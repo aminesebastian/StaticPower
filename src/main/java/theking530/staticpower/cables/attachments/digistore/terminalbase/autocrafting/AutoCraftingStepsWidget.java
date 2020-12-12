@@ -95,11 +95,20 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 			return;
 		}
 
+		// Translate the matrix to the space of this widget.
+		matrix.push();
+		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
+		
 		// Render the widgets.
-		for (AutoCraftingStepWidget widget : stepRenderers) {
+		Vector2D indicies = getStartAndEndMaterialIndicies();
+		for (int i = indicies.getXi(); i < indicies.getYi(); i++) {
+			AutoCraftingStepWidget widget = stepRenderers.get(i);
 			widget.updateBeforeRender(matrix, getSize(), partialTicks, mouseX, mouseY);
-			widget.renderForeground(null, mouseX, mouseY, partialTicks);
+			widget.renderForeground(matrix, mouseX, mouseY, partialTicks);
 		}
+		
+		// Pop the previous translation.
+		matrix.pop();
 
 		// Render the vertical dividers.
 		int divisionDistance = this.getSize().getXi() / columns;

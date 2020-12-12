@@ -1,5 +1,8 @@
 package theking530.staticpower.cables;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +24,7 @@ import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.ToolType;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
@@ -30,6 +34,7 @@ import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.CableNetworkManager;
+import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableBlock extends StaticPowerBlock implements ICustomModelSupplier {
@@ -49,8 +54,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 	@Deprecated
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos,
-			ISelectionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return CableBounds.getShape(state, worldIn, pos, context);
 	}
 
@@ -65,14 +69,11 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	}
 
 	@Override
-	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos,
-			PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
-			LOGGER.error(String.format(
-					"Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.",
-					pos));
+			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.", pos));
 			return ActionResultType.FAIL;
 		}
 
@@ -91,11 +92,10 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
 					if (!world.isRemote) {
-						NetworkGUI.openGui((ServerPlayerEntity) player,
-								attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
-									buff.writeInt(hoveredDirection.ordinal());
-									buff.writeBlockPos(pos);
-								});
+						NetworkGUI.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
+							buff.writeInt(hoveredDirection.ordinal());
+							buff.writeBlockPos(pos);
+						});
 					}
 					return ActionResultType.CONSUME;
 				}
@@ -106,19 +106,27 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	}
 
 	@Override
-	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world,
-			BlockPos pos, Direction facing, boolean returnDrops) {
+	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+		// Drop the block.
+		if (returnDrops && !world.isRemote) {
+			BlockState state = world.getBlockState(pos);
+			List<ItemStack> stacks = Block.getDrops(state, (ServerWorld) world, pos, world.getTileEntity(pos));
+			for (ItemStack stack : stacks) {
+				WorldUtilities.dropItem(world, pos, stack);
+			}
+			this.spawnAdditionalDrops(state, (ServerWorld) world, pos, wrench);
+		}
+
 		// Perform this on both the client and the server so the client updates any
 		// render changes (any conected cables).
 		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
-		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2,
-				512);
+		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2, 512);
+
 		return ActionResultType.SUCCESS;
 	}
 
 	@Override
-	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world,
-			BlockPos pos, Direction facing, boolean returnDrops) {
+	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
 		super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 		// Only perform on the server.
 		if (!world.isRemote) {
@@ -159,8 +167,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 
 			// Update the cable opposite from the side we just toggled if a cable exists
 			// there.
-			AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world,
-					pos.offset(hitSide));
+			AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.offset(hitSide));
 			if (oppositeComponent != null) {
 				oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
 			}
@@ -174,8 +181,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos,
-			PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		// Get the attachment side we're hovering.
 		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
 
@@ -199,6 +205,30 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		}
 
 		return super.getPickBlock(state, target, world, pos, player);
+	}
+
+	@Deprecated
+	@Override
+	public void spawnAdditionalDrops(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack) {
+		// Get the cable provider if present.
+		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, worldIn.getTileEntity(pos)).ifPresent(component -> {
+			// Allocate a container for the additional drops.
+			List<ItemStack> additionalDrops = new ArrayList<ItemStack>();
+			
+			// Check the attachments on all sides, and if there is one, get the additional drops.
+			for (Direction dir : Direction.values()) {
+				if (component.hasAttachment(dir)) {
+					ItemStack attachment = component.getAttachment(dir);
+					AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
+					attachmentItem.getAdditionalDrops(attachment, component, additionalDrops);
+				}
+			}
+			
+			// Drop the additional drops.
+			for(ItemStack drop : additionalDrops) {
+				WorldUtilities.dropItem(worldIn, pos, drop);
+			}
+		});
 	}
 
 	protected boolean isDisabledOnSide(IWorld world, BlockPos pos, Direction direction) {

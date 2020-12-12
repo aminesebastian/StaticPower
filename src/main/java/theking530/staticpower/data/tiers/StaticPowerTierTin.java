@@ -23,31 +23,31 @@ public class StaticPowerTierTin extends StaticPowerTier {
 
 	@Override
 	protected double getHeatSinkCapacity() {
-		return 35;
+		return 128;
 	}
 
 	@Override
 	protected double getHeatSinkConductivity() {
-		return 30.0;
+		return 2.0;
 	}
 
 	@Override
 	protected double getHeatCableCapacity() {
-		return 5000.0;
+		return 8.0;
 	}
 
 	@Override
 	protected double getHeatCableConductivity() {
-		return 50.0;
+		return 0.25;
 	}
 
 	@Override
 	protected double getHeatSinkElectricHeatGeneration() {
-		return 25.0;
+		return 4.0;
 	}
 
 	@Override
 	protected int getHeatSinkElectricHeatPowerUsage() {
-		return 2;
+		return 4;
 	}
 }

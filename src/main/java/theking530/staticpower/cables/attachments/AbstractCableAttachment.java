@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.attachments;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -26,7 +28,7 @@ import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
-import theking530.staticpower.utilities.WorldUtilities;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
 	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);
@@ -73,15 +75,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		IItemHandler upgradeInv = getUpgradeInventory(attachment);
-		if (upgradeInv != null) {
-			for (int i = 0; i < upgradeInv.getSlots(); i++) {
-				ItemStack upgrade = upgradeInv.getStackInSlot(i);
-				if (!upgrade.isEmpty()) {
-					WorldUtilities.dropItem(cable.getWorld(), cable.getPos(), upgrade);
-				}
-			}
-		}
-		attachment.setTag(null);
+		InventoryUtilities.clearInventory(upgradeInv);
 	}
 
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
@@ -91,6 +85,18 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cable) {
 		attachment.getTag().putInt("redstone_mode", mode.ordinal());
 		cable.getTileEntity().markDirty();
+	}
+
+	public void getAdditionalDrops(ItemStack attachment, AbstractCableProviderComponent cable, List<ItemStack> drops) {
+		IItemHandler upgradeInv = getUpgradeInventory(attachment);
+		if (upgradeInv != null) {
+			for (int i = 0; i < upgradeInv.getSlots(); i++) {
+				ItemStack upgrade = upgradeInv.getStackInSlot(i);
+				if (!upgrade.isEmpty()) {
+					drops.add(upgrade);
+				}
+			}
+		}
 	}
 
 	public RedstoneMode getRedstoneMode(ItemStack attachment) {

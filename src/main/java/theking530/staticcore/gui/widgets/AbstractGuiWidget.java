@@ -139,16 +139,6 @@ public abstract class AbstractGuiWidget {
 	}
 
 	/**
-	 * Helper method that returns the position of this widget within screen space
-	 * (similar to performing gui.getGuiTop() + widget.getPosition().getX().
-	 * 
-	 * @return
-	 */
-//	public Vector2D getScreenSpacePosition() {
-//		return new Vector2D(position.getX() + getOwnerPosition().getX(), position.getY() + getOwnerPosition().getY());
-//	}
-
-	/**
 	 * Gets the overall bounds of this widget. X and Y are the minimum X and Y
 	 * coordinates, Z and W and the maximum x and y coordinates. This value is in
 	 * screen space
@@ -182,14 +172,16 @@ public abstract class AbstractGuiWidget {
 	}
 
 	/**
-	 * Gets the last matrix that was used to render this widget. of the owner of
-	 * this widget.
+	 * Gets the last matrix that was used to render this widget. This is useful to
+	 * translate a position from local space of this widget, to screen space. This
+	 * matrix should NOT be modified.
 	 * 
 	 * @return
 	 */
 	public MatrixStack getLastRenderMatrix() {
 		return lastMatrixStack;
 	}
+
 	/**
 	 * Gets the size of the owner of this widget.
 	 * 
@@ -230,8 +222,15 @@ public abstract class AbstractGuiWidget {
 	 */
 	public void updateBeforeRender(MatrixStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		this.ownerSize = ownerSize;
-		this.lastMatrixStack = matrixStack;
+
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
+
+		// Make a NEW matrix that translates from local space to screen space. We make a
+		// new matrix so that it's owned by this widget, and not modified by any
+		// external references.
+		lastMatrixStack = new MatrixStack();
+		lastMatrixStack.translate(screenSpacePosition.getX() - getPosition().getX(), screenSpacePosition.getY() - getPosition().getY(), 0);
+
 		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
 	}
 

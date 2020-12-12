@@ -70,7 +70,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketGetCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketReturnCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
-
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
 	}

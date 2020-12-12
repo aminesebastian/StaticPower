@@ -60,9 +60,9 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 					.ifPresent(network -> {
 						if (managerPresent != network.isManagerPresent()) {
 							managerPresent = network.isManagerPresent();
-							this.getTileEntity().markTileEntityForSynchronization();
+							getTileEntity().markTileEntityForSynchronization();
 						}
-
+						
 						// Update the on/off state of the block.
 						if (shouldControlOnBlockState) {
 							if (managerPresent && !getIsOnBlockState()) {

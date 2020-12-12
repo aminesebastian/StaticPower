@@ -18,7 +18,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.event.LootTableLoadEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
@@ -34,7 +33,6 @@ import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.data.StaticPowerDataRegistry;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -73,11 +71,6 @@ public class StaticPowerForgeEventRegistry {
 	@OnlyIn(Dist.CLIENT)
 	public static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
 		StaticPowerClientEventHandler.renderMultiHarvestBoundingBoxes(event);
-	}
-
-	@SubscribeEvent
-	public static void onLootLoad(LootTableLoadEvent event) {
-		StaticPowerDataRegistry.onLootTableLoaded(event);
 	}
 
 	@SubscribeEvent

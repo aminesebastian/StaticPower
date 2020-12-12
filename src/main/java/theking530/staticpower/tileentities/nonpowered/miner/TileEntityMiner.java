@@ -86,7 +86,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	public ProcessingCheckState canContinueProcessingFuel() {
-		if (!isDoneMining() && processingComponent.isPerformingWork()) {
+		if (!isDoneMining()) {
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.error(processingComponent.getProcessingErrorMessage());
@@ -115,7 +115,6 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public void onBlockMined(BlockPos pos, BlockState minedBlock) {
-		fuelComponent.setMaxProcessingTime(Math.min(fuelComponent.getCurrentProcessingTime(), fuelComponent.getMaxProcessingTime()));
 		// IF we have reached the final block, set the current block index to -1.
 		if (isDoneMining()) {
 			fuelComponent.cancelProcessing();

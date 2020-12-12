@@ -61,6 +61,12 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		super.onRemovedFromCable(attachment, side, cable);
 		IItemHandler patternInv = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		InventoryUtilities.clearInventory(patternInv);
+	}
+
+	@Override
+	public void getAdditionalDrops(ItemStack attachment, AbstractCableProviderComponent cable, List<ItemStack> drops) {
+		IItemHandler patternInv = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
 		if (patternInv != null) {
 			for (int i = 0; i < patternInv.getSlots(); i++) {
 				ItemStack upgrade = patternInv.getStackInSlot(i);

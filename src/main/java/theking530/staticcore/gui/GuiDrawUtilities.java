@@ -1,5 +1,6 @@
 package theking530.staticcore.gui;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -22,6 +23,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
@@ -154,7 +156,13 @@ public class GuiDrawUtilities {
 	 * @param color
 	 * @param withShadow
 	 */
-	public static void drawStringWithSize(MatrixStack matrixStack, String text, float xPos, float yPos, float scale, Color color, boolean withShadow) {
+	public static void drawStringWithSize(@Nonnull MatrixStack matrixStack, String text, float xPos, float yPos, float scale, Color color, boolean withShadow) {
+		// The matrix stack cannot be null.
+		if (matrixStack == null) {
+			StaticPower.LOGGER.error("A non-null matrix stack must be provided to this method!");
+			return;
+		}
+
 		final float scaleFactor = scale;
 		final float inverseScaleFactor = 1.0f / scaleFactor;
 		final int offset = 0;

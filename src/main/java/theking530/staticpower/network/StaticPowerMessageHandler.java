@@ -34,8 +34,7 @@ public class StaticPowerMessageHandler {
 	private static int currentMessageId = 0;
 
 	public static void sendMessageToPlayerInArea(SimpleChannel channel, World world, BlockPos position, int radius, NetworkMessage message) {
-		channel.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(position.getX(), position.getY(), position.getZ(), radius, world.getDimensionKey())),
-				message);
+		channel.send(PacketDistributor.NEAR.with(() -> new PacketDistributor.TargetPoint(position.getX(), position.getY(), position.getZ(), radius, world.getDimensionKey())), message);
 	}
 
 	public static void sendToAllPlayersInDimension(SimpleChannel channel, World world, NetworkMessage message) {
@@ -85,7 +84,10 @@ public class StaticPowerMessageHandler {
 				StaticPower.LOGGER.error(String.format("An error occured when attempting to read from vanilla override packet: %1$s.", type.toString()), e);
 			}
 			return pack;
-		}, (MSG message, Supplier<Context> ctx) -> message.processPacket((IClientPlayNetHandler) ctx.get().getNetworkManager().getNetHandler()));
+		}, (MSG message, Supplier<Context> ctx) -> {
+			message.processPacket((IClientPlayNetHandler) ctx.get().getNetworkManager().getNetHandler());
+			ctx.get().setPacketHandled(true);
+		});
 	}
 
 	/**

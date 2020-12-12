@@ -83,15 +83,13 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 	@Override
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-		GuiDrawUtilities.drawSlot(null, position.getX(), position.getY(), getSize().getX(), getSize().getY());
-
-		textField.x = (int) (position.getX() + 2);
-		textField.y = (int) (position.getY() + 2);
+		GuiDrawUtilities.drawSlot(matrix, getPosition().getX(), getPosition().getY(), getSize().getX(), getSize().getY());
+		textField.x = getPosition().getXi() + 2;
+		textField.y = getPosition().getYi() + 2;
 
 		if (alignment == TextAlignment.CENTER) {
 			int currentTextWidth = fontRenderer.getStringWidth(getText());
-			textField.x = ((position.getXi() + position.getXi() + getSize().getXi()) / 2) - (currentTextWidth / 2);
+			textField.x = ((getPosition().getXi() + getPosition().getXi() + getSize().getXi()) / 2) - (currentTextWidth / 2);
 		}
 
 		textField.setWidth((int) getSize().getX());
@@ -101,7 +99,9 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 	@Override
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
-		return textField.mouseClicked(mouseX, mouseY, button) ? EInputResult.HANDLED : EInputResult.UNHANDLED;
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(getLastRenderMatrix(), getPosition());
+		Vector2D adjustedMousePosition = new Vector2D(mouseX - screenSpacePosition.getX() + getPosition().getXi(), mouseY - screenSpacePosition.getY() + getPosition().getYi());
+		return textField.mouseClicked(adjustedMousePosition.getX(), adjustedMousePosition.getY(), button) ? EInputResult.HANDLED : EInputResult.UNHANDLED;
 	}
 
 	@Override

@@ -28,11 +28,11 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 	private int[] slots;
 	private MachineSideMode outputMode;
 
-	public OutputServoComponent(String name, InventoryComponent inventory, MachineSideMode mode, int... slots) {
+	public OutputServoComponent(String name, int outputTime, InventoryComponent inventory, MachineSideMode mode, int... slots) {
 		super(name);
 		this.outputTime = DEFAULT_OUTPUT_TIME;
 		this.inventory = inventory;
-		if (slots.length == 0) {
+		if (slots == null || slots.length == 0) {
 			this.slots = new int[inventory.getSlots()];
 			for (int i = 0; i < inventory.getSlots(); i++) {
 				this.slots[i] = i;
@@ -45,11 +45,19 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 	}
 
 	public OutputServoComponent(String name, int outputTime, InventoryComponent inventory, int... slots) {
-		this(name, inventory, inventory.getMode(), slots);
+		this(name, outputTime, inventory, inventory.getMode(), slots);
+	}
+
+	public OutputServoComponent(String name, int outputTime, InventoryComponent inventory) {
+		this(name, outputTime, inventory, inventory.getMode(), null);
 	}
 
 	public OutputServoComponent(String name, InventoryComponent inventory, int... slots) {
-		this(name, inventory, inventory.getMode(), slots);
+		this(name, DEFAULT_OUTPUT_TIME, inventory, inventory.getMode(), slots);
+	}
+
+	public OutputServoComponent(String name, InventoryComponent inventory) {
+		this(name, DEFAULT_OUTPUT_TIME, inventory, inventory.getMode(), null);
 	}
 
 	@Override
@@ -103,7 +111,7 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 							// Check to see if we can insert any of the source inventory items into that
 							// handler. If we can, add it as a candidate.
 							for (ItemStack stack : inventory) {
-								if(stack.isEmpty()) {
+								if (stack.isEmpty()) {
 									continue;
 								}
 								if (InventoryUtilities.canPartiallyInsertItemIntoInventory(handler, stack)) {
@@ -123,7 +131,7 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 				for (int i = 0; i < inventory.getSlots(); i++) {
 					// Get the candidate to transfer.
 					ItemStack candidate = inventory.extractItem(i, validSide.getSlotLimit(i), true);
-					
+
 					// Attempt the insert using a copy and capture the remaining.
 					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(validSide, candidate.copy(), false);
 
@@ -143,7 +151,8 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
 			// Get the side's machine side mode.
 			SideConfigurationComponent sideModeConfiguration = getTileEntity().getComponent(SideConfigurationComponent.class);
-			MachineSideMode sideMode = sideModeConfiguration.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection()));
+			MachineSideMode sideMode = sideModeConfiguration
+					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection()));
 
 			// If the mode matches this servo's output mode OR the side is the generic
 			// output side and this output mode is an output mode and there are no output

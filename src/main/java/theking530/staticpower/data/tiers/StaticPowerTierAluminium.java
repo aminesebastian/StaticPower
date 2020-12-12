@@ -23,27 +23,27 @@ public class StaticPowerTierAluminium extends StaticPowerTier {
 
 	@Override
 	protected double getHeatSinkCapacity() {
-		return 10;
+		return 64;
 	}
 
 	@Override
 	protected double getHeatSinkConductivity() {
-		return 20.0;
+		return 1.0;
 	}
 
 	@Override
 	protected double getHeatCableCapacity() {
-		return 300.0;
+		return 4.0;
 	}
 
 	@Override
 	protected double getHeatCableConductivity() {
-		return 300.0;
+		return 0.25;
 	}
 
 	@Override
 	protected double getHeatSinkElectricHeatGeneration() {
-		return 15.0;
+		return 1.0;
 	}
 
 	@Override

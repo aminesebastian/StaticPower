@@ -64,4 +64,9 @@ public class EntitySmeep extends SheepEntity {
 		}
 		return java.util.Collections.emptyList();
 	}
+	@Override
+	public boolean isBreedingItem(ItemStack stack) {
+		return stack.getItem() == ModItems.StaticCrop;
+	}
+
 }

@@ -105,8 +105,7 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 				// If we can make a cover for this block, return that cover. Otherwise, return
 				// an empty itemstack.
 				if (CableCover.isValidForCover(((BlockItem) coverSourceItem).getBlock())) {
-					ItemStack output = cableCover
-							.makeCoverForBlock(((BlockItem) coverSourceItem).getBlock().getDefaultState());
+					ItemStack output = cableCover.makeCoverForBlock(((BlockItem) coverSourceItem).getBlock().getDefaultState());
 					output.setCount(8);
 					return Collections.singletonList((T) make(coverSourceItemStack, output));
 				} else {
@@ -120,8 +119,10 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 
 	private ShapelessRecipe make(ItemStack coverBlockItem, ItemStack result) {
 		// This id should only be used within JEI and not really matter
-		ResourceLocation id = new ResourceLocation(StaticPower.MOD_ID,
-				"cover/" + coverBlockItem.getItem().getRegistryName().toString().replace(':', '/'));
+		ResourceLocation id = new ResourceLocation(StaticPower.MOD_ID, "cover/" + coverBlockItem.getItem().getRegistryName().toString().replace(':', '/'));
+
+		// Make sure we only display a single item.
+		coverBlockItem.setCount(1);
 
 		// Popualte the ingredients.
 		NonNullList<Ingredient> ingredients = NonNullList.withSize(2, Ingredient.EMPTY);

@@ -17,6 +17,7 @@ import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.entities.EntitySmeep;
 import theking530.staticpower.init.ModEntities;
+import theking530.staticpower.world.trees.AbstractStaticPowerTree;
 
 /**
  * Main registry class responsible for preparing entities for registration and
@@ -32,6 +33,7 @@ public class StaticPowerRegistry {
 	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
 	public static final HashSet<IRecipeSerializer> RECIPE_SERIALIZERS = new HashSet<IRecipeSerializer>();
 	public static final HashSet<EntityType> ENTITES = new HashSet<EntityType>();
+	public static final HashSet<AbstractStaticPowerTree> TREES = new HashSet<AbstractStaticPowerTree>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -53,6 +55,17 @@ public class StaticPowerRegistry {
 	public static EntityType preRegisterEntity(EntityType entity) {
 		ENTITES.add(entity);
 		return entity;
+	}
+
+	/**
+	 * Pre-registers a tree for registration through the init method.
+	 * 
+	 * @param tree The tree to pre-register.
+	 * @return The tree that was passed.
+	 */
+	public static AbstractStaticPowerTree preRegisterTree(AbstractStaticPowerTree tree) {
+		TREES.add(tree);
+		return tree;
 	}
 
 	/**

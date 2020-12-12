@@ -53,7 +53,11 @@ public class StaticPowerConfig {
 	 * 
 	 */
 	public static class StaticPowerCommonConfig {
-		public ConfigValue<Integer> rubberWoodSpawnChance;
+		public ConfigValue<Boolean> generateRubberTrees;
+		public ConfigValue<Integer> minRubberTreeCount;
+		public ConfigValue<Integer> maxRubberTreeCount;
+		public ConfigValue<Double> rubberTreeSpawnChance;
+		public ConfigValue<Boolean> disableRubberTreesInSnowyBiomes;
 
 		public BooleanValue generateCopperOre;
 		public BooleanValue generateTinOre;
@@ -88,8 +92,17 @@ public class StaticPowerConfig {
 			generateRubyOre = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "rubyore").define("GenerateRubyOre", true);
 			builder.pop();
 			builder.push("Tree Generation");
-			rubberWoodSpawnChance = builder.comment("Controls the chance of a rubber tree spawning.").translation(StaticPower.MOD_ID + ".config." + "rubberWoodSpawnChance")
-					.define("RubberWoodSpawnChance", 1);
+			generateRubberTrees = builder.comment("Disable or Enable Rubber Tree Generation.").translation(StaticPower.MOD_ID + ".config." + "generateRubberTrees")
+					.define("GenerateRubberTrees", true);
+			disableRubberTreesInSnowyBiomes = builder.comment("Disables rubber tress from spawning in snowy biomes.")
+					.translation(StaticPower.MOD_ID + ".config." + "disableRubberTreesInSnowyBiomes").define("DisableRubberTreesInSnowyBiomes", true);
+			minRubberTreeCount = builder.comment("Indicates the number of GUARANTEED trees per biome. The default values allows for some biomes to not have a single tree spanwed.")
+					.translation(StaticPower.MOD_ID + ".config." + "minRubberTreeCount").define("MinRubberTreeCount", 0);
+			maxRubberTreeCount = builder.comment("Controls the max number of trees that can be grown in a biome.").translation(StaticPower.MOD_ID + ".config." + "maxRubberTreeCount")
+					.define("MaxRubberTreeCount", 16);
+			rubberTreeSpawnChance = builder.comment(
+					"When a biome is created, the MinRuberTreeCount amount of trees is allocated. This value represents the chance the number of trees between min and max tree counts will be added in addition. Setting this value to 0 would force all biomes to only contain the MinRubberTreeCount amount of trees, and setting it to 1 will force all biomes to contain MinRubberTreeCount + RandomNumberBetween(MinRubberTreeCount, MaxRubberTreeCount) trees.")
+					.translation(StaticPower.MOD_ID + ".config." + "rubberTreeSpawnChance").define("RubberTreeSpawnChance", 0.25);
 			builder.pop();
 			builder.pop();
 		}

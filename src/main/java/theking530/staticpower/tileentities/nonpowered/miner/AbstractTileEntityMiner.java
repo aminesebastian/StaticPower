@@ -73,7 +73,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 		registerComponent(
 				heatStorage = new HeatStorageComponent("HeatStorageComponent", 10000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
-		registerComponent(new OutputServoComponent("OutputServo", 20, outputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		heatStorage.getStorage().setCanHeat(false);
 	}
 
@@ -146,6 +146,9 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		}
 		if (!hasDrillBit()) {
 			return ProcessingCheckState.error("Missing drill bit.");
+		}
+		if (getDrillBit().getDamage() >= getDrillBit().getMaxDamage()) {
+			return ProcessingCheckState.error("Drill bit needs repair!");
 		}
 		if (!heatStorage.getStorage().canFullyAbsorbHeat(heatGeneration)) {
 			return ProcessingCheckState.error("Not enough heat capacity.");
@@ -273,6 +276,13 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			List<BlockPos> tempList = new ArrayList<BlockPos>();
 			BlockPos startingPos = new BlockPos(getPos().getX(), i, getPos().getZ());
 			for (BlockPos pos : BlockPos.getAllInBoxMutable(startingPos.add(range, 0, range), startingPos.add(-range, 0, -range))) {
+				// If the position is on the y level under the miner, and it exists on the same
+				// X or Y plane, skip it.
+				if (pos.getY() == this.getPos().getY() - 1 && (pos.getX() == getPos().getX() || pos.getZ() == getPos().getZ())) {
+					continue;
+				}
+
+				// If the position is NOT the mining position (just in case), add it.
 				if (pos != getPos()) {
 					tempList.add(pos.toImmutable());
 				}

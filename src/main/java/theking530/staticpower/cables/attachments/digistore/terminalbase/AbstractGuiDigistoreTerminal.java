@@ -35,8 +35,7 @@ import theking530.staticpower.events.StaticPowerModEventRegistry;
 import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.utilities.MetricConverter;
 
-public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDigistoreTerminal<K>, K extends AbstractCableAttachment>
-		extends AbstractCableAttachmentGui<T, K> {
+public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDigistoreTerminal<K>, K extends AbstractCableAttachment> extends AbstractCableAttachmentGui<T, K> {
 	public enum TerminalViewType {
 		ITEMS, CRAFTING;
 	}
@@ -61,8 +60,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	private int craftingRequestUpdateTimer;
 	private int currentCraftingRequestIndex;
 
-	public AbstractGuiDigistoreTerminal(T container, PlayerInventory invPlayer, ITextComponent name, int width,
-			int height) {
+	public AbstractGuiDigistoreTerminal(T container, PlayerInventory invPlayer, ITextComponent name, int width, int height) {
 		super(container, invPlayer, name, width, height);
 		craftingRequestUpdateTimer = 0;
 	}
@@ -78,8 +76,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSearchMode.TWO_WAY) {
 			initialSerachString = Strings.nullToEmpty(PluginJEI.RUNTIME.getIngredientFilter().getFilterText());
 		}
-		registerWidget(searchBar = new TextInputWidget(initialSerachString, 79, 6, 89, 12)
-				.setTypedCallback(this::onSearchTextChanged));
+		registerWidget(searchBar = new TextInputWidget(initialSerachString, 79, 6, 89, 12).setTypedCallback(this::onSearchTextChanged));
 
 		// Add island for scroll bar.
 		registerWidget(new GuiIslandWidget(170, 31, 26, 110));
@@ -91,13 +88,11 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		registerWidget(new GuiIslandWidget(-24, 16, 24, 44));
 
 		// Add sort button.
-		registerWidget(sortButton = new SpriteButton(-20, 20, 16, 16, StaticPowerSprites.SORT_NUMERICAL_DESC, null,
-				this::onSortButtonPressed));
+		registerWidget(sortButton = new SpriteButton(-20, 20, 16, 16, StaticPowerSprites.SORT_NUMERICAL_DESC, null, this::onSortButtonPressed));
 
 		// Add search mode button.
 		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
-			registerWidget(searchModeButton = new SpriteButton(-20, 40, 16, 16, StaticPowerSprites.SEARCH_MODE_DEFAULT,
-					null, this::onSearchModeButtonPressed));
+			registerWidget(searchModeButton = new SpriteButton(-20, 40, 16, 16, StaticPowerSprites.SEARCH_MODE_DEFAULT, null, this::onSearchModeButtonPressed));
 		}
 
 		// Add island for the armor.
@@ -105,33 +100,27 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		// Add island for the regular tab.
 		registerWidget(new GuiIslandWidget(this.xSize - 4, 143, 25, 24));
-		registerWidget(itemViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 145, 20, 20,
-				StaticPowerSprites.FURNACE_ICON, null, (a, b) -> switchToDefaultView())
-						.setShouldDrawButtonBackground(false));
+		registerWidget(itemViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 145, 20, 20, StaticPowerSprites.FURNACE_ICON, null, (a, b) -> switchToDefaultView())
+				.setShouldDrawButtonBackground(false));
 
 		// Add island for the crafting tab.
 		registerWidget(new GuiIslandWidget(this.xSize - 4, 168, 25, 24));
-		registerWidget(craftingViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 170, 20, 20,
-				StaticPowerSprites.CRAFTING_TABLE_ICON, null, (a, b) -> switchToCraftingStatusView())
-						.setShouldDrawButtonBackground(false));
+		registerWidget(craftingViewButton = (SpriteButton) new SpriteButton(this.xSize - 1, 170, 20, 20, StaticPowerSprites.CRAFTING_TABLE_ICON, null, (a, b) -> switchToCraftingStatusView())
+				.setShouldDrawButtonBackground(false));
 
 		// Add the crafting steps renderer.
-		registerWidget(craftingStepsWidget = new AutoCraftingStepsWidget(8, 40, 160, 133, MAX_CRAFTING_STEPS_ROWS,
-				MAX_CRAFTING_STEP_COLUMNS));
+		registerWidget(craftingStepsWidget = new AutoCraftingStepsWidget(8, 40, 160, 133, MAX_CRAFTING_STEPS_ROWS, MAX_CRAFTING_STEP_COLUMNS));
 		craftingStepsWidget.setVisible(false);
 
 		// Add the crafting rotation buttons and default them to invisible.
-		registerWidget(activeCraftingLeft = new TextButton(7, 20, 14, 14, "<",
-				(a, b) -> rotateCurrentlyViewedRecipeStatus(-1)));
-		registerWidget(activeCraftingRight = new TextButton(this.xSize - 23, 20, 14, 14, ">",
-				(a, b) -> rotateCurrentlyViewedRecipeStatus(-1)));
+		registerWidget(activeCraftingLeft = new TextButton(7, 20, 14, 14, "<", (a, b) -> rotateCurrentlyViewedRecipeStatus(-1)));
+		registerWidget(activeCraftingRight = new TextButton(this.xSize - 23, 20, 14, 14, ">", (a, b) -> rotateCurrentlyViewedRecipeStatus(-1)));
 		activeCraftingLeft.setVisible(false);
 		activeCraftingRight.setVisible(false);
 
 		// Cancel crafting request button.
-		registerWidget(
-				craftingRequestCancelButton = (SpriteButton) new SpriteButton(98, 24, 8, 8, StaticPowerSprites.ERROR,
-						null, (a, b) -> cancelCurrentCraftingRequest()).setShouldDrawButtonBackground(false));
+		registerWidget(craftingRequestCancelButton = (SpriteButton) new SpriteButton(98, 24, 8, 8, StaticPowerSprites.ERROR, null, (a, b) -> cancelCurrentCraftingRequest())
+				.setShouldDrawButtonBackground(false));
 		craftingRequestCancelButton.setTooltip(new StringTextComponent("Cancel"));
 		craftingRequestCancelButton.setVisible(false);
 
@@ -151,18 +140,15 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			ItemStack slotStack = slotIn.getStack();
 			matrixStack.push();
 			matrixStack.translate(0.0, 0.0, 260.0);
-			if (DigistoreInventorySnapshot
-					.getCraftableStateOfItem(slotStack) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
+			if (DigistoreInventorySnapshot.getCraftableStateOfItem(slotStack) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
 				// Draw a string that says: "Craft".
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "Craft", slotIn.xPos + 16, slotIn.yPos + 15, 0.5f,
-						Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "Craft", slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			} else {
 				// Pass the itemstack count through the metric converter.
 				MetricConverter count = new MetricConverter(slotIn.getStack().getCount());
 
 				// Draw the item count string manually.
-				GuiDrawUtilities.drawStringWithSize(matrixStack, count.getValueAsString(true), slotIn.xPos + 16,
-						slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, count.getValueAsString(true), slotIn.xPos + 16, slotIn.yPos + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			}
 			matrixStack.pop();
 		} else {
@@ -195,11 +181,9 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		// Update the crafting widget and the tool tips.
 		if (getContainer().getCurrentCraftingQueue().size() > 0) {
-			CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue()
-					.get(currentCraftingRequestIndex);
+			CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
 			craftingStepsWidget.setRequest(currentRequest);
-			craftingViewButton.setTooltip(new StringTextComponent(
-					String.format("%1$d jobs currently queued.", getContainer().getCurrentCraftingQueue().size())));
+			craftingViewButton.setTooltip(new StringTextComponent(String.format("%1$d jobs currently queued.", getContainer().getCurrentCraftingQueue().size())));
 		} else {
 			craftingStepsWidget.setRequest(null);
 			craftingViewButton.setTooltip(new StringTextComponent("No crafting jobs currently queued."));
@@ -232,10 +216,8 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 				if (currentCraftingRequestIndex >= getContainer().getCurrentCraftingQueue().size()) {
 					currentCraftingRequestIndex = getContainer().getCurrentCraftingQueue().size() - 1;
 				}
-				CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue()
-						.get(currentCraftingRequestIndex);
-				this.itemRenderer.drawItem(currentRequest.getCraftingItem(), guiLeft, guiTop, (xSize / 2) - 8, 20,
-						1.0f);
+				CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
+				this.itemRenderer.drawItem(currentRequest.getCraftingItem(), guiLeft, guiTop, (xSize / 2) - 8, 20, 1.0f);
 			}
 		}
 	}
@@ -245,15 +227,12 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			return;
 		}
 
-		currentCraftingRequestIndex = Math.floorMod(currentCraftingRequestIndex + direction,
-				getContainer().getCurrentCraftingQueue().size());
-		currentCraftingRequestIndex = SDMath.clamp(currentCraftingRequestIndex, 0,
-				getContainer().getCurrentCraftingQueue().size() - 1);
+		currentCraftingRequestIndex = Math.floorMod(currentCraftingRequestIndex + direction, getContainer().getCurrentCraftingQueue().size());
+		currentCraftingRequestIndex = SDMath.clamp(currentCraftingRequestIndex, 0, getContainer().getCurrentCraftingQueue().size() - 1);
 	}
 
 	protected void cancelCurrentCraftingRequest() {
-		CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue()
-				.get(currentCraftingRequestIndex);
+		CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
 		getContainer().cancelCraftingRequest(currentRequest.getId());
 	}
 
@@ -307,8 +286,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			if (getContainer().isSortDescending()) {
 				DigistoreTerminal.setSortDescending(getContainer().getAttachment(), false);
 			} else {
-				DigistoreTerminal.setSortType(getContainer().getAttachment(),
-						DigistoreTerminal.getSortType(getContainer().getAttachment()).getNextType());
+				DigistoreTerminal.setSortType(getContainer().getAttachment(), DigistoreTerminal.getSortType(getContainer().getAttachment()).getNextType());
 				DigistoreTerminal.setSortDescending(getContainer().getAttachment(), true);
 			}
 		} else {
@@ -316,8 +294,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			if (!getContainer().isSortDescending()) {
 				DigistoreTerminal.setSortDescending(getContainer().getAttachment(), true);
 			} else {
-				DigistoreTerminal.setSortType(getContainer().getAttachment(),
-						DigistoreTerminal.getSortType(getContainer().getAttachment()).getPrevType());
+				DigistoreTerminal.setSortType(getContainer().getAttachment(), DigistoreTerminal.getSortType(getContainer().getAttachment()).getPrevType());
 				DigistoreTerminal.setSortDescending(getContainer().getAttachment(), false);
 			}
 		}
@@ -329,12 +306,10 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	protected void onSearchModeButtonPressed(StandardButton button, MouseButton mouseButton) {
 		if (mouseButton == MouseButton.LEFT) {
 			// Increment the next search mode.
-			DigistoreTerminal.setSearchMode(getContainer().getAttachment(),
-					DigistoreTerminal.getSearchMode(getContainer().getAttachment()).getNextType());
+			DigistoreTerminal.setSearchMode(getContainer().getAttachment(), DigistoreTerminal.getSearchMode(getContainer().getAttachment()).getNextType());
 		} else {
 			// Increment the previous search mode.
-			DigistoreTerminal.setSearchMode(getContainer().getAttachment(),
-					DigistoreTerminal.getSearchMode(getContainer().getAttachment()).getPrevType());
+			DigistoreTerminal.setSearchMode(getContainer().getAttachment(), DigistoreTerminal.getSearchMode(getContainer().getAttachment()).getPrevType());
 		}
 
 		// Update the modes and filters
@@ -370,16 +345,12 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 		switch (sortType) {
 		case NAME:
-			sortButton.setTooltip(new StringTextComponent("Sort by Name").appendString(" ")
-					.appendString(descending ? "(Descending)" : "(Ascending)"));
-			sortButton.setRegularTexture(
-					descending ? StaticPowerSprites.SORT_ALPHA_DESC : StaticPowerSprites.SORT_ALPHA_ASC);
+			sortButton.setTooltip(new StringTextComponent("Sort by Name").appendString(" ").appendString(descending ? "(Descending)" : "(Ascending)"));
+			sortButton.setRegularTexture(descending ? StaticPowerSprites.SORT_ALPHA_DESC : StaticPowerSprites.SORT_ALPHA_ASC);
 			break;
 		case COUNT:
-			sortButton.setTooltip(new StringTextComponent("Sort by Count").appendString(" ")
-					.appendString(descending ? "(Descending)" : "(Ascending)"));
-			sortButton.setRegularTexture(
-					descending ? StaticPowerSprites.SORT_NUMERICAL_DESC : StaticPowerSprites.SORT_NUMERICAN_ASC);
+			sortButton.setTooltip(new StringTextComponent("Sort by Count").appendString(" ").appendString(descending ? "(Descending)" : "(Ascending)"));
+			sortButton.setRegularTexture(descending ? StaticPowerSprites.SORT_NUMERICAL_DESC : StaticPowerSprites.SORT_NUMERICAN_ASC);
 			break;
 		}
 

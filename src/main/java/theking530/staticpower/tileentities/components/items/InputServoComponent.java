@@ -35,10 +35,10 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 	@SaveSerialize
 	private int lastRoundRobinSlotIndex;
 
-	public InputServoComponent(String name, InventoryComponent inventory, MachineSideMode mode, Predicate<ItemStack> filter, int... slots) {
+	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, Predicate<ItemStack> filter, int... slots) {
 		super(name);
 		this.inventory = inventory;
-		if (slots.length == 0) {
+		if (slots == null || slots.length == 0) {
 			this.slots = new int[inventory.getSlots()];
 			for (int i = 0; i < inventory.getSlots(); i++) {
 				this.slots[i] = i;
@@ -49,16 +49,16 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 
 		this.inputMode = mode;
 		this.roundRobin = false;
-		this.inputTime = DEFAULT_INPUT_TIME;
+		this.inputTime = inputTime;
 		this.lastRoundRobinSlotIndex = 0;
 	}
 
 	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, MachineSideMode mode, int... slots) {
-		this(name, inventory, mode, null, slots);
+		this(name, inputTime, inventory, mode, null, slots);
 	}
 
 	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, Predicate<ItemStack> filter, int... slots) {
-		this(name, inventory, MachineSideMode.Input, filter, slots);
+		this(name, inputTime, inventory, MachineSideMode.Input, filter, slots);
 	}
 
 	public InputServoComponent(String name, int inputTime, InventoryComponent inventory, int... slots) {
@@ -67,6 +67,18 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 
 	public InputServoComponent(String name, InventoryComponent inventory, int... slots) {
 		this(name, DEFAULT_INPUT_TIME, inventory, MachineSideMode.Input, slots);
+	}
+
+	public InputServoComponent(String name, InventoryComponent inventory, MachineSideMode mode, Predicate<ItemStack> filter) {
+		this(name, DEFAULT_INPUT_TIME, inventory, mode, filter, null);
+	}
+
+	public InputServoComponent(String name, InventoryComponent inventory, Predicate<ItemStack> filter) {
+		this(name, DEFAULT_INPUT_TIME, inventory, MachineSideMode.Input, filter, null);
+	}
+
+	public InputServoComponent(String name, InventoryComponent inventory) {
+		this(name, DEFAULT_INPUT_TIME, inventory, MachineSideMode.Input, null);
 	}
 
 	public MachineSideMode getMode() {

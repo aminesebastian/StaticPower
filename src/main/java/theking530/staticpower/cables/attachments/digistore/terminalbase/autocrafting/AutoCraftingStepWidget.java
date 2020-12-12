@@ -78,6 +78,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 
 		// Get the screen space position.
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
+		Vector2D localPosition = getPosition();
 
 		// Get the ingredient.
 		Ingredient ing = material.getItem();
@@ -93,25 +94,31 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		// all
 		// the items scenario.
 		if (material.getMissingAmount() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 7, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 12, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi() + 21, screenSpacePosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(), screenSpacePosition.getXi() + 53.5f, screenSpacePosition.getYi() + 19.5f, 0.5f, new Color(75.0f, 25.0f, 0.0f, 255.0f),
-					false);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 19, 0.5f, new Color(255.0f, 150.0f, 50.0f, 255.0f),
-					false);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 7, 0.5f,
+					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(), localPosition.getXi() + 53, localPosition.getYi() + 12, 0.5f,
+					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawColoredRectangle(matrix, localPosition.getXi() + 21, localPosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(), localPosition.getXi() + 53.5f, localPosition.getYi() + 19.5f, 0.5f,
+					new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(), localPosition.getXi() + 53, localPosition.getYi() + 19, 0.5f,
+					new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
 			MISSING_INGREDIENT_RENDERABLE.draw(screenSpacePosition.getXi() + 2, screenSpacePosition.getYi() + 3);
 		} else if (material.getAmountToCraft() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 7, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 12, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi() + 21, screenSpacePosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawStringWithSize(matrix, "To Craft: " + material.getAmountToCraft(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 19, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 7, 0.5f,
+					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(), localPosition.getXi() + 53, localPosition.getYi() + 12, 0.5f,
+					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawColoredRectangle(matrix, localPosition.getXi() + 21, localPosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawStringWithSize(matrix, "To Craft: " + material.getAmountToCraft(), localPosition.getXi() + 53, localPosition.getYi() + 19, 0.5f,
+					Color.EIGHT_BIT_WHITE, true);
 		} else {
-			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountRequired(), screenSpacePosition.getXi() + 53, screenSpacePosition.getYi() + 11, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 11, 0.5f,
+					Color.EIGHT_BIT_WHITE, true);
 		}
 
 		// Draw the bottom divider.
-		GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getXi(), screenSpacePosition.getYi() + getSize().getY(), getSize().getX(), 0.75f, 1.0f, Color.GREY);
+		GuiDrawUtilities.drawColoredRectangle(matrix, localPosition.getXi(), localPosition.getYi() + getSize().getY(), getSize().getX(), 0.75f, 1.0f, Color.GREY);
 	}
 
 	protected ItemStack getCurrentIndexItemStack() {

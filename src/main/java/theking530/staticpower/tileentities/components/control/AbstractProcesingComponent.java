@@ -184,7 +184,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			}
 
 			// Use power if requested to.
-			if (hasProcessingPowerCost && powerComponent != null && currentProcessingTime < processingTime) {
+			if (hasProcessingPowerCost && powerComponent != null && powerComponent != null && currentProcessingTime < processingTime) {
 				powerComponent.getStorage().drainPower(getPowerUsage(), false);
 			}
 
@@ -202,7 +202,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 					// If it is okay, then complete processing.
 					if (completedState.isOk()) {
 						// Use the complete power if requested to.
-						if (hasCompletedPowerCost && powerComponent != null) {
+						if (hasCompletedPowerCost && powerComponent != null && powerComponent != null) {
 							powerComponent.useBulkPower(getCompletedPowerUsage());
 						}
 					}
@@ -387,6 +387,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	}
 
 	public AbstractProcesingComponent setProcessingPowerUsage(int power) {
+		if (power <= 0) {
+			return this;
+		}
+
 		hasProcessingPowerCost = true;
 		defaultPowerUsage = power;
 		powerUsage = (int) (defaultPowerUsage * powerUsageIncreaseMultiplier);
@@ -394,6 +398,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	}
 
 	public AbstractProcesingComponent setCompletedPowerUsage(int power) {
+		if (power <= 0) {
+			return this;
+		}
+
 		hasCompletedPowerCost = true;
 		completedDefaultPowerUsage = power;
 		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUsageIncreaseMultiplier);
@@ -510,17 +518,17 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	protected ProcessingCheckState checkPowerRequirements() {
 		// Check the processing power cost.
-		if (hasProcessingPowerCost && !powerComponent.hasEnoughPower(getPowerUsage())) {
+		if (hasProcessingPowerCost && powerComponent != null && !powerComponent.hasEnoughPower(getPowerUsage())) {
 			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getString());
 		}
 		// Check the processing power rate.
-		if (hasProcessingPowerCost && powerComponent.getStorage().getMaxDrain() < getPowerUsage()) {
+		if (hasProcessingPowerCost && powerComponent != null && powerComponent.getStorage().getMaxDrain() < getPowerUsage()) {
 			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (").append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
 					.appendString(") is larger than the max for this machine!").getString());
 		}
 
 		// Check the completion power cost.
-		if (hasCompletedPowerCost && !powerComponent.hasEnoughPower(getCompletedPowerUsage())) {
+		if (hasCompletedPowerCost && powerComponent != null && !powerComponent.hasEnoughPower(getCompletedPowerUsage())) {
 			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getString());
 		}
 

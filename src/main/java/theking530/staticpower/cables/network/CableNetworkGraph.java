@@ -7,6 +7,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import theking530.staticpower.StaticPower;
 
 public class CableNetworkGraph {
 	protected static final Logger LOGGER = LogManager.getLogger(CableNetworkGraph.class);
@@ -27,7 +28,8 @@ public class CableNetworkGraph {
 		try {
 			// If the cable is bad, return early.
 			if (!CableNetworkManager.get(world).isTrackingCable(scanStartPosition)) {
-				throw new RuntimeException(String.format("Encountered a null starting cable at position: %1$s when attempting to scan the network.", scanStartPosition));
+				StaticPower.LOGGER.error(String.format("Encountered a null starting cable at position: %1$s when attempting to scan the network.", scanStartPosition));
+				return mapper;
 			}
 
 			// Map the network.

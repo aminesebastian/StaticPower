@@ -67,8 +67,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	private TerminalViewType viewType;
 	private boolean resyncInv;
 
-	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory,
-			ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
+			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(allocator, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
@@ -144,8 +144,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// out like usual.
 							if (shouldCraft) {
 								// Calculate the max craftable.
-								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1,
-										CraftingRequestType.SIMULATE_NO_LIMITS);
+								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1, CraftingRequestType.SIMULATE_NO_LIMITS);
 
 								// Open prompt for crafting if we can actually craft some.
 								// Create the container opener.
@@ -304,8 +303,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		DigistoreTerminal.setSortDescending(getAttachment(), sortDescending);
 		resyncInv = true;
 		if (getCableComponent().getWorld().isRemote) {
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
-					new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
 		}
 	}
 
@@ -407,7 +405,14 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	 * @return
 	 */
 	public int getMaxScroll() {
-		return (int) Math.max(0, Math.ceil((double) clientSimulatedInventory.getSlots() / itemsPerRow) - maxRows);
+		int nonEmptySlots = 0;
+		for (int i = 0; i < clientSimulatedInventory.getSlots(); i++) {
+			if (!clientSimulatedInventory.getStackInSlot(i).isEmpty()) {
+				nonEmptySlots++;
+			}
+		}
+		
+		return (int) Math.max(0, Math.ceil((double) nonEmptySlots / itemsPerRow) - maxRows);
 	}
 
 	protected void setMaxRows(int maxRows) {
