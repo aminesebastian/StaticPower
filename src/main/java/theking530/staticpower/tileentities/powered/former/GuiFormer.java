@@ -26,7 +26,7 @@ public class GuiFormer extends StaticPowerTileEntityGui<ContainerFormer, TileEnt
 		registerWidget(new ArrowProgressBar(82, 34).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine(new StringTextComponent("The former transforms items into other items=by shaping them against molds."));
+		infoTab.addLine("desc1", new StringTextComponent("The former transforms items into other items=by shaping them against molds."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));

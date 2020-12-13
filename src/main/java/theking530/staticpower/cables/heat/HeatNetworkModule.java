@@ -6,7 +6,6 @@ import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -50,9 +49,8 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	public void getReaderOutput(List<ITextComponent> components) {
 		float averageThermalConductivity = 0.0f;
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
-			averageThermalConductivity += cable.getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY);
+			averageThermalConductivity += cable.getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 		}
-		;
 		averageThermalConductivity /= Network.getGraph().getCables().size();
 
 		ITextComponent currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat());
@@ -60,8 +58,8 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		ITextComponent heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick());
 		ITextComponent averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
 
-		components.add(
-				new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent("Contains: ")).appendString(TextFormatting.GRAY.toString()).append(currentHeat));
+		components
+				.add(new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent("Contains: ")).appendString(TextFormatting.GRAY.toString()).append(currentHeat));
 		components.add(new StringTextComponent(TextFormatting.RED.toString()).append(new StringTextComponent("Heating: ")).appendString(TextFormatting.GRAY.toString()).append(heating));
 		components.add(new StringTextComponent(TextFormatting.BLUE.toString()).append(new StringTextComponent("Cooling: ")).appendString(TextFormatting.GRAY.toString()).append(cooling));
 		components.add(new StringTextComponent(TextFormatting.AQUA.toString()).append(new StringTextComponent("Average Conductivity: ")).appendString(TextFormatting.GRAY.toString())
@@ -79,17 +77,22 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
 			// Execute any passive heating/cooling.
 			for (Direction dir : Direction.values()) {
+				// Get the block and fluid states on the side.
 				FluidState fluidState = Network.getWorld().getFluidState(cable.getPos().offset(dir));
 				BlockState blockstate = Network.getWorld().getBlockState(cable.getPos().offset(dir));
-				StaticPowerRecipeRegistry
-						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(new ItemStack(blockstate.getBlock())).setFluids(new FluidStack(fluidState.getFluid(), 1)))
-						.ifPresent((recipe) -> {
-							if (recipe.getThermalConductivity() < 0) {
-								heatStorage.heat(recipe.getThermalConductivity() * cable.getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
-							} else {
-								heatStorage.cool(recipe.getThermalConductivity() * cable.getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY), false);
-							}
-						});
+
+				// Get the recipe if one exists for those states.
+				ThermalConductivityRecipe recipe = StaticPowerRecipeRegistry
+						.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getFluid(), 1))).orElse(null);
+
+				// If the recipe exists, perform the passive healing and cooling.
+				if (recipe != null) {
+					if (recipe.getThermalConductivity() < 0 && !heatStorage.isAtMaxHeat()) {
+						heatStorage.heat(recipe.getHeatAmount() * cable.getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY), false);
+					} else if (heatStorage.getCurrentHeat() > 0) {
+						heatStorage.cool(recipe.getThermalConductivity() * cable.getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY), false);
+					}
+				}
 			}
 		}
 
@@ -108,7 +111,8 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
 						// Get the thermal conductivity of the attached cable.
-						double toSupply = Math.min(CableNetworkManager.get(world).getCable(destinations.get(wrapper).getConnectedCable()).getDoubleProperty(HeatCableComponent.HEAT_RATE_DATA_TAG_KEY),
+						double toSupply = Math.min(
+								CableNetworkManager.get(world).getCable(destinations.get(wrapper).getConnectedCable()).getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY),
 								outputPerDestination);
 						// Limit that to the max amount we currently have.
 						double supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), false);
@@ -122,12 +126,15 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 			}
 		}
 
-		for (ServerCable cable : Network.getGraph().getCables().values()) {
-			// Generate heat if required to.
-			TileEntity te = world.getChunkAt(cable.getPos()).getTileEntity(cable.getPos(), Chunk.CreateEntityType.QUEUED);
-			Optional<HeatCableComponent> heatComponent = ComponentUtilities.getComponent(HeatCableComponent.class, te);
-			if (heatComponent.isPresent()) {
-				heatComponent.get().generateHeat(this);
+		// Generate heat as needed.
+		if (!heatStorage.isAtMaxHeat()) {
+			for (ServerCable cable : Network.getGraph().getCables().values()) {
+				// Generate heat if required to.
+				TileEntity te = world.getChunkAt(cable.getPos()).getTileEntity(cable.getPos(), Chunk.CreateEntityType.QUEUED);
+				Optional<HeatCableComponent> heatComponent = ComponentUtilities.getComponent(HeatCableComponent.class, te);
+				if (heatComponent.isPresent()) {
+					heatComponent.get().generateHeat(this);
+				}
 			}
 		}
 	}

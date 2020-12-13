@@ -7,8 +7,8 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class HeatTooltipUtilities {
 
-	public static ITextComponent getHeatRateTooltip(double heatDissipation) {
-		return new StringTextComponent(TextFormatting.GRAY + "Heat Dissipation: ").append(GuiTextUtilities.formatHeatRateToString(heatDissipation)).mergeStyle(TextFormatting.BLUE);
+	public static ITextComponent getHeatConductivityTooltip(double heatDissipation) {
+		return new StringTextComponent(TextFormatting.GRAY + "Heat Conductivity: ").append(GuiTextUtilities.formatConductivityToString(heatDissipation)).mergeStyle(TextFormatting.BLUE);
 	}
 
 	public static ITextComponent getHeatGenerationTooltip(double heatGeneration) {

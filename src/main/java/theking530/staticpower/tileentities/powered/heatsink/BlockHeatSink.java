@@ -40,11 +40,18 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		tooltip.add(HeatTooltipUtilities.getHeatConductivityTooltip(tierObject.heatSinkConductivity.get()));
+		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(tierObject.heatSinkCapacity.get()));
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		super.getAdvancedTooltip(stack, worldIn, tooltip);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(tierObject.heatSinkConductivity.get()));
-		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(tierObject.heatSinkCapacity.get()));
 		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(tierObject.heatSinkElectricHeatGeneration.get()));
 		tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Generation Usage: ").append(GuiTextUtilities.formatEnergyRateToString(tierObject.heatSinkElectricHeatPowerUsage.get()))
 				.mergeStyle(TextFormatting.RED));

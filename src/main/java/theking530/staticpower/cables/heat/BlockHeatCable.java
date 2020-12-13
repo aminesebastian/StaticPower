@@ -35,7 +35,7 @@ public class BlockHeatCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(HeatTooltipUtilities.getHeatRateTooltip(StaticPowerConfig.getTier(tier).heatCableConductivity.get()));
+		tooltip.add(HeatTooltipUtilities.getHeatConductivityTooltip(StaticPowerConfig.getTier(tier).heatCableConductivity.get()));
 		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(StaticPowerConfig.getTier(tier).heatCableCapacity.get()));
 	}
 

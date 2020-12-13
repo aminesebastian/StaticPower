@@ -167,13 +167,23 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
+	public double getHeatCapacityUpgrade() {
+		return 3.0f;
+	}
+
+	@Override
+	public double getHeatConductivityUpgrade() {
+		return 3.0f;
+	}
+
+	@Override
 	protected double getPowerUpgrade() {
 		return 9.0f;
 	}
 
 	@Override
 	protected double getPowerIoUpgrade() {
-		return 8.5f;
+		return 9.0f;
 	}
 
 	@Override
@@ -203,12 +213,12 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected int getDefaultMachinePowerInput() {
-		return 100;
+		return 128;
 	}
 
 	@Override
 	protected int getDefaultMachinePowerOutput() {
-		return 100;
+		return 128;
 	}
 
 	@Override

@@ -368,6 +368,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return processingTime;
 	}
 
+	public float getCalculatedPowerUsageMultipler() {
+		return powerUsageIncreaseMultiplier;
+	}
+
 	public void setMaxProcessingTime(int newTime) {
 		defaultProcessingTime = newTime;
 		processingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);

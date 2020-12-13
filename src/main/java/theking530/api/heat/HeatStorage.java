@@ -43,7 +43,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 		return maximumHeat;
 	}
 
-	public void setMaximumHeat(float newMax) {
+	public void setMaximumHeat(double newMax) {
 		maximumHeat = newMax;
 		currentHeat = Math.min(maximumHeat, currentHeat);
 	}
@@ -53,7 +53,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 		return conductivity;
 	}
 
-	public void setConductivity(float conductivity) {
+	public void setConductivity(double conductivity) {
 		this.conductivity = conductivity;
 	}
 
@@ -93,7 +93,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 		return currentHeat == 0.0f;
 	}
 
-	public boolean canFullyAbsorbHeat(float heatAmount) {
+	public boolean canFullyAbsorbHeat(double heatAmount) {
 		return currentHeat + heatAmount <= maximumHeat;
 	}
 
@@ -195,9 +195,9 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 			currentHeat = maximumHeat;
 		}
 
-		currentHeat = nbt.getFloat("current_heat");
-		maximumHeat = nbt.getFloat("maximum_heat");
-		conductivity = nbt.getFloat("maximum_transfer_rate");
+		currentHeat = nbt.getDouble("current_heat");
+		maximumHeat = nbt.getDouble("maximum_heat");
+		conductivity = nbt.getDouble("maximum_transfer_rate");
 		averageRecieved = nbt.getFloat("recieved");
 		averageExtracted = nbt.getFloat("extracted");
 	}

@@ -4,9 +4,10 @@ import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.BaseCentrifugeUpgrade;
+import theking530.staticpower.items.upgrades.BaseHeatCapacityUpgrade;
+import theking530.staticpower.items.upgrades.BaseHeatUpgrade;
 import theking530.staticpower.items.upgrades.BaseOutputMultiplierUpgrade;
 import theking530.staticpower.items.upgrades.BasePowerUpgrade;
-import theking530.staticpower.items.upgrades.BaseQuarryingUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
@@ -55,9 +56,15 @@ public class ModUpgrades {
 	public static BaseCentrifugeUpgrade EnergizedCentrifugeUpgrade;
 	public static BaseCentrifugeUpgrade LumumCentrifugeUpgrade;
 
-	public static BaseQuarryingUpgrade StaticQuarryingUpgrade;
-	public static BaseQuarryingUpgrade EnergizedQuarryingUpgrade;
-	public static BaseQuarryingUpgrade LumumQuarryingUpgrade;
+	public static BaseHeatCapacityUpgrade BasicHeatCapacityUpgrade;
+	public static BaseHeatCapacityUpgrade StaticHeatCapacityUpgrade;
+	public static BaseHeatCapacityUpgrade EnergizedHeatCapacityUpgrade;
+	public static BaseHeatCapacityUpgrade LumumHeatCapacityUpgrade;
+
+	public static BaseHeatUpgrade BasicHeatUpgrade;
+	public static BaseHeatUpgrade StaticHeatUpgrade;
+	public static BaseHeatUpgrade EnergizedHeatUpgrade;
+	public static BaseHeatUpgrade LumumHeatUpgrade;
 
 	public static void init() {
 		StaticPowerRegistry.preRegisterItem(TeleportUpgrade = new TeleportUpgrade("upgrade_teleport"));
@@ -97,8 +104,15 @@ public class ModUpgrades {
 		StaticPowerRegistry.preRegisterItem(EnergizedCentrifugeUpgrade = new BaseCentrifugeUpgrade("upgrade_centrifuge_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumCentrifugeUpgrade = new BaseCentrifugeUpgrade("upgrade_centrifuge_lumum", StaticPowerTiers.LUMUM));
 
-		StaticPowerRegistry.preRegisterItem(StaticQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumQuarryingUpgrade = new BaseQuarryingUpgrade("upgrade_quarrying_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(BasicHeatCapacityUpgrade = new BaseHeatCapacityUpgrade("upgrade_heat_capacity_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticHeatCapacityUpgrade = new BaseHeatCapacityUpgrade("upgrade_heat_capacity_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedHeatCapacityUpgrade = new BaseHeatCapacityUpgrade("upgrade_heat_capacity_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumHeatCapacityUpgrade = new BaseHeatCapacityUpgrade("upgrade_heat_capacity_lumum", StaticPowerTiers.LUMUM));
+
+		StaticPowerRegistry.preRegisterItem(BasicHeatUpgrade = new BaseHeatUpgrade("upgrade_heat_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(StaticHeatUpgrade = new BaseHeatUpgrade("upgrade_heat_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedHeatUpgrade = new BaseHeatUpgrade("upgrade_heat_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumHeatUpgrade = new BaseHeatUpgrade("upgrade_heat_lumum", StaticPowerTiers.LUMUM));
 	}
+
 }

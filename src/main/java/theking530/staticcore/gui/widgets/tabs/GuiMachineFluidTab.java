@@ -24,7 +24,7 @@ public class GuiMachineFluidTab extends AbstractInfoTab {
 	public void updateData() {
 		super.updateData();
 		clear();
-		addKeyValueTwoLiner(new StringTextComponent("Filled"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getFilledPerTick()), TextFormatting.AQUA);
-		addKeyValueTwoLiner(new StringTextComponent("Drained"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getDrainedPerTick()), TextFormatting.GRAY);
+		addKeyValueTwoLiner("Filled", new StringTextComponent("Filled"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getFilledPerTick()), TextFormatting.AQUA);
+		addKeyValueTwoLiner("Drained", new StringTextComponent("Drained"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getDrainedPerTick()), TextFormatting.GRAY);
 	}
 }

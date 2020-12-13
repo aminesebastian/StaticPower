@@ -35,6 +35,9 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
+		// Add the upgrade inventory to the heat component.
+		heatStorage.setUpgradeInventory(upgradesInventory);
+
 		// Set the processing parameters.
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
@@ -67,22 +70,22 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	protected int getProcessingTime() {
+	public int getProcessingTime() {
 		return StaticPowerConfig.SERVER.electricMinerProcessingTime.get();
 	}
 
 	@Override
-	protected int getHeatGeneration() {
-		return StaticPowerConfig.SERVER.electricMinerHeatGeneration.get();
+	public int getHeatGeneration() {
+		return (int) (StaticPowerConfig.SERVER.electricMinerHeatGeneration.get() * processingComponent.getCalculatedPowerUsageMultipler());
 	}
 
 	@Override
-	protected int getBaseRadius() {
+	public int getRadius() {
 		return StaticPowerConfig.SERVER.electricMinerRadius.get();
 	}
 
 	@Override
-	protected int getPowerUsage() {
+	public int getPowerUsage() {
 		return StaticPowerConfig.SERVER.electricMinerPowerUsage.get();
 	}
 }

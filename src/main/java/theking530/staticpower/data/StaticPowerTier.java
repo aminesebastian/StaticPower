@@ -114,6 +114,16 @@ public abstract class StaticPowerTier {
 	public ConfigValue<Double> powerUpgrade;
 	public ConfigValue<Double> powerIOUpgrade;
 
+	/************************
+	 * Heat Capacity Upgrade
+	 ************************/
+	public ConfigValue<Double> heatCapacityUpgrade;
+
+	/************************
+	 * Heat Conductivity Upgrade
+	 ************************/
+	public ConfigValue<Double> heatConductivityUpgrade;
+
 	/***************************
 	 * Output Multiplier Upgrade
 	 ***************************/
@@ -290,7 +300,8 @@ public abstract class StaticPowerTier {
 		heatCableCapacity = builder.comment("The amount of heat that a heat pipe of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "heatCableCapacity")
 				.define("HeatCableCapacity", this.getHeatCableCapacity());
 
-		heatCableConductivity = builder.comment("The conductivity multiplier for a heat pipe of this tier. The higher it is, the faster it is able to dissipate heat.")
+		heatCableConductivity = builder
+				.comment("The conductivity multiplier for a heat pipe of this tier. The higher it is, the faster it is able to dissipate heat. This value is PER BLOCK SIDE.")
 				.translation(StaticPower.MOD_ID + ".config." + "heatCableConductivity").define("HeatCableConductivity", this.getHeatCableConductivity());
 		builder.pop();
 		builder.pop();
@@ -308,11 +319,6 @@ public abstract class StaticPowerTier {
 		itemFilterSlots = builder.comment("The number of slots that exist on an item filter of this tier (not the filter attachment, the actual item).")
 				.translation(StaticPower.MOD_ID + ".config." + "itemFilterSlots").define("ItemFilterSlots", this.getItemFilterSlots());
 
-		builder.push("Upgrade");
-		upgradeOrdinal = builder.comment(
-				"The upgrade ordinal of this tier. Higher value will take precedence. For example, if a machine has both Basic and Energized power upgrades installed, the Energized upgrades will be used when calculating power values because it has the higher upgrade ordinal. In the case of a tie, it comes down to which one appears in later in the upgrade slots.")
-				.translation(StaticPower.MOD_ID + ".config." + "upgradeOrdinal").define("UpgradeOrdinal", this.getUpgradeOrdinal());
-
 		/********
 		 * Tools
 		 ********/
@@ -327,6 +333,22 @@ public abstract class StaticPowerTier {
 		hardenedDurabilityBoostAdditive = builder.comment("Defines whether the hardened durability boost is additive or multaplicative.")
 				.translation(StaticPower.MOD_ID + ".config." + "hardenedDurabilityBoostAdditive").define("HardenedDurabilityBoostAdditive", this.isHardenedDurabilityBoostAdditive());
 
+		builder.pop();
+
+		builder.push("Upgrade");
+		upgradeOrdinal = builder.comment(
+				"The upgrade ordinal of this tier. Higher value will take precedence. For example, if a machine has both Basic and Energized power upgrades installed, the Energized upgrades will be used when calculating power values because it has the higher upgrade ordinal. In the case of a tie, it comes down to which one appears in later in the upgrade slots.")
+				.translation(StaticPower.MOD_ID + ".config." + "upgradeOrdinal").define("UpgradeOrdinal", this.getUpgradeOrdinal());
+
+		/************************
+		 * Heat Conductivity Upgrade
+		 ************************/
+		builder.push("Heat");
+		heatCapacityUpgrade = builder.comment("The heat capacity for a full upgrade stack of this tier (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "heatCapacityUpgrade").define("HeatCapacityUpgrade", this.getHeatCapacityUpgrade());
+
+		heatConductivityUpgrade = builder.comment("The heat conductivtiy boost for a full upgrade stack of this tier (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "heatConductivityUpgrade").define("HeatConductivityUpgrade", this.getHeatConductivityUpgrade());
 		builder.pop();
 
 		/********************
@@ -447,6 +469,14 @@ public abstract class StaticPowerTier {
 	}
 
 	protected double getOutputMultiplierUpgrade() {
+		return 0;
+	}
+
+	public double getHeatCapacityUpgrade() {
+		return 0;
+	}
+
+	public double getHeatConductivityUpgrade() {
 		return 0;
 	}
 

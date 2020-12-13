@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:thermal_conducitity",
-	"block": {
-		"tag": "forge:stone"
-	},
-	"conductivity": "0.1"
+	"blocks": [
+		"forge:stone"
+	],
+	"conductivity": "2.0"
 }

@@ -30,6 +30,8 @@ import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
  *
  */
 public class SmithingRecipeProvider implements IRecipeManagerPlugin {
+	private List<AutoSmithRecipeJEIWrapper> recipes;
+
 	public SmithingRecipeProvider() {
 	}
 
@@ -57,14 +59,17 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> List<T> getRecipes(IRecipeCategory<T> recipeCategory) {
-		List<AutoSmithRecipeJEIWrapper> output = new ArrayList<AutoSmithRecipeJEIWrapper>();
+		if (recipes == null) {
+			// Create the recipes array.
+			recipes = new ArrayList<AutoSmithRecipeJEIWrapper>();
 
-		// Get all the registered items.
-		for (Entry<RegistryKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
-			output.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
+			// Get all the registered items and add any recipes that can be created from
+			// them.
+			for (Entry<RegistryKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
+				recipes.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
+			}
 		}
-
-		return (List<T>) output;
+		return (List<T>) recipes;
 	}
 
 	@SuppressWarnings("unchecked")

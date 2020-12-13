@@ -157,6 +157,16 @@ public class StaticPowerTierBasic extends StaticPowerTier {
 	}
 
 	@Override
+	public double getHeatCapacityUpgrade() {
+		return 0.5f;
+	}
+
+	@Override
+	public double getHeatConductivityUpgrade() {
+		return 0.5f;
+	}
+
+	@Override
 	protected double getPowerUpgrade() {
 		return 2.0f;
 	}
@@ -193,12 +203,12 @@ public class StaticPowerTierBasic extends StaticPowerTier {
 
 	@Override
 	protected int getDefaultMachinePowerInput() {
-		return 10;
+		return 8;
 	}
 
 	@Override
 	protected int getDefaultMachinePowerOutput() {
-		return 10;
+		return 8;
 	}
 
 	@Override

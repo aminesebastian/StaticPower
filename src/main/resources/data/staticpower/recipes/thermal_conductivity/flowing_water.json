@@ -3,5 +3,5 @@
 	"blocks": [
 		"minecraft:water"
 	],
-	"conductivity": "4.0"
+	"conductivity": "10.0"
 }

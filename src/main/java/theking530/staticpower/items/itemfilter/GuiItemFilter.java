@@ -53,7 +53,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 
 		// Update the info tab label.
 		getTabManager().registerTab(infoTab = new GuiInfoTab(110));
-		infoTab.addLine(new StringTextComponent("Filter items going into an inventory."));
+		infoTab.addLine("desc", new StringTextComponent("Filter items going into an inventory."));
 
 		registerWidget(whitelistButton = new SpriteButton(45, 40, 20, 20, StaticPowerSprites.FILTER_WHITELIST, null, this::buttonPressed));
 		registerWidget(nbtButton = new SpriteButton(67, 40, 20, 20, StaticPowerSprites.FILTER_NBT, null, this::buttonPressed));

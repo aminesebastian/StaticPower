@@ -80,8 +80,9 @@ public class TileEntitySolarPanel extends TileEntityBase {
 	public void generateRF() {
 		if (isGenerating() && energyStorage.canAcceptPower(1)) {
 			if (energyStorage.getStorage().getStoredPower() < energyStorage.getStorage().getCapacity()) {
+				int generateAmount = getWorld().isRaining() ? energyStorage.getStorage().getMaxReceive() / 2 : energyStorage.getStorage().getMaxReceive();
 				energyStorage.getStorage().setCanRecieve(true);
-				energyStorage.getStorage().receivePower(energyStorage.getStorage().getMaxReceive(), false);
+				energyStorage.getStorage().receivePower(generateAmount, false);
 				energyStorage.getStorage().setCanRecieve(false);
 			}
 		}
@@ -95,7 +96,7 @@ public class TileEntitySolarPanel extends TileEntityBase {
 
 		// If we can't see the sky, isnt day time, or is raining, or can't store the
 		// power, return false.
-		if (!getWorld().canBlockSeeSky(pos) || !getWorld().isDaytime() || getWorld().isRaining()) {
+		if (!getWorld().canBlockSeeSky(pos) || !getWorld().isDaytime()) {
 			return false;
 		}
 

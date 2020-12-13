@@ -39,10 +39,9 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 
 		GuiInfoTab infoTab;
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
-		infoTab.addLine(new StringTextComponent("A Battery stores power for later usage."));
+		infoTab.addLine("desc1", new StringTextComponent("A Battery stores power for later usage."));
 		infoTab.addLineBreak();
-		infoTab.addLine(new StringTextComponent(
-				"Holding control and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+		infoTab.addLine("desc2", new StringTextComponent("Holding control and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
@@ -62,27 +61,22 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		// Render the input rate string.
 		font.drawString(stack, "Input", this.guiLeft + 15, this.guiTop + 32, 4210752);
 		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getString();
-		font.drawString(stack, inputRateString, guiLeft + 28 - (font.getStringWidth(inputRateString) / 2), guiTop + 42,
-				4210752);
+		font.drawString(stack, inputRateString, guiLeft + 28 - (font.getStringWidth(inputRateString) / 2), guiTop + 42, 4210752);
 
 		// Render the output rate string.
 		font.drawString(stack, "Output", this.guiLeft + 132, this.guiTop + 32, 4210752);
-		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit())
-				.getString();
-		font.drawString(stack, outputRateString, guiLeft + 149 - (font.getStringWidth(outputRateString) / 2),
-				guiTop + 42, 4210752);
+		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit()).getString();
+		font.drawString(stack, outputRateString, guiLeft + 149 - (font.getStringWidth(outputRateString) / 2), guiTop + 42, 4210752);
 
 		// Add tooltip for the actual value of the input.
 		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
-		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2)
-				&& mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
+		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
 				&& mouseY < this.guiTop + 50) {
 			tooltips.add(new StringTextComponent(inputRateString));
 		}
 
 		// Add tooltip for the actual value of the output.
-		if (mouseX > guiLeft + 149 - (font.getStringWidth(inputRateString) / 2)
-				&& mouseX < guiLeft + 149 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
+		if (mouseX > guiLeft + 149 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 149 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
 				&& mouseY < this.guiTop + 50) {
 			tooltips.add(new StringTextComponent(outputRateString));
 		}
@@ -121,16 +115,13 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		}
 
 		if (input) {
-			getTileEntity().setInputLimit(Math.max(0,
-					Math.min(getTileEntity().getInputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
+			getTileEntity().setInputLimit(Math.max(0, Math.min(getTileEntity().getInputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
 		} else {
-			getTileEntity().setOutputLimit(Math.max(0,
-					Math.min(getTileEntity().getOutputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
+			getTileEntity().setOutputLimit(Math.max(0, Math.min(getTileEntity().getOutputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));
 		}
 
 		// Create the packet.
-		NetworkMessage msg = new BatteryControlSyncPacket(getTileEntity().getInputLimit(),
-				getTileEntity().getOutputLimit(), getTileEntity().getPos());
+		NetworkMessage msg = new BatteryControlSyncPacket(getTileEntity().getInputLimit(), getTileEntity().getOutputLimit(), getTileEntity().getPos());
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}

@@ -38,7 +38,7 @@ public class GuiChainsaw extends StaticPowerItemStackGui<ContainerChainsaw, Chai
 
 		// Update the info tab label.
 		getTabManager().registerTab(infoTab = new GuiInfoTab(110));
-		infoTab.addLine(new StringTextComponent("Filter items going into an inventory."));
+		infoTab.addLine("desc", new StringTextComponent("Filter items going into an inventory."));
 	}
 
 	protected Chainsaw getBlade() {

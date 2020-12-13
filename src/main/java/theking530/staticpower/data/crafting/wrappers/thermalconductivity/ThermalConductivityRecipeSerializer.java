@@ -1,9 +1,9 @@
 package theking530.staticpower.data.crafting.wrappers.thermalconductivity;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,11 +20,17 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 
 	@Override
 	public ThermalConductivityRecipe read(ResourceLocation recipeId, JsonObject json) {
-		// Capture the input blocks if it exists.
-		Ingredient blocks = Ingredient.EMPTY;
-		if (json.has("block")) {
-			JsonObject inputElement = json.get("block").getAsJsonObject();
-			blocks = Ingredient.deserialize(inputElement);
+		// Allocate the blocks.
+		ResourceLocation[] blocks = null;
+
+		// Check for blocks.
+		if (json.has("blocks")) {
+			// Get the block tag array.
+			JsonArray blocksArray = json.get("blocks").getAsJsonArray();
+			blocks = new ResourceLocation[blocksArray.size()];
+			for (int i = 0; i < blocks.length; i++) {
+				blocks[i] = new ResourceLocation(blocksArray.get(i).getAsString());
+			}
 		}
 
 		// Get the fluid stack if it exists.
@@ -37,22 +43,40 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 		// Capture the conductivity.
 		float thermalConductivity = json.get("conductivity").getAsFloat();
 
+		// Capture the heating amount.
+		float heatAmount = 0.0f;
+		if (json.has("heating_amount")) {
+			heatAmount = json.get("heating_amount").getAsFloat();
+		}
+
 		// Create the recipe.
-		return new ThermalConductivityRecipe(recipeId, blocks, fluid, thermalConductivity);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluid, thermalConductivity, heatAmount);
 	}
 
 	@Override
 	public ThermalConductivityRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		Ingredient blocks = Ingredient.read(buffer);
 		FluidStack fluid = buffer.readFluidStack();
 		float cond = buffer.readFloat();
-		return new ThermalConductivityRecipe(recipeId, blocks, fluid, cond);
+		float supply = buffer.readFloat();
+		int tagCount = buffer.readByte();
+
+		ResourceLocation[] blocks = new ResourceLocation[tagCount];
+		for (int i = 0; i < tagCount; i++) {
+			blocks[i] = new ResourceLocation(buffer.readString());
+		}
+
+		return new ThermalConductivityRecipe(recipeId, blocks, fluid, cond, supply);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, ThermalConductivityRecipe recipe) {
-		recipe.getBlocks().write(buffer);
 		buffer.writeFluidStack(recipe.getFluid());
 		buffer.writeFloat(recipe.getThermalConductivity());
+		buffer.writeFloat(recipe.getHeatAmount());
+
+		buffer.writeByte(recipe.getBlockTags().length);
+		for (ResourceLocation tag : recipe.getBlockTags()) {
+			buffer.writeString(tag.toString());
+		}
 	}
 }

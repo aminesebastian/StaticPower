@@ -99,10 +99,10 @@ public class StaticPowerConfig {
 			minRubberTreeCount = builder.comment("Indicates the number of GUARANTEED trees per biome. The default values allows for some biomes to not have a single tree spanwed.")
 					.translation(StaticPower.MOD_ID + ".config." + "minRubberTreeCount").define("MinRubberTreeCount", 0);
 			maxRubberTreeCount = builder.comment("Controls the max number of trees that can be grown in a biome.").translation(StaticPower.MOD_ID + ".config." + "maxRubberTreeCount")
-					.define("MaxRubberTreeCount", 16);
+					.define("MaxRubberTreeCount", 4);
 			rubberTreeSpawnChance = builder.comment(
 					"When a biome is created, the MinRuberTreeCount amount of trees is allocated. This value represents the chance the number of trees between min and max tree counts will be added in addition. Setting this value to 0 would force all biomes to only contain the MinRubberTreeCount amount of trees, and setting it to 1 will force all biomes to contain MinRubberTreeCount + RandomNumberBetween(MinRubberTreeCount, MaxRubberTreeCount) trees.")
-					.translation(StaticPower.MOD_ID + ".config." + "rubberTreeSpawnChance").define("RubberTreeSpawnChance", 0.25);
+					.translation(StaticPower.MOD_ID + ".config." + "rubberTreeSpawnChance").define("RubberTreeSpawnChance", 0.15);
 			builder.pop();
 			builder.pop();
 		}
@@ -151,59 +151,68 @@ public class StaticPowerConfig {
 
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Tools");
-			builder.push("Axe");
-			minRubberWoodBarkPerStrip = builder.comment("Controls the minimum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
-					.translation(StaticPower.MOD_ID + ".config." + "minRubberWoodBarkPerStrip").define("MinRubberWoodBarkPerStrip", 1);
-			maxRubberWoodBarkPerStrip = builder.comment("Controls the maximum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
-					.translation(StaticPower.MOD_ID + ".config." + "maxRubberWoodBarkPerStrip").define("MaxRubberWoodBarkPerStrip", 4);
-			builder.pop();
+			{
+				builder.push("Axe");
+				minRubberWoodBarkPerStrip = builder.comment("Controls the minimum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
+						.translation(StaticPower.MOD_ID + ".config." + "minRubberWoodBarkPerStrip").define("MinRubberWoodBarkPerStrip", 1);
+				maxRubberWoodBarkPerStrip = builder.comment("Controls the maximum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
+						.translation(StaticPower.MOD_ID + ".config." + "maxRubberWoodBarkPerStrip").define("MaxRubberWoodBarkPerStrip", 4);
+				builder.pop();
+			}
 			builder.pop();
 
 			builder.push("Digistore");
-			builder.push("Regulator");
-			digistoreRegulatorRate = builder
-					.comment("Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorRate").define("DigistoreRegulatorRate", 50);
-			digistoreRegulatorSlots = builder.comment("Controls how many slots the regulator has.").translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorSlots")
-					.define("DigistoreRegulatorSlots", 8);
-			digistoreRegulatorStackSize = builder.comment("Controls how many items can be transfered for each item type during a regulation.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorStackSize").define("DigistoreRegulatorStackSize", 8);
-			builder.pop();
+			{
+				builder.push("Regulator");
+				digistoreRegulatorRate = builder
+						.comment("Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorRate").define("DigistoreRegulatorRate", 50);
+				digistoreRegulatorSlots = builder.comment("Controls how many slots the regulator has.").translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorSlots")
+						.define("DigistoreRegulatorSlots", 8);
+				digistoreRegulatorStackSize = builder.comment("Controls how many items can be transfered for each item type during a regulation.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreRegulatorStackSize").define("DigistoreRegulatorStackSize", 8);
+				builder.pop();
+			}
+			{
+				builder.push("I/O Bus");
+				digistoreIOBusRate = builder
+						.comment("Controls how many ticks between each digistore I/O bus operation. The higher, the faster the operations, but the stronger hit to performance.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusRate").define("DigistoreIOBusRate", 40);
+				digistoreIOBusSlots = builder.comment("Controls how many slots each the import and output rows of the digistore I/O bus have.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusSlots").define("DigistoreIOBusSlots", 8);
+				digistoreIOBusStackSize = builder.comment("Controls how many items the digistore I/O will try to import per operation. This count is separate for the import and the export.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusStackSize").define("DigistoreIOBusStackSize", 8);
+				builder.pop();
+			}
+			{
+				builder.push("Importer");
+				digistoreImporterRate = builder
+						.comment("Controls how many ticks between each digistore importer operation. The higher, the faster the operations, but the stronger hit to performance.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterRate").define("DigistoreImporterRate", 40);
+				digistoreImporterSlots = builder.comment("Controls how many slots the digistore importer has.").translation(StaticPower.MOD_ID + ".config." + "digistoreImporterSlots")
+						.define("DigistoreImporterSlots", 8);
+				digistoreImporterStackSize = builder.comment("Controls how many items the importer will try to import per operation.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterStackSize").define("DigistoreImporterStackSize", 8);
+				builder.pop();
+			}
+			{
+				builder.push("Exporter");
+				digistoreExporterRate = builder
+						.comment("Controls how many ticks between each digistore exporter operation. The higher, the faster the operations, but the stronger hit to performance.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterRate").define("DigistoreExporterRate", 40);
+				digistoreExporterSlots = builder.comment("Controls how many slots the digistore exporter has.").translation(StaticPower.MOD_ID + ".config." + "digistoreExporterSlots")
+						.define("DigistoreExporterSlots", 8);
+				digistoreExporterStackSize = builder.comment("Controls how many items the exporter will try to export per operation.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterStackSize").define("DigistoreExporterstackSize", 8);
+				builder.pop();
+			}
+			{
+				builder.push("Crafting Interface");
 
-			builder.push("I/O Bus");
-			digistoreIOBusRate = builder
-					.comment("Controls how many ticks between each digistore I/O bus operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusRate").define("DigistoreIOBusRate", 40);
-			digistoreIOBusSlots = builder.comment("Controls how many slots each the import and output rows of the digistore I/O bus have.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusSlots").define("DigistoreIOBusSlots", 8);
-			digistoreIOBusStackSize = builder.comment("Controls how many items the digistore I/O will try to import per operation. This count is separate for the import and the export.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreIOBusStackSize").define("DigistoreIOBusStackSize", 8);
-			builder.pop();
-
-			builder.push("Importer");
-			digistoreImporterRate = builder
-					.comment("Controls how many ticks between each digistore importer operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterRate").define("DigistoreImporterRate", 40);
-			digistoreImporterSlots = builder.comment("Controls how many slots the digistore importer has.").translation(StaticPower.MOD_ID + ".config." + "digistoreImporterSlots")
-					.define("DigistoreImporterSlots", 8);
-			digistoreImporterStackSize = builder.comment("Controls how many items the importer will try to import per operation.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreImporterStackSize").define("DigistoreImporterStackSize", 8);
-			builder.pop();
-
-			builder.push("Exporter");
-			digistoreExporterRate = builder
-					.comment("Controls how many ticks between each digistore exporter operation. The higher, the faster the operations, but the stronger hit to performance.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterRate").define("DigistoreExporterRate", 40);
-			digistoreExporterSlots = builder.comment("Controls how many slots the digistore exporter has.").translation(StaticPower.MOD_ID + ".config." + "digistoreExporterSlots")
-					.define("DigistoreExporterSlots", 8);
-			digistoreExporterStackSize = builder.comment("Controls how many items the exporter will try to export per operation.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreExporterStackSize").define("DigistoreExporterstackSize", 8);
-			builder.pop();
-
-			builder.push("Crafting Interface");
-			digistoreCraftingInterfaceSlots = builder.comment("Controls how many slots the crafting interface attachment gets.")
-					.translation(StaticPower.MOD_ID + ".config." + "digistoreCraftingInterfaceSlots").define("DigistoreCraftingInterfaceSlots", 9);
-			builder.pop();
+				digistoreCraftingInterfaceSlots = builder.comment("Controls how many slots the crafting interface attachment gets.")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreCraftingInterfaceSlots").define("DigistoreCraftingInterfaceSlots", 9);
+				builder.pop();
+			}
 			builder.pop();
 
 			builder.push("Upgrades");
@@ -212,22 +221,30 @@ public class StaticPowerConfig {
 			builder.pop();
 
 			builder.push("Machines");
-			minerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by a regular miner.")
-					.translation(StaticPower.MOD_ID + ".config." + "minerHeatGeneration").define("MinerHeatGeneration", 250);
-			minerFuelUsage = builder.comment("Defines how much fuel value is used per tick by a regular miner.").translation(StaticPower.MOD_ID + ".config." + "minerFuelUsage")
-					.define("MinerFuelUsage", 1);
-			minerRadius = builder.comment("Defines the base radius of the regular miner.").translation(StaticPower.MOD_ID + ".config." + "minerRadius").define("MinerRadius", 5);
-			minerProcessingTime = builder.comment("Defines the amount of ticks a regular miner takes to break a block.").translation(StaticPower.MOD_ID + ".config." + "minerProcessingTime")
-					.define("MinerProcessingTime", 70);
+			{
+				builder.push("Miner");
+				minerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by a regular miner.")
+						.translation(StaticPower.MOD_ID + ".config." + "minerHeatGeneration").define("MinerHeatGeneration", 100);
+				minerFuelUsage = builder.comment("Defines how much fuel value is used per tick by a regular miner.").translation(StaticPower.MOD_ID + ".config." + "minerFuelUsage")
+						.define("MinerFuelUsage", 1);
+				minerRadius = builder.comment("Defines the base radius of the regular miner.").translation(StaticPower.MOD_ID + ".config." + "minerRadius").define("MinerRadius", 3);
+				minerProcessingTime = builder.comment("Defines the amount of ticks a regular miner takes to break a block.")
+						.translation(StaticPower.MOD_ID + ".config." + "minerProcessingTime").define("MinerProcessingTime", 70);
+				builder.pop();
+			}
 
-			electricMinerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by an electric miner.")
-					.translation(StaticPower.MOD_ID + ".config." + "electricMinerHeatGeneration").define("ElectricMinerHeatGeneration", 200);
-			electricMinerPowerUsage = builder.comment("Defines how much power is used per tick by an electric miner.")
-					.translation(StaticPower.MOD_ID + ".config." + "electricMinerPowerUsage").define("ElectricMinerPowerUsage", 10);
-			electricMinerRadius = builder.comment("Defines the base radius of the electric miner.").translation(StaticPower.MOD_ID + ".config." + "electricMinerRadius")
-					.define("ElectricMinerRadius", 5);
-			electricMinerProcessingTime = builder.comment("Defines the amount of ticks an electric miner takes to break a block.")
-					.translation(StaticPower.MOD_ID + ".config." + "electricMinerProcessingTime").define("ElectricMinerProcessingTime", 40);
+			{
+				builder.push("Electric Miner");
+				electricMinerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by an electric miner.")
+						.translation(StaticPower.MOD_ID + ".config." + "electricMinerHeatGeneration").define("ElectricMinerHeatGeneration", 100);
+				electricMinerPowerUsage = builder.comment("Defines how much power is used per tick by an electric miner.")
+						.translation(StaticPower.MOD_ID + ".config." + "electricMinerPowerUsage").define("ElectricMinerPowerUsage", 50);
+				electricMinerRadius = builder.comment("Defines the base radius of the electric miner.").translation(StaticPower.MOD_ID + ".config." + "electricMinerRadius")
+						.define("ElectricMinerRadius", 3);
+				electricMinerProcessingTime = builder.comment("Defines the amount of ticks an electric miner takes to break a block.")
+						.translation(StaticPower.MOD_ID + ".config." + "electricMinerProcessingTime").define("ElectricMinerProcessingTime", 40);
+				builder.pop();
+			}
 			builder.pop();
 		}
 	}

@@ -122,22 +122,22 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	protected int getProcessingTime() {
+	public int getProcessingTime() {
 		return StaticPowerConfig.SERVER.minerProcessingTime.get();
 	}
 
 	@Override
-	protected int getHeatGeneration() {
+	public int getHeatGeneration() {
 		return StaticPowerConfig.SERVER.minerHeatGeneration.get();
 	}
 
 	@Override
-	protected int getBaseRadius() {
+	public int getRadius() {
 		return StaticPowerConfig.SERVER.minerRadius.get();
 	}
 
 	@Override
-	protected int getPowerUsage() {
+	public int getPowerUsage() {
 		return StaticPowerConfig.SERVER.minerFuelUsage.get();
 	}
 

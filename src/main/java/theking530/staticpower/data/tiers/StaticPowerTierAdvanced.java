@@ -203,12 +203,12 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 
 	@Override
 	protected int getDefaultMachinePowerInput() {
-		return 20;
+		return 16;
 	}
 
 	@Override
 	protected int getDefaultMachinePowerOutput() {
-		return 20;
+		return 16;
 	}
 
 	@Override

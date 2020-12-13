@@ -43,11 +43,11 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 	@Override
 	public void updateData() {
 		infoTab.clear();
-		infoTab.addLine(new StringTextComponent("Separates items into their base components."));
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Current Speed"), GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).append(new TranslationTextComponent("gui.staticpower.rpm")),
-				TextFormatting.YELLOW);
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Max Speed"), GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).append(new TranslationTextComponent("gui.staticpower.rpm")),
-				TextFormatting.RED);
+		infoTab.addLine("desc1", new StringTextComponent("Separates items into their base components."));
+		infoTab.addKeyValueTwoLiner("c_speed", new StringTextComponent("Current Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).append(new TranslationTextComponent("gui.staticpower.rpm")), TextFormatting.YELLOW);
+		infoTab.addKeyValueTwoLiner("max_speed", new StringTextComponent("Max Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).append(new TranslationTextComponent("gui.staticpower.rpm")), TextFormatting.RED);
 	}
 
 	@Override
@@ -55,7 +55,9 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		String rpmText = getTileEntity().getCurrentSpeed() + " RPM";
-		drawEmptySlot(stack, guiLeft + 123 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 40, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, rpmText, guiLeft + 125 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 42, Color.EIGHT_BIT_WHITE.encodeInInteger());
+		drawEmptySlot(stack, guiLeft + 123 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 40,
+				Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
+		Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, rpmText, guiLeft + 125 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 42,
+				Color.EIGHT_BIT_WHITE.encodeInInteger());
 	}
 }

@@ -1,7 +1,9 @@
 package theking530.staticcore.gui.widgets.tabs;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -24,40 +26,50 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	public static final float LINE_BREAK_HEIGHT = 8.0f;
 	public static final float HEIGHT_PADDING = 9.0f;
 
-	private List<ITextComponent> info;
+	private Map<String, List<ITextComponent>> info;
+	private int lineBreakIndex;
 
 	public AbstractInfoTab(String title, Color titleColor, int width, ResourceLocation tabBackground, IDrawable icon) {
 		super(title, titleColor, width, 0, tabBackground, icon);
-		info = new ArrayList<ITextComponent>();
+		info = new LinkedHashMap<String, List<ITextComponent>>();
+		lineBreakIndex = 0;
 	}
 
-	public int addLine(ITextComponent value) {
-		info.add(value);
-		return info.size() - 1;
+	public AbstractInfoTab addLine(String key, ITextComponent value) {
+		List<ITextComponent> list = new ArrayList<ITextComponent>();
+		list.add(value);
+		info.put(key, list);
+		return this;
 	}
 
-	public int addLine(TextFormatting color, ITextComponent value) {
-		info.add(new StringTextComponent(color.toString()).append(value));
-		return info.size() - 1;
+	public AbstractInfoTab addLine(String key, TextFormatting color, ITextComponent value) {
+		List<ITextComponent> list = new ArrayList<ITextComponent>();
+		list.add(new StringTextComponent(color.toString()).append(value));
+		info.put(key, list);
+		return this;
 	}
 
-	public void addLineBreak() {
-		info.add(new StringTextComponent("\n"));
+	public AbstractInfoTab addLineBreak() {
+		List<ITextComponent> list = new ArrayList<ITextComponent>();
+		list.add(new StringTextComponent("\n"));
+		info.put("line_break_" + lineBreakIndex, list);
+		lineBreakIndex++;
+		return this;
 	}
 
-	public int addKeyValueLine(ITextComponent key, ITextComponent value, TextFormatting keyColor) {
-		info.add(new StringTextComponent(keyColor.toString()).append(key).appendString(": ").append(value));
-		return info.size() - 1;
+	public AbstractInfoTab addKeyValueLine(String key, ITextComponent label, ITextComponent value, TextFormatting keyColor) {
+		List<ITextComponent> list = new ArrayList<ITextComponent>();
+		list.add(new StringTextComponent(keyColor.toString()).append(label).appendString(": ").append(value));
+		info.put(key, list);
+		return this;
 	}
 
-	public int addKeyValueTwoLiner(ITextComponent key, ITextComponent value, TextFormatting keyColor) {
-		info.add(new StringTextComponent(keyColor.toString()).append(key).appendString(": "));
-		info.add(new StringTextComponent(" ").append(value).setStyle(Style.EMPTY.setFormatting(keyColor)));
-		return info.size() - 1;
-	}
-
-	public void updateLineByIndex(int index, ITextComponent line) {
-		info.set(index, line);
+	public AbstractInfoTab addKeyValueTwoLiner(String key, ITextComponent label, ITextComponent value, TextFormatting keyColor) {
+		List<ITextComponent> list = new ArrayList<ITextComponent>();
+		list.add(new StringTextComponent(keyColor.toString()).append(label).appendString(": "));
+		list.add(new StringTextComponent(" ").append(value).setStyle(Style.EMPTY.setFormatting(keyColor)));
+		info.put(key, list);
+		return this;
 	}
 
 	public void clear() {
@@ -87,25 +99,24 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		float height = 0;
 
 		// Iterate through all the info lines.
-		for (int i = 0; i < info.size(); i++) {
-			// Format the text.
-			ITextComponent formattedText = info.get(i);
-
-			if (formattedText.getString().equals("\n")) {
-				lineHeight += LINE_BREAK_HEIGHT;
-				height += LINE_BREAK_HEIGHT;
-				continue;
-			}
-
-			// Get the word wrapped result.
-			List<IReorderingProcessor> wordWrappedText = fontRenderer.trimStringToWidth(formattedText, this.tabWidth);
-			// Render the info text.
-			for (IReorderingProcessor text : wordWrappedText) {
-				if (!simulate) {
-					fontRenderer.func_238407_a_(stack, text, 14, 25 + lineHeight, 16777215);
+		for (List<ITextComponent> formattedTextList : info.values()) {
+			for (ITextComponent formattedText : formattedTextList) {
+				if (formattedText.getString().equals("\n")) {
+					lineHeight += LINE_BREAK_HEIGHT;
+					height += LINE_BREAK_HEIGHT;
+					continue;
 				}
-				lineHeight += LINE_HEIGHT;
-				height += LINE_HEIGHT;
+
+				// Get the word wrapped result.
+				List<IReorderingProcessor> wordWrappedText = fontRenderer.trimStringToWidth(formattedText, this.tabWidth);
+				// Render the info text.
+				for (IReorderingProcessor text : wordWrappedText) {
+					if (!simulate) {
+						fontRenderer.func_238407_a_(stack, text, 14, 25 + lineHeight, 16777215);
+					}
+					lineHeight += LINE_HEIGHT;
+					height += LINE_HEIGHT;
+				}
 			}
 		}
 

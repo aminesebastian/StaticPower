@@ -36,7 +36,8 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 		registerWidget(fluidBar = new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 176, 20, 16, 74, MachineSideMode.Output, getTileEntity()));
 
 		fluidTab = (GuiMachineFluidTab) new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT);
-		fluidContainerTab = (GuiFluidContainerTab) new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT);
+		fluidContainerTab = (GuiFluidContainerTab) new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket())
+				.setTabSide(TabSide.LEFT);
 		setOutputSlotSize(16);
 
 		if (getTileEntity().showTank()) {
@@ -51,8 +52,8 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 	public void updateData() {
 		// Update the input tab.
 		infoTab.clear();
-		infoTab.addLine(new StringTextComponent("Vacuums items in a nearby radius"));
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Radius"), new StringTextComponent(String.valueOf(getTileEntity().getRadius())), TextFormatting.AQUA);
+		infoTab.addLine("desc", new StringTextComponent("Vacuums items in a nearby radius"));
+		infoTab.addKeyValueTwoLiner("radius", new StringTextComponent("Radius"), new StringTextComponent(String.valueOf(getTileEntity().getRadius())), TextFormatting.AQUA);
 
 		// Change the size of the GUI depending on if there is a XP upgrade present.
 		if (!getTileEntity().showTank()) {

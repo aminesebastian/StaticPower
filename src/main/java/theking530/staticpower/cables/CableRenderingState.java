@@ -22,11 +22,10 @@ public class CableRenderingState {
 	public final BlockState[] covers;
 	public final boolean[] disabledSides;
 	public final BlockPos pos;
-	public final IBlockDisplayReader world;
+	public IBlockDisplayReader world;
 
-	public CableRenderingState(CableConnectionState[] connectionStates, ResourceLocation[] attachments,
-			ItemStack[] attachmentItems, ItemStack[] covers, boolean[] disabledSides, BlockPos pos,
-			IBlockDisplayReader world) {
+	public CableRenderingState(CableConnectionState[] connectionStates, ResourceLocation[] attachments, ItemStack[] attachmentItems, ItemStack[] covers, boolean[] disabledSides,
+			BlockPos pos) {
 		super();
 		this.connectionStates = connectionStates;
 		this.attachments = attachments;
@@ -43,10 +42,13 @@ public class CableRenderingState {
 
 		this.disabledSides = disabledSides;
 		this.pos = pos;
-		this.world = world;
 	}
 
 	public boolean hasCoverOnSide(Direction side) {
 		return covers[side.ordinal()] != null;
+	}
+
+	public void setRenderingWorld(IBlockDisplayReader world) {
+		this.world = world;
 	}
 }

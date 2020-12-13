@@ -38,7 +38,7 @@ public class GuiCaster extends StaticPowerTileEntityGui<ContainerCaster, TileEnt
 				progressBar = (FluidProgressBar) new FluidProgressBar(108, 40, 36, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent).setAnimationStartAfter(0.5f));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine(new StringTextComponent("The former transforms items into other items=by shaping them against molds."));
+		infoTab.addLine("desc1", new StringTextComponent("The former transforms items into other items=by shaping them against molds."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));

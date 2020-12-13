@@ -25,12 +25,12 @@ public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPattern
 	public void updateData() {
 		// Update the info tab.
 		infoTab.clear();
-		infoTab.addLine(new StringTextComponent("Stores crafting patterns that can be atomically reconstructed into items and blocks!."));
+		infoTab.addLine("desc", new StringTextComponent("Stores crafting patterns that can be atomically reconstructed into items and blocks!."));
 		infoTab.addLineBreak();
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(getTileEntity().patternInventory.getSlots());
-		infoTab.addKeyValueLine(new StringTextComponent("Max Patterns"), new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))),
-				TextFormatting.RED);
+		infoTab.addKeyValueLine("max", new StringTextComponent("Max Patterns"),
+				new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))), TextFormatting.RED);
 	}
 }

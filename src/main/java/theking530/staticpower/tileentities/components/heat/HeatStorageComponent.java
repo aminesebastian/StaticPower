@@ -3,12 +3,15 @@ package theking530.staticpower.tileentities.components.heat;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorage;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class HeatStorageComponent extends AbstractTileEntityComponent {
@@ -20,10 +23,20 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		PRE_PROCESS, POST_PROCESS
 	}
 
-	public static final float ENERGY_SYNC_MAX_DELTA = 1;
+	public static final float HEAT_SYNC_MAX_DELTA = 1;
 
 	@UpdateSerialize
 	protected final HeatStorage heatStorage;
+	@UpdateSerialize
+	private double defaultCapacity;
+	@UpdateSerialize
+	private double defaultConductivity;
+	@UpdateSerialize
+	private double heatCapacityUpgradeMultiplier;
+	@UpdateSerialize
+	private double heatConductivityMultiplier;
+	private UpgradeInventoryComponent upgradeInventory;
+
 	protected final HeatDissipationTiming dissipationTiming;
 	protected TriFunction<Double, Direction, HeatManipulationAction, Boolean> filter;
 	private double lastSyncHeat;
@@ -33,9 +46,11 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		this(name, maxHeat, maxTransferRate, HeatDissipationTiming.POST_PROCESS);
 	}
 
-	public HeatStorageComponent(String name, double maxHeat, double maxTransferRate, HeatDissipationTiming timing) {
+	public HeatStorageComponent(String name, double maxHeat, double maxConductivity, HeatDissipationTiming timing) {
 		super(name);
-		heatStorage = new HeatStorage(maxHeat, maxTransferRate);
+		this.defaultCapacity = maxHeat;
+		this.defaultConductivity = maxConductivity;
+		heatStorage = new HeatStorage(maxHeat, maxConductivity);
 		capabilityAccessor = new HeatComponentCapabilityAccess();
 		lastSyncHeat = 0.0f;
 		dissipationTiming = timing;
@@ -44,8 +59,9 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	@Override
 	public void preProcessUpdate() {
 		// Do nothing on the client.
-		if (getWorld().isRemote) {
-			return;
+		if (!getWorld().isRemote) {
+			// Check for upgrades.
+			checkUpgrades();
 		}
 	}
 
@@ -57,7 +73,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 			double delta = Math.abs(heatStorage.getCurrentHeat() - lastSyncHeat);
 
 			// Determine if we should sync.
-			boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
+			boolean shouldSync = delta > HEAT_SYNC_MAX_DELTA;
 			shouldSync |= heatStorage.getCurrentHeat() == 0 && lastSyncHeat != 0;
 			shouldSync |= heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat() && lastSyncHeat != heatStorage.getMaximumHeat();
 
@@ -73,8 +89,18 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 	}
 
+	public HeatStorageComponent setMaxHeat(double heat) {
+		this.defaultCapacity = heat;
+		return this;
+	}
+
+	public HeatStorageComponent setMaxConductivity(double heat) {
+		this.defaultConductivity = heat;
+		return this;
+	}
+
 	/**
-	 * Gets the raw heat storage object.
+	 * Gets the raw heat storage object. This should 99% of the time NOT modified.
 	 * 
 	 * @return
 	 */
@@ -121,6 +147,39 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		return LazyOptional.empty();
+	}
+
+	public HeatStorageComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
+		upgradeInventory = inventory;
+		return this;
+	}
+
+	protected void checkUpgrades() {
+		// Do nothing if there is no upgrade inventory.
+		if (upgradeInventory == null) {
+			return;
+		}
+		// First, see if there is a heat upgrade.
+		UpgradeItemWrapper heatUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.HEAT);
+
+		// If there is, apply the combo heat upgrade, otherwise check if there is just a
+		// heat capacity upgrade, and then apply that.
+		if (!heatUpgrade.isEmpty()) {
+			heatCapacityUpgradeMultiplier = (1.0f + (heatUpgrade.getTier().heatCapacityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
+			heatConductivityMultiplier = (1.0f + (heatUpgrade.getTier().heatConductivityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
+		} else {
+			// check for a regular heat capacity upgrade.
+			UpgradeItemWrapper heatCapacityUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.HEAT_CAPACITY);
+			if (heatCapacityUpgrade.isEmpty()) {
+				heatCapacityUpgradeMultiplier = 1.0f;
+			} else {
+				heatCapacityUpgradeMultiplier = (1.0f + (heatCapacityUpgrade.getTier().heatCapacityUpgrade.get() * heatCapacityUpgrade.getUpgradeWeight()));
+			}
+		}
+
+		// Set the new values.
+		getStorage().setMaximumHeat(defaultCapacity * heatCapacityUpgradeMultiplier);
+		getStorage().setConductivity(defaultConductivity * heatConductivityMultiplier);
 	}
 
 	private class HeatComponentCapabilityAccess implements IHeatStorage {

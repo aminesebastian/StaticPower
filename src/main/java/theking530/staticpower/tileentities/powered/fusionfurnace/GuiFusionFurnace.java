@@ -26,7 +26,7 @@ public class GuiFusionFurnace extends StaticPowerTileEntityGui<ContainerFusionFu
 		registerWidget(new FusionProgressBar(79, 36).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine(new StringTextComponent("Combines basic items into their more complex constructions."));
+		infoTab.addLine("desc1", new StringTextComponent("Combines basic items into their more complex constructions."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));

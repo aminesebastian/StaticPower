@@ -164,7 +164,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	public CableRenderingState getRenderingState() {
-		return new CableRenderingState(ConnectionStates, getAttachmentModels(), Attachments, Covers, DisabledSides, getPos(), getWorld());
+		return new CableRenderingState(ConnectionStates, getAttachmentModels(), Attachments, Covers, DisabledSides, getPos());
 	}
 
 	public HashSet<ResourceLocation> getSupportedNetworkModuleTypes() {

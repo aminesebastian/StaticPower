@@ -69,7 +69,7 @@ public interface IHeatStorage {
 			TileEntity te = reader.getTileEntity(currentPos.offset(dir));
 			if (te != null && te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, dir.getOpposite()).isPresent()) {
 				te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, dir.getOpposite()).ifPresent(capability -> {
-					double cooled = capability.heat(getCurrentHeat() * getConductivity(), false);
+					double cooled = capability.heat(getCurrentHeat() * getConductivity() * capability.getConductivity(), false);
 					cool(cooled, false);
 				});
 			} else {

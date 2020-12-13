@@ -27,9 +27,9 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 		registerWidget(new GrinderProgressBar(79, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine(new StringTextComponent("Grinds items into their base components."));
+		infoTab.addLine("desc", new StringTextComponent("Grinds items into their base components."));
 		infoTab.addLineBreak();
-		infoTab.addKeyValueTwoLiner(new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"),
+		infoTab.addKeyValueTwoLiner("bonus", new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"),
 				TextFormatting.GREEN);
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
@@ -40,6 +40,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 
 	@Override
 	public void updateData() {
-		infoTab.updateLineByIndex(3, GuiTextUtilities.formatNumberAsString(100 * (getTileEntity().getBonusChance() - 1.0f)).appendString("%"));
+		infoTab.addKeyValueTwoLiner("bonus", new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"),
+				TextFormatting.GREEN);
 	}
 }

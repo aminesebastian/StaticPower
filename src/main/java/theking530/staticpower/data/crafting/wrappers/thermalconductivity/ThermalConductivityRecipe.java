@@ -1,8 +1,8 @@
 package theking530.staticpower.data.crafting.wrappers.thermalconductivity;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
@@ -11,18 +11,20 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	public static final IRecipeType<ThermalConductivityRecipe> RECIPE_TYPE = IRecipeType.register("thermal_conducitity");
 
-	private final Ingredient blocks;
+	private final ResourceLocation[] blocks;
 	private final FluidStack fluid;
 	private final float thermalConductivity;
+	private final float heatAmount;
 
-	public ThermalConductivityRecipe(ResourceLocation name, Ingredient blocks, FluidStack fluid, float thermalConductivity) {
+	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, FluidStack fluid, float thermalConductivity, float heatAmount) {
 		super(name);
 		this.blocks = blocks;
 		this.fluid = fluid;
 		this.thermalConductivity = thermalConductivity;
+		this.heatAmount = heatAmount;
 	}
 
-	public Ingredient getBlocks() {
+	public ResourceLocation[] getBlockTags() {
 		return blocks;
 	}
 
@@ -34,19 +36,29 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return thermalConductivity;
 	}
 
+	public float getHeatAmount() {
+		return heatAmount;
+	}
+
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
 		// Check for block match first.
-		if (blocks != Ingredient.EMPTY && matchParams.hasItems() && blocks.test(matchParams.getItems()[0])) {
-			return true;
-		}
-		// Then check for a fluid match.
-		if (!fluid.isEmpty() && matchParams.hasFluids() && fluid.isFluidEqual(matchParams.getFluids()[0])) {
-			return true;
+		if (blocks != null && blocks.length > 0 && matchParams.hasBlocks()) {
+			Block block = matchParams.getBlocks()[0].getBlock();
+			for (ResourceLocation blockTag : blocks) {
+				//System.out.println(blockTag + "    " + block.getRegistryName());
+				if (block.getRegistryName().equals(blockTag) || block.getTags().contains(blockTag)) {
+					return true;
+				}
+			}
 		}
 
-		// Handle the edge case for AIR.
-		if (blocks == Ingredient.EMPTY && fluid.isEmpty() && matchParams.hasItems() && matchParams.getItems()[0].isEmpty()) {
+		if (matchParams.hasBlocks()) {
+			//System.out.println(matchParams.getBlocks()[0].getBlock().getRegistryName());
+		}
+
+		// Then check for a fluid match.
+		if (!fluid.isEmpty() && matchParams.hasFluids() && fluid.isFluidEqual(matchParams.getFluids()[0])) {
 			return true;
 		}
 

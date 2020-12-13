@@ -21,13 +21,13 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {
-	public static final float HEAT_SYNC_MIN_DELTA = 10.0f;
 	public static final String HEAT_CAPACITY_DATA_TAG_KEY = "heat_capacity";
-	public static final String HEAT_RATE_DATA_TAG_KEY = "heat_transfer_rate";
+	public static final String HEAT_CONDUCTIVITY_TAG_KEY = "heat_transfer_rate";
 	public static final String HEAT_GENERATION_RATE = "heat_generation";
 	public static final String HEAT_GENERATION_POWER_USAGE = "heat_generation_power_cost";
 	private final double capacity;
@@ -59,7 +59,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		super.preProcessUpdate();
 		if (!getWorld().isRemote) {
 			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
-				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HEAT_SYNC_MIN_DELTA;
+				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
 				shouldUpdate |= network.getHeatStorage().getMaximumHeat() != clientSideHeatCapacity;
 				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentHeat() > 0;
 				shouldUpdate |= clientSideHeat > 0 && network.getHeatStorage().getCurrentHeat() == 0;
@@ -194,7 +194,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	protected ServerCable createCable() {
 		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
 			cable.setProperty(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
-			cable.setProperty(HEAT_RATE_DATA_TAG_KEY, transferRate);
+			cable.setProperty(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
 			cable.setProperty(HEAT_GENERATION_RATE, heatGeneration);
 			cable.setProperty(HEAT_GENERATION_POWER_USAGE, heatGenerationPowerUsage);
 		});

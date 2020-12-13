@@ -18,6 +18,7 @@ import net.minecraftforge.common.util.Constants;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
@@ -45,15 +46,11 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	private boolean shouldDrawRadiusPreview;
 	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
-	private int miningRadius;
-	private float heatGeneration;
 
 	public AbstractTileEntityMiner(TileEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator) {
 		super(allocator);
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
-		miningRadius = getBaseRadius();
-		heatGeneration = getHeatGeneration();
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -72,7 +69,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
 		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", 10000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", 1000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		heatStorage.getStorage().setCanHeat(false);
 	}
@@ -81,7 +78,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	public void process() {
 		// If there are no blocks, refresh them.
 		if (this.blocks.size() == 0) {
-			refreshBlocksInRange(miningRadius);
+			refreshBlocksInRange(getRadius());
 		}
 
 		if (!world.isRemote) {
@@ -99,7 +96,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 			if (processingComponent.isPerformingWork()) {
 				heatStorage.getStorage().setCanHeat(true);
-				heatStorage.getStorage().heat(heatGeneration, false);
+				heatStorage.getStorage().heat(getHeatGeneration(), false);
 				heatStorage.getStorage().setCanHeat(false);
 			}
 
@@ -111,13 +108,13 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		}
 	}
 
-	protected abstract int getProcessingTime();
+	public abstract int getProcessingTime();
 
-	protected abstract int getHeatGeneration();
+	public abstract int getHeatGeneration();
 
-	protected abstract int getBaseRadius();
+	public abstract int getRadius();
 
-	protected abstract int getPowerUsage();
+	public abstract int getPowerUsage();
 
 	public boolean isDoneMining() {
 		return currentBlockIndex == -1;
@@ -150,8 +147,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		if (getDrillBit().getDamage() >= getDrillBit().getMaxDamage()) {
 			return ProcessingCheckState.error("Drill bit needs repair!");
 		}
-		if (!heatStorage.getStorage().canFullyAbsorbHeat(heatGeneration)) {
-			return ProcessingCheckState.error("Not enough heat capacity.");
+		if (!heatStorage.getStorage().canFullyAbsorbHeat(getHeatGeneration())) {
+			return ProcessingCheckState.error("Not enough heat capacity (Requires " + GuiTextUtilities.formatHeatToString(getHeatGeneration()).getString() + ")");
 		}
 		return ProcessingCheckState.ok();
 	}
@@ -176,6 +173,16 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 				return ProcessingCheckState.ok();
 			}
 
+			// Done!
+			if (currentBlockIndex == -1) {
+				return ProcessingCheckState.error("Processing Complete!");
+			}
+
+			// We need to perform this here too, otherwise we'll skip a tick per generation.
+			heatStorage.getStorage().setCanHeat(true);
+			heatStorage.getStorage().heat(getHeatGeneration(), false);
+			heatStorage.getStorage().setCanHeat(false);
+
 			// Get the block to mine.
 			BlockPos minedPos = blocks.get(currentBlockIndex);
 			BlockState minedBlockState = world.getBlockState(minedPos);
@@ -195,6 +202,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 			// Play the sound.
 			world.playSound(null, getPos(), minedBlockState.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 0.2f, 0.75f);
+			world.playSound(null, getCurrentlyTargetedBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 0.2f, 0.75f);
 
 			// Damage the drill bit.
 			if (getDrillBit().attemptDamageItem(1, world.rand, null)) {
@@ -233,25 +241,21 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		return shouldDrawRadiusPreview;
 	}
 
-	public int getMiningRadius() {
-		return miningRadius;
-	}
-
-	public void setMiningRadius(int miningRadius) {
-		this.miningRadius = miningRadius;
-	}
-
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
 		if (shouldDraw) {
 			// If we were already drawing, remove and re-do it.
 			if (shouldDrawRadiusPreview) {
 				CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
 			}
+
+			// Get the radius.
+			int radius = getRadius();
+
 			// Set the scale equal to the range * 2 plus 1.
-			Vector3f scale = new Vector3f((miningRadius * 2) + 1, getPos().getY() - 0.98f, (miningRadius * 2) + 1);
+			Vector3f scale = new Vector3f((radius * 2) + 1, getPos().getY() - 0.98f, (radius * 2) + 1);
 			// Shift over so we center the range around the farmer.
 			Vector3f position = new Vector3f(getTileEntity().getPos().getX(), 1.0f, getTileEntity().getPos().getZ());
-			position.add(new Vector3f(-miningRadius, 0.0f, -miningRadius));
+			position.add(new Vector3f(-radius, 0.0f, -radius));
 
 			// Add the entry.
 			CustomRenderer.addCubeRenderer(getTileEntity(), "range", position, scale, new Color(1.0f, 0.1f, 0.2f, 0.25f));
@@ -306,6 +310,9 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	public BlockPos getCurrentlyTargetedBlockPos() {
+		if (currentBlockIndex == -1) {
+			return new BlockPos(0, 0, 0);
+		}
 		return blocks.size() > 0 ? blocks.get(currentBlockIndex) : new BlockPos(0, 0, 0);
 	}
 
@@ -313,14 +320,12 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		currentBlockIndex = nbt.getInt("current_index");
-		miningRadius = nbt.getInt("radius");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("current_index", currentBlockIndex);
-		nbt.putInt("radius", miningRadius);
 
 		return nbt;
 	}

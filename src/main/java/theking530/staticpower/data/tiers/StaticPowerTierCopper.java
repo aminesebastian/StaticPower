@@ -23,12 +23,12 @@ public class StaticPowerTierCopper extends StaticPowerTier {
 
 	@Override
 	protected double getHeatSinkCapacity() {
-		return 128;
+		return 128.0;
 	}
 
 	@Override
 	protected double getHeatSinkConductivity() {
-		return 4.0;
+		return 0.75;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class StaticPowerTierCopper extends StaticPowerTier {
 
 	@Override
 	protected double getHeatCableConductivity() {
-		return 0.75;
+		return 0.15;
 	}
 
 	@Override

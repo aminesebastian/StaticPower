@@ -58,12 +58,13 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	public void updateData() {
 		// Update the info tab.
 		infoTab.clear();
-		infoTab.addLine(new StringTextComponent("Stores a large amount of a single item."));
+		infoTab.addLine("desc", new StringTextComponent("Stores a large amount of a single item."));
 		infoTab.addLineBreak();
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(inventory.getItemCapacity());
-		infoTab.addKeyValueLine(new StringTextComponent("Max Items"), new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))), TextFormatting.RED);
+		infoTab.addKeyValueLine("max", new StringTextComponent("Max Items"),
+				new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))), TextFormatting.RED);
 	}
 
 	@Override

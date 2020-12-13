@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:thermal_conducitity",
-	"block": {
-		"item": "minecraft:air"
-	},
-	"conductivity": "0.01"
+	"blocks": [
+		"minecraft:air"
+	],
+	"conductivity": "0.25"
 }
