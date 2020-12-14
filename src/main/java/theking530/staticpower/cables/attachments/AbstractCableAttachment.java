@@ -43,7 +43,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(world, pos);
 			if (cableComponent != null) {
 				AbstractCableBlock block = (AbstractCableBlock) world.getBlockState(pos).getBlock();
-				CableBoundsHoverResult hoverResult = block.CableBounds.getHoveredAttachmentOrCover(pos, player);
+				CableBoundsHoverResult hoverResult = block.cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 				if (!hoverResult.isEmpty() && hoverResult.type == CableBoundsHoverType.HELD_ATTACHMENT && cableComponent.attachAttachment(item, hoverResult.direction)) {
 					if (!world.isRemote) {
 						cableComponent.setSideDisabledState(hoverResult.direction, false);

@@ -30,5 +30,6 @@ public class BasePowerUpgrade extends BaseUpgrade {
 
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerUpgrade * 100) + "%" + TextFormatting.GREEN + " RF Capacity"));
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerRateUpgrade * 100) + "%" + TextFormatting.GREEN + " RF Per Tick"));
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

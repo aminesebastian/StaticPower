@@ -116,6 +116,10 @@ public class StaticPowerConfig {
 	 *
 	 */
 	public static class StaticPowerServerConfig {
+		public ConfigValue<Integer> smeepSpawnWeight;
+		public ConfigValue<Integer> smeepMinCount;
+		public ConfigValue<Integer> smeepMaxCount;
+
 		public ConfigValue<Integer> minRubberWoodBarkPerStrip;
 		public ConfigValue<Integer> maxRubberWoodBarkPerStrip;
 
@@ -150,6 +154,19 @@ public class StaticPowerConfig {
 		public ConfigValue<Integer> electricMinerProcessingTime;
 
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
+			builder.push("Mobs");
+			{
+				builder.push("Smeep");
+				smeepSpawnWeight = builder
+						.comment("Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")
+						.translation(StaticPower.MOD_ID + ".config." + "smeepSpawnWeight").define("SmeepSpawnWeight", 4);
+				smeepMinCount = builder.comment("Controls how many slots the regulator has.").translation(StaticPower.MOD_ID + ".config." + "SmeepMinCount").define("smeepMinCount", 2);
+				smeepMaxCount = builder.comment("Controls how many items can be transfered for each item type during a regulation.")
+						.translation(StaticPower.MOD_ID + ".config." + "smeepMaxCount").define("SmeepMaxCount", 5);
+				builder.pop();
+			}
+			builder.pop();
+
 			builder.push("Tools");
 			{
 				builder.push("Axe");

@@ -14,7 +14,6 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
-import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.nonpowered.miner.AbstractTileEntityMiner;
 
@@ -23,7 +22,6 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	public static final TileEntityTypeAllocator<TileEntityElectricMiner> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityElectricMiner(), ModBlocks.ElectricMiner);
 
 	public final EnergyStorageComponent energyStorage;
-	public final UpgradeInventoryComponent upgradesInventory;
 	public final BatteryInventoryComponent batteryInventory;
 
 	public TileEntityElectricMiner() {
@@ -31,15 +29,9 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.ENERGIZED);
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", tierObject.defaultMachinePowerCapacity.get(), tierObject.defaultMachinePowerInput.get(),
 				tierObject.defaultMachinePowerOutput.get()));
-
-		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
-		// Add the upgrade inventory to the heat component.
-		heatStorage.setUpgradeInventory(upgradesInventory);
-
 		// Set the processing parameters.
-		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 
 		// Set the energy storage upgrade inventory.
@@ -49,7 +41,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	@Override
 	public void process() {
 		super.process();
-
+		
 		// Render the particle effects.
 		if (processingComponent.getIsOnBlockState()) {
 			float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
@@ -85,7 +77,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public int getPowerUsage() {
+	public int getFuelUsage() {
 		return StaticPowerConfig.SERVER.electricMinerPowerUsage.get();
 	}
 }

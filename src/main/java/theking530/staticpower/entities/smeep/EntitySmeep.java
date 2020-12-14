@@ -1,4 +1,4 @@
-package theking530.staticpower.entities;
+package theking530.staticpower.entities.smeep;
 
 import javax.annotation.Nullable;
 
@@ -33,7 +33,7 @@ public class EntitySmeep extends SheepEntity {
 
 	@Override
 	public EntitySmeep func_241840_a(ServerWorld world, AgeableEntity parent) {
-		EntitySmeep child = ModEntities.SMEEP.create(world);
+		EntitySmeep child = ModEntities.Smeep.getType().create(world);
 		return child;
 	}
 
@@ -64,6 +64,7 @@ public class EntitySmeep extends SheepEntity {
 		}
 		return java.util.Collections.emptyList();
 	}
+
 	@Override
 	public boolean isBreedingItem(ItemStack stack) {
 		return stack.getItem() == ModItems.StaticCrop;

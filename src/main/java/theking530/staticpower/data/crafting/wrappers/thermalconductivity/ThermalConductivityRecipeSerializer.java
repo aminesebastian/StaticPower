@@ -3,6 +3,7 @@ package theking530.staticpower.data.crafting.wrappers.thermalconductivity;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
+import net.minecraft.block.Block;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.ResourceLocation;
@@ -48,9 +49,13 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 		if (json.has("heating_amount")) {
 			heatAmount = json.get("heating_amount").getAsFloat();
 		}
+		
+		Block overheatedBlock;
+		FluidStack overheatedFluid;
+		float overheatTemperature;
 
 		// Create the recipe.
-		return new ThermalConductivityRecipe(recipeId, blocks, fluid, thermalConductivity, heatAmount);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluid, overheatedBlock, overheatedFluid, overheatTemperature, thermalConductivity, heatAmount);
 	}
 
 	@Override

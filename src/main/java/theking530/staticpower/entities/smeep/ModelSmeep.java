@@ -1,4 +1,4 @@
-package theking530.staticpower.entities;
+package theking530.staticpower.entities.smeep;
 
 import net.minecraft.client.renderer.entity.model.QuadrupedModel;
 import net.minecraft.client.renderer.model.ModelRenderer;
@@ -6,10 +6,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
-public class SmeepModel extends QuadrupedModel<EntitySmeep> {
+public class ModelSmeep extends QuadrupedModel<EntitySmeep> {
 	private float headRotationAngleX;
 
-	public SmeepModel() {
+	public ModelSmeep() {
 		super(12, 0.0F, false, 8.0F, 4.0F, 2.0F, 2.0F, 24);
 		this.headModel = new ModelRenderer(this, 0, 0);
 		this.headModel.addBox(-3.0F, -4.0F, -6.0F, 6.0F, 6.0F, 8.0F, 0.0F);

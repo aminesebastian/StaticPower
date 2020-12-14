@@ -3,8 +3,8 @@ package theking530.staticpower;
 import java.util.HashSet;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
-import net.minecraft.entity.ai.attributes.GlobalEntityTypeAttributes;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.ContainerType;
@@ -15,8 +15,7 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
-import theking530.staticpower.entities.EntitySmeep;
-import theking530.staticpower.init.ModEntities;
+import theking530.staticpower.entities.AbstractSpawnableEntityType;
 import theking530.staticpower.world.trees.AbstractStaticPowerTree;
 
 /**
@@ -32,7 +31,7 @@ public class StaticPowerRegistry {
 	public static final HashSet<Block> BLOCKS = new HashSet<>();
 	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
 	public static final HashSet<IRecipeSerializer> RECIPE_SERIALIZERS = new HashSet<IRecipeSerializer>();
-	public static final HashSet<EntityType> ENTITES = new HashSet<EntityType>();
+	public static final HashSet<AbstractSpawnableEntityType> ENTITES = new HashSet<AbstractSpawnableEntityType>();
 	public static final HashSet<AbstractStaticPowerTree> TREES = new HashSet<AbstractStaticPowerTree>();
 
 	/**
@@ -52,7 +51,7 @@ public class StaticPowerRegistry {
 	 * @param entity The entity to pre-register.
 	 * @return The entity that was passed.
 	 */
-	public static EntityType preRegisterEntity(EntityType entity) {
+	public static <T extends Entity> AbstractSpawnableEntityType<T> preRegisterEntity(AbstractSpawnableEntityType<T> entity) {
 		ENTITES.add(entity);
 		return entity;
 	}
@@ -127,11 +126,10 @@ public class StaticPowerRegistry {
 	}
 
 	public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		for (EntityType type : ENTITES) {
-			event.getRegistry().register(type);
+		for (AbstractSpawnableEntityType<?> type : ENTITES) {
+			event.getRegistry().register(type.getType());
+			type.registerAttributes(event);
 		}
-
-		GlobalEntityTypeAttributes.put(ModEntities.SMEEP, EntitySmeep.getAttributes().create());
 	}
 
 	public static void onRegisterRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {

@@ -46,6 +46,9 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	@Override
 	public void process() {
 		super.process();
+		
+		// Update the processing cost.
+		fuelComponent.setTimeUnitsPerTick((int) processingComponent.getCalculatedPowerUsageMultipler());
 
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
@@ -73,7 +76,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	public ProcessingCheckState moveFuel() {
 		int burnTime = getFuelBurnTime(fuelInventory.getStackInSlot(0));
 		fuelComponent.setMaxProcessingTime(burnTime);
-		fuelComponent.setTimeUnitsPerTick(getPowerUsage());
+		fuelComponent.setTimeUnitsPerTick(getFuelUsage());
 		transferItemInternally(fuelInventory, 0, fuelBurningInventory, 0);
 		return ProcessingCheckState.ok();
 	}
@@ -128,7 +131,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public int getHeatGeneration() {
-		return StaticPowerConfig.SERVER.minerHeatGeneration.get();
+		return (int) (StaticPowerConfig.SERVER.minerHeatGeneration.get() * processingComponent.getCalculatedPowerUsageMultipler());
 	}
 
 	@Override
@@ -137,8 +140,8 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public int getPowerUsage() {
-		return StaticPowerConfig.SERVER.minerFuelUsage.get();
+	public int getFuelUsage() {
+		return (int) (StaticPowerConfig.SERVER.minerFuelUsage.get() * processingComponent.getCalculatedPowerUsageMultipler());
 	}
 
 	public int getFuelBurnTime(ItemStack input) {

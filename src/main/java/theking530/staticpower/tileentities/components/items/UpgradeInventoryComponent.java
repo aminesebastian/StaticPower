@@ -41,7 +41,7 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 				if (maxTier == null || upgradeItem.getTier().upgradeOrdinal.get() > maxTier.upgradeOrdinal.get()) {
 					maxTier = upgradeItem.getTier();
 					maxTierUpgradeStack = upgradeStack;
-					count += upgradeStack.getCount();
+					count = upgradeStack.getCount();
 				} else if (ItemUtilities.areItemStacksStackable(maxTierUpgradeStack, upgradeStack)) {
 					count += upgradeStack.getCount();
 				}

@@ -9,6 +9,8 @@ public class ModFoods {
 	public static final Food STATIC_PIE = (new Food.Builder()).hunger(8).saturation(0.6F).build();
 	public static final Food ENERGIZED_PIE = (new Food.Builder()).hunger(16).saturation(0.9F).build();
 	public static final Food LUMUM_PIE = (new Food.Builder()).hunger(32).saturation(1.2F).build();
-	public static final Food SMUTTON = (new Food.Builder()).hunger(5).saturation(0.4F).meat().build();
+	public static final Food SMUTTON = (new Food.Builder()).hunger(4).saturation(0.4F).meat().build();
 	public static final Food COOKED_SMUTTON = (new Food.Builder()).hunger(10).saturation(1.0F).meat().build();
+	public static final Food EEEF = (new Food.Builder()).hunger(5).saturation(0.45F).meat().build();
+	public static final Food COOKED_EEEF = (new Food.Builder()).hunger(12).saturation(1.2F).meat().build();
 }

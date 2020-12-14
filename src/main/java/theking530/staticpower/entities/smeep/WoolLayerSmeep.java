@@ -1,4 +1,4 @@
-package theking530.staticpower.entities;
+package theking530.staticpower.entities.smeep;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -13,11 +13,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPower;
 
 @OnlyIn(Dist.CLIENT)
-public class SmeepWoolLayer extends LayerRenderer<EntitySmeep, SmeepModel> {
+public class WoolLayerSmeep extends LayerRenderer<EntitySmeep, ModelSmeep> {
 	private static final ResourceLocation TEXTURE = new ResourceLocation(StaticPower.MOD_ID, "textures/entity/smeep/smeep_fur.png");
 	private final SmeepWoolModel smeepModel = new SmeepWoolModel();
 
-	public SmeepWoolLayer(IEntityRenderer<EntitySmeep, SmeepModel> rendererIn) {
+	public WoolLayerSmeep(IEntityRenderer<EntitySmeep, ModelSmeep> rendererIn) {
 		super(rendererIn);
 	}
 

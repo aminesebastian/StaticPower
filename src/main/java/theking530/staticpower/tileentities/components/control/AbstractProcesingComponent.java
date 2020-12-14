@@ -470,8 +470,8 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			processingSpeedUpgradeMultiplier = 1.0f;
 			powerUsageIncreaseMultiplier = 1.0f;
 		} else {
-			processingSpeedUpgradeMultiplier = (float) ((1.0f + speedUpgrade.getTier().processingSpeedUpgrade.get()) * speedUpgrade.getUpgradeWeight());
-			powerUsageIncreaseMultiplier = (float) ((1.0f + speedUpgrade.getTier().processingSpeedPowerCost.get()) * speedUpgrade.getUpgradeWeight());
+			processingSpeedUpgradeMultiplier = (float) (1.0f + (speedUpgrade.getTier().processingSpeedUpgrade.get()) * speedUpgrade.getUpgradeWeight());
+			powerUsageIncreaseMultiplier = (float) (1.0f + (speedUpgrade.getTier().processingSpeedPowerCost.get()) * speedUpgrade.getUpgradeWeight());
 		}
 
 		// Set the processing time.

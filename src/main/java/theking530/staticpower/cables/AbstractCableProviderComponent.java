@@ -41,15 +41,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * Cache for the connection states. This is updated every time a new baked model
 	 * is requested AND also, on first placement.
 	 */
-	protected final CableConnectionState[] ConnectionStates;
+	protected final CableConnectionState[] connectionStates;
 	/** If false, the connection states will be reinitialized. */
 	protected boolean connectionStatesInitialized;
 	/** Container for all the attachments on this cable. */
-	protected final ItemStack[] Attachments;
+	protected final ItemStack[] attachments;
 	/** Container for all the covers on this cable. */
-	protected final ItemStack[] Covers;
+	protected final ItemStack[] covers;
 	/** List of valid attachment classes. */
-	private final HashSet<Class<? extends AbstractCableAttachment>> ValidAttachments;
+	private final HashSet<Class<? extends AbstractCableAttachment>> validAttachments;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
@@ -61,22 +61,22 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		}
 
 		// Initialize the valid attachments set.
-		ValidAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
+		validAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
 
 		// Initialize the disabled sides, connection states, and attachments arrays.
 		DisabledSides = new boolean[] { false, false, false, false, false, false };
-		ConnectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
+		connectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
 				CableConnectionState.NONE };
-		Attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
-		Covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
+		attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
+		covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		connectionStatesInitialized = false;
 	}
 
 	public void preProcessUpdate() {
 		if (getWorld().isRemote || (!getWorld().isRemote && getNetwork() != null)) {
 			for (Direction dir : Direction.values()) {
-				if (!Attachments[dir.ordinal()].isEmpty()) {
-					ItemStack attachment = Attachments[dir.ordinal()];
+				if (!attachments[dir.ordinal()].isEmpty()) {
+					ItemStack attachment = attachments[dir.ordinal()];
 					((AbstractCableAttachment) attachment.getItem()).attachmentTick(attachment, dir, this);
 				}
 			}
@@ -142,7 +142,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public CableConnectionState getConnectionState(Direction side) {
-		return ConnectionStates[side.ordinal()];
+		return connectionStates[side.ordinal()];
 	}
 
 	/**
@@ -151,7 +151,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public CableConnectionState[] getConnectionStates() {
-		return ConnectionStates;
+		return connectionStates;
 	}
 
 	/**
@@ -164,7 +164,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	public CableRenderingState getRenderingState() {
-		return new CableRenderingState(ConnectionStates, getAttachmentModels(), Attachments, Covers, DisabledSides, getPos());
+		return new CableRenderingState(connectionStates, getAttachmentModels(), attachments, covers, DisabledSides, getPos());
 	}
 
 	public HashSet<ResourceLocation> getSupportedNetworkModuleTypes() {
@@ -220,7 +220,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @param attachmentClass
 	 */
 	protected void addValidAttachmentClass(Class<? extends AbstractCableAttachment> attachmentClass) {
-		ValidAttachments.add(attachmentClass);
+		validAttachments.add(attachmentClass);
 	}
 
 	/**
@@ -238,13 +238,13 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		}
 
 		// If there is no attachment on the provided side, add it.
-		if (Attachments[side.ordinal()].isEmpty()) {
-			Attachments[side.ordinal()] = attachment.copy();
-			Attachments[side.ordinal()].setCount(1);
+		if (attachments[side.ordinal()].isEmpty()) {
+			attachments[side.ordinal()] = attachment.copy();
+			attachments[side.ordinal()].setCount(1);
 
 			// Raise the on added method on the attachment.
-			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) Attachments[side.ordinal()].getItem();
-			attachmentItem.onAddedToCable(Attachments[side.ordinal()], side, this);
+			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachments[side.ordinal()].getItem();
+			attachmentItem.onAddedToCable(attachments[side.ordinal()], side, this);
 
 			getTileEntity().markTileEntityForSynchronization();
 			return true;
@@ -263,14 +263,14 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// Ensure we have an attachment on the provided side.
 		if (hasAttachment(side)) {
 			// Get the attachment for the side.
-			ItemStack output = Attachments[side.ordinal()];
+			ItemStack output = attachments[side.ordinal()];
 
 			// Raise the on removed method on the attachment.
 			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) output.getItem();
 			attachmentItem.onRemovedFromCable(output, side, this);
 
 			// Remove the attachment and return it.
-			Attachments[side.ordinal()] = ItemStack.EMPTY;
+			attachments[side.ordinal()] = ItemStack.EMPTY;
 			getTileEntity().markTileEntityForSynchronization();
 			return output;
 		}
@@ -287,9 +287,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public boolean attachCover(ItemStack attachment, Direction side) {
 		// If there is no cover on the provided side, add it.
-		if (Covers[side.ordinal()].isEmpty()) {
-			Covers[side.ordinal()] = attachment.copy();
-			Covers[side.ordinal()].setCount(1);
+		if (covers[side.ordinal()].isEmpty()) {
+			covers[side.ordinal()] = attachment.copy();
+			covers[side.ordinal()].setCount(1);
 
 			getTileEntity().markTileEntityForSynchronization();
 			return true;
@@ -308,10 +308,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// Ensure we have an attachment on the provided side.
 		if (hasCover(side)) {
 			// Get the attachment for the side.
-			ItemStack output = Covers[side.ordinal()];
+			ItemStack output = covers[side.ordinal()];
 
 			// Remove the attachment and return it.
-			Covers[side.ordinal()] = ItemStack.EMPTY;
+			covers[side.ordinal()] = ItemStack.EMPTY;
 			getTileEntity().markTileEntityForSynchronization();
 			return output;
 		}
@@ -325,7 +325,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return Returns true if a attachment is applied on the provided side.
 	 */
 	public boolean hasAttachment(Direction side) {
-		return !Attachments[side.ordinal()].isEmpty();
+		return !attachments[side.ordinal()].isEmpty();
 	}
 
 	/**
@@ -336,7 +336,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public boolean hasAttachmentOfType(Class<? extends AbstractCableAttachment> attachmentClass) {
 		for (Direction dir : Direction.values()) {
-			if (attachmentClass.isInstance(Attachments[dir.ordinal()].getItem())) {
+			if (attachmentClass.isInstance(attachments[dir.ordinal()].getItem())) {
 				return true;
 			}
 		}
@@ -352,8 +352,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	public List<ItemStack> getAttachmentsOfType(Class<? extends AbstractCableAttachment> attachmentClass) {
 		List<ItemStack> outputs = new ArrayList<ItemStack>();
 		for (Direction dir : Direction.values()) {
-			if (attachmentClass.isInstance(Attachments[dir.ordinal()].getItem())) {
-				outputs.add(Attachments[dir.ordinal()]);
+			if (attachmentClass.isInstance(attachments[dir.ordinal()].getItem())) {
+				outputs.add(attachments[dir.ordinal()]);
 			}
 		}
 		return outputs;
@@ -366,7 +366,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return Returns true if a cover is applied on the provided side.
 	 */
 	public boolean hasCover(Direction side) {
-		return !Covers[side.ordinal()].isEmpty();
+		return !covers[side.ordinal()].isEmpty();
 	}
 
 	/**
@@ -377,7 +377,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public ItemStack getCover(Direction side) {
-		return Covers[side.ordinal()];
+		return covers[side.ordinal()];
 	}
 
 	/**
@@ -388,7 +388,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public ItemStack getAttachment(Direction side) {
-		return Attachments[side.ordinal()];
+		return attachments[side.ordinal()];
 	}
 
 	/**
@@ -455,22 +455,22 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		}
 
 		// Serialize the attachments.
-		for (int i = 0; i < Attachments.length; i++) {
+		for (int i = 0; i < attachments.length; i++) {
 			CompoundNBT itemNbt = new CompoundNBT();
-			Attachments[i].write(itemNbt);
+			attachments[i].write(itemNbt);
 			nbt.put("attachment" + i, itemNbt);
 		}
 
 		// Serialize the covers.
-		for (int i = 0; i < Covers.length; i++) {
+		for (int i = 0; i < covers.length; i++) {
 			CompoundNBT itemNbt = new CompoundNBT();
-			Covers[i].write(itemNbt);
+			covers[i].write(itemNbt);
 			nbt.put("cover" + i, itemNbt);
 		}
 
 		// Serialize the connection states.
-		for (int i = 0; i < ConnectionStates.length; i++) {
-			nbt.putInt("connection_state" + i, ConnectionStates[i].ordinal());
+		for (int i = 0; i < connectionStates.length; i++) {
+			nbt.putInt("connection_state" + i, connectionStates[i].ordinal());
 		}
 		return nbt;
 	}
@@ -485,20 +485,20 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		}
 
 		// Deserialize the attachments.
-		for (int i = 0; i < Attachments.length; i++) {
+		for (int i = 0; i < attachments.length; i++) {
 			CompoundNBT itemNbt = nbt.getCompound("attachment" + i);
-			Attachments[i] = ItemStack.read(itemNbt);
+			attachments[i] = ItemStack.read(itemNbt);
 		}
 
 		// Deserialize the covers.
-		for (int i = 0; i < Covers.length; i++) {
+		for (int i = 0; i < covers.length; i++) {
 			CompoundNBT itemNbt = nbt.getCompound("cover" + i);
-			Covers[i] = ItemStack.read(itemNbt);
+			covers[i] = ItemStack.read(itemNbt);
 		}
 
 		// Deserialize the connection states.
-		for (int i = 0; i < ConnectionStates.length; i++) {
-			ConnectionStates[i] = CableConnectionState.values()[nbt.getInt("connection_state" + i)];
+		for (int i = 0; i < connectionStates.length; i++) {
+			connectionStates[i] = CableConnectionState.values()[nbt.getInt("connection_state" + i)];
 		}
 
 		// If on the client, update the blocks.
@@ -510,13 +510,13 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	protected void scanForAttachments() {
 		// Do this synchronized (may cause a hicup, will have to watch and see. May need
 		// to rethink this if that ends up being the case).
-		synchronized (ConnectionStates) {
+		synchronized (connectionStates) {
 			for (Direction dir : Direction.values()) {
 				if (!isSideDisabled(dir)) {
 					BlockPos offsetPos = getPos().offset(dir);
-					ConnectionStates[dir.ordinal()] = cacheConnectionState(dir, getWorld().getTileEntity(offsetPos), offsetPos);
+					connectionStates[dir.ordinal()] = cacheConnectionState(dir, getWorld().getTileEntity(offsetPos), offsetPos);
 				} else {
-					ConnectionStates[dir.ordinal()] = CableConnectionState.NONE;
+					connectionStates[dir.ordinal()] = CableConnectionState.NONE;
 				}
 			}
 		}
@@ -535,8 +535,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	protected ResourceLocation getAttachmentModelForSide(Direction side) {
-		if (!Attachments[side.ordinal()].isEmpty()) {
-			ItemStack attachmentItemStack = Attachments[side.ordinal()];
+		if (!attachments[side.ordinal()].isEmpty()) {
+			ItemStack attachmentItemStack = attachments[side.ordinal()];
 			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachmentItemStack.getItem();
 			return attachmentItem.getModel(attachmentItemStack, this);
 		}
@@ -547,7 +547,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		if (attachment.isEmpty()) {
 			return false;
 		}
-		if (ValidAttachments.contains(attachment.getItem().getClass())) {
+		if (validAttachments.contains(attachment.getItem().getClass())) {
 			return true;
 		}
 		return false;

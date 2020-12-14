@@ -22,6 +22,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineHeatTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDTime;
@@ -53,6 +54,7 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
@@ -102,6 +104,9 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 
 	@Override
 	public void updateData() {
+		infoTab.addKeyValueTwoLiner("fuel", new StringTextComponent("Fuel Usage"),
+				new StringTextComponent(String.valueOf(getTileEntity().getFuelUsage())).appendString(" ").append(new TranslationTextComponent("gui.staticpower.fuel_usage")), TextFormatting.GOLD);
+
 		infoTab.addKeyValueTwoLiner("radius", new StringTextComponent("Mining Radius"),
 				new StringTextComponent(String.valueOf(getTileEntity().getRadius())).appendString(" ").append(new TranslationTextComponent("gui.staticpower.blocks")), TextFormatting.BLUE);
 

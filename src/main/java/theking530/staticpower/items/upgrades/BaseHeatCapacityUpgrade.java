@@ -26,5 +26,6 @@ public class BaseHeatCapacityUpgrade extends BaseUpgrade {
 		capacityUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(capacityUpgrade * 100) + "%" + TextFormatting.GREEN + " Heat Capacity"));
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

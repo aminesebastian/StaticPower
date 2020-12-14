@@ -42,7 +42,6 @@ import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
@@ -53,8 +52,7 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
-import theking530.staticpower.entities.SmeepRenderer;
-import theking530.staticpower.init.ModEntities;
+import theking530.staticpower.entities.AbstractSpawnableEntityType;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.utilities.RaytracingUtilities;
@@ -96,7 +94,9 @@ public class StaticPowerClientEventHandler {
 		StaticCoreRegistry.registerTileEntitySpecialRenderers();
 
 		// Regsiter entity renderers.
-		RenderingRegistry.registerEntityRenderingHandler(ModEntities.SMEEP, SmeepRenderer::new);
+		for (AbstractSpawnableEntityType<?> type : StaticPowerRegistry.ENTITES) {
+			type.registerRenderers(event);
+		}
 
 		// Log the completion.
 		LOGGER.info("Static Power Client Setup Completed!");

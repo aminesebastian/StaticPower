@@ -42,7 +42,7 @@ public class CableCover extends Item implements ICustomModelSupplier {
 			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(context.getWorld(), context.getPos());
 			if (cableComponent != null) {
 				AbstractCableBlock block = (AbstractCableBlock) context.getWorld().getBlockState(context.getPos()).getBlock();
-				Direction hoveredDirection = block.CableBounds.getHoveredAttachmentOrCover(context.getPos(), context.getPlayer()).direction;
+				Direction hoveredDirection = block.cableBoundsCache.getHoveredAttachmentOrCover(context.getPos(), context.getPlayer()).direction;
 				if (hoveredDirection != null && cableComponent.attachCover(context.getItem(), hoveredDirection)) {
 					if (!context.getWorld().isRemote) {
 						context.getItem().setCount(context.getItem().getCount() - 1);

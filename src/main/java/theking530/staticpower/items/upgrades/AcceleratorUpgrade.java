@@ -28,5 +28,6 @@ public class AcceleratorUpgrade extends BaseUpgrade {
 		double percentIncrease = StaticPowerConfig.SERVER.acceleratorCardImprovment.get();
 		percentIncrease *= (float) stack.getCount() / stack.getMaxStackSize();
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(percentIncrease * 100) + "%" + TextFormatting.GREEN + " Transfer Speed"));
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

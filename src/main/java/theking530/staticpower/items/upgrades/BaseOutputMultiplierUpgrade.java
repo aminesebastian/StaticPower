@@ -26,5 +26,6 @@ public class BaseOutputMultiplierUpgrade extends BaseUpgrade {
 				TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(getTier().outputMultiplierUpgrade.get() * 100) + "%" + TextFormatting.GREEN + " Output Chance"));
 		tooltip.add(new StringTextComponent(
 				TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#.#").format(getTier().outputMultiplierPowerCostUpgrade.get() * 100) + "%" + TextFormatting.RED + " Power Usage"));
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

@@ -62,6 +62,9 @@ public class ModItems {
 	public static StaticPowerItem LumumPie;
 	public static StaticPowerFood RawSmutton;
 	public static StaticPowerFood CookedSmutton;
+	public static StaticPowerFood RawEeef;
+	public static StaticPowerFood CookedEeef;
+	public static StaticPowerItem Eather;
 
 	public static StaticPowerItem MoldBlank;
 	public static StaticPowerItem MoldPlate;
@@ -482,6 +485,9 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumPie = new StaticPowerFood("pie_lumum", ModFoods.LUMUM_PIE));
 		StaticPowerRegistry.preRegisterItem(RawSmutton = new StaticPowerFood("smutton_raw", ModFoods.SMUTTON));
 		StaticPowerRegistry.preRegisterItem(CookedSmutton = new StaticPowerFood("smutton_cooked", ModFoods.COOKED_SMUTTON));
+		StaticPowerRegistry.preRegisterItem(RawEeef = new StaticPowerFood("eeef_raw", ModFoods.EEEF));
+		StaticPowerRegistry.preRegisterItem(CookedEeef = new StaticPowerFood("eeef_cooked", ModFoods.COOKED_EEEF));
+		StaticPowerRegistry.preRegisterItem(Eather = new StaticPowerItem("eather"));
 
 		// Molds
 		StaticPowerRegistry.preRegisterItem(MoldBlank = new StaticPowerItem("mold_blank"));

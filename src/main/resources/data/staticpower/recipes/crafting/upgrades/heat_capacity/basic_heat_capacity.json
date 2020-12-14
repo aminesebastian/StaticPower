@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" g ",
+		" r ",
+		" p "
+	],
+	"key": {
+		"g": {
+			"tag": "forge:plates/lead"
+		},
+		"r": {
+			"item": "staticpower:heat_sink_aluminium"
+		},
+		"p": {
+			"item": "staticpower:upgrade_plate_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:upgrade_heat_capacity_basic"
+	}
+}

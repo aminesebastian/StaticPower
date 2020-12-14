@@ -39,23 +39,23 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableBlock extends StaticPowerBlock implements ICustomModelSupplier {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
-	public final CableBoundsCache CableBounds;
+	public final CableBoundsCache cableBoundsCache;
 
 	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator) {
 		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid().harvestTool(ToolType.PICKAXE).setRequiresTool());
-		CableBounds = cableBoundsGenerator;
+		cableBoundsCache = cableBoundsGenerator;
 	}
 
 	@Deprecated
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return CableBounds.getShape(state, worldIn, pos, context);
+		return cableBoundsCache.getShape(state, worldIn, pos, context);
 	}
 
 	@Deprecated
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return CableBounds.getShape(state, worldIn, pos, context);
+		return cableBoundsCache.getShape(state, worldIn, pos, context);
 	}
 
 	@Override
@@ -78,9 +78,9 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		}
 
 		// Get the attachment side that is hovered (if any).
-		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
+		CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 		if (!hoverResult.isEmpty()) {
-			Direction hoveredDirection = CableBounds.getHoveredAttachmentOrCover(pos, player).direction;
+			Direction hoveredDirection = cableBoundsCache.getHoveredAttachmentOrCover(pos, player).direction;
 
 			if (hoveredDirection != null && component.hasAttachment(hoveredDirection)) {
 				// Get the attachment on the hovered side.
@@ -137,11 +137,11 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 			}
 
 			// Check for the hover result.
-			CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
+			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 
 			// If non null, check for any attached cover or attachment.
 			if (!hoverResult.isEmpty()) {
-				Direction hoveredDirection = CableBounds.getHoveredAttachmentOrCover(pos, player).direction;
+				Direction hoveredDirection = cableBoundsCache.getHoveredAttachmentOrCover(pos, player).direction;
 
 				// Remove the attachment on that side if there is one.
 				if (hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
@@ -183,7 +183,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 	@Override
 	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
 		// Get the attachment side we're hovering.
-		CableBoundsHoverResult hoverResult = CableBounds.getHoveredAttachmentOrCover(pos, player);
+		CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 
 		if (!hoverResult.isEmpty()) {
 			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);

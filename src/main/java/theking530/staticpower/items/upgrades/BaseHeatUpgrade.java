@@ -31,5 +31,6 @@ public class BaseHeatUpgrade extends BaseUpgrade {
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(capacityUpgrade * 100) + "%" + TextFormatting.GREEN + " Heat Capacity"));
 		tooltip.add(
 				new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(conductivityUpgrade * 100) + "%" + TextFormatting.GREEN + " Heat Conductivity"));
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:eeef_raw"
+  },
+  "result": "staticpower:eeef_cooked",
+  "experience": 0.5,
+  "cookingtime": 200
+}

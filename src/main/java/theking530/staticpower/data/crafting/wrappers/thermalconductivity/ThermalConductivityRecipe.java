@@ -13,15 +13,22 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 	private final ResourceLocation[] blocks;
 	private final FluidStack fluid;
+	private final Block overheatedBlock;
+	private final FluidStack overheatedFluid;
+	private final float overheatedTemperature;
 	private final float thermalConductivity;
 	private final float heatAmount;
 
-	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, FluidStack fluid, float thermalConductivity, float heatAmount) {
+	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, FluidStack fluid, Block overheatedBlock, FluidStack overheatedFluid, float overheatedTemperature,
+			float thermalConductivity, float heatAmount) {
 		super(name);
 		this.blocks = blocks;
 		this.fluid = fluid;
 		this.thermalConductivity = thermalConductivity;
 		this.heatAmount = heatAmount;
+		this.overheatedBlock = overheatedBlock;
+		this.overheatedFluid = overheatedFluid;
+		this.overheatedTemperature = overheatedTemperature;
 	}
 
 	public ResourceLocation[] getBlockTags() {
@@ -40,13 +47,25 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return heatAmount;
 	}
 
+	public Block getOverheatedBlock() {
+		return overheatedBlock;
+	}
+
+	public FluidStack getOverheatedFluid() {
+		return overheatedFluid;
+	}
+
+	public float getOverheatedTemperature() {
+		return overheatedTemperature;
+	}
+
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
 		// Check for block match first.
 		if (blocks != null && blocks.length > 0 && matchParams.hasBlocks()) {
 			Block block = matchParams.getBlocks()[0].getBlock();
 			for (ResourceLocation blockTag : blocks) {
-				//System.out.println(blockTag + "    " + block.getRegistryName());
+				// System.out.println(blockTag + " " + block.getRegistryName());
 				if (block.getRegistryName().equals(blockTag) || block.getTags().contains(blockTag)) {
 					return true;
 				}
@@ -54,7 +73,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		}
 
 		if (matchParams.hasBlocks()) {
-			//System.out.println(matchParams.getBlocks()[0].getBlock().getRegistryName());
+			// System.out.println(matchParams.getBlocks()[0].getBlock().getRegistryName());
 		}
 
 		// Then check for a fluid match.

@@ -168,6 +168,9 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 			heatCapacityUpgradeMultiplier = (1.0f + (heatUpgrade.getTier().heatCapacityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
 			heatConductivityMultiplier = (1.0f + (heatUpgrade.getTier().heatConductivityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
 		} else {
+			// Set the heat conductivity back to 1.
+			heatConductivityMultiplier = 1.0f;
+			
 			// check for a regular heat capacity upgrade.
 			UpgradeItemWrapper heatCapacityUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.HEAT_CAPACITY);
 			if (heatCapacityUpgrade.isEmpty()) {

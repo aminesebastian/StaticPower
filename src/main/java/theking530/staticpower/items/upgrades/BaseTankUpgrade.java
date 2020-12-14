@@ -25,5 +25,6 @@ public class BaseTankUpgrade extends BaseUpgrade {
 		double upgradeAmount = getTier().tankCapacityUpgrade.get();
 		upgradeAmount *= (float) stack.getCount() / stack.getMaxStackSize();
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "%" + TextFormatting.GREEN + " Tank Capacity"));
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

@@ -30,6 +30,7 @@ public class BaseSpeedUpgrade extends BaseUpgrade {
 
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(speedUpgrade * 100) + "%" + TextFormatting.GREEN + " Processing Speed"));
 		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerRateUpgrade * 100) + "%" + TextFormatting.RED + " Power Use"));
+		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 
 }

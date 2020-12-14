@@ -30,6 +30,7 @@ import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -38,6 +39,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	public final InventoryComponent drillBitInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 
 	public final MachineProcessingComponent processingComponent;
 	public final HeatStorageComponent heatStorage;
@@ -58,18 +60,24 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 				return stack.getItem() instanceof DrillBit;
 			}
 		}));
+
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(
 				processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess, this::processingCompleted, true));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(getPowerUsage());
+		processingComponent.setProcessingPowerUsage(getFuelUsage());
+		processingComponent.setUpgradeInventory(upgradesInventory);
 
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
+		// Add the heat storage and the upgrade inventory to the heat component.
 		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", 1000.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", 350.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+		heatStorage.setUpgradeInventory(upgradesInventory);
+
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		heatStorage.getStorage().setCanHeat(false);
 	}
@@ -114,7 +122,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 	public abstract int getRadius();
 
-	public abstract int getPowerUsage();
+	public abstract int getFuelUsage();
 
 	public boolean isDoneMining() {
 		return currentBlockIndex == -1;

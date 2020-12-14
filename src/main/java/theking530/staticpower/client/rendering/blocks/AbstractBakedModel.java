@@ -84,17 +84,15 @@ public abstract class AbstractBakedModel implements IBakedModel {
 		}
 
 		// Build the output.
-		if (model != null) {
-			try {
-				for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
-					BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
-					TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
-					quad.pipe(transformer);
-					quads.add(builder.build());
-				}
-			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.", model), e);
+		try {
+			for (BakedQuad quad : model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE)) {
+				BakedQuadBuilder builder = new BakedQuadBuilder(quad.getSprite());
+				TRSRTransformer transformer = new TRSRTransformer(builder, transformation);
+				quad.pipe(transformer);
+				quads.add(builder.build());
 			}
+		} catch (Exception e) {
+			LOGGER.error(String.format("An error occured when attempting to rotate a model to face the desired rotation. Model: %1$s.", model), e);
 		}
 
 		return quads.build();
