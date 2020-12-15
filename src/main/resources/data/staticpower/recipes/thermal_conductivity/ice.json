@@ -1,12 +1,12 @@
 {
 	"type": "staticpower:thermal_conducitity",
-	"fluids": [
-		"minecraft:water"
+	"blocks": [
+		"minecraft:ice"
 	],
-	"conductivity": "4.0",
+	"conductivity": "12.0",
 	"overheating": {
 		"block": {
-			"Name": "staticpower:steam"
+			"Name": "minecraft:water"
 		},
 		"temperature": 1000
 	}

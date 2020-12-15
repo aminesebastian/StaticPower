@@ -1,12 +1,12 @@
 {
 	"type": "staticpower:thermal_conducitity",
-	"fluids": [
-		"minecraft:water"
+	"blocks": [
+		"forge:stone"
 	],
-	"conductivity": "4.0",
+	"conductivity": "6.0",
 	"overheating": {
 		"block": {
-			"Name": "staticpower:steam"
+			"Name": "minecraft:lava"
 		},
 		"temperature": 1000
 	}

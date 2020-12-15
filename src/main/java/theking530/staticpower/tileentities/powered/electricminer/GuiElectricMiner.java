@@ -51,7 +51,7 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(100), true);
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 

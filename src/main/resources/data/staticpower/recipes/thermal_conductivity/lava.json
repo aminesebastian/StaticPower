@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:thermal_conducitity",
 	"fluids": [
-		"minecraft:flowing_water"
+		"minecraft:lava"
 	],
-	"conductivity": "10.0"
+	"conductivity": "0.0",
+	"heating_amount": 10
 }

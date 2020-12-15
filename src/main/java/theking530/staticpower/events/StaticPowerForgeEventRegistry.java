@@ -3,7 +3,9 @@ package theking530.staticpower.events;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -125,6 +127,12 @@ public class StaticPowerForgeEventRegistry {
 				FluidUtil.getFluidContained(event.getItemStack()).ifPresent(fluid -> {
 					matchParameters.setFluids(fluid.copy());
 				});
+
+				// Add the blocks.
+				if (event.getItemStack().getItem() instanceof BlockItem) {
+					BlockState blockState = ((BlockItem) event.getItemStack().getItem()).getBlock().getDefaultState();
+					matchParameters.setBlocks(blockState);
+				}
 
 				// Add the tooltip if the control key is down.
 				StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {

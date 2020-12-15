@@ -48,12 +48,11 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
-
+		getTabManager().registerTab(infoTab = new GuiInfoTab(100), true);
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiUpgradeTab(container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
