@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:thermal_conducitity",
 	"blocks": [
-		"forge:stone"
+		"forge:obsidian"
 	],
 	"conductivity": "6.0",
 	"overheating": {

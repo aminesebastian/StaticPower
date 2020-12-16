@@ -1,13 +1,13 @@
 {
 	"type": "staticpower:thermal_conducitity",
 	"blocks": [
-		"minecraft:ice"
+		"minecraft:planks"
 	],
-	"conductivity": "12.0",
+	"conductivity": "0.1",
 	"overheating": {
 		"block": {
-			"Name": "minecraft:water"
+			"Name": "minecraft:fire"
 		},
-		"temperature": 500
+		"temperature": 200
 	}
 }

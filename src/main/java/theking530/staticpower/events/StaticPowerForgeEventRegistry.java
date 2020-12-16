@@ -136,7 +136,18 @@ public class StaticPowerForgeEventRegistry {
 
 				// Add the tooltip if the control key is down.
 				StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
+					// Add heat conductivity tooltip.
 					event.getToolTip().add(HeatTooltipUtilities.getHeatConductivityTooltip(recipe.getThermalConductivity()));
+
+					// Add heat generation tooltip.
+					if (recipe.getHeatAmount() > 0) {
+						event.getToolTip().add(HeatTooltipUtilities.getHeatGenerationTooltip(recipe.getHeatAmount()));
+					}
+
+					// Add overheating tooltip.
+					if (recipe.hasOverheatingBehaviour()) {
+						event.getToolTip().add(HeatTooltipUtilities.getOverheatingTooltip(recipe.getOverheatedTemperature()));
+					}
 				});
 
 				// Add attributable tooltips.

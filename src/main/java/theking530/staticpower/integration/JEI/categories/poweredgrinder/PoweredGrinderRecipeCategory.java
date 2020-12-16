@@ -148,8 +148,6 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 
 		guiItemStacks.set(ingredients);
 
-		addProbabilityTooltips(recipeLayout, PRIMARY_OUTPUT_SLOT, recipe.getOutputItems());
-
 		// Add the fluid.
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);

@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
@@ -22,6 +21,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final float overheatedTemperature;
 	private final float thermalConductivity;
 	private final float heatAmount;
+	private final boolean isAirRecipe;
 
 	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids, BlockState overheatedBlock, ProbabilityItemStackOutput overheatedItemStack,
 			float overheatedTemperature, float thermalConductivity, float heatAmount) {
@@ -33,6 +33,19 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		this.overheatedBlock = overheatedBlock;
 		this.overheatedItemStack = overheatedItemStack;
 		this.overheatedTemperature = overheatedTemperature;
+
+		boolean flagIsAirRecipe = false;
+		for (ResourceLocation loc : blocks) {
+			if (loc.toString().equals("minecraft:air")) {
+				flagIsAirRecipe = true;
+				break;
+			}
+		}
+		this.isAirRecipe = flagIsAirRecipe;
+	}
+
+	public boolean isAirRecipe() {
+		return isAirRecipe;
 	}
 
 	public ResourceLocation[] getBlockTags() {
@@ -72,7 +85,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	public boolean hasOverheatingBehaviour() {
-		return overheatedTemperature != 0;
+		return hasOverheatedBlock() || hasOverheatedItem();
 	}
 
 	@Override

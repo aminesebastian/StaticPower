@@ -72,6 +72,8 @@ import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipe
 import theking530.staticpower.integration.JEI.categories.solderingtable.SolderingTableRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.solidgenerator.SolidGeneratorRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.squeezer.SqueezerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeProvider;
 import theking530.staticpower.integration.JEI.categories.tumbler.TumblerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.vulcanizer.VulcanizerRecipeCategory;
 import theking530.staticpower.integration.JEI.ingredients.ProbabilityItemStackHelper;
@@ -130,6 +132,8 @@ public class PluginJEI implements IModPlugin {
 	private CasterRecipeCategory casterRecipeCategory;
 	@Nullable
 	private TumblerRecipeCategory tumblerRecipeCategory;
+	@Nullable
+	ThermalConductivityRecipeCategory thermalConductivityRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -238,6 +242,10 @@ public class PluginJEI implements IModPlugin {
 		// Tumbler
 		tumblerRecipeCategory = new TumblerRecipeCategory(guiHelper);
 		registration.addRecipeCategories(tumblerRecipeCategory);
+
+		// Thermal Conductivity
+		thermalConductivityRecipeCategory = new ThermalConductivityRecipeCategory(guiHelper);
+		registration.addRecipeCategories(thermalConductivityRecipeCategory);
 	}
 
 	@Override
@@ -310,7 +318,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CondensationRecipe.RECIPE_TYPE), CondenserRecipeCategory.CONDENSER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(VulcanizerRecipe.RECIPE_TYPE), VulcanizerRecipeCategory.VULCANIZER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LatheRecipe.RECIPE_TYPE), LatheRecipeCategory.LATHE_UID);
-		registration.addRecipes(new SmithingRecipeProvider().getRecipes(null), SmithingRecipeCategory.AUTO_SMITHING_UID);
+		registration.addRecipes(SmithingRecipeProvider.getRecipes(), SmithingRecipeCategory.AUTO_SMITHING_UID);
+		registration.addRecipes(ThermalConductivityRecipeProvider.getRecipes(), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(MixerRecipe.RECIPE_TYPE), MixerRecipeCategory.MIXER_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CrucibleRecipe.RECIPE_TYPE), CrucibleRecipeCategory.CRUCIBLE_UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CastingRecipe.RECIPE_TYPE), CasterRecipeCategory.CASTER_UID);
@@ -343,12 +352,24 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Crucible), CrucibleRecipeCategory.CRUCIBLE_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Caster), CasterRecipeCategory.CASTER_UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler), TumblerRecipeCategory.TUMBLER_UID);
+
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
 	}
 
 	@Override
 	public void registerAdvanced(IAdvancedRegistration registration) {
 		registration.addRecipeManagerPlugin(new CoverRecipeCategory(ModItems.CableCover));
 		registration.addRecipeManagerPlugin(new SmithingRecipeProvider());
+		registration.addRecipeManagerPlugin(new ThermalConductivityRecipeProvider());
 	}
 
 	@Override

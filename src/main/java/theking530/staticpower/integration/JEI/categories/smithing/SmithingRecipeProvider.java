@@ -23,16 +23,23 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 
-/**
- * Huge thanks to Applied Energistics 2 and the JEI Wiki!
- * 
- * @author Amine Sebastian
- *
- */
 public class SmithingRecipeProvider implements IRecipeManagerPlugin {
-	private List<AutoSmithRecipeJEIWrapper> recipes;
+	private static List<AutoSmithRecipeJEIWrapper> RECIPES;
 
 	public SmithingRecipeProvider() {
+	}
+
+	public static List<AutoSmithRecipeJEIWrapper> getRecipes() {
+		// Create the recipes array.
+		RECIPES = new ArrayList<AutoSmithRecipeJEIWrapper>();
+
+		// Get all the registered items and add any recipes that can be created from
+		// them.
+		for (Entry<RegistryKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
+			RECIPES.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
+		}
+
+		return RECIPES;
 	}
 
 	@Override
@@ -59,17 +66,22 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> List<T> getRecipes(IRecipeCategory<T> recipeCategory) {
-		if (recipes == null) {
-			// Create the recipes array.
-			recipes = new ArrayList<AutoSmithRecipeJEIWrapper>();
-
-			// Get all the registered items and add any recipes that can be created from
-			// them.
-			for (Entry<RegistryKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
-				recipes.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
-			}
+		// Check the category.
+		if (recipeCategory != null && !SmithingRecipeCategory.AUTO_SMITHING_UID.equals(recipeCategory.getUid())) {
+			return Collections.emptyList();
 		}
-		return (List<T>) recipes;
+
+		// Clear the recipes array.
+		RECIPES.clear();
+
+		// Get all the registered items and add any recipes that can be created from
+		// them.
+		for (Entry<RegistryKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
+			RECIPES.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
+		}
+
+		// Return recipes.
+		return (List<T>) RECIPES;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -90,7 +102,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		return Collections.emptyList();
 	}
 
-	private List<AutoSmithRecipeJEIWrapper> makeFromSmithingInput(ItemStack input) {
+	private static List<AutoSmithRecipeJEIWrapper> makeFromSmithingInput(ItemStack input) {
 		// Allocate the output.
 		List<AutoSmithRecipeJEIWrapper> output = new ArrayList<AutoSmithRecipeJEIWrapper>();
 
@@ -112,7 +124,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		return output;
 	}
 
-	public boolean isValidSmithingOutput(ItemStack stack) {
+	private static boolean isValidSmithingOutput(ItemStack stack) {
 		if (stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent()) {
 			return true;
 		}
@@ -128,7 +140,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		return false;
 	}
 
-	public boolean isValidSmithingInput(ItemStack stack) {
+	private static boolean isValidSmithingInput(ItemStack stack) {
 		// Test to see if the item has the capability.
 		if (stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent()) {
 			return true;
@@ -153,13 +165,15 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		public static final IRecipeType<AutoSmithRecipeJEIWrapper> RECIPE_TYPE = IRecipeType.register("auto_smith_jei");
 		public final ResourceLocation id;
 		public final AutoSmithRecipe recipe;
-		public final ItemStack input;
+		public final Ingredient inputIng;
+		final ItemStack input;
 		public final ItemStack output;
 
 		public AutoSmithRecipeJEIWrapper(AutoSmithRecipe recipe, ItemStack input, ItemStack output) {
 			super();
 			this.recipe = recipe;
 			this.input = input;
+			this.inputIng = Ingredient.fromStacks(input);
 			this.output = output;
 			this.id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + output.getItem().getRegistryName().getPath().replace(":", "/"));
 		}
@@ -193,7 +207,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		}
 
 		public Ingredient getInput() {
-			return Ingredient.fromStacks(input);
+			return inputIng;
 		}
 
 		@Override
