@@ -42,7 +42,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	public ThermalConductivityRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
 		locTitle = new TranslationTextComponent("gui.staticpower.heat");
-		background = guiHelper.createBlankDrawable(170, 70);
+		background = guiHelper.createBlankDrawable(170, 65);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.CopperHeatSink));
 	}
 
@@ -77,7 +77,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	@Override
 	public void draw(ThermalConductivityJEIRecipeWrapper recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 5, 5, 20, 20);
-		GuiDrawUtilities.drawSlot(matrixStack, 30, 5, 135, 60);
+		GuiDrawUtilities.drawSlot(matrixStack, 30, 5, 135, 55);
 
 		String conductivity = new StringTextComponent("Heat Conductivity: ").appendString(TextFormatting.BLUE.toString())
 				.append(GuiTextUtilities.formatConductivityToString(recipe.getRecipe().getThermalConductivity())).getString();
@@ -85,7 +85,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		String heat = new StringTextComponent("Heat Generation: ").appendString(TextFormatting.GOLD.toString())
 				.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getHeatAmount())).getString();
 
-		String overheatTemp = new StringTextComponent("Overheat: ").appendString(TextFormatting.RED.toString())
+		String overheatTemp = new StringTextComponent("← Overheat: ").appendString(TextFormatting.RED.toString())
 				.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
 
 		int yPos = 15;
@@ -99,15 +99,30 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		}
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 35, 40, 20, 20);
-			GuiDrawUtilities.drawStringWithSize(matrixStack, overheatTemp, xPos, 52f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawSlot(matrixStack, 35, 32, 20, 20);
+			GuiDrawUtilities.drawStringWithSize(matrixStack, overheatTemp, xPos, 44f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+		}
+
+		if (!recipe.getFluidInput().isEmpty()) {
+			if (recipe.getFluidInput().getFluid().getRegistryName().toString().contains("flowing")) {
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.5f, TextFormatting.BLUE, false);
+			} else {
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.5f, TextFormatting.BLUE, false);
+			}
+		}
+
+		if (!recipe.getOutputFluid().isEmpty()) {
+			if (recipe.getOutputFluid().getFluid().getRegistryName().toString().contains("flowing")) {
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 58, 0.5f, TextFormatting.WHITE, false);
+			} else {
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 58, 0.5f, TextFormatting.WHITE, false);
+			}
 		}
 	}
 
 	@Override
 	public List<ITextComponent> getTooltipStrings(ThermalConductivityJEIRecipeWrapper recipe, double mouseX, double mouseY) {
 		List<ITextComponent> output = new ArrayList<ITextComponent>();
-
 		return output;
 	}
 
@@ -158,7 +173,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 		// Set the overheated block output.
 		if (!recipe.getOutputBlock().isEmpty()) {
-			guiItemStacks.init(2, false, 60, 18);
+			guiItemStacks.init(2, false, 37, 34);
 		}
 
 		guiItemStacks.set(ingredients);
@@ -166,14 +181,14 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		// Set the overheated item output.
 		if (!recipe.getOutputItem().isEmpty()) {
 			IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-			probabilityStacks.init(3, false, 40, 18);
+			probabilityStacks.init(3, false, 37, 34);
 			probabilityStacks.set(ingredients);
 		}
 
 		// Add the fluid.
 		if (!recipe.getOutputFluid().isEmpty()) {
 			IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-			fluids.init(4, false, 35, 40, 20, 20, recipe.getOutputFluid().getAmount(), false, null);
+			fluids.init(4, false, 35, 32, 20, 20, recipe.getOutputFluid().getAmount(), false, null);
 			fluids.set(ingredients);
 		}
 	}

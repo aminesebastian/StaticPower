@@ -8,6 +8,11 @@
 		"block": {
 			"Name": "minecraft:fire"
 		},
+		"item": {
+			"item": "minecraft:charcoal",
+			"count": 1,
+			"chance": 0.95
+		},
 		"temperature": 500
 	}
 }

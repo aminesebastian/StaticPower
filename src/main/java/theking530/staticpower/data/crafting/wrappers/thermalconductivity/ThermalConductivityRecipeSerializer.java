@@ -51,6 +51,11 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 			}
 		}
 
+		// Make sure this is a one or the other kind of recipe.
+		if (fluids.length > 0 && blocks.length > 0) {
+			throw new RuntimeException(String.format("Recipe: %1$s cannot define both blocks and fluids in the same recipe.", recipeId.toString()));
+		}
+
 		// Capture the conductivity.
 		float thermalConductivity = json.get("conductivity").getAsFloat();
 

@@ -144,6 +144,7 @@ public class ModFluids {
 	public static void registerFluidBundle(StaticPowerFluidBundle bundle) {
 		StaticPowerRegistry.preRegisterBlock(bundle.FluidBlock);
 		StaticPowerRegistry.preRegisterFluid(bundle.Fluid);
+		StaticPowerRegistry.preRegisterFluid(bundle.FlowingFluid);
 		if (bundle.getSourceBuilder().getShouldRegisterBucket()) {
 			StaticPowerRegistry.preRegisterItem(bundle.getBucket());
 		}

@@ -17,6 +17,7 @@ import net.minecraft.fluid.Fluid;
 import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Vector4f;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -146,6 +147,14 @@ public class GuiDrawUtilities {
 		GlStateManager.enableTexture();
 	}
 
+	public static void drawStringWithSize(@Nonnull MatrixStack matrixStack, String text, float xPos, float yPos, float scale, Color color, boolean withShadow) {
+		drawStringWithSize(matrixStack, text, xPos, yPos, scale, color.encodeInInteger(), withShadow);
+	}
+
+	public static void drawStringWithSize(@Nonnull MatrixStack matrixStack, String text, float xPos, float yPos, float scale, TextFormatting color, boolean withShadow) {
+		drawStringWithSize(matrixStack, text, xPos, yPos, scale, color.getColor(), withShadow);
+	}
+
 	/**
 	 * Renders a string with the provided scale.
 	 * 
@@ -156,7 +165,7 @@ public class GuiDrawUtilities {
 	 * @param color
 	 * @param withShadow
 	 */
-	public static void drawStringWithSize(@Nonnull MatrixStack matrixStack, String text, float xPos, float yPos, float scale, Color color, boolean withShadow) {
+	public static void drawStringWithSize(@Nonnull MatrixStack matrixStack, String text, float xPos, float yPos, float scale, int color, boolean withShadow) {
 		// The matrix stack cannot be null.
 		if (matrixStack == null) {
 			StaticPower.LOGGER.error("A non-null matrix stack must be provided to this method!");
@@ -174,7 +183,7 @@ public class GuiDrawUtilities {
 		final int X = (int) ((xPos + offset - Minecraft.getInstance().fontRenderer.getStringWidth(text) * scaleFactor) * inverseScaleFactor);
 		final int Y = (int) ((yPos + offset - 7.0f * scaleFactor) * inverseScaleFactor);
 		IRenderTypeBuffer.Impl buffer = IRenderTypeBuffer.getImpl(Tessellator.getInstance().getBuffer());
-		Minecraft.getInstance().fontRenderer.renderString(text, X, Y, color.encodeInInteger(), withShadow, matrixStack.getLast().getMatrix(), buffer, true, 0, 15728880);
+		Minecraft.getInstance().fontRenderer.renderString(text, X, Y, color, withShadow, matrixStack.getLast().getMatrix(), buffer, true, 0, 15728880);
 		buffer.finish();
 		RenderSystem.enableBlend();
 		matrixStack.pop();

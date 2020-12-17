@@ -4,6 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
@@ -17,6 +18,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
 import theking530.staticpower.StaticPower;
 
@@ -31,9 +33,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 	public String FlowingTexture;
 	public INamedTag<Fluid> Tag;
 
-	public AbstractStaticPowerFluid(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock,
-			Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
-			INamedTag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+	public AbstractStaticPowerFluid(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
+			String stillTexture, String flowingTexture, INamedTag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
 		setRegistryName(name);
 		Bucket = bucket;
 		FluidBlock = fluidBlock;
@@ -81,9 +82,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 	}
 
 	@Override
-	protected boolean canDisplace(FluidState fluidState, IBlockReader blockReader, BlockPos pos, Fluid fluid,
-			Direction direction) {
-		return false; // !fluid.isIn(Tag) && !(blockReader.getBlockState(pos).has(LEVEL_1_8));
+	protected boolean canDisplace(FluidState fluidState, IBlockReader blockReader, BlockPos pos, Fluid fluid, Direction direction) {
+		return blockReader.getBlockState(pos).getBlock() == Blocks.AIR;
 	}
 
 	@Override
@@ -98,8 +98,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	@Override
 	protected BlockState getBlockState(FluidState state) {
-		return FluidBlock.get().getDefaultState().with(FlowingFluidBlock.LEVEL,
-				Integer.valueOf(getLevelFromState(state)));
+		return FluidBlock.get().getDefaultState().with(FlowingFluidBlock.LEVEL, Integer.valueOf(getLevelFromState(state)));
 	}
 
 	@Override
@@ -108,10 +107,41 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 	}
 
 	@Override
+	public void tick(World worldIn, BlockPos pos, FluidState state) {
+		if (getFluid().getAttributes().isGaseous()) {
+			if (state.isSource()) {
+				if (canFlow(worldIn, pos, worldIn.getBlockState(pos), Direction.UP, pos.offset(Direction.UP), worldIn.getBlockState(pos.offset(Direction.UP)), state, getFluid())) {
+					worldIn.setBlockState(pos.add(0, 1, 0), this.getBlockState(state), 3);
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+				}
+			}
+			if (pos.getY() > worldIn.getHeight()) {
+				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+			}
+
+		} else {
+			if (!state.isSource()) {
+				FluidState fluidstate = this.calculateCorrectFlowingState(worldIn, pos, worldIn.getBlockState(pos));
+				int i = this.func_215667_a(worldIn, pos, state, fluidstate);
+				if (fluidstate.isEmpty()) {
+					state = fluidstate;
+					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+				} else if (!fluidstate.equals(state)) {
+					state = fluidstate;
+					BlockState blockstate = fluidstate.getBlockState();
+					worldIn.setBlockState(pos, blockstate, 2);
+					worldIn.getPendingFluidTicks().scheduleTick(pos, fluidstate.getFluid(), i);
+					worldIn.notifyNeighborsOfStateChange(pos, blockstate.getBlock());
+				}
+			}
+
+			this.flowAround(worldIn, pos, state);
+		}
+	}
+
+	@Override
 	protected FluidAttributes createAttributes() {
-		FluidAttributes.Builder attributes = FluidAttributes
-				.builder(new ResourceLocation(StaticPower.MOD_ID, StillTexture),
-						new ResourceLocation(StaticPower.MOD_ID, FlowingTexture))
+		FluidAttributes.Builder attributes = FluidAttributes.builder(new ResourceLocation(StaticPower.MOD_ID, StillTexture), new ResourceLocation(StaticPower.MOD_ID, FlowingTexture))
 				.translationKey(FluidBlock.get().getTranslationKey().replace("block", "fluid"));
 		if (AdditionalAtrributesDelegate != null) {
 			AdditionalAtrributesDelegate.accept(attributes);
@@ -121,9 +151,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	public static class Source extends AbstractStaticPowerFluid {
 
-		public Source(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock,
-				Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
-				INamedTag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+		public Source(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
+				String flowingTexture, INamedTag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
 			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
 		}
 
@@ -140,11 +169,9 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	public static class Flowing extends AbstractStaticPowerFluid {
 
-		public Flowing(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock,
-				Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
-				INamedTag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
-			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag,
-					attributes);
+		public Flowing(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
+				String flowingTexture, INamedTag<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
 		}
 
 		@Override
