@@ -18,6 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
@@ -43,6 +44,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
+import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.GrassLootModifier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.TOP.PluginTOP;
@@ -94,6 +96,15 @@ public class StaticPowerModEventRegistry {
 	public static void clientSetupEvent(FMLClientSetupEvent event) {
 		StaticPowerClientEventHandler.onClientSetupEvent(event);
 		LOGGER.info("Static Power Client Setup Completed!");
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void modelRegistryEvent(ModelRegistryEvent event) {
+		// Register any additional models we want.
+		LOGGER.info("Registering Additional Models!");
+		StaticPowerAdditionalModels.regsiterModels();
+		LOGGER.info(String.format("Registered: %1$d Additional Models!", StaticPowerAdditionalModels.MODELS.size()));
 	}
 
 	@SubscribeEvent

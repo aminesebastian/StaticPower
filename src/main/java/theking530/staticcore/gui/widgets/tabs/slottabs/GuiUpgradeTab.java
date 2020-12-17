@@ -40,12 +40,15 @@ public class GuiUpgradeTab extends BaseGuiTab {
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
 
 		// Add the slots.
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < upgradesInventory.getSlots(); i++) {
 			StaticPowerContainerSlot slot;
-			container.addSlotGeneric(slot = new UpgradeItemSlot(upgradesInventory, i, this.xPosition + 4, 0));
+			container.addSlotGeneric(slot = new UpgradeItemSlot(upgradesInventory, i, 0, 0));
 			slots.add(slot);
 			msg.addSlot(upgradesInventory, i, 0, 0);
 		}
+		
+		this.tabWidth = 18;
+		this.tabHeight = 38;
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
@@ -62,17 +65,15 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	@Override
 	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-		for (int i = 0; i < slots.size(); i++) {
-			slots.get(i).yPos = this.yPosition + 24 + (i * 18);
-		}
+		positionSlots();
 	}
 
 	@Override
 	protected void onTabOpened() {
-		for (int i = 0; i < slots.size(); i++) {
-			slots.get(i).yPos = this.yPosition + 24 + (i * 18);
-			slots.get(i).setEnabledState(true);
+		for (StaticPowerContainerSlot slot : slots) {
+			slot.setEnabledState(true);
 		}
+		positionSlots();
 		showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);
 	}
 
@@ -82,5 +83,20 @@ public class GuiUpgradeTab extends BaseGuiTab {
 			slot.setEnabledState(false);
 		}
 		showNotificationBadge = !InventoryUtilities.isInventoryEmpty(upgradesInventory);
+	}
+
+	protected void positionSlots() {
+		if (slots.size() == 3) {
+			for (int i = 0; i < slots.size(); i++) {
+				slots.get(i).xPos = this.xPosition + tabWidth + 4;
+				slots.get(i).yPos = this.yPosition + 24 + (i * 18);
+			}
+		} else if (slots.size() == 4) {
+			int xOffset = -18;
+			for (int i = 0; i < slots.size(); i++) {
+				slots.get(i).xPos = this.xPosition + tabWidth + 4 + ((i/2) * xOffset);
+				slots.get(i).yPos = this.yPosition + 24 + ((i % 2) * 18);
+			}
+		}
 	}
 }

@@ -72,7 +72,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		// Get the model properties.
 		CableRenderingState renderingState = data.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
 
-		// Render the cover.
+		// Render the covers.
 		RenderType layer = MinecraftForgeClient.getRenderLayer();
 		if (side != null && renderingState.covers[side.ordinal()] != null) {
 			coverBuilder.buildFacadeQuads(renderingState, layer, rand, newQuads, side);
@@ -90,6 +90,7 @@ public class CableBakedModel extends AbstractBakedModel {
 				}
 			}
 		} else {
+
 			newQuads.addAll(BaseModel.getQuads(state, side, rand, data));
 
 			for (Direction dir : Direction.values()) {
@@ -100,12 +101,14 @@ public class CableBakedModel extends AbstractBakedModel {
 
 				// Get the connection state.
 				CableConnectionState connectionState = renderingState.connectionStates[dir.ordinal()];
-
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionState.CABLE) {
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 				} else if (connectionState == CableConnectionState.TILE_ENTITY || renderingState.attachments[dir.ordinal()] != null) {
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
+
+					// If there is an actual attachment, render that. Otherwise, just render the
+					// default attachment for this cable.
 					if (renderingState.attachments[dir.ordinal()] != null) {
 						IBakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
 						newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));

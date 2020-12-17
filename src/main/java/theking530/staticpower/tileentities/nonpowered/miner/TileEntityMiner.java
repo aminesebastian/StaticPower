@@ -10,16 +10,19 @@ import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.ForgeHooks;
+import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
@@ -46,7 +49,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	@Override
 	public void process() {
 		super.process();
-		
+
 		// Update the processing cost.
 		fuelComponent.setTimeUnitsPerTick((int) processingComponent.getCalculatedPowerUsageMultipler());
 
@@ -136,7 +139,18 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public int getRadius() {
-		return StaticPowerConfig.SERVER.minerRadius.get();
+		// Get the range upgrade.
+		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeType.RANGE);
+
+		// If there isn't one, return the base level.
+		if (upgradeWrapper.isEmpty()) {
+			return StaticPowerConfig.SERVER.minerRadius.get();
+		}
+
+		// Otherwise, caluclate the new range.
+		StaticPowerTier tier = upgradeWrapper.getTier();
+		double newRange = tier.rangeUpgrade.get() * StaticPowerConfig.SERVER.minerRadius.get();
+		return (int) newRange;
 	}
 
 	@Override

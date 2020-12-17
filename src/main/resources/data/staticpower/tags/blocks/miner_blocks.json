@@ -11,6 +11,10 @@
 		"minecraft:dirt",
 		"minecraft:coarse_dirt",
 		"minecraft:basalt",
-		"minecraft:blackstone"
+		"minecraft:blackstone",
+		"minecraft:clay",
+		"#forge:cobblestone",
+		"#forge:obsidian",
+		"#forge:marble"
 	]
 }

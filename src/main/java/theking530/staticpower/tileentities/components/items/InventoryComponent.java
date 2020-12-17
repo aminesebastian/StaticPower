@@ -306,6 +306,18 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 
 		// Finally, set the actual stacks array to the new list.
 		stacks = NonNullList.withSize(size, ItemStack.EMPTY);
+
+		// Update the locked slots as well.
+		List<ItemStack> temp = new ArrayList<ItemStack>(size);
+		for (int i = 0; i < Math.min(size, lockedSlots.size()); i++) {
+			temp.add(lockedSlots.get(i));
+		}
+		if (size > temp.size()) {
+			for (int j = lockedSlots.size(); j < size; j++) {
+				temp.add(null);
+			}
+		}
+		lockedSlots = temp;
 	}
 
 	@Override

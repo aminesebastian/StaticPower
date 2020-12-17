@@ -3,6 +3,7 @@ package theking530.staticpower.fluid;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
@@ -12,6 +13,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.Item;
 import net.minecraft.state.StateContainer.Builder;
 import net.minecraft.tags.ITag.INamedTag;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -68,7 +70,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	@Override
 	protected void beforeReplacingBlock(IWorld worldIn, BlockPos pos, BlockState state) {
-
+		TileEntity tileentity = state.getBlock().hasTileEntity(state) ? worldIn.getTileEntity(pos) : null;
+		Block.spawnDrops(state, worldIn, pos, tileentity);
 	}
 
 	@Override
@@ -88,7 +91,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 
 	@Override
 	public int getTickRate(IWorldReader reader) {
-		return 5;
+		return getAttributes().getViscosity() / 200;
 	}
 
 	@Override
@@ -109,16 +112,16 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 	@Override
 	public void tick(World worldIn, BlockPos pos, FluidState state) {
 		if (getFluid().getAttributes().isGaseous()) {
+			if (pos.getY() > worldIn.getHeight() - 5) {
+				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+				return;
+			}
 			if (state.isSource()) {
 				if (canFlow(worldIn, pos, worldIn.getBlockState(pos), Direction.UP, pos.offset(Direction.UP), worldIn.getBlockState(pos.offset(Direction.UP)), state, getFluid())) {
 					worldIn.setBlockState(pos.add(0, 1, 0), this.getBlockState(state), 3);
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 				}
 			}
-			if (pos.getY() > worldIn.getHeight()) {
-				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-			}
-
 		} else {
 			if (!state.isSource()) {
 				FluidState fluidstate = this.calculateCorrectFlowingState(worldIn, pos, worldIn.getBlockState(pos));

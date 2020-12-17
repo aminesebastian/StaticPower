@@ -213,10 +213,10 @@ public class TileEntityPump extends TileEntityMachine {
 				// No matter what, search around the pumped block.
 				searchAroundPumpedBlock(position);
 				// Log the pump queue creation.
-				LOGGER.info(
+				LOGGER.debug(
 						String.format("Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.", positionsToPump.size(), getPos(), getWorld().getDimensionType()));
 			}
-		}else {
+		} else {
 			return ProcessingCheckState.error("No sources found to pump!");
 		}
 
@@ -239,10 +239,15 @@ public class TileEntityPump extends TileEntityMachine {
 	}
 
 	private @Nullable BlockPos getInitialPumpBlock() {
-		// Check from the block below the pump all the way down for a fluid state that
-		// is not empty. Stop if we hit a solid block.
-		for (int i = getPos().getY() - 1; i >= 0; i--) {
-			BlockPos samplePos = new BlockPos(getPos().getX(), i, getPos().getZ());
+		// Check from the block below the pump by two blocks.
+		for (int i = 1; i < 3; i++) {
+			// Skip checking lower than 0.
+			if (getPos().getY() - 1 <= 0) {
+				continue;
+			}
+
+			// Get the block pos.
+			BlockPos samplePos = new BlockPos(getPos().getX(), getPos().getY() - i, getPos().getZ());
 
 			// If we hit a non fluid block that is not just AIR, stop.
 			if (!(getWorld().getBlockState(samplePos).getBlock() instanceof FlowingFluidBlock) && getWorld().getBlockState(samplePos).getBlock() != Blocks.AIR) {

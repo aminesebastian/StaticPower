@@ -48,7 +48,6 @@ import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
-import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
@@ -73,8 +72,8 @@ public class StaticPowerClientEventHandler {
 	public static void onClientSetupEvent(FMLClientSetupEvent event) {
 		// If the block does not request the standard solid render type, set the new
 		// render type for the block.
+		LOGGER.info("Initializing Block Render Layers!");
 		for (Block block : StaticPowerRegistry.BLOCKS) {
-
 			// Check and update the render type as needed.
 			if (block instanceof IBlockRenderLayerProvider) {
 				IBlockRenderLayerProvider renderLayerProvider = (IBlockRenderLayerProvider) block;
@@ -84,16 +83,16 @@ public class StaticPowerClientEventHandler {
 			}
 		}
 
-		// Register any additional models we want.
-		StaticPowerAdditionalModels.regsiterModels();
-
 		// Register the guis.
+		LOGGER.info("Registering Screen Factories!");
 		StaticCoreRegistry.registerScreenFactories();
 
 		// Register the tile entity special renderers.
+		LOGGER.info("Registering Tile Entity Special Renderers!");
 		StaticCoreRegistry.registerTileEntitySpecialRenderers();
 
 		// Regsiter entity renderers.
+		LOGGER.info("Registering Entity Renderers!");
 		for (AbstractSpawnableEntityType<?> type : StaticPowerRegistry.ENTITES) {
 			type.registerRenderers(event);
 		}

@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.vector.Vector3f;
+import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
@@ -14,6 +15,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.nonpowered.miner.AbstractTileEntityMiner;
 
@@ -33,7 +35,10 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 
 		// Set the processing parameters.
 		processingComponent.setEnergyComponent(energyStorage);
-
+		
+		// Expand upgrades.
+		this.upgradesInventory.setSize(4);
+		
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
@@ -41,7 +46,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	@Override
 	public void process() {
 		super.process();
-		
+
 		// Render the particle effects.
 		if (processingComponent.getIsOnBlockState()) {
 			float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
@@ -73,7 +78,18 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public int getRadius() {
-		return StaticPowerConfig.SERVER.electricMinerRadius.get();
+		// Get the range upgrade.
+		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeType.RANGE);
+
+		// If there isn't one, return the base level.
+		if (upgradeWrapper.isEmpty()) {
+			return StaticPowerConfig.SERVER.electricMinerRadius.get();
+		}
+
+		// Otherwise, caluclate the new range.
+		StaticPowerTier tier = upgradeWrapper.getTier();
+		double newRange = tier.rangeUpgrade.get() * StaticPowerConfig.SERVER.electricMinerRadius.get();
+		return (int) newRange;
 	}
 
 	@Override

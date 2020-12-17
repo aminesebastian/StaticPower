@@ -19,6 +19,6 @@ public class StaticPowerFluidBlock extends FlowingFluidBlock implements IBlockRe
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getTranslucent();
+		return RenderType.getTranslucentMovingBlock();
 	}
 }

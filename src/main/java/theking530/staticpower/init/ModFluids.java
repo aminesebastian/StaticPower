@@ -59,24 +59,36 @@ public class ModFluids {
 			builder.luminosity(15);
 		}).build());
 
-		registerFluidBundle(Ethanol = new StaticPowerFluidBuilder("ethanol").addAutoBucket().build());
+		registerFluidBundle(Ethanol = new StaticPowerFluidBuilder("ethanol").addAutoBucket().addAttributes(builder -> {
+			builder.gaseous().viscosity(500);
+		}).build());
 
-		registerFluidBundle(Mash = new StaticPowerFluidBuilder("mash").addAutoBucket().build());
+		registerFluidBundle(Mash = new StaticPowerFluidBuilder("mash").addAttributes(builder -> {
+			builder.gaseous().viscosity(2000);
+		}).addAutoBucket().build());
 
 		registerFluidBundle(EvaporatedMash = new StaticPowerFluidBuilder("evaporated_mash").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().density(-100);
+			builder.gaseous().density(-500).viscosity(500);
 		}).build());
 
 		registerFluidBundle(LiquidExperience = new StaticPowerFluidBuilder("experience").addAutoBucket().build());
 
 		registerFluidBundle(Steam = new StaticPowerFluidBuilder("steam").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().density(-100);
+			builder.gaseous().density(-500).viscosity(500);
 		}).build());
 
-		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("oil_seed").addAutoBucket().build());
-		registerFluidBundle(TreeOil = new StaticPowerFluidBuilder("oil_tree").addAutoBucket().build());
-		registerFluidBundle(TreeSap = new StaticPowerFluidBuilder("tree_sap").addAutoBucket().build());
-		registerFluidBundle(InfernalTreeSap = new StaticPowerFluidBuilder("infernal_tree_sap").addAutoBucket().build());
+		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("oil_seed").addAutoBucket().addAttributes(builder -> {
+			builder.gaseous().viscosity(500);
+		}).build());
+		registerFluidBundle(TreeOil = new StaticPowerFluidBuilder("oil_tree").addAutoBucket().addAttributes(builder -> {
+			builder.gaseous().viscosity(500);
+		}).build());
+		registerFluidBundle(TreeSap = new StaticPowerFluidBuilder("tree_sap").addAutoBucket().addAttributes(builder -> {
+			builder.gaseous().viscosity(2000);
+		}).build());
+		registerFluidBundle(InfernalTreeSap = new StaticPowerFluidBuilder("infernal_tree_sap").addAttributes(builder -> {
+			builder.gaseous().viscosity(2000);
+		}).addAutoBucket().build());
 
 		registerFluidBundle(Milk = new StaticPowerFluidBuilder("milk").addBucketSupplier(() -> Items.MILK_BUCKET).setShouldRegisterBucket(false).build());
 
@@ -89,55 +101,55 @@ public class ModFluids {
 		registerFluidBundle(Fertilizer = new StaticPowerFluidBuilder("fertilizer").addAutoBucket().build());
 
 		registerFluidBundle(Honey = new StaticPowerFluidBuilder("honey").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(128).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
+			builder.viscosity(2000).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
 		}).build());
 
 		registerFluidBundle(Concrete = new StaticPowerFluidBuilder("concrete").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(128).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
+			builder.viscosity(2500).density(64).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
 		}).build());
 
 		registerFluidBundle(Latex = new StaticPowerFluidBuilder("latex").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
+			builder.viscosity(1500).density(32).sound(SoundEvents.BLOCK_HONEY_BLOCK_STEP);
 		}).build());
 
 		registerFluidBundle(MoltenIron = new StaticPowerFluidBuilder("molten_iron").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(2800).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1500).density(32).temperature(2800).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenGold = new StaticPowerFluidBuilder("molten_gold").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(1064).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1500).density(32).temperature(1064).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenCopper = new StaticPowerFluidBuilder("molten_copper").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(1084).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1500).density(32).temperature(1084).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenTin = new StaticPowerFluidBuilder("molten_tin").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(450).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1500).density(32).temperature(450).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenZinc = new StaticPowerFluidBuilder("molten_zinc").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(420).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1500).density(32).temperature(420).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenMagnesium = new StaticPowerFluidBuilder("molten_magnesium").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(1202).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1250).density(32).temperature(1202).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenTungsten = new StaticPowerFluidBuilder("molten_tungsten").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(3400).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1000).density(32).temperature(3400).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenSilver = new StaticPowerFluidBuilder("molten_silver").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(961).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1000).density(32).temperature(961).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenLead = new StaticPowerFluidBuilder("molten_lead").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(328).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(750).density(32).temperature(328).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenAluminium = new StaticPowerFluidBuilder("molten_aluminium").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(660).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(500).density(32).temperature(660).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenPlatinum = new StaticPowerFluidBuilder("molten_platinum").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(1770).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1500).density(32).temperature(1770).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenBrass = new StaticPowerFluidBuilder("molten_brass").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(1710).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(750).density(32).temperature(1710).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenBronze = new StaticPowerFluidBuilder("molten_bronze").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(80).density(32).temperature(950).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
+			builder.viscosity(1500).density(32).temperature(950).sound(SoundEvents.ITEM_BUCKET_FILL_LAVA, SoundEvents.ITEM_BUCKET_EMPTY_LAVA);
 		}).build());
 	}
 

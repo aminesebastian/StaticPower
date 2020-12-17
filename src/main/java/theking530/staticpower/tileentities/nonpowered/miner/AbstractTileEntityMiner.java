@@ -28,6 +28,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.HeatManipulationAction;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
@@ -62,7 +63,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		}));
 
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
-		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
+		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::upgradeInventoryChanged));
 
 		registerComponent(
 				processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess, this::processingCompleted, true));
@@ -134,6 +135,17 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 	public int getTicksRemainingUntilCompletion() {
 		return getBlocksRemaining() * processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime();
+	}
+
+	/**
+	 * Upgrade handler.
+	 * 
+	 * @param type
+	 * @param stack
+	 * @param slot
+	 */
+	protected void upgradeInventoryChanged(InventoryChangeType type, ItemStack stack, Integer slot) {
+		refreshBlocksInRange(getRadius());
 	}
 
 	/**
@@ -281,8 +293,10 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		return output;
 	}
 
+	@SuppressWarnings("deprecation")
 	protected void refreshBlocksInRange(int range) {
 		blocks.clear();
+		currentBlockIndex = 0;
 
 		for (int i = getPos().getY() - 1; i >= 2; i--) {
 			List<BlockPos> tempList = new ArrayList<BlockPos>();
@@ -302,9 +316,18 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			blocks.addAll(tempList);
 		}
 
+		// Forward to the first actual block.
+		for (int i = 0; i < blocks.size(); i++) {
+			BlockState test = world.getBlockState(blocks.get(i));
+			if (ModTags.MINER_ORE.contains(Item.getItemFromBlock(test.getBlock()))) {
+				currentBlockIndex = i;
+				break;
+			}
+		}
+
 		// If we are currently on a block that is out of range, set the block index to
 		// -1 as we are already done.
-		if (currentBlockIndex > blocks.size() - 1) {
+		if (currentBlockIndex >= blocks.size() - 1) {
 			currentBlockIndex = -1;
 		}
 	}

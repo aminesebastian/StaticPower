@@ -140,7 +140,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_SCAFFOLD_STRAIGHT = registerModel("block/cables/scaffold/straight");
 	public static final ResourceLocation CABLE_SCAFFOLD_EXTENSION = registerModel("block/cables/scaffold/extension");
 	public static final ResourceLocation CABLE_SCAFFOLD_ATTACHMENT = registerModel("block/cables/scaffold/attachment");
-	
+
 	public static final ResourceLocation CABLE_BASIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/basic_extractor");
 	public static final ResourceLocation CABLE_ADVANCED_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/advanced_extractor");
 	public static final ResourceLocation CABLE_STATIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/static_extractor");
@@ -210,7 +210,7 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation BLADE_HASTE = registerModel("item/attribute_layers/blades/blade_layer_haste");
 	public static final ResourceLocation BLADE_SMELTING = registerModel("item/attribute_layers/blades/blade_layer_smelting");
-	
+
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_DIAMOND = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_diamond");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_EMERALD = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_emerald");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_RUBY = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_ruby");
@@ -220,6 +220,7 @@ public class StaticPowerAdditionalModels {
 	public static void regsiterModels() {
 		for (ResourceLocation model : MODELS) {
 			ModelLoader.addSpecialModel(model);
+			StaticPower.LOGGER.info(String.format("Loading additional model: %1$s.", model.toString()));
 		}
 	}
 
