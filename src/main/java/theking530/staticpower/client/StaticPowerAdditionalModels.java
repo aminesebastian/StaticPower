@@ -215,6 +215,8 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_EMERALD = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_emerald");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_RUBY = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_ruby");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_SAPPHIRE = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_sapphire");
+	
+	public static final ResourceLocation TURBINE_BLADES = registerModel("block/machines/machine_turbine_blades");
 
 	@OnlyIn(Dist.CLIENT)
 	public static void regsiterModels() {

@@ -146,6 +146,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_YELLOW);
 		case Disabled:
 			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_DISABLED);
+		case Never:
+			return blocksStitchedTextures.getSprite(StaticPowerSprites.EMPTY_TEXTURE);
 		default:
 			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_NORMAL);
 		}

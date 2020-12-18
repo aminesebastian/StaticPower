@@ -44,7 +44,7 @@ public class GuiAutoCraftingTable
 		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
 
 		getTabManager().registerTab(
-				new GuiMachinePowerInfoTab(getTileEntity().energyStorage, getTileEntity().processingComponent)
+				new GuiMachinePowerInfoTab(getTileEntity().energyStorage)
 						.setTabSide(TabSide.LEFT),
 				true);
 		getTabManager().registerTab(

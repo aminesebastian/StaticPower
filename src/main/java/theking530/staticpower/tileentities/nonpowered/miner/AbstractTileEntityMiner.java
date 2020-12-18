@@ -5,7 +5,6 @@ import java.util.List;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
@@ -19,7 +18,6 @@ import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -180,7 +178,6 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings("deprecation")
 	protected ProcessingCheckState processingCompleted() {
 		if (InventoryUtilities.isInventoryEmpty(internalInventory) && hasDrillBit()) {
 			// Safety check. If we are out of range return true.
@@ -230,7 +227,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// Check if this is a mineable block. If not, just return true.
-			if (!ModTags.MINER_ORE.contains(Item.getItemFromBlock(minedBlockState.getBlock()))) {
+			if (!canMineBlock(minedBlockState, minedPos)) {
 				return ProcessingCheckState.ok();
 			}
 
@@ -293,7 +290,6 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		return output;
 	}
 
-	@SuppressWarnings("deprecation")
 	protected void refreshBlocksInRange(int range) {
 		blocks.clear();
 		currentBlockIndex = 0;
@@ -319,7 +315,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		// Forward to the first actual block.
 		for (int i = 0; i < blocks.size(); i++) {
 			BlockState test = world.getBlockState(blocks.get(i));
-			if (ModTags.MINER_ORE.contains(Item.getItemFromBlock(test.getBlock()))) {
+			if (canMineBlock(test, blocks.get(i))) {
 				currentBlockIndex = i;
 				break;
 			}
@@ -338,6 +334,19 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 	public ItemStack getDrillBit() {
 		return drillBitInventory.getStackInSlot(0);
+	}
+
+	protected boolean canMineBlock(BlockState block, BlockPos pos) {
+		if (block.getBlock().isAir(block, getWorld(), pos)) {
+			return false;
+		}
+		if (block.hasTileEntity()) {
+			return false;
+		}
+		if (!block.getFluidState().isEmpty()) {
+			return false;
+		}
+		return block.getBlockHardness(getWorld(), pos) >= 0;
 	}
 
 	public BlockPos getCurrentlyTargetedBlockPos() {

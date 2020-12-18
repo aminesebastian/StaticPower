@@ -140,9 +140,8 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
-			float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
 			if (SDMath.diceRoll(0.25f)) {
-
+				float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
 				randomOffset /= 3.5f;
 				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
 				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));

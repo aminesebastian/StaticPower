@@ -28,7 +28,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	/* Side Control */
 	protected void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
 		Direction relativeSpaceSide = SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection());
-		if (DisableFaceInteraction && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
+		if (isFaceInteractionDisabled() && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
 			ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
 		}
 	}

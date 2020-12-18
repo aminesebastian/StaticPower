@@ -22,7 +22,8 @@ public class TileEntityRenderBatteryBlock extends StaticPowerTileEntitySpecialRe
 	}
 
 	@Override
-	public void renderTileEntityBase(TileEntityBattery tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	public void renderTileEntityBase(TileEntityBattery tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+			int combinedOverlay) {
 		// Get the energy percentage.
 		float height = tileEntity.energyStorage.getStorage().getStoredEnergyPercentScaled(1.0f);
 

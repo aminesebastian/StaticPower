@@ -71,7 +71,7 @@ public class TileEntityBattery extends TileEntityMachine {
 
 	public TileEntityBattery(TileEntityTypeAllocator<TileEntityBattery> allocator, ResourceLocation tier) {
 		super(allocator);
-		DisableFaceInteraction = false;
+		enableFaceInteraction();
 
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 		energyStorage.setCapabiltiyFilter((amount, direction, action) -> {

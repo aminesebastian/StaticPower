@@ -120,8 +120,9 @@ public class TileEntityPump extends TileEntityMachine {
 		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Disabled, MachineSideMode.Output, MachineSideMode.Disabled, MachineSideMode.Disabled, MachineSideMode.Disabled,
 				MachineSideMode.Disabled);
 
-		// Disable face interaction.
-		DisableFaceInteraction = false;
+		// Enable face interaction.
+		enableFaceInteraction();
+		
 		// Initialize the positions to pump container.
 		positionsToPump = new LinkedList<BlockPos>();
 	}

@@ -60,7 +60,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityBase.class);
 	protected final static Random RANDOM = new Random();
 	private boolean isValid;
-	protected boolean DisableFaceInteraction;
+	private boolean disableFaceInteraction;
 	private HashMap<String, AbstractTileEntityComponent> Components;
 	private final List<Field> saveSerializeableFields;
 	private final List<Field> updateSerializeableFields;
@@ -83,10 +83,26 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	/**
-	 * Disables pipe interaction with the face of this block.
+	 * Disables capability interaction with the face of this block.
 	 */
 	public void disableFaceInteraction() {
-		DisableFaceInteraction = true;
+		disableFaceInteraction = true;
+	}
+
+	/**
+	 * Enables capability interaction with the face of this block.
+	 */
+	public void enableFaceInteraction() {
+		disableFaceInteraction = false;
+	}
+
+	/**
+	 * Checks to see if face interaction is disabled.
+	 * 
+	 * @return
+	 */
+	public boolean isFaceInteractionDisabled() {
+		return disableFaceInteraction;
 	}
 
 	@Override
@@ -151,7 +167,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (hasComponentOfType(SideConfigurationComponent.class)) {
-			if (DisableFaceInteraction) {
+			if (disableFaceInteraction) {
 				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
 						MachineSideMode.Never);
 			}
@@ -463,7 +479,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
-		nbt.putBoolean("DISABLE_FACE", DisableFaceInteraction);
+		nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
 		SerializationUtilities.serializeFieldsToNbt(nbt, updateSerializeableFields, this);
 		return nbt;
 	}
@@ -482,7 +498,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 				component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()), fromUpdate);
 			}
 		}
-		DisableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
+		disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
 		SerializationUtilities.deserializeFieldsToNbt(nbt, updateSerializeableFields, this);
 	}
 
@@ -605,7 +621,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		for (AbstractTileEntityComponent component : Components.values()) {
 			component.getModelData(builder);
 		}
+		getAdditionalModelData(builder);
 		return builder.build();
+	}
+
+	protected void getAdditionalModelData(ModelDataMap.Builder builder) {
+
 	}
 
 	/**

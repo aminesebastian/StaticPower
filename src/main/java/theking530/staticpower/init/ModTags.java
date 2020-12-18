@@ -27,7 +27,6 @@ public class ModTags {
 	public static final INamedTag<Item> COVER_SAW = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "saw"));
 	public static final INamedTag<Item> FARMING_AXE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "farming_axe"));
 	public static final INamedTag<Item> FARMING_HOE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "farming_hoe"));
-	public static final INamedTag<Item> MINER_BLOCK = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "miner_blocks"));
 
 	public static INamedTag<Item> createItemWrapper(ResourceLocation name) {
 		return createWrapperTag(ItemTags.getAllTags(), name, ItemTags::makeWrapperTag);

@@ -1,9 +1,9 @@
 package theking530.staticpower.init;
 
+import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.SoundType;
-import net.minecraft.block.AbstractBlock.Properties;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.material.MaterialColor;
 import net.minecraftforge.common.ToolType;
@@ -71,6 +71,7 @@ import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGene
 import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;
 import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.tileentities.powered.tumbler.BlockTumbler;
+import theking530.staticpower.tileentities.powered.turbine.BlockTurbine;
 import theking530.staticpower.tileentities.powered.vulcanizer.BlockVulcanizer;
 import theking530.staticpower.world.trees.RubberTree;
 
@@ -193,6 +194,7 @@ public class ModBlocks {
 	public static BlockMixer Mixer;
 	public static BlockCaster Caster;
 	public static BlockTumbler Tumbler;
+	public static BlockTurbine Turbine;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -406,6 +408,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Mixer = new BlockMixer("machine_mixer"));
 		StaticPowerRegistry.preRegisterBlock(Caster = new BlockCaster("machine_caster"));
 		StaticPowerRegistry.preRegisterBlock(Tumbler = new BlockTumbler("machine_tumbler"));
+		StaticPowerRegistry.preRegisterBlock(Turbine = new BlockTurbine("machine_turbine"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

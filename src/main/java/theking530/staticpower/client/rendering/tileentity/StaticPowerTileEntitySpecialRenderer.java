@@ -113,8 +113,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer,
-			int combinedLight, int combinedOverlay) {
+	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, MatrixStack matrixStack,
+			IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
@@ -182,8 +182,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	protected void drawTextInWorld(String text, T tileEntity, Color color, Vector3D offset, float scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
-			int combinedOverlay) {
+	protected void drawTextInWorld(String text, T tileEntity, Color color, Vector3D offset, float scale, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer,
+			int combinedLight, int combinedOverlay) {
 		if (text == null || text.isEmpty())
 			return;
 
@@ -212,7 +212,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 * @param tint          The tint to apply.
 	 * @param combinedLight The combined light level at the block.
 	 */
-	protected void drawTexturedQuadLit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint, int combinedLight) {
+	protected void drawTexturedQuadLit(ResourceLocation texture, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint,
+			int combinedLight) {
 		matrixStack.push();
 		IVertexBuilder builder = buffer.getBuffer(RenderType.getCutout());
 		TextureAtlasSprite sprite = Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(texture);

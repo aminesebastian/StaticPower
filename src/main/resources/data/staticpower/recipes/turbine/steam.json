@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:turbine_recipe",
+	"input": {
+		"fluid": "staticpower:steam",
+		"volume": 20
+	},
+	"output": {
+		"fluid": "minecraft:water",
+		"volume": 1
+	},
+	"generation": 20
+}

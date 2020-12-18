@@ -36,6 +36,8 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	@UpdateSerialize
 	protected boolean canDrain;
 	@UpdateSerialize
+	protected boolean exposeAsCapability;
+	@UpdateSerialize
 	private float upgradeMultiplier;
 	@UpdateSerialize
 	private int defaultCapacity;
@@ -68,6 +70,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			}
 		}
 		lastUpdatePartialTick = 0.0f;
+		exposeAsCapability = true;
 	}
 
 	@Override
@@ -108,6 +111,11 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			visualFillLevel -= difference * (partialTicks / 10.0f);
 			lastUpdatePartialTick = partialTicks;
 		}
+	}
+
+	public FluidTankComponent setExposeAsCapability(boolean expose) {
+		this.exposeAsCapability = expose;
+		return this;
 	}
 
 	public FluidTankComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
@@ -213,7 +221,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (isEnabled() && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if (isEnabled() && exposeAsCapability && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			// Check if the owner is side configurable. If it is, check to make sure it's
 			// not disabled, if not, return the inventory.
 			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());

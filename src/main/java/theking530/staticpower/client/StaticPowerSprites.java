@@ -10,6 +10,7 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation BLANK_TEXTURE = registerSprite("blank_texture");
 	public static final ResourceLocation BLACK_TEXTURE = registerSprite("black_texture");
+	public static final ResourceLocation EMPTY_TEXTURE = registerSprite("empty_texture");
 
 	public static final ResourceLocation DIGISTORE_VOID_INDICATOR = registerSprite("blocks/digistore/void_indicator");
 	public static final ResourceLocation DIGISTORE_LOCKED_INDICATOR = registerSprite("blocks/digistore/locked_indicator");
