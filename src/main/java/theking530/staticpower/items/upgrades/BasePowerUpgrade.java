@@ -28,8 +28,8 @@ public class BasePowerUpgrade extends BaseUpgrade {
 		double powerRateUpgrade = getTier().powerIOUpgrade.get();
 		powerRateUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
-		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerUpgrade * 100) + "%" + TextFormatting.GREEN + " RF Capacity"));
-		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerRateUpgrade * 100) + "%" + TextFormatting.GREEN + " RF Per Tick"));
+		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerUpgrade * 100) + "%" + TextFormatting.GREEN + " SV Capacity"));
+		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(powerRateUpgrade * 100) + "%" + TextFormatting.GREEN + " SV Per Tick"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

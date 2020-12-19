@@ -113,7 +113,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
 						// Get the thermal conductivity of the cable connected to this destination.
-						double cableConductivity = CableNetworkManager.get(world).getCable(destinations.get(wrapper).getConnectedCable())
+						double cableConductivity = CableNetworkManager.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable())
 								.getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 
 						// Get the thermal conductivity of the attached cable.
@@ -181,7 +181,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		// Check each destination and capture the ones that can recieve heat.
 		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
 			if (wrapper.supportsType(DestinationType.HEAT) && !Network.getGraph().getCables().containsKey(pos)) {
-				IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getDestinationSide()).orElse(null);
+				IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getFirstConnectedDestinationSide()).orElse(null);
 				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), true) > 0) {
 					destinations.put(otherHeatStorage, wrapper);
 				}

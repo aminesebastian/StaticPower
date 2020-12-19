@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
@@ -13,6 +14,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials;
+import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
 
 public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	private CraftingRequestResponse request;
@@ -79,7 +81,6 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		for (AutoCraftingStepWidget widget : stepRenderers) {
 			widget.getTooltips(mousePosition, tooltips, showAdvanced);
 		}
-
 	}
 
 	@Override
@@ -98,15 +99,24 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Translate the matrix to the space of this widget.
 		matrix.push();
 		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
-		
+
 		// Render the widgets.
-		Vector2D indicies = getStartAndEndMaterialIndicies();
-		for (int i = indicies.getXi(); i < indicies.getYi(); i++) {
+		List<RequiredAutoCraftingMaterial> materials = getMaterialsForScrollPosition();
+		for (int i = 0; i < stepRenderers.size(); i++) {
+			// Get the widget.
 			AutoCraftingStepWidget widget = stepRenderers.get(i);
-			widget.updateBeforeRender(matrix, getSize(), partialTicks, mouseX, mouseY);
-			widget.renderForeground(matrix, mouseX, mouseY, partialTicks);
+
+			// If the widget has a cooresponding material, set it and render. Otherwise, set
+			// it to null and do nothing.
+			if (i < materials.size()) {
+				widget.setMaterial(materials.get(i));
+				widget.updateBeforeRender(matrix, getSize(), partialTicks, mouseX, mouseY);
+				widget.renderForeground(matrix, mouseX, mouseY, partialTicks);
+			} else {
+				widget.setMaterial(null);
+			}
 		}
-		
+
 		// Pop the previous translation.
 		matrix.pop();
 
@@ -117,10 +127,10 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		}
 	}
 
-	public Vector2D getStartAndEndMaterialIndicies() {
+	public List<RequiredAutoCraftingMaterial> getMaterialsForScrollPosition() {
 		// If there is no request, do nothing.
 		if (request == null) {
-			return new Vector2D(0, 0);
+			return Collections.emptyList();
 		}
 
 		// Get the required materials.
@@ -129,9 +139,20 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Capture the min and max indicies.
 		int start = 0 + (scrollPosition * columns);
 		int end = start + (columns * rows);
-		end = Math.min(end, materials.getMaterials().size());
 
-		return new Vector2D(start, end);
+		// Make sure we don't go over!
+		if (end >= materials.getMaterials().size()) {
+			end = materials.getMaterials().size() - 1;
+		}
+
+		// Capture the list.
+		List<RequiredAutoCraftingMaterial> output = new ArrayList<RequiredAutoCraftingMaterial>();
+		for (int i = start; i < end; i++) {
+			output.add(materials.getMaterials().get(i));
+		}
+
+		// Return the output.
+		return output;
 	}
 
 	public int getScrollPosition() {

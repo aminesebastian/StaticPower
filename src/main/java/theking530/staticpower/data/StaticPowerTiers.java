@@ -5,6 +5,7 @@ import theking530.staticpower.StaticPower;
 
 public class StaticPowerTiers {
 	public static final ResourceLocation IRON = new ResourceLocation(StaticPower.MOD_ID, "tier_iron");
+	public static final ResourceLocation WOOD = new ResourceLocation(StaticPower.MOD_ID, "tier_wood");
 	public static final ResourceLocation BASIC = new ResourceLocation(StaticPower.MOD_ID, "tier_basic");
 	public static final ResourceLocation ADVANCED = new ResourceLocation(StaticPower.MOD_ID, "tier_advanced");
 	public static final ResourceLocation STATIC = new ResourceLocation(StaticPower.MOD_ID, "tier_static");

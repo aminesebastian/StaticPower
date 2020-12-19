@@ -46,9 +46,12 @@ public class GuiUpgradeTab extends BaseGuiTab {
 			slots.add(slot);
 			msg.addSlot(upgradesInventory, i, 0, 0);
 		}
-		
-		this.tabWidth = 18;
-		this.tabHeight = 38;
+
+		// Change the shape for a 4 slot upgrade inventory.
+		if (upgradesInventory.getSlots() == 4) {
+			this.tabWidth = 18;
+			this.tabHeight = 38;
+		}
 
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
@@ -94,7 +97,7 @@ public class GuiUpgradeTab extends BaseGuiTab {
 		} else if (slots.size() == 4) {
 			int xOffset = -18;
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).xPos = this.xPosition + tabWidth + 4 + ((i/2) * xOffset);
+				slots.get(i).xPos = this.xPosition + tabWidth + 4 + ((i / 2) * xOffset);
 				slots.get(i).yPos = this.yPosition + 24 + ((i % 2) * 18);
 			}
 		}

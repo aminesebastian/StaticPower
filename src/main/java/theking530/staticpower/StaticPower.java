@@ -26,6 +26,7 @@ import theking530.staticpower.data.tiers.StaticPowerTierSilver;
 import theking530.staticpower.data.tiers.StaticPowerTierStatic;
 import theking530.staticpower.data.tiers.StaticPowerTierTin;
 import theking530.staticpower.data.tiers.StaticPowerTierTungsten;
+import theking530.staticpower.data.tiers.StaticPowerTierWood;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
@@ -45,6 +46,7 @@ public class StaticPower {
 	public StaticPower() {
 		StaticPowerConfig.preInitialize();
 
+		StaticPowerConfig.registerTier(StaticPowerTiers.WOOD, StaticPowerTierWood::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.BASIC, StaticPowerTierBasic::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.ADVANCED, StaticPowerTierAdvanced::new);
 		StaticPowerConfig.registerTier(StaticPowerTiers.STATIC, StaticPowerTierStatic::new);

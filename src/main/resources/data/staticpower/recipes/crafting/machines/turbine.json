@@ -1,0 +1,31 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"pip",
+		"ubu",
+		"gmg"
+	],
+	"key": {
+		"b": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"u": {
+			"item": "minecraft:bucket"
+		},
+		"g": {
+			"tag": "forge:gears/tin"
+		},
+		"p": {
+			"tag": "forge:plates/tin"
+		},
+		"m": {
+			"item": "staticpower:motor"
+		},
+		"i": {
+			"item": "minecraft:iron_bars"
+		}
+	},
+	"result": {
+		"item": "staticpower:machine_turbine"
+	}
+}

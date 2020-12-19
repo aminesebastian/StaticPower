@@ -41,7 +41,7 @@ public class CableNetworkGraph {
 
 			// Cache the new values.
 			mapper.getDiscoveredCables().forEach(cable -> Cables.put(cable.getPos(), cable));
-			mapper.getDestinations().forEach(destTe -> Destinations.put(destTe.getPos(), destTe));
+			Destinations = mapper.getDestinations();
 
 			// Raise the network joined and left events.
 			mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(Network, true));

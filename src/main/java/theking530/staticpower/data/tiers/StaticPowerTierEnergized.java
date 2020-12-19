@@ -240,4 +240,14 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	protected int getCableIndustrialFluidCapacity() {
 		return 25000;
 	}
+
+	@Override
+	protected double getTurbineBladeGenerationBoost() {
+		return 2.5;
+	}
+
+	@Override
+	protected int getTurbineBladeDurabilityTicks() {
+		return 864000;
+	}
 }

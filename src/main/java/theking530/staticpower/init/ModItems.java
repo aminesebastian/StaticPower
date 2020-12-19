@@ -42,6 +42,7 @@ import theking530.staticpower.items.tools.Magnet;
 import theking530.staticpower.items.tools.MetalHammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
+import theking530.staticpower.items.tools.TurbineBlades;
 import theking530.staticpower.items.tools.WireCutters;
 import theking530.staticpower.items.tools.chainsaw.Chainsaw;
 import theking530.staticpower.items.tools.chainsaw.ChainsawBlade;
@@ -265,6 +266,14 @@ public class ModItems {
 	public static StaticPowerItem StaticCard;
 	public static StaticPowerItem EnergizedCard;
 	public static StaticPowerItem LumumCard;
+
+	public static TurbineBlades WoodTurbineBlades;
+	public static TurbineBlades BasicTurbineBlades;
+	public static TurbineBlades AdvancedTurbineBlades;
+	public static TurbineBlades StaticTurbineBlades;
+	public static TurbineBlades EnergizedTurbineBlades;
+	public static TurbineBlades LumumTurbineBlades;
+	public static TurbineBlades CreativeTurbineBlades;
 
 	public static StaticPowerItem BasicProcessor;
 	public static StaticPowerItem AdvancedProcessor;
@@ -517,6 +526,15 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticProcessor = new StaticPowerItem("processor_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedProcessor = new StaticPowerItem("processor_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumProcessor = new StaticPowerItem("processor_lumum"));
+
+		// Turbine Blades
+		StaticPowerRegistry.preRegisterItem(WoodTurbineBlades = new TurbineBlades("turbine_blades_wood", StaticPowerTiers.WOOD, StaticPowerAdditionalModels.TURBINE_BLADES_WOOD));
+		StaticPowerRegistry.preRegisterItem(BasicTurbineBlades = new TurbineBlades("turbine_blades_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.TURBINE_BLADES_BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedTurbineBlades = new TurbineBlades("turbine_blades_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticTurbineBlades = new TurbineBlades("turbine_blades_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.TURBINE_BLADES_STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedTurbineBlades = new TurbineBlades("turbine_blades_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumTurbineBlades = new TurbineBlades("turbine_blades_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.TURBINE_BLADES_LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeTurbineBlades = new TurbineBlades("turbine_blades_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
 
 		// Processors
 		StaticPowerRegistry.preRegisterItem(BasicCard = new StaticPowerItem("card_basic"));

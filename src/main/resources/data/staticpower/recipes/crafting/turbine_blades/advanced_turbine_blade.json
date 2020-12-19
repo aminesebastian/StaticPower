@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"i i",
+		" g ",
+		"i i"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/brass"
+		},
+		"g": {
+			"item": "staticpower:gear_box_gold"
+		}
+	},
+	"result": {
+		"item": "staticpower:turbine_blades_advanced"
+	}
+}

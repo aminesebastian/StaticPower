@@ -1,9 +1,8 @@
 package theking530.staticpower.cables.network;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -19,14 +18,14 @@ public class NetworkMapper {
 	private final Set<ServerCable> DiscoveredCables;
 	private final Set<ServerCable> NewlyAddedCables;
 	private final Set<ServerCable> RemovedCables;
-	private final List<DestinationWrapper> Destinations;
+	private HashMap<BlockPos, DestinationWrapper> Destinations;
 
 	public NetworkMapper(Collection<ServerCable> startingCables) {
 		InitialCables = startingCables;
 		DiscoveredCables = new HashSet<ServerCable>();
 		NewlyAddedCables = new HashSet<ServerCable>();
 		RemovedCables = new HashSet<ServerCable>();
-		Destinations = new ArrayList<DestinationWrapper>();
+		Destinations = new HashMap<BlockPos, DestinationWrapper>();
 
 		RemovedCables.addAll(startingCables);
 	}
@@ -55,7 +54,7 @@ public class NetworkMapper {
 		return RemovedCables;
 	}
 
-	public List<DestinationWrapper> getDestinations() {
+	public HashMap<BlockPos, DestinationWrapper> getDestinations() {
 		return Destinations;
 	}
 
@@ -64,8 +63,8 @@ public class NetworkMapper {
 		// disabled on the side we're testing, skip it. Do NOT mark that side as visited
 		// though, as another cable may get to it that is enabled on that side.
 		ServerCable cable = CableNetworkManager.get(world).getCable(currentPosition);
-		
-		for (Direction facing : Direction.values()) {			
+
+		for (Direction facing : Direction.values()) {
 			if (cable != null && cable.isDisabledOnSide(facing)) {
 				continue;
 			}
@@ -76,12 +75,13 @@ public class NetworkMapper {
 				continue;
 			}
 
-			// Add the block to the visited list.
-			visited.add(testPos);
-
 			// Attempt to cache this location if needed. If true, we found a cable and we
 			// continue mapping, otherwise, we stop here.
 			if (scanLocation(world, cable, facing, testPos)) {
+				// Add the block to the visited list.
+				visited.add(testPos);
+				
+				// Recurse.
 				_updateNetworkWorker(world, visited, testPos);
 			}
 		}
@@ -132,10 +132,13 @@ public class NetworkMapper {
 
 			// Make sure it is valid.
 			if (te != null && !te.isRemoved()) {
-
-				// Cache a destination wrapper for it.
-				DestinationWrapper wrapper = new DestinationWrapper(te, scanningCable.getPos(), facing.getOpposite());
-				Destinations.add(wrapper);
+				if (!Destinations.containsKey(location)) {
+					// Cache a destination wrapper for it.
+					DestinationWrapper wrapper = new DestinationWrapper(te, scanningCable.getPos(), facing.getOpposite());
+					Destinations.put(location, wrapper);
+				} else {
+					Destinations.get(location).addConnectedCable(scanningCable.getPos(), facing.getOpposite());
+				}
 			}
 			return false;
 		}

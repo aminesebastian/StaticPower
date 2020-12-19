@@ -215,8 +215,14 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_EMERALD = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_emerald");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_RUBY = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_ruby");
 	public static final ResourceLocation CHAINSAW_BLADE_HARDENED_SAPPHIRE = registerModel("item/attribute_layers/chainsaw_blades/chainsaw_blade_layer_hardened_sapphire");
-	
-	public static final ResourceLocation TURBINE_BLADES = registerModel("block/machines/machine_turbine_blades");
+
+	public static final ResourceLocation TURBINE_BLADES_WOOD = registerModel("block/machines/turbine_blades/turbine_blades_wood");
+	public static final ResourceLocation TURBINE_BLADES_BASIC = registerModel("block/machines/turbine_blades/turbine_blades_basic");
+	public static final ResourceLocation TURBINE_BLADES_ADVANCED = registerModel("block/machines/turbine_blades/turbine_blades_advanced");
+	public static final ResourceLocation TURBINE_BLADES_STATIC = registerModel("block/machines/turbine_blades/turbine_blades_static");
+	public static final ResourceLocation TURBINE_BLADES_ENERGIZED = registerModel("block/machines/turbine_blades/turbine_blades_energized");
+	public static final ResourceLocation TURBINE_BLADES_LUMUM = registerModel("block/machines/turbine_blades/turbine_blades_lumum");
+	public static final ResourceLocation TURBINE_BLADES_CREATIVE = registerModel("block/machines/turbine_blades/turbine_blades_creative");
 
 	@OnlyIn(Dist.CLIENT)
 	public static void regsiterModels() {

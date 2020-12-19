@@ -125,4 +125,14 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	protected int getCableIndustrialFluidCapacity() {
 		return 2147483647;
 	}
+
+	@Override
+	protected double getTurbineBladeGenerationBoost() {
+		return 5.0;
+	}
+
+	@Override
+	protected int getTurbineBladeDurabilityTicks() {
+		return Integer.MAX_VALUE;
+	}
 }

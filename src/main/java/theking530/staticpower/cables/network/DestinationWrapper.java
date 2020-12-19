@@ -21,15 +21,15 @@ public class DestinationWrapper {
 	private final TileEntity tileEntity;
 	private final BlockPos pos;
 	private final Map<Direction, HashSet<DestinationType>> supportedTypes;
-	private final BlockPos connectedCable;
-	private final Direction destinationSide;
+	private final Map<BlockPos, Direction> connectedCables;
+	private final BlockPos initialConnectedCable;
 
 	public DestinationWrapper(TileEntity tileEntity, BlockPos connectedCable, Direction destinationSide) {
-		super();
 		this.tileEntity = tileEntity;
 		this.pos = tileEntity.getPos();
-		this.connectedCable = connectedCable;
-		this.destinationSide = destinationSide;
+		this.connectedCables = new HashMap<BlockPos, Direction>();
+		this.initialConnectedCable = connectedCable;
+		this.connectedCables.put(connectedCable, destinationSide);
 		supportedTypes = new HashMap<Direction, HashSet<DestinationType>>();
 		populateDestinationTypes();
 	}
@@ -48,12 +48,20 @@ public class DestinationWrapper {
 	 * 
 	 * @return
 	 */
-	public Direction getDestinationSide() {
-		return destinationSide;
+	public Map<BlockPos, Direction> getConnectedCables() {
+		return connectedCables;
 	}
 
-	public BlockPos getConnectedCable() {
-		return connectedCable;
+	public BlockPos getFirstConnectedCable() {
+		return initialConnectedCable;
+	}
+
+	public Direction getFirstConnectedDestinationSide() {
+		return connectedCables.get(initialConnectedCable);
+	}
+
+	public void addConnectedCable(BlockPos cablePosition, Direction sideOfTargetCableIsOn) {
+		this.connectedCables.put(cablePosition, sideOfTargetCableIsOn);
 	}
 
 	public HashSet<DestinationType> getTypesForSide(Direction side) {

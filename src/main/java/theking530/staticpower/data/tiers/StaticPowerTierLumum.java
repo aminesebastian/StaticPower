@@ -240,4 +240,14 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	protected int getCableIndustrialFluidCapacity() {
 		return 50000;
 	}
+
+	@Override
+	protected double getTurbineBladeGenerationBoost() {
+		return 3.0;
+	}
+
+	@Override
+	protected int getTurbineBladeDurabilityTicks() {
+		return 1728000;
+	}
 }

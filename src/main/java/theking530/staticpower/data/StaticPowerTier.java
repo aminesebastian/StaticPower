@@ -9,149 +9,155 @@ public abstract class StaticPowerTier {
 	/****************
 	 * Tier Settings
 	 ****************/
-	public ConfigValue<String> tierId;
-	public ConfigValue<String> unlocalizedTierName;
+	public final ConfigValue<String> tierId;
+	public final ConfigValue<String> unlocalizedTierName;
 
 	/***********
 	 * Digistore
 	 ***********/
-	public ConfigValue<Integer> digistoreCardCapacity;
+	public final ConfigValue<Integer> digistoreCardCapacity;
 
 	/*************
 	 * Solar Panel
 	 *************/
-	public ConfigValue<Integer> solarPanelPowerGeneration;
-	public ConfigValue<Integer> solarPanelPowerStorage;
+	public final ConfigValue<Integer> solarPanelPowerGeneration;
+	public final ConfigValue<Integer> solarPanelPowerStorage;
 
 	/*******
 	 * Pump
 	 *******/
-	public ConfigValue<Integer> pumpRate;
+	public final ConfigValue<Integer> pumpRate;
 
 	/***************************
 	 * Extraction Configuration
 	 ***************************/
-	public ConfigValue<Integer> cableExtractorRate;
-	public ConfigValue<Integer> cableExtractionStackSize;
-	public ConfigValue<Integer> cableExtractionFluidRate;
-	public ConfigValue<Integer> cableExtractionFilterSlots;
-	public ConfigValue<Double> cableExtractedItemInitialSpeed;
+	public final ConfigValue<Integer> cableExtractorRate;
+	public final ConfigValue<Integer> cableExtractionStackSize;
+	public final ConfigValue<Integer> cableExtractionFluidRate;
+	public final ConfigValue<Integer> cableExtractionFilterSlots;
+	public final ConfigValue<Double> cableExtractedItemInitialSpeed;
 
 	/*************************
 	 * Retrieval Configuration
 	 *************************/
-	public ConfigValue<Integer> cableRetrievalRate;
-	public ConfigValue<Integer> cableRetrievalStackSize;
-	public ConfigValue<Integer> cableRetrievalFilterSlots;
-	public ConfigValue<Double> cableRetrievedItemInitialSpeed;
+	public final ConfigValue<Integer> cableRetrievalRate;
+	public final ConfigValue<Integer> cableRetrievalStackSize;
+	public final ConfigValue<Integer> cableRetrievalFilterSlots;
+	public final ConfigValue<Double> cableRetrievedItemInitialSpeed;
 
 	/**********************
 	 * Filter Configuration
 	 **********************/
-	public ConfigValue<Integer> cableFilterSlots;
+	public final ConfigValue<Integer> cableFilterSlots;
 
 	/***************************
 	 * Power Cable Configuration
 	 ***************************/
-	public ConfigValue<Integer> cablePowerCapacity;
-	public ConfigValue<Integer> cablePowerDelivery;
+	public final ConfigValue<Integer> cablePowerCapacity;
+	public final ConfigValue<Integer> cablePowerDelivery;
 
 	/**************************
 	 * Item Cable Configuration
 	 **************************/
-	public ConfigValue<Double> itemCableAcceleration;
-	public ConfigValue<Double> itemCableFriction;
-	public ConfigValue<Double> itemCableMaxSpeed;
+	public final ConfigValue<Double> itemCableAcceleration;
+	public final ConfigValue<Double> itemCableFriction;
+	public final ConfigValue<Double> itemCableMaxSpeed;
 
 	/***************************
 	 * Fluid Cable Configuration
 	 ***************************/
-	public ConfigValue<Integer> cableFluidCapacity;
-	public ConfigValue<Integer> cableIndustrialFluidCapacity;
+	public final ConfigValue<Integer> cableFluidCapacity;
+	public final ConfigValue<Integer> cableIndustrialFluidCapacity;
 
 	/********************
 	 * Heat Configuration
 	 ********************/
-	public ConfigValue<Double> heatCableCapacity;
-	public ConfigValue<Double> heatCableConductivity;
-	public ConfigValue<Double> heatSinkCapacity;
-	public ConfigValue<Double> heatSinkConductivity;
-	public ConfigValue<Double> heatSinkElectricHeatGeneration;
-	public ConfigValue<Integer> heatSinkElectricHeatPowerUsage;
+	public final ConfigValue<Double> heatCableCapacity;
+	public final ConfigValue<Double> heatCableConductivity;
+	public final ConfigValue<Double> heatSinkCapacity;
+	public final ConfigValue<Double> heatSinkConductivity;
+	public final ConfigValue<Double> heatSinkElectricHeatGeneration;
+	public final ConfigValue<Integer> heatSinkElectricHeatPowerUsage;
 
 	/*********************
 	 * Power Configuration
 	 *********************/
-	public ConfigValue<Integer> batteryCapacity;
-	public ConfigValue<Integer> portableBatteryCapacity;
+	public final ConfigValue<Integer> batteryCapacity;
+	public final ConfigValue<Integer> portableBatteryCapacity;
 
 	/***********************
 	 * Machine Configuration
 	 ***********************/
-	public ConfigValue<Integer> defaultMachinePowerCapacity;
-	public ConfigValue<Integer> defaultMachinePowerInput;
-	public ConfigValue<Integer> defaultMachinePowerOutput;
+	public final ConfigValue<Integer> defaultMachinePowerCapacity;
+	public final ConfigValue<Integer> defaultMachinePowerInput;
+	public final ConfigValue<Integer> defaultMachinePowerOutput;
 
 	/********************
 	 * Processing Upgrade
 	 ********************/
-	public ConfigValue<Double> processingSpeedUpgrade;
-	public ConfigValue<Double> processingSpeedPowerCost;
+	public final ConfigValue<Double> processingSpeedUpgrade;
+	public final ConfigValue<Double> processingSpeedPowerCost;
 
 	/**************
 	 * Tank Upgrade
 	 **************/
-	public ConfigValue<Double> tankCapacityUpgrade;
+	public final ConfigValue<Double> tankCapacityUpgrade;
 
 	/***************
 	 * Range Upgrade
 	 ***************/
-	public ConfigValue<Double> rangeUpgrade;
+	public final ConfigValue<Double> rangeUpgrade;
 
 	/***************
 	 * Power Upgrade
 	 ***************/
-	public ConfigValue<Double> powerUpgrade;
-	public ConfigValue<Double> powerIOUpgrade;
+	public final ConfigValue<Double> powerUpgrade;
+	public final ConfigValue<Double> powerIOUpgrade;
 
 	/************************
 	 * Heat Capacity Upgrade
 	 ************************/
-	public ConfigValue<Double> heatCapacityUpgrade;
+	public final ConfigValue<Double> heatCapacityUpgrade;
 
 	/************************
 	 * Heat Conductivity Upgrade
 	 ************************/
-	public ConfigValue<Double> heatConductivityUpgrade;
+	public final ConfigValue<Double> heatConductivityUpgrade;
 
 	/***************************
 	 * Output Multiplier Upgrade
 	 ***************************/
-	public ConfigValue<Double> outputMultiplierUpgrade;
-	public ConfigValue<Double> outputMultiplierPowerCostUpgrade;
+	public final ConfigValue<Double> outputMultiplierUpgrade;
+	public final ConfigValue<Double> outputMultiplierPowerCostUpgrade;
 
 	/********************
 	 * Centrifuge Upgrade
 	 ********************/
-	public ConfigValue<Integer> maxCentrifugeSpeedUpgrade;
-	public ConfigValue<Double> centrifugeUpgradedPowerIncrease;
+	public final ConfigValue<Integer> maxCentrifugeSpeedUpgrade;
+	public final ConfigValue<Double> centrifugeUpgradedPowerIncrease;
 
 	/********
 	 * Tools
 	 ********/
-	public ConfigValue<Integer> drillBitUses;
-	public ConfigValue<Integer> chainsawBladeUses;
-	public ConfigValue<Double> hardenedDurabilityBoost;
-	public ConfigValue<Boolean> hardenedDurabilityBoostAdditive;
+	public final ConfigValue<Integer> drillBitUses;
+	public final ConfigValue<Integer> chainsawBladeUses;
+	public final ConfigValue<Double> hardenedDurabilityBoost;
+	public final ConfigValue<Boolean> hardenedDurabilityBoostAdditive;
+
+	/****************
+	 * Turbine Blades
+	 ****************/
+	public final ConfigValue<Integer> turbineBladeDurabilityTicks;
+	public final ConfigValue<Double> turbineBladeGenerationBoost;
 
 	/*******
 	 * Misc
 	 *******/
-	public ConfigValue<Integer> defaultTankCapacity;
-	public ConfigValue<Integer> capsuleCapacity;
-	public ConfigValue<Integer> itemFilterSlots;
+	public final ConfigValue<Integer> defaultTankCapacity;
+	public final ConfigValue<Integer> capsuleCapacity;
+	public final ConfigValue<Integer> itemFilterSlots;
 
-	public ConfigValue<Integer> upgradeOrdinal;
+	public final ConfigValue<Integer> upgradeOrdinal;
 
 	public StaticPowerTier(ForgeConfigSpec.Builder builder) {
 		// Establish field for the tier Id.
@@ -196,6 +202,13 @@ public abstract class StaticPowerTier {
 		builder.push("Pump");
 		pumpRate = builder.comment("The amount of ticks that will elapse between each pump operation. The higher this number, the slower the pump will operate (20 ticks == 1 second).")
 				.translation(StaticPower.MOD_ID + ".config." + "pumpRate").define("PumpRate", this.getPumpRate());
+		builder.pop();
+
+		builder.push("Turbine Blades");
+		turbineBladeDurabilityTicks = builder.comment("The amount of ticks that a turbine blade will last (20 ticks == 1 second).")
+				.translation(StaticPower.MOD_ID + ".config." + "turbineBladeDurabilityTicks").define("TurbineBladeDurabilityTicks", this.getTurbineBladeDurabilityTicks());
+		turbineBladeGenerationBoost = builder.comment("The multiplier applied to the generation of the turbine these blades are installed in..")
+				.translation(StaticPower.MOD_ID + ".config." + "turbineBladeGenerationBoost").define("TurbineBladeGenerationBoost", this.getTurbineBladeGenerationBoost());
 		builder.pop();
 
 		builder.push("Heatsink");
@@ -625,6 +638,14 @@ public abstract class StaticPowerTier {
 	}
 
 	protected double getRetrievedItemInitialSpeed() {
+		return 0;
+	}
+
+	protected double getTurbineBladeGenerationBoost() {
+		return 0.0;
+	}
+
+	protected int getTurbineBladeDurabilityTicks() {
 		return 0;
 	}
 }

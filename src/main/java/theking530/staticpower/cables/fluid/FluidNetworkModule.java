@@ -45,7 +45,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		HashMap<BlockPos, DestinationWrapper> destinations = new HashMap<BlockPos, DestinationWrapper>();
 		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
 			if (wrapper.supportsType(DestinationType.FLUID)) {
-				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, wrapper.getDestinationSide()).orElse(null);
+				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, wrapper.getFirstConnectedDestinationSide()).orElse(null);
 				if (handler != null && handler.fill(FluidTank.getFluid(), FluidAction.SIMULATE) > 0) {
 					destinations.put(pos, wrapper);
 				}
@@ -72,13 +72,13 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Get the target fluid handler, skip if it is null.
-			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, destination.getDestinationSide()).orElse(null);
+			IFluidHandler handler = tile.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, destination.getFirstConnectedDestinationSide()).orElse(null);
 			if (handler == null) {
 				continue;
 			}
 
 			// Get the transfer rate.
-			ServerCable cable = CableNetworkManager.get(world).getCable(destination.getConnectedCable());
+			ServerCable cable = CableNetworkManager.get(world).getCable(destination.getFirstConnectedCable());
 			int transferRate = cable.getIntProperty(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
 
 			// Calculate how much fluid we can offer. If it is less than or equal to 0, do
@@ -139,7 +139,8 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 	public void getReaderOutput(List<ITextComponent> output) {
 		String storedFluid = new MetricConverter(FluidTank.getFluidAmount()).getValueAsString(true);
 		String maximumFluid = new MetricConverter(FluidTank.getCapacity()).getValueAsString(true);
-		output.add(new StringTextComponent(String.format("Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, FluidTank.getFluid().getDisplayName().getString(), maximumFluid)));
+		output.add(
+				new StringTextComponent(String.format("Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, FluidTank.getFluid().getDisplayName().getString(), maximumFluid)));
 	}
 
 	@Override

@@ -29,7 +29,7 @@ public class SDTime {
 
 		StringBuilder output = new StringBuilder();
 		if (days > 0) {
-			output.append(days + " ");
+			output.append(days + "D ");
 			prevPresent = true;
 		}
 		if (hours > 0 || prevPresent) {

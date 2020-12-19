@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"particle": "staticpower:blocks/machines/turbine",
-		"texture": "staticpower:blocks/machines/turbine"
+		"particle": "staticpower:blocks/machines/turbine_blades/turbine_blades_basic",
+		"texture": "staticpower:blocks/machines/turbine_blades/turbine_blades_basic"
 	},
 	"elements": [
 		{

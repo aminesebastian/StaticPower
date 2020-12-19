@@ -32,7 +32,7 @@ public class ContainerTurbine extends StaticPowerTileEntityContainer<TileEntityT
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().turbineInventory, 0, 80, 32));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().turbineBladeInventory, 0, 80, 32));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

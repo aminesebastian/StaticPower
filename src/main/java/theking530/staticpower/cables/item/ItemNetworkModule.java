@@ -210,7 +210,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// Calculate the shortest path.
 		for (RetrivalSourceWrapper source : sources) {
 			// Get all the potential paths.
-			List<Path> paths = Network.getPathCache().getPaths(source.getDestinationWrapper().getConnectedCable(), destinationPosition, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+			List<Path> paths = Network.getPathCache().getPaths(source.getDestinationWrapper().getFirstConnectedCable(), destinationPosition, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 
 			// Iterate through all the paths to the proposed tile entity.
 			for (Path path : paths) {
@@ -231,7 +231,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// If we have a path, get the source inventory.
 		if (shortestPath != null) {
 			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity()
-					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getDestinationSide()).orElse(null);
+					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getFirstConnectedDestinationSide()).orElse(null);
 
 			// If the source inventory is valid.
 			if (sourceInv != null) {
@@ -239,8 +239,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				ItemStack pulledAmount = sourceInv.extractItem(targetSource.getInventorySlot(), maxExtract, true);
 
 				// Attempt to route that amount, and return the actual amount routed.
-				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getDestinationSide().getOpposite(),
-						targetSource.getDestinationWrapper().getConnectedCable(), false, false, blocksPerSecond);
+				ItemStack actuallyTransfered = routeItem(pulledAmount, shortestPath, targetSource.getDestinationWrapper().getFirstConnectedDestinationSide().getOpposite(),
+						targetSource.getDestinationWrapper().getFirstConnectedCable(), false, false, blocksPerSecond);
 
 				// Then, extract the actual amount routed.
 				sourceInv.extractItem(targetSource.getInventorySlot(), pulledAmount.getCount() - actuallyTransfered.getCount(), false);
@@ -761,7 +761,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			AtomicReference<List<RetrivalSourceWrapper>> wrappers = new AtomicReference<List<RetrivalSourceWrapper>>(validDestinations);
 
 			// If we're able to insert into that inventory, set the atomic boolean.
-			dest.getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dest.getDestinationSide()).ifPresent(inv -> {
+			dest.getTileEntity().getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, dest.getFirstConnectedDestinationSide()).ifPresent(inv -> {
 				// If this inventory contains the provided item, add the destination to the
 				// list.
 				int slot = InventoryUtilities.getFirstSlotContainingItem(item, inv);

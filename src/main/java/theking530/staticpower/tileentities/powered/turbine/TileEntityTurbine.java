@@ -10,12 +10,12 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.Direction;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -30,6 +30,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.turbine.TurbineRecipe;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.items.tools.TurbineBlades;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -58,7 +59,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<TurbineRenderingState> TURBINE_RENDERING_STATE = new ModelProperty<>();
 
-	public final InventoryComponent turbineInventory;
+	public final InventoryComponent turbineBladeInventory;
 	public final FluidTankComponent inputFluidTankComponent;
 	public final FluidTankComponent outputFluidTankComponent;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -79,9 +80,9 @@ public class TileEntityTurbine extends TileEntityMachine {
 
 		// Register the input inventory and only let it receive items if they are
 		// burnable.
-		registerComponent(turbineInventory = new InventoryComponent("TurbineInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
+		registerComponent(turbineBladeInventory = new InventoryComponent("TurbineInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return ForgeHooks.getBurnTime(stack) > 0;
+				return stack.getItem() instanceof TurbineBlades;
 			}
 		}));
 
@@ -99,7 +100,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 				.setUpgradeInventory(upgradesInventory));
 
 		// Setup the I/O servos.
-		registerComponent(new InputServoComponent("InputServo", 2, turbineInventory));
+		registerComponent(new InputServoComponent("InputServo", 2, turbineBladeInventory));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputFluidTankComponent, MachineSideMode.Output));
 
 		// Don't allow this to receive power from external sources and let it output all
@@ -125,11 +126,14 @@ public class TileEntityTurbine extends TileEntityMachine {
 
 				if (recipe != null) {
 					if (getProcessingState(recipe).isOk()) {
+						// Get the recieve amount.
+						int recieveAmount = getGenerationPerTick();
+
 						// Update the energy storage rates.
-						energyStorage.setMaxInput(recipe.getGenerationAmount());
+						energyStorage.setMaxInput(recieveAmount);
 
 						// Generate the power.
-						energyStorage.addPower(getGenerationPerTick());
+						energyStorage.addPower(recieveAmount);
 
 						// Start the sound.
 						if (!isGenerating) {
@@ -142,6 +146,11 @@ public class TileEntityTurbine extends TileEntityMachine {
 						inputFluidTankComponent.drain(recipe.getInput(), FluidAction.EXECUTE);
 						if (recipe.hasOutput()) {
 							outputFluidTankComponent.fill(recipe.getOutput(), FluidAction.EXECUTE);
+						}
+
+						// Damage the turbine blades.
+						if (turbineBladeInventory.getStackInSlot(0).attemptDamageItem(1, world.rand, null)) {
+							world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
 						}
 
 						// Mark as having generated.
@@ -193,9 +202,19 @@ public class TileEntityTurbine extends TileEntityMachine {
 	}
 
 	public int getGenerationPerTick() {
+		// Get the recipe.
 		TurbineRecipe recipe = getRecipe().orElse(null);
+
+		// If it exists.
 		if (recipe != null) {
-			return recipe.getGenerationAmount();
+			// If the blades are installed, use the blade power multiplier, otherwise
+			// return the default of the recipe.
+			if (hasTurbineBlades()) {
+				TurbineBlades bladeItem = getTurbileBladesItem();
+				return (int) (recipe.getGenerationAmount() * StaticPowerConfig.getTier(bladeItem.getTier()).turbineBladeGenerationBoost.get());
+			} else {
+				return recipe.getGenerationAmount();
+			}
 		}
 		return 0;
 	}
@@ -214,7 +233,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 
 		// Check to make sure we have turbine blades.
 		if (!hasTurbineBlades()) {
-			return ProcessingCheckState.error("Missing Turbine!");
+			return ProcessingCheckState.error("Missing Turbine Blades!");
 		}
 
 		return ProcessingCheckState.ok();
@@ -226,7 +245,26 @@ public class TileEntityTurbine extends TileEntityMachine {
 	}
 
 	public boolean hasTurbineBlades() {
-		return true;
+		// Get the blades.
+		ItemStack blades = turbineBladeInventory.getStackInSlot(0);
+
+		// IF there are none, return false.
+		if (blades.isEmpty()) {
+			return false;
+		}
+
+		// Check the durability.
+		return blades.getDamage() < blades.getMaxDamage();
+	}
+
+	public TurbineBlades getTurbileBladesItem() {
+		if (hasTurbineBlades()) {
+			ItemStack blades = turbineBladeInventory.getStackInSlot(0);
+			if (blades.getItem() instanceof TurbineBlades) {
+				return (TurbineBlades) blades.getItem();
+			}
+		}
+		return null;
 	}
 
 	protected void suckFluidFromBelow() {
@@ -265,10 +303,11 @@ public class TileEntityTurbine extends TileEntityMachine {
 	}
 
 	public class TurbineRenderingState {
-		public static final float MAX_SPEED = 720;
+		public static final float MAX_SPEED = 1080;
 		public float speed;
 		public float rotationAngle;
 		public float lastUpdateTime;
+		public ResourceLocation bladesTier;
 
 		public TurbineRenderingState() {
 			rotationAngle = 0.0f;

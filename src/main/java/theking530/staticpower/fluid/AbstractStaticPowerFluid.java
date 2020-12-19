@@ -145,7 +145,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 	@Override
 	protected FluidAttributes createAttributes() {
 		FluidAttributes.Builder attributes = FluidAttributes.builder(new ResourceLocation(StaticPower.MOD_ID, StillTexture), new ResourceLocation(StaticPower.MOD_ID, FlowingTexture))
-				.translationKey(FluidBlock.get().getTranslationKey().replace("block", "fluid"));
+				.translationKey(FluidBlock.get().getTranslationKey().replace("block", "fluid")).color(0xaaffffff);
 		if (AdditionalAtrributesDelegate != null) {
 			AdditionalAtrributesDelegate.accept(attributes);
 		}

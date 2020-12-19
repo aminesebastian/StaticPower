@@ -60,8 +60,6 @@ public class CableNetworkManager extends WorldSavedData {
 			firstTick = true;
 		}
 		getNetworks().forEach(n -> n.tick());
-		// getNetworks().forEach(n -> System.out.println("ID:" + n.getId() + " Cables: "
-		// + n.getGraph().getCables().size()));
 
 		List<Long> toRemove = new ArrayList<Long>();
 		for (long id : Networks.keySet()) {
@@ -77,14 +75,12 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void addCable(ServerCable cable) {
 		if (!firstTick) {
-			LOGGER.error(
-					String.format("Attempted to add a cable before the world is fully loaded: %1$s.", cable.getPos()));
+			LOGGER.error(String.format("Attempted to add a cable before the world is fully loaded: %1$s.", cable.getPos()));
 			return;
 		}
 
 		if (WorldCables.containsKey(cable.getPos())) {
-			throw new RuntimeException(
-					String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
+			throw new RuntimeException(String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
 		}
 		WorldCables.put(cable.getPos(), cable);
 		LOGGER.debug(String.format("Cable added at position: %1$s.", cable.getPos()));
@@ -101,8 +97,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void refreshCable(ServerCable cable) {
 		if (cable.Network == null) {
-			throw new RuntimeException(String
-					.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
+			throw new RuntimeException(String.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
 		}
 
 		// Get the original network's cables.
@@ -148,8 +143,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void removeCable(BlockPos pos) {
 		if (!WorldCables.containsKey(pos)) {
-			throw new RuntimeException(
-					String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
+			throw new RuntimeException(String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
 		}
 		// Get the cable.
 		ServerCable cable = getCable(pos);
@@ -179,8 +173,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void addNetwork(CableNetwork network) {
 		if (Networks.containsKey(network.getId())) {
-			throw new RuntimeException(
-					String.format("Attempted to register a network with duplicate Id: %1$s.", network.getId()));
+			throw new RuntimeException(String.format("Attempted to register a network with duplicate Id: %1$s.", network.getId()));
 		}
 		network.setWorld(World);
 		Networks.put(network.getId(), network);
@@ -190,8 +183,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void removeNetwork(long id) {
 		if (!Networks.containsKey(id)) {
-			throw new RuntimeException(
-					String.format("Attempted to remove a network with Id: %1$s that had not been registered.", id));
+			throw new RuntimeException(String.format("Attempted to remove a network with Id: %1$s that had not been registered.", id));
 		}
 
 		Networks.remove(id);
@@ -253,8 +245,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 			firstAdjacentCable.getNetwork().setOrigin(firstAdjacentCable.getPos());
 
-			NetworkMapper result = firstAdjacentCable.getNetwork().updateGraph(firstAdjacentCable.getWorld(),
-					firstAdjacentCable.getPos());
+			NetworkMapper result = firstAdjacentCable.getNetwork().updateGraph(firstAdjacentCable.getWorld(), firstAdjacentCable.getPos());
 
 			// For sanity checking
 			boolean removedCableFound = false;
@@ -420,8 +411,7 @@ public class CableNetworkManager extends WorldSavedData {
 	}
 
 	public static CableNetworkManager get(ServerWorld world) {
-		String name = PREFIX + "_" + world.getDimensionKey().getLocation().getNamespace() + "_"
-				+ world.getDimensionKey().getLocation().getPath();
+		String name = PREFIX + "_" + world.getDimensionKey().getLocation().getNamespace() + "_" + world.getDimensionKey().getLocation().getPath();
 
 		return world.getSavedData().getOrCreate(() -> new CableNetworkManager(name, world), name);
 	}

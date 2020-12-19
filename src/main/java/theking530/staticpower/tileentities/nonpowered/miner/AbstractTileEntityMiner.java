@@ -313,17 +313,19 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		}
 
 		// Forward to the first actual block.
+		boolean minableBlockFound = false;
 		for (int i = 0; i < blocks.size(); i++) {
 			BlockState test = world.getBlockState(blocks.get(i));
 			if (canMineBlock(test, blocks.get(i))) {
 				currentBlockIndex = i;
+				minableBlockFound = true;
 				break;
 			}
 		}
 
-		// If we are currently on a block that is out of range, set the block index to
+		// If we are currently on a block that is out of range, or no minable blocks were found, set the block index to
 		// -1 as we are already done.
-		if (currentBlockIndex >= blocks.size() - 1) {
+		if (!minableBlockFound || currentBlockIndex >= blocks.size() - 1) {
 			currentBlockIndex = -1;
 		}
 	}

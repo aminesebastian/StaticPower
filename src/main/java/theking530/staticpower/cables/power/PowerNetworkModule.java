@@ -1,11 +1,13 @@
 package theking530.staticpower.cables.power;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -44,11 +46,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		// Check to make sure we have power and valid desinations.
 		if (EnergyStorage.getStoredPower() > 0 && Network.getGraph().getDestinations().size() > 0) {
 			// Get a map of all the applicable destination that support recieveing power.
-			HashMap<PowerEnergyInterface, DestinationWrapper> destinations = new HashMap<PowerEnergyInterface, DestinationWrapper>();
+			List<PowerEnergyInterfaceWrapper> destinations = new ArrayList<PowerEnergyInterfaceWrapper>();
+
 			Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-				PowerEnergyInterface powerInterface = getInterfaceForDesination(wrapper);
-				if (powerInterface != null) {
-					destinations.put(powerInterface, wrapper);
+				List<PowerEnergyInterfaceWrapper> powerInterfaces = getInterfaceForDesination(wrapper);
+				if (powerInterfaces.size() > 0) {
+					destinations.addAll(powerInterfaces);
 				}
 			});
 
@@ -61,28 +64,22 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			int outputPerDestination = Math.max(1, EnergyStorage.getStoredPower() / destinations.size());
 
 			// Distribute the power to the destinations.
-			for (PowerEnergyInterface powerInterface : destinations.keySet()) {
-				if (powerInterface != null) {
-					if (powerInterface.canRecievePower()) {
-						// Get the amount of power we can supply.
-						int toSupply = Math.min(
-								CableNetworkManager.get(Network.getWorld()).getCable(destinations.get(powerInterface).getConnectedCable()).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY),
-								outputPerDestination);
+			for (PowerEnergyInterfaceWrapper powerWrapper : destinations) {
+				// Get the amount of power we can supply.
+				int toSupply = Math.min(CableNetworkManager.get(Network.getWorld()).getCable(powerWrapper.cablePos).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY),
+						outputPerDestination);
 
-						// Supply the power.
-						int supplied = powerInterface.receivePower(Math.min(toSupply, EnergyStorage.getCurrentMaximumPowerOutput()), false);
+				// Supply the power.
+				int supplied = powerWrapper.powerInterface.receivePower(Math.min(toSupply, EnergyStorage.getCurrentMaximumPowerOutput()), false);
 
-						// If we supplied any power, extract the power.
-						if (supplied > 0) {
-							EnergyStorage.setCanDrain(true);
-							EnergyStorage.drainPower(supplied, false);
-							EnergyStorage.setCanDrain(false);
-						}
-					}
+				// If we supplied any power, extract the power.
+				if (supplied > 0) {
+					EnergyStorage.setCanDrain(true);
+					EnergyStorage.drainPower(supplied, false);
+					EnergyStorage.setCanDrain(false);
 				}
 			}
 		}
-
 	}
 
 	@Override
@@ -121,19 +118,29 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Nullable
-	public PowerEnergyInterface getInterfaceForDesination(DestinationWrapper wrapper) {
-		if (wrapper.supportsType(DestinationType.POWER)) {
-			IStaticVoltHandler powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, wrapper.getDestinationSide()).orElse(null);
-			if (powerStorage != null && powerStorage.receivePower(Integer.MAX_VALUE, true) > 0) {
-				return new PowerEnergyInterface(powerStorage);
-			}
-		} else if (wrapper.supportsType(DestinationType.FORGE_POWER)) {
-			IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY, wrapper.getDestinationSide()).orElse(null);
-			if (energyStorage != null && energyStorage.receiveEnergy(Integer.MAX_VALUE, true) > 0) {
-				return new PowerEnergyInterface(energyStorage);
+	public List<PowerEnergyInterfaceWrapper> getInterfaceForDesination(DestinationWrapper wrapper) {
+		// Allocate the output.
+		List<PowerEnergyInterfaceWrapper> output = new ArrayList<PowerEnergyInterfaceWrapper>();
+
+		// Iterate through all the connected cables.
+		for (BlockPos cablePos : wrapper.getConnectedCables().keySet()) {
+			// Get the cable pos.
+			Direction connectedSide = wrapper.getConnectedCables().get(cablePos);
+
+			if (wrapper.supportsType(DestinationType.POWER)) {
+				IStaticVoltHandler powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, connectedSide).orElse(null);
+				if (powerStorage != null && powerStorage.canRecievePower() && powerStorage.receivePower(Integer.MAX_VALUE, true) > 0) {
+					output.add(new PowerEnergyInterfaceWrapper(new PowerEnergyInterface(powerStorage), cablePos));
+				}
+			} else if (wrapper.supportsType(DestinationType.FORGE_POWER)) {
+				IEnergyStorage energyStorage = wrapper.getTileEntity().getCapability(CapabilityEnergy.ENERGY, connectedSide).orElse(null);
+				if (energyStorage != null && energyStorage.canReceive() && energyStorage.receiveEnergy(Integer.MAX_VALUE, true) > 0) {
+					output.add(new PowerEnergyInterfaceWrapper(new PowerEnergyInterface(energyStorage), cablePos));
+				}
 			}
 		}
-		return null;
+
+		return output;
 	}
 
 	@Override
@@ -141,5 +148,15 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		String storedEnergy = new MetricConverter(getEnergyStorage().getStoredPower()).getValueAsString(true);
 		String maximumEnergy = new MetricConverter(getEnergyStorage().getCapacity()).getValueAsString(true);
 		output.add(new StringTextComponent(String.format("Contains: %1$sRF out of a maximum of %2$sRF.", storedEnergy, maximumEnergy)));
+	}
+
+	protected class PowerEnergyInterfaceWrapper {
+		protected PowerEnergyInterface powerInterface;
+		protected BlockPos cablePos;
+
+		protected PowerEnergyInterfaceWrapper(PowerEnergyInterface powerInterface, BlockPos cablePos) {
+			this.powerInterface = powerInterface;
+			this.cablePos = cablePos;
+		}
 	}
 }

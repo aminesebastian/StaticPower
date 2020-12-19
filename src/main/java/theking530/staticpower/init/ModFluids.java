@@ -60,11 +60,11 @@ public class ModFluids {
 		}).build());
 
 		registerFluidBundle(Ethanol = new StaticPowerFluidBuilder("ethanol").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().viscosity(500);
+			builder.viscosity(500);
 		}).build());
 
 		registerFluidBundle(Mash = new StaticPowerFluidBuilder("mash").addAttributes(builder -> {
-			builder.gaseous().viscosity(2000);
+			builder.viscosity(2000);
 		}).addAutoBucket().build());
 
 		registerFluidBundle(EvaporatedMash = new StaticPowerFluidBuilder("evaporated_mash").addAutoBucket().addAttributes(builder -> {
@@ -78,16 +78,16 @@ public class ModFluids {
 		}).build());
 
 		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("oil_seed").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().viscosity(500);
+			builder.viscosity(500);
 		}).build());
 		registerFluidBundle(TreeOil = new StaticPowerFluidBuilder("oil_tree").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().viscosity(500);
+			builder.viscosity(500);
 		}).build());
 		registerFluidBundle(TreeSap = new StaticPowerFluidBuilder("tree_sap").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().viscosity(2000);
+			builder.viscosity(2000);
 		}).build());
 		registerFluidBundle(InfernalTreeSap = new StaticPowerFluidBuilder("infernal_tree_sap").addAttributes(builder -> {
-			builder.gaseous().viscosity(2000);
+			builder.viscosity(2000);
 		}).addAutoBucket().build());
 
 		registerFluidBundle(Milk = new StaticPowerFluidBuilder("milk").addBucketSupplier(() -> Items.MILK_BUCKET).setShouldRegisterBucket(false).build());

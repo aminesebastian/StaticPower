@@ -331,9 +331,16 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 		// Iterate through all the craftables.
 		for (ItemStack cached : stacks) {
+			// Get the stack stripped.
 			ItemStack strippedCached = stripCraftableTag(cached.copy());
+
 			// If the item is already cached, mark it as craftable.
 			if (ItemUtilities.areItemStacksStackable(strippedCached, stackToCache)) {
+				// If we already have a craftable stack for this item, return early.
+				if (getCraftableStateOfItem(cached) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
+					return;
+				}
+
 				// Mark the craftable state.
 				// state.
 				if (!cached.hasTag()) {
