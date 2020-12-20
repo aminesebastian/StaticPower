@@ -9,10 +9,10 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
-import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
-import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager.CraftingRequestType;
 import theking530.staticpower.cables.digistore.crafting.network.PacketRequestDigistoreCraftRecalculation;
 import theking530.staticpower.cables.digistore.crafting.network.PacketSimulateDigistoreCraftingRequestResponse;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -28,21 +28,21 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 		}
 	}
 
-	private CraftingRequestResponse craftingResponse;
+	private CraftingStepsBundleContainer bundles;
 	private long networkId;
 
 	public ContainerCraftingAmount(int windowId, PlayerInventory playerInventory, PacketBuffer data) {
-		this(windowId, playerInventory, CraftingRequestResponse.read(data.readCompoundTag()), data.readLong());
+		this(windowId, playerInventory, CraftingStepsBundleContainer.read(data.readCompoundTag()), data.readLong());
 	}
 
-	public ContainerCraftingAmount(int windowId, PlayerInventory playerInventory, CraftingRequestResponse craftingResponse, long networkId) {
+	public ContainerCraftingAmount(int windowId, PlayerInventory playerInventory, CraftingStepsBundleContainer bundles, long networkId) {
 		super(TYPE, windowId, playerInventory);
-		this.craftingResponse = craftingResponse;
+		this.bundles = bundles;
 		this.networkId = networkId;
 	}
 
-	public CraftingRequestResponse getCraftingResponse() {
-		return craftingResponse;
+	public CraftingStepsBundleContainer getBundleContainer() {
+		return bundles;
 	}
 
 	public void updateCraftingResponse(ItemStack target, int amount) {
@@ -52,8 +52,8 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 			CableNetwork network = CableNetworkManager.get(getPlayerInventory().player.world).getNetworkById(networkId);
 			DigistoreNetworkModule digistoreModule = network.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 			if (digistoreModule != null && digistoreModule.isManagerPresent()) {
-				CraftingRequestResponse newResponse = digistoreModule.getCraftingManager().addCraftingRequest(target, amount, CraftingRequestType.SIMULATE_NO_LIMITS);
-				PacketSimulateDigistoreCraftingRequestResponse newCraftingRequest = new PacketSimulateDigistoreCraftingRequestResponse(windowId, newResponse);
+				CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().getAllCraftingLists(target, amount);
+				PacketSimulateDigistoreCraftingRequestResponse newCraftingRequest = new PacketSimulateDigistoreCraftingRequestResponse(windowId, newBundles);
 				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player, newCraftingRequest);
 			}
 		} else {
@@ -62,7 +62,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 		}
 	}
 
-	public void makeRequest(ItemStack target, int amount) {
+	public void makeRequest(CraftingStepsBundle bundle) {
 		// If on the server.
 		if (!getPlayerInventory().player.world.isRemote) {
 			// Get the network and the digistore module.
@@ -72,7 +72,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 			// If the module is valid and we still have the manager present, add the
 			// request.
 			if (digistoreModule != null && digistoreModule.isManagerPresent()) {
-				digistoreModule.getCraftingManager().addCraftingRequest(target, amount, CraftingRequestType.EXECUTE);
+				digistoreModule.getCraftingManager().addCraftingRequest(bundle);
 				revertToParent();
 			}
 		} else {
@@ -80,8 +80,8 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 		}
 	}
 
-	public void onCraftingResponseUpdated(CraftingRequestResponse response) {
-		this.craftingResponse = response;
+	public void onCraftingResponseUpdated(CraftingStepsBundleContainer bundles) {
+		this.bundles = bundles;
 	}
 
 	@Override

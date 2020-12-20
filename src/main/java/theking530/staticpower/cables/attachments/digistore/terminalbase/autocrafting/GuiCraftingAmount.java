@@ -14,6 +14,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.digistore.crafting.network.PacketMakeDigistoreCraftingRequest;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.container.PacketRevertToParentContainer;
@@ -33,10 +34,15 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	public TextButton plusTen;
 	public TextButton minusOne;
 	public TextButton minusTen;
+
+	public TextButton leftRecipe;
+	public TextButton rightRecipe;
+
 	public TextButton confirm;
 	public ScrollBarWidget scrollBar;
 	public SpriteButton close;
 	public AutoCraftingStepsWidget stepsWidget;
+	private int bundleIndex;
 
 	public GuiCraftingAmount(ContainerCraftingAmount container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 165, 198);
@@ -46,12 +52,13 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	public void initializeGui() {
 		super.initializeGui();
 		guiTop -= 30;
+		bundleIndex = 0;
 
 		missingIngredientDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 
-		craftingStack = new ItemDrawable(getContainer().getCraftingResponse().getCraftingItem());
+		craftingStack = new ItemDrawable(getCurrentBundle().getOutput());
 		registerWidget(craftingStackDrawableWidget = new DrawableWidget(75, 16, 16, 16, craftingStack));
-		craftingStackDrawableWidget.setTooltip(getContainer().getCraftingResponse().getCraftingItem().getDisplayName());
+		craftingStackDrawableWidget.setTooltip(getCurrentBundle().getOutput().getDisplayName());
 
 		registerWidget(close = new SpriteButton(152, 4, 8, 8, StaticPowerSprites.CLOSE, null, (b, n) -> goBack()));
 		registerWidget(minusTen = new TextButton(28, 176, 25, 16, "-10", (b, n) -> modifyCraftingAmmount(-10)));
@@ -59,8 +66,28 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		registerWidget(plusOne = new TextButton(112, 176, 20, 16, "+1", (b, n) -> modifyCraftingAmmount(1)));
 		registerWidget(plusTen = new TextButton(134, 176, 25, 16, "+10", (b, n) -> modifyCraftingAmmount(10)));
 		registerWidget(confirm = new TextButton(61, 176, 45, 16, "Confirm", (b, n) -> confirmCraft()));
+
+		registerWidget(leftRecipe = new TextButton(60, 18, 14, 14, "<", (b, n) -> modifyBundleIndex(-1)));
+		registerWidget(rightRecipe = new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)));
+
 		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 119));
 		registerWidget(stepsWidget = new AutoCraftingStepsWidget(8, 53, 136, 95, MAX_ROWS, COLUMNS));
+
+		// Since we start at 1 item, disable the ability to decrement until we have gone
+		// up at least once.
+		minusTen.setEnabled(false);
+		minusOne.setEnabled(false);
+
+		// Since we start on bundle 0, we can't go left. That should be disabled. If
+		// there are more than one recipe, then the right button can be enabled. If
+		// there is only one recipe, hide both buttons.
+		if (getContainer().getBundleContainer().getBundles().size() > 1) {
+			leftRecipe.setEnabled(false);
+			rightRecipe.setEnabled(getContainer().getBundleContainer().getBundles().size() > 1);
+		} else {
+			leftRecipe.setVisible(false);
+			rightRecipe.setVisible(false);
+		}
 
 		// Set the initial request amount to 1. Don't allow any non-numerics and do not
 		// let the number go higher than the max craftable.
@@ -78,28 +105,37 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 				}
 
 				// Recalculate the crafting response.
-				getContainer().updateCraftingResponse(getContainer().getCraftingResponse().getCraftingItem(), Integer.parseInt(text));
+				getContainer().updateCraftingResponse(getCurrentBundle().getOutput(), Integer.parseInt(text));
 			}
 		}));
+	}
+
+	private CraftingStepsBundle getCurrentBundle() {
+		return getContainer().getBundleContainer().getBundle(bundleIndex);
 	}
 
 	@Override
 	public void updateData() {
 		// Update the request.
-		stepsWidget.setRequest(getContainer().getCraftingResponse());
+		stepsWidget.setRequest(getCurrentBundle());
 
 		// Update the scroll offset.
 		scrollBar.setMaxScroll(stepsWidget.getMaxScrollPosition());
 		stepsWidget.setScrollPosition(scrollBar.getScrollAmount());
 
 		// Update the confirm state.
-		confirm.setEnabled(!getContainer().getCraftingResponse().getBillOfMaterials().isMissingMaterials());
+		confirm.setEnabled(!getCurrentBundle().getBillOfMaterials().isMissingMaterials());
 	}
 
 	protected void confirmCraft() {
-		PacketMakeDigistoreCraftingRequest request = new PacketMakeDigistoreCraftingRequest(getContainer().windowId, getContainer().getCraftingResponse().getCraftingItem(),
-				getContainer().getCraftingResponse().getCraftableAmount());
+		PacketMakeDigistoreCraftingRequest request = new PacketMakeDigistoreCraftingRequest(getContainer().windowId, getCurrentBundle());
 		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, request);
+	}
+
+	protected void modifyBundleIndex(int delta) {
+		bundleIndex = SDMath.clamp(bundleIndex + delta, 0, getContainer().getBundleContainer().getBundles().size() - 1);
+		leftRecipe.setEnabled(bundleIndex > 0);
+		rightRecipe.setEnabled(bundleIndex < getContainer().getBundleContainer().getBundles().size() - 1);
 	}
 
 	protected void modifyCraftingAmmount(int delta) {

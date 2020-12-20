@@ -182,7 +182,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		// Update the crafting widget and the tool tips.
 		if (getContainer().getCurrentCraftingQueue().size() > 0) {
 			CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
-			craftingStepsWidget.setRequest(currentRequest);
+			craftingStepsWidget.setRequest(currentRequest.getStepsBundle());
 			craftingViewButton.setTooltip(new StringTextComponent(String.format("%1$d jobs currently queued.", getContainer().getCurrentCraftingQueue().size())));
 		} else {
 			craftingStepsWidget.setRequest(null);

@@ -1,7 +1,6 @@
 package theking530.staticpower.cables.digistore.crafting;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -16,25 +15,23 @@ import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern.EncodedIngredient;
-import theking530.staticpower.cables.digistore.crafting.TestRecipeTreeGenerator.AutoCraftingTree;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsGenerator;
+import theking530.staticpower.cables.digistore.crafting.recipes.RecipeTreeGenerator;
+import theking530.staticpower.cables.digistore.crafting.recipes.RecipeTreeGenerator.AutoCraftingTree;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.utilities.InventoryUtilities;
 
 public class DigistoreNetworkCraftingManager {
 	public static final int MAX_CRAFT_QUERY_DEPTH = 128;
 	public static final Logger LOGGER = LogManager.getLogger(DigistoreNetworkCraftingManager.class);
 	private final DigistoreNetworkModule module;
 	private final LinkedHashMap<Long, CraftingRequestResponse> craftingRequests;
-
-	public enum CraftingRequestType {
-		SIMULATE, SIMULATE_NO_LIMITS, EXECUTE
-	}
 
 	public DigistoreNetworkCraftingManager(DigistoreNetworkModule module) {
 		this.module = module;
@@ -45,6 +42,8 @@ public class DigistoreNetworkCraftingManager {
 		if (craftingRequests.isEmpty()) {
 			return;
 		}
+
+		// craftingRequests.clear();
 
 		// Allocate a list of completed crafts to then remove.
 		List<Long> completedCrafts = new LinkedList<Long>();
@@ -79,251 +78,50 @@ public class DigistoreNetworkCraftingManager {
 		return craftingRequests.containsKey(id);
 	}
 
-	public CraftingRequestResponse addCraftingRequest(ItemStack requestedItem, int amount, CraftingRequestType requestType) {
-		// Strip any autocrafting data from the stack if needed.
+	public CraftingStepsBundleContainer getAllCraftingLists(ItemStack requestedItem, int amount) {
+		// Strip any autocrafting data from the stack if needed. Set the count to 1 to
+		// so we have an example stack of exactly one.
 		ItemStack strippedItem = requestedItem.copy();
-		strippedItem.setCount(1);
 		DigistoreInventorySnapshot.stripCraftableTag(strippedItem);
+		strippedItem.setCount(1);
 
 		// Take a snapshot of the module's inventory.
 		DigistoreInventorySnapshot snapshot = module.getSimulatedNetworkInventorySnapshot();
 
-		// Allocate all the required steps.
-		List<AutoCraftingStep> steps = new ArrayList<AutoCraftingStep>();
-
-		// Add the final step.
-		AutoCraftingStep intialStep = new AutoCraftingStep(Ingredient.fromStacks(strippedItem), 0, amount, amount);
-		steps.add(intialStep);
-
-		// Get all the required steps.
-		int craftableAmount = generatePatternSteps(new EncodedIngredient(strippedItem, 1), amount, snapshot, steps, null, 0, requestType);
-
-		// TESTING
-		TestRecipeTreeGenerator test = new TestRecipeTreeGenerator();
+		// Generate all the crafting trees.
+		RecipeTreeGenerator test = new RecipeTreeGenerator();
 		List<AutoCraftingTree> trees = test.generateTree(strippedItem, amount, snapshot);
+
+		// Allocate the output.
+		List<CraftingStepsBundle> output = new ArrayList<CraftingStepsBundle>();
+
+		// Generate crafting steps for all the trees.
 		for (AutoCraftingTree tree : trees) {
-			tree.printInCraftingOrder();
+			CraftingStepsGenerator generator = new CraftingStepsGenerator();
+			List<AutoCraftingStep> steps = generator.generateSteps(tree, new DigistoreInventorySnapshot(snapshot));
+			CraftingStepsBundle bundle = new CraftingStepsBundle(steps);
+			output.add(bundle);
 		}
 
-		// Post process the steps to reduce redundant crafting.
-		postProcessPatternSteps(steps);
+		// Return the list of bundles.
+		return new CraftingStepsBundleContainer(output);
+	}
 
-		// Update the craftable amount.
-		intialStep.setAmountRemainingToCraft(craftableAmount);
-		intialStep.setTotalRequiredAmount(craftableAmount);
+	public CraftingRequestResponse addAutomationCraftingRequest(ItemStack requestedItem, int amount) {
+		CraftingStepsBundleContainer bundle = getAllCraftingLists(requestedItem, amount);
+		return addCraftingRequest(bundle.getBundles().get(0));
 
-		// Reverse the crafting order.
-		Collections.reverse(steps);
+	}
 
-		// If we're simulating, simply return the craftable amount in the wrapper.
-		// Otherwise, add the crafting reuquest.
-		if (requestType == CraftingRequestType.EXECUTE) {
-			if (craftableAmount > 0) {
-				long id = CableNetworkManager.get(module.getNetwork().getWorld()).getAndIncrementCurrentCraftingId();
-				CraftingRequestResponse response = new CraftingRequestResponse(id, craftableAmount, strippedItem, steps);
-				craftingRequests.put(response.getId(), response);
-				return response;
-			} else {
-				return new CraftingRequestResponse(-1, 0, ItemStack.EMPTY, Collections.emptyList());
-			}
-		} else {
-			return new CraftingRequestResponse(-1, craftableAmount, strippedItem, steps);
-		}
+	public CraftingRequestResponse addCraftingRequest(CraftingStepsBundle bundle) {
+		long id = CableNetworkManager.get(module.getNetwork().getWorld()).getAndIncrementCurrentCraftingId();
+		CraftingRequestResponse response = new CraftingRequestResponse(id, bundle.getCraftableAmount(), bundle.getOutput(), bundle);
+		craftingRequests.put(response.getId(), response);
+		return response;
 	}
 
 	public CraftingRequestResponse cancelCraftingRequest(long craftingRequestId) {
 		return craftingRequests.remove(craftingRequestId);
-	}
-
-	protected void postProcessPatternSteps(List<AutoCraftingStep> steps) {
-		// Allocate inventory to hold crafted items.
-		ItemStackHandler craftedItems = new ItemStackHandler(1000) {
-			@Override
-			public int getSlotLimit(int slot) {
-				return Integer.MAX_VALUE;
-			}
-		};
-
-		for (AutoCraftingStep step : steps) {
-			// Check to see if we are going to have an excess crafted item from another step
-			// that we can use here.
-			if (step.getStoredAmount() < step.getTotalRequiredAmount()) {
-				// Get any excess items that have already been crafted that we can use.
-				int reducable = InventoryUtilities.extractWithIngredient(step.getIngredientToCraft(), step.getAmountRemainingToCraft(), craftedItems);
-
-				// If there were any, use them to resolve some extra crafting steps here.
-				if (reducable > 0) {
-					step.setAmountRemainingToCraft(step.getAmountRemainingToCraft() - reducable);
-					step.setStoredAmount(step.getStoredAmount() + reducable);
-				}
-			}
-
-			// Now check how many will be crafted.
-			if (step.isCraftingStep()) {
-				int willBeCrafted = step.getCraftingPattern().getOutput().getCount() * step.getRequiredCraftingIterations();
-
-				// Identify any excess.
-				int excess = willBeCrafted - step.getAmountRemainingToCraft();
-
-				// If there is excess, insert the excess into the temp inventory for the next
-				// iteration.
-				if (excess > 0) {
-					ItemStack excessStack = step.getCraftingPattern().getOutput().copy();
-					excessStack.setCount(excess);
-					InventoryUtilities.insertItemIntoInventory(craftedItems, excessStack, false);
-				}
-			}
-		}
-	}
-
-	protected int generatePatternSteps(EncodedIngredient ing, int amount, DigistoreInventorySnapshot snapshot, List<AutoCraftingStep> outSteps,
-			@Nullable EncodedDigistorePattern sourcePattern, int depth, CraftingRequestType requestType) {
-		// Just in case someone asks for fewer than 0 items, return false.
-		if (amount < 0) {
-			return 0;
-		}
-
-		// If we surpassed the max search depth, return false.
-		if (depth > MAX_CRAFT_QUERY_DEPTH) {
-			LOGGER.warn(String.format("Reached the maximum crafitng query depth of: $1%d when attempting to craft required ingredient: %2$s.", MAX_CRAFT_QUERY_DEPTH, ing.toString()));
-			return 0;
-		}
-
-		// Get all the patterns for this item.
-		List<EncodedDigistorePattern> patterns = snapshot.getAllPatternsForIngredient(ing.getIngredient());
-
-		// If we have no patterns for this item, return false.
-		if (patterns.size() == 0) {
-			patterns.clear();
-			return 0;
-		}
-
-		// For each of the patterns, check if we can craft it.
-		for (int i = 0; i < patterns.size(); i++) {
-			// Get the pattern.
-			EncodedDigistorePattern pattern = patterns.get(i);
-
-			// Use this to avoid a single cycle in a loop.
-			if (pattern == sourcePattern) {
-				continue;
-			}
-
-			// Create a snapshot for this pattern's testing. We need a new snapshot for each
-			// pattern so they don't mess with each other.
-			DigistoreInventorySnapshot patternSnapshot = new DigistoreInventorySnapshot(snapshot);
-
-			// Create a container for the steps for this pattern.
-			List<AutoCraftingStep> patternSteps = new ArrayList<AutoCraftingStep>();
-
-			// Allocate a flag to track if this pattern is useable.
-			boolean failed = false;
-
-			// Keep track of the max output.
-			int maxCraftingTargetOutput = amount;
-
-			// Check to see if we have the items required to craft with.
-			for (EncodedIngredient requiredItem : pattern.getRequiredItems()) {
-				// Calculate the amount of steps required.
-				double iterationsRequired = (double) maxCraftingTargetOutput / (double) pattern.getOutput().getCount();
-
-				// Calculate the required amount.
-				int requiredIngredientAmount = (int) (requiredItem.getCount() * Math.ceil(iterationsRequired));
-
-				// Simulate extract and capture the extract amount.
-				int storedIngredientAmount = patternSnapshot.extractWithIngredient(requiredItem.getIngredient(), requiredIngredientAmount, true);
-
-				// Calculate the missing amount between the required and extracted.
-				int missingIngredientAmount = requiredIngredientAmount - storedIngredientAmount;
-
-				// If we have a missing amount, see if we can auto craft the rest. If we do not
-				// have a missing amount, add this as a non-crafting step.
-				if (missingIngredientAmount > 0) {
-					// Allocate a list of steps for the item we're testing.
-					List<AutoCraftingStep> steps = new ArrayList<AutoCraftingStep>();
-
-					// Create a step for the item we have to craft.
-					AutoCraftingStep currentStep = new AutoCraftingStep(requiredItem.getIngredient(), storedIngredientAmount, 0, requiredIngredientAmount);
-
-					// Add the current step here first, but we may later modify the values in this
-					// step.
-					steps.add(currentStep);
-
-					// See how many of the required item is craftable.
-					int craftableAmount = generatePatternSteps(requiredItem, missingIngredientAmount, patternSnapshot, steps, pattern, depth + 1, requestType);
-					currentStep.setAmountRemainingToCraft(craftableAmount);
-
-					// If we can craft at least 1 of the missing item, lets investigate further. If
-					// not, this is failed.
-					if (craftableAmount > 0) {
-						// Perform the extract for real.
-						patternSnapshot.extractWithIngredient(requiredItem.getIngredient(), storedIngredientAmount, false);
-
-						// If we can craft more than enough, we're good. Just add the steps to the steps
-						// for this pattern.
-						if (craftableAmount >= missingIngredientAmount) {
-							patternSteps.addAll(steps);
-						} else {
-							// Update the new max output.
-							maxCraftingTargetOutput = Math.min(maxCraftingTargetOutput, (craftableAmount + storedIngredientAmount) / requiredItem.getCount())
-									* pattern.getOutput().getCount();
-
-							// If the new max output is less than or equal to zero, stop checking this
-							// pattern. IF we can craft at least one, update the step.
-							if (maxCraftingTargetOutput <= 0) {
-								failed = true;
-								break;
-							} else {
-								currentStep.setAmountRemainingToCraft(craftableAmount);
-								currentStep.setTotalRequiredAmount(craftableAmount + storedIngredientAmount);
-								currentStep.setStoredAmount(storedIngredientAmount);
-								patternSteps.addAll(steps);
-							}
-						}
-					} else {
-						if (requestType == CraftingRequestType.SIMULATE_NO_LIMITS) {
-							if (i < patterns.size() - 1) {
-								failed = true;
-								break;
-							} else {
-								currentStep.setAmountRemainingToCraft(0);
-								currentStep.setTotalRequiredAmount(requiredIngredientAmount);
-								currentStep.setStoredAmount(storedIngredientAmount);
-								patternSteps.addAll(steps);
-
-								// Perform the extract for real.
-								patternSnapshot.extractWithIngredient(requiredItem.getIngredient(), storedIngredientAmount, false);
-							}
-						} else if (storedIngredientAmount > requiredItem.getCount()) {
-							maxCraftingTargetOutput = Math.min(maxCraftingTargetOutput, storedIngredientAmount / requiredItem.getCount()) * pattern.getOutput().getCount();
-							currentStep.setAmountRemainingToCraft(0);
-							currentStep.setTotalRequiredAmount(storedIngredientAmount);
-							currentStep.setStoredAmount(storedIngredientAmount);
-							patternSteps.addAll(steps);
-							// Perform the extract for real.
-							patternSnapshot.extractWithIngredient(requiredItem.getIngredient(), storedIngredientAmount, false);
-						} else {
-							failed = true;
-							break;
-						}
-					}
-				} else {
-					// If we have all the items, mark this as a crafting step and extract the items
-					// for real.
-					patternSteps.add(new AutoCraftingStep(requiredItem.getIngredient(), requiredIngredientAmount, 0, requiredIngredientAmount));
-					patternSnapshot.extractWithIngredient(requiredItem.getIngredient(), requiredIngredientAmount, false);
-				}
-			}
-
-			// If we made it this far and have not failed, that means we found a valid
-			// craftable recipe. Add the steps and return true.
-			if (!failed) {
-				outSteps.get(outSteps.size() - 1).setCraftingPattern(pattern);
-				outSteps.addAll(patternSteps);
-				return maxCraftingTargetOutput;
-			}
-		}
-		return 0;
-
 	}
 
 	protected boolean canCraftRequest(CraftingRequestResponse request) {
@@ -374,18 +172,18 @@ public class DigistoreNetworkCraftingManager {
 			// If we don't have enough for a non-crafting step, see if we can resolve it by
 			// putting in a request to craft those missing items.
 			if (simulatedExtract != step.getTotalRequiredAmount()) {
-				// Only do this ONCE per step though.
-				if (!step.isAttemptingResolve()) {
-					// See which of the ingredients we can craft.
-					for (ItemStack potentialResolver : step.getIngredientToCraft().getMatchingStacks()) {
-						// Add the request.
-						if (addCraftingRequest(potentialResolver, step.getTotalRequiredAmount() - simulatedExtract, CraftingRequestType.EXECUTE).getCraftableAmount() > 0) {
-							// Mark this step as having been attempted to resolve.
-							step.setResolving();
-							break;
-						}
-					}
-				}
+//				// Only do this ONCE per step though.
+//				if (!step.isAttemptingResolve()) {
+//					// See which of the ingredients we can craft.
+//					for (ItemStack potentialResolver : step.getIngredientToCraft().getMatchingStacks()) {
+//						// Add the request.
+//						if (addCraftingRequest(potentialResolver, step.getTotalRequiredAmount() - simulatedExtract).getCraftableAmount() > 0) {
+//							// Mark this step as having been attempted to resolve.
+//							step.setResolving();
+//							break;
+//						}
+//					}
+//				}
 				return false;
 			} else {
 				return true;

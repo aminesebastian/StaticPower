@@ -35,8 +35,8 @@ import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
-import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager.CraftingRequestType;
 import theking530.staticpower.cables.digistore.crafting.network.PacketCancelDigistoreCraftingRequest;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
@@ -144,17 +144,17 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// out like usual.
 							if (shouldCraft) {
 								// Calculate the max craftable.
-								CraftingRequestResponse craftingResponse = digistoreModule.getCraftingManager().addCraftingRequest(stackInSlot, 1, CraftingRequestType.SIMULATE_NO_LIMITS);
+								CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().getAllCraftingLists(stackInSlot, 1);
 
 								// Open prompt for crafting if we can actually craft some.
 								// Create the container opener.
 								ContainerOpener<?> requestUi = new ContainerOpener<>(new StringTextComponent("Crafting Request"), (id, inv, data) -> {
-									return new ContainerCraftingAmount(id, inv, craftingResponse, digistoreModule.getNetwork().getId());
+									return new ContainerCraftingAmount(id, inv, newBundles, digistoreModule.getNetwork().getId());
 								}).fromParent(this);
 
 								// Open the UI.
 								requestUi.open((ServerPlayerEntity) player, buff -> {
-									buff.writeCompoundTag(craftingResponse.serialze());
+									buff.writeCompoundTag(newBundles.serialize());
 									buff.writeLong(digistoreModule.getNetwork().getId());
 								});
 							} else {
@@ -411,7 +411,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 				nonEmptySlots++;
 			}
 		}
-		
+
 		return (int) Math.max(0, Math.ceil((double) nonEmptySlots / itemsPerRow) - maxRows);
 	}
 

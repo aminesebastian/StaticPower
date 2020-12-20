@@ -1,23 +1,17 @@
 package theking530.staticpower.cables.digistore.crafting;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 
 public class CraftingRequestResponse {
 	private final long id;
 	private final int craftableAmount;
 	private int currentCraftingStep;
 	private final ItemStack craftingTarget;
-	private final List<AutoCraftingStep> steps;
-	private final RequiredAutoCraftingMaterials billOfMaterials;
+	private final CraftingStepsBundle steps;
 
-	public CraftingRequestResponse(long id, int craftableAmount, ItemStack craftingTarget, List<AutoCraftingStep> steps) {
+	public CraftingRequestResponse(long id, int craftableAmount, ItemStack craftingTarget, CraftingStepsBundle steps) {
 		this.id = id;
 		this.craftableAmount = craftableAmount;
 		ItemStack itemToSerialize = craftingTarget.copy();
@@ -25,10 +19,9 @@ public class CraftingRequestResponse {
 		this.craftingTarget = itemToSerialize;
 		this.steps = steps;
 		this.currentCraftingStep = 0;
-		this.billOfMaterials = new RequiredAutoCraftingMaterials(steps);
 	}
 
-	public List<AutoCraftingStep> getSteps() {
+	public CraftingStepsBundle getStepsBundle() {
 		return steps;
 	}
 
@@ -45,7 +38,7 @@ public class CraftingRequestResponse {
 	}
 
 	public AutoCraftingStep peekTopStep() {
-		return steps.get(currentCraftingStep);
+		return steps.getSteps().get(currentCraftingStep);
 	}
 
 	public void completeCurrentStep() {
@@ -53,11 +46,11 @@ public class CraftingRequestResponse {
 	}
 
 	public boolean isDone() {
-		return currentCraftingStep >= steps.size();
+		return currentCraftingStep >= steps.getSteps().size();
 	}
 
 	public RequiredAutoCraftingMaterials getBillOfMaterials() {
-		return billOfMaterials;
+		return steps.getBillOfMaterials();
 	}
 
 	public CompoundNBT serialze() {
@@ -79,11 +72,7 @@ public class CraftingRequestResponse {
 		output.put("target", craftingTargetNbt);
 
 		// Store the steps.
-		ListNBT stepNBTList = new ListNBT();
-		for (AutoCraftingStep step : steps) {
-			stepNBTList.add(step.serialize());
-		}
-		output.put("steps", stepNBTList);
+		output.put("steps", steps.serialize());
 
 		return output;
 	}
@@ -102,12 +91,7 @@ public class CraftingRequestResponse {
 		ItemStack target = ItemStack.read(nbt.getCompound("target"));
 
 		// Read the steps.
-		List<AutoCraftingStep> steps = new ArrayList<AutoCraftingStep>();
-		ListNBT stepNBTList = nbt.getList("steps", Constants.NBT.TAG_COMPOUND);
-		for (INBT step : stepNBTList) {
-			CompoundNBT stepTag = (CompoundNBT) step;
-			steps.add(AutoCraftingStep.read(stepTag));
-		}
+		CraftingStepsBundle steps = CraftingStepsBundle.read(nbt.getCompound("steps"));
 
 		CraftingRequestResponse output = new CraftingRequestResponse(id, amount, target, steps);
 		output.currentCraftingStep = currentCraftingStep;

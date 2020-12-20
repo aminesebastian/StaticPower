@@ -12,12 +12,12 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 
 public class AutoCraftingStepsWidget extends AbstractGuiWidget {
-	private CraftingRequestResponse request;
+	private CraftingStepsBundle bundle;
 	private int rows;
 	private int columns;
 	private int scrollPosition;
@@ -38,19 +38,19 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		}
 	}
 
-	public void setRequest(CraftingRequestResponse request) {
-		this.request = request;
+	public void setRequest(CraftingStepsBundle bundle) {
+		this.bundle = bundle;
 	}
 
 	@Override
 	public void updateData() {
 		// If there is no request, do nothing.
-		if (request == null) {
+		if (bundle == null) {
 			return;
 		}
 
 		// Get the required materials.
-		RequiredAutoCraftingMaterials materials = request.getBillOfMaterials();
+		RequiredAutoCraftingMaterials materials = bundle.getBillOfMaterials();
 
 		// Capture the min and max indicies.
 		int start = 0 + (scrollPosition * columns);
@@ -73,7 +73,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	@Override
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
 		// If there is no request, do nothing.
-		if (request == null) {
+		if (bundle == null) {
 			return;
 		}
 
@@ -92,7 +92,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		GuiDrawUtilities.drawSlot(null, screenSpacePos.getX(), screenSpacePos.getY(), getSize().getX(), (rows * 24) - 1);
 
 		// If there is no request, do nothing else.
-		if (request == null) {
+		if (bundle == null) {
 			return;
 		}
 
@@ -129,12 +129,12 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 
 	public List<RequiredAutoCraftingMaterial> getMaterialsForScrollPosition() {
 		// If there is no request, do nothing.
-		if (request == null) {
+		if (bundle == null) {
 			return Collections.emptyList();
 		}
 
 		// Get the required materials.
-		RequiredAutoCraftingMaterials materials = request.getBillOfMaterials();
+		RequiredAutoCraftingMaterials materials = bundle.getBillOfMaterials();
 
 		// Capture the min and max indicies.
 		int start = 0 + (scrollPosition * columns);
@@ -147,7 +147,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 
 		// Capture the list.
 		List<RequiredAutoCraftingMaterial> output = new ArrayList<RequiredAutoCraftingMaterial>();
-		for (int i = start; i < end; i++) {
+		for (int i = start; i <= end; i++) {
 			output.add(materials.getMaterials().get(i));
 		}
 
@@ -161,11 +161,11 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 
 	public int getMaxScrollPosition() {
 		// If there is no request, do nothing.
-		if (request == null) {
+		if (bundle == null) {
 			return 0;
 		}
 
-		int materialRows = (int) Math.ceil((double) request.getBillOfMaterials().getMaterials().size() / columns);
+		int materialRows = (int) Math.ceil((double) bundle.getBillOfMaterials().getMaterials().size() / columns);
 		return Math.max(0, materialRows - rows);
 	}
 

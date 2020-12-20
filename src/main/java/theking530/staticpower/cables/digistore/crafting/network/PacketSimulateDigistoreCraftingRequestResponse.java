@@ -7,32 +7,32 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
-import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketSimulateDigistoreCraftingRequestResponse extends NetworkMessage {
 	protected int windowId;
-	protected CraftingRequestResponse response;
+	protected CraftingStepsBundleContainer bundles;
 
 	public PacketSimulateDigistoreCraftingRequestResponse() {
 
 	}
 
-	public PacketSimulateDigistoreCraftingRequestResponse(int windowId, CraftingRequestResponse response) {
+	public PacketSimulateDigistoreCraftingRequestResponse(int windowId, CraftingStepsBundleContainer bundles) {
 		this.windowId = windowId;
-		this.response = response;
+		this.bundles = bundles;
 	}
 
 	@Override
 	public void encode(PacketBuffer buffer) {
 		buffer.writeInt(windowId);
-		buffer.writeCompoundTag(response.serialze());
+		buffer.writeCompoundTag(bundles.serialize());
 	}
 
 	@Override
 	public void decode(PacketBuffer buffer) {
 		windowId = buffer.readInt();
-		response = CraftingRequestResponse.read(buffer.readCompoundTag());
+		bundles = CraftingStepsBundleContainer.read(buffer.readCompoundTag());
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public class PacketSimulateDigistoreCraftingRequestResponse extends NetworkMessa
 			Container container = Minecraft.getInstance().player.openContainer;
 			if (container instanceof ContainerCraftingAmount && container.windowId == windowId) {
 				ContainerCraftingAmount craftingContainer = (ContainerCraftingAmount) container;
-				craftingContainer.onCraftingResponseUpdated(response);
+				craftingContainer.onCraftingResponseUpdated(bundles);
 			}
 		});
 	}

@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
+import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 import theking530.staticpower.data.crafting.IngredientUtilities;
 
 /**
@@ -24,8 +25,8 @@ public class RequiredAutoCraftingMaterials {
 	private final List<RequiredAutoCraftingMaterial> materials;
 	private boolean isMissingMaterials;
 
-	public RequiredAutoCraftingMaterials(List<AutoCraftingStep> steps) {
-		this.steps = steps;
+	public RequiredAutoCraftingMaterials(CraftingStepsBundle steps) {
+		this.steps = steps.getSteps();
 		this.materials = new ArrayList<RequiredAutoCraftingMaterial>();
 		update();
 	}
@@ -53,7 +54,8 @@ public class RequiredAutoCraftingMaterials {
 			if (step.getCraftingPattern() != null) {
 				material = this.getMaterialForItem(step.getCraftingPattern().getOutput());
 				if (material == null) {
-					material = new RequiredAutoCraftingMaterial(step.getCraftingPattern().getOutput(), step.getTotalRequiredAmount(), step.getAmountRemainingToCraft(), step.getStoredAmount());
+					material = new RequiredAutoCraftingMaterial(step.getCraftingPattern().getOutput(), step.getTotalRequiredAmount(), step.getAmountRemainingToCraft(),
+							step.getStoredAmount());
 					materials.add(material);
 				} else {
 					material.addAmountToCraft(step.getAmountRemainingToCraft());
@@ -163,8 +165,8 @@ public class RequiredAutoCraftingMaterials {
 
 		@Override
 		public String toString() {
-			return "RequiredAutoCraftingMaterial [item=" + (item.hasNoMatchingItems() ? item : item.getMatchingStacks()[0]) + ", amountRequired=" + amountRequired + ", amountToCraft=" + amountToCraft
-					+ ", amountStored=" + amountStored + "]";
+			return "RequiredAutoCraftingMaterial [item=" + (item.hasNoMatchingItems() ? item : item.getMatchingStacks()[0]) + ", amountRequired=" + amountRequired + ", amountToCraft="
+					+ amountToCraft + ", amountStored=" + amountStored + "]";
 		}
 	}
 }

@@ -7,16 +7,16 @@ import theking530.staticpower.data.crafting.IngredientUtilities;
 public class AutoCraftingStep {
 	private final Ingredient ingredientToCraft;
 	private int storedAmount;
-	private int amountRemainingToCraft;
+	private int amountToCraft;
 	private int totalRequiredAmount;
 	private boolean isAttemptingResolve;
 	private boolean machineItemsSupplied;
 	private EncodedDigistorePattern pattern;
 
-	public AutoCraftingStep(Ingredient itemToCraft, int storedAmount, int amountRemainintToCraft, int totalRequiredAmount) {
+	public AutoCraftingStep(Ingredient itemToCraft, int storedAmount, int amountToCraft, int totalRequiredAmount) {
 		this.ingredientToCraft = itemToCraft;
 		this.storedAmount = storedAmount;
-		this.amountRemainingToCraft = amountRemainintToCraft;
+		this.amountToCraft = amountToCraft;
 		this.totalRequiredAmount = totalRequiredAmount;
 		this.isAttemptingResolve = false;
 	}
@@ -34,31 +34,31 @@ public class AutoCraftingStep {
 	}
 
 	public int getRequiredCraftingIterations() {
-		float amount = ((float) amountRemainingToCraft / (float) pattern.getOutput().getCount());
+		float amount = ((float) amountToCraft / (float) pattern.getOutput().getCount());
 		return (int) Math.ceil(amount);
 	}
 
 	public void markCraftingIterationCompleted() {
-		amountRemainingToCraft -= pattern.getOutput().getCount();
+		amountToCraft -= pattern.getOutput().getCount();
 		storedAmount += pattern.getOutput().getCount();
-		if (amountRemainingToCraft < 0) {
-			amountRemainingToCraft = 0;
+		if (amountToCraft < 0) {
+			amountToCraft = 0;
 		}
 	}
 
 	public int getAmountAlreadyCrafted() {
-		return totalRequiredAmount - (storedAmount + amountRemainingToCraft);
+		return totalRequiredAmount - (storedAmount + amountToCraft);
 	}
 
 	public void setStoredAmount(int storedAmount) {
 		this.storedAmount = storedAmount;
-		if (amountRemainingToCraft < 0) {
-			amountRemainingToCraft = 0;
+		if (amountToCraft < 0) {
+			amountToCraft = 0;
 		}
 	}
 
 	public void setAmountRemainingToCraft(int amountRemainingToCraft) {
-		this.amountRemainingToCraft = amountRemainingToCraft;
+		this.amountToCraft = amountRemainingToCraft;
 		if (amountRemainingToCraft < 0) {
 			amountRemainingToCraft = 0;
 		}
@@ -66,8 +66,8 @@ public class AutoCraftingStep {
 
 	public void setTotalRequiredAmount(int totalRequiredAmount) {
 		this.totalRequiredAmount = totalRequiredAmount;
-		if (amountRemainingToCraft < 0) {
-			amountRemainingToCraft = 0;
+		if (amountToCraft < 0) {
+			amountToCraft = 0;
 		}
 	}
 
@@ -84,11 +84,11 @@ public class AutoCraftingStep {
 	}
 
 	public boolean isCraftingCompleted() {
-		return amountRemainingToCraft <= 0;
+		return amountToCraft <= 0;
 	}
 
 	public boolean isCraftingStep() {
-		return pattern != null && amountRemainingToCraft > 0;
+		return pattern != null && amountToCraft > 0;
 	}
 
 	public int getStoredAmount() {
@@ -96,7 +96,7 @@ public class AutoCraftingStep {
 	}
 
 	public int getAmountRemainingToCraft() {
-		return amountRemainingToCraft;
+		return amountToCraft;
 	}
 
 	public int getTotalRequiredAmount() {
@@ -113,14 +113,15 @@ public class AutoCraftingStep {
 
 	@Override
 	public String toString() {
-		return "AutoCraftingStep [requiredItem=" + (ingredientToCraft.hasNoMatchingItems() ? ingredientToCraft : ingredientToCraft.getMatchingStacks()[0]) + ", storedAmount=" + storedAmount + ", amountRemainintToCraft=" + amountRemainingToCraft + ", amountCrafted="
-				+ getAmountAlreadyCrafted() + ", totalRequiredAmount=" + totalRequiredAmount + ", isAttemptingResolve=" + isAttemptingResolve + ", pattern=" + pattern + "]";
+		return "AutoCraftingStep [requiredItem=" + (ingredientToCraft.hasNoMatchingItems() ? ingredientToCraft : ingredientToCraft.getMatchingStacks()[0]) + ", storedAmount=" + storedAmount
+				+ ", amountToCraft=" + amountToCraft + ", amountCrafted=" + getAmountAlreadyCrafted() + ", totalRequiredAmount=" + totalRequiredAmount + ", isAttemptingResolve="
+				+ isAttemptingResolve + ", pattern=" + pattern + "]";
 	}
 
 	public CompoundNBT serialize() {
 		CompoundNBT output = new CompoundNBT();
 		output.putInt("stored_amount", storedAmount);
-		output.putInt("amount_to_craft", amountRemainingToCraft);
+		output.putInt("amount_to_craft", amountToCraft);
 		output.putInt("total_amount", totalRequiredAmount);
 		output.putBoolean("is_attempting_resolve", isAttemptingResolve);
 		output.putBoolean("machine_items_supplied", machineItemsSupplied);
