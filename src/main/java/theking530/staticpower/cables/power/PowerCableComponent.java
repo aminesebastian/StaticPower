@@ -171,11 +171,9 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected ServerCable createCable() {
-		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
-			cable.setProperty(POWER_CAPACITY_DATA_TAG_KEY, capacity);
-			cable.setProperty(POWER_RATE_DATA_TAG_KEY, transferRate);
-		});
+	protected void initializeCableProperties(ServerCable cable) {
+		cable.setProperty(POWER_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.setProperty(POWER_RATE_DATA_TAG_KEY, transferRate);
 	}
 
 	@Override

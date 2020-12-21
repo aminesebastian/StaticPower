@@ -27,7 +27,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityFormer extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityFormer> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFormer(), ModBlocks.Former);
-	
+
 	public static final int DEFAULT_PROCESSING_TIME = 150;
 	public static final int DEFAULT_PROCESSING_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -108,7 +108,8 @@ public class TileEntityFormer extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState processingCompleted(FormerRecipe recipe) {
-		outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
+		ItemStack output = recipe.getOutput().calculateOutput();
+		outputInventory.insertItem(0, output, false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
 		markTileEntityForSynchronization();

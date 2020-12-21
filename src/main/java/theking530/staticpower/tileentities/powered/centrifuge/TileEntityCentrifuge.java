@@ -17,7 +17,9 @@ import theking530.staticpower.tileentities.components.control.AbstractProcesingC
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
@@ -33,7 +35,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	public static final TileEntityTypeAllocator<TileEntityCentrifuge> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
 
 	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 20;
+	public static final int DEFAULT_PROCESSING_COST = 10;
 	public static final int DEFAULT_CENTRIFUGE_MOTOR_COST = 5;
 	public static final int DEFAULT_MOVING_TIME = 4;
 	public static final int DEFAULT_MAX_SPEED = 500;
@@ -69,9 +71,10 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(firstOutputInventory = new InventoryComponent("FirstOutputInventory", 1, MachineSideMode.Output));
-		registerComponent(secondOutputInventory = new InventoryComponent("SecondOutputInventory", 1, MachineSideMode.Output2));
-		registerComponent(thirdOutputInventory = new InventoryComponent("ThirdOutputInventory", 1, MachineSideMode.Output3));
+		registerComponent(firstOutputInventory = new InventoryComponent("FirstOutputInventory", 1, MachineSideMode.Output2));
+		registerComponent(secondOutputInventory = new InventoryComponent("SecondOutputInventory", 1, MachineSideMode.Output3));
+		registerComponent(thirdOutputInventory = new InventoryComponent("ThirdOutputInventory", 1, MachineSideMode.Output4));
+		registerComponent(new CompoundInventoryComponent("CompoundInventory", MachineSideMode.Output, firstOutputInventory, secondOutputInventory, thirdOutputInventory));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
@@ -219,6 +222,12 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
+				|| mode == MachineSideMode.Output3 || mode == MachineSideMode.Output4;
 	}
 
 	@Override

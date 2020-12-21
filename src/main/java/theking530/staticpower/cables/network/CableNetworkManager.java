@@ -39,8 +39,10 @@ public class CableNetworkManager extends WorldSavedData {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetworkManager.class);
 	private static final String PREFIX = StaticPower.MOD_ID + "_cable_network";
 
-	private long currentCraftingId = 0;
-	private long currentItemParcelId = 0;
+	/** Make these values static so they are incremented across all dimensions. */
+	private static long currentCraftingId = 0;
+	private static long currentPatternId = 0;
+	private static long currentItemParcelId = 0;
 
 	private final World World;
 	private final HashMap<BlockPos, ServerCable> WorldCables;
@@ -326,6 +328,21 @@ public class CableNetworkManager extends WorldSavedData {
 		markDirty();
 	}
 
+	public long getCurrentPatternId() {
+		return currentPatternId;
+	}
+
+	public long getAndIncrementCurrentPatternId() {
+		// Increment first just to be safe in case someone forgets to increment.
+		incrementCurrentPatternId();
+		return currentPatternId;
+	}
+
+	public void incrementCurrentPatternId() {
+		currentPatternId++;
+		markDirty();
+	}
+
 	public long getCurrentItemParcelId() {
 		// Increment first just to be safe in case someone forgets to increment.
 		incrementCurrentItemParcelId();
@@ -356,6 +373,11 @@ public class CableNetworkManager extends WorldSavedData {
 			currentCraftingId = tag.getLong("crafting_id");
 		}
 
+		// Load the pattern id.
+		if (tag.contains("pattern_id")) {
+			currentPatternId = tag.getLong("pattern_id");
+		}
+
 		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
 		for (INBT cableTag : cables) {
 			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
@@ -382,6 +404,7 @@ public class CableNetworkManager extends WorldSavedData {
 	public CompoundNBT write(CompoundNBT tag) {
 		// Save the current crafting id.
 		tag.putLong("crafting_id", currentCraftingId);
+		tag.putLong("pattern_id", currentPatternId);
 		tag.putLong("current_parcel_id", currentItemParcelId);
 
 		ListNBT cables = new ListNBT();

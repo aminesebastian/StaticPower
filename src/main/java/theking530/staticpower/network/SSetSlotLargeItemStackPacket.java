@@ -29,6 +29,6 @@ public class SSetSlotLargeItemStackPacket extends SSetSlotPacket {
 	public void writePacketData(PacketBuffer buf) throws IOException {
 		buf.writeByte(this.windowId);
 		buf.writeShort(this.slot);
-		ItemUtilities.writeLargeStackItemToBuffer(this.item, true, buf);
+		ItemUtilities.writeLargeStackItemToBuffer(this.item, false, buf);
 	}
 }

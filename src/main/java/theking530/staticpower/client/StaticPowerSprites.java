@@ -32,6 +32,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation MACHINE_SIDE_YELLOW = registerSprite("blocks/machines/sides_modes/machine_side_yellow");
 	public static final ResourceLocation MACHINE_SIDE_PURPLE = registerSprite("blocks/machines/sides_modes/machine_side_purple");
 	public static final ResourceLocation MACHINE_SIDE_MAGENTA = registerSprite("blocks/machines/sides_modes/machine_side_magenta");
+	public static final ResourceLocation MACHINE_SIDE_AQUA = registerSprite("blocks/machines/sides_modes/machine_side_aqua");
 
 	public static final ResourceLocation BASIC_BATTERY_TOP = registerSprite("blocks/machines/batteries/battery_basic_top");
 	public static final ResourceLocation BASIC_BATTERY_SIDE = registerSprite("blocks/machines/batteries/battery_basic_side");
@@ -94,7 +95,6 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation DURABILITY_BAR = registerSprite("items/tools/durability_bar");
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
-
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);

@@ -109,36 +109,37 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 		return fluidIn == getFlowingFluid() || fluidIn == getStillFluid();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void tick(World worldIn, BlockPos pos, FluidState state) {
+		// Check if we're gaseous.
 		if (getFluid().getAttributes().isGaseous()) {
+			// If the fluid is near the world height, kill it.
 			if (pos.getY() > worldIn.getHeight() - 5) {
 				worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
 				return;
 			}
+
+			// Check if this is a source.
 			if (state.isSource()) {
-				if (canFlow(worldIn, pos, worldIn.getBlockState(pos), Direction.UP, pos.offset(Direction.UP), worldIn.getBlockState(pos.offset(Direction.UP)), state, getFluid())) {
+				// Get the block above.
+				BlockState getStateAbove = worldIn.getBlockState(pos.offset(Direction.UP));
+
+				// If we can flow upwards, do so. Otherwise, check if the block above is solid.
+				// If it is not, let the gas continue going up.
+				if (canFlow(worldIn, pos, worldIn.getBlockState(pos), Direction.UP, pos.offset(Direction.UP), getStateAbove, state, getFluid())) {
 					worldIn.setBlockState(pos.add(0, 1, 0), this.getBlockState(state), 3);
 					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+				} else if (!worldIn.getBlockState(pos.offset(Direction.UP)).isSolid()) {
+					// Make sure the block above the non solid block is air and replaceable.
+					if (worldIn.getBlockState(pos.offset(Direction.UP, 2)).isAir()) {
+						worldIn.setBlockState(pos.add(0, 2, 0), this.getBlockState(state), 3);
+						worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
+					}
 				}
 			}
 		} else {
-			if (!state.isSource()) {
-				FluidState fluidstate = this.calculateCorrectFlowingState(worldIn, pos, worldIn.getBlockState(pos));
-				int i = this.func_215667_a(worldIn, pos, state, fluidstate);
-				if (fluidstate.isEmpty()) {
-					state = fluidstate;
-					worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 3);
-				} else if (!fluidstate.equals(state)) {
-					state = fluidstate;
-					BlockState blockstate = fluidstate.getBlockState();
-					worldIn.setBlockState(pos, blockstate, 2);
-					worldIn.getPendingFluidTicks().scheduleTick(pos, fluidstate.getFluid(), i);
-					worldIn.notifyNeighborsOfStateChange(pos, blockstate.getBlock());
-				}
-			}
-
-			this.flowAround(worldIn, pos, state);
+			super.tick(worldIn, pos, state);
 		}
 	}
 

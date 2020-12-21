@@ -32,7 +32,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 	private long networkId;
 
 	public ContainerCraftingAmount(int windowId, PlayerInventory playerInventory, PacketBuffer data) {
-		this(windowId, playerInventory, CraftingStepsBundleContainer.read(data.readCompoundTag()), data.readLong());
+		this(windowId, playerInventory, CraftingStepsBundleContainer.readFromCompressedString(data.readString()), data.readLong());
 	}
 
 	public ContainerCraftingAmount(int windowId, PlayerInventory playerInventory, CraftingStepsBundleContainer bundles, long networkId) {

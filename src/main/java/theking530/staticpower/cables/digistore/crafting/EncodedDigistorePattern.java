@@ -19,6 +19,7 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.items.DigistorePatternCard;
 
 public class EncodedDigistorePattern {
+	private final long id;
 	private final ItemStack[] inputs;
 	private final ItemStack output;
 	private final RecipeEncodingType recipeType;
@@ -27,7 +28,8 @@ public class EncodedDigistorePattern {
 	private final ResourceLocation craftingRecipeId;
 	private final boolean isValid;
 
-	public EncodedDigistorePattern(ItemStack[] inputs, ItemStack output, RecipeEncodingType recipeType) {
+	public EncodedDigistorePattern(long id, ItemStack[] inputs, ItemStack output, RecipeEncodingType recipeType) {
+		this.id = id;
 		this.inputs = inputs;
 		this.output = output;
 		this.recipeType = recipeType;
@@ -37,7 +39,8 @@ public class EncodedDigistorePattern {
 		cacheRequiredItems(inputs);
 	}
 
-	public EncodedDigistorePattern(ItemStack[] inputs, ICraftingRecipe recipe) {
+	public EncodedDigistorePattern(long id, ItemStack[] inputs, ICraftingRecipe recipe) {
+		this.id = id;
 		this.requiredItems = new LinkedList<EncodedIngredient>();
 		this.recipeType = RecipeEncodingType.CRAFTING_TABLE;
 
@@ -53,6 +56,10 @@ public class EncodedDigistorePattern {
 			this.output = recipe.getRecipeOutput();
 			cacheRequiredIngredients(recipe.getIngredients());
 		}
+	}
+
+	public long getId() {
+		return id;
 	}
 
 	public boolean isValid() {
@@ -161,6 +168,9 @@ public class EncodedDigistorePattern {
 		// Read the recipe type.
 		RecipeEncodingType recipeType = RecipeEncodingType.values()[nbt.getInt("type")];
 
+		// Read the pattern id.
+		long id = nbt.getLong("id");
+
 		// Read the recipe id.
 		ResourceLocation craftingRecipeId = null;
 		if (nbt.contains("crafting_id")) {
@@ -182,12 +192,12 @@ public class EncodedDigistorePattern {
 		// Create the recipe.
 		if (recipeType == RecipeEncodingType.CRAFTING_TABLE) {
 			if (craftingRecipeId != null && StaticPowerRecipeRegistry.CRAFTING_RECIPES.containsKey(craftingRecipeId)) {
-				return new EncodedDigistorePattern(inputStacks, StaticPowerRecipeRegistry.CRAFTING_RECIPES.get(craftingRecipeId));
+				return new EncodedDigistorePattern(id, inputStacks, StaticPowerRecipeRegistry.CRAFTING_RECIPES.get(craftingRecipeId));
 			} else {
-				return new EncodedDigistorePattern(inputStacks, null);
+				return new EncodedDigistorePattern(id, inputStacks, null);
 			}
 		} else {
-			return new EncodedDigistorePattern(inputStacks, outputStack, recipeType);
+			return new EncodedDigistorePattern(id, inputStacks, outputStack, recipeType);
 		}
 	}
 
@@ -200,6 +210,9 @@ public class EncodedDigistorePattern {
 	public CompoundNBT serialize() {
 		// Create the pattern tag.
 		CompoundNBT pattern = new CompoundNBT();
+
+		// Store the id.
+		pattern.putLong("id", id);
 
 		// Store the recipe type.
 		pattern.putInt("type", recipeType.ordinal());

@@ -18,6 +18,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
@@ -59,6 +60,8 @@ public class TileEntityBattery extends TileEntityMachine {
 		}
 	}
 
+	public final BatteryInventoryComponent batteryInventory;
+
 	private int minPowerThreshold;
 	private int maxPowerThreshold;
 
@@ -92,6 +95,7 @@ public class TileEntityBattery extends TileEntityMachine {
 
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		energyStorage.getStorage().setCapacity(tierObject.batteryCapacity.get());
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
 		inputRFTick = SDMath.multiplyRespectingOverflow(tierObject.defaultMachinePowerInput.get(), MACHINE_POWER_IO_MULTIPLIER / 2);
 		outputRFTick = SDMath.multiplyRespectingOverflow(tierObject.defaultMachinePowerOutput.get(), MACHINE_POWER_IO_MULTIPLIER / 2);

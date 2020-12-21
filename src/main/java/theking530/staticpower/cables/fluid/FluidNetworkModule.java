@@ -77,8 +77,13 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				continue;
 			}
 
-			// Get the transfer rate.
+			// Get the cable and skip if its industrial.
 			ServerCable cable = CableNetworkManager.get(world).getCable(destination.getFirstConnectedCable());
+			if (cable.getBooleanProperty(FluidCableComponent.FLUID_INDUSTRIAL_DATA_TAG_KEY)) {
+				continue;
+			}
+
+			// Get the transfer rate.
 			int transferRate = cable.getIntProperty(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
 
 			// Calculate how much fluid we can offer. If it is less than or equal to 0, do

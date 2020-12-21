@@ -135,12 +135,10 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	protected ServerCable createCable() {
-		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
-			cable.setProperty(ITEM_CABLE_MAX_BLOCKS_PER_TICK, maxTransferSpeed);
-			cable.setProperty(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
-			cable.setProperty(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);
-		});
+	protected void initializeCableProperties(ServerCable cable) {
+		cable.setProperty(ITEM_CABLE_MAX_BLOCKS_PER_TICK, maxTransferSpeed);
+		cable.setProperty(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
+		cable.setProperty(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);
 	}
 
 	/**

@@ -189,6 +189,10 @@ public class RecipeTreeGenerator {
 			System.out.println("-----------------------------------------");
 		}
 
+		public AutoCraftingNode getRoot() {
+			return root;
+		}
+
 		public void traverseInLevelOrder(Consumer<AutoCraftingNode> consumer) {
 			int height = getHeight(root);
 			for (int i = height; i >= 1; i--) {

@@ -11,8 +11,8 @@ public enum MachineSideMode {
 	Input2("input2", TextFormatting.DARK_PURPLE, new Color(100, 0, 200, 255).fromEightBitToFloat()),
 	Input3("input3", TextFormatting.LIGHT_PURPLE, new Color(213, 0, 168, 255).fromEightBitToFloat()),
 	Output("output", TextFormatting.GOLD, new Color(237, 160, 45, 255).fromEightBitToFloat()), Output2("output2", TextFormatting.GREEN, new Color(0, 200, 50, 255).fromEightBitToFloat()),
-	Output3("output3", TextFormatting.YELLOW, new Color(220, 220, 0, 255).fromEightBitToFloat()), Disabled("disabled", TextFormatting.RED, new Color(200, 20, 20, 255).fromEightBitToFloat()),
-	Never("never", TextFormatting.WHITE, new Color(0, 0, 0, 0).fromEightBitToFloat());
+	Output3("output3", TextFormatting.YELLOW, new Color(220, 220, 0, 255).fromEightBitToFloat()), Output4("output4", TextFormatting.AQUA, new Color(0, 206, 217, 255).fromEightBitToFloat()),
+	Disabled("disabled", TextFormatting.RED, new Color(200, 20, 20, 255).fromEightBitToFloat()), Never("never", TextFormatting.WHITE, new Color(0, 0, 0, 0).fromEightBitToFloat());
 
 	/** The unlocalized name of the mode. */
 	private String name;
@@ -44,7 +44,7 @@ public enum MachineSideMode {
 	}
 
 	public boolean isOutputMode() {
-		return this == Output || this == Output2 || this == Output3;
+		return this == Output || this == Output2 || this == Output3 || this == Output4;
 	}
 
 	public boolean isDisabledMode() {

@@ -9,7 +9,6 @@ import net.minecraft.util.math.BlockPos;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
 public class ScaffoldCableComponent extends AbstractCableProviderComponent {
@@ -20,12 +19,6 @@ public class ScaffoldCableComponent extends AbstractCableProviderComponent {
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
 		return false;
-	}
-
-	@Override
-	protected ServerCable createCable() {
-		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
-		});
 	}
 
 	@Override

@@ -44,7 +44,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent batteryInventory;
+	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final HeatStorageComponent heatStorage;

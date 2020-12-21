@@ -93,8 +93,16 @@ public class ServerCable {
 		return dataTag.getDouble(key);
 	}
 
+	public boolean getBooleanProperty(String key) {
+		return dataTag.getBoolean(key);
+	}
+
 	public void setProperty(String key, int value) {
 		dataTag.putInt(key, value);
+	}
+
+	public void setProperty(String key, boolean value) {
+		dataTag.putBoolean(key, value);
 	}
 
 	public void setProperty(String key, float value) {

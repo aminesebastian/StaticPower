@@ -82,7 +82,7 @@ public class DigistoreNetworkCraftingManager {
 		// Strip any autocrafting data from the stack if needed. Set the count to 1 to
 		// so we have an example stack of exactly one.
 		ItemStack strippedItem = requestedItem.copy();
-		DigistoreInventorySnapshot.stripCraftableTag(strippedItem);
+		DigistoreInventorySnapshot.stripMetadataTags(strippedItem);
 		strippedItem.setCount(1);
 
 		// Take a snapshot of the module's inventory.
@@ -107,13 +107,30 @@ public class DigistoreNetworkCraftingManager {
 		return new CraftingStepsBundleContainer(output);
 	}
 
-	public CraftingRequestResponse addAutomationCraftingRequest(ItemStack requestedItem, int amount) {
-		CraftingStepsBundleContainer bundle = getAllCraftingLists(requestedItem, amount);
-		return addCraftingRequest(bundle.getBundles().get(0));
+	public @Nullable CraftingRequestResponse addAutomationCraftingRequest(ItemStack requestedItem, int amount) {
+		// Get all the possible ways to craft this item.
+		CraftingStepsBundleContainer bundleContainer = getAllCraftingLists(requestedItem, amount);
 
+		// If there are none, return null.
+		if (bundleContainer.isEmpty()) {
+			return null;
+		}
+
+		// Go through all of the bundles. Return the first craftable one.
+		for (CraftingStepsBundle bundle : bundleContainer.getBundles()) {
+			if (bundle.hasCraftableOutput()) {
+				return addCraftingRequest(bundle);
+			}
+		}
+
+		// Return nothing if there is not way to craft it.
+		return null;
 	}
 
-	public CraftingRequestResponse addCraftingRequest(CraftingStepsBundle bundle) {
+	public @Nullable CraftingRequestResponse addCraftingRequest(CraftingStepsBundle bundle) {
+		if (!bundle.hasCraftableOutput()) {
+			return null;
+		}
 		long id = CableNetworkManager.get(module.getNetwork().getWorld()).getAndIncrementCurrentCraftingId();
 		CraftingRequestResponse response = new CraftingRequestResponse(id, bundle.getCraftableAmount(), bundle.getOutput(), bundle);
 		craftingRequests.put(response.getId(), response);
@@ -172,18 +189,18 @@ public class DigistoreNetworkCraftingManager {
 			// If we don't have enough for a non-crafting step, see if we can resolve it by
 			// putting in a request to craft those missing items.
 			if (simulatedExtract != step.getTotalRequiredAmount()) {
-//				// Only do this ONCE per step though.
-//				if (!step.isAttemptingResolve()) {
-//					// See which of the ingredients we can craft.
-//					for (ItemStack potentialResolver : step.getIngredientToCraft().getMatchingStacks()) {
-//						// Add the request.
-//						if (addCraftingRequest(potentialResolver, step.getTotalRequiredAmount() - simulatedExtract).getCraftableAmount() > 0) {
-//							// Mark this step as having been attempted to resolve.
-//							step.setResolving();
-//							break;
-//						}
-//					}
-//				}
+				// Only do this ONCE per step though.
+				if (!step.isAttemptingResolve()) {
+					// See which of the ingredients we can craft.
+					for (ItemStack potentialResolver : step.getIngredientToCraft().getMatchingStacks()) {
+						// Add the request.
+						if (addAutomationCraftingRequest(potentialResolver, step.getTotalRequiredAmount() - simulatedExtract).getCraftableAmount() > 0) {
+							// Mark this step as having been attempted to resolve.
+							step.setResolving();
+							break;
+						}
+					}
+				}
 				return false;
 			} else {
 				return true;

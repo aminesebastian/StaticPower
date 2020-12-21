@@ -27,11 +27,13 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
 	public static final String FLUID_CAPACITY_DATA_TAG_KEY = "fluid_capacity";
 	public static final String FLUID_RATE_DATA_TAG_KEY = "fluid_transfer_rate";
+	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
 	public static final float UPDATE_THRESHOLD = 0.1f;
 	private final int capacity;
 	private FluidStack lastUpdateFluidStack;
 	private float lastUpdateFilledPercentage;
 	private float visualFilledPercentage;
+	private boolean isIndustrial;
 
 	public FluidCableComponent(String name, boolean isIndustrial, int capacity) {
 		super(name, CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
@@ -39,9 +41,10 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
 		visualFilledPercentage = 0.0f;
-		
+		this.isIndustrial = isIndustrial;
+
 		// Only non-industrial pipes can have attachments.
-		if(!isIndustrial) {
+		if (!isIndustrial) {
 			addValidAttachmentClass(ExtractorAttachment.class);
 		}
 	}
@@ -209,11 +212,10 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected ServerCable createCable() {
-		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes(), (cable) -> {
-			cable.setProperty(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
-			cable.setProperty(FLUID_RATE_DATA_TAG_KEY, capacity);
-		});
+	protected void initializeCableProperties(ServerCable cable) {
+		cable.setProperty(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.setProperty(FLUID_RATE_DATA_TAG_KEY, capacity);
+		cable.setProperty(FLUID_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}
 
 	@Override
@@ -223,7 +225,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
 			}
-		} else if (te != null && otherProvider == null) {
+		} else if (te != null && otherProvider == null && !isIndustrial) {
 			if (te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
 			}

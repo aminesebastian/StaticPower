@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -111,6 +112,11 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 				miningSoundComponent.startPlayingSound(SoundEvents.ENTITY_MINECART_RIDING.getRegistryName(), SoundCategory.BLOCKS, 0.2f, 0.5f, getPos(), 64);
 			} else {
 				miningSoundComponent.stopPlayingSound();
+			}
+		} else {
+			if (processingComponent.isPerformingWork()) {
+				BlockPos minedPos = getCurrentlyTargetedBlockPos();
+				getWorld().addParticle(ParticleTypes.SMOKE, minedPos.getX(), minedPos.getY(), minedPos.getZ(), 0.0f, 0.01f, 0.0f);
 			}
 		}
 	}
@@ -323,7 +329,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 		}
 
-		// If we are currently on a block that is out of range, or no minable blocks were found, set the block index to
+		// If we are currently on a block that is out of range, or no minable blocks
+		// were found, set the block index to
 		// -1 as we are already done.
 		if (!minableBlockFound || currentBlockIndex >= blocks.size() - 1) {
 			currentBlockIndex = -1;

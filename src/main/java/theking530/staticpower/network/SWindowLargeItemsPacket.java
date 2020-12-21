@@ -40,7 +40,7 @@ public class SWindowLargeItemsPacket extends SWindowItemsPacket {
 		buf.writeShort(this.itemStacks.size());
 
 		for (ItemStack itemstack : this.itemStacks) {
-			ItemUtilities.writeLargeStackItemToBuffer(itemstack, true, buf);
+			ItemUtilities.writeLargeStackItemToBuffer(itemstack, false, buf);
 		}
 
 	}

@@ -285,6 +285,11 @@ public class InventoryUtilities {
 	}
 
 	public static void clearInventory(IItemHandler inv) {
+		// Do nothing if the inventory is null.
+		if (inv == null) {
+			return;
+		}
+
 		for (int i = 0; i < inv.getSlots(); i++) {
 			inv.extractItem(i, Integer.MAX_VALUE, false);
 		}

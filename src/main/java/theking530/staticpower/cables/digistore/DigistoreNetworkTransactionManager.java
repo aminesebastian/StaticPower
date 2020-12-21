@@ -59,7 +59,7 @@ public class DigistoreNetworkTransactionManager {
 
 		// Create a copy for the output stack.
 		ItemStack strippedStack = stack.copy();
-		DigistoreInventorySnapshot.stripCraftableTag(strippedStack);
+		DigistoreInventorySnapshot.stripMetadataTags(strippedStack);
 
 		// Allocate a list of all potential digistores to insert into.
 		List<IDigistoreInventory> potentials = new ArrayList<IDigistoreInventory>();
@@ -177,7 +177,7 @@ public class DigistoreNetworkTransactionManager {
 		}
 
 		ItemStack extractItem = stack.copy();
-		DigistoreInventorySnapshot.stripCraftableTag(extractItem);
+		DigistoreInventorySnapshot.stripMetadataTags(extractItem);
 
 		// Allocate a list of all potential digistores to insert into.
 		List<IDigistoreInventory> potentials = new ArrayList<IDigistoreInventory>();

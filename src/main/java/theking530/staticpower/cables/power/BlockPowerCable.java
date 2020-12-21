@@ -10,18 +10,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.power.StaticVoltTooltipUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockPowerCable extends AbstractCableBlock {
@@ -35,7 +38,9 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(StaticVoltTooltipUtilities.getPowerPerTickTooltip(StaticPowerConfig.getTier(tier).cablePowerDelivery.get()));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.max_power_rate"));
+		tooltip.add(new StringTextComponent("• ")
+				.append(new StringTextComponent(TextFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cablePowerDelivery.get()).getString())));
 	}
 
 	@Override

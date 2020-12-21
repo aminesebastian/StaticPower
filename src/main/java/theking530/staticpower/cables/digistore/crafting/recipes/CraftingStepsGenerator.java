@@ -18,7 +18,7 @@ public class CraftingStepsGenerator {
 
 		// Traverse the tree.
 		tree.traverseInLevelOrder((node) -> {
-			AutoCraftingStep generatedStep = generateStepForNode(node, inventory);
+			AutoCraftingStep generatedStep = generateStepForNode(node == tree.getRoot(), node, inventory);
 			generatedStep.setCraftingPattern(node.getPattern());
 			output.add(generatedStep);
 		});
@@ -27,9 +27,11 @@ public class CraftingStepsGenerator {
 		return output;
 	}
 
-	private AutoCraftingStep generateStepForNode(AutoCraftingNode node, DigistoreInventorySnapshot inventory) {
-		// See how many of the ingredient we have.
-		int extracted = inventory.extractWithIngredient(node.ingredientToCraft.getIngredient(), node.count, false);
+	private AutoCraftingStep generateStepForNode(boolean isRoot, AutoCraftingNode node, DigistoreInventorySnapshot inventory) {
+		// See how many of the ingredient we have. If this is the not the root, capture
+		// the amount we have stored. If it IS the root, we always want to craft the
+		// amount requested, so the extracted is 0.
+		int extracted = isRoot ? 0 : inventory.extractWithIngredient(node.ingredientToCraft.getIngredient(), node.count, false);
 
 		// Calculate how much we have missing.
 		int missing = node.count - extracted;

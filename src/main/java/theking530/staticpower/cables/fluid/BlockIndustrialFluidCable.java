@@ -14,6 +14,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -29,6 +30,7 @@ import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockIndustrialFluidCable extends AbstractCableBlock {
@@ -42,8 +44,10 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()));
-		tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).appendString("Cannot connect directly to blocks!"));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.max_fluid_rate"));
+		tooltip.add(new StringTextComponent("• ").append(
+				new StringTextComponent(TextFormatting.AQUA + GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()).getString())));
+		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.industrial_fluid_cable_warning").mergeStyle(TextFormatting.RED)));
 	}
 
 	@Override

@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
@@ -24,7 +26,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreInventorySnapshot implements IItemHandler {
-	public static final String CRAFTABLE_TAG = "digistore_craftable";
+	public static final String METADATA_TAG = "digistore_meta";
+	public static final String CRAFTABLE_TAG = "craftable";
 
 	public enum DigistoreItemCraftableState {
 		NONE, CRAFTABLE, ONLY_CRAFTABLE
@@ -32,7 +35,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public static final DigistoreInventorySnapshot EMPTY = new DigistoreInventorySnapshot();
 	private final List<ItemStack> stacks;
-	private final Map<ItemStack, List<EncodedDigistorePattern>> craftableItems;
+	private final Map<ItemStack, List<EncodedDigistorePattern>> craftingItemPatterns;
 	private final String filterString;
 	private final DigistoreInventorySortType sortType;
 	private final boolean sortDescending;
@@ -54,7 +57,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		}
 
 		// But just add references to the recipes.
-		craftableItems.putAll(otherSnapshot.craftableItems);
+		craftingItemPatterns.putAll(otherSnapshot.craftingItemPatterns);
 	}
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending, boolean simulated) {
@@ -64,7 +67,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		this.simulated = simulated;
 		stacks = new ArrayList<ItemStack>();
 		filterString = filter.toLowerCase();
-		craftableItems = new HashMap<ItemStack, List<EncodedDigistorePattern>>();
+		craftingItemPatterns = new HashMap<ItemStack, List<EncodedDigistorePattern>>();
 
 		// Perform an initial update when first created.
 		if (module != null) {
@@ -247,22 +250,22 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public List<EncodedDigistorePattern> getAllPatternsForIngredient(Ingredient ingredient) {
 		List<EncodedDigistorePattern> output = new ArrayList<EncodedDigistorePattern>();
-		for (ItemStack key : craftableItems.keySet()) {
+		for (ItemStack key : craftingItemPatterns.keySet()) {
 			if (ingredient.test(key)) {
-				output.addAll(craftableItems.get(key));
+				output.addAll(craftingItemPatterns.get(key));
 			}
 		}
 		return output;
 	}
 
 	public List<EncodedDigistorePattern> getAllPatternsForItem(ItemStack item) {
-		for (ItemStack key : craftableItems.keySet()) {
+		for (ItemStack key : craftingItemPatterns.keySet()) {
 			if (ItemUtilities.areItemStacksStackable(key, item)) {
-				return craftableItems.get(key);
+				return craftingItemPatterns.get(key);
 			} else {
 				for (ResourceLocation resource : item.getItem().getTags()) {
 					if (key.getItem().getTags().contains(resource)) {
-						return craftableItems.get(key);
+						return craftingItemPatterns.get(key);
 					}
 				}
 			}
@@ -310,29 +313,31 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	}
 
 	protected void cacheCraftable(ItemStack stack, EncodedDigistorePattern pattern) {
-		// Cache the craftable. This requires an optimization pass.
+		// Create a copy of the output item to cache, and set the count to 1.
 		ItemStack stackToCache = stack.copy();
 		stackToCache.setCount(1);
 
-		// If we already have cached this, just add this new pattern.
+		// Check if we have already cached this item. If we already have cached this,
+		// just add this new pattern to the existing map entry.
 		boolean patternCached = false;
-		for (ItemStack key : craftableItems.keySet()) {
+		for (ItemStack key : craftingItemPatterns.keySet()) {
 			if (ItemUtilities.areItemStacksStackable(key, stackToCache)) {
-				craftableItems.get(key).add(pattern);
+				craftingItemPatterns.get(key).add(pattern);
 				patternCached = true;
 			}
 		}
-		// Otherwise, create a new entry.
+
+		// Otherwise, create a new map entry.
 		if (!patternCached) {
 			LinkedList<EncodedDigistorePattern> patternList = new LinkedList<EncodedDigistorePattern>();
 			patternList.add(pattern);
-			craftableItems.put(stackToCache.copy(), patternList);
+			craftingItemPatterns.put(stackToCache.copy(), patternList);
 		}
 
-		// Iterate through all the craftables.
+		// Iterate through all the craftables to mark them with their craftable state.
 		for (ItemStack cached : stacks) {
 			// Get the stack stripped.
-			ItemStack strippedCached = stripCraftableTag(cached.copy());
+			ItemStack strippedCached = stripMetadataTags(cached.copy());
 
 			// If the item is already cached, mark it as craftable.
 			if (ItemUtilities.areItemStacksStackable(strippedCached, stackToCache)) {
@@ -341,12 +346,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 					return;
 				}
 
-				// Mark the craftable state.
-				// state.
-				if (!cached.hasTag()) {
-					cached.setTag(new CompoundNBT());
-				}
-				cached.getTag().putInt(CRAFTABLE_TAG, DigistoreItemCraftableState.CRAFTABLE.ordinal());
+				addCraftableMetadata(cached, DigistoreItemCraftableState.CRAFTABLE);
 				return;
 			}
 		}
@@ -357,7 +357,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 			stackToCache.setTag(new CompoundNBT());
 		}
 		// Mark the craftable state and add it to the list.
-		stackToCache.getTag().putInt(CRAFTABLE_TAG, DigistoreItemCraftableState.ONLY_CRAFTABLE.ordinal());
+		addCraftableMetadata(stackToCache, DigistoreItemCraftableState.ONLY_CRAFTABLE);
 		stacks.add(stackToCache);
 	}
 
@@ -372,9 +372,39 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		stacks.add(stack);
 	}
 
-	public static ItemStack stripCraftableTag(ItemStack stack) {
+	protected static void addCraftableMetadata(ItemStack stack, DigistoreItemCraftableState craftableState) {
+		// If the stack does not have a tag, add it.
+		if (!stack.hasTag()) {
+			stack.setTag(new CompoundNBT());
+		}
+
+		// If the stack does not have a metadata tag, add it.
+		if (!stack.getTag().contains(METADATA_TAG)) {
+			stack.getTag().put(METADATA_TAG, new CompoundNBT());
+		}
+
+		// Put the craftable state.
+		stack.getTag().getCompound(METADATA_TAG).putInt(CRAFTABLE_TAG, craftableState.ordinal());
+	}
+
+	protected static @Nullable CompoundNBT getMetadataTag(ItemStack stack) {
+		// If the stack does not have a tag, return null.
+		if (!stack.hasTag()) {
+			return null;
+		}
+
+		// If the stack does not have a metadata tag, return null.
+		if (!stack.getTag().contains(METADATA_TAG)) {
+			return null;
+		}
+
+		// Return the metadata tag.
+		return stack.getTag().getCompound(METADATA_TAG);
+	}
+
+	public static ItemStack stripMetadataTags(ItemStack stack) {
 		if (stack.hasTag()) {
-			stack.getTag().remove(CRAFTABLE_TAG);
+			stack.getTag().remove(METADATA_TAG);
 			if (stack.getTag().keySet().size() == 0) {
 				stack.setTag(null);
 			}
@@ -383,12 +413,15 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	}
 
 	public static DigistoreItemCraftableState getCraftableStateOfItem(ItemStack stack) {
-		if (!stack.hasTag()) {
+		// Get the metadata.
+		CompoundNBT metadata = getMetadataTag(stack);
+
+		// If metadata does not exist, then this must not be craftable.
+		if (metadata == null) {
 			return DigistoreItemCraftableState.NONE;
 		}
-		if (!stack.getTag().contains(CRAFTABLE_TAG)) {
-			return DigistoreItemCraftableState.NONE;
-		}
-		return DigistoreItemCraftableState.values()[stack.getTag().getInt(CRAFTABLE_TAG)];
+
+		// Otherwise, get the craftable tag.
+		return DigistoreItemCraftableState.values()[metadata.getInt(CRAFTABLE_TAG)];
 	}
 }

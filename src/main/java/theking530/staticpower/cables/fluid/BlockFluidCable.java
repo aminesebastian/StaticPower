@@ -12,6 +12,9 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -27,6 +30,7 @@ import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockFluidCable extends AbstractCableBlock {
@@ -40,7 +44,9 @@ public class BlockFluidCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(FluidCableTooltipUtilities.getFluidTrasnferRate(StaticPowerConfig.getTier(tier).cableFluidCapacity.get()));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.max_fluid_rate"));
+		tooltip.add(new StringTextComponent("• ")
+				.append(new StringTextComponent(TextFormatting.AQUA + GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableFluidCapacity.get()).getString())));
 	}
 
 	@Override

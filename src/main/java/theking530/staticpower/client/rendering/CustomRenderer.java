@@ -26,7 +26,6 @@ public class CustomRenderer {
 	private BlockModel model = new BlockModel();
 	private static HashMap<TileEntity, HashMap<String, DrawCubeRequest>> CubeRenderRequests = new HashMap<TileEntity, HashMap<String, DrawCubeRequest>>();
 
-	@SuppressWarnings("resource")
 	public void render(RenderWorldLastEvent event) {
 		// Get the current matrix stack.
 		MatrixStack matrixStack = event.getMatrixStack();

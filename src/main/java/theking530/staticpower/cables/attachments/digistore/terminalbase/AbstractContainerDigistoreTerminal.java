@@ -49,22 +49,61 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCableAttachment> extends AbstractCableAttachmentContainer<T> {
 	public static final int DEFAULT_ITEMS_PER_ROW = 9;
 	public static final int DEFAULT_MAX_ROWS_ON_SCREEN = 8;
-	public static final Vector2D DEFAULT_INVENTORY_START = new Vector2D(8, 22);
+	public static final Vector2D DEFAULT_INVENTORY_START_POSITION = new Vector2D(8, 22);
 
+	/**
+	 * List of active crafting requests.
+	 */
 	private List<CraftingRequestResponse> craftingRequests;
-
+	/**
+	 * Indicates how many items will be displayed per row of digitsore inventory.
+	 */
 	protected int itemsPerRow;
+	/**
+	 * Indicates the maximum amount of digitstore inventory rows to render.
+	 */
 	protected int maxRows;
+	/**
+	 * Sets the position of the digistore inventory to render at.
+	 */
 	protected Vector2D digistoreInventoryPosition;
+	/**
+	 * Indicates whether or not the manager was present last tick.
+	 */
 	protected boolean managerPresentLastState;
+	/**
+	 * If true, digistore items will not be rendered.
+	 */
 	protected boolean hideDigistoreItems;
 
+	/**
+	 * The scroll offset (the scroll bar's position).
+	 */
 	private int scrollOffset;
+	/**
+	 * The sorting order for the digistore items.
+	 */
 	private boolean sortDescending;
+	/**
+	 * The string filter to use on the digistore items.
+	 */
 	private String filter;
+	/**
+	 * The sort type (alpha, count, etc).
+	 */
 	private DigistoreInventorySortType sortType;
+	/**
+	 * Client side simulated digistore inventory.
+	 */
 	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
+	/**
+	 * The view type of the terminal (Items, Crafting Reqeusts, etc).
+	 */
 	private TerminalViewType viewType;
+	/**
+	 * If true, a new simulated digitstore inventory will be created and sent from
+	 * the server.
+	 */
 	private boolean resyncInv;
 
 	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
@@ -76,7 +115,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	public void preInitializeContainer() {
 		itemsPerRow = DEFAULT_ITEMS_PER_ROW;
 		maxRows = DEFAULT_MAX_ROWS_ON_SCREEN;
-		digistoreInventoryPosition = DEFAULT_INVENTORY_START;
+		digistoreInventoryPosition = DEFAULT_INVENTORY_START_POSITION;
 		scrollOffset = 0;
 		sortDescending = true;
 		hideDigistoreItems = false;
@@ -154,7 +193,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 
 								// Open the UI.
 								requestUi.open((ServerPlayerEntity) player, buff -> {
-									buff.writeCompoundTag(newBundles.serialize());
+									buff.writeString(newBundles.serializeCompressed());
 									buff.writeLong(digistoreModule.getNetwork().getId());
 								});
 							} else {

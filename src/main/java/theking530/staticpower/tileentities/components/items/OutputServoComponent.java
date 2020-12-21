@@ -98,6 +98,8 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 					Direction facing = getWorld().getBlockState(getPos()).get(StaticPowerTileEntityBlock.FACING);
 					Direction direction = SideConfigurationUtilities.getDirectionFromSide(side, facing);
 
+
+					
 					// Get the tile entity in that direction.
 					TileEntity te = getWorld().getTileEntity(getPos().offset(direction));
 

@@ -54,13 +54,8 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 
 		// Capture the min and max indicies.
 		int start = 0 + (scrollPosition * columns);
-		int end = start + (columns * rows);
+		int end = start + (columns * rows) - 1;
 		end = Math.min(end, materials.getMaterials().size());
-
-		// Get the tooltips.
-		for (AutoCraftingStepWidget widget : stepRenderers) {
-			widget.setMaterial(null);
-		}
 
 		// Draw the steps.
 		for (int i = end - 1; i >= start; i--) {

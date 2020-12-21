@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.digistore.crafting;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -80,6 +81,14 @@ public class RequiredAutoCraftingMaterials {
 				isMissingMaterials = true;
 			}
 		}
+
+		// Remove the final element.
+		if (materials.size() > 1) {
+			materials.remove(materials.size() - 1);
+		}
+		
+		// Reverse the bill of materials.
+		Collections.reverse(materials);
 	}
 
 	/**

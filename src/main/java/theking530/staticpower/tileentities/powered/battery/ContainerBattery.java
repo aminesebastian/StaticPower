@@ -7,6 +7,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
+import theking530.staticpower.container.slots.BatteryItemSlot;
 
 public class ContainerBattery extends StaticPowerTileEntityContainer<TileEntityBattery> {
 	@ContainerTypePopulator
@@ -27,6 +28,9 @@ public class ContainerBattery extends StaticPowerTileEntityContainer<TileEntityB
 
 	@Override
 	public void initializeContainer() {
+		// Battery
+		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
+
 		addPlayerInventory(getPlayerInventory(), 8, 84);
 		addPlayerHotbar(getPlayerInventory(), 8, 142);
 	}
