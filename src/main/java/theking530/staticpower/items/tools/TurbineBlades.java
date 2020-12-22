@@ -53,7 +53,7 @@ public class TurbineBlades extends StaticPowerItem {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 
 		// Add the generation time.
-		String generationTime = SDTime.ticksToTimeString(tierObject.turbineBladeDurabilityTicks.get());
+		String generationTime = SDTime.ticksToTimeString(getMaxDamage(stack) - getDamage(stack));
 		tooltip.add(new StringTextComponent("Generation Time: " + generationTime));
 
 		// Add the generation boost.

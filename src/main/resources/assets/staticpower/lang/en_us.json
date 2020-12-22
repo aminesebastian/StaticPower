@@ -710,6 +710,7 @@
 	"gui.staticpower.mode.output3": "Secondary Output",
 	"gui.staticpower.mode.output4": "Tertiary Output",
 	"gui.staticpower.mode.disabled": "Disabled",
+	"gui.staticpower.mode.never": "N/A",
 	"gui.staticpower.ticks": "Ticks",
 	"gui.staticpower.seconds": "Seconds",
 	"gui.staticpower.seconds.short": "s",

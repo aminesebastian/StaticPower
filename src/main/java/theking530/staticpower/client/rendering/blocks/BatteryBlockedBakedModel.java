@@ -27,13 +27,13 @@ public class BatteryBlockedBakedModel extends DefaultMachineBakedModel {
 	private static final Map<MachineSideMode, BlockFaceUV> TOP_MODE_UV_LAYOUTS = new HashMap<MachineSideMode, BlockFaceUV>();
 
 	static {
-		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Input, new BlockFaceUV(new float[] { 0.0f, 0.0f, 0.0f, 0.0f }, 0));
-		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Output, new BlockFaceUV(new float[] { 0.0f, 0.0f, 0.0f, 0.0f }, 0));
-		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Disabled, new BlockFaceUV(new float[] { 0.0f, 0.0f, 0.0f, 0.0f }, 0));
+		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Input, new BlockFaceUV(new float[] { 10.0f, 0.0f, 13.0f, 3.0f }, 0));
+		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Output, new BlockFaceUV(new float[] { 13.0f, 6.0f, 16.0f, 9.0f }, 0));
+		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Disabled, new BlockFaceUV(new float[] { 10.0f, 3.0f, 13.0f, 6.0f }, 0));
 
-		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Input, new BlockFaceUV(new float[] { 0.0f, 0.0f, 0.0f, 0.0f }, 0));
-		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Output, new BlockFaceUV(new float[] { 0.0f, 0.0f, 0.0f, 0.0f }, 0));
-		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Disabled, new BlockFaceUV(new float[] { 0.0f, 0.0f, 0.0f, 0.0f }, 0));
+		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Input, new BlockFaceUV(new float[] { 7.0f, 0.0f, 10.0f, 3.0f }, 0));
+		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Output, new BlockFaceUV(new float[] { 10.0f, 6.0f, 13.0f, 9.0f }, 0));
+		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Disabled, new BlockFaceUV(new float[] { 7.0f, 3.0f, 10.0f, 6.0f }, 0));
 	}
 
 	public BatteryBlockedBakedModel(IBakedModel baseModel) {
@@ -46,17 +46,13 @@ public class BatteryBlockedBakedModel extends DefaultMachineBakedModel {
 	}
 
 	@Override
-	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, TextureAtlasSprite sideSprite, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
-		SIDE_MODE_UV_LAYOUTS.clear();
-		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Input, new BlockFaceUV(new float[] { 10.0f, 0.0f, 13.0f, 3.0f }, 0));
-		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Output, new BlockFaceUV(new float[] { 13.0f, 6.0f, 16.0f, 9.0f }, 0));
-		SIDE_MODE_UV_LAYOUTS.put(MachineSideMode.Disabled, new BlockFaceUV(new float[] { 10.0f, 3.0f, 13.0f, 6.0f }, 0));
-		TOP_MODE_UV_LAYOUTS.clear();
-		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Input, new BlockFaceUV(new float[] { 7.0f, 0.0f, 10.0f, 3.0f }, 0));
-		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Output, new BlockFaceUV(new float[] { 10.0f, 6.0f, 13.0f, 9.0f }, 0));
-		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Disabled, new BlockFaceUV(new float[] { 7.0f, 3.0f, 10.0f, 6.0f }, 0));
-
+	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+		// Add the original quads.
 		newQuads.add(originalQuad);
+
+		// Get the texture sprite for the side.
+		TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideConfiguration, blocksTexture, side);
+
 		if (side.getAxis() == Direction.Axis.Y) {
 			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), TOP_MODE_UV_LAYOUTS.get(sideConfiguration));
 			BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(5.0f, -0.01f, 5.0f), new Vector3f(11.0f, 16.01f, 11.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,

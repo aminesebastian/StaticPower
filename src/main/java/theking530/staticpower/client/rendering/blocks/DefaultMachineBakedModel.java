@@ -2,6 +2,7 @@ package theking530.staticpower.client.rendering.blocks;
 
 import static net.minecraftforge.client.model.SimpleModelTransform.IDENTITY;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import java.util.Random;
@@ -46,9 +47,22 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 	protected static final AtlasTexture BLOCKS_TEXTURE = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMachineBakedModel.class);
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
+	private final HashMap<Direction, Boolean> sideConfigurationRenderControl;
 
 	public DefaultMachineBakedModel(IBakedModel baseModel) {
 		super(baseModel);
+		sideConfigurationRenderControl = new HashMap<Direction, Boolean>();
+
+		// Populate with defaults.
+		for (Direction dir : Direction.values()) {
+			sideConfigurationRenderControl.put(dir, true);
+		}
+		sideConfigurationRenderControl.put(null, true);
+	}
+
+	public DefaultMachineBakedModel setSideConfigVisiblity(Direction side, boolean visible) {
+		sideConfigurationRenderControl.put(side, visible);
+		return this;
 	}
 
 	@Override
@@ -78,36 +92,44 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 			conditionallyLogError("Encountered no side configuration data when attempting to bake quads for machine.");
 			return BaseModel.getQuads(state, side, rand);
 		}
+
 		// Capture the default quads and retexture the sides to match the desired side
 		// textures based on the configuration.
-
 		List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 
+		// Get the block atlas texture.
+		AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+
 		// Iterate through all the quads.
 		for (BakedQuad quad : baseQuads) {
+			// Get the rendering side.
 			Direction renderingSide = side == null ? quad.getFace() : side;
 
+			// Get the side mode.
 			MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
 			try {
-				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-
-				// Get the texture sprite for the side.
-				TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideMode, blocksTexture, renderingSide);
-
 				// Attempt to render the quad for the side.
-				renderQuadsForSide(newQuads, renderingSide, sideSprite, quad, sideMode);
+				renderQuadsForSide(newQuads, renderingSide, blocksTexture, quad, sideMode);
 			} catch (Exception e) {
 				LOGGER.warn("An error occured when attempting to render the model.", e);
 			}
 
 		}
+
+		// Build and return the new quad list.
 		return newQuads.build();
 	}
 
-	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, TextureAtlasSprite sideSprite, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+		// Add the original quads.
 		newQuads.add(originalQuad);
-		if (sideConfiguration != MachineSideMode.Never) {
+
+		// Add the side config color if it's not NEVER and if its enabled.
+		if (sideConfigurationRenderControl.get(side) && sideConfiguration != MachineSideMode.Never) {
+			// Get the texture sprite for the side.
+			TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideConfiguration, blocksTexture, side);
+
 			// Vectors for quads are relative to the face direction, so we need to only work
 			// in the positive direction vectors.
 			Direction offsetSide = side;

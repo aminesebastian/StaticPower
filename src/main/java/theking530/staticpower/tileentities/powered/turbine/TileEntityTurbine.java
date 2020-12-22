@@ -181,7 +181,10 @@ public class TileEntityTurbine extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side == BlockSide.TOP || side == BlockSide.BOTTOM) {
+		if (side == BlockSide.TOP) {
+			return mode == MachineSideMode.Input;
+		}
+		if (side == BlockSide.BOTTOM) {
 			return mode == MachineSideMode.Never;
 		}
 		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output;
@@ -189,7 +192,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 
 	@Override
 	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
+		return new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
 	}
 
 	@Override
