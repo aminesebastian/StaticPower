@@ -107,6 +107,16 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getCableIndustrialPowerCapacity() {
+		return 2048;
+	}
+
+	@Override
+	protected int getCableIndustrialPowerDelivery() {
+		return 1024;
+	}
+
+	@Override
 	protected int getDigistoreCapacity() {
 		return 131072;
 	}

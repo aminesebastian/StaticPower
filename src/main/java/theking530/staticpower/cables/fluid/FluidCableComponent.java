@@ -30,10 +30,10 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
 	public static final float UPDATE_THRESHOLD = 0.1f;
 	private final int capacity;
+	private final boolean isIndustrial;
 	private FluidStack lastUpdateFluidStack;
 	private float lastUpdateFilledPercentage;
 	private float visualFilledPercentage;
-	private boolean isIndustrial;
 
 	public FluidCableComponent(String name, boolean isIndustrial, int capacity) {
 		super(name, CableNetworkModuleTypes.FLUID_NETWORK_MODULE);

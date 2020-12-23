@@ -167,7 +167,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 	@Override
 	public void process() {
 		// Maintain the spin.
-		if (!getWorld().isRemote && redstoneControlComponent.passesRedstoneCheck()) {
+		if (!getWorld().isRemote) {
 			// If we're spinning faster than the current max, start slowing down. Otherwise,
 			// either spin up or maintain speed.
 			if (currentSpeed > REQUIRED_SPEED) {

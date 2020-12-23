@@ -57,6 +57,16 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getCableIndustrialPowerCapacity() {
+		return 2147483647;
+	}
+
+	@Override
+	protected int getCableIndustrialPowerDelivery() {
+		return 2147483647;
+	}
+
+	@Override
 	protected int getDigistoreCapacity() {
 		return 2147483647;
 	}

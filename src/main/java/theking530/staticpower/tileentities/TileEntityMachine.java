@@ -13,7 +13,7 @@ import theking530.staticpower.tileentities.components.power.EnergyStorageCompone
  */
 public abstract class TileEntityMachine extends TileEntityConfigurable {
 	public final EnergyStorageComponent energyStorage;
-	protected final ResourceLocation tier;
+	private final ResourceLocation tier;
 
 	public boolean isUpdateQueued = true;
 
@@ -28,5 +28,9 @@ public abstract class TileEntityMachine extends TileEntityConfigurable {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", tierObject.defaultMachinePowerCapacity.get(), tierObject.defaultMachinePowerInput.get(),
 				tierObject.defaultMachinePowerOutput.get()));
+	}
+
+	public ResourceLocation getTier() {
+		return tier;
 	}
 }

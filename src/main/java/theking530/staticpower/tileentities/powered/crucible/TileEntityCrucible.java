@@ -38,7 +38,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 
 	public static final int DEFAULT_PROCESSING_TIME = 100;
 	public static final int DEFAULT_PROCESSING_COST = 20;
-	public static final int HEAT_GENERATION = 5;
+	public static final int HEAT_GENERATION = 25;
 	public static final int HEAT_POWER_COST = 10;
 
 	public final InventoryComponent inputInventory;
@@ -73,7 +73,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Register the heate component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 5000.0f, 10.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 5000.0f, 1.0f));
 		heatStorage.getStorage().setConductivity(10);
 
 		// Setup the processing component.

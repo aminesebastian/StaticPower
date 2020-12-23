@@ -5,7 +5,6 @@ import theking530.staticpower.StaticPower;
 
 public class GuiTextures {
 	public static final ResourceLocation GENERIC_GUI = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/generic_gui_sampler.png");
-	public static final ResourceLocation VANILLA_FURNACE_GUI = new ResourceLocation("textures/gui/container/furnace.png");
 
 	public static final ResourceLocation GREEN_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/green_tab.png");
 	public static final ResourceLocation PURPLE_TAB = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/purple_tab.png");

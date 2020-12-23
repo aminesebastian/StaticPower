@@ -24,13 +24,17 @@ import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage, IStaticVoltHandler {
 	public static final String POWER_CAPACITY_DATA_TAG_KEY = "power_capacity";
 	public static final String POWER_RATE_DATA_TAG_KEY = "power_transfer_rate";
+	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
+
 	private final int capacity;
 	private final int transferRate;
+	private final boolean isIndustrial;
 
-	public PowerCableComponent(String name, int capacity, int transferRate) {
+	public PowerCableComponent(String name, boolean isIndustrial, int capacity, int transferRate) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		this.capacity = capacity;
 		this.transferRate = transferRate;
+		this.isIndustrial = isIndustrial;
 	}
 
 	@Override
@@ -174,6 +178,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	protected void initializeCableProperties(ServerCable cable) {
 		cable.setProperty(POWER_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.setProperty(POWER_RATE_DATA_TAG_KEY, transferRate);
+		cable.setProperty(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}
 
 	@Override
@@ -184,7 +189,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 				return CableConnectionState.CABLE;
 			}
 		}
-		if (te != null) {
+		if (te != null && !isIndustrial) {
 			if (te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
 			}

@@ -29,6 +29,7 @@ import theking530.staticpower.cables.fluid.BlockFluidCable;
 import theking530.staticpower.cables.fluid.BlockIndustrialFluidCable;
 import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
+import theking530.staticpower.cables.power.BlockIndustrialPowerCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -230,6 +231,13 @@ public class ModBlocks {
 	public static BlockPowerCable PowerCableEnergized;
 	public static BlockPowerCable PowerCableLumum;
 	public static BlockPowerCable PowerCableCreative;
+
+	public static BlockIndustrialPowerCable IndustrialPowerCableBasic;
+	public static BlockIndustrialPowerCable IndustrialPowerCableAdvanced;
+	public static BlockIndustrialPowerCable IndustrialPowerCableStatic;
+	public static BlockIndustrialPowerCable IndustrialPowerCableEnergized;
+	public static BlockIndustrialPowerCable IndustrialPowerCableLumum;
+	public static BlockIndustrialPowerCable IndustrialPowerCableCreative;
 
 	public static BlockFluidCable FluidCableBasic;
 	public static BlockFluidCable FluidCableAdvanced;
@@ -440,12 +448,20 @@ public class ModBlocks {
 
 		// Cables
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("cable_digistore"));
+
 		StaticPowerRegistry.preRegisterBlock(PowerCableBasic = new BlockPowerCable("cable_power_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(PowerCableAdvanced = new BlockPowerCable("cable_power_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterBlock(PowerCableStatic = new BlockPowerCable("cable_power_static", StaticPowerTiers.STATIC));
 		StaticPowerRegistry.preRegisterBlock(PowerCableEnergized = new BlockPowerCable("cable_power_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(PowerCableLumum = new BlockPowerCable("cable_power_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(PowerCableCreative = new BlockPowerCable("cable_power_creative", StaticPowerTiers.CREATIVE));
+
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableBasic = new BlockIndustrialPowerCable("cable_industrial_power_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableAdvanced = new BlockIndustrialPowerCable("cable_industrial_power_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableStatic = new BlockIndustrialPowerCable("cable_industrial_power_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableEnergized = new BlockIndustrialPowerCable("cable_industrial_power_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableLumum = new BlockIndustrialPowerCable("cable_industrial_power_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableCreative = new BlockIndustrialPowerCable("cable_industrial_power_creative", StaticPowerTiers.CREATIVE));
 
 		StaticPowerRegistry.preRegisterBlock(ItemCableBasic = new BlockItemCable("cable_item_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(ItemCableAdvanced = new BlockItemCable("cable_item_advanced", StaticPowerTiers.ADVANCED));

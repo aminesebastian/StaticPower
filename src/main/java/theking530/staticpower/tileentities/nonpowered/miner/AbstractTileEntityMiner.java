@@ -17,6 +17,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
@@ -78,7 +79,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 				heatStorage = new HeatStorageComponent("HeatStorageComponent", 350.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 
-		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
 		heatStorage.getStorage().setCanHeat(false);
 	}
 
@@ -115,8 +116,10 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 		} else {
 			if (processingComponent.isPerformingWork()) {
-				BlockPos minedPos = getCurrentlyTargetedBlockPos();
-				getWorld().addParticle(ParticleTypes.SMOKE, minedPos.getX(), minedPos.getY(), minedPos.getZ(), 0.0f, 0.01f, 0.0f);
+				if (SDMath.diceRoll(0.5)) {
+					BlockPos minedPos = getCurrentlyTargetedBlockPos();
+					getWorld().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f, minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
+				}
 			}
 		}
 	}
@@ -244,13 +247,13 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// Set the mined block to cobblestone.
-			world.setBlockState(minedPos, Blocks.AIR.getDefaultState(), 1 | 2);
+			world.setBlockState(minedPos, Blocks.AIR.getDefaultState(), 1 | 2 | 4);
 
 			// Raise the on mined event.
 			onBlockMined(minedPos, minedBlockState);
 
 			// Mark the te as dirty.
-			markDirty();
+			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.error("Items backed up in internal inventory.");
@@ -362,6 +365,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		if (currentBlockIndex == -1) {
 			return new BlockPos(0, 0, 0);
 		}
+
 		return blocks.size() > 0 ? blocks.get(currentBlockIndex) : new BlockPos(0, 0, 0);
 	}
 

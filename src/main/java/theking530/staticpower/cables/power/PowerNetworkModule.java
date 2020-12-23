@@ -25,6 +25,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.NetworkMapper;
+import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule {
@@ -49,6 +50,13 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			List<PowerEnergyInterfaceWrapper> destinations = new ArrayList<PowerEnergyInterfaceWrapper>();
 
 			Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
+				// Get the cable and skip if its industrial.
+				ServerCable cable = CableNetworkManager.get(world).getCable(wrapper.getFirstConnectedCable());
+				if (cable.getBooleanProperty(PowerCableComponent.POWER_INDUSTRIAL_DATA_TAG_KEY)) {
+					return;
+				}
+
+				// Add all the power interfaces.
 				List<PowerEnergyInterfaceWrapper> powerInterfaces = getInterfaceForDesination(wrapper);
 				if (powerInterfaces.size() > 0) {
 					destinations.addAll(powerInterfaces);

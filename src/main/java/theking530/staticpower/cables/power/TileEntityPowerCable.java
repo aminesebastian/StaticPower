@@ -11,26 +11,47 @@ import theking530.staticpower.tileentities.TileEntityBase;
 public class TileEntityPowerCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityPowerCable>(
-			(allocator) -> new TileEntityPowerCable(allocator, StaticPowerTiers.BASIC), ModBlocks.PowerCableBasic);
+			(allocator) -> new TileEntityPowerCable(allocator, false, StaticPowerTiers.BASIC), ModBlocks.PowerCableBasic);
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityPowerCable>(
-			(allocator) -> new TileEntityPowerCable(allocator, StaticPowerTiers.ADVANCED), ModBlocks.PowerCableAdvanced);
+			(allocator) -> new TileEntityPowerCable(allocator, false, StaticPowerTiers.ADVANCED), ModBlocks.PowerCableAdvanced);
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityPowerCable>(
-			(allocator) -> new TileEntityPowerCable(allocator, StaticPowerTiers.STATIC), ModBlocks.PowerCableStatic);
+			(allocator) -> new TileEntityPowerCable(allocator, false, StaticPowerTiers.STATIC), ModBlocks.PowerCableStatic);
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityPowerCable>(
-			(allocator) -> new TileEntityPowerCable(allocator, StaticPowerTiers.ENERGIZED), ModBlocks.PowerCableEnergized);
+			(allocator) -> new TileEntityPowerCable(allocator, false, StaticPowerTiers.ENERGIZED), ModBlocks.PowerCableEnergized);
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityPowerCable>(
-			(allocator) -> new TileEntityPowerCable(allocator, StaticPowerTiers.LUMUM), ModBlocks.PowerCableLumum);
+			(allocator) -> new TileEntityPowerCable(allocator, false, StaticPowerTiers.LUMUM), ModBlocks.PowerCableLumum);
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityPowerCable>(
-			(allocator) -> new TileEntityPowerCable(allocator, StaticPowerTiers.CREATIVE), ModBlocks.PowerCableCreative);
+			(allocator) -> new TileEntityPowerCable(allocator, false, StaticPowerTiers.CREATIVE), ModBlocks.PowerCableCreative);
 
-	public TileEntityPowerCable(TileEntityTypeAllocator<TileEntityPowerCable> allocator, ResourceLocation tier) {
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_BASIC = new TileEntityTypeAllocator<TileEntityPowerCable>(
+			(allocator) -> new TileEntityPowerCable(allocator, true, StaticPowerTiers.BASIC), ModBlocks.IndustrialPowerCableBasic);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_ADVANCED = new TileEntityTypeAllocator<TileEntityPowerCable>(
+			(allocator) -> new TileEntityPowerCable(allocator, true, StaticPowerTiers.ADVANCED), ModBlocks.IndustrialPowerCableAdvanced);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_STATIC = new TileEntityTypeAllocator<TileEntityPowerCable>(
+			(allocator) -> new TileEntityPowerCable(allocator, true, StaticPowerTiers.STATIC), ModBlocks.IndustrialPowerCableStatic);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_ENERGIZED = new TileEntityTypeAllocator<TileEntityPowerCable>(
+			(allocator) -> new TileEntityPowerCable(allocator, true, StaticPowerTiers.ENERGIZED), ModBlocks.IndustrialPowerCableEnergized);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_LUMUM = new TileEntityTypeAllocator<TileEntityPowerCable>(
+			(allocator) -> new TileEntityPowerCable(allocator, true, StaticPowerTiers.LUMUM), ModBlocks.IndustrialPowerCableLumum);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_CREATIVE = new TileEntityTypeAllocator<TileEntityPowerCable>(
+			(allocator) -> new TileEntityPowerCable(allocator, true, StaticPowerTiers.CREATIVE), ModBlocks.IndustrialPowerCableCreative);
+
+	public TileEntityPowerCable(TileEntityTypeAllocator<TileEntityPowerCable> allocator, boolean isIndustrial, ResourceLocation tier) {
 		super(allocator);
-		registerComponent(new PowerCableComponent("PowerCableComponent", StaticPowerConfig.getTier(tier).cablePowerCapacity.get(), StaticPowerConfig.getTier(tier).cablePowerDelivery.get()));
+		int powerRate = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerDelivery.get() : StaticPowerConfig.getTier(tier).cablePowerDelivery.get();
+		int powerCapacity = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() : StaticPowerConfig.getTier(tier).cablePowerCapacity.get();
+		registerComponent(new PowerCableComponent("PowerCableComponent", isIndustrial, powerCapacity, powerRate));
 	}
 
 	@Override

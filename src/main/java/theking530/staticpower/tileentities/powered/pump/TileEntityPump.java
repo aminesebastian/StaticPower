@@ -122,7 +122,7 @@ public class TileEntityPump extends TileEntityMachine {
 
 		// Enable face interaction.
 		enableFaceInteraction();
-		
+
 		// Initialize the positions to pump container.
 		positionsToPump = new LinkedList<BlockPos>();
 	}
@@ -200,7 +200,7 @@ public class TileEntityPump extends TileEntityMachine {
 					fluidTankComponent.fill(pumpedStack, FluidAction.EXECUTE);
 
 					// Do not suck away the source block if this is a creative pump.
-					if (this.tier != StaticPowerTiers.CREATIVE) {
+					if (getTier() != StaticPowerTiers.CREATIVE) {
 						getWorld().setBlockState(position, Blocks.AIR.getDefaultState());
 					}
 

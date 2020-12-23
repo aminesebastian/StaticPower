@@ -55,6 +55,8 @@ public abstract class StaticPowerTier {
 	 ***************************/
 	public final ConfigValue<Integer> cablePowerCapacity;
 	public final ConfigValue<Integer> cablePowerDelivery;
+	public final ConfigValue<Integer> cableIndustrialPowerCapacity;
+	public final ConfigValue<Integer> cableIndustrialPowerDelivery;
 
 	/**************************
 	 * Item Cable Configuration
@@ -278,6 +280,12 @@ public abstract class StaticPowerTier {
 
 		cablePowerDelivery = builder.comment("The amount of power that a power cable of this tier can supply to a single destination.")
 				.translation(StaticPower.MOD_ID + ".config." + "cablePowerDelivery").define("CablePowerDelivery", this.getCablePowerDelivery());
+
+		cableIndustrialPowerCapacity = builder.comment("The amount of power that an industrial power cable of this tier can store.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerCapacity").define("CableIndustrialPowerCapacity", this.getCableIndustrialPowerCapacity());
+		cableIndustrialPowerDelivery = builder.comment("The amount of power that an industrial power cable of this tier can supply to a single destination.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerDelivery").define("CableIndustrialPowerDelivery", this.getCableIndustrialPowerDelivery());
+
 		builder.pop();
 
 		/********
@@ -578,6 +586,14 @@ public abstract class StaticPowerTier {
 	}
 
 	protected int getCablePowerDelivery() {
+		return 0;
+	}
+
+	protected int getCableIndustrialPowerCapacity() {
+		return 0;
+	}
+
+	protected int getCableIndustrialPowerDelivery() {
 		return 0;
 	}
 

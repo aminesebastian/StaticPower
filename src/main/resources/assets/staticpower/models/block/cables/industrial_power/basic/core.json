@@ -1,0 +1,7 @@
+{
+  "parent": "staticpower:block/cables/cable_7_core",
+  "textures": {
+    "cable_texture": "staticpower:blocks/cables/cable_industrial_power_basic",
+    "particle": "staticpower:blocks/cables/cable_industrial_power_basic"
+  }
+}

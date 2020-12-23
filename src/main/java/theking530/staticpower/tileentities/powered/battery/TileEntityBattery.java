@@ -73,7 +73,7 @@ public class TileEntityBattery extends TileEntityMachine {
 	protected PowerDistributionComponent powerDistributor;
 
 	public TileEntityBattery(TileEntityTypeAllocator<TileEntityBattery> allocator, ResourceLocation tier) {
-		super(allocator);
+		super(allocator, tier);
 		enableFaceInteraction();
 
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
@@ -106,7 +106,10 @@ public class TileEntityBattery extends TileEntityMachine {
 	}
 
 	public void process() {
-		super.process();
+		// If this is a creative battery, always keep the power at max.
+		if (getTier() == StaticPowerTiers.CREATIVE) {
+			this.energyStorage.addPower(Integer.MAX_VALUE);
+		}
 	}
 
 	public void setMinimumPowerThreshold(int newThreshold) {

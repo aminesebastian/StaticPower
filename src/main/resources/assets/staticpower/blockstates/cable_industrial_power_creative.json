@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/cables/industrial_power/creative/core" }
+    }
+}

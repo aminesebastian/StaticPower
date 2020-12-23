@@ -107,6 +107,16 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getCableIndustrialPowerCapacity() {
+		return 4096;
+	}
+
+	@Override
+	protected int getCableIndustrialPowerDelivery() {
+		return 2048;
+	}
+
+	@Override
 	protected int getDigistoreCapacity() {
 		return 262144;
 	}

@@ -47,7 +47,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 		tooltip.add(new TranslationTextComponent("gui.staticpower.max_fluid_rate"));
 		tooltip.add(new StringTextComponent("• ").append(
 				new StringTextComponent(TextFormatting.AQUA + GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()).getString())));
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.industrial_fluid_cable_warning").mergeStyle(TextFormatting.RED)));
+		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.industrial_cable_warning").mergeStyle(TextFormatting.RED)));
 	}
 
 	@Override

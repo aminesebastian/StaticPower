@@ -89,29 +89,43 @@ public class StaticPowerAdditionalModels {
 
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_STRAIGHT = registerModel("block/cables/industrial_fluid/basic/straight");
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_EXTENSION = registerModel("block/cables/industrial_fluid/basic/extension");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_BASIC_ATTACHMENT = registerModel("block/cables/industrial_fluid/basic/attachment");
 
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_STRAIGHT = registerModel("block/cables/industrial_fluid/advanced/straight");
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_EXTENSION = registerModel("block/cables/industrial_fluid/advanced/extension");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ADVANCED_ATTACHMENT = registerModel("block/cables/industrial_fluid/advanced/attachment");
 
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_STRAIGHT = registerModel("block/cables/industrial_fluid/static/straight");
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_EXTENSION = registerModel("block/cables/industrial_fluid/static/extension");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_STATIC_ATTACHMENT = registerModel("block/cables/industrial_fluid/static/attachment");
 
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_STRAIGHT = registerModel("block/cables/industrial_fluid/energized/straight");
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_EXTENSION = registerModel("block/cables/industrial_fluid/energized/extension");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_ENERGIZED_ATTACHMENT = registerModel("block/cables/industrial_fluid/energized/attachment");
 
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_STRAIGHT = registerModel("block/cables/industrial_fluid/lumum/straight");
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_EXTENSION = registerModel("block/cables/industrial_fluid/lumum/extension");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_LUMUM_ATTACHMENT = registerModel("block/cables/industrial_fluid/lumum/attachment");
 
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_STRAIGHT = registerModel("block/cables/industrial_fluid/creative/straight");
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_EXTENSION = registerModel("block/cables/industrial_fluid/creative/extension");
-	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_CREATIVE_ATTACHMENT = registerModel("block/cables/industrial_fluid/creative/attachment");
 
 	public static final ResourceLocation CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT = registerModel("block/cables/industrial_fluid/attachment");
+
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_BASIC_STRAIGHT = registerModel("block/cables/industrial_power/basic/straight");
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_BASIC_EXTENSION = registerModel("block/cables/industrial_power/basic/extension");
+
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ADVANCED_STRAIGHT = registerModel("block/cables/industrial_power/advanced/straight");
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ADVANCED_EXTENSION = registerModel("block/cables/industrial_power/advanced/extension");
+
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_STATIC_STRAIGHT = registerModel("block/cables/industrial_power/static/straight");
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_STATIC_EXTENSION = registerModel("block/cables/industrial_power/static/extension");
+
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ENERGIZED_STRAIGHT = registerModel("block/cables/industrial_power/energized/straight");
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_ENERGIZED_EXTENSION = registerModel("block/cables/industrial_power/energized/extension");
+
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_LUMUM_STRAIGHT = registerModel("block/cables/industrial_power/lumum/straight");
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_LUMUM_EXTENSION = registerModel("block/cables/industrial_power/lumum/extension");
+
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_CREATIVE_STRAIGHT = registerModel("block/cables/industrial_power/creative/straight");
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_CREATIVE_EXTENSION = registerModel("block/cables/industrial_power/creative/extension");
+
+	public static final ResourceLocation CABLE_POWER_INDUSTRIAL_DEFAULT_ATTACHMENT = registerModel("block/cables/industrial_power/attachment");
 
 	public static final ResourceLocation CABLE_HEAT_COPPER_STRAIGHT = registerModel("block/cables/heat/copper/straight");
 	public static final ResourceLocation CABLE_HEAT_COPPER_EXTENSION = registerModel("block/cables/heat/copper/extension");
