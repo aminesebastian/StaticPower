@@ -122,7 +122,7 @@ public class StaticPowerTierBasic extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getBatteryCapacity() {
+	protected int getBatteryCapacity()  {
 		return 5000;
 	}
 
