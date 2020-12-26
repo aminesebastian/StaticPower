@@ -34,7 +34,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGeneratorRecipe> {
-	public static final ResourceLocation FLUID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_generator");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_generator");
 
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
@@ -56,7 +56,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return FLUID_GENERATOR_UID;
+		return UID;
 	}
 
 	@Override

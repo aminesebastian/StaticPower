@@ -35,7 +35,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRecipe> {
-	public static final ResourceLocation CENTRIFUGE_UID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge");
 	private static final int INTPUT_SLOT = 0;
 	private static final int PRIMARY_OUTPUT_SLOT = 1;
 	private static final int SECONDARY_OUTPUT_SLOT = 2;
@@ -60,7 +60,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return CENTRIFUGE_UID;
+		return UID;
 	}
 
 	@Override

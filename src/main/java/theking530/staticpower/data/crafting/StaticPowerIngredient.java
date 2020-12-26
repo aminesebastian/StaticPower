@@ -12,13 +12,20 @@ public class StaticPowerIngredient {
 	private final Ingredient ingredient;
 	private final int count;
 
-	protected StaticPowerIngredient(Ingredient ingredient, int count) {
-		super();
+	public StaticPowerIngredient(Ingredient ingredient, int count) {
 		this.ingredient = ingredient;
 		this.count = count;
 		for (ItemStack stack : ingredient.getMatchingStacks()) {
 			stack.setCount(count);
 		}
+	}
+
+	public StaticPowerIngredient(ItemStack stack, int count) {
+		this(Ingredient.fromStacks(stack), count);
+	}
+
+	public StaticPowerIngredient(ItemStack stack) {
+		this(Ingredient.fromStacks(stack), stack.getCount());
 	}
 
 	public boolean isEmpty() {

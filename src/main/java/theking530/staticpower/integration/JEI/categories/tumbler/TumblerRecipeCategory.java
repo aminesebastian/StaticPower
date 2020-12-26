@@ -33,7 +33,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class TumblerRecipeCategory extends BaseJEIRecipeCategory<TumblerRecipe> {
-	public static final ResourceLocation TUMBLER_UID = new ResourceLocation(StaticPower.MOD_ID, "tumbler");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "tumbler");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -56,7 +56,7 @@ public class TumblerRecipeCategory extends BaseJEIRecipeCategory<TumblerRecipe> 
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return TUMBLER_UID;
+		return UID;
 	}
 
 	@Override

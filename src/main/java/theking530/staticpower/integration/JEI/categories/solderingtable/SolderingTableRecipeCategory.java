@@ -28,7 +28,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 
 public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<SolderingRecipe> {
-	public static final ResourceLocation SOLDERING_TABLE_UID = new ResourceLocation(StaticPower.MOD_ID,
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID,
 			"soldering_table");
 	private static final int OUTPUT_SLOT = 10;
 	private static final int SOLDERING_IRON_SLOT = 11;
@@ -47,7 +47,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return SOLDERING_TABLE_UID;
+		return UID;
 	}
 
 	@Override

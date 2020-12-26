@@ -36,7 +36,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe> {
-	public static final ResourceLocation SQUEEZER_UID = new ResourceLocation(StaticPower.MOD_ID, "squeezer");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "squeezer");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -57,7 +57,7 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return SQUEEZER_UID;
+		return UID;
 	}
 
 	@Override

@@ -38,7 +38,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
-	public static final ResourceLocation CASTER_UID = new ResourceLocation(StaticPower.MOD_ID, "caster");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "caster");
 	private static final int MOLD_SLOT = 0;
 	private static final int FLUID_SLOT = 1;
 	private static final int OUTPUT_SLOT = 2;
@@ -62,7 +62,7 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return CASTER_UID;
+		return UID;
 	}
 
 	@Override

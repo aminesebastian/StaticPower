@@ -43,6 +43,7 @@ import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
+import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
@@ -65,6 +66,7 @@ import theking530.staticpower.integration.JEI.categories.fusionfurnace.FusionFur
 import theking530.staticpower.integration.JEI.categories.lathe.LatheRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.mixer.MixerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.packager.PackagerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.poweredgrinder.PoweredGrinderRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeCategory;
@@ -134,6 +136,8 @@ public class PluginJEI implements IModPlugin {
 	private TumblerRecipeCategory tumblerRecipeCategory;
 	@Nullable
 	ThermalConductivityRecipeCategory thermalConductivityRecipeCategory;
+	@Nullable
+	PackagerRecipeCategory packagerRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -246,6 +250,10 @@ public class PluginJEI implements IModPlugin {
 		// Thermal Conductivity
 		thermalConductivityRecipeCategory = new ThermalConductivityRecipeCategory(guiHelper);
 		registration.addRecipeCategories(thermalConductivityRecipeCategory);
+
+		// Packager
+		packagerRecipeCategory = new PackagerRecipeCategory(guiHelper);
+		registration.addRecipeCategories(packagerRecipeCategory);
 	}
 
 	@Override
@@ -301,68 +309,70 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LumberMillRecipe.RECIPE_TYPE), LumberMillRecipeCategory.LUMBER_MILL_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FormerRecipe.RECIPE_TYPE), FormerRecipeCategory.FORMER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.FURNACE_RECIPES, PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.GRINDER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FermenterRecipe.RECIPE_TYPE), FermenterRecipeCategory.FERMENTER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.SQUEEZER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE), BottleRecipeCategory.BOTTLER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolidFuelRecipe.RECIPE_TYPE), SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolderingRecipe.RECIPE_TYPE), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidInfusionRecipe.RECIPE_TYPE), FluidInfuserRecipeCategory.FLUID_INFUSER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CentrifugeRecipe.RECIPE_TYPE), CentrifugeRecipeCategory.CENTRIFUGE_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FusionFurnaceRecipe.RECIPE_TYPE), FusionFurnaceRecipeCategory.FUSION_FURNACE_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(EvaporatorRecipe.RECIPE_TYPE), EvaporatorRecipeCategory.EVAPORATOR_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidGeneratorRecipe.RECIPE_TYPE), FluidGeneratorRecipeCateogry.FLUID_GENERATOR_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CondensationRecipe.RECIPE_TYPE), CondenserRecipeCategory.CONDENSER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(VulcanizerRecipe.RECIPE_TYPE), VulcanizerRecipeCategory.VULCANIZER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LatheRecipe.RECIPE_TYPE), LatheRecipeCategory.LATHE_UID);
-		registration.addRecipes(SmithingRecipeProvider.getRecipes(), SmithingRecipeCategory.AUTO_SMITHING_UID);
-		registration.addRecipes(ThermalConductivityRecipeProvider.getRecipes(), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(MixerRecipe.RECIPE_TYPE), MixerRecipeCategory.MIXER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CrucibleRecipe.RECIPE_TYPE), CrucibleRecipeCategory.CRUCIBLE_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CastingRecipe.RECIPE_TYPE), CasterRecipeCategory.CASTER_UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(TumblerRecipe.RECIPE_TYPE), TumblerRecipeCategory.TUMBLER_UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LumberMillRecipe.RECIPE_TYPE), LumberMillRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FormerRecipe.RECIPE_TYPE), FormerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.FURNACE_RECIPES, PoweredFurnaceRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FermenterRecipe.RECIPE_TYPE), FermenterRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE), BottleRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolidFuelRecipe.RECIPE_TYPE), SolidGeneratorRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolderingRecipe.RECIPE_TYPE), SolderingTableRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidInfusionRecipe.RECIPE_TYPE), FluidInfuserRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CentrifugeRecipe.RECIPE_TYPE), CentrifugeRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FusionFurnaceRecipe.RECIPE_TYPE), FusionFurnaceRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(EvaporatorRecipe.RECIPE_TYPE), EvaporatorRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidGeneratorRecipe.RECIPE_TYPE), FluidGeneratorRecipeCateogry.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CondensationRecipe.RECIPE_TYPE), CondenserRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(VulcanizerRecipe.RECIPE_TYPE), VulcanizerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LatheRecipe.RECIPE_TYPE), LatheRecipeCategory.UID);
+		registration.addRecipes(SmithingRecipeProvider.getRecipes(), SmithingRecipeCategory.UID);
+		registration.addRecipes(ThermalConductivityRecipeProvider.getRecipes(), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(MixerRecipe.RECIPE_TYPE), MixerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CrucibleRecipe.RECIPE_TYPE), CrucibleRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CastingRecipe.RECIPE_TYPE), CasterRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(TumblerRecipe.RECIPE_TYPE), TumblerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(PackagerRecipe.RECIPE_TYPE), PackagerRecipeCategory.UID);
 	}
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.LumberMill), LumberMillRecipeCategory.LUMBER_MILL_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Former), FormerRecipeCategory.FORMER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredFurnace), PoweredFurnaceRecipeCategory.POWERED_FURNACE_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder), PoweredGrinderRecipeCategory.GRINDER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Fermenter), FermenterRecipeCategory.FERMENTER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Squeezer), SqueezerRecipeCategory.SQUEEZER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Bottler), BottleRecipeCategory.BOTTLER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator), SolidGeneratorRecipeCategory.SOLID_GENERATOR_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.LumberMill), LumberMillRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Former), FormerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredFurnace), PoweredFurnaceRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder), PoweredGrinderRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Fermenter), FermenterRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Squeezer), SqueezerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Bottler), BottleRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator), SolidGeneratorRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable), SolderingTableRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable), SolderingTableRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable), VanillaRecipeCategoryUid.CRAFTING);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser), FluidInfuserRecipeCategory.FLUID_INFUSER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge), CentrifugeRecipeCategory.CENTRIFUGE_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FusionFurnace), FusionFurnaceRecipeCategory.FUSION_FURNACE_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Evaporator), EvaporatorRecipeCategory.EVAPORATOR_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator), FluidGeneratorRecipeCateogry.FLUID_GENERATOR_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Condenser), CondenserRecipeCategory.CONDENSER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Vulcanizer), VulcanizerRecipeCategory.VULCANIZER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSmith), SmithingRecipeCategory.AUTO_SMITHING_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Lathe), LatheRecipeCategory.LATHE_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Mixer), MixerRecipeCategory.MIXER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Crucible), CrucibleRecipeCategory.CRUCIBLE_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Caster), CasterRecipeCategory.CASTER_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler), TumblerRecipeCategory.TUMBLER_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser), FluidInfuserRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge), CentrifugeRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FusionFurnace), FusionFurnaceRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Evaporator), EvaporatorRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator), FluidGeneratorRecipeCateogry.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Condenser), CondenserRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Vulcanizer), VulcanizerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSmith), SmithingRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Lathe), LatheRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Mixer), MixerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Crucible), CrucibleRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Caster), CasterRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler), TumblerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Packager), PackagerRecipeCategory.UID);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatCable), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatSink), ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatCable), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatSink), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatCable), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatSink), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatCable), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatSink), ThermalConductivityRecipeCategory.UID);
 	}
 
 	@Override
@@ -377,8 +387,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistoreCraftingTerminal.class, 9), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoCraftingTable.class, 9), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistorePatternEncoder.class, 9), VanillaRecipeCategoryUid.CRAFTING);
-		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerSolderingTable.class, 9), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
-		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoSolderingTable.class, 9), SolderingTableRecipeCategory.SOLDERING_TABLE_UID);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerSolderingTable.class, 9), SolderingTableRecipeCategory.UID);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoSolderingTable.class, 9), SolderingTableRecipeCategory.UID);
 	}
 
 	@Override

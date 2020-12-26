@@ -37,7 +37,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRecipe> {
-	public static final ResourceLocation LUMBER_MILL_UID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill");
 	private static final int INTPUT_SLOT = 0;
 	private static final int PRIMARY_OUTPUT_SLOT = 1;
 	private static final int SECONDARY_OUTPUT_SLOT = 2;
@@ -61,7 +61,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return LUMBER_MILL_UID;
+		return UID;
 	}
 
 	@Override

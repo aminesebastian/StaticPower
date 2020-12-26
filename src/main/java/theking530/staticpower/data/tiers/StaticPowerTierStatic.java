@@ -103,21 +103,21 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 
 	@Override
 	protected int getCablePowerDelivery() {
-		return 64;
+		return 128;
 	}
 
 	@Override
 	protected int getCableIndustrialPowerCapacity() {
-		return 256;
+		return 1024;
 	}
 
 	@Override
 	protected int getCableIndustrialPowerDelivery() {
-		return 512;
+		return 1024;
 	}
 
 	@Override
-	protected int getDigistoreCapacity() {
+	protected int getDigistoreCardCapacity() {
 		return 65536;
 	}
 

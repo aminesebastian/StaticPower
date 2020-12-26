@@ -31,7 +31,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationRecipe> {
-	public static final ResourceLocation CONDENSER_UID = new ResourceLocation(StaticPower.MOD_ID, "condenser");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "condenser");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -51,7 +51,7 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return CONDENSER_UID;
+		return UID;
 	}
 
 	@Override

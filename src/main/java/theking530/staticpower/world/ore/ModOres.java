@@ -27,7 +27,7 @@ public class ModOres {
 	public static final ConfiguredFeature<OreFeatureConfig, ?> SILVER = register("ore_silver",
 			new OreConfigBuilder(ModBlocks.OreSilver).setMaxLevel(40).setMinLevel(0).setMaxVeinSize(5).setRarity(8));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> TUNGSTEN = register("ore_tungsten",
-			new OreConfigBuilder(ModBlocks.OreTungsten).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(2).setRarity(4));
+			new OreConfigBuilder(ModBlocks.OreTungsten).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(2).setRarity(8));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> PLATINUM = register("ore_platinum",
 			new OreConfigBuilder(ModBlocks.OrePlatinum).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(4).setRarity(10));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> ALUMINIUM = register("ore_aluminium",

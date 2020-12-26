@@ -87,6 +87,9 @@ public class StaticPowerSprites {
 	public static final ResourceLocation IMPORT = registerSprite("gui/import_icon");
 	public static final ResourceLocation EXPORT = registerSprite("gui/export_icon");
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
+	
+	public static final ResourceLocation SIZE_TWO_CRAFTING = registerSprite("gui/2x2");
+	public static final ResourceLocation SIZE_THREE_CRAFTING = registerSprite("gui/3x3");
 
 	public static final ResourceLocation CRAFTING_TABLE_ICON = registerSprite("gui/crafting_table_icon");
 	public static final ResourceLocation FURNACE_ICON = registerSprite("gui/furnace_icon");

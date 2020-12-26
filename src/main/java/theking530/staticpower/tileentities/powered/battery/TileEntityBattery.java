@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatteryBlock;
 import theking530.staticpower.data.StaticPowerTier;
@@ -47,8 +46,6 @@ public class TileEntityBattery extends TileEntityMachine {
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityBattery>(
 			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.CREATIVE), ModBlocks.BatteryCreative);
 
-	public static final int MACHINE_POWER_IO_MULTIPLIER = 4;
-
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE_BASIC.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
@@ -59,6 +56,8 @@ public class TileEntityBattery extends TileEntityMachine {
 			TYPE_CREATIVE.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
 		}
 	}
+
+	public static final int MACHINE_POWER_IO_DIVISOR = 4;
 
 	public final BatteryInventoryComponent batteryInventory;
 
@@ -93,16 +92,21 @@ public class TileEntityBattery extends TileEntityMachine {
 			return true;
 		});
 
+		// Get the tier.
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+
+		// Calculate the IO.
+		maxPowerIO = tierObject.cableIndustrialPowerCapacity.get() / MACHINE_POWER_IO_DIVISOR;
+		inputRFTick = maxPowerIO / 2;
+		outputRFTick = maxPowerIO / 2;
+
+		// Set the capacities and IO.
 		energyStorage.getStorage().setCapacity(tierObject.batteryCapacity.get());
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
-
-		inputRFTick = SDMath.multiplyRespectingOverflow(tierObject.defaultMachinePowerInput.get(), MACHINE_POWER_IO_MULTIPLIER / 2);
-		outputRFTick = SDMath.multiplyRespectingOverflow(tierObject.defaultMachinePowerOutput.get(), MACHINE_POWER_IO_MULTIPLIER / 2);
-		maxPowerIO = SDMath.multiplyRespectingOverflow(inputRFTick, MACHINE_POWER_IO_MULTIPLIER);
-
 		energyStorage.getStorage().setMaxReceive(inputRFTick);
 		energyStorage.getStorage().setMaxExtract(outputRFTick);
+
+		// Add a battery input.
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 	}
 
 	public void process() {

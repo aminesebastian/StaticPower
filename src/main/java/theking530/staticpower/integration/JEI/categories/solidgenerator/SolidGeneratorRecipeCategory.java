@@ -36,7 +36,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.solidgenerator.TileEntitySolidGenerator;
 
 public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFuelRecipe> {
-	public static final ResourceLocation SOLID_GENERATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "solid_generator");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "solid_generator");
 	private static final int INTPUT_SLOT = 0;
 
 	private final TranslationTextComponent locTitle;
@@ -60,7 +60,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return SOLID_GENERATOR_UID;
+		return UID;
 	}
 
 	@Override

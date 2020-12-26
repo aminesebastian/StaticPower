@@ -34,7 +34,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRecipe> {
-	public static final ResourceLocation VULCANIZER_UID = new ResourceLocation(StaticPower.MOD_ID, "vulcanizer");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "vulcanizer");
 	private static final int OUTPUT_SLOT = 0;
 
 	private final TranslationTextComponent locTitle;
@@ -54,7 +54,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return VULCANIZER_UID;
+		return UID;
 	}
 
 	@Override

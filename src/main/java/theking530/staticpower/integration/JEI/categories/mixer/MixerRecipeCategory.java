@@ -36,7 +36,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
-	public static final ResourceLocation MIXER_UID = new ResourceLocation(StaticPower.MOD_ID, "mixer");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "mixer");
 	private static final int PRIMARY_ITEM_INPUT_SLOT = 0;
 	private static final int SECONDARY_ITEM_INPUT_SLOT = 1;
 	private static final int PRIMARY_FLUID_INPUT_SLOT = 2;
@@ -64,7 +64,7 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return MIXER_UID;
+		return UID;
 	}
 
 	@Override

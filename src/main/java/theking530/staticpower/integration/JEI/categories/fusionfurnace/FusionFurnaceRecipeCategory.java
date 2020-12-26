@@ -34,7 +34,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFurnaceRecipe> {
-	public static final ResourceLocation FUSION_FURNACE_UID = new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace");
 	private static final int INTPUT_SLOT_1 = 1;
 	private static final int INTPUT_SLOT_2 = 2;
 	private static final int INTPUT_SLOT_3 = 3;
@@ -61,7 +61,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return FUSION_FURNACE_UID;
+		return UID;
 	}
 
 	@Override

@@ -37,7 +37,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe> {
-	public static final ResourceLocation CRUCIBLE_UID = new ResourceLocation(StaticPower.MOD_ID, "crucible");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "crucible");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 	private static final int FLUID_SLOT = 2;
@@ -59,7 +59,7 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return CRUCIBLE_UID;
+		return UID;
 	}
 
 	@Override

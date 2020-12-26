@@ -35,7 +35,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
 
 public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterRecipe> {
-	public static final ResourceLocation FERMENTER_UID = new ResourceLocation(StaticPower.MOD_ID, "fermenter");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "fermenter");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -56,7 +56,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return FERMENTER_UID;
+		return UID;
 	}
 
 	@Override

@@ -103,7 +103,7 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected int getCablePowerDelivery() {
-		return 256;
+		return 512;
 	}
 
 	@Override
@@ -113,11 +113,11 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected int getCableIndustrialPowerDelivery() {
-		return 2048;
+		return 4096;
 	}
 
 	@Override
-	protected int getDigistoreCapacity() {
+	protected int getDigistoreCardCapacity() {
 		return 262144;
 	}
 

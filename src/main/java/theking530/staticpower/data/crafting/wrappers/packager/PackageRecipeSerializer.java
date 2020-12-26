@@ -1,0 +1,62 @@
+package theking530.staticpower.data.crafting.wrappers.packager;
+
+import com.google.gson.JsonObject;
+
+import net.minecraft.item.crafting.IRecipeSerializer;
+import net.minecraft.network.PacketBuffer;
+import net.minecraft.util.JSONUtils;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.tileentities.powered.packager.TileEntityPackager;
+
+public class PackageRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PackagerRecipe> {
+	public static final PackageRecipeSerializer INSTANCE = new PackageRecipeSerializer();
+
+	private PackageRecipeSerializer() {
+		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "packager_recipe"));
+	}
+
+	@Override
+	public PackagerRecipe read(ResourceLocation recipeId, JsonObject json) {
+		// Capture the input ingredient.
+		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
+
+		// Start with the default processing values.
+		int powerCost = TileEntityPackager.DEFAULT_PROCESSING_COST;
+		int processingTime = TileEntityPackager.DEFAULT_PROCESSING_TIME;
+
+		// Get the recipe size.
+		int size = json.get("size").getAsInt();
+
+		// Get the item output if one is defined.
+		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(json.get("output").getAsJsonObject());
+
+		// Create the recipe.
+		return new PackagerRecipe(recipeId, processingTime, powerCost, size, input, itemOutput);
+	}
+
+	@Override
+	public PackagerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+		int power = buffer.readInt();
+		int time = buffer.readInt();
+		int size = buffer.readInt();
+		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
+		ProbabilityItemStackOutput outputs = ProbabilityItemStackOutput.readFromBuffer(buffer);
+
+		// Create the recipe.
+		return new PackagerRecipe(recipeId, time, power, size, input, outputs);
+	}
+
+	@Override
+	public void write(PacketBuffer buffer, PackagerRecipe recipe) {
+		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeInt(recipe.getProcessingTime());
+		buffer.writeInt(recipe.getSize());
+		recipe.getInputIngredient().write(buffer);
+		recipe.getOutput().writeToBuffer(buffer);
+	}
+}

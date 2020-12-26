@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.power;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -101,13 +102,34 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
-		// Calculate the total capacity.
-		int capacity = mapper.getDiscoveredCables().stream().filter(p -> p.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE))
-				.mapToInt(p -> p.getIntProperty(PowerCableComponent.POWER_CAPACITY_DATA_TAG_KEY)).sum();
+		// Allocate a hash map to contain all the values.
+		HashMap<Integer, Integer> averageMap = new HashMap<Integer, Integer>();
 
+		// Aggregate the counts for each type of cable.
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			// Skip non-power cables.
+			if (!cable.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
+				continue;
+			}
+
+			// Get the capacity of the cable, add it to the map, and increase the count.
+			int capacity = cable.getIntProperty(PowerCableComponent.POWER_CAPACITY_DATA_TAG_KEY);
+			if (!averageMap.containsKey(capacity)) {
+				averageMap.put(capacity, 1);
+			} else {
+				averageMap.put(capacity, averageMap.get(capacity) + 1);
+			}
+		}
+
+		// Calculate the weighted average.
+		int average = 0;
+		for (Integer key : averageMap.keySet()) {
+			average += key * (averageMap.get(key) / (float) mapper.getDiscoveredCables().size());
+		}
+		
 		// If the capacity is less than 0, that means we overflowed. Set the capcaity to
 		// the maximum integer value.
-		EnergyStorage.setCapacity(capacity < 0 ? Integer.MAX_VALUE : (int) capacity);
+		EnergyStorage.setCapacity(average < 0 ? Integer.MAX_VALUE : (int) average);
 	}
 
 	@Override

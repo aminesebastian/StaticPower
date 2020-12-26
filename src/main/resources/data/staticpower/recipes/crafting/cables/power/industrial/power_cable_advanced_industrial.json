@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"prp",
+		"rir",
+		"prp"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:glass"
+		},
+		"r": {
+			"tag": "forge:storage_blocks/redstone"
+		},
+		"p": {
+			"item": "staticpower:cable_power_advanced"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_industrial_power_advanced",
+		"count": 4
+	}
+}

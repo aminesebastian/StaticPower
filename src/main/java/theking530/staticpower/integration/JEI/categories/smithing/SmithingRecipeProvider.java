@@ -50,13 +50,13 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 			// Check to see if it is a valid smithing output.
 			if (isValidSmithingOutput(itemStack)) {
-				return Collections.singletonList(SmithingRecipeCategory.AUTO_SMITHING_UID);
+				return Collections.singletonList(SmithingRecipeCategory.UID);
 			}
 		} else if (focus.getMode() == IFocus.Mode.INPUT && focus.getValue() instanceof ItemStack) {
 			// Check if the input is used in any smithing recipes or is itself smithable.
 			ItemStack itemStack = (ItemStack) focus.getValue();
 			if (isValidSmithingInput(itemStack)) {
-				return Collections.singletonList(SmithingRecipeCategory.AUTO_SMITHING_UID);
+				return Collections.singletonList(SmithingRecipeCategory.UID);
 			}
 		}
 
@@ -67,7 +67,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	@Override
 	public <T> List<T> getRecipes(IRecipeCategory<T> recipeCategory) {
 		// Check the category.
-		if (recipeCategory != null && !SmithingRecipeCategory.AUTO_SMITHING_UID.equals(recipeCategory.getUid())) {
+		if (recipeCategory != null && !SmithingRecipeCategory.UID.equals(recipeCategory.getUid())) {
 			return Collections.emptyList();
 		}
 
@@ -87,7 +87,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T, V> List<T> getRecipes(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
-		if (!SmithingRecipeCategory.AUTO_SMITHING_UID.equals(recipeCategory.getUid())) {
+		if (!SmithingRecipeCategory.UID.equals(recipeCategory.getUid())) {
 			return Collections.emptyList();
 		}
 

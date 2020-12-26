@@ -64,6 +64,7 @@ import theking530.staticpower.tileentities.powered.heatsink.BlockHeatSink;
 import theking530.staticpower.tileentities.powered.lathe.BlockLathe;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.mixer.BlockMixer;
+import theking530.staticpower.tileentities.powered.packager.BlockPackager;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
@@ -149,13 +150,6 @@ public class ModBlocks {
 	public static StaticPowerCutoutBlock MachineBlockEnergized;
 	public static StaticPowerCutoutBlock MachineBlockLumum;
 
-	public static BlockVacuumChest VacuumChest;
-	public static BlockChargingStation ChargingStation;
-	public static BlockPoweredFurnace PoweredFurnace;
-	public static BlockPoweredGrinder PoweredGrinder;
-	public static BlockLumberMill LumberMill;
-	public static BlockBasicFarmer BasicFarmer;
-
 	public static BlockTank BasicTank;
 	public static BlockTank AdvancedTank;
 	public static BlockTank StaticTank;
@@ -171,6 +165,12 @@ public class ModBlocks {
 	public static BlockPump LumumPump;
 	public static BlockPump CreativePump;
 
+	public static BlockVacuumChest VacuumChest;
+	public static BlockChargingStation ChargingStation;
+	public static BlockPoweredFurnace PoweredFurnace;
+	public static BlockPoweredGrinder PoweredGrinder;
+	public static BlockLumberMill LumberMill;
+	public static BlockBasicFarmer BasicFarmer;
 	public static BlockTreeFarmer TreeFarmer;
 	public static BlockFermenter Fermenter;
 	public static BlockFormer Former;
@@ -196,6 +196,7 @@ public class ModBlocks {
 	public static BlockCaster Caster;
 	public static BlockTumbler Tumbler;
 	public static BlockTurbine Turbine;
+	public static BlockPackager Packager;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -417,6 +418,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Caster = new BlockCaster("machine_caster"));
 		StaticPowerRegistry.preRegisterBlock(Tumbler = new BlockTumbler("machine_tumbler"));
 		StaticPowerRegistry.preRegisterBlock(Turbine = new BlockTurbine("machine_turbine"));
+		StaticPowerRegistry.preRegisterBlock(Packager = new BlockPackager("machine_packager"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

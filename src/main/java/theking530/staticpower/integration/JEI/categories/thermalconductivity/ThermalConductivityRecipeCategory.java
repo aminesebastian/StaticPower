@@ -33,7 +33,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeProvider.ThermalConductivityJEIRecipeWrapper;
 
 public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<ThermalConductivityJEIRecipeWrapper> {
-	public static final ResourceLocation THERMAL_CONDUCTIVITY_UID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity");
 
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
@@ -49,7 +49,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return THERMAL_CONDUCTIVITY_UID;
+		return UID;
 	}
 
 	@Override

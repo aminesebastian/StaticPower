@@ -172,7 +172,7 @@ public abstract class StaticPowerTier {
 
 		builder.push("Digistore");
 		digistoreCardCapacity = builder.comment("The number of items that can be contained in a regular digistore card of this tier.")
-				.translation(StaticPower.MOD_ID + ".config." + "digistoreCardCapacity").define("DigistoreCardCapacity", getDigistoreCapacity());
+				.translation(StaticPower.MOD_ID + ".config." + "digistoreCardCapacity").define("DigistoreCardCapacity", getDigistoreCardCapacity());
 		builder.pop();
 
 		builder.push("Machines");
@@ -605,7 +605,7 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected int getDigistoreCapacity() {
+	protected int getDigistoreCardCapacity() {
 		return 0;
 	}
 

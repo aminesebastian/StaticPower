@@ -22,7 +22,6 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
@@ -46,12 +45,12 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(
-				new StringTextComponent(TextFormatting.GREEN.toString() + "Capacity: ").append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.getTier(tier).batteryCapacity.get())));
-		tooltip.add(new StringTextComponent(TextFormatting.BLUE.toString() + "Max Input: ").append(GuiTextUtilities
-				.formatEnergyRateToString(SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultMachinePowerInput.get(), TileEntityBattery.MACHINE_POWER_IO_MULTIPLIER))));
-		tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString() + "Max Output: ").append(GuiTextUtilities.formatEnergyRateToString(
-				SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultMachinePowerOutput.get(), TileEntityBattery.MACHINE_POWER_IO_MULTIPLIER))));
+		tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString() + "• Capacity ")
+				.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.getTier(tier).batteryCapacity.get())));
+		tooltip.add(new StringTextComponent(TextFormatting.BLUE.toString() + "• Max Input ")
+				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() / TileEntityBattery.MACHINE_POWER_IO_DIVISOR)));
+		tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString() + "• Max Output ")
+				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() / TileEntityBattery.MACHINE_POWER_IO_DIVISOR)));
 	}
 
 	@Override

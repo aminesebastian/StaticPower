@@ -35,6 +35,7 @@ import theking530.staticpower.tileentities.components.power.PacketEnergyStorageC
 import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLockDigistore;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
+import theking530.staticpower.tileentities.powered.packager.PacketPackagerSizeChange;
 
 public class ModNetworkMessages {
 	public static void init() {
@@ -72,5 +73,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
+		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
 	}
 }

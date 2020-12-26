@@ -33,7 +33,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.powered.bottler.TileEntityBottler;
 
 public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
-	public static final ResourceLocation BOTTLER_UID = new ResourceLocation(StaticPower.MOD_ID, "bottler");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "bottler");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -54,7 +54,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return BOTTLER_UID;
+		return UID;
 	}
 
 	@Override

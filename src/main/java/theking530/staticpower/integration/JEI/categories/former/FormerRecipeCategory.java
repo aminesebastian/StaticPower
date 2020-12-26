@@ -33,7 +33,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
-	public static final ResourceLocation FORMER_UID = new ResourceLocation(StaticPower.MOD_ID, "former");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "former");
 	private static final int MOLD_SLOT = 0;
 	private static final int INTPUT_SLOT = 1;
 	private static final int OUTPUT_SLOT = 2;
@@ -57,7 +57,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return FORMER_UID;
+		return UID;
 	}
 
 	@Override

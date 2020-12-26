@@ -128,5 +128,4 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		}
 		return false;
 	}
-
 }

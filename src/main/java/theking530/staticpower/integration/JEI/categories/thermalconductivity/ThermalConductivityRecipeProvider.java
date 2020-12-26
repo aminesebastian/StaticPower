@@ -88,17 +88,17 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 			ItemStack itemStack = (ItemStack) focus.getValue();
 			if (focus.getMode() == IFocus.Mode.OUTPUT) {
 				if (isValidOverheatingOutput(itemStack)) {
-					return Collections.singletonList(ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+					return Collections.singletonList(ThermalConductivityRecipeCategory.UID);
 				}
 			} else if (focus.getMode() == IFocus.Mode.INPUT) {
 				if (hasThermalConductivity(itemStack)) {
-					return Collections.singletonList(ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+					return Collections.singletonList(ThermalConductivityRecipeCategory.UID);
 				}
 			}
 		} else if (focus.getValue() instanceof FluidStack) {
 			if (focus.getMode() == IFocus.Mode.INPUT) {
 				if (hasThermalConductivity((FluidStack) focus.getValue())) {
-					return Collections.singletonList(ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID);
+					return Collections.singletonList(ThermalConductivityRecipeCategory.UID);
 				}
 			}
 		}
@@ -109,7 +109,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 	@Override
 	public <T> List<T> getRecipes(IRecipeCategory<T> recipeCategory) {
 		// Check the category.
-		if (recipeCategory != null && !ThermalConductivityRecipeCategory.THERMAL_CONDUCTIVITY_UID.equals(recipeCategory.getUid())) {
+		if (recipeCategory != null && !ThermalConductivityRecipeCategory.UID.equals(recipeCategory.getUid())) {
 			return Collections.emptyList();
 		}
 

@@ -38,7 +38,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfusionRecipe> {
-	public static final ResourceLocation FLUID_INFUSER_UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_infuser");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_infuser");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -61,7 +61,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return FLUID_INFUSER_UID;
+		return UID;
 	}
 
 	@Override
@@ -146,14 +146,12 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 		// Add the input and output slots.
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		guiItemStacks.init(INTPUT_SLOT, true, 30, 16);
-
+		guiItemStacks.set(ingredients);
+		
 		// Set the outputs.
 		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
 		probabilityStacks.init(OUTPUT_SLOT, false, 124, 17);
 		probabilityStacks.set(ingredients);
-
-		// Set the items.
-		guiItemStacks.set(ingredients);
 
 		// Add the fluid.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();

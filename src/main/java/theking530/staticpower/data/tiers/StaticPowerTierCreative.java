@@ -67,7 +67,7 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getDigistoreCapacity() {
+	protected int getDigistoreCardCapacity() {
 		return 2147483647;
 	}
 

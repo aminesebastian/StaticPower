@@ -38,7 +38,7 @@ import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
-	public static final ResourceLocation LATHE_UID = new ResourceLocation(StaticPower.MOD_ID, "lathe");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "lathe");
 	private static final int PRIMARY_OUTPUT_SLOT = 9;
 	private static final int SECONDARY_OUTPUT_SLOT = 10;
 	private static final int FLUID_OUTPUT_SLOT = 11;
@@ -62,7 +62,7 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return LATHE_UID;
+		return UID;
 	}
 
 	@Override

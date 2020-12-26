@@ -33,7 +33,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderRecipe> {
-	public static final ResourceLocation GRINDER_UID = new ResourceLocation(StaticPower.MOD_ID, "grinder");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "grinder");
 	private static final int INTPUT_SLOT = 0;
 	private static final int PRIMARY_OUTPUT_SLOT = 1;
 	private static final int SECONDARY_OUTPUT_SLOT = 2;
@@ -58,7 +58,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return GRINDER_UID;
+		return UID;
 	}
 
 	@Override

@@ -32,7 +32,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 
 public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceRecipe> {
-	public static final ResourceLocation POWERED_FURNACE_UID = new ResourceLocation(StaticPower.MOD_ID,
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID,
 			"powered_furnace");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
@@ -56,7 +56,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceR
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return POWERED_FURNACE_UID;
+		return UID;
 	}
 
 	@Override

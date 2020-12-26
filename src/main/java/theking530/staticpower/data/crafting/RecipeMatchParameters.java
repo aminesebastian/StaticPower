@@ -5,12 +5,14 @@ import java.util.Optional;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 
 public class RecipeMatchParameters {
 	private ItemStack[] items;
 	private FluidStack[] fluids;
 	private BlockState[] blocks;
+	private CompoundNBT customParameters;
 	private boolean verifyBlocks;
 	private boolean verifyItems;
 	private boolean verifyItemCounts;
@@ -21,6 +23,7 @@ public class RecipeMatchParameters {
 	private final HashMap<String, Object> extraProperties;
 
 	public RecipeMatchParameters() {
+		customParameters = new CompoundNBT();
 		extraProperties = new HashMap<String, Object>();
 		verifyItemCounts = true;
 		verifyFluids = true;
@@ -42,6 +45,23 @@ public class RecipeMatchParameters {
 	public RecipeMatchParameters(FluidStack... fluids) {
 		this();
 		this.fluids = fluids;
+	}
+
+	public CompoundNBT getCustomParameterContainer() {
+		return this.customParameters;
+	}
+
+	public boolean hasCustomParameters() {
+		return this.customParameters.size() > 0;
+	}
+
+	public boolean hasCustomParameter(String key) {
+		return this.customParameters.contains(key);
+	}
+
+	public RecipeMatchParameters setIntParameter(String key, int value) {
+		this.customParameters.putInt(key, value);
+		return this;
 	}
 
 	public boolean shouldVerifyItems() {

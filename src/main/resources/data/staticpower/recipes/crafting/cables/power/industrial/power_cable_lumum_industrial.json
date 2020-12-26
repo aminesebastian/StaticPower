@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"prp",
+		"rir",
+		"prp"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:glass"
+		},
+		"r": {
+			"item": "staticpower:block_redstone_alloy"
+		},
+		"p": {
+			"item": "staticpower:cable_power_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_industrial_power_lumum",
+		"count": 4
+	}
+}

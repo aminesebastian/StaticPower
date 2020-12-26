@@ -31,7 +31,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRecipe> {
-	public static final ResourceLocation EVAPORATOR_UID = new ResourceLocation(StaticPower.MOD_ID, "evaporator");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "evaporator");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -51,7 +51,7 @@ public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRe
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return EVAPORATOR_UID;
+		return UID;
 	}
 
 	@Override

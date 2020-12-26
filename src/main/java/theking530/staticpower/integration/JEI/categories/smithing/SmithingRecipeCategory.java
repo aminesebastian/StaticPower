@@ -42,7 +42,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.utilities.MetricConverter;
 
 public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecipeJEIWrapper> {
-	public static final ResourceLocation AUTO_SMITHING_UID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith");
 	private static final int INTPUT_SLOT = 0;
 	private static final int MODIFIER_SLOT = 1;
 	private static final int FLUID_MODIFIER_SLOT = 2;
@@ -67,7 +67,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	@Override
 	@Nonnull
 	public ResourceLocation getUid() {
-		return AUTO_SMITHING_UID;
+		return UID;
 	}
 
 	@Override
