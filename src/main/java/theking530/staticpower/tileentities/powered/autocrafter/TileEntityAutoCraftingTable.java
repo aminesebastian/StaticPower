@@ -66,11 +66,11 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
+		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(),
+				this::movingCompleted, true).setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(
-				moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
-						.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true));
+				processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+						.setShouldControlBlockState(true));
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);

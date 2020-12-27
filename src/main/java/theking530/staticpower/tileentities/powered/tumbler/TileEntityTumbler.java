@@ -66,7 +66,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
-
+		
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<TumblerRecipe>("ProcessingComponent", TumblerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,

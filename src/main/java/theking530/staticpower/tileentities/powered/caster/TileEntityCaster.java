@@ -122,7 +122,7 @@ public class TileEntityCaster extends TileEntityMachine {
 		// Insert the output.
 		ItemStack output = recipe.getOutput().calculateOutput();
 		outputInventory.insertItem(0, output, false);
-		
+
 		// Drain the fluid.
 		fluidTankComponent.drain(recipe.getInputFluid().getAmount(), FluidAction.EXECUTE);
 

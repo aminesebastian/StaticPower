@@ -33,6 +33,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
+	public final InventoryComponent moldInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
@@ -42,13 +43,15 @@ public class TileEntityFormer extends TileEntityMachine {
 	public TileEntityFormer() {
 		super(TYPE, StaticPowerTiers.BASIC);
 
-		// Setup the input inventory to only accept items that have a valid recipe.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+		// Setup the input inventories to only accept items that have a valid recipe.
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				if (slot == 1 && StaticPowerRecipeRegistry.isValidFormerMold(stack)) {
-					return true;
-				}
 				return processingComponent.getRecipe(new RecipeMatchParameters(stack, inputInventory.getStackInSlot(1))).isPresent();
+			}
+		}));
+		registerComponent(moldInventory = new InventoryComponent("MoldInputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return StaticPowerRecipeRegistry.isValidFormerMold(stack);
 			}
 		}));
 
@@ -95,7 +98,7 @@ public class TileEntityFormer extends TileEntityMachine {
 		}
 
 		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, 0, internalInventory, 0);
-		internalInventory.setStackInSlot(1, inputInventory.getStackInSlot(1).copy());
+		internalInventory.setStackInSlot(1, moldInventory.getStackInSlot(1).copy());
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
@@ -110,8 +113,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	protected ProcessingCheckState processingCompleted(FormerRecipe recipe) {
 		ItemStack output = recipe.getOutput().calculateOutput();
 		outputInventory.insertItem(0, output, false);
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
+		InventoryUtilities.clearInventory(internalInventory);
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

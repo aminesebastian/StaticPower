@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:ores/gold"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_gold",
+			"volume": 144
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 4
+		}
+	}
+}

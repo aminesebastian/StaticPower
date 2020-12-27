@@ -16,7 +16,6 @@ import theking530.staticpower.tileentities.components.control.RecipeProcessingCo
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
-import theking530.staticpower.tileentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
@@ -35,18 +34,29 @@ public class TileEntityPackager extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPackager> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityPackager(), ModBlocks.Packager);
 
+	/** The default amount of time processing takes. */
 	public static final int DEFAULT_PROCESSING_TIME = 100;
+	/** The default amount of power used per tick processing an item. */
 	public static final int DEFAULT_PROCESSING_COST = 5;
 
+	/** The input inventory containing the items to pack. */
 	public final InventoryComponent inputInventory;
+	/** The output inventory where packaged items will be placed. */
 	public final InventoryComponent outputInventory;
+	/** The internal inventory where items that are being process are placed. */
 	public final InventoryComponent internalInventory;
+	/** The battery inventory that automatically charges the storage. */
 	public final BatteryInventoryComponent batteryInventory;
+	/** The upgrades inventory handles power and processing speed upgrades. */
 	public final UpgradeInventoryComponent upgradesInventory;
+	/**
+	 * The processing component that handles the recipe processing of this machine.
+	 */
 	public final RecipeProcessingComponent<PackagerRecipe> processingComponent;
-
+	/** The crafting grid size to use (2x2 vs 3x3). */
 	@UpdateSerialize
-	protected int gridSize;
+	protected int gridSize;;
+	/** This value keeps track of the last grid size used when processing. */
 	@UpdateSerialize
 	protected int currentProcessingGridSize;
 
@@ -69,8 +79,7 @@ public class TileEntityPackager extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(new CompoundInventoryComponent("CompoundInventory", inputInventory, outputInventory));
-
+		
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<PackagerRecipe>("ProcessingComponent", PackagerRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
 				this::moveInputs, this::canProcessRecipe, this::processingCompleted));

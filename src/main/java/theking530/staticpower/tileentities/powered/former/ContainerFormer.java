@@ -37,7 +37,7 @@ public class ContainerFormer extends StaticPowerTileEntityContainer<TileEntityFo
 		addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 59, 34));
 
 		// Input Mold
-		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.MoldBlank), 0.3f, getTileEntity().inputInventory, 1, 37, 34));
+		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.MoldBlank), 0.3f, getTileEntity().moldInventory, 0, 37, 34));
 
 		// Output
 		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 118, 35));

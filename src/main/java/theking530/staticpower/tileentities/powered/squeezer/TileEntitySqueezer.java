@@ -75,7 +75,7 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-
+		
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", SqueezerRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
 				this::moveInputs, this::canProcessRecipe, this::processingCompleted));

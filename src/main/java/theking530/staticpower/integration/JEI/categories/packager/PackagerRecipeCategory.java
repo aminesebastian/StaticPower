@@ -47,9 +47,9 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 	public PackagerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
 		locTitle = new TranslationTextComponent(ModBlocks.PoweredFurnace.getTranslationKey());
-		background = guiHelper.createBlankDrawable(145, 60);
+		background = guiHelper.createBlankDrawable(100, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Packager));
-		pBar = new ArrowProgressBar(90, 22);
+		pBar = new ArrowProgressBar(50, 22);
 	}
 
 	@Override
@@ -82,24 +82,9 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 
 	@Override
 	public void draw(PackagerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		if (recipe.getSize() == 2) {
-			GuiDrawUtilities.drawSlot(matrixStack, 38, 13, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 38, 31, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 56, 13, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 56, 31, 16, 16);
-		} else {
-			GuiDrawUtilities.drawSlot(matrixStack, 30, 4, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 30, 22, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 30, 40, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 48, 4, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 48, 22, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 48, 40, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 66, 4, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 66, 22, 16, 16);
-			GuiDrawUtilities.drawSlot(matrixStack, 66, 40, 16, 16);
-		}
+		GuiDrawUtilities.drawSlot(matrixStack, 30, 22, 16, 16);
 
-		GuiDrawUtilities.drawSlot(matrixStack, 120, 20, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 77, 20, 20, 20);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
@@ -144,12 +129,12 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 	public void setRecipe(IRecipeLayout recipeLayout, PackagerRecipe recipe, IIngredients ingredients) {
 		// Set the output.
 		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-		probabilityStacks.init(OUTPUT_SLOT, false, 122, 22);
+		probabilityStacks.init(OUTPUT_SLOT, false, 79, 22);
 		probabilityStacks.set(ingredients);
 
 		// Set the inputs.
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(1, true, 47, 21);
+		guiItemStacks.init(1, true, 29, 21);
 		guiItemStacks.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);

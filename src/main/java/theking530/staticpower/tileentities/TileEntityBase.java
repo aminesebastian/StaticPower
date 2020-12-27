@@ -4,7 +4,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Random;
 
@@ -61,9 +61,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	protected final static Random RANDOM = new Random();
 	private boolean isValid;
 	private boolean disableFaceInteraction;
-	private HashMap<String, AbstractTileEntityComponent> Components;
+	private LinkedHashMap<String, AbstractTileEntityComponent> components;
 	private final List<Field> saveSerializeableFields;
 	private final List<Field> updateSerializeableFields;
+	private boolean hasPostInitRun;
 
 	/**
 	 * If true, on the next tick, the tile entity will be synced using the methods
@@ -74,7 +75,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	public TileEntityBase(TileEntityTypeAllocator<? extends TileEntity> allocator) {
 		super(allocator.getType());
-		Components = new HashMap<String, AbstractTileEntityComponent>();
+		components = new LinkedHashMap<String, AbstractTileEntityComponent>();
 		updateQueued = false;
 		isValid = true;
 		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
@@ -107,6 +108,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	@Override
 	public void tick() {
+		if (!hasPostInitRun) {
+			hasPostInitRun = true;
+			postInit();
+		}
 		// Pre process all the components.
 		preProcessUpdateComponents();
 
@@ -126,6 +131,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		postProcessUpdateComponents();
 	}
 
+	protected void postInit() {
+
+	}
+
 	@Override
 	public void setWorldAndPos(World world, BlockPos pos) {
 		super.setWorldAndPos(world, pos);
@@ -135,14 +144,14 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public void validate() {
 		super.validate();
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			component.onOwningTileEntityValidate();
 		}
 	}
 
 	@Override
 	public void remove() {
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			component.onOwningTileEntityRemoved();
 		}
 
@@ -183,7 +192,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void onBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
-		for (AbstractTileEntityComponent comp : Components.values()) {
+		for (AbstractTileEntityComponent comp : components.values()) {
 			comp.onOwningBlockBroken(state, newState, isMoving);
 		}
 		isValid = false;
@@ -219,7 +228,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
-		for (AbstractTileEntityComponent comp : Components.values()) {
+		for (AbstractTileEntityComponent comp : components.values()) {
 			comp.onNeighborChanged(currentState, neighborPos);
 		}
 	}
@@ -229,7 +238,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
-		for (AbstractTileEntityComponent comp : Components.values()) {
+		for (AbstractTileEntityComponent comp : components.values()) {
 			comp.updatePostPlacement(state, direction, facingState, FacingPos);
 		}
 	}
@@ -288,7 +297,22 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @param component The component to register.
 	 */
 	public void registerComponent(AbstractTileEntityComponent component) {
-		Components.put(component.getComponentName(), component);
+		components.put(component.getComponentName(), component);
+		component.onRegistered(this);
+	}
+
+	/**
+	 * Registers a {@link TileEntityComponent} to this {@link TileEntity} at the top
+	 * of the component stack. This will override capability behaviour of lower
+	 * components.
+	 * 
+	 * @param component The component to register.
+	 */
+	public void registerComponentOverride(AbstractTileEntityComponent component) {
+		LinkedHashMap<String, AbstractTileEntityComponent> temp = new LinkedHashMap<String, AbstractTileEntityComponent>();
+		temp.put(component.getComponentName(), component);
+		temp.putAll(components);
+		components = temp;
 		component.onRegistered(this);
 	}
 
@@ -299,7 +323,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @return True if the component was removed, false otherwise.
 	 */
 	public boolean removeComponent(AbstractTileEntityComponent component) {
-		return Components.remove(component.getComponentName()) != null;
+		return components.remove(component.getComponentName()) != null;
 	}
 
 	/**
@@ -308,7 +332,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @return The list of all components registered to this tile entity.
 	 */
 	public Collection<AbstractTileEntityComponent> getComponents() {
-		return Components.values();
+		return components.values();
 	}
 
 	/**
@@ -321,7 +345,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractTileEntityComponent> List<T> getComponents(Class<T> type) {
 		List<T> output = new ArrayList<>();
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				output.add((T) component);
 			}
@@ -339,8 +363,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type, String componentName) {
-		if (Components.containsKey(componentName)) {
-			return (T) Components.get(componentName);
+		if (components.containsKey(componentName)) {
+			return (T) components.get(componentName);
 		}
 		return null;
 	}
@@ -357,7 +381,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type) {
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				return (T) component;
 			}
@@ -373,7 +397,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 *         false otherwise.
 	 */
 	public <T extends AbstractTileEntityComponent> boolean hasComponentOfType(Class<T> type) {
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				return true;
 			}
@@ -385,7 +409,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Calls the pre-process methods on all the components.
 	 */
 	private void preProcessUpdateComponents() {
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			component.preProcessUpdate();
 		}
 	}
@@ -394,7 +418,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Calls the post-process methods on all the components.
 	 */
 	private void postProcessUpdateComponents() {
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			component.postProcessUpdate();
 		}
 	}
@@ -429,7 +453,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		for (AbstractTileEntityComponent comp : Components.values()) {
+		for (AbstractTileEntityComponent comp : components.values()) {
 			LazyOptional<T> capability = comp.provideCapability(cap, side);
 			if (capability.isPresent()) {
 				return capability;
@@ -474,7 +498,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
@@ -493,7 +517,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (nbt.contains(component.getComponentName())) {
 				component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()), fromUpdate);
 			}
@@ -518,7 +542,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
@@ -536,7 +560,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void deserializeSaveNbt(CompoundNBT nbt) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			if (nbt.contains(component.getComponentName())) {
 				component.deserializeSaveNbt(nbt.getCompound(component.getComponentName()));
 			}
@@ -618,7 +642,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public IModelData getModelData() {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		for (AbstractTileEntityComponent component : Components.values()) {
+		for (AbstractTileEntityComponent component : components.values()) {
 			component.getModelData(builder);
 		}
 		getAdditionalModelData(builder);

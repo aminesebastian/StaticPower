@@ -123,7 +123,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		registerComponent(
 				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64));
-
+		
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);

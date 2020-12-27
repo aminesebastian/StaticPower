@@ -112,7 +112,7 @@ public class TileEntityLathe extends TileEntityMachine {
 		for (int i = 0; i < 9; i++) {
 			transferItemInternally(recipe.getInputs().get(i).getCount(), inputInventory, i, internalInventory, i);
 		}
-		
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

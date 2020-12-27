@@ -19,7 +19,6 @@ import theking530.staticpower.tileentities.components.control.RecipeProcessingCo
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
-import theking530.staticpower.tileentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
@@ -74,7 +73,6 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		registerComponent(firstOutputInventory = new InventoryComponent("FirstOutputInventory", 1, MachineSideMode.Output2));
 		registerComponent(secondOutputInventory = new InventoryComponent("SecondOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(thirdOutputInventory = new InventoryComponent("ThirdOutputInventory", 1, MachineSideMode.Output4));
-		registerComponent(new CompoundInventoryComponent("CompoundInventory", MachineSideMode.Output, firstOutputInventory, secondOutputInventory, thirdOutputInventory));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));

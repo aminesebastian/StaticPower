@@ -274,7 +274,7 @@ public class StaticPowerRecipeRegistry {
 				ICraftingRecipe recipe = twoRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
 				PackagerRecipe packRecipe = new PackagerRecipe(id, TileEntityPackager.DEFAULT_PROCESSING_TIME, TileEntityPackager.DEFAULT_PROCESSING_COST, 2,
-						new StaticPowerIngredient(instance, 4), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
+						new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
 				addRecipe(packRecipe);
 			}
 
@@ -283,7 +283,7 @@ public class StaticPowerRecipeRegistry {
 				ICraftingRecipe recipe = threeRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
 				PackagerRecipe packRecipe = new PackagerRecipe(id, TileEntityPackager.DEFAULT_PROCESSING_TIME, TileEntityPackager.DEFAULT_PROCESSING_COST, 3,
-						new StaticPowerIngredient(instance, 9), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
+						new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
 				addRecipe(packRecipe);
 			}
 		}

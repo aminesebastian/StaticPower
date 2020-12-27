@@ -1,5 +1,10 @@
 package theking530.staticpower.tileentities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemStack;
@@ -14,6 +19,8 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.tileentities.components.items.CompoundInventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class TileEntityConfigurable extends TileEntityBase {
 	public final SideConfigurationComponent ioSideConfiguration;
@@ -23,6 +30,49 @@ public class TileEntityConfigurable extends TileEntityBase {
 		super(allocator);
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration, getDefaultSideConfiguration()));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
+	}
+
+	@Override
+	protected void postInit() {
+		// Get all inventories for this tile entitiy.
+		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
+
+		// Declare a map to contain all the organized inventories.
+		Map<MachineSideMode, List<InventoryComponent>> modeList = new HashMap<MachineSideMode, List<InventoryComponent>>();
+
+		// Create the three compound inventory categories.
+		modeList.put(MachineSideMode.Input, new ArrayList<InventoryComponent>());
+		modeList.put(MachineSideMode.Output, new ArrayList<InventoryComponent>());
+		modeList.put(MachineSideMode.Regular, new ArrayList<InventoryComponent>());
+
+		// Iterate through all the side modes and organize the inventories.
+		for (InventoryComponent inv : inventories) {
+			// Populate the input and output lists.
+			if (inv.getMode().isInputMode()) {
+				modeList.get(MachineSideMode.Input).add(inv);
+			} else if (inv.getMode().isOutputMode()) {
+				modeList.get(MachineSideMode.Output).add(inv);
+			}
+
+			// Add all non disabled modes to the regular list.
+			if (!inv.getMode().isDisabledMode()) {
+				modeList.get(MachineSideMode.Regular).add(inv);
+			}
+		}
+
+		// Iterate through all the organized side modes and create compounds for the
+		// ones with values.
+		for (MachineSideMode mode : modeList.keySet()) {
+			// Get all the inventories for that side mode.
+			List<InventoryComponent> modeInvs = modeList.get(mode);
+			// Skip empty lists.
+			if (modeInvs.size() == 0) {
+				continue;
+			}
+
+			// Create a compount inventory and register it for that side mode.
+			registerComponentOverride(new CompoundInventoryComponent("CompoundInventory" + mode, mode, modeInvs));
+		}
 	}
 
 	/* Side Control */

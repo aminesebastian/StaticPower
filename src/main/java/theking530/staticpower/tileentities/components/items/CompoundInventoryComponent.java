@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.components.items;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +22,11 @@ public class CompoundInventoryComponent extends AbstractTileEntityComponent impl
 	private final int slotCount;
 	private MachineSideMode inventoryMode;
 
-	public CompoundInventoryComponent(String name, InventoryComponent... inventories) {
-		this(name, MachineSideMode.Regular, inventories);
+	public CompoundInventoryComponent(String name, MachineSideMode mode, InventoryComponent... inventories) {
+		this(name, mode, Arrays.asList(inventories));
 	}
 
-	public CompoundInventoryComponent(String name, MachineSideMode mode, InventoryComponent... inventories) {
+	public CompoundInventoryComponent(String name, MachineSideMode mode, List<InventoryComponent> inventories) {
 		super(name);
 		this.inventoryMode = mode;
 		this.inventories = new ArrayList<InventoryComponentWrapper>();

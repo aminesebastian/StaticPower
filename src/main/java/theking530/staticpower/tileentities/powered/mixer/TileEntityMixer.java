@@ -62,7 +62,7 @@ public class TileEntityMixer extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-
+		
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<MixerRecipe>("ProcessingComponent", MixerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
 				this::canProcessRecipe, this::processingCompleted));
