@@ -65,8 +65,8 @@ public class TileEntityConfigurable extends TileEntityBase {
 		for (MachineSideMode mode : modeList.keySet()) {
 			// Get all the inventories for that side mode.
 			List<InventoryComponent> modeInvs = modeList.get(mode);
-			// Skip empty lists.
-			if (modeInvs.size() == 0) {
+			// Skip empty lists or lists with just one value.
+			if (modeInvs.size() <= 1) {
 				continue;
 			}
 
