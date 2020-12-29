@@ -25,7 +25,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		PROVIDE, RECIEVE
 	}
 
-	public static final int ENERGY_SYNC_MAX_DELTA = 1;
+	public static final int ENERGY_SYNC_MAX_DELTA = 10;
 	@UpdateSerialize
 	protected final StaticVoltHandler EnergyStorage;
 	@UpdateSerialize

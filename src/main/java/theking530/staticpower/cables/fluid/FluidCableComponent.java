@@ -123,7 +123,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			});
 			return recieve.get();
 		} else {
-			return 0;
+			return lastUpdateFluidStack.isEmpty() ? 0 : 1;
 		}
 	}
 

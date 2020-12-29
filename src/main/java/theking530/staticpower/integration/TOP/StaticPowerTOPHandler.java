@@ -43,13 +43,13 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 		}
 
 		// Handle any static volts.
-		world.getTileEntity(data.getPos()).getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(handler -> {
+		world.getTileEntity(data.getPos()).getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, data.getSideHit()).ifPresent(handler -> {
 			probeInfo.progress(handler.getStoredPower(), handler.getCapacity(),
 					probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.energy_unit").getString()).filledColor(0xff0099cc).alternateFilledColor(0xff0075ff).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
 		});
 
 		// Handle any heat.
-		world.getTileEntity(data.getPos()).getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY).ifPresent(handler -> {
+		world.getTileEntity(data.getPos()).getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, data.getSideHit()).ifPresent(handler -> {
 			probeInfo.progress((int) handler.getCurrentHeat(), (int) handler.getMaximumHeat(),
 					probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.heat_unit").getString()).filledColor(0xffff9d00).alternateFilledColor(0xffff8400).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
 		});

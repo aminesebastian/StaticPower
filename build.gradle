@@ -107,6 +107,11 @@ dependencies {
 	
 	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
     runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+	
+	    // Compile against the Hwyla API, but do not include it at runtime
+    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
+    // At runtime, use the full Hwyla jar
+    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
 }
 
 repositories {
@@ -125,7 +130,10 @@ repositories {
 	}
 	maven { 
 		name = "Patchouli Maven"
-		url 'https://maven.blamejared.com' 
+		url = "https://maven.blamejared.com"
+	}
+	maven { 
+		url = "https://maven.tehnut.info" 
 	}
 }
 

@@ -368,6 +368,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return processingTime;
 	}
 
+	public int getReminingTicks() {
+		return processingTime - currentProcessingTime;
+	}
+
 	public float getCalculatedPowerUsageMultipler() {
 		return powerUsageIncreaseMultiplier;
 	}

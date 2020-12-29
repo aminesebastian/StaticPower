@@ -23,7 +23,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		PRE_PROCESS, POST_PROCESS
 	}
 
-	public static final float HEAT_SYNC_MAX_DELTA = 1;
+	public static final float HEAT_SYNC_MAX_DELTA = 10;
 
 	@UpdateSerialize
 	protected final HeatStorage heatStorage;
