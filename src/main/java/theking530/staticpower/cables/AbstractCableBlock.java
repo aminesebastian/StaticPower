@@ -190,8 +190,11 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 			if (hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
 				if (component.hasAttachment(hoverResult.direction)) {
 					ItemStack attachment = component.getAttachment(hoverResult.direction);
+
 					if (!attachment.isEmpty()) {
-						return attachment.copy();
+						// Make a clean version of attachment with clear inventory.
+						ItemStack cleanAttachment = new ItemStack(attachment.getItem());
+						return cleanAttachment.copy();
 					}
 				}
 			} else if (hoverResult.type == CableBoundsHoverType.ATTACHED_COVER) {
@@ -214,8 +217,9 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, worldIn.getTileEntity(pos)).ifPresent(component -> {
 			// Allocate a container for the additional drops.
 			List<ItemStack> additionalDrops = new ArrayList<ItemStack>();
-			
-			// Check the attachments on all sides, and if there is one, get the additional drops.
+
+			// Check the attachments on all sides, and if there is one, get the additional
+			// drops.
 			for (Direction dir : Direction.values()) {
 				if (component.hasAttachment(dir)) {
 					ItemStack attachment = component.getAttachment(dir);
@@ -223,9 +227,9 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 					attachmentItem.getAdditionalDrops(attachment, component, additionalDrops);
 				}
 			}
-			
+
 			// Drop the additional drops.
-			for(ItemStack drop : additionalDrops) {
+			for (ItemStack drop : additionalDrops) {
 				WorldUtilities.dropItem(worldIn, pos, drop);
 			}
 		});

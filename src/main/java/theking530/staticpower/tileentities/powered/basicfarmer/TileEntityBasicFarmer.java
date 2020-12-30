@@ -120,7 +120,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 				.setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE).setCompletedPowerUsage(DEFAULT_HARVEST_ENERGY_COST));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
-		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		}));
+
+		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
+		fluidTankComponent.setUpgradeInventory(upgradesInventory);
+		fluidTankComponent.setAutoSyncPacketsEnabled(true);
 
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));

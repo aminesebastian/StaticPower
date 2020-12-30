@@ -42,7 +42,7 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 			if (paramSize != size) {
 				return false;
 			}
-		}else {
+		} else {
 			return false;
 		}
 
@@ -50,11 +50,7 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 
 		// Check items.
 		if (matchParams.shouldVerifyItems()) {
-			if (matchParams.shouldVerifyItemCounts()) {
-				matched &= matchParams.hasItems() && inputItem.testWithCount(matchParams.getItems()[0]);
-			} else {
-				matched &= matchParams.hasItems() && inputItem.test(matchParams.getItems()[0]);
-			}
+			matched &= matchParams.hasItems() && inputItem.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts());
 		}
 
 		return matched;

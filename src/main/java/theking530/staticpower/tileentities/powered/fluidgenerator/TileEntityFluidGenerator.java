@@ -63,7 +63,10 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluidStack) -> {
 			return getRecipe(fluidStack).isPresent();
-		}).setCapabilityExposedModes(MachineSideMode.Input));
+		}));
+		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
+		fluidTankComponent.setAutoSyncPacketsEnabled(true);
+
 		registerComponent(new FluidInputServoComponent("InputServo", 20, fluidTankComponent, MachineSideMode.Input));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
 

@@ -46,7 +46,7 @@ public class TileEntityFormer extends TileEntityMachine {
 		// Setup the input inventories to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack, inputInventory.getStackInSlot(1))).isPresent();
+				return processingComponent.getRecipe(new RecipeMatchParameters(stack, inputInventory.getStackInSlot(1)).ignoreItemCounts()).isPresent();
 			}
 		}));
 		registerComponent(moldInventory = new InventoryComponent("MoldInputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

@@ -1,5 +1,8 @@
 package theking530.staticpower.tileentities.components.heat;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -35,12 +38,15 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	private double heatCapacityUpgradeMultiplier;
 	@UpdateSerialize
 	private double heatConductivityMultiplier;
-	private UpgradeInventoryComponent upgradeInventory;
+	@UpdateSerialize
+	private boolean issueSyncPackets;
 
 	protected final HeatDissipationTiming dissipationTiming;
 	protected TriFunction<Double, Direction, HeatManipulationAction, Boolean> filter;
+
+	private UpgradeInventoryComponent upgradeInventory;
+	private final Map<Direction, HeatComponentCapabilityAccess> accessors;
 	private double lastSyncHeat;
-	private HeatComponentCapabilityAccess capabilityAccessor;
 
 	public HeatStorageComponent(String name, double maxHeat, double maxTransferRate) {
 		this(name, maxHeat, maxTransferRate, HeatDissipationTiming.POST_PROCESS);
@@ -48,10 +54,17 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 
 	public HeatStorageComponent(String name, double maxHeat, double maxConductivity, HeatDissipationTiming timing) {
 		super(name);
-		this.defaultCapacity = maxHeat;
-		this.defaultConductivity = maxConductivity;
+		defaultCapacity = maxHeat;
+		defaultConductivity = maxConductivity;
+		issueSyncPackets = false;
 		heatStorage = new HeatStorage(maxHeat, maxConductivity);
-		capabilityAccessor = new HeatComponentCapabilityAccess();
+
+		// Create the accessors.
+		accessors = new HashMap<Direction, HeatComponentCapabilityAccess>();
+		for (Direction dir : Direction.values()) {
+			accessors.put(dir, new HeatComponentCapabilityAccess(dir));
+		}
+
 		lastSyncHeat = 0.0f;
 		dissipationTiming = timing;
 	}
@@ -68,20 +81,25 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	@Override
 	public void postProcessUpdate() {
 		if (!getWorld().isRemote) {
-			// Get the current delta between the amount of power we have and the power we
-			// had last tick.
-			double delta = Math.abs(heatStorage.getCurrentHeat() - lastSyncHeat);
+			// Handle sync.
+			if (issueSyncPackets) {
+				// Get the current delta between the amount of power we have and the power we
+				// had last tick.
+				double delta = Math.abs(heatStorage.getCurrentHeat() - lastSyncHeat);
 
-			// Determine if we should sync.
-			boolean shouldSync = delta > HEAT_SYNC_MAX_DELTA;
-			shouldSync |= heatStorage.getCurrentHeat() == 0 && lastSyncHeat != 0;
-			shouldSync |= heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat() && lastSyncHeat != heatStorage.getMaximumHeat();
+				// Determine if we should sync.
+				boolean shouldSync = delta > HEAT_SYNC_MAX_DELTA;
+				shouldSync |= heatStorage.getCurrentHeat() == 0 && lastSyncHeat != 0;
+				shouldSync |= heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat() && lastSyncHeat != heatStorage.getMaximumHeat();
 
-			// If we should sync, perform the sync.
-			if (shouldSync) {
-				lastSyncHeat = heatStorage.getCurrentHeat();
-				syncToClient();
+				// If we should sync, perform the sync.
+				if (shouldSync) {
+					lastSyncHeat = heatStorage.getCurrentHeat();
+					syncToClient();
+				}
 			}
+
+			// Capture heat transfer metrics.
 			heatStorage.captureHeatTransferMetric();
 
 			// Cool off the heat storage.
@@ -96,6 +114,20 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 
 	public HeatStorageComponent setMaxConductivity(double heat) {
 		this.defaultConductivity = heat;
+		return this;
+	}
+
+	/**
+	 * If set to true, packets will be sent to keep the values between the client
+	 * and server in sync within a small threshold. This should only be set to true
+	 * if the values from this component are required when rendering the block. GUI
+	 * values are automatically synchronized.
+	 * 
+	 * @param enabled
+	 * @return
+	 */
+	public HeatStorageComponent setAutoSyncPacketsEnabled(boolean enabled) {
+		issueSyncPackets = enabled;
 		return this;
 	}
 
@@ -141,8 +173,11 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
 			if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
-				capabilityAccessor.currentSide = side;
-				return LazyOptional.of(() -> capabilityAccessor).cast();
+				if (side != null) {
+					return LazyOptional.of(() -> accessors.get(side)).cast();
+				} else {
+					return LazyOptional.of(() -> heatStorage).cast();
+				}
 			}
 		}
 
@@ -170,7 +205,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		} else {
 			// Set the heat conductivity back to 1.
 			heatConductivityMultiplier = 1.0f;
-			
+
 			// check for a regular heat capacity upgrade.
 			UpgradeItemWrapper heatCapacityUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeType.HEAT_CAPACITY);
 			if (heatCapacityUpgrade.isEmpty()) {
@@ -186,11 +221,15 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	}
 
 	private class HeatComponentCapabilityAccess implements IHeatStorage {
-		protected Direction currentSide;
+		protected final Direction side;
+
+		public HeatComponentCapabilityAccess(Direction side) {
+			this.side = side;
+		}
 
 		@Override
 		public double heat(double amountToHeat, boolean simulate) {
-			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToHeat, currentSide, HeatManipulationAction.HEAT)) {
+			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToHeat, side, HeatManipulationAction.HEAT)) {
 				return 0.0f;
 			}
 			return HeatStorageComponent.this.getStorage().heat(amountToHeat, simulate);
@@ -198,7 +237,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 
 		@Override
 		public double cool(double amountToCool, boolean simulate) {
-			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToCool, currentSide, HeatManipulationAction.COOL)) {
+			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToCool, side, HeatManipulationAction.COOL)) {
 				return 0.0f;
 			}
 			return HeatStorageComponent.this.getStorage().cool(amountToCool, simulate);

@@ -62,7 +62,7 @@ public class TileEntityMixer extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		
+
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<MixerRecipe>("ProcessingComponent", MixerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
 				this::canProcessRecipe, this::processingCompleted));
@@ -80,8 +80,10 @@ public class TileEntityMixer extends TileEntityMachine {
 				fluidInput1 = new FluidTankComponent("FluidTank1", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input2).setUpgradeInventory(upgradesInventory));
 		registerComponent(
 				fluidInput2 = new FluidTankComponent("FluidTank2", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input3).setUpgradeInventory(upgradesInventory));
-		registerComponent(fluidOutput = new FluidTankComponent("FluidTankOutput", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
-				.setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidOutput = new FluidTankComponent("FluidTankOutput", tier.defaultTankCapacity.get()));
+		fluidOutput.setCapabilityExposedModes(MachineSideMode.Output);
+		fluidOutput.setUpgradeInventory(upgradesInventory);
+		fluidOutput.setAutoSyncPacketsEnabled(true);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("Input1Servo", 4, input1Inventory, 0));

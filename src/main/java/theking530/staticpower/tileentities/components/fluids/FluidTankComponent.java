@@ -41,6 +41,9 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	private float upgradeMultiplier;
 	@UpdateSerialize
 	private int defaultCapacity;
+	@UpdateSerialize
+	private boolean issueSyncPackets;
+
 	private float lastUpdatePartialTick;
 
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
@@ -58,6 +61,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		FluidStorage = new StaticPowerFluidTank(capacity, fluidStackFilter);
 		canFill = true;
 		canDrain = true;
+		issueSyncPackets = false;
 		capabilityInterface = new FluidComponentCapabilityInterface();
 		capabilityExposeModes = new HashSet<MachineSideMode>();
 		this.lastSyncFluidStack = FluidStack.EMPTY;
@@ -84,22 +88,26 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	@Override
 	public void postProcessUpdate() {
 		if (!getWorld().isRemote) {
-			// Get the current delta between the amount of power we have and the power we
-			// had last tick.
-			int delta = Math.abs(getFluidAmount() - lastSyncFluidStack.getAmount());
+			// Handle sync.
+			if (issueSyncPackets) {
+				// Get the current delta between the amount of power we have and the power we
+				// had last tick.
+				int delta = Math.abs(getFluidAmount() - lastSyncFluidStack.getAmount());
 
-			// Determine if we should sync.
-			boolean shouldSync = delta > FLUID_SYNC_MAX_DELTA;
-			shouldSync |= !lastSyncFluidStack.isFluidEqual(this.getFluid());
-			shouldSync |= getFluidAmount() == 0 && lastSyncFluidStack.getAmount() != 0;
-			shouldSync |= getFluidAmount() == getCapacity() && lastSyncFluidStack.getAmount() != getCapacity();
+				// Determine if we should sync.
+				boolean shouldSync = delta > FLUID_SYNC_MAX_DELTA;
+				shouldSync |= !lastSyncFluidStack.isFluidEqual(this.getFluid());
+				shouldSync |= getFluidAmount() == 0 && lastSyncFluidStack.getAmount() != 0;
+				shouldSync |= getFluidAmount() == getCapacity() && lastSyncFluidStack.getAmount() != getCapacity();
 
-			// If we should sync, perform the sync.
-			if (shouldSync) {
-				lastSyncFluidStack = getFluid().copy();
-				syncToClient();
+				// If we should sync, perform the sync.
+				if (shouldSync) {
+					lastSyncFluidStack = getFluid().copy();
+					syncToClient();
+				}
 			}
 
+			// Capture fluid metrics.
 			FluidStorage.captureFluidMetrics();
 		}
 	}
@@ -120,6 +128,20 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	public FluidTankComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
 		upgradeInventory = inventory;
+		return this;
+	}
+
+	/**
+	 * If set to true, packets will be sent to keep the values between the client
+	 * and server in sync within a small threshold. This should only be set to true
+	 * if the values from this component are required when rendering the block. GUI
+	 * values are automatically synchronized.
+	 * 
+	 * @param enabled
+	 * @return
+	 */
+	public FluidTankComponent setAutoSyncPacketsEnabled(boolean enabled) {
+		issueSyncPackets = enabled;
 		return this;
 	}
 

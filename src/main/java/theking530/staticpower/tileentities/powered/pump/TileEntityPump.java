@@ -99,7 +99,10 @@ public class TileEntityPump extends TileEntityMachine {
 		pumpRate = tierObject.pumpRate.get();
 
 		// Add the tank component.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output).setCanFill(false));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()));
+		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Output);
+		fluidTankComponent.setCanFill(false);
+		fluidTankComponent.setAutoSyncPacketsEnabled(true);
 
 		// Add the fluid output servo to deliver fluid to adjacent blocks.
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));

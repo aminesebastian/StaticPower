@@ -18,6 +18,7 @@ import net.minecraftforge.common.util.Constants;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
@@ -362,7 +363,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	public BlockPos getCurrentlyTargetedBlockPos() {
-		if (currentBlockIndex == -1) {
+		if (currentBlockIndex == -1 || currentBlockIndex >= blocks.size()) {
+			StaticPower.LOGGER.warn(String.format("Attempting to render an invalid current block index: %1$s.", currentBlockIndex));
 			return new BlockPos(0, 0, 0);
 		}
 

@@ -70,7 +70,7 @@ public class TileEntityPackager extends TileEntityMachine {
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack).setIntParameter("size", gridSize)).isPresent();
+				return processingComponent.getRecipe(new RecipeMatchParameters(stack).setIntParameter("size", gridSize).ignoreItemCounts()).isPresent();
 			}
 		}));
 
@@ -79,7 +79,7 @@ public class TileEntityPackager extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		
+
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<PackagerRecipe>("ProcessingComponent", PackagerRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
 				this::moveInputs, this::canProcessRecipe, this::processingCompleted));

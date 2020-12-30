@@ -38,6 +38,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	private int defaultMaxInput;
 	@UpdateSerialize
 	private int defaultMaxOutput;
+	@UpdateSerialize
+	private boolean issueSyncPackets;
 
 	private final Map<Direction, FECapabilityAccess> feAccessors;
 	private final Map<Direction, SVCapabilityAccess> staticVoltAccessors;
@@ -70,6 +72,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		defaultCapacity = capacity;
 		powerCapacityUpgradeMultiplier = 1.0f;
 		powerIOUpgradeMultiplier = 1.0f;
+		issueSyncPackets = false;
 		defaultMaxInput = maxInput;
 		defaultMaxOutput = maxExtract;
 		// Create the interface.
@@ -87,20 +90,24 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	@Override
 	public void postProcessUpdate() {
 		if (!getWorld().isRemote) {
-			// Get the current delta between the amount of power we have and the power we
-			// had last tick.
-			int delta = Math.abs(EnergyStorage.getStoredPower() - lastSyncEnergy);
+			// Handle sync.
+			if (issueSyncPackets) {
+				// Get the current delta between the amount of power we have and the power we
+				// had last tick.
+				int delta = Math.abs(EnergyStorage.getStoredPower() - lastSyncEnergy);
 
-			// Determine if we should sync.
-			boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
-			shouldSync |= EnergyStorage.getStoredPower() == 0 && lastSyncEnergy != 0;
-			shouldSync |= EnergyStorage.getStoredPower() == EnergyStorage.getCapacity() && lastSyncEnergy != EnergyStorage.getCapacity();
+				// Determine if we should sync.
+				boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
+				shouldSync |= EnergyStorage.getStoredPower() == 0 && lastSyncEnergy != 0;
+				shouldSync |= EnergyStorage.getStoredPower() == EnergyStorage.getCapacity() && lastSyncEnergy != EnergyStorage.getCapacity();
 
-			// If we should sync, perform the sync.
-			if (shouldSync) {
-				lastSyncEnergy = EnergyStorage.getStoredPower();
-				syncToClient();
+				// If we should sync, perform the sync.
+				if (shouldSync) {
+					lastSyncEnergy = EnergyStorage.getStoredPower();
+					syncToClient();
+				}
 			}
+
 			EnergyStorage.captureEnergyMetric();
 		}
 	}
@@ -131,6 +138,20 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	public int getDefaultCapacity() {
 		return defaultCapacity;
+	}
+
+	/**
+	 * If set to true, packets will be sent to keep the values between the client
+	 * and server in sync within a small threshold. This should only be set to true
+	 * if the values from this component are required when rendering the block. GUI
+	 * values are automatically synchronized.
+	 * 
+	 * @param enabled
+	 * @return
+	 */
+	public EnergyStorageComponent setAutoSyncPacketsEnabled(boolean enabled) {
+		issueSyncPackets = enabled;
+		return this;
 	}
 
 	public EnergyStorageComponent setDefaultCapacity(int defaultCapacity) {
@@ -270,8 +291,12 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
-			if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY && side != null) {
-				return LazyOptional.of(() -> staticVoltAccessors.get(side)).cast();
+			if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
+				if (side != null) {
+					return LazyOptional.of(() -> staticVoltAccessors.get(side)).cast();
+				} else {
+					return LazyOptional.of(() -> energyInterface).cast();
+				}
 			} else if (cap == CapabilityEnergy.ENERGY && side != null) {
 				return LazyOptional.of(() -> feAccessors.get(side)).cast();
 			}
@@ -281,7 +306,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	}
 
 	public class FECapabilityAccess implements IEnergyStorage {
-		private Direction side;
+		private final Direction side;
 
 		public FECapabilityAccess(Direction side) {
 			this.side = side;
@@ -346,7 +371,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	}
 
 	public class SVCapabilityAccess implements IStaticVoltHandler {
-		private Direction side;
+		private final Direction side;
 
 		public SVCapabilityAccess(Direction side) {
 			this.side = side;

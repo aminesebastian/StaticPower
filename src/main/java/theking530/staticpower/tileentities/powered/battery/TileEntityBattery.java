@@ -76,6 +76,7 @@ public class TileEntityBattery extends TileEntityMachine {
 		enableFaceInteraction();
 
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+		energyStorage.setAutoSyncPacketsEnabled(true);
 		energyStorage.setCapabiltiyFilter((amount, direction, action) -> {
 			if (direction == null) {
 				return false;

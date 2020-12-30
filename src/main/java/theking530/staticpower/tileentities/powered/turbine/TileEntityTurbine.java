@@ -95,7 +95,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 
 		// Setup the fluid tanks
 		registerComponent(inputFluidTankComponent = new FluidTankComponent("InputFluid", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
-				.setUpgradeInventory(upgradesInventory).setExposeAsCapability(false));
+				.setUpgradeInventory(upgradesInventory).setAutoSyncPacketsEnabled(true).setExposeAsCapability(false));
 		registerComponent(outputFluidTankComponent = new FluidTankComponent("OutputFluid", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
 				.setUpgradeInventory(upgradesInventory));
 
