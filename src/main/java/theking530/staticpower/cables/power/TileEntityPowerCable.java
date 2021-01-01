@@ -1,5 +1,8 @@
 package theking530.staticpower.cables.power;
 
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -47,15 +50,22 @@ public class TileEntityPowerCable extends TileEntityBase {
 	public static final TileEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_CREATIVE = new TileEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator) -> new TileEntityPowerCable(allocator, true, StaticPowerTiers.CREATIVE), ModBlocks.IndustrialPowerCableCreative);
 
+	public final PowerCableComponent powerCableComponent;
+
 	public TileEntityPowerCable(TileEntityTypeAllocator<TileEntityPowerCable> allocator, boolean isIndustrial, ResourceLocation tier) {
 		super(allocator);
 		int powerRate = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerDelivery.get() : StaticPowerConfig.getTier(tier).cablePowerDelivery.get();
 		int powerCapacity = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() : StaticPowerConfig.getTier(tier).cablePowerCapacity.get();
-		registerComponent(new PowerCableComponent("PowerCableComponent", isIndustrial, powerCapacity, powerRate));
+		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, powerCapacity, powerRate));
 	}
 
 	@Override
 	public void process() {
 
+	}
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return new ContainerPowerCable(windowId, inventory, this);
 	}
 }

@@ -6,9 +6,13 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -33,6 +37,11 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	public BlockIndustrialPowerCable(String name, ResourceLocation tier) {
 		super(name, new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)));
 		this.tier = tier;
+	}
+
+	@Override
+	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return HasGuiType.SNEAKING_ONLY;
 	}
 
 	@OnlyIn(Dist.CLIENT)

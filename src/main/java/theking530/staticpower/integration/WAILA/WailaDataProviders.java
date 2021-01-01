@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent;
@@ -20,6 +21,7 @@ public class WailaDataProviders implements IServerDataProvider<TileEntity> {
 	public static final String FLUID_TAG = "fluid";
 	public static final String HEAT_TAG = "heat";
 	public static final String PROCESSING_TAG = "processing";
+	public static final String DIGISTORE_MANAGER_TAG = "digistore_manager";
 
 	@Override
 	public void appendServerData(CompoundNBT data, ServerPlayerEntity player, World world, TileEntity te) {
@@ -54,6 +56,12 @@ public class WailaDataProviders implements IServerDataProvider<TileEntity> {
 			powerData.putString("description", GuiTextUtilities.formatEnergyToString(powerStorage.getStoredPower()).getString());
 			data.put(POWER_TAG, powerData);
 		});
+
+		// Add digistore data.
+		Optional<DigistoreCableProviderComponent> digistoreComponent = ComponentUtilities.getComponent(DigistoreCableProviderComponent.class, te);
+		if (digistoreComponent.isPresent()) {
+			data.putBoolean(DIGISTORE_MANAGER_TAG, digistoreComponent.get().isManagerPresent());
+		}
 
 		// Add processing data.
 		Optional<AbstractProcesingComponent> processing = ComponentUtilities.getComponent(AbstractProcesingComponent.class, te);

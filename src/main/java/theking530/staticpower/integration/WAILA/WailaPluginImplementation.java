@@ -13,9 +13,13 @@ import mcp.mobius.waila.api.WailaPlugin;
 import net.minecraft.block.Block;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.integration.TOP.BarTooltipRenderer;
+import theking530.staticpower.tileentities.digistorenetwork.digistore.BlockDigistore;
 
 @WailaPlugin(StaticPower.MOD_ID)
 public class WailaPluginImplementation implements IWailaPlugin {
@@ -42,6 +46,8 @@ public class WailaPluginImplementation implements IWailaPlugin {
 		registrar.registerTooltipRenderer(HEAT_BAR_RENDERER, new BarTooltipRenderer(100, 10, MAIN_HEAT_COLOR, ALT_HEAT_COLOR, Color.DARK_GREY));
 		registrar.registerTooltipRenderer(PROCESSING_BAR_RENDERER, new BarTooltipRenderer(100, 10, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR, Color.DARK_GREY));
 		registrar.registerTooltipRenderer(FLUID_BAR_RENDERER, new BarTooltipRenderer(100, 10, MAIN_FLUID_COLOR, ALT_FLUID_COLOR, Color.DARK_GREY));
+		registrar.registerComponentProvider(new DigistoreMasterPresenceDecorator(), TooltipPosition.BODY, Block.class);
+		registrar.registerComponentProvider(new DigistoreDecorator(), TooltipPosition.BODY, BlockDigistore.class);
 		registrar.registerBlockDataProvider(new WailaDataProviders(), Block.class);
 		registrar.registerComponentProvider(new StaticVoltDecorator(), TooltipPosition.BODY, Block.class);
 		registrar.registerComponentProvider(new HeatDecorator(), TooltipPosition.BODY, Block.class);
@@ -85,4 +91,24 @@ public class WailaPluginImplementation implements IWailaPlugin {
 		}
 	}
 
+	public static class DigistoreDecorator implements IComponentProvider {
+		@Override
+		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+
+		}
+	}
+
+	public static class DigistoreMasterPresenceDecorator implements IComponentProvider {
+		@Override
+		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+			if (accessor.getServerData().contains(WailaDataProviders.DIGISTORE_MANAGER_TAG)) {
+				boolean managerPresent = accessor.getServerData().getBoolean(WailaDataProviders.DIGISTORE_MANAGER_TAG);
+				if (managerPresent) {
+					tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString()).append(new TranslationTextComponent("gui.staticpower.manager_present")));
+				} else {
+					tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).append(new TranslationTextComponent("gui.staticpower.manager_missing")));
+				}
+			}
+		}
+	}
 }

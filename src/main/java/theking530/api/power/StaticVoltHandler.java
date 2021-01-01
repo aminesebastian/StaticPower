@@ -215,7 +215,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	 * 
 	 * @return
 	 */
-	public float getRecievedPerTick() {
+	public float getReceivedPerTick() {
 		return averageRecieved;
 	}
 

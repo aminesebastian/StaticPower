@@ -164,4 +164,24 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 		// If we make it this far, return null.
 		return null;
 	}
+
+	@Override
+	public int getMaxReceive() {
+		if (actualType == EnergyType.STATIC_VOLT) {
+			return staticVoltHandler.getMaxReceive() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+		} else if (actualType == EnergyType.FORGE_ENERGY) {
+			return energyStorage.receiveEnergy(Integer.MAX_VALUE, true);
+		}
+		return 0;
+	}
+
+	@Override
+	public int getMaxDrain() {
+		if (actualType == EnergyType.STATIC_VOLT) {
+			return staticVoltHandler.getMaxDrain() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+		} else if (actualType == EnergyType.FORGE_ENERGY) {
+			return energyStorage.extractEnergy(Integer.MAX_VALUE, true);
+		}
+		return 0;
+	}
 }

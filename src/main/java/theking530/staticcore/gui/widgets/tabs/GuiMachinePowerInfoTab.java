@@ -24,7 +24,7 @@ public class GuiMachinePowerInfoTab extends AbstractInfoTab {
 	public void updateData() {
 		super.updateData();
 		clear();
-		addKeyValueTwoLiner("Input", new StringTextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getRecievedPerTick()),
+		addKeyValueTwoLiner("Input", new StringTextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getReceivedPerTick()),
 				TextFormatting.GREEN);
 		addKeyValueTwoLiner("Usage", new StringTextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getExtractedPerTick()),
 				TextFormatting.RED);

@@ -77,7 +77,7 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 		if (teBase.hasComponentOfType(DigistoreCableProviderComponent.class)) {
 			DigistoreCableProviderComponent digistoreComponent = teBase.getComponent(DigistoreCableProviderComponent.class);
 			if (!digistoreComponent.isManagerPresent()) {
-				probeInfo.text(new TranslationTextComponent("gui.staticpower.missing_manager").mergeStyle(TextFormatting.RED));
+				probeInfo.text(new TranslationTextComponent("gui.staticpower.manager_missing").mergeStyle(TextFormatting.RED));
 			}
 		}
 	}

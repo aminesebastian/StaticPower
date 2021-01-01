@@ -13,6 +13,7 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -30,20 +31,25 @@ import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.network.NetworkGUI;
-import theking530.staticpower.blocks.StaticPowerBlock;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractCableBlock extends StaticPowerBlock implements ICustomModelSupplier {
+public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
 	public final CableBoundsCache cableBoundsCache;
 
 	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator) {
 		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid().harvestTool(ToolType.PICKAXE).setRequiresTool());
 		cableBoundsCache = cableBoundsGenerator;
+	}
+
+	@Override
+	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return HasGuiType.NEVER;
 	}
 
 	@Deprecated
@@ -101,8 +107,8 @@ public abstract class AbstractCableBlock extends StaticPowerBlock implements ICu
 				}
 			}
 		}
-		// IF we didn't return earlier, continue the execution.
-		return ActionResultType.PASS;
+		// IF we didn't return earlier, go to the super call.
+		return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
 	}
 
 	@Override

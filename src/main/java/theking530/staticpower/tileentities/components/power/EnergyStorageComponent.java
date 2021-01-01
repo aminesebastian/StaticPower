@@ -431,5 +431,21 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 			return energyInterface.canDrainPower();
 		}
+
+		@Override
+		public int getMaxReceive() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
+			return energyInterface.getMaxReceive();
+		}
+
+		@Override
+		public int getMaxDrain() {
+			if (!EnergyStorageComponent.this.isEnabled()) {
+				return 0;
+			}
+			return energyInterface.getMaxDrain();
+		}
 	}
 }

@@ -89,6 +89,9 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 				}
 			}
 		}
+		
+		// Capture metrics.
+		EnergyStorage.captureEnergyMetric();
 	}
 
 	@Override
@@ -126,7 +129,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		for (Integer key : averageMap.keySet()) {
 			average += key * (averageMap.get(key) / (float) mapper.getDiscoveredCables().size());
 		}
-		
+
 		// If the capacity is less than 0, that means we overflowed. Set the capcaity to
 		// the maximum integer value.
 		EnergyStorage.setCapacity(average < 0 ? Integer.MAX_VALUE : (int) average);
@@ -143,8 +146,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		return tag;
 	}
 
-	public StaticVoltAutoConverter getEnergyStorage() {
+	public StaticVoltAutoConverter getEnergyAutoConverter() {
 		return energyInterface;
+	}
+
+	public StaticVoltHandler getEnergyStorage() {
+		return EnergyStorage;
 	}
 
 	@Nullable
@@ -175,8 +182,8 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void getReaderOutput(List<ITextComponent> output) {
-		String storedEnergy = new MetricConverter(getEnergyStorage().getStoredPower()).getValueAsString(true);
-		String maximumEnergy = new MetricConverter(getEnergyStorage().getCapacity()).getValueAsString(true);
+		String storedEnergy = new MetricConverter(getEnergyAutoConverter().getStoredPower()).getValueAsString(true);
+		String maximumEnergy = new MetricConverter(getEnergyAutoConverter().getCapacity()).getValueAsString(true);
 		output.add(new StringTextComponent(String.format("Contains: %1$sRF out of a maximum of %2$sRF.", storedEnergy, maximumEnergy)));
 	}
 

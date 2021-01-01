@@ -42,6 +42,16 @@ public class StaticVoltAutoConverter implements IEnergyStorage, IStaticVoltHandl
 		return staticVoltHandler.canDrainPower();
 	}
 
+	@Override
+	public int getMaxReceive() {
+		return staticVoltHandler.getMaxReceive();
+	}
+
+	@Override
+	public int getMaxDrain() {
+		return staticVoltHandler.getMaxDrain();
+	}
+
 	/**************************
 	 * IEnergyStorage Interface
 	 **************************/
@@ -74,5 +84,4 @@ public class StaticVoltAutoConverter implements IEnergyStorage, IStaticVoltHandl
 	public boolean canReceive() {
 		return canRecievePower();
 	}
-
 }

@@ -7,23 +7,24 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.power.StaticVoltHandler;
+import theking530.api.power.IStaticVoltHandler;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiPowerBarFromEnergyStorage extends AbstractGuiWidget {
 
-	private StaticVoltHandler energyStorage;
+	private IStaticVoltHandler energyStorage;
 
-	public GuiPowerBarFromEnergyStorage(StaticVoltHandler energyStorage, int xPosition, int yPosition, int xSize, int ySize) {
+	public GuiPowerBarFromEnergyStorage(IStaticVoltHandler energyStorage, int xPosition, int yPosition, int xSize, int ySize) {
 		super(xPosition, yPosition, xSize, ySize);
 		this.energyStorage = energyStorage;
 	}
 
 	@Override
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiPowerBarUtilities.drawPowerBar(matrix, getPosition().getX(), getPosition().getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, energyStorage.getStoredPower(), energyStorage.getCapacity());
+		GuiPowerBarUtilities.drawPowerBar(matrix, getPosition().getX(), getPosition().getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, energyStorage.getStoredPower(),
+				energyStorage.getCapacity());
 	}
 
 	@Override

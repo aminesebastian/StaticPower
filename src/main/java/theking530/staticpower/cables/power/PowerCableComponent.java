@@ -5,6 +5,7 @@ import java.util.Optional;
 import javax.annotation.Nullable;
 
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
@@ -30,11 +31,24 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	private final int transferRate;
 	private final boolean isIndustrial;
 
+	private int clientCurrentPower;
+	private int clientCapacity;
+	private int clientMaxReceive;
+	private int clientMaxDrain;
+	private float clientLastTickReceive;
+	private float clientLastTickDraint;
+
 	public PowerCableComponent(String name, boolean isIndustrial, int capacity, int transferRate) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		this.capacity = capacity;
 		this.transferRate = transferRate;
 		this.isIndustrial = isIndustrial;
+		this.clientCurrentPower = 0;
+		this.clientCapacity = 0;
+		this.clientMaxReceive = 0;
+		this.clientMaxDrain = 0;
+		this.clientLastTickReceive = 0;
+		this.clientLastTickDraint = 0;
 	}
 
 	@Override
@@ -52,10 +66,10 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.getEnergyStorage().getEnergyStored();
+				return module.getEnergyAutoConverter().getEnergyStored();
 			}
 		}
-		return 0;
+		return clientCurrentPower;
 	}
 
 	@Override
@@ -63,10 +77,18 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.getEnergyStorage().getMaxEnergyStored();
+				return module.getEnergyAutoConverter().getMaxEnergyStored();
 			}
 		}
-		return 0;
+		return clientCapacity;
+	}
+
+	public float getClientLastEnergyDrain() {
+		return this.clientLastTickDraint;
+	}
+
+	public float getClientLastEnergyReceieve() {
+		return this.clientLastTickReceive;
 	}
 
 	@Override
@@ -80,14 +102,36 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
+	public int getMaxReceive() {
+		if (!getTileEntity().getWorld().isRemote) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getEnergyAutoConverter().getMaxReceive();
+			}
+		}
+		return clientMaxReceive;
+	}
+
+	@Override
+	public int getMaxDrain() {
+		if (!getTileEntity().getWorld().isRemote) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getEnergyAutoConverter().getMaxDrain();
+			}
+		}
+		return clientMaxDrain;
+	}
+
+	@Override
 	public int getStoredPower() {
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.getEnergyStorage().getStoredPower();
+				return module.getEnergyAutoConverter().getStoredPower();
 			}
 		}
-		return 0;
+		return clientCurrentPower;
 	}
 
 	@Override
@@ -95,10 +139,10 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.getEnergyStorage().getCapacity();
+				return module.getEnergyAutoConverter().getCapacity();
 			}
 		}
-		return 0;
+		return clientCapacity;
 	}
 
 	@Override
@@ -111,9 +155,9 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				if (forge) {
-					return module.getEnergyStorage().receiveEnergy(Math.min(transferRate * IStaticVoltHandler.FE_TO_SV_CONVERSION, power), simulate);
+					return module.getEnergyAutoConverter().receiveEnergy(Math.min(transferRate * IStaticVoltHandler.FE_TO_SV_CONVERSION, power), simulate);
 				} else {
-					return module.getEnergyStorage().receivePower(Math.min(transferRate, power), simulate);
+					return module.getEnergyAutoConverter().receivePower(Math.min(transferRate, power), simulate);
 				}
 			}
 		}
@@ -179,6 +223,38 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		cable.setProperty(POWER_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.setProperty(POWER_RATE_DATA_TAG_KEY, transferRate);
 		cable.setProperty(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
+	}
+
+	@Override
+	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
+		if (!this.getWorld().isRemote) {
+			getPowerNetworkModule().ifPresent(module -> {
+				CompoundNBT powerCableNBT = new CompoundNBT();
+				powerCableNBT.putInt("power", module.getEnergyStorage().getStoredPower());
+				powerCableNBT.putInt("capacity", module.getEnergyStorage().getCapacity());
+				powerCableNBT.putInt("max_drain", module.getEnergyStorage().getMaxDrain());
+				powerCableNBT.putInt("max_receive", module.getEnergyStorage().getMaxReceive());
+				powerCableNBT.putFloat("drained", module.getEnergyStorage().getExtractedPerTick());
+				powerCableNBT.putFloat("received", module.getEnergyStorage().getReceivedPerTick());
+				nbt.put("power_cable", powerCableNBT);
+			});
+		}
+		return nbt;
+	}
+
+	@Override
+	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
+		if (nbt.contains("power_cable")) {
+			CompoundNBT powerCableNBT = nbt.getCompound("power_cable");
+			clientCurrentPower = powerCableNBT.getInt("power");
+			clientCapacity = powerCableNBT.getInt("capacity");
+			clientLastTickDraint = powerCableNBT.getFloat("drained");
+			clientLastTickReceive = powerCableNBT.getFloat("received");
+			clientMaxDrain = powerCableNBT.getInt("max_drain");
+			clientMaxReceive = powerCableNBT.getInt("max_recieve");
+		}
 	}
 
 	@Override

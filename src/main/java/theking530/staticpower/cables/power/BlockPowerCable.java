@@ -6,9 +6,13 @@ import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -35,12 +39,17 @@ public class BlockPowerCable extends AbstractCableBlock {
 		this.tier = tier;
 	}
 
+	@Override
+	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		return HasGuiType.SNEAKING_ONLY;
+	}
+
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TranslationTextComponent("gui.staticpower.max_power_rate"));
-		tooltip.add(new StringTextComponent("• ")
-				.append(new StringTextComponent(TextFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cablePowerDelivery.get()).getString())));
+		tooltip.add(new StringTextComponent("• ").append(
+				new StringTextComponent(TextFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cablePowerDelivery.get()).getString())));
 	}
 
 	@Override

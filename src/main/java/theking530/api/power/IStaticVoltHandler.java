@@ -18,6 +18,10 @@ public interface IStaticVoltHandler {
 	 */
 	public int getCapacity();
 
+	public int getMaxReceive();
+
+	public int getMaxDrain();
+
 	public int receivePower(int power, boolean simulate);
 
 	public int drainPower(int power, boolean simulate);
