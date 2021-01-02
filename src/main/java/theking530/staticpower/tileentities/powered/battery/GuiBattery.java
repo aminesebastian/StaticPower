@@ -59,35 +59,37 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Render the input rate string.
-		font.drawString(stack, "Input", this.guiLeft + 15, this.guiTop + 32, 4210752);
+		font.drawString(stack, "Input", 15, 32, 4210752);
 		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getString();
-		font.drawString(stack, inputRateString, guiLeft + 28 - (font.getStringWidth(inputRateString) / 2), guiTop + 42, 4210752);
+		font.drawString(stack, inputRateString, 28 - (font.getStringWidth(inputRateString) / 2), 42, 4210752);
 
 		// Render the output rate string.
-		font.drawString(stack, "Output", this.guiLeft + 132, this.guiTop + 32, 4210752);
+		font.drawString(stack, "Output", 132, 32, 4210752);
 		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit()).getString();
-		font.drawString(stack, outputRateString, guiLeft + 149 - (font.getStringWidth(outputRateString) / 2), guiTop + 42, 4210752);
+		font.drawString(stack, outputRateString, 149 - (font.getStringWidth(outputRateString) / 2), 42, 4210752);
 
 		// Add tooltip for the actual value of the input.
 		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
-		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
-				&& mouseY < this.guiTop + 50) {
-			tooltips.add(new StringTextComponent(inputRateString));
-		}
-
-		// Add tooltip for the actual value of the output.
-		if (mouseX > guiLeft + 149 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 149 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
-				&& mouseY < this.guiTop + 50) {
-			tooltips.add(new StringTextComponent(outputRateString));
-		}
 
 		// Render the tooltips.
 		this.func_243308_b(stack, tooltips, mouseX, mouseY);
 	}
 
 	@Override
-	public void updateData() {
+	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
+		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getString();
+		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit()).getString();
 
+		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
+				&& mouseY < this.guiTop + 50) {
+			tooltips.add(new StringTextComponent(inputRateString));
+		}
+
+		// Add tooltip for the actual value of the output.
+		if (mouseX > guiLeft + 149 - (font.getStringWidth(outputRateString) / 2) && mouseX < guiLeft + 149 + (font.getStringWidth(outputRateString) / 2) && mouseY > this.guiTop + 41
+				&& mouseY < this.guiTop + 50) {
+			tooltips.add(new StringTextComponent(outputRateString));
+		}
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {

@@ -2,7 +2,9 @@ package theking530.staticpower.cables.power;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 import javax.annotation.Nullable;
 
@@ -19,6 +21,7 @@ import theking530.api.power.IStaticVoltHandler;
 import theking530.api.power.PowerEnergyInterface;
 import theking530.api.power.StaticVoltAutoConverter;
 import theking530.api.power.StaticVoltHandler;
+import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -30,23 +33,33 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule {
+	public static final int MAX_METRIC_SAMPLES = 60;
+
 	private final StaticVoltAutoConverter energyInterface;
-	private final StaticVoltHandler EnergyStorage;
+	private final StaticVoltHandler storage;
+	private TransferMetrics secondsDelta;
+	private TransferMetrics minutesDelta;
+	private TransferMetrics hoursDelta;
 
 	public PowerNetworkModule() {
 		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		// The actual input and output rates are controlled by the individual cables.
-		EnergyStorage = new StaticVoltHandler(0, Integer.MAX_VALUE, Integer.MAX_VALUE);
+		storage = new StaticVoltHandler(0, Integer.MAX_VALUE, Integer.MAX_VALUE);
 		// No one should extract power from the network, we only provide it.
-		EnergyStorage.setCanDrain(false);
+		storage.setCanDrain(false);
 		// Create the interface.
-		energyInterface = new StaticVoltAutoConverter(EnergyStorage);
+		energyInterface = new StaticVoltAutoConverter(storage);
+
+		// Create the metric capturing values.
+		secondsDelta = new TransferMetrics();
+		minutesDelta = new TransferMetrics();
+		hoursDelta = new TransferMetrics();
 	}
 
 	@Override
 	public void tick(World world) {
 		// Check to make sure we have power and valid desinations.
-		if (EnergyStorage.getStoredPower() > 0 && Network.getGraph().getDestinations().size() > 0) {
+		if (storage.getStoredPower() > 0 && Network.getGraph().getDestinations().size() > 0) {
 			// Get a map of all the applicable destination that support recieveing power.
 			List<PowerEnergyInterfaceWrapper> destinations = new ArrayList<PowerEnergyInterfaceWrapper>();
 
@@ -70,7 +83,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Calculate how we should split the output amount.
-			int outputPerDestination = Math.max(1, EnergyStorage.getStoredPower() / destinations.size());
+			int outputPerDestination = Math.max(1, storage.getStoredPower() / destinations.size());
 
 			// Distribute the power to the destinations.
 			for (PowerEnergyInterfaceWrapper powerWrapper : destinations) {
@@ -79,19 +92,46 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 						outputPerDestination);
 
 				// Supply the power.
-				int supplied = powerWrapper.powerInterface.receivePower(Math.min(toSupply, EnergyStorage.getCurrentMaximumPowerOutput()), false);
+				int supplied = powerWrapper.powerInterface.receivePower(Math.min(toSupply, storage.getCurrentMaximumPowerOutput()), false);
 
 				// If we supplied any power, extract the power.
 				if (supplied > 0) {
-					EnergyStorage.setCanDrain(true);
-					EnergyStorage.drainPower(supplied, false);
-					EnergyStorage.setCanDrain(false);
+					storage.setCanDrain(true);
+					storage.drainPower(supplied, false);
+					storage.setCanDrain(false);
 				}
 			}
 		}
-		
+
 		// Capture metrics.
-		EnergyStorage.captureEnergyMetric();
+		storage.captureEnergyMetric();
+
+		// Capture the seconds metric.
+		if ((world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
+			secondsDelta.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
+		}
+
+		// Capture the minutes metric.
+		if ((world.getGameTime() % SDTime.TICKS_PER_MINUTE) == 0) {
+			minutesDelta.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
+		}
+
+		// Capture the hours metric.
+		if ((world.getGameTime() % SDTime.TICKS_PER_HOUR) == 0) {
+			hoursDelta.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
+		}
+	}
+
+	public TransferMetrics getSecondsMetrics() {
+		return this.secondsDelta;
+	}
+
+	public TransferMetrics getMinutesMetrics() {
+		return this.minutesDelta;
+	}
+
+	public TransferMetrics getHoursMetrics() {
+		return this.hoursDelta;
 	}
 
 	@Override
@@ -99,7 +139,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		super.onAddedToNetwork(other);
 		if (other.hasModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
 			PowerNetworkModule module = (PowerNetworkModule) other.getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
-			module.EnergyStorage.addPowerIgnoreTransferRate(EnergyStorage.getStoredPower());
+			module.storage.addPowerIgnoreTransferRate(storage.getStoredPower());
 		}
 	}
 
@@ -132,17 +172,17 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 		// If the capacity is less than 0, that means we overflowed. Set the capcaity to
 		// the maximum integer value.
-		EnergyStorage.setCapacity(average < 0 ? Integer.MAX_VALUE : (int) average);
+		storage.setCapacity(average < 0 ? Integer.MAX_VALUE : (int) average);
 	}
 
 	@Override
 	public void readFromNbt(CompoundNBT tag) {
-		EnergyStorage.deserializeNBT(tag.getCompound("energy_storage"));
+		storage.deserializeNBT(tag.getCompound("energy_storage"));
 	}
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
-		tag.put("energy_storage", EnergyStorage.serializeNBT());
+		tag.put("energy_storage", storage.serializeNBT());
 		return tag;
 	}
 
@@ -151,7 +191,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	public StaticVoltHandler getEnergyStorage() {
-		return EnergyStorage;
+		return storage;
 	}
 
 	@Nullable
@@ -194,6 +234,35 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		protected PowerEnergyInterfaceWrapper(PowerEnergyInterface powerInterface, BlockPos cablePos) {
 			this.powerInterface = powerInterface;
 			this.cablePos = cablePos;
+		}
+	}
+
+	protected class TransferMetrics {
+		private final Queue<Float> received;
+		private final Queue<Float> provided;
+
+		/**
+		 * @param received
+		 * @param provided
+		 */
+		public TransferMetrics() {
+			this.received = new LinkedList<Float>();
+			this.provided = new LinkedList<Float>();
+		}
+
+		public void addMetrics(float received, float provided) {
+			// Add the values.
+			this.received.add(received);
+			this.provided.add(provided);
+
+			// Make sure our queues only keep the correct values.
+			if (this.received.size() > MAX_METRIC_SAMPLES) {
+				this.received.poll();
+			}
+
+			if (this.provided.size() > MAX_METRIC_SAMPLES) {
+				this.provided.poll();
+			}
 		}
 	}
 }

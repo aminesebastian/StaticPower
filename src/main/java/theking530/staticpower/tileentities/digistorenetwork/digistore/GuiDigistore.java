@@ -1,8 +1,12 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
+import java.util.List;
+
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -72,8 +76,17 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
-				GuiDrawUtilities.drawColoredRectangle(guiLeft + 79, guiTop + 19, 18, 18, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
-				renderTooltip(stack, inventory.getDigistoreStack(0).getStoredItem(), mouseX, mouseY);
+				GuiDrawUtilities.drawColoredRectangle(stack, 79, 19, 18, 18, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
+			}
+		}
+	}
+
+	@Override
+	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
+		super.getExtraTooltips(tooltips, stack, mouseX, mouseY);
+		if (inventory.getItemCapacity() > 0) {
+			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
+				tooltips.addAll(inventory.getDigistoreStack(0).getStoredItem().getTooltip(Minecraft.getInstance().player, TooltipFlags.NORMAL));
 			}
 		}
 	}
@@ -83,7 +96,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Draw the massive digistore slot.
-		drawEmptySlot(stack, guiLeft + 78, guiTop + 18, 20, 20);
+		drawEmptySlot(stack, 78, 18, 20, 20);
 
 		// Draw the item.
 		if (inventory.getCurrentUniqueItemTypeCount() > 0) {
@@ -95,7 +108,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
 
 			// Draw the item count string.
-			GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), guiLeft + 98, guiTop + 37, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), 98, 37, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 }

@@ -55,9 +55,8 @@ public class GuiTumbler extends StaticPowerTileEntityGui<ContainerTumbler, TileE
 
 		MetricConverter metric = new MetricConverter(getTileEntity().getCurrentSpeed());
 		String rpmText = metric.getValueAsString(true) + " RPM";
-		drawEmptySlot(stack, guiLeft + 123 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 40,
-				Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, rpmText, guiLeft + 125 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), guiTop + 42,
+		drawEmptySlot(stack, 123 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), 40, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
+		Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, rpmText, 125 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), 42,
 				Color.EIGHT_BIT_WHITE.encodeInInteger());
 	}
 }

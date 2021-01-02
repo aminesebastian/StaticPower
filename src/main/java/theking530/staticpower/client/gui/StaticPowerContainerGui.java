@@ -169,7 +169,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		drawGenericBackground();
 
 		// Draw any extras.
+		stack.push();
+		stack.translate(guiLeft, guiTop, 0);
 		drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
+		stack.pop();
 
 		// Draw the slots.
 		if (container instanceof StaticPowerTileEntityContainer) {
@@ -182,7 +185,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		widgetContainer.renderBehindItems(stack, mouseX, mouseY, partialTicks);
 
 		// Draw anything infront of the background but behind the items.
+		stack.push();
+		stack.translate(guiLeft, guiTop, 0);
 		drawBehindItems(stack, partialTicks, mouseX, mouseY);
+		stack.pop();
 
 		// Animations the screensize if the target sizes have changed.
 		animateScreenSize();
@@ -207,13 +213,23 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		drawSlotOverlays(container.inventorySlots);
 
 		// Draw any additional foreground elements.
+		stack.push();
+		stack.translate(guiLeft, guiTop, 0);
 		drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
+		stack.pop();
 
 		// Renders any hovered tooltips.
 		renderHoveredTooltip(stack, mouseX, mouseY);
 
 		// Render the widget tooltips as needed.
 		widgetContainer.renderTooltips(stack, mouseX, mouseY);
+
+		// Render any extra tooltips.
+		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+		getExtraTooltips(tooltips, stack, mouseX, mouseY);
+		if (tooltips.size() > 0) {
+			func_243308_b(stack, tooltips, mouseX, mouseY);
+		}
 	}
 
 	@Override
@@ -385,6 +401,18 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param mouseY       The mouse's y position.
 	 */
 	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	}
+
+	/**
+	 * Override this method to supply any additional tooltips.
+	 * 
+	 * @param tooltips
+	 * @param stack
+	 * @param mouseX
+	 * @param mouseY
+	 */
+	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
+
 	}
 
 	/**
@@ -571,9 +599,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
 							GlStateManager.enableDepthTest();
 						}
-						
+
 						// Draw the yellow line lockable indicator.
-						GuiDrawUtilities.drawColoredRectangle(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f, new Color(0.9f, 0.8f, 0));
+						GuiDrawUtilities.drawColoredRectangle(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f,
+								new Color(0.9f, 0.8f, 0));
 					}
 				}
 
