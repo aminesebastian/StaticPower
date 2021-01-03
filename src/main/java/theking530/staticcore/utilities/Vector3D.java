@@ -4,6 +4,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 
 public class Vector3D extends Vector2D {
+	public static final Vector3D ZERO = new Vector3D(0, 0, 0);
 
 	public Vector3D(float x, float y, float z) {
 		super(x, y);

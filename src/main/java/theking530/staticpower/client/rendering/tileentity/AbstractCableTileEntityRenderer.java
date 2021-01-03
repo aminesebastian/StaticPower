@@ -31,29 +31,34 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 
 	public AbstractCableTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
+		this.shouldPreRotateTowardsFacingDirection = false;
 	}
 
-	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+			int combinedOverlay) {
 
+		// Get the travel direction and return early if one does not exist.
 		Direction dir = packet.getItemAnimationDirection();
 		if (dir == null) {
 			return;
 		}
+
+		// Capture the lerp and rotation values.
 		float lerpValue = packet.getItemMoveLerp() + (partialTicks / (packet.getCurrentMoveTime() / 2));
-		matrixStack.push();
+		float renderRotation = packet.getRenderRotation(partialTicks);
 
 		// Get the baked model and check if it wants to render the item in 3d or 2d.
 		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(packet.getContainedItem(), null, null);
 		boolean render3D = itemModel.isGui3d();
-		
+
 		// Determine which scale to use when drawing.
 		if (render3D) {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
+			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, getItemParcelRotation(renderRotation),
+					partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		} else {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
+			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, getItemParcelRotation(renderRotation),
+					partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		}
-
-		matrixStack.pop();
 	}
 
 	protected Vector3D getItemParcelAnimationOffset(float lerpValue, Direction dir) {
@@ -63,6 +68,10 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		directionVector.multiply(lerpValue);
 		baseOffset.add(directionVector);
 		return baseOffset;
+	}
+
+	protected Vector3D getItemParcelRotation(float rotation) {
+		return new Vector3D(0, rotation, 0);
 	}
 
 	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, MatrixStack matrixStack, AbstractCableProviderComponent cableComponent) {
@@ -100,9 +109,11 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		} else if (side == Direction.NORTH) {
 			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, 0.5f - radius, 0.01f), new Vector3f(diameter, diameter * filledAmount, 0.6f), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.DOWN) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount),
+					fluidColor, matrixStack, sprite);
 		} else if (side == Direction.UP) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.39f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount), fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.39f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount),
+					fluidColor, matrixStack, sprite);
 		} else if (side == Direction.WEST) {
 			CUBE_MODEL.drawPreviewCube(new Vector3f(0.01f, 0.5f - radius, 0.5f - radius), new Vector3f(0.6f, diameter * filledAmount, diameter), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.EAST) {

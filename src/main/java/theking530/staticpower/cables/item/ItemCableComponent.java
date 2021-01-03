@@ -2,6 +2,7 @@ package theking530.staticpower.cables.item;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -32,7 +33,7 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class ItemCableComponent extends AbstractCableProviderComponent implements IItemHandler {
+public class ItemCableComponent extends AbstractCableProviderComponent {
 	/**
 	 * This is the slowest an item may travel.
 	 */
@@ -46,17 +47,23 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 	private final double accelerationFactor;
 	private final HashMap<Long, ItemRoutingParcelClient> containedPackets;
 	private final ResourceLocation tier;
-
-	private Direction lastCapabilityRequestedDirection;
+	private final Map<Direction, ItemCableSideWrapper> sideWrappers;
 
 	public ItemCableComponent(String name, ResourceLocation tier, double maxTransferSpeed, double frictionFactor, double accelerationFactor) {
 		super(name, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
 		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
-		lastCapabilityRequestedDirection = Direction.UP;
 		this.maxTransferSpeed = maxTransferSpeed;
 		this.frictionFactor = frictionFactor;
 		this.accelerationFactor = accelerationFactor;
 		this.tier = tier;
+
+		// Create and populate the side wrappers.
+		this.sideWrappers = new HashMap<Direction, ItemCableSideWrapper>();
+		for (Direction dir : Direction.values()) {
+			sideWrappers.put(dir, new ItemCableSideWrapper(dir, this));
+		}
+		sideWrappers.put(null, new ItemCableSideWrapper(null, this));
+
 		addValidAttachmentClass(ExtractorAttachment.class);
 		addValidAttachmentClass(FilterAttachment.class);
 		addValidAttachmentClass(RetrieverAttachment.class);
@@ -177,8 +184,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 			}
 
 			if (!disabled) {
-				lastCapabilityRequestedDirection = side;
-				return LazyOptional.of(() -> this).cast();
+				return LazyOptional.of(() -> sideWrappers.get(side)).cast();
 			}
 		}
 		return LazyOptional.empty();
@@ -222,49 +228,58 @@ public class ItemCableComponent extends AbstractCableProviderComponent implement
 		}
 	}
 
-	@Override
-	public int getSlots() {
-		return 1;
-	}
+	public class ItemCableSideWrapper implements IItemHandler {
+		private Direction side;
+		private ItemCableComponent owningCable;
 
-	@Override
-	public ItemStack getStackInSlot(int slot) {
-		return ItemStack.EMPTY;
-	}
-
-	@Override
-	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-		if (!stack.isEmpty()) {
-			// Create a copy of the stack maxed to the slot limit of the cable.
-			ItemStack insertStack = stack.copy();
-			insertStack.setCount(Math.min(stack.getCount(), getSlotLimit(slot)));
-
-			this.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
-				// Attempt to insert the stack into the cable. We will use the default
-				// extraction speed.
-				ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), lastCapabilityRequestedDirection, false,
-						StaticPowerConfig.getTier(tier).cableExtractedItemInitialSpeed.get());
-				if (remainingAmount.getCount() < insertStack.getCount()) {
-					getTileEntity().markDirty();
-					stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());
-				}
-			});
+		public ItemCableSideWrapper(Direction side, ItemCableComponent owningCable) {
+			this.side = side;
+			this.owningCable = owningCable;
 		}
-		return stack;
-	}
 
-	@Override
-	public ItemStack extractItem(int slot, int amount, boolean simulate) {
-		return ItemStack.EMPTY;
-	}
+		@Override
+		public int getSlots() {
+			return 1;
+		}
 
-	@Override
-	public int getSlotLimit(int slot) {
-		return 64;
-	}
+		@Override
+		public ItemStack getStackInSlot(int slot) {
+			return ItemStack.EMPTY;
+		}
 
-	@Override
-	public boolean isItemValid(int slot, ItemStack stack) {
-		return true;
+		@Override
+		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+			if (!stack.isEmpty()) {
+				// Create a copy of the stack maxed to the slot limit of the cable.
+				ItemStack insertStack = stack.copy();
+				insertStack.setCount(Math.min(stack.getCount(), getSlotLimit(slot)));
+
+				owningCable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+					// Attempt to insert the stack into the cable. We will use the default
+					// extraction speed.
+					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false, StaticPowerConfig.getTier(tier).cableExtractedItemInitialSpeed.get());
+					if (remainingAmount.getCount() < insertStack.getCount()) {
+						getTileEntity().markDirty();
+						stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());
+					}
+				});
+			}
+			return stack;
+		}
+
+		@Override
+		public ItemStack extractItem(int slot, int amount, boolean simulate) {
+			return ItemStack.EMPTY;
+		}
+
+		@Override
+		public int getSlotLimit(int slot) {
+			return 64;
+		}
+
+		@Override
+		public boolean isItemValid(int slot, ItemStack stack) {
+			return true;
+		}
 	}
 }

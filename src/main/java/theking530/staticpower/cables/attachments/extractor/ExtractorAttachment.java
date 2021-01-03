@@ -201,7 +201,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 							}
 
 							// Attempt to transfer the itemstack through the cable network.
-							ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false,
+							ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side.getOpposite(), false,
 									StaticPowerConfig.getTier(tierType).cableExtractedItemInitialSpeed.get());
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
@@ -237,7 +237,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 					}
 
 					// Attempt to transfer the itemstack through the cable network.
-					ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side, false,
+					ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side.getOpposite(), false,
 							StaticPowerConfig.getTier(tierType).cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						inv.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);

@@ -18,6 +18,7 @@ import theking530.staticpower.cables.fluid.FluidCableUpdatePacket;
 import theking530.staticpower.cables.heat.HeatCableUpdatePacket;
 import theking530.staticpower.cables.item.ItemCableAddedPacket;
 import theking530.staticpower.cables.item.ItemCableRemovedPacket;
+import theking530.staticpower.cables.power.PowerMetricsSyncPacket;
 import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.PacketRevertToParentContainer;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
@@ -74,5 +75,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
+		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
 	}
 }

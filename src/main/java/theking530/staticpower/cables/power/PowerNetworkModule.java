@@ -9,11 +9,15 @@ import java.util.Queue;
 import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.FloatNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.api.power.CapabilityStaticVolt;
@@ -37,9 +41,9 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 
 	private final StaticVoltAutoConverter energyInterface;
 	private final StaticVoltHandler storage;
-	private TransferMetrics secondsDelta;
-	private TransferMetrics minutesDelta;
-	private TransferMetrics hoursDelta;
+	private TransferMetrics secondsMetrics;
+	private TransferMetrics minuteMetrics;
+	private TransferMetrics hourlyMetrics;
 
 	public PowerNetworkModule() {
 		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
@@ -51,9 +55,9 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		energyInterface = new StaticVoltAutoConverter(storage);
 
 		// Create the metric capturing values.
-		secondsDelta = new TransferMetrics();
-		minutesDelta = new TransferMetrics();
-		hoursDelta = new TransferMetrics();
+		secondsMetrics = new TransferMetrics();
+		minuteMetrics = new TransferMetrics();
+		hourlyMetrics = new TransferMetrics();
 	}
 
 	@Override
@@ -78,27 +82,25 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			});
 
 			// If there are no valid destinations, return early.
-			if (destinations.size() == 0) {
-				return;
-			}
+			if (destinations.size() > 0) {
+				// Calculate how we should split the output amount.
+				int outputPerDestination = Math.max(1, storage.getStoredPower() / destinations.size());
 
-			// Calculate how we should split the output amount.
-			int outputPerDestination = Math.max(1, storage.getStoredPower() / destinations.size());
+				// Distribute the power to the destinations.
+				for (PowerEnergyInterfaceWrapper powerWrapper : destinations) {
+					// Get the amount of power we can supply.
+					int toSupply = Math.min(CableNetworkManager.get(Network.getWorld()).getCable(powerWrapper.cablePos).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY),
+							outputPerDestination);
 
-			// Distribute the power to the destinations.
-			for (PowerEnergyInterfaceWrapper powerWrapper : destinations) {
-				// Get the amount of power we can supply.
-				int toSupply = Math.min(CableNetworkManager.get(Network.getWorld()).getCable(powerWrapper.cablePos).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY),
-						outputPerDestination);
+					// Supply the power.
+					int supplied = powerWrapper.powerInterface.receivePower(Math.min(toSupply, storage.getCurrentMaximumPowerOutput()), false);
 
-				// Supply the power.
-				int supplied = powerWrapper.powerInterface.receivePower(Math.min(toSupply, storage.getCurrentMaximumPowerOutput()), false);
-
-				// If we supplied any power, extract the power.
-				if (supplied > 0) {
-					storage.setCanDrain(true);
-					storage.drainPower(supplied, false);
-					storage.setCanDrain(false);
+					// If we supplied any power, extract the power.
+					if (supplied > 0) {
+						storage.setCanDrain(true);
+						storage.drainPower(supplied, false);
+						storage.setCanDrain(false);
+					}
 				}
 			}
 		}
@@ -107,31 +109,31 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		storage.captureEnergyMetric();
 
 		// Capture the seconds metric.
-		if ((world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
-			secondsDelta.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
+		if (secondsMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
+			secondsMetrics.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
 		}
 
 		// Capture the minutes metric.
-		if ((world.getGameTime() % SDTime.TICKS_PER_MINUTE) == 0) {
-			minutesDelta.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
+		if (minuteMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_MINUTE) == 0) {
+			minuteMetrics.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
 		}
 
 		// Capture the hours metric.
-		if ((world.getGameTime() % SDTime.TICKS_PER_HOUR) == 0) {
-			hoursDelta.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
+		if (hourlyMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_HOUR) == 0) {
+			hourlyMetrics.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
 		}
 	}
 
 	public TransferMetrics getSecondsMetrics() {
-		return this.secondsDelta;
+		return this.secondsMetrics;
 	}
 
 	public TransferMetrics getMinutesMetrics() {
-		return this.minutesDelta;
+		return this.minuteMetrics;
 	}
 
 	public TransferMetrics getHoursMetrics() {
-		return this.hoursDelta;
+		return this.hourlyMetrics;
 	}
 
 	@Override
@@ -237,7 +239,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		}
 	}
 
-	protected class TransferMetrics {
+	protected static class TransferMetrics {
 		private final Queue<Float> received;
 		private final Queue<Float> provided;
 
@@ -248,6 +250,15 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		public TransferMetrics() {
 			this.received = new LinkedList<Float>();
 			this.provided = new LinkedList<Float>();
+		}
+
+		protected TransferMetrics(Queue<Float> received, Queue<Float> provided) {
+			this.received = received;
+			this.provided = provided;
+		}
+
+		public boolean isEmpty() {
+			return received.isEmpty() || provided.isEmpty();
 		}
 
 		public void addMetrics(float received, float provided) {
@@ -263,6 +274,70 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			if (this.provided.size() > MAX_METRIC_SAMPLES) {
 				this.provided.poll();
 			}
+		}
+
+		public List<Float> getReceivedData() {
+			return new ArrayList<Float>(received);
+		}
+
+		public List<Float> getProvidedData() {
+			return new ArrayList<Float>(provided);
+		}
+
+		public CompoundNBT serialize() {
+			// Allocate the output.
+			CompoundNBT output = new CompoundNBT();
+
+			// Convert the queues to lists.
+			List<Float> receivedList = new ArrayList<Float>(received);
+			List<Float> providedList = new ArrayList<Float>(provided);
+
+			// Serialize the recieved list.
+			ListNBT receivedNBTList = new ListNBT();
+			receivedList.forEach(value -> {
+				FloatNBT recievedTag = FloatNBT.valueOf(value);
+				receivedNBTList.add(recievedTag);
+			});
+			output.put("received", receivedNBTList);
+
+			// Serialize the provided list.
+			ListNBT providedNBTList = new ListNBT();
+			providedList.forEach(value -> {
+				FloatNBT providedTag = FloatNBT.valueOf(value);
+				providedNBTList.add(providedTag);
+			});
+			output.put("provided", providedNBTList);
+
+			// Return the outputs.
+			return output;
+		}
+
+		public static TransferMetrics deserialize(CompoundNBT data) {
+			// Allocate the inputs.
+			List<Float> receivedList = new ArrayList<Float>();
+			List<Float> providedList = new ArrayList<Float>();
+
+			// Read the serialized lists.
+			ListNBT receivedNBT = data.getList("received", Constants.NBT.TAG_FLOAT);
+			ListNBT providedNBT = data.getList("provided", Constants.NBT.TAG_FLOAT);
+
+			// Populate the arrays.
+			for (INBT receivedTag : receivedNBT) {
+				FloatNBT receivedValue = (FloatNBT) receivedTag;
+				receivedList.add(receivedValue.getFloat());
+			}
+			for (INBT providedTag : providedNBT) {
+				FloatNBT providedValue = (FloatNBT) providedTag;
+				providedList.add(providedValue.getFloat());
+			}
+
+			// Create the transfer metrics.
+			return new TransferMetrics(new LinkedList<Float>(receivedList), new LinkedList<Float>(providedList));
+		}
+
+		@Override
+		public String toString() {
+			return "TransferMetrics [received=" + received + ", provided=" + provided + "]";
 		}
 	}
 }

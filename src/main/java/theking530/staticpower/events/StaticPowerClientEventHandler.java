@@ -176,6 +176,7 @@ public class StaticPowerClientEventHandler {
 		renderMultiHarvesteBlockBreakEffect(event);
 	}
 
+
 	/**
 	 * Renders the outline on the extra blocks
 	 *

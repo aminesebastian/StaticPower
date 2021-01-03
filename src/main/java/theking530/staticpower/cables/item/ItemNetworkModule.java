@@ -157,6 +157,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 		// Calculate the path and see if its not null.
 		Path path = getPathForItem(stack, cablePosition, sourcePosition, pulledFromDirection, false);
+
 		if (path != null) {
 			return transferItemStack(stack, path, pulledFromDirection, simulate, startHalfWay, blocksPerSecond);
 		}
@@ -297,8 +298,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 					// Create the new item routing packet and initialize it with the transfer speed
 					// of the cable it was pulled out of.
-					ItemRoutingParcel packet = new ItemRoutingParcel(CableNetworkManager.get(Network.getWorld()).getCurrentCraftingId(), stackToTransfer, path,
-							pulledFromDirection.getOpposite());
+					ItemRoutingParcel packet = new ItemRoutingParcel(CableNetworkManager.get(Network.getWorld()).getCurrentCraftingId(), stackToTransfer, path, pulledFromDirection);
 					packet.setMovementTime((int) (20 / blocksPerSecond));
 
 					// Add the packet to the list of active packets.

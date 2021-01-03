@@ -48,9 +48,11 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntitySpecialRenderer.class);
 	protected static final float TEXEL = (1.0f / 16.0f);
 	protected ItemRenderer ItemRenderer;
+	protected boolean shouldPreRotateTowardsFacingDirection;
 
 	public StaticPowerTileEntitySpecialRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
+		shouldPreRotateTowardsFacingDirection = true;
 	}
 
 	/**
@@ -66,7 +68,9 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		matrixStack.push();
 
 		// Rotate to face the side this tile is facing.
-		renderToFaceSide(facing, matrixStack);
+		if (shouldPreRotateTowardsFacingDirection) {
+			renderToFaceSide(facing, matrixStack);
+		}
 
 		// Draw the tile entity.
 		try {
@@ -101,6 +105,12 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 */
 	protected abstract void renderTileEntityBase(T tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay);
 
+	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, MatrixStack matrixStack,
+			IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+		this.drawItemInWorld(tileEntity, item, transformType, offset, scale, Vector3D.ZERO, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+
+	}
+
 	/**
 	 * Renders the provided {@link ItemStack} in the world.
 	 * 
@@ -113,11 +123,12 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, MatrixStack matrixStack,
+	protected void drawItemInWorld(T tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, Vector3D rotation, float partialTicks, MatrixStack matrixStack,
 			IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
+		matrixStack.rotate(new Quaternion(rotation.getX(), rotation.getY(), rotation.getZ(), true));
 		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(item, tileEntity.getWorld(), null);
 		ItemRenderer.renderItem(item, transformType, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);
 		matrixStack.pop();

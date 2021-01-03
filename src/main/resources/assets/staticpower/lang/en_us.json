@@ -775,6 +775,10 @@
 	"gui.staticpower.rainy": "Rainy",
 	"gui.staticpower.snowy": "Snowy",
 	"gui.staticpower.clear": "Clear",
+	"gui.staticpower.metric_seconds": "Seconds",
+	"gui.staticpower.metric_minutes": "Minutes",
+	"gui.staticpower.metric_hours": "Hours",
+	"gui.staticpower.metric_real_time": "Real Time",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

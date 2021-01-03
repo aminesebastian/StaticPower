@@ -5,12 +5,14 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 
 public class ItemRoutingParcelClient {
+	public static final int ROTATION_PER_BLOCK = 90;
 	private long id;
 	protected ItemStack containedItem;
 	protected int moveTimer;
 	protected int moveTime;
 	protected Direction inDirection;
 	protected Direction outDirection;
+	protected int currentPathIndex;
 
 	public ItemRoutingParcelClient(long id, ItemStack containedItem) {
 		this(id, containedItem, null);
@@ -43,6 +45,11 @@ public class ItemRoutingParcelClient {
 		return outDirection;
 	}
 
+	public float getRenderRotation(float partialTicks) {
+		float lerp = getItemMovePercent() + (partialTicks / (getCurrentMoveTime() / 2));
+		return (ROTATION_PER_BLOCK * currentPathIndex) + (ROTATION_PER_BLOCK * lerp);
+	}
+
 	public Direction getItemAnimationDirection() {
 		return moveTimer > moveTime / 2 ? outDirection : inDirection;
 	}
@@ -68,6 +75,7 @@ public class ItemRoutingParcelClient {
 		if (moveTimer < moveTime) {
 			moveTimer++;
 		}
+
 		return moveTimer >= moveTime;
 	}
 
@@ -89,6 +97,7 @@ public class ItemRoutingParcelClient {
 		nbt.putLong("id", id);
 		nbt.putInt("moveTimer", moveTimer);
 		nbt.putInt("move_time", moveTime);
+		nbt.putInt("current_path_index", currentPathIndex);
 
 		if (inDirection != null) {
 			nbt.putInt("in_direction", inDirection.ordinal());
@@ -107,11 +116,18 @@ public class ItemRoutingParcelClient {
 		id = nbt.getLong("id");
 		moveTimer = nbt.getInt("moveTimer");
 		moveTime = nbt.getInt("move_time");
+		currentPathIndex = nbt.getInt("current_path_index");
 		if (nbt.contains("in_direction")) {
 			inDirection = Direction.values()[nbt.getInt("in_direction")];
 		}
 		if (nbt.contains("out_direction")) {
 			outDirection = Direction.values()[nbt.getInt("out_direction")];
 		}
+	}
+
+	@Override
+	public String toString() {
+		return "ItemRoutingParcelClient [id=" + id + ", containedItem=" + containedItem + ", moveTimer=" + moveTimer + ", moveTime=" + moveTime + ", inDirection=" + inDirection
+				+ ", outDirection=" + outDirection + "]";
 	}
 }

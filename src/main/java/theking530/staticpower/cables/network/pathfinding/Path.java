@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.network.pathfinding;
 
+import java.util.Arrays;
+
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
@@ -8,16 +10,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 
 public class Path {
-	private final BlockPos SourceLocation;
-	private final BlockPos DestinationLocation;
-	private final PathEntry[] Path;
-	private final ResourceLocation SupportedNetworkType;
+	private final BlockPos sourceLocation;
+	private final BlockPos destinationLocation;
+	private final PathEntry[] path;
+	private final ResourceLocation supportedNetworkType;
 
 	public Path(BlockPos source, BlockPos destination, ResourceLocation supportedNetworkType, PathEntry... path) {
-		SourceLocation = source;
-		DestinationLocation = destination;
-		Path = path;
-		SupportedNetworkType = supportedNetworkType;
+		sourceLocation = source;
+		destinationLocation = destination;
+		this.path = path;
+		this.supportedNetworkType = supportedNetworkType;
 	}
 
 	public Path(CompoundNBT nbt) {
@@ -25,46 +27,46 @@ public class Path {
 		ListNBT entries = nbt.getList("entries", Constants.NBT.TAG_COMPOUND);
 
 		// Create the array to contain the entries.
-		Path = new PathEntry[entries.size()];
+		path = new PathEntry[entries.size()];
 
 		// Create the entries.
 		for (int i = 0; i < entries.size(); i++) {
 			CompoundNBT entryTag = (CompoundNBT) entries.get(i);
-			Path[i] = PathEntry.createFromNbt(entryTag);
+			path[i] = PathEntry.createFromNbt(entryTag);
 		}
 
 		// Get the source and destination locations.
-		SourceLocation = BlockPos.fromLong(nbt.getLong("source"));
-		DestinationLocation = BlockPos.fromLong(nbt.getLong("destination"));
-		SupportedNetworkType = new ResourceLocation(nbt.getString("supported_network_module"));
+		sourceLocation = BlockPos.fromLong(nbt.getLong("source"));
+		destinationLocation = BlockPos.fromLong(nbt.getLong("destination"));
+		supportedNetworkType = new ResourceLocation(nbt.getString("supported_network_module"));
 	}
 
 	public BlockPos getSourceLocation() {
-		return SourceLocation;
+		return sourceLocation;
 	}
 
 	public BlockPos getSourceCableLocation() {
-		return Path[1].getPosition();
+		return path[1].getPosition();
 	}
 
 	public BlockPos getDestinationLocation() {
-		return DestinationLocation;
+		return destinationLocation;
 	}
 
 	public BlockPos getFinalCablePosition() {
-		return Path[Path.length - 2].getPosition();
+		return path[path.length - 2].getPosition();
 	}
 
 	public Direction getFinalCableExitDirection() {
-		return Path[Path.length - 2].getDirectionOfEntry();
+		return path[path.length - 2].getDirectionOfEntry();
 	}
 
 	public PathEntry[] getEntries() {
-		return Path;
+		return path;
 	}
 
 	public ResourceLocation getSupportedNetworkType() {
-		return SupportedNetworkType;
+		return supportedNetworkType;
 	}
 
 	/**
@@ -74,20 +76,43 @@ public class Path {
 	 * @return
 	 */
 	public Direction getDestinationDirection() {
-		return Path[Path.length - 1].getDirectionOfEntry();
+		return path[path.length - 1].getDirectionOfEntry();
 	}
 
 	public int getLength() {
-		return Path.length;
+		return path.length;
+	}
+
+	@Override
+	public String toString() {
+		return "Path [path=" + Arrays.toString(path) + ", destinationLocation=" + destinationLocation + ", sourceLocation=" + sourceLocation + ", supportedNetworkType="
+				+ supportedNetworkType + "]";
+	}
+
+	public CompoundNBT writeToNbt(CompoundNBT nbt) {
+		// Serialize the source and destination locations.
+		nbt.putLong("source", sourceLocation.toLong());
+		nbt.putLong("destination", destinationLocation.toLong());
+
+		// Serialize the parcels to the list.
+		ListNBT pathNBTList = new ListNBT();
+		for (PathEntry entry : path) {
+			CompoundNBT entryTag = new CompoundNBT();
+			entry.writeToNbt(entryTag);
+			pathNBTList.add(entryTag);
+		}
+		nbt.put("entries", pathNBTList);
+		nbt.putString("supported_network_module", supportedNetworkType.toString());
+		return nbt;
 	}
 
 	public static class PathEntry {
-		private final BlockPos Position;
-		private final Direction DirectionOfEntry;
+		private final BlockPos position;
+		private final Direction entryDirection;
 
 		public PathEntry(BlockPos position, Direction directionOfApproach) {
-			Position = position;
-			DirectionOfEntry = directionOfApproach;
+			this.position = position;
+			entryDirection = directionOfApproach;
 		}
 
 		/**
@@ -96,7 +121,7 @@ public class Path {
 		 * @return
 		 */
 		public BlockPos getPosition() {
-			return Position;
+			return position;
 		}
 
 		/**
@@ -108,13 +133,13 @@ public class Path {
 		 * @return
 		 */
 		public Direction getDirectionOfEntry() {
-			return DirectionOfEntry;
+			return entryDirection;
 		}
 
 		public CompoundNBT writeToNbt(CompoundNBT nbt) {
-			nbt.putLong("position", Position.toLong());
-			if (DirectionOfEntry != null) {
-				nbt.putInt("direction", DirectionOfEntry.ordinal());
+			nbt.putLong("position", position.toLong());
+			if (entryDirection != null) {
+				nbt.putInt("direction", entryDirection.ordinal());
 			}
 
 			return nbt;
@@ -123,22 +148,10 @@ public class Path {
 		public static PathEntry createFromNbt(CompoundNBT nbt) {
 			return new PathEntry(BlockPos.fromLong(nbt.getLong("position")), nbt.contains("direction") ? Direction.values()[nbt.getInt("direction")] : null);
 		}
-	}
 
-	public CompoundNBT writeToNbt(CompoundNBT nbt) {
-		// Serialize the source and destination locations.
-		nbt.putLong("source", SourceLocation.toLong());
-		nbt.putLong("destination", DestinationLocation.toLong());
-
-		// Serialize the parcels to the list.
-		ListNBT pathNBTList = new ListNBT();
-		for (PathEntry entry : Path) {
-			CompoundNBT entryTag = new CompoundNBT();
-			entry.writeToNbt(entryTag);
-			pathNBTList.add(entryTag);
+		@Override
+		public String toString() {
+			return "PathEntry [position=" + position + ", entryDirection=" + entryDirection + "]";
 		}
-		nbt.put("entries", pathNBTList);
-		nbt.putString("supported_network_module", SupportedNetworkType.toString());
-		return nbt;
 	}
 }

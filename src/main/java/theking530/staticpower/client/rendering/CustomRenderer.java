@@ -19,12 +19,15 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.model.animation.Animation;
 import theking530.staticcore.utilities.Color;
 
 @OnlyIn(Dist.CLIENT)
 public class CustomRenderer {
 	private BlockModel model = new BlockModel();
 	private static HashMap<TileEntity, HashMap<String, DrawCubeRequest>> CubeRenderRequests = new HashMap<TileEntity, HashMap<String, DrawCubeRequest>>();
+	private static float lastRenderTime = 0.0f;
+	private static float deltaTime = 0.0f;
 
 	public void render(RenderWorldLastEvent event) {
 		// Get the current matrix stack.
@@ -64,6 +67,15 @@ public class CustomRenderer {
 
 		// Pop our stack entry.
 		matrixStack.pop();
+
+		// Update the delta time.
+		float currentTime = Animation.getWorldTime(Minecraft.getInstance().world, event.getPartialTicks());
+		deltaTime = currentTime - lastRenderTime;
+		lastRenderTime = currentTime;
+	}
+
+	public static float getDeltaTime() {
+		return deltaTime;
 	}
 
 	public static void addCubeRenderer(TileEntity tileEntity, String key, Vector3f position, Vector3f scale, Color color) {

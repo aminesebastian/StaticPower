@@ -57,6 +57,16 @@ public class Color extends Vector4D {
 
 	}
 
+	/**
+	 * Converts color from range 0.0f - 1.0f to the eight bit range 0 - 255.
+	 * 
+	 * @return A new instance of the color in eight bit format.
+	 */
+	public Color fromFloatToEightBit() {
+		return new Color(getRed() * 255.0f, getGreen() * 255.0f, getBlue() * 255.0f, getAlpha() * 255.0f);
+
+	}
+
 	public static Color fromEncodedInteger(int input) {
 		return new Color((input >> 16 & 0xFF), (input >> 8 & 0xFF), (input & 0xFF), (input >> 24 & 0xFF));
 	}

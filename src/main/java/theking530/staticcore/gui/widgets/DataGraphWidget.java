@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -18,9 +17,11 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class DataGraphWidget extends AbstractGuiWidget {
 	private Map<String, IGraphDataSet> dataSets;
+	private List<String> xAxisLabels;
 
 	public DataGraphWidget(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
@@ -57,9 +58,17 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		// Draw the 0 line.
 		GuiDrawUtilities.drawColoredRectangle(matrix, 0, 0, getSize().getX(), 0.5f, 1, Color.GREY);
 
+		// Determine how many labels to draw.
+		int maxLabelCount = maxSegmentCount / 5;
+		maxLabelCount = SDMath.clamp(maxLabelCount, 1, maxSegmentCount);
+
 		// Draw the grids.
 		for (int i = 0; i < maxSegmentCount; i++) {
 			GuiDrawUtilities.drawColoredRectangle(matrix, i * segmentLength, 0.25f - getSize().getY() / 2, 0.5f, getSize().getY() - 0.5f, 1, Color.GREY);
+
+			if (xAxisLabels != null && i < xAxisLabels.size() && i % maxLabelCount == 0) {
+				GuiDrawUtilities.drawStringWithSizeCentered(matrix, xAxisLabels.get(i), i * segmentLength, getSize().getY() - 1, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
+			}
 		}
 
 		// Set appropriate GL attributes.
@@ -73,7 +82,9 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 		// Draw all the data sets.
 		for (String dataLabel : dataSets.keySet()) {
-			drawDataSet(matrix, dataSets.get(dataLabel), valueScale, segmentLength, maxDataHeight / 2);
+			if (dataSets.get(dataLabel).getData().length > 0) {
+				drawDataSet(matrix, dataSets.get(dataLabel), valueScale, segmentLength, maxDataHeight / 2);
+			}
 		}
 
 		// Clear the gl attributes and pop the transform matrix.
@@ -81,17 +92,17 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		GL11.glPopAttrib();
 
 		// Draw y axis values.
-		String minValueLabel = String.valueOf(minMax.getX());
-		String maxValueLabel = String.valueOf(minMax.getY());
-
-		int minLabelWidth = Minecraft.getInstance().fontRenderer.getStringWidth(minValueLabel);
-		int maxLabelWidth = Minecraft.getInstance().fontRenderer.getStringWidth(maxValueLabel);
-
-		GuiDrawUtilities.drawStringWithSize(matrix, maxValueLabel, 1 + maxLabelWidth / 2, -getSize().getY() / 2 + 5, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringWithSize(matrix, minValueLabel, 1 + minLabelWidth / 2, getSize().getY() / 2 - 1, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringWithSize(matrix, "0", 4, -1, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringWithSizeCentered(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 5.5f, getSize().getY() / 2 - 1, 0.55f,
+				Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringWithSizeCentered(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 5.5f, -getSize().getY() / 2 + 5, 0.55f,
+				Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringWithSize(matrix, "0", 5.5f, -1.5f, 0.55f, Color.EIGHT_BIT_DARK_GREY, false);
 
 		matrix.pop();
+	}
+
+	public void setXAxisLabels(List<String> labels) {
+		xAxisLabels = labels;
 	}
 
 	public void setDataSet(String label, IGraphDataSet dataSet) {
@@ -168,21 +179,33 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 		// Render all the data points.
 		if (yAxis.length >= 2) {
-			for (int i = 0; i < yAxis.length - 1; i++) {
+			for (int i = 0; i < yAxis.length; i++) {
 				x = i * segmentLength;
 				y = -SDMath.clamp(yAxis[i] * valueScale, -maxDataHeight, maxDataHeight);
-				nextY = -SDMath.clamp(yAxis[i + 1] * valueScale, -maxDataHeight, maxDataHeight);
+				nextY = i < yAxis.length - 1 ? -SDMath.clamp(yAxis[i + 1] * valueScale, -maxDataHeight, maxDataHeight) : y;
 
 				bufferBuilder.pos(origin.getX() + x, origin.getY() + y, 1).endVertex();
 				bufferBuilder.pos(origin.getX() + x + segmentLength, origin.getY() + nextY, 1).endVertex();
 			}
-		} else {
-			bufferBuilder.pos(origin.getX(), origin.getY(), 1).endVertex();
-			bufferBuilder.pos(origin.getX() + getSize().getX() + segmentLength, origin.getY(), 1).endVertex();
+		} else if (yAxis.length == 1) {
+			y = -SDMath.clamp(yAxis[0] * valueScale, -maxDataHeight, maxDataHeight);
+			bufferBuilder.pos(origin.getX(), origin.getY() + y, 1).endVertex();
+			bufferBuilder.pos(origin.getX() + getSize().getX(), origin.getY() + y, 1).endVertex();
 		}
 
+		// Draw all the points.
 		tessellator.draw();
 
+		// Draw the value label.
+		if (yAxis.length > 0) {
+			double lastValue = yAxis[yAxis.length - 1];
+			float textYPos = (float) (-lastValue * valueScale) + 6;
+			textYPos = SDMath.clamp(textYPos, -maxDataHeight, maxDataHeight - 2);
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GuiDrawUtilities.drawStringWithSizeCentered(matrix, GuiTextUtilities.formatNumberAsString(lastValue).getString(), yAxis.length * segmentLength - 6, textYPos, 0.55f,
+					lineColor.fromFloatToEightBit(), false);
+			GL11.glDisable(GL11.GL_TEXTURE_2D);
+		}
 	}
 
 	public static class SupplierGraphDataSet extends AbstractGraphDataSet {
@@ -196,6 +219,24 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		@Override
 		public double[] getData() {
 			return dataSupplier.get();
+		}
+	}
+
+	public static class ListGraphDataSet extends AbstractGraphDataSet {
+		private List<Double> data;
+
+		public ListGraphDataSet(Color color, List<Double> data) {
+			super(color);
+			this.data = data;
+		}
+
+		@Override
+		public double[] getData() {
+			double[] array = new double[data.size()];
+			for (int i = 0; i < array.length; i++) {
+				array[i] = data.get(i);
+			}
+			return array;
 		}
 	}
 

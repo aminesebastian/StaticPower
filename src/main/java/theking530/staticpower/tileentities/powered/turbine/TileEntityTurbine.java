@@ -306,27 +306,28 @@ public class TileEntityTurbine extends TileEntityMachine {
 	}
 
 	public class TurbineRenderingState {
+		public static final float ACCELERATION = 120;
+		public static final float DECELERATION = 180;
 		public static final float MAX_SPEED = 1080;
+		
 		public float speed;
 		public float rotationAngle;
-		public float lastUpdateTime;
 		public ResourceLocation bladesTier;
 
 		public TurbineRenderingState() {
 			rotationAngle = 0.0f;
 			speed = 0.0f;
-			lastUpdateTime = 0.0f;
 		}
 
 		public void rotate(float deltaTime) {
 			rotationAngle += (speed * deltaTime);
 			if (isGenerating) {
 				if (speed < MAX_SPEED) {
-					speed = Math.min(MAX_SPEED, speed + (120 * deltaTime));
+					speed = Math.min(MAX_SPEED, speed + (ACCELERATION * deltaTime));
 				}
 			} else {
 				if (speed > 0) {
-					speed = Math.max(0, speed - (180 * deltaTime));
+					speed = Math.max(0, speed - (DECELERATION * deltaTime));
 				}
 			}
 		}

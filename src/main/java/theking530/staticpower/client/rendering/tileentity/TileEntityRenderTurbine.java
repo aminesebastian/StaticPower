@@ -21,13 +21,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelDataManager;
-import net.minecraftforge.client.model.animation.Animation;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.rendering.BlockModel;
+import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.tileentities.powered.turbine.TileEntityTurbine;
 import theking530.staticpower.tileentities.powered.turbine.TileEntityTurbine.TurbineRenderingState;
 
@@ -73,13 +73,8 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 				// Get the thread safe rotation container.
 				TurbineRenderingState renderingState = data.getData(TileEntityTurbine.TURBINE_RENDERING_STATE);
 
-				// Update the delta time.
-				float currentTime = Animation.getWorldTime(Minecraft.getInstance().world, partialTicks);
-				float delta = currentTime - renderingState.lastUpdateTime;
-				renderingState.lastUpdateTime = currentTime;
-
 				// Increment the rotation (or decrement, that will be handled automatically).
-				renderingState.rotate(delta);
+				renderingState.rotate(CustomRenderer.getDeltaTime());
 
 				// Push a new matrix.
 				matrixStack.push();

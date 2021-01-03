@@ -9,7 +9,6 @@ import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
 
 public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	private Path path;
-	protected int currentPathIndex;
 
 	public ItemRoutingParcel(long id, ItemStack containedItem, Path path) {
 		this(id, containedItem, path, Direction.UP);
@@ -39,10 +38,12 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 		incrementCurrentPathIndex(false);
 	}
 
+
 	public void incrementCurrentPathIndex(boolean startHalfWay) {
 		if (currentPathIndex < path.getLength() - 1) {
-			if (getCurrentEntry().getDirectionOfEntry() != null) { // The direction of entry will be null for the first cable in. We use the one
-																	// provided in the constructor instead.
+			// The direction of entry will be null for the first cable in. We use the one
+			// provided in the constructor instead.
+			if (getCurrentEntry().getDirectionOfEntry() != null) {
 				inDirection = getCurrentEntry().getDirectionOfEntry();
 			}
 			outDirection = getNextEntry().getDirectionOfEntry();
@@ -128,7 +129,6 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 		path.writeToNbt(pathTag);
 		nbt.put("path", pathTag);
 		nbt.putInt("move_timer", moveTimer);
-		nbt.putInt("current_path_index", currentPathIndex);
 		return nbt;
 	}
 
@@ -138,6 +138,12 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 		// Create the path.
 		path = new Path(nbt.getCompound("path"));
 		moveTimer = nbt.getInt("move_timer");
-		currentPathIndex = nbt.getInt("current_path_index");
 	}
+
+	@Override
+	public String toString() {
+		return "ItemRoutingParcel [containedItem=" + containedItem + ", path=" + path + ", currentPathIndex=" + currentPathIndex + ", moveTimer=" + moveTimer + ", moveTime=" + moveTime
+				+ ", inDirection=" + inDirection + ", outDirection=" + outDirection + "]";
+	}
+
 }

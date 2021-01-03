@@ -104,7 +104,7 @@ public class StaticPowerMessageHandler {
 		try {
 			pack = type.getConstructor().newInstance();
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException e) {
-			LOGGER.error(String.format("An error occured when attempting to decode packet of type: %1$s.", type.toString()), e);
+			LOGGER.error(String.format("An error occured when attempting to decode packet of type: %1$s. Ensure that there is a parameterless constructor defined!", type.toString()), e);
 		}
 		return pack;
 	}
