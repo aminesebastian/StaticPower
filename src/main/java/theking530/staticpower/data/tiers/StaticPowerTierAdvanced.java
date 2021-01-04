@@ -98,22 +98,22 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 
 	@Override
 	protected int getCablePowerCapacity() {
-		return 32;
+		return 64;
 	}
 
 	@Override
 	protected int getCablePowerDelivery() {
-		return 32;
+		return 64;
 	}
 
 	@Override
 	protected int getCableIndustrialPowerCapacity() {
-		return 256;
+		return 512;
 	}
 
 	@Override
 	protected int getCableIndustrialPowerDelivery() {
-		return 256;
+		return 512;
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 
 	@Override
 	protected int getBatteryCapacity() {
-		return 10000;
+		return 128000;
 	}
 
 	@Override

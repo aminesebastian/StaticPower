@@ -98,22 +98,22 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected int getCablePowerCapacity() {
-		return 512;
+		return 1024;
 	}
 
 	@Override
 	protected int getCablePowerDelivery() {
-		return 512;
+		return 1024;
 	}
 
 	@Override
 	protected int getCableIndustrialPowerCapacity() {
-		return 4096;
+		return 8192;
 	}
 
 	@Override
 	protected int getCableIndustrialPowerDelivery() {
-		return 4096;
+		return 8192;
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected int getBatteryCapacity() {
-		return 100000;
+		return 1024000;
 	}
 
 	@Override

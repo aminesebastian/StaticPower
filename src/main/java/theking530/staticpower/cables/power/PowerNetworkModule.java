@@ -175,16 +175,24 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		// If the capacity is less than 0, that means we overflowed. Set the capcaity to
 		// the maximum integer value.
 		storage.setCapacity(average < 0 ? Integer.MAX_VALUE : (int) average);
+		storage.setMaxExtract(storage.getCapacity());
+		storage.setMaxReceive(storage.getCapacity());
 	}
 
 	@Override
 	public void readFromNbt(CompoundNBT tag) {
 		storage.deserializeNBT(tag.getCompound("energy_storage"));
+		secondsMetrics = TransferMetrics.deserialize(tag.getCompound("seconds"));
+		minuteMetrics = TransferMetrics.deserialize(tag.getCompound("minutes"));
+		hourlyMetrics = TransferMetrics.deserialize(tag.getCompound("hours"));
 	}
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
 		tag.put("energy_storage", storage.serializeNBT());
+		tag.put("seconds", this.secondsMetrics.serialize());
+		tag.put("minutes", this.minuteMetrics.serialize());
+		tag.put("hours", this.hourlyMetrics.serialize());
 		return tag;
 	}
 

@@ -35,13 +35,8 @@ public class FormerRecipe extends AbstractMachineRecipe {
 				return false;
 			}
 
-			if (matchParams.shouldVerifyItemCounts()) {
-				matched &= matchParams.hasItems() && inputIngredient.testWithCount(matchParams.getItems()[0]);
-				matched &= matchParams.hasItems() && requiredMold.test(matchParams.getItems()[1]);
-			} else {
-				matched &= matchParams.hasItems() && inputIngredient.test(matchParams.getItems()[0]);
-				matched &= matchParams.hasItems() && requiredMold.test(matchParams.getItems()[1]);
-			}
+			matched &= matchParams.hasItems() && inputIngredient.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts());
+			matched &= matchParams.hasItems() && requiredMold.test(matchParams.getItems()[1]);
 		}
 
 		return matched;

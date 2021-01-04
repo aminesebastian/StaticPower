@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
@@ -13,14 +12,12 @@ import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.DataGraphWidget;
 import theking530.staticcore.gui.widgets.DataGraphWidget.ListGraphDataSet;
-import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
+import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.cables.power.PowerNetworkModule.TransferMetrics;
-import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -31,19 +28,19 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 
 	private DataGraphWidget graphWidget;
 	private MetricDisplayType displayType;
-	private SpriteButton metricTypeButton;
+	private TextButton metricTypeButton;
 
 	public GuiPowerCable(ContainerPowerCable container, PlayerInventory invPlayer, ITextComponent name) {
-		super(container, invPlayer, name, 176, 120);
+		super(container, invPlayer, name, 190, 125);
 		displayType = MetricDisplayType.SECONDS;
 	}
 
 	@Override
 	public void initializeGui() {
-		this.registerWidget(new GuiPowerBarFromEnergyStorage(this.getTileEntity().powerCableComponent, 150, 17, 16, 78));
-		this.registerWidget(graphWidget = new DataGraphWidget(10, 17, 130, 78));
+		this.registerWidget(new GuiPowerBarFromEnergyStorage(this.getTileEntity().powerCableComponent, 164, 20, 16, 78));
+		this.registerWidget(graphWidget = new DataGraphWidget(10, 20, 146, 78));
 
-		registerWidget(metricTypeButton = new SpriteButton(152, 101, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
+		registerWidget(metricTypeButton = new TextButton(164, 102, 16, 16, "S", this::buttonPressed));
 		metricTypeButton.setTooltip(new StringTextComponent("Seconds"));
 	}
 
@@ -77,13 +74,6 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 		graphWidget.setDataSet("received", new ListGraphDataSet(new Color(0, 1.0f, 0.2f, 0.75f), receivedData));
 		graphWidget.setDataSet("provided", new ListGraphDataSet(new Color(1.0f, 0, 0.1f, 0.75f), providedData));
 		graphWidget.setDataSet("net", new ListGraphDataSet(new Color(0, 0.1f, 1.0f, 1), netData));
-
-		// Generate the labels.
-		List<String> labels = new ArrayList<String>();
-		for (int i = 0; i < receivedData.size(); i++) {
-			labels.add(SDTime.ticksToTimeString(Minecraft.getInstance().world.getGameTime()));
-		}
-		graphWidget.setXAxisLabels(labels);
 	}
 
 	protected TransferMetrics getMetrics() {
@@ -101,25 +91,29 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 		if (displayType == MetricDisplayType.SECONDS) {
 			displayType = MetricDisplayType.MINUTES;
 			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_minutes"));
+			metricTypeButton.setText("M");
 		} else if (displayType == MetricDisplayType.MINUTES) {
 			displayType = MetricDisplayType.HOURS;
 			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_hours"));
+			metricTypeButton.setText("H");
 		} else if (displayType == MetricDisplayType.HOURS) {
 			displayType = MetricDisplayType.SECONDS;
 			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_seconds"));
+			metricTypeButton.setText("S");
 		}
 	}
 
 	@Override
 	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		float textScale = 0.70f;
-		float inPosition = 17;
-		float outPosition = 65;
-		float netPosition = 110;
-		float yPos = 101;
+		float xPos = 10;
+		float yPos = 104;
+		float inPosition = xPos + 7;
+		float outPosition = xPos + 60;
+		float netPosition = xPos + 110;
 
 		// Draw the values background.
-		GuiDrawUtilities.drawSlot(stack, 10, yPos, 130, 12);
+		GuiDrawUtilities.drawSlot(stack, xPos, yPos, 146, 12);
 
 		// Draw the labels.
 		GuiDrawUtilities.drawStringWithSize(stack, "In:", inPosition, yPos + 4.5f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);

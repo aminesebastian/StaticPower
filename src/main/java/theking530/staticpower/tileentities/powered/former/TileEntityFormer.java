@@ -86,7 +86,7 @@ public class TileEntityFormer extends TileEntityMachine {
 		if (location == RecipeProcessingLocation.INTERNAL) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1));
 		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1));
+			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), moldInventory.getStackInSlot(0));
 		}
 	}
 
@@ -98,7 +98,7 @@ public class TileEntityFormer extends TileEntityMachine {
 		}
 
 		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, 0, internalInventory, 0);
-		internalInventory.setStackInSlot(1, moldInventory.getStackInSlot(1).copy());
+		internalInventory.setStackInSlot(1, moldInventory.getStackInSlot(0).copy());
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

@@ -156,6 +156,11 @@ public class GuiDrawUtilities {
 		drawStringWithSize(matrixStack, text, xPos + (width / 2), yPos, scale, color.encodeInInteger(), withShadow);
 	}
 
+	public static void drawStringWithSizeLeftAligned(@Nonnull MatrixStack matrixStack, String text, float xPos, float yPos, float scale, Color color, boolean withShadow) {
+		float width = Minecraft.getInstance().fontRenderer.getStringWidth(text) * scale;
+		drawStringWithSize(matrixStack, text, xPos + width, yPos, scale, color.encodeInInteger(), withShadow);
+	}
+
 	public static void drawStringWithSize(@Nonnull MatrixStack matrixStack, String text, float xPos, float yPos, float scale, TextFormatting color, boolean withShadow) {
 		drawStringWithSize(matrixStack, text, xPos, yPos, scale, color.getColor(), withShadow);
 	}

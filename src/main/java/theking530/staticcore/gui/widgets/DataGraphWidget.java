@@ -58,16 +58,16 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		// Draw the 0 line.
 		GuiDrawUtilities.drawColoredRectangle(matrix, 0, 0, getSize().getX(), 0.5f, 1, Color.GREY);
 
-		// Determine how many labels to draw.
-		int maxLabelCount = maxSegmentCount / 5;
-		maxLabelCount = SDMath.clamp(maxLabelCount, 1, maxSegmentCount);
-
 		// Draw the grids.
 		for (int i = 0; i < maxSegmentCount; i++) {
 			GuiDrawUtilities.drawColoredRectangle(matrix, i * segmentLength, 0.25f - getSize().getY() / 2, 0.5f, getSize().getY() - 0.5f, 1, Color.GREY);
 
-			if (xAxisLabels != null && i < xAxisLabels.size() && i % maxLabelCount == 0) {
-				GuiDrawUtilities.drawStringWithSizeCentered(matrix, xAxisLabels.get(i), i * segmentLength, getSize().getY() - 1, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
+			if (xAxisLabels != null && (i == 0 || i == maxSegmentCount - 1) && i < xAxisLabels.size()) {
+				if (i == 0) {
+					GuiDrawUtilities.drawStringWithSizeCentered(matrix, xAxisLabels.get(i), 8, 5 + getSize().getY() / 2, 0.45f, Color.EIGHT_BIT_DARK_GREY, false);
+				} else if (i == maxSegmentCount - 1) {
+					GuiDrawUtilities.drawStringWithSizeCentered(matrix, xAxisLabels.get(i), getSize().getX() - 8, 5 + getSize().getY() / 2, 0.45f, Color.EIGHT_BIT_DARK_GREY, false);
+				}
 			}
 		}
 
@@ -92,11 +92,11 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		GL11.glPopAttrib();
 
 		// Draw y axis values.
-		GuiDrawUtilities.drawStringWithSizeCentered(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 5.5f, getSize().getY() / 2 - 1, 0.55f,
+		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 1.5f, getSize().getY() / 2 - 2, 0.55f,
 				Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringWithSizeCentered(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 5.5f, -getSize().getY() / 2 + 5, 0.55f,
+		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 1.5f, -getSize().getY() / 2 + 5, 0.55f,
 				Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringWithSize(matrix, "0", 5.5f, -1.5f, 0.55f, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, "0", 1.5f, -2f, 0.55f, Color.EIGHT_BIT_DARK_GREY, false);
 
 		matrix.pop();
 	}
@@ -202,7 +202,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 			float textYPos = (float) (-lastValue * valueScale) + 6;
 			textYPos = SDMath.clamp(textYPos, -maxDataHeight, maxDataHeight - 2);
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GuiDrawUtilities.drawStringWithSizeCentered(matrix, GuiTextUtilities.formatNumberAsString(lastValue).getString(), yAxis.length * segmentLength - 6, textYPos, 0.55f,
+			GuiDrawUtilities.drawStringWithSize(matrix, GuiTextUtilities.formatNumberAsString(lastValue).getString(), yAxis.length * segmentLength, textYPos, 0.55f,
 					lineColor.fromFloatToEightBit(), false);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}

@@ -77,6 +77,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 			}
 			return true;
 		});
+		energyStorage.setAutoSyncPacketsEnabled(true);
 	}
 
 	@Override
@@ -118,6 +119,9 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 
 		// Get the recipe.
 		FluidGeneratorRecipe recipe = getRecipe(fluidTankComponent.getFluid()).get();
+
+		energyStorage.setMaxInput(recipe.getPowerGeneration());
+		energyStorage.setMaxOutput(recipe.getPowerGeneration());
 		// Add the power.
 		energyStorage.getStorage().receivePower(recipe.getPowerGeneration(), false);
 		// Drain the used fluid.

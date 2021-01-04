@@ -50,7 +50,7 @@ public class TileEntityRenderFluidGenerator extends StaticPowerTileEntitySpecial
 			// Render the power bar.
 			float height = tileEntity.energyStorage.getStorage().getStoredEnergyPercentScaled(1.0f);
 			Vector4D uv = new Vector4D(0.0f, 1.0f - height, 1.0f, 1.0f);
-			drawTexturedQuadUnlit(StaticPowerSprites.GUI_POWER_BAR_FG, matrixStack, buffer, new Vector3D(0.657f, 0.18f, 0.0001f), new Vector3D(0.125f, height * 0.635f, 1.0f), uv, Color.WHITE);
+			drawTexturedQuadUnlit(StaticPowerSprites.GUI_POWER_BAR_FG, matrixStack, buffer, new Vector3D(0.657f, 0.18f, 0.0005f), new Vector3D(0.125f, height * 0.635f, 1.0f), uv, Color.WHITE);
 		}
 	}
 }
