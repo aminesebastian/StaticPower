@@ -8,6 +8,7 @@ import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
@@ -33,12 +34,6 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityCentrifuge> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
 
-	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 10;
-	public static final int DEFAULT_CENTRIFUGE_MOTOR_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final int DEFAULT_MAX_SPEED = 500;
-
 	public final InventoryComponent inputInventory;
 
 	public final InventoryComponent firstOutputInventory;
@@ -55,7 +50,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@UpdateSerialize
 	private int maxSpeed;
 	@UpdateSerialize
-	private int centrifugeMotorPowerCost;
+	private long centrifugeMotorPowerCost;
 
 	public TileEntityCentrifuge() {
 		super(TYPE, StaticPowerTiers.ADVANCED);
@@ -79,8 +74,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", CentrifugeRecipe.RECIPE_TYPE, DEFAULT_PROCESSING_TIME,
-				this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", CentrifugeRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.centrifugeProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -88,7 +83,6 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
@@ -100,8 +94,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 
 		// Set the max speed and power cost.
-		maxSpeed = DEFAULT_MAX_SPEED;
-		centrifugeMotorPowerCost = DEFAULT_CENTRIFUGE_MOTOR_COST;
+		maxSpeed = StaticPowerConfig.SERVER.centrifugeInitialMaxSpeed.get();
+		centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get();
 	}
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
@@ -127,6 +121,11 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// true.
 		if (internalInventory.getStackInSlot(0).isEmpty() && canInsertRecipeIntoOutputs(recipe)) {
 			transferItemInternally(recipe.getInput().getCount(), inputInventory, 0, internalInventory, 0);
+
+			// Set the power usage.
+			processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		} else {
@@ -202,10 +201,10 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// new max speed.
 		if (!upgradeWrapper.isEmpty()) {
 			maxSpeed = upgradeWrapper.getTier().maxCentrifugeSpeedUpgrade.get();
-			centrifugeMotorPowerCost = (int) (DEFAULT_CENTRIFUGE_MOTOR_COST * (1.0f + upgradeWrapper.getTier().centrifugeUpgradedPowerIncrease.get()));
+			centrifugeMotorPowerCost = (long) (StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get() * (1.0f + upgradeWrapper.getTier().centrifugeUpgradedPowerIncrease.get()));
 		} else {
-			maxSpeed = DEFAULT_MAX_SPEED;
-			centrifugeMotorPowerCost = DEFAULT_CENTRIFUGE_MOTOR_COST;
+			maxSpeed = StaticPowerConfig.SERVER.centrifugeInitialMaxSpeed.get();
+			centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get();
 		}
 	}
 

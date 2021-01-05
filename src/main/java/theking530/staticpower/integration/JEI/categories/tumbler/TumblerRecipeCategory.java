@@ -129,13 +129,13 @@ public class TumblerRecipeCategory extends BaseJEIRecipeCategory<TumblerRecipe> 
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		guiItemStacks.init(INTPUT_SLOT, true, 39, 5);
 		guiItemStacks.set(ingredients);
-		
+
 		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
 		probabilityStacks.init(OUTPUT_SLOT, false, 40, 48);
 		probabilityStacks.set(ingredients);
-		
+
 		// Add the fluid.
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

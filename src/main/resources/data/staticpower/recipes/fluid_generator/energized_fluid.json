@@ -4,5 +4,5 @@
 		"fluid": "staticpower:fluid_energized",
 		"volume": 1
 	},
-	"power": 64
+	"power": 64000
 }

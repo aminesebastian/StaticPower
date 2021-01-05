@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
@@ -32,11 +34,6 @@ public class TileEntityLathe extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityLathe> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityLathe(), ModBlocks.Lathe);
 
-	public static final int DEFAULT_PROCESSING_TIME = 150;
-	public static final int DEFAULT_PROCESSING_COST = 3;
-	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final int DEFAULT_TANK_SIZE = 5000;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;
 	public final InventoryComponent secondaryOutputInventory;
@@ -50,6 +47,9 @@ public class TileEntityLathe extends TileEntityMachine {
 
 	public TileEntityLathe() {
 		super(TYPE, StaticPowerTiers.STATIC);
+
+		// Get the tier object.
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setSlotsLockable(true));
 
@@ -71,7 +71,6 @@ public class TileEntityLathe extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", inputInventory).setRoundRobin(true));
@@ -79,8 +78,8 @@ public class TileEntityLathe extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("SecondaryOutputServo", secondaryOutputInventory));
 
 		// Setup the fluid tank and fluid servo.
-		registerComponent(
-				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
+				.setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
@@ -112,6 +111,10 @@ public class TileEntityLathe extends TileEntityMachine {
 		for (int i = 0; i < 9; i++) {
 			transferItemInternally(recipe.getInputs().get(i).getCount(), inputInventory, i, internalInventory, i);
 		}
+
+		// Set the power usage.
+		this.processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();

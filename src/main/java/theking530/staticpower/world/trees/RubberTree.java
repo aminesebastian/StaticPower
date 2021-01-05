@@ -33,12 +33,12 @@ public class RubberTree extends AbstractStaticPowerTree {
 		// Check if rubber tree spawning is disabled (we do it here instead of not
 		// registering the tree at all to avoid breaking the Rubber Tree blocks that
 		// depend on the tree defenition not being null.
-		if (!StaticPowerConfig.COMMON.generateRubberTrees.get()) {
+		if (!StaticPowerConfig.SERVER.generateRubberTrees.get()) {
 			return false;
 		}
 
 		// Rubber trees cannot spawn in snowy biomes (if enabled).
-		if (StaticPowerConfig.COMMON.disableRubberTreesInSnowyBiomes.get() && event.getClimate().precipitation == RainType.SNOW) {
+		if (StaticPowerConfig.SERVER.disableRubberTreesInSnowyBiomes.get() && event.getClimate().precipitation == RainType.SNOW) {
 			return false;
 		}
 
@@ -47,12 +47,12 @@ public class RubberTree extends AbstractStaticPowerTree {
 				|| event.getCategory() == Category.SAVANNA || event.getCategory() == Category.SWAMP || event.getCategory() == Category.TAIGA) {
 
 			// Calculate the bonus chance.
-			int bonusCount = SDMath.getRandomIntInRange(StaticPowerConfig.COMMON.minRubberTreeCount.get(), StaticPowerConfig.COMMON.maxRubberTreeCount.get());
+			int bonusCount = SDMath.getRandomIntInRange(StaticPowerConfig.SERVER.minRubberTreeCount.get(), StaticPowerConfig.SERVER.maxRubberTreeCount.get());
 
 			// Add the trees.
 			event.getGeneration().withFeature(GenerationStage.Decoration.VEGETAL_DECORATION,
 					Feature.TREE.withConfiguration(RubberTree.TREE_CONFIG).withPlacement(Features.Placements.HEIGHTMAP_PLACEMENT).withPlacement(Placement.COUNT_EXTRA.configure(
-							new AtSurfaceWithExtraConfig(StaticPowerConfig.COMMON.minRubberTreeCount.get(), StaticPowerConfig.COMMON.rubberTreeSpawnChance.get().floatValue(), bonusCount))));
+							new AtSurfaceWithExtraConfig(StaticPowerConfig.SERVER.minRubberTreeCount.get(), StaticPowerConfig.SERVER.rubberTreeSpawnChance.get().floatValue(), bonusCount))));
 			return true;
 		}
 

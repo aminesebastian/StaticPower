@@ -3,7 +3,6 @@ package theking530.staticpower.tileentities.powered.treefarmer;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import net.minecraft.block.Block;
@@ -38,6 +37,7 @@ import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTreeFarmer;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -75,15 +75,6 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			TYPE.setTileEntitySpecialRenderer(TileEntityRenderTreeFarmer::new);
 		}
 	}
-
-	public static final int DEFAULT_WATER_USAGE = 1;
-	public static final int DEFAULT_IDLE_ENERGY_USAGE = 10;
-	public static final int DEFAULT_HARVEST_ENERGY_COST = 1000;
-	public static final int MAX_WOOD_RECURSIVE_DEPTH = 100;
-	public static final int DEFAULT_RANGE = 2;
-	public static final int DEFAULT_SAPLING_SPACING = 2;
-	public static final int DEFAULT_TOOL_USAGE = 1;
-	public static final Random RANDOM = new Random();
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -124,11 +115,12 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 5, this::canProcess, this::canProcess, this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.treeFarmerProcessingTime.get(), this::canProcess,
+				this::canProcess, this::processingCompleted, true));
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setEnergyComponent(energyStorage);
-		processingComponent.setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE);
+		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
@@ -136,7 +128,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 		currentBlockIndex = 0;
 		shouldDrawRadiusPreview = false;
-		range = DEFAULT_RANGE;
+		range = StaticPowerConfig.SERVER.treeFarmerDefaultRange.get();
 		blocks = new LinkedList<BlockPos>();
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent));
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
@@ -151,13 +143,13 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
-				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
+				fluidTankComponent.drain(StaticPowerConfig.SERVER.treeFarmerFluidUsage.get(), FluidAction.EXECUTE);
 			}
 		}
 	}
 
 	protected ProcessingCheckState canProcess() {
-		if (fluidTankComponent.getFluidAmount() < DEFAULT_WATER_USAGE) {
+		if (fluidTankComponent.getFluidAmount() < StaticPowerConfig.SERVER.treeFarmerFluidUsage.get()) {
 			return ProcessingCheckState.notEnoughFluid();
 		}
 		if (!hasAxe()) {
@@ -254,7 +246,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	public void useAxe() {
 		if (hasAxe()) {
-			if (inputInventory.getStackInSlot(0).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
+			if (inputInventory.getStackInSlot(0).attemptDamageItem(StaticPowerConfig.SERVER.treeFarmerToolUsage.get(), RANDOM, null)) {
 				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
@@ -296,14 +288,14 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	private void harvestBlock(BlockPos pos, List<ItemStack> items, int index) {
 		// If we've hit our max recursion, stop.
-		if (index >= MAX_WOOD_RECURSIVE_DEPTH) {
+		if (index >= StaticPowerConfig.SERVER.treeFarmerMaxTreeRecursion.get()) {
 			return;
 		}
 
 		// Add the drops for the current block and break it.
 		items.addAll(WorldUtilities.getBlockDrops(getWorld(), pos));
 		getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
-		energyStorage.useBulkPower(DEFAULT_HARVEST_ENERGY_COST);
+		energyStorage.useBulkPower(StaticPowerConfig.SERVER.treeFarmerHarvestPowerUsage.get());
 
 		// Recurse to any adjacent blocks if they are farm-able.
 		for (Direction facing : Direction.values()) {
@@ -333,7 +325,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		if (getWorld().isRemote) {
 			throw new RuntimeException("This method should only be called on the server!");
 		}
-		if (currentBlockIndex % DEFAULT_SAPLING_SPACING == 0) {
+		if (currentBlockIndex % StaticPowerConfig.SERVER.treeFarmerSaplingSpacing.get() == 0) {
 			// Get the block space we're trying to plant IN.
 			Block block = getWorld().getBlockState(pos).getBlock();
 			// Make sure the block is empty.
@@ -411,10 +403,10 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	}
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
-		range = DEFAULT_RANGE;
+		range = StaticPowerConfig.SERVER.treeFarmerDefaultRange.get();
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).getTier().rangeUpgrade.get()));
+				range = (int) Math.max(range, StaticPowerConfig.SERVER.treeFarmerDefaultRange.get() * (((BaseRangeUpgrade) stack.getItem()).getTier().rangeUpgrade.get()));
 			}
 		}
 		refreshBlocksInRange(range);

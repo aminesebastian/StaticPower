@@ -38,37 +38,37 @@ public class ModOres {
 			new OreConfigBuilder(ModBlocks.OreRuby).setMaxLevel(25).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
 
 	public static void addOreGenFeatures(BiomeLoadingEvent event) {
-		if (StaticPowerConfig.COMMON.generateZincOre.get()) {
+		if (StaticPowerConfig.SERVER.generateZincOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ZINC);
 		}
-		if (StaticPowerConfig.COMMON.generateMagnesiumOre.get()) {
+		if (StaticPowerConfig.SERVER.generateMagnesiumOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, MAGENSIUM);
 		}
-		if (StaticPowerConfig.COMMON.generateCopperOre.get()) {
+		if (StaticPowerConfig.SERVER.generateCopperOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, COPPER);
 		}
-		if (StaticPowerConfig.COMMON.generateTinOre.get()) {
+		if (StaticPowerConfig.SERVER.generateTinOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TIN);
 		}
-		if (StaticPowerConfig.COMMON.generateLeadOre.get()) {
+		if (StaticPowerConfig.SERVER.generateLeadOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, LEAD);
 		}
-		if (StaticPowerConfig.COMMON.generateSilverOre.get()) {
+		if (StaticPowerConfig.SERVER.generateSilverOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SILVER);
 		}
-		if (StaticPowerConfig.COMMON.generateTungstenOre.get()) {
+		if (StaticPowerConfig.SERVER.generateTungstenOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, TUNGSTEN);
 		}
-		if (StaticPowerConfig.COMMON.generatePlatinumOre.get()) {
+		if (StaticPowerConfig.SERVER.generatePlatinumOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, PLATINUM);
 		}
-		if (StaticPowerConfig.COMMON.generateAluminiumOre.get()) {
+		if (StaticPowerConfig.SERVER.generateAluminiumOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, ALUMINIUM);
 		}
-		if (StaticPowerConfig.COMMON.generateSapphireOre.get()) {
+		if (StaticPowerConfig.SERVER.generateSapphireOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, SAPPHIRE);
 		}
-		if (StaticPowerConfig.COMMON.generateRubyOre.get()) {
+		if (StaticPowerConfig.SERVER.generateRubyOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RUBY);
 		}
 	}

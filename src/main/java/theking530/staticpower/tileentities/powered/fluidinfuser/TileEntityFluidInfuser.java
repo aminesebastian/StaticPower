@@ -43,10 +43,6 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		}
 	}
 
-	public static final int DEFAULT_PROCESSING_TIME = 200;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
@@ -70,8 +66,8 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", FluidInfusionRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", FluidInfusionRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -79,7 +75,6 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
@@ -116,6 +111,11 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		}
 
 		transferItemInternally(recipe.getInput().getCount(), inputInventory, 0, internalInventory, 0);
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

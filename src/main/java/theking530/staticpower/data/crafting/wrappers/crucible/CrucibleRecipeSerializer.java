@@ -12,10 +12,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.powered.crucible.TileEntityCrucible;
 
 public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrucibleRecipe> {
 	public static final CrucibleRecipeSerializer INSTANCE = new CrucibleRecipeSerializer();
@@ -38,8 +38,8 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		}
 
 		// Start with the default values.
-		int powerCost = TileEntityCrucible.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityCrucible.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.cruciblePowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.crucibleProcessingTime.get();
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -83,7 +83,7 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 
 	@Override
 	public CrucibleRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 		int minimumTemperature = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
@@ -95,7 +95,7 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 
 	@Override
 	public void write(PacketBuffer buffer, CrucibleRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getMinimumTemperature());
 		recipe.getInput().write(buffer);

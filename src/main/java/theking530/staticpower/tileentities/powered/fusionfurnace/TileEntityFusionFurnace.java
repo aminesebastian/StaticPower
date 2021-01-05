@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
@@ -26,10 +27,6 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityFusionFurnace extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFusionFurnace(), ModBlocks.FusionFurnace);
-
-	public static final int DEFAULT_PROCESSING_TIME = 250;
-	public static final int DEFAULT_PROCESSING_COST = 25;
-	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -53,8 +50,8 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", FusionFurnaceRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", FusionFurnaceRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -62,7 +59,6 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
@@ -74,8 +70,8 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
 		if (location == RecipeProcessingLocation.INTERNAL) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2), internalInventory.getStackInSlot(3),
-					internalInventory.getStackInSlot(4));
+			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
+					internalInventory.getStackInSlot(3), internalInventory.getStackInSlot(4));
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
 					inputInventory.getStackInSlot(4));
@@ -96,6 +92,10 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 				transferItemInternally(count, inputInventory, i, internalInventory, i);
 			}
 		}
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
 		return ProcessingCheckState.ok();
 	}

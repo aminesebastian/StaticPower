@@ -13,22 +13,22 @@ public class StaticVoltAutoConverter implements IEnergyStorage, IStaticVoltHandl
 	 * IStaticVoltHandler Interface
 	 ******************************/
 	@Override
-	public int getStoredPower() {
+	public long getStoredPower() {
 		return staticVoltHandler.getStoredPower();
 	}
 
 	@Override
-	public int getCapacity() {
+	public long getCapacity() {
 		return staticVoltHandler.getCapacity();
 	}
 
 	@Override
-	public int receivePower(int power, boolean simulate) {
+	public long receivePower(long power, boolean simulate) {
 		return staticVoltHandler.receivePower(power, simulate);
 	}
 
 	@Override
-	public int drainPower(int power, boolean simulate) {
+	public long drainPower(long power, boolean simulate) {
 		return staticVoltHandler.drainPower(power, simulate);
 	}
 
@@ -38,17 +38,17 @@ public class StaticVoltAutoConverter implements IEnergyStorage, IStaticVoltHandl
 	}
 
 	@Override
-	public boolean canDrainPower() {
-		return staticVoltHandler.canDrainPower();
+	public boolean canBeDrained() {
+		return staticVoltHandler.canBeDrained();
 	}
 
 	@Override
-	public int getMaxReceive() {
+	public long getMaxReceive() {
 		return staticVoltHandler.getMaxReceive();
 	}
 
 	@Override
-	public int getMaxDrain() {
+	public long getMaxDrain() {
 		return staticVoltHandler.getMaxDrain();
 	}
 
@@ -57,27 +57,29 @@ public class StaticVoltAutoConverter implements IEnergyStorage, IStaticVoltHandl
 	 **************************/
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		return receivePower(maxReceive / IStaticVoltHandler.FE_TO_SV_CONVERSION, simulate) * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+		long recievedPower = receivePower(CapabilityStaticVolt.convertFEtoSV(maxReceive), simulate);
+		return CapabilityStaticVolt.convertSVtoFE(recievedPower);
 	}
 
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
-		return drainPower(maxExtract / IStaticVoltHandler.FE_TO_SV_CONVERSION, simulate) * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+		long drainedPower = drainPower(CapabilityStaticVolt.convertFEtoSV(maxExtract), simulate);
+		return CapabilityStaticVolt.convertSVtoFE(drainedPower);
 	}
 
 	@Override
 	public int getEnergyStored() {
-		return getStoredPower() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+		return CapabilityStaticVolt.convertSVtoFE(getStoredPower());
 	}
 
 	@Override
 	public int getMaxEnergyStored() {
-		return getCapacity() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+		return CapabilityStaticVolt.convertSVtoFE(getCapacity());
 	}
 
 	@Override
 	public boolean canExtract() {
-		return canDrainPower();
+		return canBeDrained();
 	}
 
 	@Override

@@ -87,12 +87,6 @@ public class StaticPowerForgeEventRegistry {
 	public static void onAddItemTooltip(ItemTooltipEvent event) {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			// Capture the original tooltips.
-			List<ITextComponent> original = new ArrayList<ITextComponent>();
-			original.addAll(event.getToolTip());
-			event.getToolTip().clear();
-			event.getToolTip().add(original.get(0));
-			original.remove(0);
-
 			// Allocate the basic tooltips.
 			List<ITextComponent> basicTooltips = new ArrayList<ITextComponent>();
 
@@ -167,9 +161,6 @@ public class StaticPowerForgeEventRegistry {
 					event.getToolTip().add(new TranslationTextComponent("gui.staticpower.hold_control").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
 				}
 			}
-
-			// Add back the original tooltips.
-			event.getToolTip().addAll(original);
 		}
 	}
 

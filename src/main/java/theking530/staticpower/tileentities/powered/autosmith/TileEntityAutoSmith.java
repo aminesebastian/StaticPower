@@ -13,6 +13,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -40,11 +42,6 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityAutoSmith> TYPE = new TileEntityTypeAllocator<TileEntityAutoSmith>((allocator) -> new TileEntityAutoSmith(), ModBlocks.AutoSmith);
 
-	public static final int DEFAULT_PROCESSING_TIME = 75;
-	public static final int DEFAULT_PROCESSING_COST = 40;
-	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final int DEFAULT_TANK_SIZE = 5000;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
@@ -57,6 +54,9 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 
 	public TileEntityAutoSmith() {
 		super(TYPE, StaticPowerTiers.ENERGIZED);
+
+		// Get the tier.
+		StaticPowerTier tier = StaticPowerConfig.getTier(getTier());
 
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -89,8 +89,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<AutoSmithRecipe>("ProcessingComponent", AutoSmithRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<AutoSmithRecipe>("ProcessingComponent", AutoSmithRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.autoSmithProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -98,7 +98,6 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", inputInventory, 0));
@@ -106,8 +105,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("CompletedOutputServo", completedOutputInventory));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(
-				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
+				.setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 
@@ -137,6 +136,10 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		int transferCount = recipe.isWildcardRecipe() ? 1 : recipe.getSmithTarget().getCount();
 		transferItemInternally(transferCount, inputInventory, 0, internalInventory, 0);
 		transferItemInternally(recipe.getModifierMaterial().getCount(), inputInventory, 1, internalInventory, 1);
+
+		// Set the power usage and processing time.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();

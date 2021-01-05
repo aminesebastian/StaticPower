@@ -152,7 +152,7 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		fluids.init(FLUID_SLOT, false, 106, 4, 16, 52, getFluidTankDisplaySize(recipe.getOutputFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

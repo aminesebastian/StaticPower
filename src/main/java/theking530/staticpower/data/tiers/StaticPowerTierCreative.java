@@ -27,17 +27,17 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getPortableBatteryCapacity() {
+	protected long getPortableBatteryCapacity() {
 		return 2147483647;
 	}
 
 	@Override
-	protected int getSolarPanelPowerGeneration() {
+	protected long getSolarPanelPowerGeneration() {
 		return 2147483647;
 	}
 
 	@Override
-	protected int getSolarPanelPowerStorage() {
+	protected long getSolarPanelPowerStorage() {
 		return 2147483647;
 	}
 
@@ -47,22 +47,22 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getCablePowerCapacity() {
+	protected long getCablePowerCapacity() {
 		return 2147483647;
 	}
 
 	@Override
-	protected int getCablePowerDelivery() {
+	protected long getCablePowerDelivery() {
 		return 2147483647;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerCapacity() {
+	protected long getCableIndustrialPowerCapacity() {
 		return 2147483647;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerDelivery() {
+	protected long getCableIndustrialPowerDelivery() {
 		return 2147483647;
 	}
 
@@ -72,7 +72,7 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getBatteryCapacity() {
+	protected long getBatteryCapacity() {
 		return 2147483647;
 	}
 
@@ -102,17 +102,17 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getDefaultMachinePowerCapacity() {
+	protected long getDefaultMachinePowerCapacity() {
 		return 2147483647;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerInput() {
+	protected long getDefaultMachinePowerInput() {
 		return 2147483647;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerOutput() {
+	protected long getDefaultMachinePowerOutput() {
 		return 2147483647;
 	}
 

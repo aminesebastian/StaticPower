@@ -19,7 +19,7 @@ import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class GuiPowerBarUtilities {
-	public static List<ITextComponent> getTooltip(int currentEnergy, int maxEnergy, int energyPerTick) {
+	public static List<ITextComponent> getTooltip(long currentEnergy, long maxEnergy, double energyPerTick) {
 		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
 		// Add the input rate to the tooltip.
@@ -31,7 +31,7 @@ public class GuiPowerBarUtilities {
 		return tooltip;
 	}
 
-	public static void drawPowerBar(@Nullable MatrixStack matrixStack, float xpos, float ypos, float width, float height, float zLevel, int currentEnergy, int maxEnergy) {
+	public static void drawPowerBar(@Nullable MatrixStack matrixStack, float xpos, float ypos, float width, float height, float zLevel, long currentEnergy, long maxEnergy) {
 		float u1 = (float) currentEnergy / (float) maxEnergy;
 		float k1 = u1 * height;
 

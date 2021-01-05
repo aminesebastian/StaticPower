@@ -16,7 +16,7 @@ public class FluidInfusionRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput output;
 	private final FluidStack inputFluid;
 
-	public FluidInfusionRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack inputFluid, int processingTime, int powerCost) {
+	public FluidInfusionRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack inputFluid, int processingTime, long powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.output = output;

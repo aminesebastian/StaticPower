@@ -28,10 +28,6 @@ public class TileEntityFormer extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityFormer> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFormer(), ModBlocks.Former);
 
-	public static final int DEFAULT_PROCESSING_TIME = 150;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent moldInventory;
 	public final InventoryComponent outputInventory;
@@ -72,7 +68,6 @@ public class TileEntityFormer extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
@@ -99,6 +94,11 @@ public class TileEntityFormer extends TileEntityMachine {
 
 		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, 0, internalInventory, 0);
 		internalInventory.setStackInSlot(1, moldInventory.getStackInSlot(0).copy());
+
+		// Set the power usage and processing time.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

@@ -136,7 +136,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 		probabilityStacks.init(OUTPUT_SLOT, false, 112, 19);
 		probabilityStacks.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

@@ -31,7 +31,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	private final int repairAmount;
 
 	public AutoSmithRecipe(ResourceLocation name, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidStack modifierFluid,
-			RecipeModifierWrapper[] modifiers, int repairAmount, int powerCost, int processingTime) {
+			RecipeModifierWrapper[] modifiers, int repairAmount, long powerCost, int processingTime) {
 		super(name, processingTime, powerCost);
 		this.modifierMaterial = modifierMaterial;
 		this.smithTarget = smithTarget;

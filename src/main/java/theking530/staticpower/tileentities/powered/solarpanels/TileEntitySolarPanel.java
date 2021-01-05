@@ -57,9 +57,6 @@ public class TileEntitySolarPanel extends TileEntityBase {
 
 		// Don't let the storage recieve from outside sources.
 		energyStorage.getStorage().setCanRecieve(false);
-		energyStorage.getStorage().setCapacity(tier.solarPanelPowerStorage.get());
-		energyStorage.getStorage().setMaxExtract(tier.solarPanelPowerGeneration.get());
-		energyStorage.getStorage().setMaxReceive(tier.solarPanelPowerGeneration.get());
 
 		// Set the side config to only output on the bottom and disable on the rest.
 		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig", new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Disabled, MachineSideMode.Disabled,
@@ -80,7 +77,7 @@ public class TileEntitySolarPanel extends TileEntityBase {
 	public void generateRF() {
 		if (isGenerating() && energyStorage.canAcceptPower(1)) {
 			if (energyStorage.getStorage().getStoredPower() < energyStorage.getStorage().getCapacity()) {
-				int generateAmount = getWorld().isRaining() ? energyStorage.getStorage().getMaxReceive() / 2 : energyStorage.getStorage().getMaxReceive();
+				long generateAmount = getWorld().isRaining() ? energyStorage.getStorage().getMaxReceive() / 2 : energyStorage.getStorage().getMaxReceive();
 				energyStorage.getStorage().setCanRecieve(true);
 				energyStorage.getStorage().receivePower(generateAmount, false);
 				energyStorage.getStorage().setCanRecieve(false);

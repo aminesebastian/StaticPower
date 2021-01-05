@@ -33,10 +33,6 @@ public class TileEntityMixer extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityMixer> TYPE = new TileEntityTypeAllocator<TileEntityMixer>((type) -> new TileEntityMixer(), ModBlocks.Mixer);
 
-	public static final int DEFAULT_PROCESSING_TIME = 200;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-
 	public final InventoryComponent input1Inventory;
 	public final InventoryComponent input2Inventory;
 	public final InventoryComponent internalInventory;
@@ -73,7 +69,6 @@ public class TileEntityMixer extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the fluid tanks.
 		registerComponent(
@@ -116,6 +111,11 @@ public class TileEntityMixer extends TileEntityMachine {
 
 		transferItemInternally(recipe.getPrimaryItemInput().getCount(), input1Inventory, 0, internalInventory, 0);
 		transferItemInternally(recipe.getSecondaryItemInput().getCount(), input2Inventory, 0, internalInventory, 1);
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

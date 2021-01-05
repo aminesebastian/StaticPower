@@ -54,8 +54,8 @@ public class TileEntityPowerCable extends TileEntityBase {
 
 	public TileEntityPowerCable(TileEntityTypeAllocator<TileEntityPowerCable> allocator, boolean isIndustrial, ResourceLocation tier) {
 		super(allocator);
-		int powerRate = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerDelivery.get() : StaticPowerConfig.getTier(tier).cablePowerDelivery.get();
-		int powerCapacity = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() : StaticPowerConfig.getTier(tier).cablePowerCapacity.get();
+		long powerRate = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerDelivery.get() : StaticPowerConfig.getTier(tier).cablePowerDelivery.get();
+		long powerCapacity = isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() : StaticPowerConfig.getTier(tier).cablePowerCapacity.get();
 		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, powerCapacity, powerRate));
 	}
 

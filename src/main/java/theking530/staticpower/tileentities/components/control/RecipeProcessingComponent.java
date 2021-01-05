@@ -262,13 +262,13 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public RecipeProcessingComponent<T> setProcessingPowerUsage(int power) {
+	public RecipeProcessingComponent<T> setProcessingPowerUsage(long power) {
 		return (RecipeProcessingComponent<T>) super.setProcessingPowerUsage(power);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public RecipeProcessingComponent<T> setCompletedPowerUsage(int power) {
+	public RecipeProcessingComponent<T> setCompletedPowerUsage(long power) {
 		return (RecipeProcessingComponent<T>) super.setCompletedPowerUsage(power);
 	}
 

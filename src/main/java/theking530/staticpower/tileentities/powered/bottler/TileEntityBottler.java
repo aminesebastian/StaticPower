@@ -11,6 +11,8 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -35,11 +37,6 @@ public class TileEntityBottler extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityBottler> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityBottler(), ModBlocks.Bottler);
 
-	public static final int DEFAULT_PROCESSING_TIME = 40;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final int DEFAULT_TANK_SIZE = 5000;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
@@ -54,6 +51,9 @@ public class TileEntityBottler extends TileEntityMachine {
 
 	public TileEntityBottler() {
 		super(TYPE, StaticPowerTiers.BASIC);
+
+		// Get the tier object.
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -71,21 +71,22 @@ public class TileEntityBottler extends TileEntityMachine {
 
 		// Use the old processing system because we need to support NON recipe based
 		// processing as well as recipe based.
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", 2, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
+		registerComponent(moveComponent = MachineProcessingComponent
+				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
 				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(
-				processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-						.setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage)
-						.setProcessingPowerUsage(DEFAULT_PROCESSING_COST));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.bottlerProcessingTime.get(), this::canProcess,
+				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory)
+						.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setProcessingPowerUsage(StaticPowerConfig.SERVER.bottlerPowerUsage.get()));
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(
-				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
+				.setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
+		
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
 
@@ -189,16 +190,6 @@ public class TileEntityBottler extends TileEntityMachine {
 			markTileEntityForSynchronization();
 		}
 		return ProcessingCheckState.ok();
-	}
-
-	@Override
-	public void process() {
-		// Use power if we are processing.
-		if (processingComponent.isPerformingWork()) {
-			if (!getWorld().isRemote) {
-				energyStorage.useBulkPower(DEFAULT_PROCESSING_COST);
-			}
-		}
 	}
 
 	public boolean hasValidInput() {

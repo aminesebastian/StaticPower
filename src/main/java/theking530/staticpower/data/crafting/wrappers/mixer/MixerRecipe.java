@@ -18,7 +18,7 @@ public class MixerRecipe extends AbstractMachineRecipe {
 	private final FluidStack output;
 
 	public MixerRecipe(ResourceLocation name, StaticPowerIngredient input1, StaticPowerIngredient input2, FluidStack inputFluid1, FluidStack inputFluid2, FluidStack output,
-			int processingTime, int powerCost) {
+			int processingTime, long powerCost) {
 		super(name, processingTime, powerCost);
 		this.input1 = input1;
 		this.input2 = input2;

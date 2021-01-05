@@ -15,7 +15,7 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 	private final FluidStack inputFluid;
 	private final ProbabilityItemStackOutput output;
 
-	public VulcanizerRecipe(ResourceLocation name, int processingTime, int powerCost, FluidStack inputFluid, ProbabilityItemStackOutput output) {
+	public VulcanizerRecipe(ResourceLocation name, int processingTime, long powerCost, FluidStack inputFluid, ProbabilityItemStackOutput output) {
 		super(name, processingTime, powerCost);
 		this.output = output;
 		this.inputFluid = inputFluid;

@@ -15,7 +15,7 @@ public class ItemStackStaticVoltCapability extends StaticVoltHandler implements 
 	protected final PowerEnergyInterface energyInterface;
 	protected ItemStackMultiCapabilityProvider owningProvider;
 
-	public ItemStackStaticVoltCapability(String name, ItemStack container, int capacity, int maxInput, int maxOutput) {
+	public ItemStackStaticVoltCapability(String name, ItemStack container, long capacity, long maxInput, long maxOutput) {
 		super(capacity, maxInput, maxOutput);
 		this.name = name;
 		this.container = container;

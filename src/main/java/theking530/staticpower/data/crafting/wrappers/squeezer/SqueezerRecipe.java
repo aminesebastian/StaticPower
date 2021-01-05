@@ -16,7 +16,7 @@ public class SqueezerRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput output;
 	private final FluidStack outputFluid;
 
-	public SqueezerRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, int processingTime, int powerCost) {
+	public SqueezerRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, int processingTime, long powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.output = output;

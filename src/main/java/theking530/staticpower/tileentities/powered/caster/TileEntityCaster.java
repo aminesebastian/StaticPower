@@ -33,10 +33,6 @@ public class TileEntityCaster extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityCaster> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCaster(), ModBlocks.Caster);
 
-	public static final int DEFAULT_PROCESSING_TIME = 150;
-	public static final int DEFAULT_PROCESSING_COST = 15;
-	public static final int DEFAULT_MOVING_TIME = 4;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
@@ -66,8 +62,8 @@ public class TileEntityCaster extends TileEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CastingRecipe>("ProcessingComponent", CastingRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CastingRecipe>("ProcessingComponent", CastingRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.casterProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -75,7 +71,6 @@ public class TileEntityCaster extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the fluid tanks and servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
@@ -107,6 +102,11 @@ public class TileEntityCaster extends TileEntityMachine {
 		}
 
 		internalInventory.setStackInSlot(0, inputInventory.getStackInSlot(0).copy());
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

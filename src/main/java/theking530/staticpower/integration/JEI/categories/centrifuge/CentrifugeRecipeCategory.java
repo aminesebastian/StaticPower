@@ -155,7 +155,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 		// Add the fluid.
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),
-				recipe.getProcessingTime() * recipe.getPowerCost(), true);
+				(int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

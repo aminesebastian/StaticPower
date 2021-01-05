@@ -1,8 +1,13 @@
 package theking530.staticpower.tileentities.powered.solarpanels;
 
+import java.util.List;
+
+import javax.annotation.Nullable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -10,9 +15,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockSolarPanel extends StaticPowerTileEntityBlock {
@@ -32,6 +44,13 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		return SHAPE;
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString() + "• Generation ")
+				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tierType).solarPanelPowerGeneration.get())));
 	}
 
 	@Override

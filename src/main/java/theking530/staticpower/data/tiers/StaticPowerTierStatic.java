@@ -27,18 +27,18 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getPortableBatteryCapacity() {
-		return 2500;
+	protected long getPortableBatteryCapacity() {
+		return 2500000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerGeneration() {
-		return 16;
+	protected long getSolarPanelPowerGeneration() {
+		return 16000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerStorage() {
-		return 32;
+	protected long getSolarPanelPowerStorage() {
+		return 32000;
 	}
 
 	@Override
@@ -97,23 +97,23 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getCablePowerCapacity() {
-		return 256;
+	protected long getCablePowerCapacity() {
+		return 256000;
 	}
 
 	@Override
-	protected int getCablePowerDelivery() {
-		return 256;
+	protected long getCablePowerDelivery() {
+		return 256000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerCapacity() {
-		return 2048;
+	protected long getCableIndustrialPowerCapacity() {
+		return 2048000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerDelivery() {
-		return 2048;
+	protected long getCableIndustrialPowerDelivery() {
+		return 2048000;
 	}
 
 	@Override
@@ -122,8 +122,13 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getBatteryCapacity() {
-		return 256000;
+	protected long getBatteryCapacity() {
+		return 256000000;
+	}
+
+	@Override
+	protected long getBatteryMaxIO() {
+		return 512000;
 	}
 
 	@Override
@@ -217,18 +222,18 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getDefaultMachinePowerCapacity() {
-		return 2500;
+	protected long getDefaultMachinePowerCapacity() {
+		return 2500000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerInput() {
-		return 32;
+	protected long getDefaultMachinePowerInput() {
+		return 32000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerOutput() {
-		return 32;
+	protected long getDefaultMachinePowerOutput() {
+		return 32000;
 	}
 
 	@Override

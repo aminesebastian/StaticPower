@@ -43,9 +43,6 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		}
 	}
 
-	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
@@ -77,8 +74,8 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", SqueezerRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", SqueezerRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.squeezerProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -86,7 +83,6 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
@@ -127,6 +123,11 @@ public class TileEntitySqueezer extends TileEntityMachine {
 
 		// Transfer the items to the internal inventory.
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}

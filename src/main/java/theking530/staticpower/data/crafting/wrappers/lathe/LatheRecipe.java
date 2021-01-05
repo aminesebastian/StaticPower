@@ -43,7 +43,7 @@ public class LatheRecipe extends AbstractMachineRecipe {
 	private final FluidStack outputFluid;
 
 	public LatheRecipe(ResourceLocation name, int recipeWidthIn, int recipeHeightIn, NonNullList<StaticPowerIngredient> inputs, ProbabilityItemStackOutput primaryOutput,
-			ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, int processingTime, int powerCost) {
+			ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, int processingTime, long powerCost) {
 		super(name, processingTime, powerCost);
 
 		this.inputs = inputs;

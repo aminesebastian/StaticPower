@@ -31,41 +31,43 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	 * IStaticVoltHandler Interface
 	 ******************************/
 	@Override
-	public int getStoredPower() {
+	public long getStoredPower() {
 		if (actualType == EnergyType.STATIC_VOLT) {
 			return staticVoltHandler.getStoredPower();
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
-			return energyStorage.getEnergyStored() / IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			return CapabilityStaticVolt.convertFEtoSV(energyStorage.getEnergyStored());
 		}
 		return 0;
 	}
 
 	@Override
-	public int getCapacity() {
+	public long getCapacity() {
 		if (actualType == EnergyType.STATIC_VOLT) {
 			return staticVoltHandler.getCapacity();
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
-			return energyStorage.getMaxEnergyStored() / IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			return CapabilityStaticVolt.convertFEtoSV(energyStorage.getMaxEnergyStored());
 		}
 		return 0;
 	}
 
 	@Override
-	public int receivePower(int power, boolean simulate) {
+	public long receivePower(long power, boolean simulate) {
 		if (actualType == EnergyType.STATIC_VOLT) {
 			return staticVoltHandler.receivePower(power, simulate);
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
-			return energyStorage.receiveEnergy(power * IStaticVoltHandler.FE_TO_SV_CONVERSION, simulate) / IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			int recievedFE = energyStorage.receiveEnergy(CapabilityStaticVolt.convertSVtoFE(power), simulate);
+			return CapabilityStaticVolt.convertFEtoSV(recievedFE);
 		}
 		return 0;
 	}
 
 	@Override
-	public int drainPower(int power, boolean simulate) {
+	public long drainPower(long power, boolean simulate) {
 		if (actualType == EnergyType.STATIC_VOLT) {
 			return staticVoltHandler.drainPower(power, simulate);
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
-			return energyStorage.extractEnergy(power * IStaticVoltHandler.FE_TO_SV_CONVERSION, simulate) / IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			int extractedFE = energyStorage.extractEnergy(CapabilityStaticVolt.convertSVtoFE(power), simulate);
+			return CapabilityStaticVolt.convertFEtoSV(extractedFE);
 		}
 		return 0;
 	}
@@ -81,9 +83,9 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	}
 
 	@Override
-	public boolean canDrainPower() {
+	public boolean canBeDrained() {
 		if (actualType == EnergyType.STATIC_VOLT) {
-			return staticVoltHandler.canDrainPower();
+			return staticVoltHandler.canBeDrained();
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
 			return energyStorage.canExtract();
 		}
@@ -96,7 +98,8 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
 		if (actualType == EnergyType.STATIC_VOLT) {
-			return receivePower(maxReceive / IStaticVoltHandler.FE_TO_SV_CONVERSION, simulate) * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			long recievedSV = receivePower(CapabilityStaticVolt.convertFEtoSV(maxReceive), simulate);
+			return CapabilityStaticVolt.convertSVtoFE(recievedSV);
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
 			return receiveEnergy(maxReceive, simulate);
 		}
@@ -106,7 +109,8 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
 		if (actualType == EnergyType.STATIC_VOLT) {
-			return drainPower(maxExtract / IStaticVoltHandler.FE_TO_SV_CONVERSION, simulate) * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			long extractedSV = drainPower(CapabilityStaticVolt.convertFEtoSV(maxExtract), simulate);
+			return CapabilityStaticVolt.convertSVtoFE(extractedSV);
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
 			return extractEnergy(maxExtract, simulate);
 		}
@@ -116,7 +120,7 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	@Override
 	public int getEnergyStored() {
 		if (actualType == EnergyType.STATIC_VOLT) {
-			return staticVoltHandler.getStoredPower() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			return CapabilityStaticVolt.convertSVtoFE(staticVoltHandler.getStoredPower());
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
 			return energyStorage.getEnergyStored();
 		}
@@ -126,7 +130,7 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	@Override
 	public int getMaxEnergyStored() {
 		if (actualType == EnergyType.STATIC_VOLT) {
-			return staticVoltHandler.getCapacity() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			return CapabilityStaticVolt.convertSVtoFE(staticVoltHandler.getCapacity());
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
 			return energyStorage.getMaxEnergyStored();
 		}
@@ -135,7 +139,7 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 
 	@Override
 	public boolean canExtract() {
-		return canDrainPower();
+		return canBeDrained();
 	}
 
 	@Override
@@ -166,9 +170,9 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	}
 
 	@Override
-	public int getMaxReceive() {
+	public long getMaxReceive() {
 		if (actualType == EnergyType.STATIC_VOLT) {
-			return staticVoltHandler.getMaxReceive() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			return CapabilityStaticVolt.convertSVtoFE(staticVoltHandler.getMaxReceive());
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
 			return energyStorage.receiveEnergy(Integer.MAX_VALUE, true);
 		}
@@ -176,9 +180,9 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 	}
 
 	@Override
-	public int getMaxDrain() {
+	public long getMaxDrain() {
 		if (actualType == EnergyType.STATIC_VOLT) {
-			return staticVoltHandler.getMaxDrain() * IStaticVoltHandler.FE_TO_SV_CONVERSION;
+			return CapabilityStaticVolt.convertSVtoFE(staticVoltHandler.getMaxDrain());
 		} else if (actualType == EnergyType.FORGE_ENERGY) {
 			return energyStorage.extractEnergy(Integer.MAX_VALUE, true);
 		}

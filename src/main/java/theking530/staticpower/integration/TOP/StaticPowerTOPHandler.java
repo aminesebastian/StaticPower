@@ -44,14 +44,16 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 
 		// Handle any static volts.
 		world.getTileEntity(data.getPos()).getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, data.getSideHit()).ifPresent(handler -> {
-			probeInfo.progress(handler.getStoredPower(), handler.getCapacity(),
-					probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.energy_unit").getString()).filledColor(0xff0099cc).alternateFilledColor(0xff0075ff).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
+			probeInfo.progress(CapabilityStaticVolt.convertmSVtoSV(handler.getStoredPower()), CapabilityStaticVolt.convertmSVtoSV(handler.getCapacity()),
+					probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.energy_unit").getString()).filledColor(0xff0099cc).alternateFilledColor(0xff0075ff)
+							.borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
 		});
 
 		// Handle any heat.
 		world.getTileEntity(data.getPos()).getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, data.getSideHit()).ifPresent(handler -> {
 			probeInfo.progress((int) handler.getCurrentHeat(), (int) handler.getMaximumHeat(),
-					probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.heat_unit").getString()).filledColor(0xffff9d00).alternateFilledColor(0xffff8400).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
+					probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.heat_unit").getString()).filledColor(0xffff9d00).alternateFilledColor(0xffff8400)
+							.borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
 		});
 
 		// Get the base tile entity.
@@ -65,11 +67,11 @@ public class StaticPowerTOPHandler implements IProbeInfoProvider {
 			AbstractProcesingComponent processingComponent = teBase.getComponent(AbstractProcesingComponent.class);
 			if (processingComponent.isProcessing()) {
 				probeInfo.progress(processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime(), processingComponent.getMaxProcessingTime(),
-						probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.ticks_remaining").getString()).filledColor(0xffaaaaaa).alternateFilledColor(0xffaaaaaa).borderColor(0xff999999)
-								.numberFormat(NumberFormat.COMPACT));
+						probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.ticks_remaining").getString()).filledColor(0xffaaaaaa)
+								.alternateFilledColor(0xffaaaaaa).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
 			} else {
-				probeInfo.progress(0, 0, probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.ticks_remaining").getString()).filledColor(0xffaaaaaa).alternateFilledColor(0xffaaaaaa).borderColor(0xff999999)
-						.numberFormat(NumberFormat.COMPACT));
+				probeInfo.progress(0, 0, probeInfo.defaultProgressStyle().suffix(new TranslationTextComponent("gui.staticpower.ticks_remaining").getString()).filledColor(0xffaaaaaa)
+						.alternateFilledColor(0xffaaaaaa).borderColor(0xff999999).numberFormat(NumberFormat.COMPACT));
 			}
 
 		}

@@ -8,6 +8,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -34,10 +35,6 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityFermenter extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityFermenter> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
-	
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -66,8 +63,8 @@ public class TileEntityFermenter extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FermenterRecipe>("ProcessingComponent", FermenterRecipe.RECIPE_TYPE, DEFAULT_PROCESSING_TIME, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FermenterRecipe>("ProcessingComponent", FermenterRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.fermenterProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -75,7 +72,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.fermenterPowerUsage.get());
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));

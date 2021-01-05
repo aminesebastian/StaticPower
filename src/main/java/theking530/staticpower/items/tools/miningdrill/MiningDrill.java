@@ -103,7 +103,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		PARTS.add(MultiPartSlots.DRILL_BIT);
 	}
 
-	public int getPowerCapacity() {
+	public long getPowerCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
 	}
 
@@ -338,8 +338,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		int remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
-		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
+		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 
 		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {

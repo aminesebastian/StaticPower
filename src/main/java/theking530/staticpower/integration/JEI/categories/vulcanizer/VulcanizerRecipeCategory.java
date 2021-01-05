@@ -124,7 +124,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 		fluids.init(3, true, 40, 4, 16, 52, getFluidTankDisplaySize(recipe.getInputFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

@@ -27,18 +27,18 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getPortableBatteryCapacity() {
-		return 10000;
+	protected long getPortableBatteryCapacity() {
+		return 10000000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerGeneration() {
-		return 64;
+	protected long getSolarPanelPowerGeneration() {
+		return 64000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerStorage() {
-		return 128;
+	protected long getSolarPanelPowerStorage() {
+		return 128000;
 	}
 
 	@Override
@@ -97,23 +97,23 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getCablePowerCapacity() {
-		return 1024;
+	protected long getCablePowerCapacity() {
+		return 1024000;
 	}
 
 	@Override
-	protected int getCablePowerDelivery() {
-		return 1024;
+	protected long getCablePowerDelivery() {
+		return 1024000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerCapacity() {
-		return 8192;
+	protected long getCableIndustrialPowerCapacity() {
+		return 8192000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerDelivery() {
-		return 8192;
+	protected long getCableIndustrialPowerDelivery() {
+		return 8192000;
 	}
 
 	@Override
@@ -122,8 +122,13 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getBatteryCapacity() {
-		return 1024000;
+	protected long getBatteryCapacity() {
+		return 1024000000;
+	}
+
+	@Override
+	protected long getBatteryMaxIO() {
+		return 2048000;
 	}
 
 	@Override
@@ -217,18 +222,18 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getDefaultMachinePowerCapacity() {
-		return 10000;
+	protected long getDefaultMachinePowerCapacity() {
+		return 10000000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerInput() {
-		return 128;
+	protected long getDefaultMachinePowerInput() {
+		return 128000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerOutput() {
-		return 128;
+	protected long getDefaultMachinePowerOutput() {
+		return 128000;
 	}
 
 	@Override

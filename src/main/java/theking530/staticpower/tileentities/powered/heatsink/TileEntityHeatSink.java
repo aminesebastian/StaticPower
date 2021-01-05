@@ -40,7 +40,6 @@ public class TileEntityHeatSink extends TileEntityMachine implements INamedConta
 	public static final TileEntityTypeAllocator<TileEntityHeatSink> TYPE_GOLD = new TileEntityTypeAllocator<TileEntityHeatSink>(
 			(allocator) -> new TileEntityHeatSink(allocator, StaticPowerTiers.GOLD), ModBlocks.GoldHeatSink);
 
-	public static final float HEAT_DAMAGE_THRESHOLD = 100.0f;
 	public final HeatCableComponent cableComponent;
 
 	public TileEntityHeatSink(TileEntityTypeAllocator<TileEntityHeatSink> allocator, ResourceLocation tierName) {
@@ -57,7 +56,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements INamedConta
 			cableComponent.getHeatNetworkModule().ifPresent(module -> {
 				// Apply damage to any entities that are on top of this block if the heat is >
 				// the damage threshold.
-				if (module.getHeatPerCable() >= HEAT_DAMAGE_THRESHOLD) {
+				if (module.getHeatPerCable() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold.get()) {
 					AxisAlignedBB aabb = new AxisAlignedBB(this.pos.add(0.0, 0, 0.0), this.pos.add(1.0, 2.0, 1.0));
 					List<Entity> list = this.world.getEntitiesWithinAABB(Entity.class, aabb);
 					for (Entity entity : list) {

@@ -7,6 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
@@ -33,11 +35,6 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityLumberMill> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityLumberMill(), ModBlocks.LumberMill);
 
-	public static final int DEFAULT_PROCESSING_TIME = 150;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final int DEFAULT_TANK_SIZE = 5000;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;
 	public final InventoryComponent secondaryOutputInventory;
@@ -52,6 +49,10 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	public TileEntityLumberMill() {
 		super(TYPE, StaticPowerTiers.BASIC);
 
+		// Get the tier.
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
+
+		// Create the input inventory.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
@@ -76,16 +77,14 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
-
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", mainOutputInventory));
 		registerComponent(new OutputServoComponent("SecondaryOutputServo", secondaryOutputInventory));
 
 		// Setup the fluid tank and fluid servo.
-		registerComponent(
-				fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
+				.setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanFill(false);
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
@@ -112,6 +111,11 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 		// Move the item.
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
+
+		// Set the power usage.
+		this.processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
@@ -134,7 +138,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 
 		mainOutputInventory.insertItem(0, primaryOutput, false);
 		secondaryOutputInventory.insertItem(0, secondaryOutput, false);
-		
+
 		fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);

@@ -3,7 +3,6 @@ package theking530.staticpower.tileentities.powered.basicfarmer;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import net.minecraft.block.AttachedStemBlock;
 import net.minecraft.block.Block;
@@ -35,6 +34,7 @@ import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -70,14 +70,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			TYPE.setTileEntitySpecialRenderer(TileEntityRenderFarmer::new);
 		}
 	}
-
-	public static final int DEFAULT_WATER_USAGE = 1;
-	public static final int DEFAULT_IDLE_ENERGY_USAGE = 10;
-	public static final int DEFAULT_HARVEST_ENERGY_COST = 100;
-	public static final int DEFAULT_RANGE = 2;
-	public static final int DEFAULT_TOOL_USAGE = 1;
-	public static final int DEFAULT_TIME_PER_BLOCK = 20;
-	public static final Random RANDOM = new Random();
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -115,9 +107,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(
 				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_TIME_PER_BLOCK, this::canFarm, this::canFarm, this::processingCompleted, true)
-				.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage)
-				.setProcessingPowerUsage(DEFAULT_IDLE_ENERGY_USAGE).setCompletedPowerUsage(DEFAULT_HARVEST_ENERGY_COST));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm, this::canFarm,
+				this::processingCompleted, true).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage)
+						.setProcessingPowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get()).setCompletedPowerUsage(StaticPowerConfig.SERVER.basicFarmerHarvestPowerUsage.get()));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
 		}));
@@ -143,7 +135,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		validHarvestacbleClasses.add(PumpkinBlock.class);
 		validHarvestacbleClasses.add(AttachedStemBlock.class);
 
-		range = DEFAULT_RANGE;
+		range = StaticPowerConfig.SERVER.basicFarmerDefaultRange.get();
 		blocks = new LinkedList<BlockPos>();
 		shouldDrawRadiusPreview = false;
 	}
@@ -152,8 +144,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
 			if (!getWorld().isRemote) {
-				energyStorage.useBulkPower(DEFAULT_IDLE_ENERGY_USAGE);
-				fluidTankComponent.drain(DEFAULT_WATER_USAGE, FluidAction.EXECUTE);
+				fluidTankComponent.drain(StaticPowerConfig.SERVER.basicFarmerFluidUsage.get(), FluidAction.EXECUTE);
 
 				for (BlockPos blockpos : blocks) {
 					BlockPos farmlandPos = blockpos.offset(Direction.DOWN);
@@ -288,7 +279,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (!hasHoe()) {
 			return ProcessingCheckState.error("Missing Hoe!");
 		}
-		if (fluidTankComponent.getFluid().getAmount() < DEFAULT_WATER_USAGE) {
+		if (fluidTankComponent.getFluid().getAmount() < StaticPowerConfig.SERVER.basicFarmerFluidUsage.get()) {
 			return ProcessingCheckState.notEnoughFluid();
 		}
 		return ProcessingCheckState.ok();
@@ -305,7 +296,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void useHoe() {
 		// If we have an hoe, and we're on the server, use it.
 		if (hasHoe() && !getWorld().isRemote) {
-			if (inputInventory.getStackInSlot(0).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
+			if (inputInventory.getStackInSlot(0).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), RANDOM, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
@@ -315,7 +306,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void useAxe() {
 		// If we have an axe, and we're on the server, use it.
 		if (hasAxe() && !getWorld().isRemote) {
-			if (inputInventory.getStackInSlot(1).attemptDamageItem(DEFAULT_TOOL_USAGE, RANDOM, null)) {
+			if (inputInventory.getStackInSlot(1).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), RANDOM, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
@@ -482,10 +473,10 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
-		range = DEFAULT_RANGE;
+		range = StaticPowerConfig.SERVER.basicFarmerDefaultRange.get();
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range, DEFAULT_RANGE * (((BaseRangeUpgrade) stack.getItem()).getTier().rangeUpgrade.get()));
+				range = (int) Math.max(range, StaticPowerConfig.SERVER.basicFarmerDefaultRange.get() * (((BaseRangeUpgrade) stack.getItem()).getTier().rangeUpgrade.get()));
 			}
 		}
 		refreshBlocksInRange(range);

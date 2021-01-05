@@ -131,7 +131,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 	public abstract int getRadius();
 
-	public abstract int getFuelUsage();
+	public abstract long getFuelUsage();
 
 	public boolean isDoneMining() {
 		return currentBlockIndex == -1;

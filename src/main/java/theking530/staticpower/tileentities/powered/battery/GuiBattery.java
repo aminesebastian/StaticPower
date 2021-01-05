@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
@@ -41,7 +42,7 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
 		infoTab.addLine("desc1", new StringTextComponent("A Battery stores power for later usage."));
 		infoTab.addLineBreak();
-		infoTab.addLine("desc2", new StringTextComponent("Holding control and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+		infoTab.addLine("desc2", new StringTextComponent("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
@@ -93,7 +94,7 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
-		int deltaValue = 0;
+		long deltaValue = 0;
 		boolean input = false;
 		if (button == inputUp) {
 			deltaValue = 1;
@@ -112,9 +113,11 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		deltaValue *= mouseButton == MouseButton.LEFT ? 1 : 10;
 		if (Screen.hasShiftDown()) {
 			deltaValue = (deltaValue * maxIOAdjustment * 2);
-		} else if (!Screen.hasControlDown()) {
+		} else if (!Screen.hasAltDown()) {
 			deltaValue = (deltaValue * maxIOAdjustment);
 		}
+
+		deltaValue = CapabilityStaticVolt.convertSVtomSV(deltaValue);
 
 		if (input) {
 			getTileEntity().setInputLimit(Math.max(0, Math.min(getTileEntity().getInputLimit() + deltaValue, getTileEntity().getMaximumPowerIO())));

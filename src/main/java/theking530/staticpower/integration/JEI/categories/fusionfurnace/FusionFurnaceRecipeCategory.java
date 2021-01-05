@@ -151,7 +151,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 		probabilityStacks.init(OUTPUT_SLOT, false, 80, 40);
 		probabilityStacks.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

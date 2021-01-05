@@ -57,17 +57,15 @@ public class TileEntityBattery extends TileEntityMachine {
 		}
 	}
 
-	public static final int MACHINE_POWER_IO_DIVISOR = 4;
-
 	public final BatteryInventoryComponent batteryInventory;
 
-	private int minPowerThreshold;
-	private int maxPowerThreshold;
+	private long minPowerThreshold;
+	private long maxPowerThreshold;
 
-	private int maxPowerIO;
+	private long maxPowerIO;
 
-	private int inputRFTick;
-	private int outputRFTick;
+	private long inputRFTick;
+	private long outputRFTick;
 
 	protected PowerDistributionComponent powerDistributor;
 
@@ -97,7 +95,7 @@ public class TileEntityBattery extends TileEntityMachine {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 
 		// Calculate the IO.
-		maxPowerIO = tierObject.cableIndustrialPowerCapacity.get() / MACHINE_POWER_IO_DIVISOR;
+		maxPowerIO = tierObject.batteryMaxIO.get();
 		inputRFTick = maxPowerIO / 2;
 		outputRFTick = maxPowerIO / 2;
 
@@ -125,39 +123,39 @@ public class TileEntityBattery extends TileEntityMachine {
 		maxPowerThreshold = newThreshold;
 	}
 
-	public int getMinimumPowerThreshold() {
+	public long getMinimumPowerThreshold() {
 		return minPowerThreshold;
 	}
 
-	public int getMaximumPowerThreshold() {
+	public long getMaximumPowerThreshold() {
 		return maxPowerThreshold;
 	}
 
-	public int getInputLimit() {
+	public long getInputLimit() {
 		return inputRFTick;
 	}
 
-	public int getOutputLimit() {
+	public long getOutputLimit() {
 		return outputRFTick;
 	}
 
-	public void setInputLimit(int newLimit) {
+	public void setInputLimit(long newLimit) {
 		inputRFTick = newLimit;
 		energyStorage.getStorage().setMaxReceive(newLimit);
 	}
 
-	public void setOutputLimit(int newLimit) {
+	public void setOutputLimit(long newLimit) {
 		outputRFTick = newLimit;
 		energyStorage.getStorage().setMaxExtract(newLimit);
 	}
 
-	public void setMaximumPowerIO(int newMaxIO) {
+	public void setMaximumPowerIO(long newMaxIO) {
 		maxPowerIO = newMaxIO;
 		setInputLimit(maxPowerIO);
 		setOutputLimit(maxPowerIO);
 	}
 
-	public int getMaximumPowerIO() {
+	public long getMaximumPowerIO() {
 		return maxPowerIO;
 	}
 
@@ -175,22 +173,22 @@ public class TileEntityBattery extends TileEntityMachine {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
-		minPowerThreshold = nbt.getInt("min_power_threshold");
-		maxPowerThreshold = nbt.getInt("max_power_threshold");
+		minPowerThreshold = nbt.getLong("min_power_threshold");
+		maxPowerThreshold = nbt.getLong("max_power_threshold");
 
-		inputRFTick = nbt.getInt("input_limit");
-		outputRFTick = nbt.getInt("output_limit");
+		inputRFTick = nbt.getLong("input_limit");
+		outputRFTick = nbt.getLong("output_limit");
 	}
 
 	@Override
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
-		nbt.putInt("min_power_threshold", minPowerThreshold);
-		nbt.putInt("max_power_threshold", maxPowerThreshold);
+		nbt.putLong("min_power_threshold", minPowerThreshold);
+		nbt.putLong("max_power_threshold", maxPowerThreshold);
 
-		nbt.putInt("input_limit", inputRFTick);
-		nbt.putInt("output_limit", outputRFTick);
+		nbt.putLong("input_limit", inputRFTick);
+		nbt.putLong("output_limit", outputRFTick);
 		return nbt;
 	}
 

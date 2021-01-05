@@ -20,7 +20,7 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 	private final ItemStack[] outputItems;
 	private final StaticPowerIngredient inputItem;
 
-	public GrinderRecipe(ResourceLocation name, int processingTime, int powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput... outputs) {
+	public GrinderRecipe(ResourceLocation name, int processingTime, long powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput... outputs) {
 		super(name, processingTime, powerCost);
 		this.inputItem = input;
 		this.outputs = outputs;

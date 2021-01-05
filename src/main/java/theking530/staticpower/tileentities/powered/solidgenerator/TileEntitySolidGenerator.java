@@ -13,6 +13,7 @@ import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
@@ -34,9 +35,6 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
 
-	public static final int DEFAULT_POWER_GENERATION = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -44,7 +42,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	public final RecipeProcessingComponent<SolidFuelRecipe> processingComponent;
 
-	public int powerGenerationPerTick;
+	public long powerGenerationPerTick;
 
 	public TileEntitySolidGenerator() {
 		super(TYPE, StaticPowerTiers.IRON);
@@ -80,7 +78,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
 		// Set the default power generation.
-		powerGenerationPerTick = DEFAULT_POWER_GENERATION;
+		powerGenerationPerTick = StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get();
 
 		// Don't allow this to receive power from external sources.
 		energyStorage.setCapabiltiyFilter((amount, side, action) -> {

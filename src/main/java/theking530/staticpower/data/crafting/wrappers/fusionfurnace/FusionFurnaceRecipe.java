@@ -18,7 +18,7 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 	private final List<StaticPowerIngredient> inputs;
 	private final ProbabilityItemStackOutput output;
 
-	public FusionFurnaceRecipe(ResourceLocation name, int processingTime, int powerCost, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output) {
+	public FusionFurnaceRecipe(ResourceLocation name, int processingTime, long powerCost, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output) {
 		super(name, processingTime, powerCost);
 		this.inputs = inputs;
 		this.output = output;

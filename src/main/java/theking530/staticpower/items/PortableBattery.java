@@ -30,7 +30,7 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 	}
 
 	@Override
-	public int getCapacity() {
+	public long getCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get();
 	}
 }

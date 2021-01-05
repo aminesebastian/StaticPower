@@ -89,6 +89,10 @@ public class ServerCable {
 		return dataTag.getFloat(key);
 	}
 
+	public long getLongProperty(String key) {
+		return dataTag.getLong(key);
+	}
+
 	public double getDoubleProperty(String key) {
 		return dataTag.getDouble(key);
 	}
@@ -107,6 +111,10 @@ public class ServerCable {
 
 	public void setProperty(String key, float value) {
 		dataTag.putFloat(key, value);
+	}
+
+	public void setProperty(String key, long value) {
+		dataTag.putLong(key, value);
 	}
 
 	public void setProperty(String key, double value) {

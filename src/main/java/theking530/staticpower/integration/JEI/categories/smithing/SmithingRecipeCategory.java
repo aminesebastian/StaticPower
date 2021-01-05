@@ -213,7 +213,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 			fluids.set(ingredients);
 		}
 
-		powerTimer = guiHelper.createTickTimer(recipe.getRecipe().getProcessingTime(), recipe.getRecipe().getProcessingTime() * recipe.getRecipe().getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getRecipe().getProcessingTime(), (int) (recipe.getRecipe().getProcessingTime() * recipe.getRecipe().getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getRecipe().getProcessingTime(), recipe.getRecipe().getProcessingTime(), false);
 	}
 }

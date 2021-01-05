@@ -27,18 +27,18 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getPortableBatteryCapacity() {
-		return 1000;
+	protected long getPortableBatteryCapacity() {
+		return 1000000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerGeneration() {
-		return 8;
+	protected long getSolarPanelPowerGeneration() {
+		return 8000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerStorage() {
-		return 16;
+	protected long getSolarPanelPowerStorage() {
+		return 16000;
 	}
 
 	@Override
@@ -97,23 +97,23 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getCablePowerCapacity() {
-		return 64;
+	protected long getCablePowerCapacity() {
+		return 64000;
 	}
 
 	@Override
-	protected int getCablePowerDelivery() {
-		return 64;
+	protected long getCablePowerDelivery() {
+		return 64000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerCapacity() {
-		return 512;
+	protected long getCableIndustrialPowerCapacity() {
+		return 512000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerDelivery() {
-		return 512;
+	protected long getCableIndustrialPowerDelivery() {
+		return 512000;
 	}
 
 	@Override
@@ -122,7 +122,12 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getBatteryCapacity() {
+	protected long getBatteryCapacity() {
+		return 128000000;
+	}
+
+	@Override
+	protected long getBatteryMaxIO() {
 		return 128000;
 	}
 
@@ -207,18 +212,18 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getDefaultMachinePowerCapacity() {
-		return 1000;
+	protected long getDefaultMachinePowerCapacity() {
+		return 1000000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerInput() {
-		return 16;
+	protected long getDefaultMachinePowerInput() {
+		return 16000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerOutput() {
-		return 16;
+	protected long getDefaultMachinePowerOutput() {
+		return 16000;
 	}
 
 	@Override

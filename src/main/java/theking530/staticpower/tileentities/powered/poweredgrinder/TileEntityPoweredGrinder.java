@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -32,11 +33,6 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPoweredGrinder> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityPoweredGrinder(), ModBlocks.PoweredGrinder);
 
-	public static final int DEFAULT_PROCESSING_TIME = 200;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final float DEFAULT_OUTPUT_BONUS_CHANCE = 1.0f;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
@@ -45,7 +41,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	public final RecipeProcessingComponent<GrinderRecipe> processingComponent;
 
 	@UpdateSerialize
-	private float bonusOutputChance;
+	private double bonusOutputChance;
 
 	public TileEntityPoweredGrinder() {
 		super(TYPE, StaticPowerTiers.BASIC);
@@ -66,8 +62,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent", GrinderRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent", GrinderRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -75,7 +71,6 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
@@ -85,7 +80,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 
 		// Initialize the bonus output chance.
-		bonusOutputChance = DEFAULT_OUTPUT_BONUS_CHANCE;
+		bonusOutputChance = StaticPowerConfig.SERVER.poweredGrinderOutputBonusChance.get();
 	}
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
@@ -104,6 +99,11 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		}
 
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
+
+		// Set the power usage and processing time.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
@@ -130,12 +130,12 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	}
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
-		bonusOutputChance = DEFAULT_OUTPUT_BONUS_CHANCE;
+		bonusOutputChance = StaticPowerConfig.SERVER.poweredGrinderOutputBonusChance.get();
 		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeType.OUTPUT_MULTIPLIER);
 
 		// If it is not valid, set the values back to the defaults. Otherwise, set the
 		// new processing speeds.
-		float upgradeAmount = DEFAULT_OUTPUT_BONUS_CHANCE;
+		double upgradeAmount = bonusOutputChance;
 		if (!upgradeWrapper.isEmpty()) {
 			upgradeAmount = (float) (1.0f + (upgradeWrapper.getTier().outputMultiplierUpgrade.get() * upgradeWrapper.getUpgradeWeight()));
 		}
@@ -144,7 +144,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		bonusOutputChance = upgradeAmount;
 	}
 
-	public float getBonusChance() {
+	public double getBonusChance() {
 		return bonusOutputChance;
 	}
 

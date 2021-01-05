@@ -77,7 +77,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 				}
 
 				// Get the amount of power to apply to each item.
-				int maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput() / count;
+				long maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput() / count;
 
 				// Attempt to charge each item.
 				for (int i = 0; i < unchargedInventory.getSlots(); i++) {
@@ -86,7 +86,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 					// If it's not empty and is an energy storing item.
 					if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 						if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
-							int charged = EnergyHandlerItemStackUtilities.receivePower(stack, maxOutput, false);
+							long charged = EnergyHandlerItemStackUtilities.receivePower(stack, maxOutput, false);
 							energyStorage.useBulkPower(charged);
 						} else {
 							moveChargedItemToOutputs(i);

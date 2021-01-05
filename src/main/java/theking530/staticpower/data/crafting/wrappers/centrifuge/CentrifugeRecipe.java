@@ -21,7 +21,7 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput output3;
 	private final int minimumSpeed;
 
-	public CentrifugeRecipe(ResourceLocation name, int processingTime, int powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput output1, ProbabilityItemStackOutput output2,
+	public CentrifugeRecipe(ResourceLocation name, int processingTime, long powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput output1, ProbabilityItemStackOutput output2,
 			ProbabilityItemStackOutput output3, int minimumSpeed) {
 		super(name, processingTime, powerCost);
 		this.input = input;

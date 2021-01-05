@@ -1,6 +1,6 @@
 package theking530.staticpower.items.utilities;
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -52,7 +52,7 @@ public class EnergyHandlerItemStackUtilities {
 	 * @param energy    The amount of energy to set this itemstack's stored energy
 	 *                  to.
 	 */
-	public static void setEnergy(ItemStack container, int energy) {
+	public static void setEnergy(ItemStack container, long energy) {
 		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			instance.receivePower(energy, false);
 		});
@@ -63,8 +63,8 @@ public class EnergyHandlerItemStackUtilities {
 	 * 
 	 * @param container The itemstack to check.
 	 */
-	public static int getStoredPower(ItemStack container) {
-		AtomicInteger energy = new AtomicInteger(0);
+	public static long getStoredPower(ItemStack container) {
+		AtomicLong energy = new AtomicLong(0);
 		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			energy.set(instance.getStoredPower());
 		});
@@ -77,8 +77,8 @@ public class EnergyHandlerItemStackUtilities {
 	 * 
 	 * @param container The itemstack to check.
 	 */
-	public static int getCapacity(ItemStack container) {
-		AtomicInteger energy = new AtomicInteger(0);
+	public static long getCapacity(ItemStack container) {
+		AtomicLong energy = new AtomicLong(0);
 		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			energy.set(instance.getCapacity());
 		});
@@ -93,8 +93,8 @@ public class EnergyHandlerItemStackUtilities {
 	 * @param simulate   If true, the process will only be simulated.
 	 * @return The actual amount of energy added.
 	 */
-	public static int receivePower(ItemStack container, int maxReceive, boolean simulate) {
-		AtomicInteger received = new AtomicInteger(0);
+	public static long receivePower(ItemStack container, long maxReceive, boolean simulate) {
+		AtomicLong received = new AtomicLong(0);
 		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			received.set(instance.receivePower(maxReceive, simulate));
 		});
@@ -109,8 +109,8 @@ public class EnergyHandlerItemStackUtilities {
 	 * @param simulate   If true, the process will only be simulated.
 	 * @return The actual amount of energy drained.
 	 */
-	public static int drainPower(ItemStack container, int maxExtract, boolean simulate) {
-		AtomicInteger extracted = new AtomicInteger(0);
+	public static long drainPower(ItemStack container, long maxExtract, boolean simulate) {
+		AtomicLong extracted = new AtomicLong(0);
 		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			extracted.set(instance.drainPower(maxExtract, simulate));
 		});

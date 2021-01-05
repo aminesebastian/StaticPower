@@ -17,7 +17,7 @@ public class CastingRecipe extends AbstractMachineRecipe {
 	private Ingredient requiredMold;
 	private ProbabilityItemStackOutput outputItemStack;
 
-	public CastingRecipe(ResourceLocation name, int processingTime, int powerCost, ProbabilityItemStackOutput output, FluidStack inputFluid, Ingredient mold) {
+	public CastingRecipe(ResourceLocation name, int processingTime, long powerCost, ProbabilityItemStackOutput output, FluidStack inputFluid, Ingredient mold) {
 		super(name, processingTime, powerCost);
 		this.inputFluid = inputFluid;
 		requiredMold = mold;

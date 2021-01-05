@@ -26,14 +26,14 @@ import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 
 public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID,
-			"powered_furnace");
+	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "powered_furnace");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -98,8 +98,8 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceR
 	public List<ITextComponent> getTooltipStrings(FurnaceRecipe recipe, double mouseX, double mouseY) {
 		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(
-					TileEntityPoweredFurnace.getCookTime(recipe) * TileEntityPoweredFurnace.DEFAULT_PROCESSING_COST)));
+			output.add(new StringTextComponent("Usage: ")
+					.append(GuiTextUtilities.formatEnergyToString(TileEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
 		}
 
 		// Render the progress bar tooltip.
@@ -141,8 +141,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<FurnaceR
 		guiItemStacks.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.getCookTime(recipe),
-				TileEntityPoweredFurnace.getCookTime(recipe) * TileEntityPoweredFurnace.DEFAULT_PROCESSING_COST, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.getCookTime(recipe),
-				TileEntityPoweredFurnace.getCookTime(recipe), false);
+				(int) (TileEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get()), true);
+		processingTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.getCookTime(recipe), TileEntityPoweredFurnace.getCookTime(recipe), false);
 	}
 }

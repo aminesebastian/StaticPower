@@ -4,9 +4,9 @@ import net.minecraft.util.ResourceLocation;
 
 public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	protected final int processingTime;
-	protected final int powerCost;
+	protected final long powerCost;
 
-	public AbstractMachineRecipe(ResourceLocation name, int processingTime, int powerCost) {
+	public AbstractMachineRecipe(ResourceLocation name, int processingTime, long powerCost) {
 		super(name);
 		this.processingTime = processingTime;
 		this.powerCost = powerCost;
@@ -26,7 +26,7 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	 * 
 	 * @return
 	 */
-	public int getPowerCost() {
+	public long getPowerCost() {
 		return powerCost;
 	}
 }

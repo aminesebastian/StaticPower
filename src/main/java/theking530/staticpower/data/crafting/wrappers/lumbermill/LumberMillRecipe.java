@@ -22,7 +22,7 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 	private final FluidStack outputFluid;
 
 	public LumberMillRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput primaryOutput, ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid,
-			int processingTime, int powerCost) {
+			int processingTime, long powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.primaryOutput = primaryOutput;

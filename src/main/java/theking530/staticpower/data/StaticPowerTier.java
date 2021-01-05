@@ -3,6 +3,7 @@ package theking530.staticpower.data;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 import theking530.staticpower.StaticPower;
 
 public abstract class StaticPowerTier {
@@ -20,8 +21,8 @@ public abstract class StaticPowerTier {
 	/*************
 	 * Solar Panel
 	 *************/
-	public final ConfigValue<Integer> solarPanelPowerGeneration;
-	public final ConfigValue<Integer> solarPanelPowerStorage;
+	public final LongValue solarPanelPowerGeneration;
+	public final LongValue solarPanelPowerStorage;
 
 	/*******
 	 * Pump
@@ -53,10 +54,10 @@ public abstract class StaticPowerTier {
 	/***************************
 	 * Power Cable Configuration
 	 ***************************/
-	public final ConfigValue<Integer> cablePowerCapacity;
-	public final ConfigValue<Integer> cablePowerDelivery;
-	public final ConfigValue<Integer> cableIndustrialPowerCapacity;
-	public final ConfigValue<Integer> cableIndustrialPowerDelivery;
+	public final LongValue cablePowerCapacity;
+	public final LongValue cablePowerDelivery;
+	public final LongValue cableIndustrialPowerCapacity;
+	public final LongValue cableIndustrialPowerDelivery;
 
 	/**************************
 	 * Item Cable Configuration
@@ -84,15 +85,16 @@ public abstract class StaticPowerTier {
 	/*********************
 	 * Power Configuration
 	 *********************/
-	public final ConfigValue<Integer> batteryCapacity;
-	public final ConfigValue<Integer> portableBatteryCapacity;
+	public final LongValue batteryCapacity;
+	public final LongValue batteryMaxIO;
+	public final LongValue portableBatteryCapacity;
 
 	/***********************
 	 * Machine Configuration
 	 ***********************/
-	public final ConfigValue<Integer> defaultMachinePowerCapacity;
-	public final ConfigValue<Integer> defaultMachinePowerInput;
-	public final ConfigValue<Integer> defaultMachinePowerOutput;
+	public final LongValue defaultMachinePowerCapacity;
+	public final LongValue defaultMachinePowerInput;
+	public final LongValue defaultMachinePowerOutput;
 
 	/********************
 	 * Processing Upgrade
@@ -176,29 +178,36 @@ public abstract class StaticPowerTier {
 		builder.pop();
 
 		builder.push("Machines");
-		defaultMachinePowerCapacity = builder.comment("The base amount of power a machine of this tier can store.")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerCapacity").define("DefaultMachinePowerCapacity", this.getDefaultMachinePowerCapacity());
+		defaultMachinePowerCapacity = builder.comment("The base amount of power a machine of this tier can store (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerCapacity")
+				.defineInRange("DefaultMachinePowerCapacity", this.getDefaultMachinePowerCapacity(), 0, Long.MAX_VALUE);
 
-		defaultMachinePowerInput = builder.comment("The base amount of power a machine of this tier can consume from a power providing source (a cable or battery).")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerInput").define("DefaultMachinePowerInput", this.getDefaultMachinePowerInput());
+		defaultMachinePowerInput = builder.comment("The base amount of power a machine of this tier can consume from a power providing source (a cable or battery) (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerInput").defineInRange("DefaultMachinePowerInput", this.getDefaultMachinePowerInput(), 0, Long.MAX_VALUE);
 
-		defaultMachinePowerOutput = builder.comment("The base amount of power that can be extracted or provided by a machine of this tier.")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerOutput").define("DefaultMachinePowerOutput", this.getDefaultMachinePowerOutput());
+		defaultMachinePowerOutput = builder.comment("The base amount of power that can be extracted or provided by a machine of this tier (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerOutput")
+				.defineInRange("DefaultMachinePowerOutput", this.getDefaultMachinePowerOutput(), 0, Long.MAX_VALUE);
 
 		defaultTankCapacity = builder.comment("The base amount of fluid a machine of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "defaultTankCapacity")
 				.define("DefaultTankCapacity", this.getDefaultTankCapacity());
 
 		builder.push("Battery");
-		batteryCapacity = builder.comment("The amount of power that a non-portable battery of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "batteryCapacity")
-				.define("BatteryCapacity", this.getBatteryCapacity());
+		batteryCapacity = builder.comment("The amount of power that a non-portable battery of this tier can store (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "batteryCapacity").defineInRange("BatteryCapacity", this.getBatteryCapacity(), 0, Long.MAX_VALUE);
+
+		batteryMaxIO = builder.comment("The amount of power that a non-portable battery of this tier can transfer (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "batteryMaxIO").defineInRange("BatteryMaxIO", this.getBatteryMaxIO(), 0, Long.MAX_VALUE);
+
 		builder.pop();
 
 		builder.push("Solar_Panel");
-		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick.")
-				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration").define("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration());
+		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration")
+				.defineInRange("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
 
-		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage")
-				.define("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration());
+		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage").defineInRange("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
 		builder.pop();
 
 		builder.push("Pump");
@@ -275,16 +284,17 @@ public abstract class StaticPowerTier {
 		 * Power
 		 ********/
 		builder.push("Power");
-		cablePowerCapacity = builder.comment("The amount of power that a power cable of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "cablePowerCapacity")
-				.define("CablePowerCapacity", this.getCablePowerCapacity());
+		cablePowerCapacity = builder.comment("The amount of power that a power cable of this tier can store (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "cablePowerCapacity").defineInRange("CablePowerCapacity", this.getCablePowerCapacity(), 0, Long.MAX_VALUE);
+		cablePowerDelivery = builder.comment("The amount of power that a power cable of this tier can supply to a single destination (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "cablePowerDelivery").defineInRange("CablePowerDelivery", this.getCablePowerDelivery(), 0, Long.MAX_VALUE);
 
-		cablePowerDelivery = builder.comment("The amount of power that a power cable of this tier can supply to a single destination.")
-				.translation(StaticPower.MOD_ID + ".config." + "cablePowerDelivery").define("CablePowerDelivery", this.getCablePowerDelivery());
-
-		cableIndustrialPowerCapacity = builder.comment("The amount of power that an industrial power cable of this tier can store.")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerCapacity").define("CableIndustrialPowerCapacity", this.getCableIndustrialPowerCapacity());
-		cableIndustrialPowerDelivery = builder.comment("The amount of power that an industrial power cable of this tier can supply to a single destination.")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerDelivery").define("CableIndustrialPowerDelivery", this.getCableIndustrialPowerDelivery());
+		cableIndustrialPowerCapacity = builder.comment("The amount of power that an industrial power cable of this tier can store (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerCapacity")
+				.defineInRange("CableIndustrialPowerCapacity", this.getCableIndustrialPowerCapacity(), 0, Long.MAX_VALUE);
+		cableIndustrialPowerDelivery = builder.comment("The amount of power that an industrial power cable of this tier can supply to a single destination (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerDelivery")
+				.defineInRange("CableIndustrialPowerDelivery", this.getCableIndustrialPowerDelivery(), 0, Long.MAX_VALUE);
 
 		builder.pop();
 
@@ -334,8 +344,8 @@ public abstract class StaticPowerTier {
 		capsuleCapacity = builder.comment("The amount of fluid that can be stored in a fluid capsule of this tier.").translation(StaticPower.MOD_ID + ".config." + "capsuleCapacity")
 				.define("CapsuleCapacity", this.getCapsuleCapacity());
 
-		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier.")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").define("PortableBatteryCapacity", this.getPortableBatteryCapacity());
+		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").defineInRange("PortableBatteryCapacity", this.getPortableBatteryCapacity(), 0, Long.MAX_VALUE);
 
 		itemFilterSlots = builder.comment("The number of slots that exist on an item filter of this tier (not the filter attachment, the actual item).")
 				.translation(StaticPower.MOD_ID + ".config." + "itemFilterSlots").define("ItemFilterSlots", this.getItemFilterSlots());
@@ -457,15 +467,15 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected int getDefaultMachinePowerCapacity() {
+	protected long getDefaultMachinePowerCapacity() {
 		return 0;
 	}
 
-	protected int getDefaultMachinePowerInput() {
+	protected long getDefaultMachinePowerInput() {
 		return 0;
 	}
 
-	protected int getDefaultMachinePowerOutput() {
+	protected long getDefaultMachinePowerOutput() {
 		return 0;
 	}
 
@@ -577,23 +587,27 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected int getBatteryCapacity() {
+	protected long getBatteryCapacity() {
 		return 0;
 	}
 
-	protected int getCablePowerCapacity() {
+	protected long getBatteryMaxIO() {
 		return 0;
 	}
 
-	protected int getCablePowerDelivery() {
+	protected long getCablePowerCapacity() {
 		return 0;
 	}
 
-	protected int getCableIndustrialPowerCapacity() {
+	protected long getCablePowerDelivery() {
 		return 0;
 	}
 
-	protected int getCableIndustrialPowerDelivery() {
+	protected long getCableIndustrialPowerCapacity() {
+		return 0;
+	}
+
+	protected long getCableIndustrialPowerDelivery() {
 		return 0;
 	}
 
@@ -601,7 +615,7 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected int getPortableBatteryCapacity() {
+	protected long getPortableBatteryCapacity() {
 		return 0;
 	}
 
@@ -609,11 +623,11 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected int getSolarPanelPowerGeneration() {
+	protected long getSolarPanelPowerGeneration() {
 		return 0;
 	}
 
-	protected int getSolarPanelPowerStorage() {
+	protected long getSolarPanelPowerStorage() {
 		return 0;
 	}
 

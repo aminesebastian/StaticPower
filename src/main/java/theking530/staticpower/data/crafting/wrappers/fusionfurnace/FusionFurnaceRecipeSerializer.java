@@ -13,9 +13,9 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.tileentities.powered.fusionfurnace.TileEntityFusionFurnace;
 
 public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FusionFurnaceRecipe> {
 	public static final FusionFurnaceRecipeSerializer INSTANCE = new FusionFurnaceRecipeSerializer();
@@ -37,8 +37,8 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<IRecipeSer
 		}
 
 		// Start with the default values.
-		int powerCost = TileEntityFusionFurnace.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityFusionFurnace.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.fusionFurnacePowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get();
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -56,7 +56,7 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<IRecipeSer
 
 	@Override
 	public FusionFurnaceRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 
 		int inputCount = buffer.readByte();
@@ -73,7 +73,7 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<IRecipeSer
 
 	@Override
 	public void write(PacketBuffer buffer, FusionFurnaceRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeByte(recipe.getInputs().size());
 

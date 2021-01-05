@@ -9,9 +9,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.powered.vulcanizer.TileEntityVulcanizer;
 
 public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<VulcanizerRecipe> {
 	public static final VulcanizerRecipeSerializer INSTANCE = new VulcanizerRecipeSerializer();
@@ -23,8 +23,8 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	@Override
 	public VulcanizerRecipe read(ResourceLocation recipeId, JsonObject json) {
 		// Start with the default processing values.
-		int powerCost = TileEntityVulcanizer.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityVulcanizer.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.vulcanizerPowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.vulcanizerProcessingTime.get();
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -47,16 +47,16 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	@Override
 	public VulcanizerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
 		// Start with the default processing values.
-		int powerCost = buffer.readInt();
+		long power = buffer.readLong();
 		int processingTime = buffer.readInt();
 		FluidStack input = buffer.readFluidStack();
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		return new VulcanizerRecipe(recipeId, processingTime, powerCost, input, output);
+		return new VulcanizerRecipe(recipeId, processingTime, power, input, output);
 	}
 
 	@Override
 	public void write(PacketBuffer buffer, VulcanizerRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		recipe.getOutput().writeToBuffer(buffer);

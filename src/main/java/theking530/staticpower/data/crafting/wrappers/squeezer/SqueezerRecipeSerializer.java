@@ -12,10 +12,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.powered.squeezer.TileEntitySqueezer;
 
 public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<SqueezerRecipe> {
 	public static final SqueezerRecipeSerializer INSTANCE = new SqueezerRecipeSerializer();
@@ -38,8 +38,8 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		}
 
 		// Start with the default values.
-		int powerCost = TileEntitySqueezer.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntitySqueezer.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.squeezerPowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.squeezerProcessingTime.get();
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -81,7 +81,7 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 
 	@Override
 	public SqueezerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
@@ -92,7 +92,7 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 
 	@Override
 	public void write(PacketBuffer buffer, SqueezerRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInput().write(buffer);
 		recipe.getOutput().writeToBuffer(buffer);

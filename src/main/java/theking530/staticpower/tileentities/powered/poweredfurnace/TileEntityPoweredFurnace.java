@@ -8,6 +8,7 @@ import net.minecraft.item.crafting.FurnaceRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModBlocks;
@@ -39,8 +40,6 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	 * vanila furnace.
 	 */
 	public static final float DEFAULT_PROCESSING_TIME_MULT = 1.3f;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -64,7 +63,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		
+
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<FurnaceRecipe>("ProcessingComponent", IRecipeType.SMELTING, 1, this::getMatchParameters, this::moveInputs,
 				this::canProcessRecipe, this::processingCompleted));
@@ -75,7 +74,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get());
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));

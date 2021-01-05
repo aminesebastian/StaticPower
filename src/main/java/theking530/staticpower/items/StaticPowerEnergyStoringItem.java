@@ -47,7 +47,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		int capacity = getCapacity();
+		long capacity = getCapacity();
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticVoltCapability("default", stack, capacity, capacity, capacity));
 	}
 
@@ -57,7 +57,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		return output;
 	}
 
-	public int getCapacity() {
+	public long getCapacity() {
 		return capacity;
 	}
 
@@ -86,8 +86,8 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		int remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
-		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
+		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 	}
 

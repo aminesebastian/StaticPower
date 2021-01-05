@@ -39,7 +39,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 			if (energyStorage.getStoredPower() > 0) {
 				for (Direction facing : Direction.values()) {
 					if (canOutputFromSide(facing)) {
-						int maxExtract = energyStorage.drainPower(Integer.MAX_VALUE, true);
+						long maxExtract = energyStorage.drainPower(Integer.MAX_VALUE, true);
 						providePower(facing, Math.min(maxExtract, energyStorage.getStoredPower()));
 					}
 				}
@@ -47,7 +47,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 		}
 	}
 
-	public int providePower(Direction facing, int amount) {
+	public long providePower(Direction facing, long amount) {
 		return providePower(getTileEntity().getPos().offset(facing), facing, amount);
 	}
 
@@ -57,12 +57,12 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 	 * @param amount - The amount of energy to send.
 	 * @return - The actual amount of energy that was sent.
 	 */
-	public int providePower(BlockPos pos, Direction facing, int amount) {
+	public long providePower(BlockPos pos, Direction facing, long amount) {
 		PowerEnergyInterface powerInterface = getInterfaceForDesination(pos, facing.getOpposite());
 
 		if (powerInterface != null) {
-			int provided = powerInterface.receivePower(amount, true);
-			int drained = energyStorage.drainPower(provided, false);
+			long provided = powerInterface.receivePower(amount, true);
+			long drained = energyStorage.drainPower(provided, false);
 			powerInterface.receivePower(drained, false);
 			return provided;
 		}

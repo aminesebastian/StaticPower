@@ -8,6 +8,8 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
@@ -32,11 +34,6 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityVulcanizer> TYPE = new TileEntityTypeAllocator<TileEntityVulcanizer>((type) -> new TileEntityVulcanizer(), ModBlocks.Vulcanizer);
 
-	public static final int DEFAULT_PROCESSING_TIME = 200;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-	public static final int DEFAULT_TANK_SIZE = 5000;
-
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -50,14 +47,17 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 	public TileEntityVulcanizer() {
 		super(TYPE, StaticPowerTiers.BASIC);
 
+		// Get the tier object.
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
+
 		// Setup the inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", VulcanizerRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", VulcanizerRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -65,13 +65,12 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE, (fluidStack) -> {
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
 			return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
 		}));
 
@@ -108,6 +107,10 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 
 		// Capture the processing fluidstack.
 		currentProcessingFluidStack = this.fluidTankComponent.drain(recipe.getInputFluid(), FluidAction.EXECUTE);
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();

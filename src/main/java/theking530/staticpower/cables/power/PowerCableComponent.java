@@ -27,18 +27,18 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	public static final String POWER_RATE_DATA_TAG_KEY = "power_transfer_rate";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
-	private final int capacity;
-	private final int transferRate;
+	private final long capacity;
+	private final long transferRate;
 	private final boolean isIndustrial;
 
-	private int clientCurrentPower;
-	private int clientCapacity;
-	private int clientMaxReceive;
-	private int clientMaxDrain;
+	private long clientCurrentPower;
+	private long clientCapacity;
+	private long clientMaxReceive;
+	private long clientMaxDrain;
 	private float clientLastTickReceive;
 	private float clientLastTickDraint;
 
-	public PowerCableComponent(String name, boolean isIndustrial, int capacity, int transferRate) {
+	public PowerCableComponent(String name, boolean isIndustrial, long capacity, long transferRate) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		this.capacity = capacity;
 		this.transferRate = transferRate;
@@ -53,7 +53,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		return recievePower(maxReceive, simulate, true);
+		return (int) recievePower(maxReceive, simulate, true);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 				return module.getEnergyAutoConverter().getEnergyStored();
 			}
 		}
-		return clientCurrentPower;
+		return CapabilityStaticVolt.convertSVtoFE(clientCurrentPower);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 				return module.getEnergyAutoConverter().getMaxEnergyStored();
 			}
 		}
-		return clientCapacity;
+		return CapabilityStaticVolt.convertSVtoFE(clientCapacity);
 	}
 
 	public float getClientLastEnergyDrain() {
@@ -93,7 +93,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public boolean canExtract() {
-		return canDrainPower();
+		return canBeDrained();
 	}
 
 	@Override
@@ -102,7 +102,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public int getMaxReceive() {
+	public long getMaxReceive() {
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
@@ -113,7 +113,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public int getMaxDrain() {
+	public long getMaxDrain() {
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
@@ -124,7 +124,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public int getStoredPower() {
+	public long getStoredPower() {
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
@@ -135,7 +135,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public int getCapacity() {
+	public long getCapacity() {
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
@@ -146,16 +146,16 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public int receivePower(int power, boolean simulate) {
+	public long receivePower(long power, boolean simulate) {
 		return recievePower(power, simulate, false);
 	}
 
-	private int recievePower(int power, boolean simulate, boolean forge) {
+	private long recievePower(long power, boolean simulate, boolean forge) {
 		if (!getTileEntity().getWorld().isRemote) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				if (forge) {
-					return module.getEnergyAutoConverter().receiveEnergy(Math.min(transferRate * IStaticVoltHandler.FE_TO_SV_CONVERSION, power), simulate);
+					return module.getEnergyAutoConverter().receiveEnergy((int) Math.min(CapabilityStaticVolt.convertSVtoFE(transferRate), power), simulate);
 				} else {
 					return module.getEnergyAutoConverter().receivePower(Math.min(transferRate, power), simulate);
 				}
@@ -165,7 +165,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public int drainPower(int power, boolean simulate) {
+	public long drainPower(long power, boolean simulate) {
 		return 0;
 	}
 
@@ -175,7 +175,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public boolean canDrainPower() {
+	public boolean canBeDrained() {
 		return false;
 	}
 
@@ -231,10 +231,10 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (!this.getWorld().isRemote) {
 			getPowerNetworkModule().ifPresent(module -> {
 				CompoundNBT powerCableNBT = new CompoundNBT();
-				powerCableNBT.putInt("power", module.getEnergyStorage().getStoredPower());
-				powerCableNBT.putInt("capacity", module.getEnergyStorage().getCapacity());
-				powerCableNBT.putInt("max_drain", module.getEnergyStorage().getMaxDrain());
-				powerCableNBT.putInt("max_receive", module.getEnergyStorage().getMaxReceive());
+				powerCableNBT.putLong("power", module.getEnergyStorage().getStoredPower());
+				powerCableNBT.putLong("capacity", module.getEnergyStorage().getCapacity());
+				powerCableNBT.putFloat("max_drain", module.getEnergyStorage().getMaxDrain());
+				powerCableNBT.putFloat("max_receive", module.getEnergyStorage().getMaxReceive());
 				powerCableNBT.putFloat("drained", module.getEnergyStorage().getExtractedPerTick());
 				powerCableNBT.putFloat("received", module.getEnergyStorage().getReceivedPerTick());
 				nbt.put("power_cable", powerCableNBT);
@@ -248,8 +248,8 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		if (nbt.contains("power_cable")) {
 			CompoundNBT powerCableNBT = nbt.getCompound("power_cable");
-			clientCurrentPower = powerCableNBT.getInt("power");
-			clientCapacity = powerCableNBT.getInt("capacity");
+			clientCurrentPower = powerCableNBT.getLong("power");
+			clientCapacity = powerCableNBT.getLong("capacity");
 			clientLastTickDraint = powerCableNBT.getFloat("drained");
 			clientLastTickReceive = powerCableNBT.getFloat("received");
 			clientMaxDrain = powerCableNBT.getInt("max_drain");

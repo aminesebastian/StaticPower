@@ -48,9 +48,9 @@ public class BlockBattery extends StaticPowerMachineBlock {
 		tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString() + "• Capacity ")
 				.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.getTier(tier).batteryCapacity.get())));
 		tooltip.add(new StringTextComponent(TextFormatting.BLUE.toString() + "• Max Input ")
-				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() / TileEntityBattery.MACHINE_POWER_IO_DIVISOR)));
+				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
 		tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString() + "• Max Output ")
-				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerCapacity.get() / TileEntityBattery.MACHINE_POWER_IO_DIVISOR)));
+				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
 	}
 
 	@Override

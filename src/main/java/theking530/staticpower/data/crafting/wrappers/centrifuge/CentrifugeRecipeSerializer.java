@@ -9,9 +9,9 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.tileentities.powered.centrifuge.TileEntityCentrifuge;
 
 public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CentrifugeRecipe> {
 	public static final CentrifugeRecipeSerializer INSTANCE = new CentrifugeRecipeSerializer();
@@ -30,8 +30,8 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		int minimumSpeed = json.get("minimum_speed").getAsInt();
 
 		// Start with the default values.
-		int powerCost = TileEntityCentrifuge.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityCentrifuge.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.centrifugePowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.centrifugeProcessingTime.get();
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -64,7 +64,7 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 	@Override
 	public CentrifugeRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 		int speed = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
@@ -78,7 +78,7 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 	@Override
 	public void write(PacketBuffer buffer, CentrifugeRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getMinimumSpeed());
 		recipe.getInput().write(buffer);

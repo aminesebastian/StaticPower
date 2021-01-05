@@ -84,7 +84,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		PARTS.add(MultiPartSlots.CHAINSAW_BLADE);
 	}
 
-	public int getCapacity() {
+	public long getCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
 	}
 
@@ -162,7 +162,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		if (isCreative) {
 			return;
 		}
-		
+
 		// Allocate a list of the items that would be dropped.
 		List<ItemStack> droppableItems = Block.getDrops(state, player.getServerWorld(), pos, tileEntity, player, heldItem);
 
@@ -242,8 +242,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		int remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
-		int capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
+		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 
 		if (isSlotPopulated(stack, MultiPartSlots.CHAINSAW_BLADE)) {

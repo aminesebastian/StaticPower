@@ -168,7 +168,7 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 		fluids.init(OUTPUT_SLOT, false, 128, 2, 16, 52, getFluidTankDisplaySize(recipe.getOutput()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

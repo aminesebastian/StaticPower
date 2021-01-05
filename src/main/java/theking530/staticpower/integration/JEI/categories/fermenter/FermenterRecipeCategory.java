@@ -26,13 +26,13 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.powered.fermenter.TileEntityFermenter;
 
 public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "fermenter");
@@ -111,7 +111,8 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME)));
+			output.add(new StringTextComponent("Usage: ")
+					.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get())));
 
 		}
 
@@ -144,7 +145,8 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		fluids.init(3, false, 153, 6, 16, 48, getFluidTankDisplaySize(recipe.getOutputFluidStack()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST * TileEntityFermenter.DEFAULT_PROCESSING_TIME, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityFermenter.DEFAULT_PROCESSING_TIME, TileEntityFermenter.DEFAULT_PROCESSING_COST, false);
+		powerTimer = guiHelper.createTickTimer(StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
+				(int) (StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get()), true);
+		processingTimer = guiHelper.createTickTimer(StaticPowerConfig.SERVER.fermenterProcessingTime.get(), (int) StaticPowerConfig.SERVER.fermenterPowerUsage.get().longValue(), false);
 	}
 }

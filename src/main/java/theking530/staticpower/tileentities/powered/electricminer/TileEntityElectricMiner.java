@@ -93,7 +93,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public int getFuelUsage() {
+	public long getFuelUsage() {
 		return StaticPowerConfig.SERVER.electricMinerPowerUsage.get();
 	}
 }

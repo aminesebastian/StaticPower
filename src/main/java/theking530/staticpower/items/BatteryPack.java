@@ -112,12 +112,12 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 					// How much power should we distribute?
 					if (items.size() > 0) {
-						int perItemDistribute = powerStorage.getStoredPower() / items.size();
+						long perItemDistribute = powerStorage.getStoredPower() / items.size();
 						perItemDistribute = SDMath.clamp(perItemDistribute, 1, powerStorage.getCapacity() / 100);
 
 						for (PowerEnergyInterface powerInterface : items) {
-							int charged = powerInterface.receivePower(perItemDistribute, true);
-							int drained = powerStorage.drainPower(charged, false);
+							long charged = powerInterface.receivePower(perItemDistribute, true);
+							long drained = powerStorage.drainPower(charged, false);
 							powerInterface.receivePower(drained, false);
 
 							// Break out if we used all the power.
@@ -150,7 +150,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	}
 
 	@Override
-	public int getCapacity() {
+	public long getCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 3;
 	}
 }

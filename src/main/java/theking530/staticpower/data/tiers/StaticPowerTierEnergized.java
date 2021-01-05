@@ -27,18 +27,18 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getPortableBatteryCapacity() {
-		return 5000;
+	protected long getPortableBatteryCapacity() {
+		return 5000000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerGeneration() {
-		return 32;
+	protected long getSolarPanelPowerGeneration() {
+		return 32000;
 	}
 
 	@Override
-	protected int getSolarPanelPowerStorage() {
-		return 64;
+	protected long getSolarPanelPowerStorage() {
+		return 64000;
 	}
 
 	@Override
@@ -97,23 +97,23 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getCablePowerCapacity() {
-		return 512;
+	protected long getCablePowerCapacity() {
+		return 512000;
 	}
 
 	@Override
-	protected int getCablePowerDelivery() {
-		return 512;
+	protected long getCablePowerDelivery() {
+		return 512000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerCapacity() {
-		return 4096;
+	protected long getCableIndustrialPowerCapacity() {
+		return 4096000;
 	}
 
 	@Override
-	protected int getCableIndustrialPowerDelivery() {
-		return 4096;
+	protected long getCableIndustrialPowerDelivery() {
+		return 4096000;
 	}
 
 	@Override
@@ -122,8 +122,13 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getBatteryCapacity() {
-		return 512000;
+	protected long getBatteryCapacity() {
+		return 512000000;
+	}
+
+	@Override
+	protected long getBatteryMaxIO() {
+		return 1024000;
 	}
 
 	@Override
@@ -217,18 +222,18 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getDefaultMachinePowerCapacity() {
-		return 5000;
+	protected long getDefaultMachinePowerCapacity() {
+		return 5000000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerInput() {
-		return 64;
+	protected long getDefaultMachinePowerInput() {
+		return 64000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerOutput() {
-		return 64;
+	protected long getDefaultMachinePowerOutput() {
+		return 64000;
 	}
 
 	@Override

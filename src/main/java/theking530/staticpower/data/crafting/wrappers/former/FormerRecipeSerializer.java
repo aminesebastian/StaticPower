@@ -9,9 +9,9 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.tileentities.powered.former.TileEntityFormer;
 
 public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FormerRecipe> {
 	public static final FormerRecipeSerializer INSTANCE = new FormerRecipeSerializer();
@@ -35,8 +35,8 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
 		// Start with the default processing values.
-		int powerCost = TileEntityFormer.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityFormer.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.formerPowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.formerProcessingTime.get();
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -51,7 +51,7 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 
 	@Override
 	public FormerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		Ingredient mold = Ingredient.read(buffer);
@@ -63,7 +63,7 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 
 	@Override
 	public void write(PacketBuffer buffer, FormerRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInputIngredient().write(buffer);
 		recipe.getRequiredMold().write(buffer);

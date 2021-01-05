@@ -18,7 +18,7 @@ public class CrucibleRecipe extends AbstractMachineRecipe {
 	private final int minimumTemperature;
 
 	public CrucibleRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, int minimumTemperature, int processingTime,
-			int powerCost) {
+			long powerCost) {
 		super(name, processingTime, powerCost);
 		this.input = input;
 		this.output = output;

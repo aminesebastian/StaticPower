@@ -42,16 +42,16 @@ public class StaticPowerTierIron extends StaticPowerTier {
 	}
 
 	@Override
-	protected int getDefaultMachinePowerCapacity() {
-		return 200;
+	protected long getDefaultMachinePowerCapacity() {
+		return 200000;
 	}
 	@Override
-	protected int getDefaultMachinePowerInput() {
-		return 5;
+	protected long getDefaultMachinePowerInput() {
+		return 5000;
 	}
 
 	@Override
-	protected int getDefaultMachinePowerOutput() {
-		return 5;
+	protected long getDefaultMachinePowerOutput() {
+		return 5000;
 	}
 }

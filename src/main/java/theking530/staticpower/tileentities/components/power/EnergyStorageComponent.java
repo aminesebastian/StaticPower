@@ -33,11 +33,11 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	@UpdateSerialize
 	private float powerIOUpgradeMultiplier;
 	@UpdateSerialize
-	private int defaultCapacity;
+	private long defaultCapacity;
 	@UpdateSerialize
-	private int defaultMaxInput;
+	private long defaultMaxInput;
 	@UpdateSerialize
-	private int defaultMaxOutput;
+	private long defaultMaxOutput;
 	@UpdateSerialize
 	private boolean issueSyncPackets;
 
@@ -45,19 +45,19 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	private final Map<Direction, SVCapabilityAccess> staticVoltAccessors;
 	private final StaticVoltAutoConverter energyInterface;
 
-	protected TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter;
-	private int lastSyncEnergy;
+	protected TriFunction<Long, Direction, EnergyManipulationAction, Boolean> filter;
+	private long lastSyncEnergy;
 	private UpgradeInventoryComponent upgradeInventory;
 
-	public EnergyStorageComponent(String name, int capacity) {
+	public EnergyStorageComponent(String name, long capacity) {
 		this(name, capacity, Integer.MAX_VALUE, Integer.MAX_VALUE);
 	}
 
-	public EnergyStorageComponent(String name, int capacity, int maxInput) {
+	public EnergyStorageComponent(String name, long capacity, long maxInput) {
 		this(name, capacity, maxInput, 0);
 	}
 
-	public EnergyStorageComponent(String name, int capacity, int maxInput, int maxExtract) {
+	public EnergyStorageComponent(String name, long capacity, long maxInput, long maxExtract) {
 		super(name);
 		EnergyStorage = new StaticVoltHandler(capacity, maxInput, maxExtract);
 
@@ -94,7 +94,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we
 				// had last tick.
-				int delta = Math.abs(EnergyStorage.getStoredPower() - lastSyncEnergy);
+				long delta = Math.abs(EnergyStorage.getStoredPower() - lastSyncEnergy);
 
 				// Determine if we should sync.
 				boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
@@ -112,7 +112,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 	}
 
-	public EnergyStorageComponent setMaxInput(int maxInput) {
+	public EnergyStorageComponent setMaxInput(long maxInput) {
 		defaultMaxInput = maxInput;
 		if (upgradeInventory == null) {
 			EnergyStorage.setMaxReceive(defaultMaxInput);
@@ -120,7 +120,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
-	public EnergyStorageComponent setMaxOutput(int maxOutput) {
+	public EnergyStorageComponent setMaxOutput(long maxOutput) {
 		defaultMaxOutput = maxOutput;
 		if (upgradeInventory == null) {
 			EnergyStorage.setMaxExtract(defaultMaxOutput);
@@ -128,15 +128,15 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
-	public int getDefaultMaxInput() {
+	public long getDefaultMaxInput() {
 		return defaultMaxInput;
 	}
 
-	public int getDefaultMaxOutput() {
+	public long getDefaultMaxOutput() {
 		return defaultMaxOutput;
 	}
 
-	public int getDefaultCapacity() {
+	public long getDefaultCapacity() {
 		return defaultCapacity;
 	}
 
@@ -184,8 +184,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 		// Set the new values.
 		getStorage().setCapacity((int) (defaultCapacity * powerCapacityUpgradeMultiplier));
-		getStorage().setMaxExtract(Math.min(getStorage().getCapacity(), (int) (defaultMaxOutput * powerIOUpgradeMultiplier)));
-		getStorage().setMaxReceive(Math.min(getStorage().getCapacity(), (int) (defaultMaxInput * powerIOUpgradeMultiplier)));
+		getStorage().setMaxExtract(Math.min(getStorage().getCapacity(), (long) (defaultMaxOutput * powerIOUpgradeMultiplier)));
+		getStorage().setMaxReceive(Math.min(getStorage().getCapacity(), (long) (defaultMaxInput * powerIOUpgradeMultiplier)));
 	}
 
 	/**
@@ -204,7 +204,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * @param power
 	 * @return
 	 */
-	public boolean hasEnoughPower(int power) {
+	public boolean hasEnoughPower(long power) {
 		return EnergyStorage.getStoredPower() >= power;
 	}
 
@@ -216,9 +216,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * @param power The amount of power to drain.
 	 * @return True if the provided amount of power was drained, false otherwise.
 	 */
-	public boolean useBulkPower(int power) {
+	public boolean useBulkPower(long power) {
 		if (hasEnoughPower(power)) {
-			int maxExtract = getStorage().getMaxDrain();
+			long maxExtract = getStorage().getMaxDrain();
 			getStorage().setMaxExtract(Integer.MAX_VALUE);
 			getStorage().drainPower(power, false);
 			getStorage().setMaxExtract(maxExtract);
@@ -233,7 +233,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * @param power The amount of power test this component for.
 	 * @return
 	 */
-	public boolean canAcceptPower(int power) {
+	public boolean canAcceptPower(long power) {
 		return EnergyStorage.getStoredPower() + power <= EnergyStorage.getCapacity();
 	}
 
@@ -244,7 +244,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * @param power The amount of power to receive.
 	 * @return True if the provided amount of power was received, false otherwise.
 	 */
-	public boolean addPower(int power) {
+	public boolean addPower(long power) {
 		if (canAcceptPower(power)) {
 			getStorage().receivePower(power, false);
 			return true;
@@ -284,7 +284,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * 
 	 * @param filter
 	 */
-	public void setCapabiltiyFilter(TriFunction<Integer, Direction, EnergyManipulationAction, Boolean> filter) {
+	public void setCapabiltiyFilter(TriFunction<Long, Direction, EnergyManipulationAction, Boolean> filter) {
 		this.filter = filter;
 	}
 
@@ -297,8 +297,12 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 				} else {
 					return LazyOptional.of(() -> energyInterface).cast();
 				}
-			} else if (cap == CapabilityEnergy.ENERGY && side != null) {
-				return LazyOptional.of(() -> feAccessors.get(side)).cast();
+			} else if (cap == CapabilityEnergy.ENERGY) {
+				if (side != null) {
+					return LazyOptional.of(() -> feAccessors.get(side)).cast();
+				} else {
+					return LazyOptional.of(() -> energyInterface).cast();
+				}
 			}
 		}
 
@@ -318,7 +322,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 				return 0;
 			}
 			if (EnergyStorageComponent.this.filter != null
-					&& !EnergyStorageComponent.this.filter.apply(maxReceive / IStaticVoltHandler.FE_TO_SV_CONVERSION, side, EnergyManipulationAction.RECIEVE)) {
+					&& !EnergyStorageComponent.this.filter.apply(CapabilityStaticVolt.convertFEtoSV(maxReceive), side, EnergyManipulationAction.RECIEVE)) {
 				return 0;
 			}
 			return energyInterface.receiveEnergy(maxReceive, simulate);
@@ -330,7 +334,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 				return 0;
 			}
 			if (EnergyStorageComponent.this.filter != null
-					&& !EnergyStorageComponent.this.filter.apply(maxExtract / IStaticVoltHandler.FE_TO_SV_CONVERSION, side, EnergyManipulationAction.PROVIDE)) {
+					&& !EnergyStorageComponent.this.filter.apply(CapabilityStaticVolt.convertFEtoSV(maxExtract), side, EnergyManipulationAction.PROVIDE)) {
 				return 0;
 			}
 			return energyInterface.extractEnergy(maxExtract, simulate);
@@ -378,7 +382,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public int getStoredPower() {
+		public long getStoredPower() {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
@@ -386,7 +390,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public int getCapacity() {
+		public long getCapacity() {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
@@ -394,7 +398,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public int receivePower(int power, boolean simulate) {
+		public long receivePower(long power, boolean simulate) {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
@@ -405,7 +409,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public int drainPower(int power, boolean simulate) {
+		public long drainPower(long power, boolean simulate) {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
@@ -424,16 +428,16 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public boolean canDrainPower() {
+		public boolean canBeDrained() {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return false;
 			}
 
-			return energyInterface.canDrainPower();
+			return energyInterface.canBeDrained();
 		}
 
 		@Override
-		public int getMaxReceive() {
+		public long getMaxReceive() {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}
@@ -441,7 +445,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public int getMaxDrain() {
+		public long getMaxDrain() {
 			if (!EnergyStorageComponent.this.isEnabled()) {
 				return 0;
 			}

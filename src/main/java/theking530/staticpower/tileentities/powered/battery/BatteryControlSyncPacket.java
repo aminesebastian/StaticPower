@@ -9,14 +9,14 @@ import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 
 public class BatteryControlSyncPacket extends NetworkMessage {
-	private int inputPerTick;
-	private int outputPerTick;
+	private long inputPerTick;
+	private long outputPerTick;
 	private BlockPos position;
 
 	public BatteryControlSyncPacket() {
 	}
 
-	public BatteryControlSyncPacket(int inputPerTick, int outputPerTick, BlockPos pos) {
+	public BatteryControlSyncPacket(long inputPerTick, long outputPerTick, BlockPos pos) {
 		this.inputPerTick = inputPerTick;
 		this.outputPerTick = outputPerTick;
 		this.position = pos;
@@ -24,15 +24,15 @@ public class BatteryControlSyncPacket extends NetworkMessage {
 
 	@Override
 	public void encode(PacketBuffer buffer) {
-		buffer.writeInt(inputPerTick);
-		buffer.writeInt(outputPerTick);
+		buffer.writeLong(inputPerTick);
+		buffer.writeLong(outputPerTick);
 		buffer.writeBlockPos(position);
 	}
 
 	@Override
 	public void decode(PacketBuffer buffer) {
-		inputPerTick = buffer.readInt();
-		outputPerTick = buffer.readInt();
+		inputPerTick = buffer.readLong();
+		outputPerTick = buffer.readLong();
 		position = buffer.readBlockPos();
 	}
 

@@ -9,10 +9,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
-import theking530.staticpower.tileentities.powered.lumbermill.TileEntityLumberMill;
 
 public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<LumberMillRecipe> {
 	public static final LumberMillRecipeSerializer INSTANCE = new LumberMillRecipeSerializer();
@@ -28,8 +28,8 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Start with the default values.
-		int powerCost = TileEntityLumberMill.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityLumberMill.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.lumberMillPowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.lumberMillProcessingTime.get();
 
 		// Capture the processing and power costs.
 		if (JSONUtils.hasField(json, "processing")) {
@@ -60,7 +60,7 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 	@Override
 	public LumberMillRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		ProbabilityItemStackOutput primary = ProbabilityItemStackOutput.readFromBuffer(buffer);
@@ -72,7 +72,7 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 
 	@Override
 	public void write(PacketBuffer buffer, LumberMillRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInput().write(buffer);
 		recipe.getPrimaryOutput().writeToBuffer(buffer);

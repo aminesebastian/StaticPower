@@ -17,7 +17,7 @@ public class FormerRecipe extends AbstractMachineRecipe {
 	private Ingredient requiredMold;
 	private ProbabilityItemStackOutput outputItemStack;
 
-	public FormerRecipe(ResourceLocation name, int processingTime, int powerCost, ProbabilityItemStackOutput output, StaticPowerIngredient input, Ingredient mold) {
+	public FormerRecipe(ResourceLocation name, int processingTime, long powerCost, ProbabilityItemStackOutput output, StaticPowerIngredient input, Ingredient mold) {
 		super(name, processingTime, powerCost);
 		inputIngredient = input;
 		requiredMold = mold;

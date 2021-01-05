@@ -29,13 +29,13 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
-import theking530.staticpower.tileentities.powered.packager.TileEntityPackager;
 
 public class StaticPowerRecipeRegistry {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerRecipeRegistry.class);
@@ -273,7 +273,7 @@ public class StaticPowerRecipeRegistry {
 			if (twoRecipe.isPresent()) {
 				ICraftingRecipe recipe = twoRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
-				PackagerRecipe packRecipe = new PackagerRecipe(id, TileEntityPackager.DEFAULT_PROCESSING_TIME, TileEntityPackager.DEFAULT_PROCESSING_COST, 2,
+				PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 2,
 						new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
 				addRecipe(packRecipe);
 			}
@@ -282,7 +282,7 @@ public class StaticPowerRecipeRegistry {
 			if (threeRecipe.isPresent()) {
 				ICraftingRecipe recipe = threeRecipe.get();
 				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
-				PackagerRecipe packRecipe = new PackagerRecipe(id, TileEntityPackager.DEFAULT_PROCESSING_TIME, TileEntityPackager.DEFAULT_PROCESSING_COST, 3,
+				PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 3,
 						new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
 				addRecipe(packRecipe);
 			}

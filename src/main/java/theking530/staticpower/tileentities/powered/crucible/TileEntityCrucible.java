@@ -36,11 +36,6 @@ public class TileEntityCrucible extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityCrucible> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
 
-	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 20;
-	public static final int HEAT_GENERATION = 25;
-	public static final int HEAT_POWER_COST = 10;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
@@ -77,8 +72,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 		heatStorage.getStorage().setConductivity(10);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", CrucibleRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", CrucibleRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.crucibleProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -86,7 +81,6 @@ public class TileEntityCrucible extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
@@ -107,9 +101,10 @@ public class TileEntityCrucible extends TileEntityMachine {
 	public void process() {
 		super.process();
 		if (!world.isRemote && redstoneControlComponent.passesRedstoneCheck()) {
-			if (energyStorage.hasEnoughPower(HEAT_POWER_COST) && heatStorage.getStorage().canFullyAbsorbHeat(HEAT_GENERATION)) {
-				heatStorage.getStorage().heat(HEAT_GENERATION, false);
-				energyStorage.useBulkPower(HEAT_POWER_COST);
+			if (energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get())
+					&& heatStorage.getStorage().canFullyAbsorbHeat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
+				heatStorage.getStorage().heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(), false);
+				energyStorage.useBulkPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get());
 			}
 		}
 	}
@@ -139,6 +134,10 @@ public class TileEntityCrucible extends TileEntityMachine {
 		if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
 			return ProcessingCheckState.outputTankCannotTakeFluid();
 		}
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
 		// Transfer the items to the internal inventory.
 		transferItemInternally(inputInventory, 0, internalInventory, 0);

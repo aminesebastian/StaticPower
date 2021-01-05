@@ -68,7 +68,7 @@ public class ProbabilityItemStackOutput {
 		item.setCount(count);
 	}
 
-	public ItemStack calculateOutput(float bonusBoost) {
+	public ItemStack calculateOutput(double bonusBoost) {
 		// Perform the initial dice roll.
 		if (percentChance >= 1.0f || SDMath.diceRoll(percentChance + bonusBoost)) {
 			// Create an output item.

@@ -158,7 +158,7 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 		fluids.init(FLUID_SLOT, true, 30, 6, 16, 48, getFluidTankDisplaySize(recipe.getInputFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

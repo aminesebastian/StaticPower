@@ -80,8 +80,6 @@ public class TileEntityPump extends TileEntityMachine {
 		}
 	}
 
-	public static final int PUMP_POWER_COST = 100;
-
 	public final FluidContainerInventoryComponent fluidContainerInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final MachineProcessingComponent processingComponent;
@@ -112,7 +110,7 @@ public class TileEntityPump extends TileEntityMachine {
 
 		// Register the processing component to handle the pumping.
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", pumpRate, this::canProcess, this::canProcess, this::pump, true)
-				.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setCompletedPowerUsage(PUMP_POWER_COST));
+				.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage));
 
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
@@ -196,7 +194,7 @@ public class TileEntityPump extends TileEntityMachine {
 							1.0f);
 
 					// Use the power.
-					energyStorage.useBulkPower(PUMP_POWER_COST);
+					energyStorage.useBulkPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
 
 					// Pump the fluid.
 					FluidStack pumpedStack = new FluidStack(fluidState.getFluid(), FluidAttributes.BUCKET_VOLUME);

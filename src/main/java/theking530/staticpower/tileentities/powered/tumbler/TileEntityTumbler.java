@@ -8,6 +8,7 @@ import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
@@ -32,12 +33,6 @@ public class TileEntityTumbler extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTumbler> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityTumbler(), ModBlocks.Tumbler);
 
-	public static final int DEFAULT_PROCESSING_TIME = 200;
-	public static final int DEFAULT_PROCESSING_COST = 20;
-	public static final float DEFAULT_OUTPUT_BONUS_CHANCE = 1.0f;
-	public static final int REQUIRED_SPEED = 1000;
-	public static final int MOTOR_POWER_COST = 10;
-
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
@@ -46,7 +41,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 	public final RecipeProcessingComponent<TumblerRecipe> processingComponent;
 
 	@UpdateSerialize
-	private float bonusOutputChance;
+	private double bonusOutputChance;
 	@UpdateSerialize
 	private int currentSpeed;
 
@@ -66,11 +61,11 @@ public class TileEntityTumbler extends TileEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
-		
+
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<TumblerRecipe>("ProcessingComponent", TumblerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<TumblerRecipe>("ProcessingComponent", TumblerRecipe.RECIPE_TYPE,
+				StaticPowerConfig.SERVER.tumblerProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -78,7 +73,6 @@ public class TileEntityTumbler extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
@@ -88,7 +82,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 
 		// Initialize the bonus output chance.
-		bonusOutputChance = DEFAULT_OUTPUT_BONUS_CHANCE;
+		bonusOutputChance = StaticPowerConfig.SERVER.tumblerOutputBonusChance.get();
 
 		// Set the current speed to 0.
 		currentSpeed = 0;
@@ -110,11 +104,16 @@ public class TileEntityTumbler extends TileEntityMachine {
 		}
 
 		// Check the current speed.
-		if (currentSpeed < REQUIRED_SPEED) {
-			return ProcessingCheckState.error("Tumbler has not reached the required speed of " + REQUIRED_SPEED + "RPM");
+		if (currentSpeed < StaticPowerConfig.SERVER.tumblerRequiredSpeed.get()) {
+			return ProcessingCheckState.error("Tumbler has not reached the required speed of " + StaticPowerConfig.SERVER.tumblerRequiredSpeed.get() + "RPM");
 		}
 
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
+
+		// Set the power usage.
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
 		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
@@ -123,10 +122,10 @@ public class TileEntityTumbler extends TileEntityMachine {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRawOutputItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
-		
+
 		// Check the current speed.
-		if (currentSpeed < REQUIRED_SPEED) {
-			return ProcessingCheckState.error("Tumbler has not reached the required speed of " + REQUIRED_SPEED + "RPM");
+		if (currentSpeed < StaticPowerConfig.SERVER.tumblerRequiredSpeed.get()) {
+			return ProcessingCheckState.error("Tumbler has not reached the required speed of " + StaticPowerConfig.SERVER.tumblerRequiredSpeed.get() + "RPM");
 		}
 
 		return ProcessingCheckState.ok();
@@ -146,12 +145,12 @@ public class TileEntityTumbler extends TileEntityMachine {
 	}
 
 	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
-		bonusOutputChance = DEFAULT_OUTPUT_BONUS_CHANCE;
+		bonusOutputChance = StaticPowerConfig.SERVER.tumblerOutputBonusChance.get();
 		UpgradeItemWrapper upgradeWrapper = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeType.OUTPUT_MULTIPLIER);
 
 		// If it is not valid, set the values back to the defaults. Otherwise, set the
 		// new processing speeds.
-		float upgradeAmount = DEFAULT_OUTPUT_BONUS_CHANCE;
+		double upgradeAmount = bonusOutputChance;
 		if (!upgradeWrapper.isEmpty()) {
 			upgradeAmount = (float) (1.0f + (upgradeWrapper.getTier().outputMultiplierUpgrade.get() * upgradeWrapper.getUpgradeWeight()));
 		}
@@ -160,7 +159,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		bonusOutputChance = upgradeAmount;
 	}
 
-	public float getBonusChance() {
+	public double getBonusChance() {
 		return bonusOutputChance;
 	}
 
@@ -170,14 +169,14 @@ public class TileEntityTumbler extends TileEntityMachine {
 		if (!getWorld().isRemote) {
 			// If we're spinning faster than the current max, start slowing down. Otherwise,
 			// either spin up or maintain speed.
-			if (currentSpeed > REQUIRED_SPEED) {
+			if (currentSpeed > StaticPowerConfig.SERVER.tumblerRequiredSpeed.get()) {
 				currentSpeed -= 2;
 			} else {
-				if (energyStorage.hasEnoughPower(MOTOR_POWER_COST) && redstoneControlComponent.passesRedstoneCheck()) {
-					energyStorage.useBulkPower(MOTOR_POWER_COST);
-					currentSpeed = SDMath.clamp(currentSpeed + 1, 0, REQUIRED_SPEED);
+				if (energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get()) && redstoneControlComponent.passesRedstoneCheck()) {
+					energyStorage.useBulkPower(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get());
+					currentSpeed = SDMath.clamp(currentSpeed + 1, 0, StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());
 				} else {
-					currentSpeed = SDMath.clamp(currentSpeed - 1, 0, REQUIRED_SPEED);
+					currentSpeed = SDMath.clamp(currentSpeed - 1, 0, StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());
 				}
 			}
 		}
@@ -188,7 +187,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 	}
 
 	public int getRequiredSpeed() {
-		return REQUIRED_SPEED;
+		return StaticPowerConfig.SERVER.tumblerRequiredSpeed.get();
 	}
 
 	@Override

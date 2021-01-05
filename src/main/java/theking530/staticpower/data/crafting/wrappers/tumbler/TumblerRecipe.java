@@ -15,7 +15,7 @@ public class TumblerRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput output;
 	private final StaticPowerIngredient inputItem;
 
-	public TumblerRecipe(ResourceLocation name, int processingTime, int powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput output) {
+	public TumblerRecipe(ResourceLocation name, int processingTime, long powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput output) {
 		super(name, processingTime, powerCost);
 		this.inputItem = input;
 		this.output = output;

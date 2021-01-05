@@ -9,6 +9,12 @@ public class MetricConverter {
 	private String Suffix;
 
 	public MetricConverter(double value, int initialOffset) {
+		if (value == 0) {
+			Value = 0;
+			Suffix = "";
+			return;
+		}
+
 		// Keep dividing the Value by 1000 until we hit a current value of < 1000.
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 8 + initialOffset;

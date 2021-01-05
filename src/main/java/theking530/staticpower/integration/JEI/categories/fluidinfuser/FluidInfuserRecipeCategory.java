@@ -158,7 +158,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 		fluids.init(3, true, 77, 4, 16, 52, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

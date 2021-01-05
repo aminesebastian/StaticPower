@@ -11,6 +11,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSolderingTable;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModBlocks;
@@ -36,10 +37,6 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 		}
 	}
 
-	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
-
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
 	public final InventoryComponent internalInventory;
@@ -62,16 +59,16 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(),
-				this::movingCompleted, true).setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(
-				processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-						.setShouldControlBlockState(true));
+		registerComponent(moveComponent = MachineProcessingComponent
+				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.autoSolderingTableProcessingTime.get(), this::canProcess,
+				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true));
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoSolderingTablePowerUsage.get());
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);

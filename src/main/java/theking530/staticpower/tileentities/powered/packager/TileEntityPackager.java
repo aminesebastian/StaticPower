@@ -6,6 +6,7 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
@@ -33,11 +34,6 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityPackager extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPackager> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityPackager(), ModBlocks.Packager);
-
-	/** The default amount of time processing takes. */
-	public static final int DEFAULT_PROCESSING_TIME = 100;
-	/** The default amount of power used per tick processing an item. */
-	public static final int DEFAULT_PROCESSING_COST = 5;
 
 	/** The input inventory containing the items to pack. */
 	public final InventoryComponent inputInventory;
@@ -90,7 +86,7 @@ public class TileEntityPackager extends TileEntityMachine {
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.packagerPowerUsage.get());
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", inputInventory));

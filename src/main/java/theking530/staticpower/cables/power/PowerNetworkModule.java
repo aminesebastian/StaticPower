@@ -84,16 +84,16 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			// If there are no valid destinations, return early.
 			if (destinations.size() > 0) {
 				// Calculate how we should split the output amount.
-				int outputPerDestination = Math.max(1, storage.getStoredPower() / destinations.size());
+				long outputPerDestination = Math.max(1, storage.getStoredPower() / destinations.size());
 
 				// Distribute the power to the destinations.
 				for (PowerEnergyInterfaceWrapper powerWrapper : destinations) {
 					// Get the amount of power we can supply.
-					int toSupply = Math.min(CableNetworkManager.get(Network.getWorld()).getCable(powerWrapper.cablePos).getIntProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY),
+					long toSupply = Math.min(CableNetworkManager.get(Network.getWorld()).getCable(powerWrapper.cablePos).getLongProperty(PowerCableComponent.POWER_RATE_DATA_TAG_KEY),
 							outputPerDestination);
 
 					// Supply the power.
-					int supplied = powerWrapper.powerInterface.receivePower(Math.min(toSupply, storage.getCurrentMaximumPowerOutput()), false);
+					long supplied = powerWrapper.powerInterface.receivePower(Math.min(toSupply, storage.getCurrentMaximumPowerOutput()), false);
 
 					// If we supplied any power, extract the power.
 					if (supplied > 0) {
@@ -148,7 +148,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
 		// Allocate a hash map to contain all the values.
-		HashMap<Integer, Integer> averageMap = new HashMap<Integer, Integer>();
+		HashMap<Long, Integer> averageMap = new HashMap<Long, Integer>();
 
 		// Aggregate the counts for each type of cable.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
@@ -158,7 +158,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Get the capacity of the cable, add it to the map, and increase the count.
-			int capacity = cable.getIntProperty(PowerCableComponent.POWER_CAPACITY_DATA_TAG_KEY);
+			long capacity = cable.getLongProperty(PowerCableComponent.POWER_CAPACITY_DATA_TAG_KEY);
 			if (!averageMap.containsKey(capacity)) {
 				averageMap.put(capacity, 1);
 			} else {
@@ -167,8 +167,8 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		}
 
 		// Calculate the weighted average.
-		int average = 0;
-		for (Integer key : averageMap.keySet()) {
+		long average = 0;
+		for (Long key : averageMap.keySet()) {
 			average += key * (averageMap.get(key) / (float) mapper.getDiscoveredCables().size());
 		}
 

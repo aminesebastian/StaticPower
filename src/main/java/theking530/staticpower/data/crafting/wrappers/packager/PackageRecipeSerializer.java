@@ -8,9 +8,9 @@ import net.minecraft.util.JSONUtils;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.tileentities.powered.packager.TileEntityPackager;
 
 public class PackageRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PackagerRecipe> {
 	public static final PackageRecipeSerializer INSTANCE = new PackageRecipeSerializer();
@@ -26,8 +26,8 @@ public class PackageRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Start with the default processing values.
-		int powerCost = TileEntityPackager.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityPackager.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.packagerPowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.packagerProcessingTime.get();
 
 		// Get the recipe size.
 		int size = json.get("size").getAsInt();
@@ -41,7 +41,7 @@ public class PackageRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 
 	@Override
 	public PackagerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 		int size = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
@@ -53,7 +53,7 @@ public class PackageRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 
 	@Override
 	public void write(PacketBuffer buffer, PackagerRecipe recipe) {
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getSize());
 		recipe.getInputIngredient().write(buffer);

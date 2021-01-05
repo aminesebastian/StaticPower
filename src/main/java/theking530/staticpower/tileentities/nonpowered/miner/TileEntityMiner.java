@@ -79,7 +79,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	public ProcessingCheckState moveFuel() {
 		int burnTime = getFuelBurnTime(fuelInventory.getStackInSlot(0));
 		fuelComponent.setMaxProcessingTime(burnTime);
-		fuelComponent.setTimeUnitsPerTick(getFuelUsage());
+		fuelComponent.setTimeUnitsPerTick((int) getFuelUsage());
 		transferItemInternally(fuelInventory, 0, fuelBurningInventory, 0);
 		return ProcessingCheckState.ok();
 	}
@@ -154,8 +154,8 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public int getFuelUsage() {
-		return (int) (StaticPowerConfig.SERVER.minerFuelUsage.get() * processingComponent.getCalculatedPowerUsageMultipler());
+	public long getFuelUsage() {
+		return (long) (StaticPowerConfig.SERVER.minerFuelUsage.get() * processingComponent.getCalculatedPowerUsageMultipler());
 	}
 
 	public int getFuelBurnTime(ItemStack input) {

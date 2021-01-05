@@ -10,10 +10,10 @@ import theking530.staticcore.utilities.SDMath;
 public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<CompoundNBT> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
 
-	protected int storedPower;
-	protected int capacity;
-	protected int maxReceive;
-	protected int maxDrain;
+	protected long storedPower;
+	protected long capacity;
+	protected long maxReceive;
+	protected long maxDrain;
 
 	protected boolean canRecieve;
 	protected boolean canDrain;
@@ -26,7 +26,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	protected float averageRecieved;
 	protected float averageExtracted;
 
-	public StaticVoltHandler(int capacity, int maxInput, int maxExtract) {
+	public StaticVoltHandler(long capacity, long maxInput, long maxExtract) {
 		this.capacity = capacity;
 		this.maxReceive = maxInput;
 		this.maxDrain = maxExtract;
@@ -39,18 +39,18 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	}
 
 	@Override
-	public int getStoredPower() {
+	public long getStoredPower() {
 		return storedPower;
 	}
 
 	@Override
-	public int getCapacity() {
+	public long getCapacity() {
 		return capacity;
 	}
 
 	@Override
-	public int drainPower(int amount, boolean simulate) {
-		if (!canDrainPower()) {
+	public long drainPower(long amount, boolean simulate) {
+		if (!canBeDrained()) {
 			return 0;
 		}
 		// If there is no power, return 0.
@@ -59,7 +59,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		}
 
 		// Calculate the maximum amount we can output.
-		int output = Math.min(storedPower, amount);
+		long output = Math.min(storedPower, amount);
 		output = Math.min(output, maxDrain);
 
 		// If not simulating, perform the drain.
@@ -73,12 +73,12 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	}
 
 	@Override
-	public int receivePower(int power, boolean simulate) {
+	public long receivePower(long power, boolean simulate) {
 		if (!canRecievePower()) {
 			return 0;
 		}
 
-		int recievedAmount = Math.min(power, capacity - storedPower);
+		long recievedAmount = Math.min(power, capacity - storedPower);
 		recievedAmount = Math.min(recievedAmount, maxReceive);
 
 		// If greater than 0 and not simulating, received the power
@@ -97,7 +97,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	}
 
 	@Override
-	public boolean canDrainPower() {
+	public boolean canBeDrained() {
 		return canDrain;
 	}
 
@@ -117,31 +117,31 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		return storedPower == 0;
 	}
 
-	public boolean canFullyAcceptPower(int power) {
+	public boolean canFullyAcceptPower(long power) {
 		return storedPower + power <= capacity;
 	}
 
-	public void setMaxReceive(int newMaxRecieve) {
+	public void setMaxReceive(long newMaxRecieve) {
 		maxReceive = newMaxRecieve;
 	}
 
-	public void setMaxExtract(int newMaxExtract) {
+	public void setMaxExtract(long newMaxExtract) {
 		maxDrain = newMaxExtract;
 	}
 
-	public void addPowerIgnoreTransferRate(int energy) {
+	public void addPowerIgnoreTransferRate(long energy) {
 		storedPower = SDMath.clamp(storedPower + energy, 0, capacity);
 	}
 
-	public void usePowerIgnoreTransferRate(int energy) {
+	public void usePowerIgnoreTransferRate(long energy) {
 		storedPower = SDMath.clamp(storedPower - energy, 0, capacity);
 	}
 
-	public int getMaxDrain() {
+	public long getMaxDrain() {
 		return maxDrain;
 	}
 
-	public int getMaxReceive() {
+	public long getMaxReceive() {
 		return maxReceive;
 	}
 
@@ -223,7 +223,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		return (float) storedPower / (float) capacity;
 	}
 
-	public void setCapacity(int newCapacity) {
+	public void setCapacity(long newCapacity) {
 		capacity = newCapacity;
 		storedPower = Math.min(storedPower, capacity);
 	}
@@ -237,7 +237,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	 * 
 	 * @return The amount of energy that can be output by this storage on this tick.
 	 */
-	public int getCurrentMaximumPowerOutput() {
+	public long getCurrentMaximumPowerOutput() {
 		return Math.min(getStoredPower(), getMaxDrain());
 	}
 
@@ -251,17 +251,17 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	 * @return The amount of energy that can be input into this storage on this
 	 *         tick.
 	 */
-	public int getCurrentMaximumPowerInput() {
+	public long getCurrentMaximumPowerInput() {
 		return Math.min(getCapacity() - getStoredPower(), getMaxReceive());
 	}
 
 	@Override
 	public CompoundNBT serializeNBT() {
 		CompoundNBT output = new CompoundNBT();
-		output.putInt("current_power", storedPower);
-		output.putInt("capacity", capacity);
-		output.putInt("max_receive", maxReceive);
-		output.putInt("max_drain", maxDrain);
+		output.putLong("current_power", storedPower);
+		output.putLong("capacity", capacity);
+		output.putLong("max_receive", maxReceive);
+		output.putLong("max_drain", maxDrain);
 		output.putBoolean("can_recieve", canRecieve);
 		output.putBoolean("can_drain", canDrain);
 		output.putFloat("received", averageRecieved);
@@ -271,10 +271,10 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 
 	@Override
 	public void deserializeNBT(CompoundNBT nbt) {
-		storedPower = nbt.getInt("current_power");
-		capacity = nbt.getInt("capacity");
-		maxReceive = nbt.getInt("max_receive");
-		maxDrain = nbt.getInt("max_drain");
+		storedPower = nbt.getLong("current_power");
+		capacity = nbt.getLong("capacity");
+		maxReceive = nbt.getLong("max_receive");
+		maxDrain = nbt.getLong("max_drain");
 		canRecieve = nbt.getBoolean("can_recieve");
 		canDrain = nbt.getBoolean("can_drain");
 		averageRecieved = nbt.getFloat("received");

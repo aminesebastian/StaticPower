@@ -25,12 +25,12 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.powered.bottler.TileEntityBottler;
 
 public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "bottler");
@@ -99,7 +99,8 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	public List<ITextComponent> getTooltipStrings(BottleRecipe recipe, double mouseX, double mouseY) {
 		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME)));
+			output.add(new StringTextComponent("Usage: ")
+					.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get())));
 		}
 
 		return output;
@@ -132,7 +133,9 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		fluids.init(3, true, 50, 4, 16, 52, getFluidTankDisplaySize(recipe.getFluid()), false, null);
 		fluids.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(TileEntityBottler.DEFAULT_PROCESSING_COST, TileEntityBottler.DEFAULT_PROCESSING_COST * TileEntityBottler.DEFAULT_PROCESSING_TIME, true);
-		processingTimer = guiHelper.createTickTimer(TileEntityBottler.DEFAULT_PROCESSING_COST, TileEntityBottler.DEFAULT_PROCESSING_COST, false);
+		powerTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
+				(int) (StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get()), true);
+		processingTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(), (int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
+				false);
 	}
 }

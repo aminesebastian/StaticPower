@@ -10,10 +10,10 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
-import theking530.staticpower.tileentities.powered.autosmith.TileEntityAutoSmith;
 
 public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<AutoSmithRecipe> {
 	public static final AutoSmithRecipeSerializer INSTANCE = new AutoSmithRecipeSerializer();
@@ -53,13 +53,13 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 			for (int i = 0; i < attributeModifiers.size(); i++) {
 				modifiers[i] = new RecipeModifierWrapper(attributeModifiers.get(i).getAsJsonObject());
 			}
-		}else {
+		} else {
 			modifiers = new RecipeModifierWrapper[0];
 		}
 
 		// Start with the default values.
-		int powerCost = TileEntityAutoSmith.DEFAULT_PROCESSING_COST;
-		int processingTime = TileEntityAutoSmith.DEFAULT_PROCESSING_TIME;
+		long powerCost = StaticPowerConfig.SERVER.autoSmithPowerUsage.get();
+		int processingTime = StaticPowerConfig.SERVER.autoSmithProcessingTime.get();
 		int repairAmount = 0;
 
 		// Capture the processing and power costs.
@@ -81,7 +81,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 	@Override
 	public AutoSmithRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
 		// Read the processing times.
-		int power = buffer.readInt();
+		long power = buffer.readLong();
 		int time = buffer.readInt();
 		int repairAmount = buffer.readInt();
 
@@ -106,7 +106,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 	@Override
 	public void write(PacketBuffer buffer, AutoSmithRecipe recipe) {
 		// Write the processing costs.
-		buffer.writeInt(recipe.getPowerCost());
+		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getRepairAmount());
 

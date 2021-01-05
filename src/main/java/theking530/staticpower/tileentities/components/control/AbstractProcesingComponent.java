@@ -43,16 +43,16 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	private float processingSpeedUpgradeMultiplier;
 
 	@UpdateSerialize
-	protected int powerUsage;
+	protected long powerUsage;
 	@SaveSerialize
-	protected int defaultPowerUsage;
+	protected long defaultPowerUsage;
 	@SaveSerialize
 	protected boolean hasProcessingPowerCost;
 
 	@UpdateSerialize
-	protected int completedPowerUsage;
+	protected long completedPowerUsage;
 	@SaveSerialize
-	protected int completedDefaultPowerUsage;
+	protected long completedDefaultPowerUsage;
 	@SaveSerialize
 	protected boolean hasCompletedPowerCost;
 
@@ -394,25 +394,25 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return this;
 	}
 
-	public AbstractProcesingComponent setProcessingPowerUsage(int power) {
+	public AbstractProcesingComponent setProcessingPowerUsage(long power) {
 		if (power <= 0) {
 			return this;
 		}
 
 		hasProcessingPowerCost = true;
 		defaultPowerUsage = power;
-		powerUsage = (int) (defaultPowerUsage * powerUsageIncreaseMultiplier);
+		powerUsage = (long) (defaultPowerUsage * powerUsageIncreaseMultiplier);
 		return this;
 	}
 
-	public AbstractProcesingComponent setCompletedPowerUsage(int power) {
+	public AbstractProcesingComponent setCompletedPowerUsage(long power) {
 		if (power <= 0) {
 			return this;
 		}
 
 		hasCompletedPowerCost = true;
 		completedDefaultPowerUsage = power;
-		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUsageIncreaseMultiplier);
+		completedPowerUsage = (long) (completedDefaultPowerUsage * powerUsageIncreaseMultiplier);
 		return this;
 	}
 

@@ -95,8 +95,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 				double transferableHeat = networkModule.getHeatStorage().getMaximumHeat() - networkModule.getHeatStorage().getCurrentHeat();
 				transferableHeat = Math.min(transferableHeat, heatGeneration);
 
-				int maxPowerUsage = Math.min(heatGenerationPowerUsage, energyStorageComponent.getStorage().getStoredPower());
-				int powerUsage = (int) Math.max(1, maxPowerUsage * (transferableHeat / heatGeneration));
+				long maxPowerUsage = Math.min(heatGenerationPowerUsage, energyStorageComponent.getStorage().getStoredPower());
+				long powerUsage = (int) Math.max(1, maxPowerUsage * (transferableHeat / heatGeneration));
 				if (energyStorageComponent.hasEnoughPower(powerUsage)) {
 					energyStorageComponent.useBulkPower(powerUsage);
 					networkModule.getHeatStorage().heat(transferableHeat, false);

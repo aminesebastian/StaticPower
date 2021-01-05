@@ -137,7 +137,7 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 		guiItemStacks.init(1, true, 29, 21);
 		guiItemStacks.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime() * recipe.getPowerCost(), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

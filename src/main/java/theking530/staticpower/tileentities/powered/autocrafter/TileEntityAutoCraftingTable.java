@@ -16,6 +16,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -41,9 +42,6 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 			TYPE.setTileEntitySpecialRenderer(TileEntityRenderAutoCraftingTable::new);
 		}
 	}
-	public static final int DEFAULT_PROCESSING_TIME = 100;
-	public static final int DEFAULT_PROCESSING_COST = 5;
-	public static final int DEFAULT_MOVING_TIME = 4;
 
 	public final MachineProcessingComponent moveComponent;
 	public final MachineProcessingComponent processingComponent;
@@ -66,16 +64,16 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(moveComponent = new MachineProcessingComponent("MoveComponent", DEFAULT_MOVING_TIME, this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(),
-				this::movingCompleted, true).setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(
-				processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-						.setShouldControlBlockState(true));
+		registerComponent(moveComponent = MachineProcessingComponent
+				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
+				.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(), this::canProcess,
+				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get()));
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setEnergyComponent(energyStorage);
-		processingComponent.setProcessingPowerUsage(DEFAULT_PROCESSING_COST);
+		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get());
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));

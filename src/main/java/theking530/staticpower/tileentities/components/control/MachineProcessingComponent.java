@@ -8,6 +8,8 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
 public class MachineProcessingComponent extends AbstractProcesingComponent {
+	public static final int DEFAULT_MOVING_TIME = 4;
+
 	protected Supplier<ProcessingCheckState> canStartProcessingCallback;
 	protected Supplier<ProcessingCheckState> canContinueProcessingCallback;
 	protected Supplier<ProcessingCheckState> processingEndedCallback;
@@ -24,6 +26,11 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
 		this(name, processingTime, () -> ProcessingCheckState.error(""), () -> ProcessingCheckState.ok(), processingEndedCallback, serverOnly);
+	}
+
+	public static MachineProcessingComponent createMovingProcessingComponent(String name, @Nonnull Supplier<ProcessingCheckState> canStartProcessingCallback,
+			@Nonnull Supplier<ProcessingCheckState> canContinueProcessingCallback, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
+		return new MachineProcessingComponent(name, DEFAULT_MOVING_TIME, processingEndedCallback, processingEndedCallback, processingEndedCallback, serverOnly);
 	}
 
 	protected ProcessingCheckState canStartProcessing() {
@@ -83,12 +90,12 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 	}
 
 	@Override
-	public MachineProcessingComponent setProcessingPowerUsage(int power) {
+	public MachineProcessingComponent setProcessingPowerUsage(long power) {
 		return (MachineProcessingComponent) super.setProcessingPowerUsage(power);
 	}
 
 	@Override
-	public MachineProcessingComponent setCompletedPowerUsage(int power) {
+	public MachineProcessingComponent setCompletedPowerUsage(long power) {
 		return (MachineProcessingComponent) super.setCompletedPowerUsage(power);
 	}
 

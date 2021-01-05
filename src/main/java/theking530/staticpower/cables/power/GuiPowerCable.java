@@ -9,6 +9,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.DataGraphWidget;
 import theking530.staticcore.gui.widgets.DataGraphWidget.ListGraphDataSet;
@@ -65,9 +66,9 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 			provided = -metrics.getProvidedData().get(i);
 
 			// Capture the data.
-			providedData.add(new Double(recieved));
-			receivedData.add(new Double(provided));
-			netData.add(new Double(recieved + provided));
+			providedData.add(new Double(CapabilityStaticVolt.convertmSVtoSV((long) recieved)));
+			receivedData.add(new Double(CapabilityStaticVolt.convertmSVtoSV((long) provided)));
+			netData.add(new Double(CapabilityStaticVolt.convertmSVtoSV((long) (recieved + provided))));
 		}
 
 		// Add the data.

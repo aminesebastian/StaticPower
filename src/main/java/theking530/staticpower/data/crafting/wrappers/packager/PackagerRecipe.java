@@ -15,7 +15,7 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput outputItem;
 	private final int size;
 
-	public PackagerRecipe(ResourceLocation name, int processingTime, int powerCost, int size, StaticPowerIngredient input, ProbabilityItemStackOutput outputItem) {
+	public PackagerRecipe(ResourceLocation name, int processingTime, long powerCost, int size, StaticPowerIngredient input, ProbabilityItemStackOutput outputItem) {
 		super(name, processingTime, powerCost);
 		this.size = size;
 		this.inputItem = input;
