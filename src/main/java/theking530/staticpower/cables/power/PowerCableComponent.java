@@ -69,7 +69,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 				return module.getEnergyAutoConverter().getEnergyStored();
 			}
 		}
-		return CapabilityStaticVolt.convertSVtoFE(clientCurrentPower);
+		return CapabilityStaticVolt.convertmSVtoFE(clientCurrentPower);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 				return module.getEnergyAutoConverter().getMaxEnergyStored();
 			}
 		}
-		return CapabilityStaticVolt.convertSVtoFE(clientCapacity);
+		return CapabilityStaticVolt.convertmSVtoFE(clientCapacity);
 	}
 
 	public float getClientLastEnergyDrain() {
@@ -155,7 +155,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				if (forge) {
-					return module.getEnergyAutoConverter().receiveEnergy((int) Math.min(CapabilityStaticVolt.convertSVtoFE(transferRate), power), simulate);
+					return module.getEnergyAutoConverter().receiveEnergy((int) Math.min(CapabilityStaticVolt.convertmSVtoFE(transferRate), power), simulate);
 				} else {
 					return module.getEnergyAutoConverter().receivePower(Math.min(transferRate, power), simulate);
 				}

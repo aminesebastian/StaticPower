@@ -15,14 +15,14 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
 
-	public static final int ENERGY_STORAGE = 1000;
+	public static final int ENERGY_STORAGE = 1000000;
 
 	public final EnergyStorageComponent energyStorage;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final BatteryInventoryComponent batteryInventory;
 
 	public TileEntityDigistoreManager() {
-		super(TYPE, 10);
+		super(TYPE, 10000);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", ENERGY_STORAGE, ENERGY_STORAGE, ENERGY_STORAGE).setUpgradeInventory(upgradesInventory));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));

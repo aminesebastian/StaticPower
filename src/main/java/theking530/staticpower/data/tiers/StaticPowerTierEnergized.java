@@ -33,12 +33,12 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 
 	@Override
 	protected long getSolarPanelPowerGeneration() {
-		return 32000;
+		return 8000;
 	}
 
 	@Override
 	protected long getSolarPanelPowerStorage() {
-		return 64000;
+		return 16000;
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 
 	@Override
 	protected long getBatteryCapacity() {
-		return 512000000;
+		return 50000000;
 	}
 
 	@Override

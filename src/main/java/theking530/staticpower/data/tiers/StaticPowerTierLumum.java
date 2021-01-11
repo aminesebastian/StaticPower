@@ -33,12 +33,12 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected long getSolarPanelPowerGeneration() {
-		return 64000;
+		return 16000;
 	}
 
 	@Override
 	protected long getSolarPanelPowerStorage() {
-		return 128000;
+		return 32000;
 	}
 
 	@Override
@@ -123,7 +123,7 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 
 	@Override
 	protected long getBatteryCapacity() {
-		return 1024000000;
+		return 100000000;
 	}
 
 	@Override

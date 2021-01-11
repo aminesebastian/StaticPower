@@ -322,7 +322,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 				return 0;
 			}
 			if (EnergyStorageComponent.this.filter != null
-					&& !EnergyStorageComponent.this.filter.apply(CapabilityStaticVolt.convertFEtoSV(maxReceive), side, EnergyManipulationAction.RECIEVE)) {
+					&& !EnergyStorageComponent.this.filter.apply(CapabilityStaticVolt.convertFEtomSV(maxReceive), side, EnergyManipulationAction.RECIEVE)) {
 				return 0;
 			}
 			return energyInterface.receiveEnergy(maxReceive, simulate);
@@ -334,7 +334,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 				return 0;
 			}
 			if (EnergyStorageComponent.this.filter != null
-					&& !EnergyStorageComponent.this.filter.apply(CapabilityStaticVolt.convertFEtoSV(maxExtract), side, EnergyManipulationAction.PROVIDE)) {
+					&& !EnergyStorageComponent.this.filter.apply(CapabilityStaticVolt.convertFEtomSV(maxExtract), side, EnergyManipulationAction.PROVIDE)) {
 				return 0;
 			}
 			return energyInterface.extractEnergy(maxExtract, simulate);

@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,6 +22,7 @@ import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.RecipeManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 import net.minecraftforge.common.ForgeHooks;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -29,6 +32,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import net.minecraftforge.fml.common.registry.GameRegistry;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -173,17 +177,15 @@ public class StaticPowerRecipeRegistry {
 			}
 		}
 
-		// Cache all packager recipes.
-		cachePackagerRecipes(manager);
-
-		// Cache all dynamic bottler recipes.
-		cacheDynamicBottlerRecipes(manager);
+		// Cache additional recipes.
+		cacheDynamicBottlerRecipes(manager, null);
+		cachePackagerRecipes(manager, null);
 
 		// Log the completion.
 		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), RECIPES.size() + FURNACE_RECIPES.size() + CRAFTING_RECIPES.size()));
 	}
 
-	private static void cacheDynamicBottlerRecipes(RecipeManager manager) {
+	public static void cacheDynamicBottlerRecipes(RecipeManager manager, @Nullable World world) {
 		// Capture dynamic recipes.
 		for (Item item : GameRegistry.findRegistry(Item.class)) {
 			// Create an instance to use.
@@ -241,7 +243,7 @@ public class StaticPowerRecipeRegistry {
 		}
 	}
 
-	private static void cachePackagerRecipes(RecipeManager manager) {
+	public static void cachePackagerRecipes(RecipeManager manager, @Nullable World world) {
 		// Iterate through all items.
 		for (Item item : GameRegistry.findRegistry(Item.class)) {
 			// Create an item stack instance.
@@ -266,25 +268,34 @@ public class StaticPowerRecipeRegistry {
 
 			// Check for recipes.
 			// Get the outputs for a 2x2 and 3x3 recipe.
-			Optional<ICraftingRecipe> twoRecipe = manager.getRecipe(IRecipeType.CRAFTING, sizeTwoInv, null);
-			Optional<ICraftingRecipe> threeRecipe = manager.getRecipe(IRecipeType.CRAFTING, sizeThreeInv, null);
+			try {
+				Optional<ICraftingRecipe> twoRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, sizeTwoInv, world);
 
-			// Create and add the 2x2 recipe.
-			if (twoRecipe.isPresent()) {
-				ICraftingRecipe recipe = twoRecipe.get();
-				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
-				PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 2,
-						new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
-				addRecipe(packRecipe);
+				// Create and add the 2x2 recipe.
+				if (twoRecipe.isPresent()) {
+					ICraftingRecipe recipe = twoRecipe.get();
+					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
+					PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 2,
+							new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
+					addRecipe(packRecipe);
+				}
+			} catch (Exception e) {
+				StaticPower.LOGGER.error("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a ");
 			}
 
-			// Create and add the 3x3 recipe.
-			if (threeRecipe.isPresent()) {
-				ICraftingRecipe recipe = threeRecipe.get();
-				ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
-				PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 3,
-						new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
-				addRecipe(packRecipe);
+			try {
+				Optional<ICraftingRecipe> threeRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, sizeThreeInv, world);
+
+				// Create and add the 3x3 recipe.
+				if (threeRecipe.isPresent()) {
+					ICraftingRecipe recipe = threeRecipe.get();
+					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
+					PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 3,
+							new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getRecipeOutput()));
+					addRecipe(packRecipe);
+				}
+			} catch (Exception e) {
+
 			}
 		}
 	}

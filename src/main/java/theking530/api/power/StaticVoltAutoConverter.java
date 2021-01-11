@@ -57,24 +57,24 @@ public class StaticVoltAutoConverter implements IEnergyStorage, IStaticVoltHandl
 	 **************************/
 	@Override
 	public int receiveEnergy(int maxReceive, boolean simulate) {
-		long recievedPower = receivePower(CapabilityStaticVolt.convertFEtoSV(maxReceive), simulate);
-		return CapabilityStaticVolt.convertSVtoFE(recievedPower);
+		long recievedPower = receivePower(CapabilityStaticVolt.convertFEtomSV(maxReceive), simulate);
+		return CapabilityStaticVolt.convertmSVtoFE(recievedPower);
 	}
 
 	@Override
 	public int extractEnergy(int maxExtract, boolean simulate) {
-		long drainedPower = drainPower(CapabilityStaticVolt.convertFEtoSV(maxExtract), simulate);
-		return CapabilityStaticVolt.convertSVtoFE(drainedPower);
+		long drainedPower = drainPower(CapabilityStaticVolt.convertFEtomSV(maxExtract), simulate);
+		return CapabilityStaticVolt.convertmSVtoFE(drainedPower);
 	}
 
 	@Override
 	public int getEnergyStored() {
-		return CapabilityStaticVolt.convertSVtoFE(getStoredPower());
+		return CapabilityStaticVolt.convertmSVtoFE(getStoredPower());
 	}
 
 	@Override
 	public int getMaxEnergyStored() {
-		return CapabilityStaticVolt.convertSVtoFE(getCapacity());
+		return CapabilityStaticVolt.convertmSVtoFE(getCapacity());
 	}
 
 	@Override

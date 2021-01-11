@@ -30,11 +30,11 @@ public class CapabilityStaticVolt {
 		}, () -> new StaticVoltHandler(0, 0, 0));
 	}
 
-	public static long convertFEtoSV(int FE) {
-		return FE * FE_TO_SV_CONVERSION;
+	public static long convertFEtomSV(int FE) {
+		return (FE * mSV_TO_SV) / FE_TO_SV_CONVERSION;
 	}
 
-	public static int convertSVtoFE(long SV) {
+	public static int convertmSVtoFE(long SV) {
 		return (int) ((SV * CapabilityStaticVolt.FE_TO_SV_CONVERSION) / mSV_TO_SV);
 	}
 

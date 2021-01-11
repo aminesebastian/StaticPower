@@ -77,6 +77,11 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
+	protected long getBatteryMaxIO() {
+		return 2147483647;
+	}
+
+	@Override
 	protected double getItemCableMaxSpeed() {
 		return 10;
 	}
