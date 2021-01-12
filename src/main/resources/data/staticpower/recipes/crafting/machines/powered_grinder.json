@@ -13,7 +13,7 @@
 			"item": "minecraft:flint"
 		},
 		"g": {
-			"item": "minecraft:stone_cutter"
+			"item": "minecraft:stonecutter"
 		},
 		"e": {
 			"tag": "forge:gears/iron"

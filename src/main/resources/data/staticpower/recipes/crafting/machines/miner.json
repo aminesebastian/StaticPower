@@ -1,9 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"bob",
-		"gmg",
-		"bpb"
+		"ihi",
+		"cmc",
+		"gog"
 	],
 	"key": {
 		"m": {
@@ -12,14 +12,17 @@
 		"g": {
 			"tag": "forge:gears/tin"
 		},
-		"p": {
-			"tag": "forge:storage_blocks/copper"
-		},
 		"o": {
 			"item": "staticpower:motor"
 		},
-		"b": {
-			"item": "minecraft:bucket"
+		"c": {
+			"item": "minecraft:chain"
+		},
+		"i": {
+			"item": "minecraft:iron_pickaxe"
+		},
+		"h": {
+			"tag": "forge:chests"
 		}
 	},
 	"result": {
