@@ -42,13 +42,12 @@ pipeline {
 @NonCPS
 def sendDiscordMessage() {
     def commitMessages = ""
-    def formatter = new SimpleDateFormat('yyyy-MM-dd HH:mm')
     def changeLogSets = currentBuild.changeSets
     for (int i = 0; i < changeLogSets.size(); i++) {
         def entries = changeLogSets[i].items
         for (int j = 0; j < entries.length; j++) {
             def entry = entries[j]
-            commitMessages = commitMessages + "${entry.author} ${entry.commitId}:\n${formatter.format(new Date(entry.timestamp))}: *${entry.msg}*\n" 
+            commitMessages = commitMessages + "${entry.author} ${entry.commitId}: *${entry.msg}*\n" 
         }
     }
     discordSend description: "New mod version available! Use Username: Minecraft and Password: Minecraft to gain access! \n\nChangelog:\n${commitMessages}", footer: "Patch Version: " + currentBuild.number, link: "http://jenkins.suburbandigital.com:8080/job/Static%20Power/job/development/lastSuccessfulBuild/artifact/build/libs/", result: currentBuild.currentResult, title: JOB_NAME, enableArtifactList: true, webhookURL: "https://discord.com/api/webhooks/798478687975768066/okWARb5o92cnKK2c6-ebbNA8P9Mu6Ss3Ol8z8XYsnJ88VXRNMtVE753GQZTiCV9u0q1Y"      
