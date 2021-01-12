@@ -13,7 +13,7 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}" + project.getProperty("build_number")
+version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}." + project.getProperty("build_number")
 group = "com.theking530.staticpower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StaticPower"
 
