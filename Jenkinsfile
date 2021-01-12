@@ -1,4 +1,5 @@
 pipeline {
+    agent any
     environment {
         GRADLE_OPTS = "-Dorg.gradle.daemon=false" // This environment variable aims to disable Gradle Daemon for piles of incompatible Gradle Daemons existence.
     }
