@@ -10,7 +10,7 @@
 			"tag": "forge:ingots/bronze"
 		},
 		"l": {
-			"tag": "forge:rubber"
+			"item": "staticpower:rod_latex"
 		}
 	},
 	"result": {
