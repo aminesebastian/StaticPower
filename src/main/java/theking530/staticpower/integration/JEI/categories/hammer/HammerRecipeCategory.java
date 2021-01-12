@@ -84,7 +84,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
-		// Get the buffer and renter the large hammer.
+		// Get the buffer and render the large hammer.
 		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 21, -1);
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(location.getX(), location.getY(), 0.0F);

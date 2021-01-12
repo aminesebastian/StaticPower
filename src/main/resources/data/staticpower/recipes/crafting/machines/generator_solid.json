@@ -1,7 +1,7 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"ttt",
+		"tbt",
 		"tmt",
 		"pfp"
 	],
@@ -17,6 +17,9 @@
 		},
 		"m": {
 			"item": "staticpower:machine_block_iron"
+		},
+		"b": {
+			"item": "staticpower:portable_battery_basic"
 		}
 	},
 	"result": {

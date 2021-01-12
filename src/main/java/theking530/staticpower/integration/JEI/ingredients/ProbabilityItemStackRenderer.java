@@ -14,7 +14,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -57,8 +56,6 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 
 	@Override
 	public List<ITextComponent> getTooltip(ProbabilityItemStackOutput ingredient, ITooltipFlag tooltipFlag) {
-		Minecraft minecraft = Minecraft.getInstance();
-		PlayerEntity player = minecraft.player;
 		try {
 			List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 

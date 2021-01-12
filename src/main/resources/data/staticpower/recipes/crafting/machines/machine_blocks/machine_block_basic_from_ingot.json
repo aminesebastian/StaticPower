@@ -10,7 +10,7 @@
 			"tag": "forge:ingots/tin"
 		},
 		"m": {
-			"item": "staticpower:machine_block_iron"
+			"item": "staticpower:io_port"
 		},
 		"p": {
 			"item": "staticpower:processor_basic"

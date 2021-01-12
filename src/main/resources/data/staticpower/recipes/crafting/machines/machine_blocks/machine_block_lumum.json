@@ -10,7 +10,7 @@
 			"item": "staticpower:plate_lumum"
 		},
 		"m": {
-			"item": "staticpower:machine_block_energized"
+			"item": "staticpower:io_port"
 		},
 		"p": {
 			"item": "staticpower:processor_lumum"

@@ -13,7 +13,7 @@
 			"item": "staticpower:coil_copper"
 		},
 		"g": {
-			"tag": "forge:storage_blocks/copper"
+			"tag": "forge:plates/copper"
 		},
 		"p": {
 			"item": "staticpower:plug"

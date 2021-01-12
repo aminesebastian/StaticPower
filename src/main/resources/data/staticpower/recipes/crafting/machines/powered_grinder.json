@@ -1,8 +1,8 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"ucu",
-		"eme",
+		" e ",
+		"umu",
 		"gpg"
 	],
 	"key": {
@@ -13,16 +13,13 @@
 			"item": "minecraft:flint"
 		},
 		"g": {
-			"tag": "forge:storage_blocks/iron"
+			"item": "minecraft:stone_cutter"
 		},
 		"e": {
 			"tag": "forge:gears/iron"
 		},
 		"p": {
 			"item": "staticpower:plug"
-		},
-		"c": {
-			"item": "staticpower:gear_box_iron"
 		}
 	},
 	"result": {

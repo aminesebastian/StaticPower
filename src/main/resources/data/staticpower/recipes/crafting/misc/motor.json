@@ -16,7 +16,7 @@
 			"tag": "forge:ingots/tin"
 		},
 		"m": {
-			"item": "staticpower:magnet_basic"
+			"item": "staticpower:portable_battery_basic"
 		}
 	},
 	"result": {

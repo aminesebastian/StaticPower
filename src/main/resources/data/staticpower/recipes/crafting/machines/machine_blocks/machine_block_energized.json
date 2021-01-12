@@ -10,7 +10,7 @@
 			"item": "staticpower:plate_energized"
 		},
 		"m": {
-			"item": "staticpower:machine_block_static"
+			"item": "staticpower:io_port"
 		},
 		"p": {
 			"item": "staticpower:processor_energized"

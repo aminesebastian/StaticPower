@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"t": {
-			"tag": "forge:ingots/gold"
+			"tag": "forge:ingots/brass"
 		},
 		"m": {
-			"item": "staticpower:machine_block_basic"
+			"item": "staticpower:io_port"
 		},
 		"p": {
 			"item": "staticpower:processor_advanced"
