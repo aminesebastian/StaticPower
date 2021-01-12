@@ -11,7 +11,7 @@ pipeline {
         }
         stage('Build') {
             steps {
-                sh './gradlew build'
+                sh './gradlew build -Pbuild_number=' + currentBuild.number
             }
         }
         stage('Test') {
