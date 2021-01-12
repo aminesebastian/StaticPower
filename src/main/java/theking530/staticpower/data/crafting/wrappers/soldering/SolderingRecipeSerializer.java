@@ -2,6 +2,7 @@ package theking530.staticpower.data.crafting.wrappers.soldering;
 
 import java.util.Map;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.item.ItemStack;
@@ -16,9 +17,11 @@ import theking530.staticpower.StaticPower;
 
 public class SolderingRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<SolderingRecipe> {
 	public static final SolderingRecipeSerializer INSTANCE = new SolderingRecipeSerializer();
+	private final JsonElement solderingIronTag;
 
 	public SolderingRecipeSerializer() {
 		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "soldering_recipe"));
+		solderingIronTag = JSONUtils.fromJson("{ \"tag\":\"staticpower:soldering_iron\" }");
 	}
 
 	public SolderingRecipe read(ResourceLocation recipeId, JsonObject json) {
@@ -29,7 +32,8 @@ public class SolderingRecipeSerializer extends net.minecraftforge.registries.For
 		int j = astring.length;
 		NonNullList<Ingredient> nonnulllist = SolderingRecipe.deserializeIngredients(astring, map, i, j);
 		ItemStack itemstack = ShapedRecipe.deserializeItem(JSONUtils.getJsonObject(json, "result"));
-		return new SolderingRecipe(recipeId, s, i, j, nonnulllist, itemstack);
+		Ingredient solderingIron = Ingredient.deserialize(solderingIronTag);
+		return new SolderingRecipe(recipeId, s, i, j, solderingIron, nonnulllist, itemstack);
 	}
 
 	public SolderingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
@@ -43,7 +47,8 @@ public class SolderingRecipeSerializer extends net.minecraftforge.registries.For
 		}
 
 		ItemStack itemstack = buffer.readItemStack();
-		return new SolderingRecipe(recipeId, s, i, j, nonnulllist, itemstack);
+		Ingredient solderingIron = Ingredient.read(buffer);
+		return new SolderingRecipe(recipeId, s, i, j, solderingIron, nonnulllist, itemstack);
 	}
 
 	public void write(PacketBuffer buffer, SolderingRecipe recipe) {
@@ -56,5 +61,6 @@ public class SolderingRecipeSerializer extends net.minecraftforge.registries.For
 		}
 
 		buffer.writeItemStack(recipe.recipeOutput);
+		recipe.getSolderingIron().write(buffer);
 	}
 }

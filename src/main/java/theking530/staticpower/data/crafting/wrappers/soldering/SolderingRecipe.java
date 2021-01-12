@@ -34,12 +34,15 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	public final int recipeWidth;
 	public final int recipeHeight;
 	public final NonNullList<Ingredient> recipeItems;
+	public final Ingredient solderingIron;
 	public final ItemStack recipeOutput;
 	public final String group;
 
-	public SolderingRecipe(ResourceLocation name, String groupIn, int recipeWidthIn, int recipeHeightIn, NonNullList<Ingredient> recipeItemsIn, ItemStack recipeOutputIn) {
+	public SolderingRecipe(ResourceLocation name, String groupIn, int recipeWidthIn, int recipeHeightIn, Ingredient solderingIron, NonNullList<Ingredient> recipeItemsIn,
+			ItemStack recipeOutputIn) {
 		super(name);
 		this.group = groupIn;
+		this.solderingIron = solderingIron;
 		this.recipeWidth = recipeWidthIn;
 		this.recipeHeight = recipeHeightIn;
 		this.recipeItems = recipeItemsIn;
@@ -57,6 +60,10 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	 */
 	public ItemStack getRecipeOutput() {
 		return recipeOutput;
+	}
+
+	public Ingredient getSolderingIron() {
+		return this.solderingIron;
 	}
 
 	public NonNullList<Ingredient> getIngredients() {

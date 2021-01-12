@@ -58,7 +58,7 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 
 	@Override
 	public IRecipeSerializer<?> getSerializer() {
-		return PackageRecipeSerializer.INSTANCE;
+		return PackagerRecipeSerializer.INSTANCE;
 	}
 
 	@Override

@@ -60,7 +60,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 		Minecraft minecraft = Minecraft.getInstance();
 		PlayerEntity player = minecraft.player;
 		try {
-			List<ITextComponent> tooltip = ingredient.getItem().getTooltip(player, tooltipFlag);
+			List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
 
 			// Formulate the output percentage tooltip and then add it.
 			if (ingredient.getOutputChance() != 1.0f) {

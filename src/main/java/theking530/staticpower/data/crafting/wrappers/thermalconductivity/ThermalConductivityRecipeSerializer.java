@@ -108,8 +108,8 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 
 		// Read the over heat values.
 		float overheatTemp = buffer.readFloat();
-		BlockState overheatedBlock = NBTUtil.readBlockState(buffer.readCompoundTag());
 		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
+		BlockState overheatedBlock = NBTUtil.readBlockState(buffer.readCompoundTag());
 
 		// Read Blocks
 		byte blockTagCount = buffer.readByte();

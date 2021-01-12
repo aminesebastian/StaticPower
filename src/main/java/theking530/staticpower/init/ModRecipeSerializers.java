@@ -16,6 +16,7 @@ import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusion
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipeSerializer;
@@ -44,14 +45,15 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(FluidGeneratorRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(ThermalConductivityRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(EvaporatorRecipeSerializer.INSTANCE);
-		StaticPowerRegistry.preRegisterRecipeSerializer(CondensationRecipeSerializer.INSTANCE);		
-		StaticPowerRegistry.preRegisterRecipeSerializer(VulcanizerRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(AutoSmithRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(LatheRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(MixerRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(CrucibleRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(CastingRecipeSerializer.INSTANCE);		
-		StaticPowerRegistry.preRegisterRecipeSerializer(TumblerRecipeSerializer.INSTANCE);	
-		StaticPowerRegistry.preRegisterRecipeSerializer(TurbineRecipeSerializer.INSTANCE);						
+		StaticPowerRegistry.preRegisterRecipeSerializer(CondensationRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(VulcanizerRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(AutoSmithRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(LatheRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(MixerRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(CrucibleRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(CastingRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(TumblerRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(TurbineRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(HammerRecipeSerializer.INSTANCE);
 	}
 }

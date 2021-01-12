@@ -1,6 +1,6 @@
 {
 	"name": "Forge Hammers",
-	"icon": "staticpower:metal_hammer_iron",
+	"icon": "staticpower:hammer_iron",
 	"category": "staticpower:tools",
 	"pages": [
 		{
@@ -9,13 +9,13 @@
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/tools/forge_hammer_iron",
-			"recipe2": "staticpower:crafting/tools/forge_hammer_zinc"
+			"recipe": "staticpower:crafting/tools/hammer_iron",
+			"recipe2": "staticpower:crafting/tools/hammer_zinc"
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/tools/forge_hammer_bronze",
-			"recipe2": "staticpower:crafting/tools/forge_hammer_tungsten"
+			"recipe": "staticpower:crafting/tools/hammer_bronze",
+			"recipe2": "staticpower:crafting/tools/hammer_tungsten"
 		}
 	]
 }

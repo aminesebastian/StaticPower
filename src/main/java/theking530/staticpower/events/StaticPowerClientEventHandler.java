@@ -65,7 +65,7 @@ public class StaticPowerClientEventHandler {
 	protected static Field currentBlockDamageMP;
 
 	/**
-	 * This event is raised by the client setup event.
+	 * This event is raised by the client setup event (duh).
 	 * 
 	 * @param event The client setup event.
 	 */

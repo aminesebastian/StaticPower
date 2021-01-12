@@ -1,19 +1,19 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"iii",
-		"isi",
-		" s "
+		"lsl",
+		"lsl",
+		"lsl"
 	],
 	"key": {
-		"i": {
-			"tag": "forge:ingots/iron"
-		},
 		"s": {
 			"tag": "forge:rods/wooden"
+		},
+		"l": {
+			"item": "staticpower:latex_chunk"
 		}
 	},
 	"result": {
-		"item": "staticpower:hammer_iron"
+		"item": "staticpower:rod_latex"
 	}
 }

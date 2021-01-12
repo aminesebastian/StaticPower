@@ -12,10 +12,10 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
-public class PackageRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PackagerRecipe> {
-	public static final PackageRecipeSerializer INSTANCE = new PackageRecipeSerializer();
+public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PackagerRecipe> {
+	public static final PackagerRecipeSerializer INSTANCE = new PackagerRecipeSerializer();
 
-	private PackageRecipeSerializer() {
+	private PackagerRecipeSerializer() {
 		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "packager_recipe"));
 	}
 

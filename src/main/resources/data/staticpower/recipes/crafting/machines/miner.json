@@ -13,7 +13,7 @@
 			"tag": "forge:gears/tin"
 		},
 		"p": {
-			"item": "staticpower:heat_sink_copper"
+			"tag": "forge:storage_blocks/copper"
 		},
 		"o": {
 			"item": "staticpower:motor"

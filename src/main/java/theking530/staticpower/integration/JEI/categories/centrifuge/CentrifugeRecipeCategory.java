@@ -96,10 +96,8 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		String rpmText = String.valueOf(recipe.getMinimumSpeed()) + " RPM";
-		GuiDrawUtilities.drawColoredRectangle(103, 12, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4,
-				11, 0.0f, Color.GREY);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, rpmText, 105, 14,
-				Color.EIGHT_BIT_WHITE.encodeInInteger());
+		GuiDrawUtilities.drawSlot(matrixStack, 103, 12.5f, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
+		Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, rpmText, 105, 14, Color.EIGHT_BIT_WHITE.encodeInInteger());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
@@ -110,8 +108,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	public List<ITextComponent> getTooltipStrings(CentrifugeRecipe recipe, double mouseX, double mouseY) {
 		List<ITextComponent> output = new ArrayList<ITextComponent>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ")
-					.append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
@@ -145,7 +142,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		guiItemStacks.init(INTPUT_SLOT, true, 79, 5);
 		guiItemStacks.set(ingredients);
-		
+
 		// Set the outputs.
 		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
 		probabilityStacks.init(PRIMARY_OUTPUT_SLOT, false, 80, 48);
@@ -154,8 +151,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 		probabilityStacks.set(ingredients);
 
 		// Add the fluid.
-		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(),
-				(int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
+		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}
 }

@@ -246,6 +246,15 @@ public class StaticPowerAdditionalModels {
 		}
 	}
 
+	/**
+	 * This executes on both the client on the server. On the client, it's purpose
+	 * is to register a model for loading. On the server, it's purpose is to
+	 * silently assign the resource location back to the static variable that called
+	 * it.
+	 * 
+	 * @param path
+	 * @return
+	 */
 	private static ResourceLocation registerModel(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);
 		MODELS.add(sprite);

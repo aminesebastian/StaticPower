@@ -16,7 +16,7 @@
 			"item": "minecraft:iron_block"
 		},
 		"h": {
-			"tag": "staticpower:metal_hammer"
+			"tag": "staticpower:hammer"
 		},
 		"l": {
 			"item": "staticpower:plug"

@@ -40,6 +40,7 @@ import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusion
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
+import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
@@ -63,6 +64,7 @@ import theking530.staticpower.integration.JEI.categories.fluidgenerator.FluidGen
 import theking530.staticpower.integration.JEI.categories.fluidinfuser.FluidInfuserRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.former.FormerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.fusionfurnace.FusionFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.hammer.HammerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.lathe.LatheRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.lumbermill.LumberMillRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.mixer.MixerRecipeCategory;
@@ -135,9 +137,11 @@ public class PluginJEI implements IModPlugin {
 	@Nullable
 	private TumblerRecipeCategory tumblerRecipeCategory;
 	@Nullable
-	ThermalConductivityRecipeCategory thermalConductivityRecipeCategory;
+	private ThermalConductivityRecipeCategory thermalConductivityRecipeCategory;
 	@Nullable
-	PackagerRecipeCategory packagerRecipeCategory;
+	private PackagerRecipeCategory packagerRecipeCategory;
+	@Nullable
+	private HammerRecipeCategory hammerRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -254,6 +258,10 @@ public class PluginJEI implements IModPlugin {
 		// Packager
 		packagerRecipeCategory = new PackagerRecipeCategory(guiHelper);
 		registration.addRecipeCategories(packagerRecipeCategory);
+
+		// Hammer
+		hammerRecipeCategory = new HammerRecipeCategory(guiHelper);
+		registration.addRecipeCategories(hammerRecipeCategory);
 	}
 
 	@Override
@@ -333,6 +341,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CastingRecipe.RECIPE_TYPE), CasterRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(TumblerRecipe.RECIPE_TYPE), TumblerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(PackagerRecipe.RECIPE_TYPE), PackagerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(HammerRecipe.RECIPE_TYPE), HammerRecipeCategory.UID);
 	}
 
 	@Override
@@ -373,6 +382,12 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatSink), ThermalConductivityRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatCable), ThermalConductivityRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatSink), ThermalConductivityRecipeCategory.UID);
+
+		registration.addRecipeCatalyst(new ItemStack(ModItems.BronzeMetalHammer), HammerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.CreativeMetalHammer), HammerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.IronMetalHammer), HammerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.TungstenMetalHammer), HammerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.ZincMetalHammer), HammerRecipeCategory.UID);
 	}
 
 	@Override

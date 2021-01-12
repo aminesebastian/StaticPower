@@ -39,7 +39,7 @@ import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.CoverSaw;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.Magnet;
-import theking530.staticpower.items.tools.MetalHammer;
+import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.TurbineBlades;
@@ -243,6 +243,7 @@ public class ModItems {
 	public static StaticPowerItem RodDiamond;
 	public static StaticPowerItem RodQuartz;
 	public static StaticPowerItem RodLapis;
+	public static StaticPowerItem RodLatex;
 
 	public static StaticPowerItem GemRuby;
 	public static StaticPowerItem GemSapphire;
@@ -373,11 +374,11 @@ public class ModItems {
 	public static StaticPlantCrop LumumCrop;
 	public static DepletedCrop DepletedCrop;
 
-	public static MetalHammer IronMetalHammer;
-	public static MetalHammer ZincMetalHammer;
-	public static MetalHammer BronzeMetalHammer;
-	public static MetalHammer TungstenMetalHammer;
-	public static MetalHammer CreativeMetalHammer;
+	public static Hammer IronMetalHammer;
+	public static Hammer ZincMetalHammer;
+	public static Hammer BronzeMetalHammer;
+	public static Hammer TungstenMetalHammer;
+	public static Hammer CreativeMetalHammer;
 
 	public static WireCutters IronWireCutters;
 	public static WireCutters ZincWireCutters;
@@ -530,11 +531,14 @@ public class ModItems {
 		// Turbine Blades
 		StaticPowerRegistry.preRegisterItem(WoodTurbineBlades = new TurbineBlades("turbine_blades_wood", StaticPowerTiers.WOOD, StaticPowerAdditionalModels.TURBINE_BLADES_WOOD));
 		StaticPowerRegistry.preRegisterItem(BasicTurbineBlades = new TurbineBlades("turbine_blades_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.TURBINE_BLADES_BASIC));
-		StaticPowerRegistry.preRegisterItem(AdvancedTurbineBlades = new TurbineBlades("turbine_blades_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
+		StaticPowerRegistry
+				.preRegisterItem(AdvancedTurbineBlades = new TurbineBlades("turbine_blades_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
 		StaticPowerRegistry.preRegisterItem(StaticTurbineBlades = new TurbineBlades("turbine_blades_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.TURBINE_BLADES_STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedTurbineBlades = new TurbineBlades("turbine_blades_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterItem(EnergizedTurbineBlades = new TurbineBlades("turbine_blades_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumTurbineBlades = new TurbineBlades("turbine_blades_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.TURBINE_BLADES_LUMUM));
-		StaticPowerRegistry.preRegisterItem(CreativeTurbineBlades = new TurbineBlades("turbine_blades_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
+		StaticPowerRegistry
+				.preRegisterItem(CreativeTurbineBlades = new TurbineBlades("turbine_blades_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
 
 		// Processors
 		StaticPowerRegistry.preRegisterItem(BasicCard = new StaticPowerItem("card_basic"));
@@ -560,11 +564,11 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CreativeBatteryPack = new BatteryPack("battery_pack_creative", StaticPowerTiers.CREATIVE));
 
 		// Tools
-		StaticPowerRegistry.preRegisterItem(IronMetalHammer = new MetalHammer("metal_hammer_iron", 100));
-		StaticPowerRegistry.preRegisterItem(ZincMetalHammer = new MetalHammer("metal_hammer_zinc", 500));
-		StaticPowerRegistry.preRegisterItem(BronzeMetalHammer = new MetalHammer("metal_hammer_bronze", 1000));
-		StaticPowerRegistry.preRegisterItem(TungstenMetalHammer = new MetalHammer("metal_hammer_tungsten", 5000));
-		StaticPowerRegistry.preRegisterItem(CreativeMetalHammer = new MetalHammer("metal_hammer_creative", Integer.MAX_VALUE));
+		StaticPowerRegistry.preRegisterItem(IronMetalHammer = new Hammer("hammer_iron", 100));
+		StaticPowerRegistry.preRegisterItem(ZincMetalHammer = new Hammer("hammer_zinc", 500));
+		StaticPowerRegistry.preRegisterItem(BronzeMetalHammer = new Hammer("hammer_bronze", 1000));
+		StaticPowerRegistry.preRegisterItem(TungstenMetalHammer = new Hammer("hammer_tungsten", 5000));
+		StaticPowerRegistry.preRegisterItem(CreativeMetalHammer = new Hammer("hammer_creative", Integer.MAX_VALUE));
 
 		StaticPowerRegistry.preRegisterItem(IronWireCutters = new WireCutters("wire_cutters_iron", 100));
 		StaticPowerRegistry.preRegisterItem(ZincWireCutters = new WireCutters("wire_cutters_zinc", 500));
@@ -781,6 +785,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(RodBrass = new StaticPowerItem("rod_brass"));
 		StaticPowerRegistry.preRegisterItem(RodBronze = new StaticPowerItem("rod_bronze"));
 		StaticPowerRegistry.preRegisterItem(RodLapis = new StaticPowerItem("rod_lapis"));
+		StaticPowerRegistry.preRegisterItem(RodLatex = new StaticPowerItem("rod_latex"));
 
 		// Chunks
 		StaticPowerRegistry.preRegisterItem(ChunksCopper = new StaticPowerItem("chunks_copper"));
