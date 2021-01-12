@@ -34,7 +34,7 @@ pipeline {
                     }
                 }
                 
-                discordSend description: "New mod version available! Use Username: Minecraft and Password: Minecraft to gain access!", footer: "Patch Version: " + currentBuild.number, link: "http://jenkins.suburbandigital.com:8080/job/Static%20Power/job/development/lastSuccessfulBuild/artifact/build/libs/", result: currentBuild.currentResult, title: JOB_NAME, enableArtifactList: true, webhookURL: "https://discord.com/api/webhooks/798478687975768066/okWARb5o92cnKK2c6-ebbNA8P9Mu6Ss3Ol8z8XYsnJ88VXRNMtVE753GQZTiCV9u0q1Y"
+                discordSend description: "New mod version available! Use Username: Minecraft and Password: Minecraft to gain access! \n\n " + ${GIT_COMMIT}, footer: "Patch Version: " + currentBuild.number, link: "http://jenkins.suburbandigital.com:8080/job/Static%20Power/job/development/lastSuccessfulBuild/artifact/build/libs/", result: currentBuild.currentResult, title: JOB_NAME, enableArtifactList: true, webhookURL: "https://discord.com/api/webhooks/798478687975768066/okWARb5o92cnKK2c6-ebbNA8P9Mu6Ss3Ol8z8XYsnJ88VXRNMtVE753GQZTiCV9u0q1Y"
             }
         }
     }
