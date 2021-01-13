@@ -7,10 +7,10 @@
 	],
 	"key": {
 		"i": {
-			"tag": "forge:rods/aluminium"
+			"tag": "forge:rods/aluminum"
 		},
 		"g": {
-			"tag": "forge:gears/aluminium"
+			"tag": "forge:gears/aluminum"
 		}
 	},
 	"result": {

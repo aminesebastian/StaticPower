@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shapeless",
 	"ingredients": [
 		{
-			"tag": "forge:plates/aluminium"
+			"tag": "forge:plates/aluminum"
 		},
 		{
 			"tag": "staticpower:wire_cutters"

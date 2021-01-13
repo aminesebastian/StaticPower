@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:crucible_recipe",
 	"input": {
-		"tag": "forge:nuggets/aluminium"
+		"tag": "forge:nuggets/aluminum"
 	},
 	"outputs": {
 		"fluid": {

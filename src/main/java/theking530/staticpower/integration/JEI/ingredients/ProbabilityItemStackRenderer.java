@@ -57,7 +57,10 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 	@Override
 	public List<ITextComponent> getTooltip(ProbabilityItemStackOutput ingredient, ITooltipFlag tooltipFlag) {
 		try {
-			List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
+			// Get the original item tooltip but remove the last line (that should be the
+			// mod name).
+			List<ITextComponent> tooltip = ingredient.getItem().getTooltip(Minecraft.getInstance().player, tooltipFlag);
+			tooltip.remove(tooltip.size() - 1);
 
 			// Formulate the output percentage tooltip and then add it.
 			if (ingredient.getOutputChance() != 1.0f) {

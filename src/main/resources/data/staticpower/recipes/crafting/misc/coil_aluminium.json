@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"w": {
-			"tag": "forge:wires/aluminium"
+			"tag": "forge:wires/aluminum"
 		},
 		"s": {
 			"tag": "forge:rods/wooden"
