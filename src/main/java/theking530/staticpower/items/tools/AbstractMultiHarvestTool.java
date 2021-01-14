@@ -32,6 +32,7 @@ import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.server.ServerWorld;
 import theking530.api.multipart.AbstractMultiPartItem;
+import theking530.staticpower.StaticPower;
 
 public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected float attackDamage;
@@ -112,17 +113,21 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 					BlockPos offsetPos = pos.offset(harvestDirections.getHeightDirection(), y);
 					offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
 
-					// Get the state.
-					BlockState state = player.getEntityWorld().getBlockState(offsetPos);
+					try {
+						// Get the state.
+						BlockState state = player.getEntityWorld().getBlockState(offsetPos);
 
-					// Check the hardness.
-					if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
-						continue;
-					}
+						// Check the hardness.
+						if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
+							continue;
+						}
 
-					// Check if we can harvest this block.
-					if (canHarvestBlock(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
-						minableBlocks.add(offsetPos);
+						// Check if we can harvest this block.
+						if (canHarvestBlock(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
+							minableBlocks.add(offsetPos);
+						}
+					} catch (Exception e) {
+						StaticPower.LOGGER.warn(String.format("Unable to mine block at position: %1$s.", offsetPos.toString()), e);
 					}
 				}
 			}
