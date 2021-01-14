@@ -28,17 +28,17 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected long getPortableBatteryCapacity() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getSolarPanelPowerGeneration() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getSolarPanelPowerStorage() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
@@ -48,22 +48,22 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected long getCablePowerCapacity() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getCablePowerDelivery() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getCableIndustrialPowerCapacity() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getCableIndustrialPowerDelivery() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
@@ -73,12 +73,12 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected long getBatteryCapacity() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getBatteryMaxIO() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
@@ -108,17 +108,17 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected long getDefaultMachinePowerCapacity() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getDefaultMachinePowerInput() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override
 	protected long getDefaultMachinePowerOutput() {
-		return Integer.MAX_VALUE;
+		return Long.MAX_VALUE;
 	}
 
 	@Override

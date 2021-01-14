@@ -2,7 +2,6 @@ package theking530.staticpower.tileentities.powered.chargingstation;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -13,7 +12,6 @@ import theking530.staticpower.container.slots.BatteryItemSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ContainerChargingStation extends StaticPowerTileEntityContainer<TileEntityChargingStation> {
 	@ContainerTypePopulator
@@ -35,30 +33,10 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 0, 53, 24) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
-			}
-		});
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 1, 72, 24) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
-			}
-		});
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 2, 91, 24) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
-			}
-		});
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 3, 110, 24) {
-			@Override
-			public boolean isItemValid(ItemStack itemStack) {
-				return EnergyHandlerItemStackUtilities.isEnergyContainer(itemStack);
-			}
-		});
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 0, 53, 24));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 1, 72, 24));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 2, 91, 24));
+		this.addSlot(new StaticPowerContainerSlot(getTileEntity().unchargedInventory, 3, 110, 24));
 
 		// Output
 		this.addSlot(new OutputSlot(getTileEntity().chargedInventory, 0, 48, 52));

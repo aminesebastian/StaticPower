@@ -17,6 +17,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -51,6 +52,7 @@ public class BlockBattery extends StaticPowerMachineBlock {
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
 		tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString() + "• Max Output ")
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
+		tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString() + "• ").append(new TranslationTextComponent("gui.staticpower.battery_block_charging_tooltip").mergeStyle(TextFormatting.GRAY)));
 	}
 
 	@Override

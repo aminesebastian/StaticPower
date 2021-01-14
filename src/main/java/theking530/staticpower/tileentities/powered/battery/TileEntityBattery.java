@@ -3,6 +3,7 @@ package theking530.staticpower.tileentities.powered.battery;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,10 +15,12 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderBatter
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
+import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 
@@ -58,6 +61,7 @@ public class TileEntityBattery extends TileEntityMachine {
 	}
 
 	public final BatteryInventoryComponent batteryInventory;
+	public final InventoryComponent chargingInventory;
 
 	private long minPowerThreshold;
 	private long maxPowerThreshold;
@@ -73,7 +77,10 @@ public class TileEntityBattery extends TileEntityMachine {
 		super(allocator, tier);
 		enableFaceInteraction();
 
+		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+
+		// Setup the energy storage component.
 		energyStorage.setAutoSyncPacketsEnabled(true);
 		energyStorage.setCapabiltiyFilter((amount, direction, action) -> {
 			if (direction == null) {
@@ -105,13 +112,32 @@ public class TileEntityBattery extends TileEntityMachine {
 		energyStorage.getStorage().setMaxExtract(outputRFTick);
 
 		// Add a battery input.
+		registerComponent(chargingInventory = new InventoryComponent("ChargingInventorySlot", 1));
+
+		// Add the charging input.
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 	}
 
+	@Override
 	public void process() {
-		// If this is a creative battery, always keep the power at max.
-		if (getTier() == StaticPowerTiers.CREATIVE) {
-			this.energyStorage.addPower(Integer.MAX_VALUE);
+		if (!getWorld().isRemote) {
+			// If this is a creative battery, always keep the power at max.
+			if (getTier() == StaticPowerTiers.CREATIVE) {
+				this.energyStorage.getStorage().addPowerIgnoreTransferRate(Long.MAX_VALUE);
+			}
+
+			// Charge up the item in the input slot.
+			if (energyStorage.getStorage().getStoredPower() > 0) {
+				// Get the item to charge.
+				ItemStack stack = chargingInventory.getStackInSlot(0);
+				// If it's not empty and is an energy storing item.
+				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
+					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
+						long charged = EnergyHandlerItemStackUtilities.receivePower(stack, energyStorage.getStorage().getCurrentMaximumPowerOutput(), false);
+						energyStorage.useBulkPower(charged);
+					}
+				}
+			}
 		}
 	}
 

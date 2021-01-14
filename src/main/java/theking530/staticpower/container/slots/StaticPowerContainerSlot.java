@@ -27,7 +27,8 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	private boolean drawFluidContainerAsFluid;
 	private boolean isEnabled;
 
-	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {
+	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition,
+			@Nonnull MachineSideMode mode) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.previewItem = previewItem;
 		this.previewAlpha = previewAlpha;
@@ -42,6 +43,10 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 
 	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
 		this(previewItem, previewAlpha, itemHandler, index, xPosition, yPosition, MachineSideMode.Never);
+	}
+
+	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
+		this(previewItem, 0.3f, itemHandler, index, xPosition, yPosition, MachineSideMode.Never);
 	}
 
 	public StaticPowerContainerSlot(@Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {

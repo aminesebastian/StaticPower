@@ -783,6 +783,7 @@
 	"gui.staticpower.metric_hours": "Hours",
 	"gui.staticpower.metric_real_time": "Real Time",
 	"gui.staticpower.hammering": "Hammer",
+	"gui.staticpower.battery_block_charging_tooltip": "Can charge a single item at a time!",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }
