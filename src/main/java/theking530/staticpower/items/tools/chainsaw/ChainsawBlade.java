@@ -17,11 +17,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.attributes.capability.AttributeableHandler;
+import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.DiamondHardenedDefenition;
 import theking530.api.attributes.defenitions.EmeraldHardenedDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.RubyHardenedDefenition;
 import theking530.api.attributes.defenitions.SapphireHardenedDefenition;
+import theking530.api.attributes.defenitions.PromotedAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
@@ -48,13 +51,14 @@ public class ChainsawBlade extends AbstractToolPart {
 		handler.addAttribute(SapphireHardenedDefenition.ID);
 		handler.addAttribute(EmeraldHardenedDefenition.ID);
 		handler.addAttribute(SmeltingAttributeDefenition.ID);
+		handler.addAttribute(PromotedAttributeDefenition.ID);
 	}
 
 	@Override
 	protected void initializeRenderLayers(AttributableItemRenderLayers renderLayers) {
 		renderLayers.addLayer(SmeltingAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_SMELTING, 2));
 		renderLayers.addLayer(HasteAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.BLADE_HASTE, 2));
-		
+
 		renderLayers.addLayer(DiamondHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_DIAMOND, 3));
 		renderLayers.addLayer(RubyHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_RUBY, 3));
 		renderLayers.addLayer(SapphireHardenedDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.CHAINSAW_BLADE_HARDENED_SAPPHIRE, 3));
@@ -66,7 +70,14 @@ public class ChainsawBlade extends AbstractToolPart {
 		return StaticPowerConfig.getTier(tier).chainsawBladeUses.get();
 	}
 
-	public ItemTier getMiningTier() {
+	public ItemTier getMiningTier(ItemStack stack) {
+		// Get the drill bit attributes, check if it has the promoted attribute. If it
+		// does, promote the item.
+		IAttributable drillBitAttributes = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		if (drillBitAttributes != null && drillBitAttributes.hasAttribute(PromotedAttributeDefenition.ID)) {
+			PromotedAttributeDefenition defenition = (PromotedAttributeDefenition) drillBitAttributes.getAttribute(PromotedAttributeDefenition.ID);
+			return defenition.modifyItemTier(miningTier);
+		}
 		return miningTier;
 	}
 
@@ -74,7 +85,7 @@ public class ChainsawBlade extends AbstractToolPart {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		// Add the mining tier.
-		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(miningTier)));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(getMiningTier(stack))));
 
 		// Add the durability.
 		int remaining = getMaxDamage(stack) - getDamage(stack);

@@ -682,6 +682,7 @@
 	"attribute.staticpower.hardened_ruby": "Hardened",
 	"attribute.staticpower.hardened_sapphire": "Hardened",
 	"attribute.staticpower.hardened_emerald": "Hardened",
+	"attribute.staticpower.promoted": "Promoted",
 	"gui.staticpower.empty": "Empty",
 	"gui.staticpower.input": "Input",
 	"gui.staticpower.max_input": "Max Input",

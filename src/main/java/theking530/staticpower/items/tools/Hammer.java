@@ -52,6 +52,11 @@ public class Hammer extends StaticPowerItem {
 	}
 
 	@Override
+	public boolean showDurabilityBar(ItemStack stack) {
+		return true;
+	}
+
+	@Override
 	public int getMaxDamage(ItemStack stack) {
 		return StaticPowerConfig.getTier(tier).hammerUses.get();
 	}

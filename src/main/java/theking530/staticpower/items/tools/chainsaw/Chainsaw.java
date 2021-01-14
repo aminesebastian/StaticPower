@@ -122,7 +122,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		if (isSlotPopulated(itemstack, MultiPartSlots.CHAINSAW_BLADE)) {
 			ItemStack blade = getPartInSlot(itemstack, MultiPartSlots.CHAINSAW_BLADE);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
-			efficiency.set(bladeItem.getMiningTier().getEfficiency() * 0.25f);
+			efficiency.set(bladeItem.getMiningTier(blade).getEfficiency() * 0.25f);
 			blade.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
 					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
@@ -138,7 +138,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		if (isSlotPopulated(stack, MultiPartSlots.CHAINSAW_BLADE)) {
 			ItemStack blade = getPartInSlot(stack, MultiPartSlots.CHAINSAW_BLADE);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
-			return bladeItem.getMiningTier().getHarvestLevel();
+			return bladeItem.getMiningTier(blade).getHarvestLevel();
 		}
 		return super.getHarvestLevel(stack, tool, player, blockState);
 	}
@@ -233,9 +233,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			});
 		});
 
-		// Update the energy usage on client and server.
+		// Update the energy usage on client and server. 1SV per block.
 		if (!player.isCreative()) {
-			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size(), false);
+			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * 1000, false);
 		}
 	}
 

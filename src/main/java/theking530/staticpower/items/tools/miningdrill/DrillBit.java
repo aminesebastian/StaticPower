@@ -17,11 +17,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.attributes.capability.AttributeableHandler;
+import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.DiamondHardenedDefenition;
 import theking530.api.attributes.defenitions.EmeraldHardenedDefenition;
 import theking530.api.attributes.defenitions.FortuneAttributeDefenition;
 import theking530.api.attributes.defenitions.GrindingAttributeDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
+import theking530.api.attributes.defenitions.PromotedAttributeDefenition;
 import theking530.api.attributes.defenitions.RubyHardenedDefenition;
 import theking530.api.attributes.defenitions.SapphireHardenedDefenition;
 import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
@@ -56,6 +59,8 @@ public class DrillBit extends AbstractToolPart {
 		handler.addAttribute(RubyHardenedDefenition.ID);
 		handler.addAttribute(SapphireHardenedDefenition.ID);
 		handler.addAttribute(EmeraldHardenedDefenition.ID);
+
+		handler.addAttribute(PromotedAttributeDefenition.ID);
 	}
 
 	@Override
@@ -75,7 +80,14 @@ public class DrillBit extends AbstractToolPart {
 		renderLayers.addLayer(FortuneAttributeDefenition.ID, new BasicAttributeRenderLayer(StaticPowerAdditionalModels.DRILL_BIT_FORTUNE, 10));
 	}
 
-	public ItemTier getMiningTier() {
+	public ItemTier getMiningTier(ItemStack stack) {
+		// Get the drill bit attributes, check if it has the promoted attribute. If it
+		// does, promote the item.
+		IAttributable drillBitAttributes = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+		if (drillBitAttributes != null && drillBitAttributes.hasAttribute(PromotedAttributeDefenition.ID)) {
+			PromotedAttributeDefenition defenition = (PromotedAttributeDefenition) drillBitAttributes.getAttribute(PromotedAttributeDefenition.ID);
+			return defenition.modifyItemTier(miningTier);
+		}
 		return miningTier;
 	}
 
@@ -88,7 +100,7 @@ public class DrillBit extends AbstractToolPart {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		// Add the mining tier.
-		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(miningTier)));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(getMiningTier(stack))));
 
 		// Add the durability.
 		int remaining = getMaxDamage(stack) - getDamage(stack);

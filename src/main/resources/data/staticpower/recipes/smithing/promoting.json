@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:auto_smith_recipe",
+	"modifier_item": {
+		"tag": "forge:gems/diamond",
+		"count": 2
+	},
+	"attributes": [
+		{
+			"id": "staticpower:promoted",
+			"modifier": {
+				"type": "boolean",
+				"value": true
+			}
+		}
+	]
+}

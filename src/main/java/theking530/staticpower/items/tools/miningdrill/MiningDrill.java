@@ -141,7 +141,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (isSlotPopulated(itemstack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack drillBitStack = getPartInSlot(itemstack, MultiPartSlots.DRILL_BIT);
 			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
-			efficiency.set(drillBit.getMiningTier().getEfficiency() * 0.1f);
+			efficiency.set(drillBit.getMiningTier(drillBitStack).getEfficiency() * 0.1f);
 			drillBitStack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
 					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
@@ -157,7 +157,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack drillBitStack = getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
 			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
-			return drillBit.getMiningTier().getHarvestLevel();
+			return drillBit.getMiningTier(drillBitStack).getHarvestLevel();
 		}
 		return super.getHarvestLevel(stack, tool, player, blockState);
 	}
@@ -325,9 +325,9 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			});
 		});
 
-		// Update the energy usage on client and server.
+		// Update the energy usage on client and server. 1 SV per block.
 		if (!player.isCreative()) {
-			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size(), false);
+			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * 1000, false);
 		}
 
 		// Remove the enchantments.
