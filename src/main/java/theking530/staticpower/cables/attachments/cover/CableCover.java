@@ -47,7 +47,8 @@ public class CableCover extends Item implements ICustomModelSupplier {
 					if (!context.getWorld().isRemote) {
 						context.getItem().setCount(context.getItem().getCount() - 1);
 					} else {
-						context.getWorld().playSound(context.getPlayer(), context.getPos(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));
+						context.getWorld().playSound(context.getPlayer(), context.getPos(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.15F,
+								(float) (0.5F + Math.random() * 2.0));
 					}
 					return ActionResultType.SUCCESS;
 				}
@@ -61,14 +62,15 @@ public class CableCover extends Item implements ICustomModelSupplier {
 		output.setTag(new CompoundNBT());
 		CompoundNBT blockStateTag = NBTUtil.writeBlockState(blockState);
 		output.getTag().put(COVER_BLOCK_STATE_TAG, blockStateTag);
-		output.setDisplayName(blockState.getBlock().getTranslatedName().deepCopy().appendString(" ").append(COVER_TRANSLATION_COMPONENT));
+		output.setDisplayName(new TranslationTextComponent(blockState.getBlock().getTranslationKey()).appendString(" ").append(COVER_TRANSLATION_COMPONENT));
 		return output;
 	}
 
 	public static boolean isValidForCover(Block block) {
 		BlockState defaultState = block.getDefaultState();
 
-		// block.hasTileEntity(defaultState) will skip tile entites as needed. We only non normal cube blocks that are made of glass.
+		// block.hasTileEntity(defaultState) will skip tile entites as needed. We only
+		// non normal cube blocks that are made of glass.
 		if (defaultState.getRenderType() != BlockRenderType.MODEL || !defaultState.isNormalCube(EmptyBlockReader.INSTANCE, BlockPos.ZERO)) {
 			return block instanceof AbstractGlassBlock;
 		}
@@ -96,7 +98,7 @@ public class CableCover extends Item implements ICustomModelSupplier {
 	}
 
 	@Override
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
 		return new CoverItemModelProvider(existingModel, new CoverBuilder());
 	}
