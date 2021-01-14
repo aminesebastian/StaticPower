@@ -50,4 +50,14 @@ public class StaticPowerTierCopper extends StaticPowerTier {
 	protected int getHeatSinkElectricHeatPowerUsage() {
 		return 8;
 	}
+
+	@Override
+	protected int getHammerUses() {
+		return 100;
+	}
+
+	@Override
+	protected int getWireCutterUses() {
+		return 100;
+	}
 }

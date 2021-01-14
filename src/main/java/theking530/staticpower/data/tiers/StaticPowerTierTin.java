@@ -50,4 +50,14 @@ public class StaticPowerTierTin extends StaticPowerTier {
 	protected int getHeatSinkElectricHeatPowerUsage() {
 		return 4;
 	}
+
+	@Override
+	protected int getHammerUses() {
+		return 200;
+	}
+
+	@Override
+	protected int getWireCutterUses() {
+		return 200;
+	}
 }

@@ -31,4 +31,13 @@ public class StaticPowerTierTungsten extends StaticPowerTier {
 		return 96000;
 	}
 
+	@Override
+	protected int getHammerUses() {
+		return 1000;
+	}
+
+	@Override
+	protected int getWireCutterUses() {
+		return 1000;
+	}
 }

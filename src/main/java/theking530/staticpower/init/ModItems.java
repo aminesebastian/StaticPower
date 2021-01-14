@@ -2,6 +2,7 @@ package theking530.staticpower.init;
 
 import net.minecraft.item.Foods;
 import net.minecraft.item.ItemTier;
+import net.minecraft.item.Items;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
@@ -375,6 +376,8 @@ public class ModItems {
 	public static DepletedCrop DepletedCrop;
 
 	public static Hammer IronMetalHammer;
+	public static Hammer CopperMetalHammer;
+	public static Hammer TinMetalHammer;
 	public static Hammer ZincMetalHammer;
 	public static Hammer BronzeMetalHammer;
 	public static Hammer TungstenMetalHammer;
@@ -485,6 +488,42 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
 		StaticPowerRegistry.preRegisterItem(BedFrame = new StaticPowerItem("bed_frame"));
 
+		// Ingots
+		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));
+		StaticPowerRegistry.preRegisterItem(IngotTin = new StaticPowerItem("ingot_tin"));
+		StaticPowerRegistry.preRegisterItem(IngotZinc = new StaticPowerItem("ingot_zinc"));
+		StaticPowerRegistry.preRegisterItem(IngotSilver = new StaticPowerItem("ingot_silver"));
+		StaticPowerRegistry.preRegisterItem(IngotLead = new StaticPowerItem("ingot_lead"));
+		StaticPowerRegistry.preRegisterItem(IngotMagnesium = new StaticPowerItem("ingot_magnesium"));
+		StaticPowerRegistry.preRegisterItem(IngotTungsten = new StaticPowerItem("ingot_tungsten"));
+		StaticPowerRegistry.preRegisterItem(IngotPlatinum = new StaticPowerItem("ingot_platinum"));
+		StaticPowerRegistry.preRegisterItem(IngotBrass = new StaticPowerItem("ingot_brass"));
+		StaticPowerRegistry.preRegisterItem(IngotBronze = new StaticPowerItem("ingot_bronze"));
+		StaticPowerRegistry.preRegisterItem(IngotAluminium = new StaticPowerItem("ingot_aluminium"));
+		StaticPowerRegistry.preRegisterItem(IngotStatic = new StaticPowerItem("ingot_static"));
+		StaticPowerRegistry.preRegisterItem(IngotEnergized = new StaticPowerItem("ingot_energized"));
+		StaticPowerRegistry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
+		StaticPowerRegistry.preRegisterItem(IngotInertInfusion = new StaticPowerItem("ingot_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(IngotRedstoneAlloy = new StaticPowerItem("ingot_redstone_alloy"));
+
+		// Nuggets
+		StaticPowerRegistry.preRegisterItem(NuggetCopper = new StaticPowerItem("nugget_copper"));
+		StaticPowerRegistry.preRegisterItem(NuggetTin = new StaticPowerItem("nugget_tin"));
+		StaticPowerRegistry.preRegisterItem(NuggetZinc = new StaticPowerItem("nugget_zinc"));
+		StaticPowerRegistry.preRegisterItem(NuggetSilver = new StaticPowerItem("nugget_silver"));
+		StaticPowerRegistry.preRegisterItem(NuggetLead = new StaticPowerItem("nugget_lead"));
+		StaticPowerRegistry.preRegisterItem(NuggetMagnesium = new StaticPowerItem("nugget_magnesium"));
+		StaticPowerRegistry.preRegisterItem(NuggetTungsten = new StaticPowerItem("nugget_tungsten"));
+		StaticPowerRegistry.preRegisterItem(NuggetPlatinum = new StaticPowerItem("nugget_platinum"));
+		StaticPowerRegistry.preRegisterItem(NuggetAluminium = new StaticPowerItem("nugget_aluminium"));
+		StaticPowerRegistry.preRegisterItem(NuggetStatic = new StaticPowerItem("nugget_static"));
+		StaticPowerRegistry.preRegisterItem(NuggetEnergized = new StaticPowerItem("nugget_energized"));
+		StaticPowerRegistry.preRegisterItem(NuggetLumum = new StaticPowerItem("nugget_lumum"));
+		StaticPowerRegistry.preRegisterItem(NuggetInertInfusion = new StaticPowerItem("nugget_inert_infusion"));
+		StaticPowerRegistry.preRegisterItem(NuggetRedstoneAlloy = new StaticPowerItem("nugget_redstone_alloy"));
+		StaticPowerRegistry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
+		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
+		
 		// Food
 		StaticPowerRegistry.preRegisterItem(WheatFlour = new StaticPowerItem("flour_wheat"));
 		StaticPowerRegistry.preRegisterItem(PotatoFlour = new StaticPowerItem("flour_potato"));
@@ -564,17 +603,19 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(CreativeBatteryPack = new BatteryPack("battery_pack_creative", StaticPowerTiers.CREATIVE));
 
 		// Tools
-		StaticPowerRegistry.preRegisterItem(IronMetalHammer = new Hammer("hammer_iron", 100));
-		StaticPowerRegistry.preRegisterItem(ZincMetalHammer = new Hammer("hammer_zinc", 500));
-		StaticPowerRegistry.preRegisterItem(BronzeMetalHammer = new Hammer("hammer_bronze", 1000));
-		StaticPowerRegistry.preRegisterItem(TungstenMetalHammer = new Hammer("hammer_tungsten", 5000));
-		StaticPowerRegistry.preRegisterItem(CreativeMetalHammer = new Hammer("hammer_creative", Integer.MAX_VALUE));
+		StaticPowerRegistry.preRegisterItem(IronMetalHammer = new Hammer("hammer_iron", StaticPowerTiers.IRON, Items.IRON_INGOT));
+		StaticPowerRegistry.preRegisterItem(ZincMetalHammer = new Hammer("hammer_zinc", StaticPowerTiers.ZINC, ModItems.IngotZinc));
+		StaticPowerRegistry.preRegisterItem(CopperMetalHammer = new Hammer("hammer_copper", StaticPowerTiers.COPPER, ModItems.IngotCopper));
+		StaticPowerRegistry.preRegisterItem(TinMetalHammer = new Hammer("hammer_tin", StaticPowerTiers.TIN, ModItems.IngotTin));
+		StaticPowerRegistry.preRegisterItem(BronzeMetalHammer = new Hammer("hammer_bronze", StaticPowerTiers.BRONZE, ModItems.IngotBronze));
+		StaticPowerRegistry.preRegisterItem(TungstenMetalHammer = new Hammer("hammer_tungsten", StaticPowerTiers.TUNGSTEN, ModItems.IngotTungsten));
+		StaticPowerRegistry.preRegisterItem(CreativeMetalHammer = new Hammer("hammer_creative", StaticPowerTiers.CREATIVE, Items.AIR));
 
-		StaticPowerRegistry.preRegisterItem(IronWireCutters = new WireCutters("wire_cutters_iron", 100));
-		StaticPowerRegistry.preRegisterItem(ZincWireCutters = new WireCutters("wire_cutters_zinc", 500));
-		StaticPowerRegistry.preRegisterItem(BronzeWireCutters = new WireCutters("wire_cutters_bronze", 1000));
-		StaticPowerRegistry.preRegisterItem(TungstenWireCutters = new WireCutters("wire_cutters_tungsten", 5000));
-		StaticPowerRegistry.preRegisterItem(CreativeWireCutters = new WireCutters("wire_cutters_creative", Integer.MAX_VALUE));
+		StaticPowerRegistry.preRegisterItem(IronWireCutters = new WireCutters("wire_cutters_iron", StaticPowerTiers.IRON, Items.IRON_INGOT));
+		StaticPowerRegistry.preRegisterItem(ZincWireCutters = new WireCutters("wire_cutters_zinc", StaticPowerTiers.ZINC, ModItems.IngotZinc));
+		StaticPowerRegistry.preRegisterItem(BronzeWireCutters = new WireCutters("wire_cutters_bronze", StaticPowerTiers.BRONZE, ModItems.IngotBronze));
+		StaticPowerRegistry.preRegisterItem(TungstenWireCutters = new WireCutters("wire_cutters_tungsten", StaticPowerTiers.TUNGSTEN, ModItems.IngotTungsten));
+		StaticPowerRegistry.preRegisterItem(CreativeWireCutters = new WireCutters("wire_cutters_creative", StaticPowerTiers.CREATIVE, Items.AIR));
 
 		StaticPowerRegistry.preRegisterItem(BasicMiningDrill = new MiningDrill("mining_drill_basic", 5.0f, 5.0f, StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedMiningDrill = new MiningDrill("mining_drill_advanced", 5.0f, 5.0f, StaticPowerTiers.ADVANCED));
@@ -844,42 +885,6 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedChainsawBlade = new ChainsawBlade("chainsaw_blade_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumChainsawBlade = new ChainsawBlade("chainsaw_blade_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterItem(CreativeChainsawBlade = new ChainsawBlade("chainsaw_blade_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
-
-		// Ingots
-		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));
-		StaticPowerRegistry.preRegisterItem(IngotTin = new StaticPowerItem("ingot_tin"));
-		StaticPowerRegistry.preRegisterItem(IngotZinc = new StaticPowerItem("ingot_zinc"));
-		StaticPowerRegistry.preRegisterItem(IngotSilver = new StaticPowerItem("ingot_silver"));
-		StaticPowerRegistry.preRegisterItem(IngotLead = new StaticPowerItem("ingot_lead"));
-		StaticPowerRegistry.preRegisterItem(IngotMagnesium = new StaticPowerItem("ingot_magnesium"));
-		StaticPowerRegistry.preRegisterItem(IngotTungsten = new StaticPowerItem("ingot_tungsten"));
-		StaticPowerRegistry.preRegisterItem(IngotPlatinum = new StaticPowerItem("ingot_platinum"));
-		StaticPowerRegistry.preRegisterItem(IngotBrass = new StaticPowerItem("ingot_brass"));
-		StaticPowerRegistry.preRegisterItem(IngotBronze = new StaticPowerItem("ingot_bronze"));
-		StaticPowerRegistry.preRegisterItem(IngotAluminium = new StaticPowerItem("ingot_aluminium"));
-		StaticPowerRegistry.preRegisterItem(IngotStatic = new StaticPowerItem("ingot_static"));
-		StaticPowerRegistry.preRegisterItem(IngotEnergized = new StaticPowerItem("ingot_energized"));
-		StaticPowerRegistry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
-		StaticPowerRegistry.preRegisterItem(IngotInertInfusion = new StaticPowerItem("ingot_inert_infusion"));
-		StaticPowerRegistry.preRegisterItem(IngotRedstoneAlloy = new StaticPowerItem("ingot_redstone_alloy"));
-
-		// Nuggets
-		StaticPowerRegistry.preRegisterItem(NuggetCopper = new StaticPowerItem("nugget_copper"));
-		StaticPowerRegistry.preRegisterItem(NuggetTin = new StaticPowerItem("nugget_tin"));
-		StaticPowerRegistry.preRegisterItem(NuggetZinc = new StaticPowerItem("nugget_zinc"));
-		StaticPowerRegistry.preRegisterItem(NuggetSilver = new StaticPowerItem("nugget_silver"));
-		StaticPowerRegistry.preRegisterItem(NuggetLead = new StaticPowerItem("nugget_lead"));
-		StaticPowerRegistry.preRegisterItem(NuggetMagnesium = new StaticPowerItem("nugget_magnesium"));
-		StaticPowerRegistry.preRegisterItem(NuggetTungsten = new StaticPowerItem("nugget_tungsten"));
-		StaticPowerRegistry.preRegisterItem(NuggetPlatinum = new StaticPowerItem("nugget_platinum"));
-		StaticPowerRegistry.preRegisterItem(NuggetAluminium = new StaticPowerItem("nugget_aluminium"));
-		StaticPowerRegistry.preRegisterItem(NuggetStatic = new StaticPowerItem("nugget_static"));
-		StaticPowerRegistry.preRegisterItem(NuggetEnergized = new StaticPowerItem("nugget_energized"));
-		StaticPowerRegistry.preRegisterItem(NuggetLumum = new StaticPowerItem("nugget_lumum"));
-		StaticPowerRegistry.preRegisterItem(NuggetInertInfusion = new StaticPowerItem("nugget_inert_infusion"));
-		StaticPowerRegistry.preRegisterItem(NuggetRedstoneAlloy = new StaticPowerItem("nugget_redstone_alloy"));
-		StaticPowerRegistry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
-		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
 
 		StaticPowerRegistry.preRegisterItem(
 				BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));

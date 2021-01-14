@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"iii",
+		"isi",
+		" s "
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/tin"
+		},
+		"s": {
+			"tag": "forge:rods/wooden"
+		}
+	},
+	"result": {
+		"item": "staticpower:hammer_tin"
+	}
+}

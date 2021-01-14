@@ -1,9 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"h h",
-		"aba",
-		"ili"
+		" i ",
+		"hbh",
+		"ala"
 	],
 	"key": {
 		"b": {
@@ -13,7 +13,7 @@
 			"item": "minecraft:anvil"
 		},
 		"i": {
-			"item": "minecraft:iron_block"
+			"item": "minecraft:smithing_table"
 		},
 		"h": {
 			"tag": "staticpower:hammer"

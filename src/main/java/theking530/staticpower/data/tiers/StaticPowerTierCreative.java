@@ -13,12 +13,12 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected ResourceLocation getTierId() {
-		return new ResourceLocation(StaticPower.MOD_ID, "energized");
+		return new ResourceLocation(StaticPower.MOD_ID, "creative");
 	}
 
 	@Override
 	protected String getUnlocalizedName() {
-		return "tier.staticpower.energized";
+		return "tier.staticpower.creative";
 	}
 
 	@Override
@@ -28,17 +28,17 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected long getPortableBatteryCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getSolarPanelPowerGeneration() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getSolarPanelPowerStorage() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
@@ -48,37 +48,37 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected long getCablePowerCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getCablePowerDelivery() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getCableIndustrialPowerCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getCableIndustrialPowerDelivery() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected int getDigistoreCardCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getBatteryCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getBatteryMaxIO() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
@@ -98,47 +98,47 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected int getDrillBitUses() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected int getChainsawBladeUses() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getDefaultMachinePowerCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getDefaultMachinePowerInput() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected long getDefaultMachinePowerOutput() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected int getDefaultTankCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected int getCapsuleCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected int getCableFluidCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
 	protected int getCableIndustrialFluidCapacity() {
-		return 2147483647;
+		return Integer.MAX_VALUE;
 	}
 
 	@Override
@@ -148,6 +148,16 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected int getTurbineBladeDurabilityTicks() {
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	protected int getHammerUses() {
+		return Integer.MAX_VALUE;
+	}
+
+	@Override
+	protected int getWireCutterUses() {
 		return Integer.MAX_VALUE;
 	}
 }

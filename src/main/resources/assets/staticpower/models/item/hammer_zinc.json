@@ -1,5 +1,5 @@
 {
-	"parent": "item/generated",
+	"parent": "minecraft:item/handheld",
 	"textures": {
 		"layer0": "staticpower:items/tools/hammer_zinc"
 	}

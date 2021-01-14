@@ -147,6 +147,8 @@ public abstract class StaticPowerTier {
 	public final ConfigValue<Integer> chainsawBladeUses;
 	public final ConfigValue<Double> hardenedDurabilityBoost;
 	public final ConfigValue<Boolean> hardenedDurabilityBoostAdditive;
+	public final ConfigValue<Integer> hammerUses;
+	public final ConfigValue<Integer> wireCutterUses;
 
 	/****************
 	 * Turbine Blades
@@ -364,6 +366,10 @@ public abstract class StaticPowerTier {
 		hardenedDurabilityBoostAdditive = builder.comment("Defines whether the hardened durability boost is additive or multaplicative.")
 				.translation(StaticPower.MOD_ID + ".config." + "hardenedDurabilityBoostAdditive").define("HardenedDurabilityBoostAdditive", this.isHardenedDurabilityBoostAdditive());
 
+		hammerUses = builder.comment("The number of blocks/items that can be processed by a hammer of this tier.").translation(StaticPower.MOD_ID + ".config." + "hammerUses")
+				.define("HammerUses", this.getHammerUses());
+		wireCutterUses = builder.comment("The number of items that can be processed by a wire cutter of this tier.").translation(StaticPower.MOD_ID + ".config." + "wireCutterUses")
+				.define("WireCutterUses", this.getWireCutterUses());
 		builder.pop();
 
 		builder.push("Upgrade");
@@ -569,6 +575,14 @@ public abstract class StaticPowerTier {
 
 	protected Boolean isHardenedDurabilityBoostAdditive() {
 		return false;
+	}
+
+	protected int getHammerUses() {
+		return 0;
+	}
+
+	protected int getWireCutterUses() {
+		return 0;
 	}
 
 	protected int getItemFilterSlots() {

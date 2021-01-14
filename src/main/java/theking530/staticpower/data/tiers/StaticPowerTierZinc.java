@@ -5,39 +5,29 @@ import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.StaticPowerTier;
 
-public class StaticPowerTierBronze extends StaticPowerTier {
+public class StaticPowerTierZinc extends StaticPowerTier {
 
-	public StaticPowerTierBronze(Builder builder) {
+	public StaticPowerTierZinc(Builder builder) {
 		super(builder);
 	}
 
 	@Override
 	protected ResourceLocation getTierId() {
-		return new ResourceLocation(StaticPower.MOD_ID, "bronze");
+		return new ResourceLocation(StaticPower.MOD_ID, "zinc");
 	}
 
 	@Override
 	protected String getUnlocalizedName() {
-		return "tier.staticpower.bronze";
-	}
-
-	@Override
-	protected int getDrillBitUses() {
-		return 2000;
-	}
-
-	@Override
-	protected int getChainsawBladeUses() {
-		return 4000;
+		return "tier.staticpower.zinc";
 	}
 
 	@Override
 	protected int getHammerUses() {
-		return 400;
+		return 300;
 	}
 
 	@Override
 	protected int getWireCutterUses() {
-		return 400;
+		return 300;
 	}
 }

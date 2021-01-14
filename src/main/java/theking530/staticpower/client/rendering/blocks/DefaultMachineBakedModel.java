@@ -99,22 +99,26 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		ImmutableList.Builder<BakedQuad> newQuads = new ImmutableList.Builder<BakedQuad>();
 
 		// Get the block atlas texture.
-		AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+		try {
+			AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
 
-		// Iterate through all the quads.
-		for (BakedQuad quad : baseQuads) {
-			// Get the rendering side.
-			Direction renderingSide = side == null ? quad.getFace() : side;
+			// Iterate through all the quads.
+			for (BakedQuad quad : baseQuads) {
+				// Get the rendering side.
+				Direction renderingSide = side == null ? quad.getFace() : side;
 
-			// Get the side mode.
-			MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
-			try {
-				// Attempt to render the quad for the side.
-				renderQuadsForSide(newQuads, renderingSide, blocksTexture, quad, sideMode);
-			} catch (Exception e) {
-				LOGGER.warn("An error occured when attempting to render the model.", e);
+				// Get the side mode.
+				MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
+				try {
+					// Attempt to render the quad for the side.
+					renderQuadsForSide(newQuads, renderingSide, blocksTexture, quad, sideMode);
+				} catch (Exception e) {
+					LOGGER.warn("An error occured when attempting to render the model.", e);
+				}
+
 			}
-
+		} catch (Exception e) {
+			// Silence!
 		}
 
 		// Build and return the new quad list.

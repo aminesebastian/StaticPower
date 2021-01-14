@@ -58,7 +58,7 @@ public class TileEntityRenderSolderingTable extends StaticPowerTileEntitySpecial
 		// Render the soldering iron.
 		if (!tileEntity.solderingIronInventory.getStackInSlot(0).isEmpty()) {
 			drawItemInWorld(tileEntity, tileEntity.solderingIronInventory.getStackInSlot(0), TransformType.FIXED,
-					new Vector3D(0.25f, 1.05f, 0.185f), new Vector3D(0.3f, 0.3f, 0.3f), partialTicks, matrixStack,
+					new Vector3D(0.2f, 1.07f, 0.185f), new Vector3D(0.3f, 0.3f, 0.3f), new Vector3D(0, 0, 30), partialTicks, matrixStack,
 					buffer, combinedLight, combinedOverlay);
 		}
 	}
