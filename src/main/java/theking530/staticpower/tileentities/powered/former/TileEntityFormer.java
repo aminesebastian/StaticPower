@@ -88,7 +88,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(FormerRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
@@ -104,7 +104,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canProcessRecipe(FormerRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRawRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();

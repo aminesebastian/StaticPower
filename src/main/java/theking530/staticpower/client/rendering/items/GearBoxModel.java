@@ -107,9 +107,9 @@ public class GearBoxModel implements IBakedModel {
 
 			IBakedModel itemModel = getBaseModel();
 			List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data);
-			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(-0.18f, -0.18f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
-			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.2f, -0.02f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
-			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(-0.15f, 0.18f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
+			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(-0.21f, -0.22f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
+			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.21f, -0.02f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
+			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(-0.13f, 0.22f, 0.001f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
 
 			return output;
 		}

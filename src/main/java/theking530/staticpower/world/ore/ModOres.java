@@ -19,19 +19,19 @@ public class ModOres {
 	public static final ConfiguredFeature<OreFeatureConfig, ?> MAGENSIUM = register("ore_magnesium",
 			new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> COPPER = register("ore_copper",
-			new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(18));
+			new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(16));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> TIN = register("ore_tin",
-			new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(7).setRarity(16));
+			new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(30).setMaxVeinSize(10).setRarity(18));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> LEAD = register("ore_lead",
 			new OreConfigBuilder(ModBlocks.OreLead).setMaxLevel(35).setMinLevel(0).setMaxVeinSize(3).setRarity(10));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> SILVER = register("ore_silver",
-			new OreConfigBuilder(ModBlocks.OreSilver).setMaxLevel(40).setMinLevel(0).setMaxVeinSize(5).setRarity(8));
+			new OreConfigBuilder(ModBlocks.OreSilver).setMaxLevel(40).setMinLevel(0).setMaxVeinSize(5).setRarity(12));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> TUNGSTEN = register("ore_tungsten",
-			new OreConfigBuilder(ModBlocks.OreTungsten).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(2).setRarity(8));
+			new OreConfigBuilder(ModBlocks.OreTungsten).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(4).setRarity(8));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> PLATINUM = register("ore_platinum",
 			new OreConfigBuilder(ModBlocks.OrePlatinum).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(4).setRarity(10));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> ALUMINIUM = register("ore_aluminium",
-			new OreConfigBuilder(ModBlocks.OreAluminium).setMaxLevel(80).setMinLevel(40).setMaxVeinSize(10).setRarity(15));
+			new OreConfigBuilder(ModBlocks.OreAluminium).setMaxLevel(80).setMinLevel(40).setMaxVeinSize(10).setRarity(12));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> SAPPHIRE = register("ore_sapphire",
 			new OreConfigBuilder(ModBlocks.OreSapphire).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> RUBY = register("ore_ruby",

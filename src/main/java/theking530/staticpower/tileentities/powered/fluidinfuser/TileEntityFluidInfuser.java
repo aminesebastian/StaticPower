@@ -106,7 +106,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(FluidInfusionRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
@@ -121,7 +121,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canProcessRecipe(FluidInfusionRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
