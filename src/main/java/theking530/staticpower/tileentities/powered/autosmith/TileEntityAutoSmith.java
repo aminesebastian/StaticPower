@@ -53,7 +53,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityAutoSmith() {
-		super(TYPE, StaticPowerTiers.ENERGIZED);
+		super(TYPE, StaticPowerTiers.ADVANCED);
 
 		// Get the tier.
 		StaticPowerTier tier = StaticPowerConfig.getTier(getTier());

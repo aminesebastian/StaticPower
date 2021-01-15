@@ -383,7 +383,7 @@ public class StaticPowerConfig {
 					builder.push("Auto Smith");
 					autoSmithPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "autoSmithPowerUsage")
-							.defineInRange("AutoSmithPowerUsage", 40 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+							.defineInRange("AutoSmithPowerUsage", 14 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
 					autoSmithProcessingTime = builder
 							.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "autoSmithProcessingTime").define("AutoSmithProcessingTime", 75);
