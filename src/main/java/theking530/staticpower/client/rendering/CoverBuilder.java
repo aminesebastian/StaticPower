@@ -47,12 +47,14 @@ public class CoverBuilder {
 	public static final double THICK_THICKNESS = 2D / 16D;
 	public static final double THIN_THICKNESS = 1D / 16D;
 
-	public static final AxisAlignedBB[] THICK_FACADE_BOXES = new AxisAlignedBB[] { new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, THICK_THICKNESS, 1.0), new AxisAlignedBB(0.0, 1.0 - THICK_THICKNESS, 0.0, 1.0, 1.0, 1.0),
-			new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, THICK_THICKNESS), new AxisAlignedBB(0.0, 0.0, 1.0 - THICK_THICKNESS, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, THICK_THICKNESS, 1.0, 1.0),
+	public static final AxisAlignedBB[] THICK_FACADE_BOXES = new AxisAlignedBB[] { new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, THICK_THICKNESS, 1.0),
+			new AxisAlignedBB(0.0, 1.0 - THICK_THICKNESS, 0.0, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, THICK_THICKNESS),
+			new AxisAlignedBB(0.0, 0.0, 1.0 - THICK_THICKNESS, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, THICK_THICKNESS, 1.0, 1.0),
 			new AxisAlignedBB(1.0 - THICK_THICKNESS, 0.0, 0.0, 1.0, 1.0, 1.0) };
 
-	public static final AxisAlignedBB[] THIN_FACADE_BOXES = new AxisAlignedBB[] { new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, THIN_THICKNESS, 1.0), new AxisAlignedBB(0.0, 1.0 - THIN_THICKNESS, 0.0, 1.0, 1.0, 1.0),
-			new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, THIN_THICKNESS), new AxisAlignedBB(0.0, 0.0, 1.0 - THIN_THICKNESS, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, THIN_THICKNESS, 1.0, 1.0),
+	public static final AxisAlignedBB[] THIN_FACADE_BOXES = new AxisAlignedBB[] { new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, THIN_THICKNESS, 1.0),
+			new AxisAlignedBB(0.0, 1.0 - THIN_THICKNESS, 0.0, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, THIN_THICKNESS),
+			new AxisAlignedBB(0.0, 0.0, 1.0 - THIN_THICKNESS, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, THIN_THICKNESS, 1.0, 1.0),
 			new AxisAlignedBB(1.0 - THIN_THICKNESS, 0.0, 0.0, 1.0, 1.0, 1.0) };
 
 	private final ThreadLocal<BakedPipeline> pipelines = ThreadLocal.withInitial(() -> BakedPipeline.builder()
@@ -71,8 +73,14 @@ public class CoverBuilder {
 	);
 	private final ThreadLocal<Quad> collectors = ThreadLocal.withInitial(Quad::new);
 
+	@SuppressWarnings("deprecation")
 	public void buildFacadeQuads(CableRenderingState cableState, RenderType layer, Random rand, List<BakedQuad> quads, Direction dir) {
+		// Get the blockstate for the cover and return early if its empty.
 		BlockState blockState = cableState.covers[dir.ordinal()];
+		if (blockState.isAir()) {
+			return;
+		}
+
 		BakedPipeline pipeline = this.pipelines.get();
 		Quad collectorQuad = this.collectors.get();
 		BlockColors blockColors = Minecraft.getInstance().getBlockColors();
@@ -104,7 +112,7 @@ public class CoverBuilder {
 			modelQuads.addAll(gatherQuads(model, blockState, rand, modelData));
 		}
 
-		// No quads.. Cool, next!
+		// Skip any empty quad lists.
 		if (modelQuads.isEmpty()) {
 			return;
 		}
@@ -115,9 +123,8 @@ public class CoverBuilder {
 		QuadTinter tinter = pipeline.getElement("tinter", QuadTinter.class);
 		QuadCornerKicker kicker = pipeline.getElement("corner_kicker", QuadCornerKicker.class);
 
-		List<AxisAlignedBB> holeStrips = getBoxes(facadeBox, cableState.attachmentItems[sideIndex].isEmpty() ? null : (AbstractCableAttachment) cableState.attachmentItems[sideIndex].getItem(), dir.getAxis());
-
-		// Set global element states.
+		List<AxisAlignedBB> holeStrips = getBoxes(facadeBox,
+				cableState.attachmentItems[sideIndex].isEmpty() ? null : (AbstractCableAttachment) cableState.attachmentItems[sideIndex].getItem(), dir.getAxis());
 
 		// calculate the side mask.
 		int facadeMask = 0;
@@ -128,6 +135,7 @@ public class CoverBuilder {
 				}
 			}
 		}
+
 		// Setup the edge stripper.
 		edgeStripper.setBounds(fullBounds);
 		edgeStripper.setMask(facadeMask);
@@ -161,10 +169,9 @@ public class CoverBuilder {
 				// Pipe our quad into the pipeline.
 				quad.pipe(pipeline);
 				// Check if the collector got any data.
-				if (collectorQuad.full) {
-					// Add the result.
-					quads.add(collectorQuad.bake());
-				}
+
+				// Add the result.
+				quads.add(collectorQuad.bake());
 			}
 		}
 	}
@@ -189,24 +196,32 @@ public class CoverBuilder {
 		for (BakedQuad quad : modelQuads) {
 			// Lookup the CachedFormat for this quads format.
 			CachedFormat format = CachedFormat.lookup(DefaultVertexFormats.BLOCK);
+
 			// Reset the pipeline.
 			pipeline.reset(format);
+
 			// Reset the collector.
 			collectorQuad.reset(format);
+
 			// If we have a tint index, setup the tinter and enable it.
 			if (quad.hasTintIndex()) {
 				tinter.setTint(Minecraft.getInstance().getItemColors().getColor(textureItem, quad.getTintIndex()));
 				pipeline.enableElement("tinter");
 			}
+
 			// Disable elements we don't need for items.
 			pipeline.disableElement("face_stripper");
 			pipeline.disableElement("corner_kicker");
+
 			// Setup the clamper
 			clamper.setClampBounds(THICK_FACADE_BOXES[side.ordinal()]);
+
 			// Prepare the pipeline.
 			pipeline.prepare(collectorQuad);
+
 			// Pipe our quad into the pipeline.
 			quad.pipe(pipeline);
+
 			// Check the collector for data and add the quad if there was.
 			if (collectorQuad.full) {
 				facadeQuads.add(collectorQuad.bake());

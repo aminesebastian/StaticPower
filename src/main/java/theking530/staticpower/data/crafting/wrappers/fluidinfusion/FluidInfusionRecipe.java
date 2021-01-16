@@ -52,7 +52,7 @@ public class FluidInfusionRecipe extends AbstractMachineRecipe {
 		}
 
 		// Check items.
-		if (matchParams.shouldVerifyItems()) {
+		if (matched && matchParams.shouldVerifyItems()) {
 			if (matchParams.shouldVerifyItemCounts()) {
 				matched &= matchParams.hasItems() && input.testWithCount(matchParams.getItems()[0]);
 			} else {

@@ -114,7 +114,8 @@ public class CableBoundsCache {
 
 		// If we are holding an attachment that is NOT valid for this cable, return null
 		// early.
-		if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment && !cable.canAttachAttachment(entity.getHeldItemMainhand())) {
+		if (!entity.getHeldItemMainhand().isEmpty() && entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment
+				&& !cable.canAttachAttachment(entity.getHeldItemMainhand())) {
 			return CableBoundsHoverResult.EMPTY;
 		}
 
@@ -142,7 +143,8 @@ public class CableBoundsCache {
 					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_COVER));
 				}
 				if (entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
-					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_ATTACHMENT));
+					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir,
+							CableBoundsHoverType.HELD_ATTACHMENT));
 				}
 			}
 

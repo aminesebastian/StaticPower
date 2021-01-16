@@ -72,10 +72,16 @@ public class CableBakedModel extends AbstractBakedModel {
 		// Get the model properties.
 		CableRenderingState renderingState = data.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
 
-		// Render the covers.
+		// Render the covers when we're on the NULL render side. Reason for this is, as
+		// much as we lose some render optimization, if we don't do this, chests placed
+		// on a cover will stop rendering the cover.
 		RenderType layer = MinecraftForgeClient.getRenderLayer();
-		if (side != null && renderingState.covers[side.ordinal()] != null) {
-			coverBuilder.buildFacadeQuads(renderingState, layer, rand, newQuads, side);
+		if (side == null) {
+			for (Direction dir : Direction.values()) {
+				if (renderingState.covers[dir.ordinal()] != null) {
+					coverBuilder.buildFacadeQuads(renderingState, layer, rand, newQuads, dir);
+				}
+			}
 		}
 
 		// If we have a simple straight connection, just add that mode. Otherwise, add
@@ -90,9 +96,10 @@ public class CableBakedModel extends AbstractBakedModel {
 				}
 			}
 		} else {
-
+			// Add the core.
 			newQuads.addAll(BaseModel.getQuads(state, side, rand, data));
 
+			// Add the attachments and connecting pieces.
 			for (Direction dir : Direction.values()) {
 				// If a side is disabled, skip it.
 				if (renderingState.disabledSides[dir.ordinal()]) {
@@ -101,10 +108,12 @@ public class CableBakedModel extends AbstractBakedModel {
 
 				// Get the connection state.
 				CableConnectionState connectionState = renderingState.connectionStates[dir.ordinal()];
+				
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionState.CABLE) {
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 				} else if (connectionState == CableConnectionState.TILE_ENTITY || renderingState.attachments[dir.ordinal()] != null) {
+					// Rotate and render the extension model to the entity or attachment.
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 
 					// If there is an actual attachment, render that. Otherwise, just render the

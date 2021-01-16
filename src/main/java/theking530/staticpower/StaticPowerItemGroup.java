@@ -67,8 +67,8 @@ public class StaticPowerItemGroup extends ItemGroup {
 						this.subTypes.add(facade);
 					}
 				}
-			} catch (final Throwable t) {
-				System.out.println(t);
+			} catch (final Exception e) {
+				StaticPower.LOGGER.warn(String.format("Failed to add cover for block: %1$s to the creative tab.", block.getRegistryName()), e);
 			}
 		}
 
@@ -115,13 +115,15 @@ public class StaticPowerItemGroup extends ItemGroup {
 
 		// Add all the capsules for all fluids.
 		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
-			subTypes.add(ModItems.IronFluidCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.BasicFluidCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.AdvancedFluidCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.StaticFluidCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.EnergizedFluidCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.LumumFluidCapsule.getFilledVariant(fluid));
-			subTypes.add(ModItems.CreativeFluidCapsule.getFilledVariant(fluid));
+			if (!fluid.getRegistryName().toString().contains("flowing")) {
+				subTypes.add(ModItems.IronFluidCapsule.getFilledVariant(fluid));
+				subTypes.add(ModItems.BasicFluidCapsule.getFilledVariant(fluid));
+				subTypes.add(ModItems.AdvancedFluidCapsule.getFilledVariant(fluid));
+				subTypes.add(ModItems.StaticFluidCapsule.getFilledVariant(fluid));
+				subTypes.add(ModItems.EnergizedFluidCapsule.getFilledVariant(fluid));
+				subTypes.add(ModItems.LumumFluidCapsule.getFilledVariant(fluid));
+				subTypes.add(ModItems.CreativeFluidCapsule.getFilledVariant(fluid));
+			}
 		}
 	}
 }
