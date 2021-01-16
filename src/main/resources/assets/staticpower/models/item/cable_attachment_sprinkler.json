@@ -1,0 +1,4 @@
+{
+	"parent": "staticpower:block/cables/attachments/sprinkler",
+	"gui_light": "front"
+}

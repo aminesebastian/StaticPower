@@ -141,7 +141,17 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @return The result of the action.
 	 */
 	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
-		return ActionResult.resultPass(item);
+		if (this.isFood()) {
+			ItemStack itemstack = player.getHeldItem(hand);
+			if (player.canEat(this.getFood().canEatWhenFull())) {
+				player.setActiveHand(hand);
+				return ActionResult.resultConsume(itemstack);
+			} else {
+				return ActionResult.resultFail(itemstack);
+			}
+		} else {
+			return ActionResult.resultPass(player.getHeldItem(hand));
+		}
 	}
 
 	/**

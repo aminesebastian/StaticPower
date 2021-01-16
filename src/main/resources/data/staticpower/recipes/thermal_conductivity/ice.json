@@ -8,6 +8,6 @@
 		"block": {
 			"Name": "minecraft:water"
 		},
-		"temperature": 500
+		"temperature": 10
 	}
 }

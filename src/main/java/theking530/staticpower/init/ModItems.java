@@ -18,6 +18,7 @@ import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTer
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
+import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.BatteryPack;
@@ -39,8 +40,8 @@ import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.CoverSaw;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
-import theking530.staticpower.items.tools.Magnet;
 import theking530.staticpower.items.tools.Hammer;
+import theking530.staticpower.items.tools.Magnet;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.TurbineBlades;
@@ -457,6 +458,8 @@ public class ModItems {
 	public static DigistoreScreen DigistoreScreenAttachment;
 	public static DigistoreLight DigistoreLightAttachment;
 
+	public static SprinklerAttachment SprinklerAttachment;
+
 	public static DigistorePatternCard PatternCard;
 
 	public static DigistoreCard BasicDigistoreCard;
@@ -523,7 +526,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(NuggetRedstoneAlloy = new StaticPowerItem("nugget_redstone_alloy"));
 		StaticPowerRegistry.preRegisterItem(NuggetBrass = new StaticPowerItem("nugget_brass"));
 		StaticPowerRegistry.preRegisterItem(NuggetBronze = new StaticPowerItem("nugget_bronze"));
-		
+
 		// Food
 		StaticPowerRegistry.preRegisterItem(WheatFlour = new StaticPowerItem("flour_wheat"));
 		StaticPowerRegistry.preRegisterItem(PotatoFlour = new StaticPowerItem("flour_potato"));
@@ -929,6 +932,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingInterfaceAttachment = new DigistoreCraftingInterfaceAttachment("cable_attachment_digistore_crafting_interface"));
 		StaticPowerRegistry.preRegisterItem(DigistoreScreenAttachment = new DigistoreScreen("cable_attachment_digistore_screen"));
 		StaticPowerRegistry.preRegisterItem(DigistoreLightAttachment = new DigistoreLight("cable_attachment_digistore_light"));
+
+		StaticPowerRegistry.preRegisterItem(SprinklerAttachment = new SprinklerAttachment("cable_attachment_sprinkler", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));
 
 		// Digistore Misc.
 		StaticPowerRegistry.preRegisterItem(PatternCard = new DigistorePatternCard("digistore_pattern_card"));

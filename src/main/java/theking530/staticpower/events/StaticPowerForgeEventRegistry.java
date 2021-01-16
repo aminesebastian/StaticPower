@@ -157,7 +157,7 @@ public class StaticPowerForgeEventRegistry {
 
 				// Add the "Hold Control" indentifier.
 				if (advancedToolTips.size() > 0) {
-					event.getToolTip().add(new StringTextComponent(""));
+					event.getToolTip().add(new StringTextComponent(" "));
 					event.getToolTip().add(new TranslationTextComponent("gui.staticpower.hold_control").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
 				}
 			}

@@ -1,0 +1,25 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"iii",
+		"cuc",
+		" g "
+	],
+	"key": {
+		"c": {
+			"tag": "forge:ingots/copper"
+		},
+		"i": {
+			"tag": "forge:ingots/tin"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		},
+		"u": {
+			"item": "minecraft:bucket"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_sprinkler"
+	}
+}
