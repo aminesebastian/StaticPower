@@ -269,7 +269,7 @@ public class StaticPowerRecipeRegistry {
 			// Check for recipes.
 			// Get the outputs for a 2x2 and 3x3 recipe.
 			try {
-				Optional<ICraftingRecipe> twoRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, sizeTwoInv, world);
+				Optional<ICraftingRecipe> twoRecipe = manager.getRecipe(IRecipeType.CRAFTING, sizeTwoInv, world);
 
 				// Create and add the 2x2 recipe.
 				if (twoRecipe.isPresent()) {
@@ -280,11 +280,11 @@ public class StaticPowerRecipeRegistry {
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
-				StaticPower.LOGGER.error("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a ");
+				StaticPower.LOGGER.error("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
 			}
 
 			try {
-				Optional<ICraftingRecipe> threeRecipe = world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, sizeThreeInv, world);
+				Optional<ICraftingRecipe> threeRecipe = manager.getRecipe(IRecipeType.CRAFTING, sizeThreeInv, world);
 
 				// Create and add the 3x3 recipe.
 				if (threeRecipe.isPresent()) {
@@ -295,7 +295,7 @@ public class StaticPowerRecipeRegistry {
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
-
+				StaticPower.LOGGER.error("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
 			}
 		}
 	}

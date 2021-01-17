@@ -128,7 +128,7 @@ public class ItemFilter extends StaticPowerItem {
 	 * @return True if the itemstack passs the filter.
 	 */
 	public boolean evaluateItemStackAgainstFilter(ItemStack filter, ItemStack itemstack) {
-		IItemHandler inv = itemstack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+		IItemHandler inv = filter.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
 		if (inv != null) {
 			boolean whitelist = true;
 			boolean matchNBT = false;

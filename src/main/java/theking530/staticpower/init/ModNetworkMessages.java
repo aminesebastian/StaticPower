@@ -21,6 +21,7 @@ import theking530.staticpower.cables.item.ItemCableRemovedPacket;
 import theking530.staticpower.cables.power.PowerMetricsSyncPacket;
 import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.PacketRevertToParentContainer;
+import theking530.staticpower.entities.RubberWoodBarkEntity.RubberWoodBarkEntitySpawn;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.SSetSlotLargeItemStackPacket;
@@ -74,6 +75,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
+		StaticPowerMessageHandler.registerVanillaStyleMessage(RubberWoodBarkEntitySpawn.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
 		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
 	}

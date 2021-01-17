@@ -17,6 +17,7 @@ import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.IUpgradeItem.UpgradeType;
@@ -108,19 +109,17 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 			if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory, stack) && doesItemPassFilter(stack)) {
 				double distance = Math.sqrt(x * x + y * y + z * z);
 				if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
-					if (!getWorld().isRemote) {
-						InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
-					}
+					InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
 					entity.remove();
-					getWorld().addParticle(ParticleTypes.PORTAL, (double) pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
-					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F, false);
+					((ServerWorld) getWorld()).spawnParticle(ParticleTypes.PORTAL, pos.getX() + 0.5, (double) pos.getY() + 1.0, (double) pos.getZ() + 0.5, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+					getWorld().playSound(null, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.5F, 1.0F);
 				} else {
 					double var11 = 1.0 - distance / 15.0;
 					if (var11 > 0.0D) {
 						var11 *= var11;
 						entity.addVelocity(x / distance * var11 * 0.06, y / distance * var11 * 0.15, z / distance * var11 * 0.06);
 						Vector3d entityPos = entity.getPositionVec();
-						getWorld().addParticle(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 0.0D, 0.0D, 0.0D);
+						((ServerWorld) getWorld()).spawnParticle(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 					}
 				}
 			}
@@ -147,8 +146,8 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
 					markTileEntityForSynchronization();
 					orb.remove();
-					getWorld().playSound((double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F,
-							(RANDOM.nextFloat() + 1) / 2, false);
+					getWorld().playSound(null, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F,
+							(RANDOM.nextFloat() + 1) / 2);
 				}
 			} else {
 				double var11 = 1.0 - distance / 15.0;

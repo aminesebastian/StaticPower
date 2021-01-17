@@ -517,6 +517,7 @@
 	"block.staticpower.machine_turbine": "Turbine",
 	"block.staticpower.machine_packager": "Packager",
 	"block.staticpower.experience_hopper": "Experience Hopper",
+	"block.staticpower.rusty_cauldron": "Rusty Cauldron",
 	"block.staticpower.battery_block_basic": "Basic Battery",
 	"block.staticpower.battery_block_advanced": "Advanced Battery",
 	"block.staticpower.battery_block_static": "Static Battery",

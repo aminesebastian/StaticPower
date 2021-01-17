@@ -51,7 +51,7 @@ import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
-import theking530.staticpower.entities.AbstractSpawnableEntityType;
+import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.utilities.RaytracingUtilities;
@@ -93,7 +93,7 @@ public class StaticPowerClientEventHandler {
 
 		// Regsiter entity renderers.
 		LOGGER.info("Registering Entity Renderers!");
-		for (AbstractSpawnableEntityType<?> type : StaticPowerRegistry.ENTITES) {
+		for (AbstractEntityType<?> type : StaticPowerRegistry.ENTITIES) {
 			type.registerRenderers(event);
 		}
 
@@ -175,7 +175,6 @@ public class StaticPowerClientEventHandler {
 		CUSTOM_RENDERER.render(event);
 		renderMultiHarvesteBlockBreakEffect(event);
 	}
-
 
 	/**
 	 * Renders the outline on the extra blocks

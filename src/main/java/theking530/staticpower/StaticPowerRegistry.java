@@ -15,7 +15,8 @@ import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
-import theking530.staticpower.entities.AbstractSpawnableEntityType;
+import theking530.staticpower.entities.AbstractEntityType;
+import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.world.trees.AbstractStaticPowerTree;
 
 /**
@@ -31,7 +32,7 @@ public class StaticPowerRegistry {
 	public static final HashSet<Block> BLOCKS = new HashSet<>();
 	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
 	public static final HashSet<IRecipeSerializer> RECIPE_SERIALIZERS = new HashSet<IRecipeSerializer>();
-	public static final HashSet<AbstractSpawnableEntityType> ENTITES = new HashSet<AbstractSpawnableEntityType>();
+	public static final HashSet<AbstractEntityType<?>> ENTITIES = new HashSet<AbstractEntityType<?>>();
 	public static final HashSet<AbstractStaticPowerTree> TREES = new HashSet<AbstractStaticPowerTree>();
 
 	/**
@@ -51,8 +52,8 @@ public class StaticPowerRegistry {
 	 * @param entity The entity to pre-register.
 	 * @return The entity that was passed.
 	 */
-	public static <T extends Entity> AbstractSpawnableEntityType<T> preRegisterEntity(AbstractSpawnableEntityType<T> entity) {
-		ENTITES.add(entity);
+	public static <T extends Entity> AbstractEntityType<T> preRegisterEntity(AbstractEntityType<T> entity) {
+		ENTITIES.add(entity);
 		return entity;
 	}
 
@@ -126,9 +127,12 @@ public class StaticPowerRegistry {
 	}
 
 	public static void onRegisterEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		for (AbstractSpawnableEntityType<?> type : ENTITES) {
+		// Register mobs.
+		for (AbstractEntityType<?> type : ENTITIES) {
 			event.getRegistry().register(type.getType());
-			type.registerAttributes(event);
+			if (type instanceof AbstractSpawnableMobType) {
+				((AbstractSpawnableMobType<?>) type).registerAttributes(event);
+			}
 		}
 	}
 

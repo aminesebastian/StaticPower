@@ -11,10 +11,10 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.entities.AbstractSpawnableEntityType;
+import theking530.staticpower.entities.AbstractSpawnableMobType;
 import theking530.staticpower.init.ModEntities;
 
-public class TypeEnox extends AbstractSpawnableEntityType<EntityEnox> {
+public class TypeEnox extends AbstractSpawnableMobType<EntityEnox> {
 	public TypeEnox(String name) {
 		super(name, Color.EIGHT_BIT_WHITE, new Color(16, 100, 180), EntityType.Builder.create(EntityEnox::new, EntityClassification.CREATURE).size(0.9f, 1.3f));
 	}
