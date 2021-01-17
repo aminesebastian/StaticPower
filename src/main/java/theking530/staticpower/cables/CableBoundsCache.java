@@ -68,7 +68,7 @@ public class CableBoundsCache {
 			// Mark the shapes as cached.
 			IsCached = true;
 		}
-
+		
 		// Get the output.
 		VoxelShape output = CoreShape;
 

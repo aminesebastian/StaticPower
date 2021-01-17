@@ -5,10 +5,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 
-public abstract class AbstractDigistoreTerminalAttachment extends AbstractCableAttachment {
+public abstract class AbstractDigistoreTerminalAttachment extends AbstractDigistoreCableAttachment {
 	public static final String TERMINAL_SEARCH_MODE = "search_mode";
 	public static final String TERMINAL_SORT_TYPE = "sort_type";
 	public static final String TERMINAL_SORT_DESC = "sort_desc";

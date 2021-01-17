@@ -20,7 +20,7 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	public static final TileEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityDigistoreIOPort(), ModBlocks.DigistoreIOPort);
 
 	public TileEntityDigistoreIOPort() {
-		super(TYPE);
+		super(TYPE, 5000);
 		registerComponent(new DigitstoreIOPortInventoryComponent("IONetwork"));
 	}
 

@@ -9,6 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachment {
@@ -31,5 +32,10 @@ public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachme
 		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
 			return new ContainerDigistoreCraftingTerminal(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
+	}
+
+	@Override
+	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+		return 1000;
 	}
 }

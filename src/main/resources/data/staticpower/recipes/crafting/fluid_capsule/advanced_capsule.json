@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"ppp",
-		"bgb",
-		"ppp"
+		"pbp",
+		"pgp",
+		"pbp"
 	],
 	"key": {
 		"g": {
-			"tag": "forge:glass"
+			"tag": "forge:glass_panes"
 		},
 		"p": {
 			"tag": "forge:plates/tin"

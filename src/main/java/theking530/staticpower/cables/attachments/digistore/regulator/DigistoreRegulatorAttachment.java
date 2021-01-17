@@ -22,8 +22,9 @@ import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
+import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -32,7 +33,7 @@ import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
+public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
 	public DigistoreRegulatorAttachment(String name) {
@@ -112,6 +113,11 @@ public class DigistoreRegulatorAttachment extends AbstractCableAttachment {
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
 		return StaticPowerAdditionalModels.CABLE_DIGISTORE_REGULATOR_ATTACHMENT;
+	}
+
+	@Override
+	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+		return 1000;
 	}
 
 	protected boolean regulate(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {

@@ -17,4 +17,9 @@ public class DigistoreLight extends DigistoreScreen {
 		DigistoreCableProviderComponent digistoreCable = (DigistoreCableProviderComponent) cableComponent;
 		return digistoreCable.isManagerPresent() ? StaticPowerAdditionalModels.CABLE_DIGISTORE_LIGHT_ATTACHMENT_ON : StaticPowerAdditionalModels.CABLE_DIGISTORE_LIGHT_ATTACHMENT;
 	}
+
+	@Override
+	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+		return 500;
+	}
 }

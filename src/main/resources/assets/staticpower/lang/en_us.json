@@ -516,6 +516,7 @@
 	"block.staticpower.machine_vulcanizer": "Vulcanizer",
 	"block.staticpower.machine_turbine": "Turbine",
 	"block.staticpower.machine_packager": "Packager",
+	"block.staticpower.experience_hopper": "Experience Hopper",
 	"block.staticpower.battery_block_basic": "Basic Battery",
 	"block.staticpower.battery_block_advanced": "Advanced Battery",
 	"block.staticpower.battery_block_static": "Static Battery",
@@ -786,9 +787,13 @@
 	"gui.staticpower.metric_real_time": "Real Time",
 	"gui.staticpower.hammering": "Hammer",
 	"gui.staticpower.battery_block_charging_tooltip": "Can charge a single item at a time!",
-	"gui.staticpower.sprinkler_growth_rate": "When attached to a pipe\ncontaining water, keeps\nfarmland watered and\nincreases the rate\nof plant growth!",
-	"gui.staticpower.sprinkler_additional_growth_rate": "Other fluids may provide\nbetter results!",
+	"gui.staticpower.sprinkler_tooltip": "Make it rain...indoors!",
+	"gui.staticpower.sprinkler_description": "When attached to a pipe containing water, keeps farmland watered and increases the rate of plant growth! Other fluids may provide better results.",
+	"gui.staticpower.sprinkler_experience_description": "When attached to a pipe containing experience, converts the experience to experience orbs!",
 	"gui.staticpower.sprinkler_water_growth_rate": "Water Growth Bonus: ",
+	"gui.staticpower.redstone_control_enabled": "Can be controlled by a redstone signal.",
+	"gui.staticpower.experience_hopper_tooltip": "Hoppin' full of XP!",
+	"gui.staticpower.experience_hopper_description": "This hopper is specifically engineered to drain the raw volatile power of liquid experience from a living thing!",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

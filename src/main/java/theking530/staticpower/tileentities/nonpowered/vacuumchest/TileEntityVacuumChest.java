@@ -134,6 +134,12 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 			double y = (pos.getY() + 0.5D - orb.getPosY());
 			double z = (pos.getZ() + 0.5D - orb.getPosZ());
 
+			// Check if we can take the orb's xp. If not, stop.
+			int tempFilled = fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.SIMULATE);
+			if (tempFilled != orb.xpValue) {
+				break;
+			}
+
 			double distance = Math.sqrt(x * x + y * y + z * z);
 			if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
 				if (true) {// experienceTank.canFill() && experienceTank.fill(new

@@ -37,6 +37,11 @@ public class StaticPowerTierIron extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getCapsuleCapacity() {
+		return 2000;
+	}
+
+	@Override
 	protected int getDefaultTankCapacity() {
 		return 2500;
 	}

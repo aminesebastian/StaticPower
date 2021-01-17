@@ -23,8 +23,9 @@ import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
+import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -32,7 +33,7 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachment {
+public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCableAttachment {
 	public static final String CRAFTING_INTERFACE_TIMER_TAG = "crafting_interface_timer";
 	public static final String RECIPE_ITEM_TAG = "recipe_items";
 
@@ -75,6 +76,11 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractCableAttachmen
 				}
 			}
 		}
+	}
+
+	@Override
+	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+		return 1000;
 	}
 
 	@Override

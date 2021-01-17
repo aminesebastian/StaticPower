@@ -3,12 +3,15 @@ package theking530.staticpower.cables.digistore;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
 import theking530.staticpower.cables.attachments.digistore.DigistoreScreen;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
@@ -19,6 +22,7 @@ import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusA
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
+import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
@@ -30,13 +34,13 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@UpdateSerialize
 	private boolean managerPresent;
 	private boolean shouldControlOnBlockState;
-	private int powerUsage;
+	private long powerUsage;
 
 	public DigistoreCableProviderComponent(String name) {
 		this(name, 0);
 	}
 
-	public DigistoreCableProviderComponent(String name, int powerUsage) {
+	public DigistoreCableProviderComponent(String name, long powerUsage) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 		shouldControlOnBlockState = false;
 		this.powerUsage = powerUsage;
@@ -74,6 +78,62 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		}
 	}
 
+	@Override
+	public boolean attachAttachment(ItemStack attachment, Direction side) {
+		boolean superResult = super.attachAttachment(attachment, side);
+
+		// Update the power usage on the server.
+		if (!getWorld().isRemote) {
+			updatePowerUsage();
+		}
+
+		return superResult;
+	}
+
+	@Override
+	public ItemStack removeAttachment(Direction side) {
+		ItemStack superResult = super.removeAttachment(side);
+		updatePowerUsage();
+		return superResult;
+	}
+
+	public void updatePowerUsage() {
+		// Update the power usage on the server.
+		if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
+			updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
+		}
+	}
+
+	protected void updatePowerUsage(ServerCable cable) {
+		// Throw this in a try catch because I'm skeptical about doing this.
+		try {
+			// Update the cable value on the server.
+			long attachmentPowerUsage = 0;
+			for (ItemStack attachment : attachments) {
+				if (attachment.getItem() instanceof AbstractDigistoreCableAttachment) {
+					AbstractDigistoreCableAttachment attachmentItem = (AbstractDigistoreCableAttachment) attachment.getItem();
+					attachmentPowerUsage += attachmentItem.getPowerUsage(attachment, this);
+				}
+			}
+
+			// Update the power usage on the server.
+			cable.setProperty(POWER_USAGE_TAG, attachmentPowerUsage + powerUsage);
+		} catch (Exception e) {
+			StaticPower.LOGGER
+					.error(String.format("An error occured when attempting to update the power usage of a digistore cable provider owned by a tile entity at location: %1$s of type: %2$s",
+							getPos(), getTileEntity().getClass()));
+		}
+	}
+
+	public long getBasePowerUsage() {
+		return powerUsage;
+	}
+
+	public DigistoreCableProviderComponent setBasePowerUsage(long usage) {
+		this.powerUsage = usage;
+		return this;
+	}
+
 	public boolean isManagerPresent() {
 		return managerPresent;
 	}
@@ -85,9 +145,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
-		if (powerUsage > 0) {
-			cable.setProperty(POWER_USAGE_TAG, powerUsage);
-		}
+		// Update the power usage.
+		updatePowerUsage(cable);
 	}
 
 	@Override

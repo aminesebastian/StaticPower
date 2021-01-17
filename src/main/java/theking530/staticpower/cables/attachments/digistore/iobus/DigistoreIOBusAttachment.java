@@ -24,8 +24,9 @@ import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
+import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -35,7 +36,7 @@ import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreIOBusAttachment extends AbstractCableAttachment {
+public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
 	public DigistoreIOBusAttachment(String name) {
@@ -115,6 +116,11 @@ public class DigistoreIOBusAttachment extends AbstractCableAttachment {
 	@Override
 	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
 		return StaticPowerAdditionalModels.CABLE_DIGISTORE_IO_BUS_ATTACHMENT;
+	}
+
+	@Override
+	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+		return 1000;
 	}
 
 	public boolean doesItemPassImportFilter(ItemStack attachment, ItemStack itemToTest) {

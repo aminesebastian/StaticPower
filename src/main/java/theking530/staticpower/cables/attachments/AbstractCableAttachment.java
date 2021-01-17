@@ -103,7 +103,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		if (attachment.getTag().contains("redstone_mode")) {
 			return RedstoneMode.values()[attachment.getTag().getInt("redstone_mode")];
 		}
-		return RedstoneMode.Ignore;
+		return RedstoneMode.High;
 	}
 
 	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {

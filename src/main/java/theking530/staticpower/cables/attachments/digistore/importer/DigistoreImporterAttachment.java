@@ -23,8 +23,9 @@ import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
+import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
+import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
@@ -33,7 +34,7 @@ import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreImporterAttachment extends AbstractCableAttachment {
+public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachment {
 	public static final String IMPORT_TIMER_TAG = "import_timer";
 
 	public DigistoreImporterAttachment(String name) {
@@ -74,6 +75,11 @@ public class DigistoreImporterAttachment extends AbstractCableAttachment {
 			// See if we can perform a digistore extract and supply.
 			importFromAttached(attachment, side, cable, te);
 		}
+	}
+
+	@Override
+	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+		return 1000;
 	}
 
 	public boolean increaseSupplierTimer(ItemStack attachment) {
