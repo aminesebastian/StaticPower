@@ -142,11 +142,15 @@ public class TileEntityPump extends TileEntityMachine {
 	 * @return
 	 */
 	public ProcessingCheckState canProcess() {
-		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) <= fluidTankComponent.getCapacity()) {
-			return ProcessingCheckState.ok();
-		} else {
+		if (!this.energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get())) {
+			return ProcessingCheckState.notEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
+
+		}
+		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) > fluidTankComponent.getCapacity()) {
 			return ProcessingCheckState.outputTankCannotTakeFluid();
 		}
+
+		return ProcessingCheckState.ok();
 	}
 
 	/**

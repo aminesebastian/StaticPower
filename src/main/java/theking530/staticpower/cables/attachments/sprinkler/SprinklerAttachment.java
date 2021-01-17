@@ -136,30 +136,33 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 		// Spawn the particles on the client, fertilize and use the fluid on the server.
 		if (fluidCable.getWorld().isRemote) {
-			// Get a random offset.
-			float random = fluidCable.getWorld().getRandom().nextFloat();
-			random *= 2;
-			random -= 1;
-			random /= 5;
+			// Only render particles half of the time.
+			if (SDMath.diceRoll(0.5f)) {
+				// Get a random offset.
+				float random = fluidCable.getWorld().getRandom().nextFloat();
+				random *= 2;
+				random -= 1;
+				random /= 5;
 
-			// Set the direction.
-			Vector3D direction = new Vector3D(side);
-			direction.multiply(0.85f);
+				// Set the direction.
+				Vector3D direction = new Vector3D(side);
+				direction.multiply(0.85f);
 
-			// Set the velocity.
-			Vector3D velocity = new Vector3D(side);
-			velocity.multiply(0.5f);
+				// Set the velocity.
+				Vector3D velocity = new Vector3D(side);
+				velocity.multiply(0.5f);
 
-			// Spawn the particle.
-			fluidCable.getWorld().addParticle(ParticleTypes.FALLING_WATER, fluidCable.getPos().getX() + random + 0.5f + direction.getX(),
-					fluidCable.getPos().getY() + random + 0.5f + direction.getY(), fluidCable.getPos().getZ() + random + 0.5f + direction.getZ(), velocity.getX(), velocity.getY(),
-					velocity.getZ());
+				// Spawn the particle.
+				fluidCable.getWorld().addParticle(ParticleTypes.FALLING_WATER, fluidCable.getPos().getX() + random + 0.5f + direction.getX(),
+						fluidCable.getPos().getY() + random + 0.5f + direction.getY(), fluidCable.getPos().getZ() + random + 0.5f + direction.getZ(), velocity.getX(), velocity.getY(),
+						velocity.getZ());
+			}
 		} else {
 			// Get the fertilization chance and divide it by 20. Handle cases where the
 			// fertilization chance is == 0;
 			float growthChange = recipe.getFertalizationAmount();
 			if (growthChange == 0) {
-				growthChange = 0.025f;
+				growthChange = 0.02f;
 			}
 			growthChange /= 20;
 

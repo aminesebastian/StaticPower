@@ -151,6 +151,7 @@ public class ModBlocks {
 	public static StaticPowerCutoutBlock MachineBlockEnergized;
 	public static StaticPowerCutoutBlock MachineBlockLumum;
 
+	public static BlockTank IronTank;
 	public static BlockTank BasicTank;
 	public static BlockTank AdvancedTank;
 	public static BlockTank StaticTank;
@@ -297,9 +298,9 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(EnergizedGrass = new EnergizedGrass("grass_energized"));
 
 		// Plants
-		StaticPowerRegistry.preRegisterBlock(StaticPlant = new BaseSimplePlant("plant_static"));
-		StaticPowerRegistry.preRegisterBlock(EnergizedPlant = new BaseSimplePlant("plant_energized"));
-		StaticPowerRegistry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum"));
+		StaticPowerRegistry.preRegisterBlock(StaticPlant = new BaseSimplePlant("plant_static", () -> ModItems.StaticSeeds));
+		StaticPowerRegistry.preRegisterBlock(EnergizedPlant = new BaseSimplePlant("plant_energized", () -> ModItems.EnergizedSeeds));
+		StaticPowerRegistry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum", () -> ModItems.LumumSeeds));
 
 		// Wood
 		StaticPowerRegistry.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.from(Blocks.OAK_LOG)));
@@ -429,6 +430,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(SilverHeatSink = new BlockHeatSink("heat_sink_silver", StaticPowerTiers.SILVER));
 		StaticPowerRegistry.preRegisterBlock(GoldHeatSink = new BlockHeatSink("heat_sink_gold", StaticPowerTiers.GOLD));
 
+		StaticPowerRegistry.preRegisterBlock(IronTank = new BlockTank("tank_iron", StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(AdvancedTank = new BlockTank("tank_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterBlock(StaticTank = new BlockTank("tank_static", StaticPowerTiers.STATIC));

@@ -640,6 +640,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			return new ProcessingCheckState(ProcessingState.ERROR, "Output tank does not have enough space!");
 		}
 
+		public static ProcessingCheckState notEnoughPower(long requiredPower) {
+			return new ProcessingCheckState(ProcessingState.ERROR, "Not enough power! " + GuiTextUtilities.formatEnergyToString(requiredPower).getString() + " required!");
+		}
+
 		public static ProcessingCheckState powerOutputFull() {
 			return new ProcessingCheckState(ProcessingState.ERROR, "Energy storage is full!");
 		}

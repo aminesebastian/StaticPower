@@ -560,6 +560,7 @@
 	"block.staticpower.cable_heat_gold": "Gold Heat Pipe",
 	"block.staticpower.cable_heat_aluminium": "Aluminium Heat Pipe",
 	"block.staticpower.cable_scaffold": "Scaffold",
+	"block.staticpower.tank_iron": "Iron Tank",
 	"block.staticpower.tank_basic": "Tank",
 	"block.staticpower.tank_advanced": "Advanced Tank",
 	"block.staticpower.tank_static": "Static Tank",

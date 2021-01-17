@@ -31,6 +31,9 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 
 public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_IRON = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.IRON),
+			ModBlocks.IronTank);
+	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.BASIC),
 			ModBlocks.BasicTank);
 	@TileEntityTypePopulator()
@@ -53,6 +56,7 @@ public class TileEntityTank extends TileEntityBase {
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
+			TYPE_IRON.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
 			TYPE_BASIC.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
 			TYPE_ADVANCED.setTileEntitySpecialRenderer(TileEntityRenderTank::new);
 			TYPE_STATIC.setTileEntitySpecialRenderer(TileEntityRenderTank::new);

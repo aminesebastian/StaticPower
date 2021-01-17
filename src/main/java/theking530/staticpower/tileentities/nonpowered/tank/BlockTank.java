@@ -76,7 +76,9 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		if (tier == StaticPowerTiers.BASIC) {
+		if (tier == StaticPowerTiers.IRON) {
+			return new TankMachineBakedModel(existingModel, StaticPowerSprites.IRON_TANK);
+		} else if (tier == StaticPowerTiers.BASIC) {
 			return new TankMachineBakedModel(existingModel, StaticPowerSprites.BASIC_TANK);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
 			return new TankMachineBakedModel(existingModel, StaticPowerSprites.ADVANCED_TANK);
@@ -100,7 +102,9 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 
 	@Override
 	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		if (tier == StaticPowerTiers.BASIC) {
+		if (tier == StaticPowerTiers.IRON) {
+			return TileEntityTank.TYPE_IRON.create();
+		} else if (tier == StaticPowerTiers.BASIC) {
 			return TileEntityTank.TYPE_BASIC.create();
 		} else if (tier == StaticPowerTiers.ADVANCED) {
 			return TileEntityTank.TYPE_ADVANCED.create();
