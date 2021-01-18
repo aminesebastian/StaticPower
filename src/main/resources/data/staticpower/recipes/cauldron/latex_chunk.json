@@ -1,0 +1,14 @@
+{
+	"type": "staticpower:cauldron_recipe",
+	"input": {
+		"item": "staticpower:rubber_wood_bark"
+	},
+	"time": 100,
+	"empty_after_craft": true,
+	"fluid": {
+		"fluid": "minecraft:water"
+	},
+	"output": {
+		"item": "staticpower:latex_chunk"
+	}
+}

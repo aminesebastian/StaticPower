@@ -115,15 +115,18 @@ public class StaticPowerItemGroup extends ItemGroup {
 
 		// Add all the capsules for all fluids.
 		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
-			if (!fluid.getRegistryName().toString().contains("flowing")) {
-				subTypes.add(ModItems.IronFluidCapsule.getFilledVariant(fluid));
-				subTypes.add(ModItems.BasicFluidCapsule.getFilledVariant(fluid));
-				subTypes.add(ModItems.AdvancedFluidCapsule.getFilledVariant(fluid));
-				subTypes.add(ModItems.StaticFluidCapsule.getFilledVariant(fluid));
-				subTypes.add(ModItems.EnergizedFluidCapsule.getFilledVariant(fluid));
-				subTypes.add(ModItems.LumumFluidCapsule.getFilledVariant(fluid));
-				subTypes.add(ModItems.CreativeFluidCapsule.getFilledVariant(fluid));
+			// Skip the flowing fluids.
+			if (fluid.getDefaultState().getLevel() != 8) {
+				continue;
 			}
+
+			subTypes.add(ModItems.IronFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.BasicFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.AdvancedFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.StaticFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.EnergizedFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.LumumFluidCapsule.getFilledVariant(fluid));
+			subTypes.add(ModItems.CreativeFluidCapsule.getFilledVariant(fluid));
 		}
 	}
 }

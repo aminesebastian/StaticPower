@@ -101,8 +101,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 
 	@Override
 	protected void drawBackgroundExtras(MatrixStack stack, float f, int i, int j) {
-		drawGenericBackground();
-		drawContainerSlots(stack, container.inventorySlots);
+
 	}
 
 	protected ItemFilter getItemFilter() {

@@ -4,6 +4,7 @@ import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottlerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.covers.CoverRecipe;
@@ -55,5 +56,6 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(TumblerRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(TurbineRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(HammerRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(CauldronRecipeSerializer.INSTANCE);
 	}
 }

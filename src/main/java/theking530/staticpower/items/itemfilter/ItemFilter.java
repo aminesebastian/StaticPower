@@ -23,7 +23,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.network.NetworkGUI;
@@ -57,13 +56,11 @@ public class ItemFilter extends StaticPowerItem {
 		// Initialize the tag.
 		if (!stack.hasTag()) {
 			stack.setTag(new CompoundNBT());
+			stack.getTag().putBoolean(WHITE_LIST_MOD_KEY, false);
+			stack.getTag().putBoolean(MATCH_NBT_KEY, false);
+			stack.getTag().putBoolean(MATCH_TAGS_DICT_KEY, false);
+			stack.getTag().putBoolean(MATCH_MOD_KEY, false);
 		}
-
-		// Initialize the filter flags.
-		stack.getTag().putBoolean(WHITE_LIST_MOD_KEY, false);
-		stack.getTag().putBoolean(MATCH_NBT_KEY, false);
-		stack.getTag().putBoolean(MATCH_TAGS_DICT_KEY, false);
-		stack.getTag().putBoolean(MATCH_MOD_KEY, false);
 
 		// Add the inventory.
 		return new ItemStackMultiCapabilityProvider(stack, nbt)
@@ -156,20 +153,18 @@ public class ItemFilter extends StaticPowerItem {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
-			boolean empty = true;
-			if (stack.hasTag() && stack.getTag().contains("Items")) {
-				ItemStackHandler tempHandler = new ItemStackHandler();
-				tempHandler.deserializeNBT(stack.getTag());
-
-				for (int i = 0; i < tempHandler.getSlots(); i++) {
-					if (!tempHandler.getStackInSlot(i).isEmpty()) {
-						tooltip.add(new StringTextComponent("Slot " + (i + 1) + ": ").append(tempHandler.getStackInSlot(i).getDisplayName()));
+			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
+			if (inv != null) {
+				boolean empty = true;
+				for (int i = 0; i < inv.getSlots(); i++) {
+					if (!inv.getStackInSlot(i).isEmpty()) {
+						tooltip.add(new StringTextComponent("Slot " + (i + 1) + ": ").append(inv.getStackInSlot(i).getDisplayName()));
 						empty = false;
 					}
 				}
-			}
-			if (empty) {
-				tooltip.add(new StringTextComponent(TextFormatting.ITALIC + "Empty"));
+				if (empty) {
+					tooltip.add(new StringTextComponent(TextFormatting.ITALIC + "Empty"));
+				}
 			}
 		}
 	}

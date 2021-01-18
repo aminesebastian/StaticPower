@@ -36,6 +36,8 @@ public class ModOres {
 			new OreConfigBuilder(ModBlocks.OreSapphire).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
 	public static final ConfiguredFeature<OreFeatureConfig, ?> RUBY = register("ore_ruby",
 			new OreConfigBuilder(ModBlocks.OreRuby).setMaxLevel(25).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
+	public static final ConfiguredFeature<OreFeatureConfig, ?> RUSTY_IRON_ORE = register("ore_rusty_iron",
+			new OreConfigBuilder(ModBlocks.OreRustyIron).setMaxLevel(100).setMinLevel(50).setMaxVeinSize(8).setRarity(8));
 
 	public static void addOreGenFeatures(BiomeLoadingEvent event) {
 		if (StaticPowerConfig.SERVER.generateZincOre.get()) {
@@ -70,6 +72,9 @@ public class ModOres {
 		}
 		if (StaticPowerConfig.SERVER.generateRubyOre.get()) {
 			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RUBY);
+		}
+		if (StaticPowerConfig.SERVER.generateRustyIronOre.get()) {
+			event.getGeneration().withFeature(GenerationStage.Decoration.UNDERGROUND_ORES, RUSTY_IRON_ORE);
 		}
 	}
 

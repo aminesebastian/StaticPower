@@ -210,6 +210,11 @@ public class StaticPowerRecipeRegistry {
 					continue;
 				}
 
+				// Skip the flowing fluids.
+				if (fluid.getDefaultState().getLevel() != 8) {
+					continue;
+				}
+
 				// Get the fluid container handler. If this itemstack doesn't have a fluid
 				// container, skip it.
 				IFluidHandler containerHandler = FluidUtil.getFluidHandler(instance).orElse(null);

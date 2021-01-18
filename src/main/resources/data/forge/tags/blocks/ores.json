@@ -11,6 +11,7 @@
 		"staticpower:ore_silver",
 		"staticpower:ore_tin",
 		"staticpower:ore_tungsten",
-		"staticpower:ore_zinc"
+		"staticpower:ore_zinc",
+		"staticpower:ore_rusty_iron"
 	]
 }

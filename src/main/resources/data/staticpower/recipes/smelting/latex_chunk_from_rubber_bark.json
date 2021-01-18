@@ -1,9 +1,0 @@
-{
-	"type": "minecraft:smelting",
-	"ingredient": {
-		"item": "staticpower:rubber_wood_bark"
-	},
-	"result": "staticpower:latex_chunk",
-	"experience": 0.5,
-	"cookingtime": 200
-}

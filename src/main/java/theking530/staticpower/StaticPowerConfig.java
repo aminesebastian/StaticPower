@@ -69,23 +69,24 @@ public class StaticPowerConfig {
 	 *
 	 */
 	public static class StaticPowerServerConfig {
-		public ConfigValue<Boolean> generateRubberTrees;
-		public ConfigValue<Integer> minRubberTreeCount;
-		public ConfigValue<Integer> maxRubberTreeCount;
-		public ConfigValue<Double> rubberTreeSpawnChance;
-		public ConfigValue<Boolean> disableRubberTreesInSnowyBiomes;
+		public final ConfigValue<Boolean> generateRubberTrees;
+		public final ConfigValue<Integer> minRubberTreeCount;
+		public final ConfigValue<Integer> maxRubberTreeCount;
+		public final ConfigValue<Double> rubberTreeSpawnChance;
+		public final ConfigValue<Boolean> disableRubberTreesInSnowyBiomes;
 
-		public BooleanValue generateCopperOre;
-		public BooleanValue generateTinOre;
-		public BooleanValue generateLeadOre;
-		public BooleanValue generateSilverOre;
-		public BooleanValue generatePlatinumOre;
-		public BooleanValue generateTungstenOre;
-		public BooleanValue generateZincOre;
-		public BooleanValue generateMagnesiumOre;
-		public BooleanValue generateAluminiumOre;
-		public BooleanValue generateSapphireOre;
-		public BooleanValue generateRubyOre;
+		public final BooleanValue generateCopperOre;
+		public final BooleanValue generateTinOre;
+		public final BooleanValue generateLeadOre;
+		public final BooleanValue generateSilverOre;
+		public final BooleanValue generatePlatinumOre;
+		public final BooleanValue generateTungstenOre;
+		public final BooleanValue generateZincOre;
+		public final BooleanValue generateMagnesiumOre;
+		public final BooleanValue generateAluminiumOre;
+		public final BooleanValue generateSapphireOre;
+		public final BooleanValue generateRubyOre;
+		public final BooleanValue generateRustyIronOre;
 
 		public final ConfigValue<Integer> smeepSpawnWeight;
 		public final ConfigValue<Integer> smeepMinCount;
@@ -235,6 +236,8 @@ public class StaticPowerConfig {
 					generateSapphireOre = builder.comment("Disable or Enable Sapphire Ore Generation").translation(StaticPower.MOD_ID + ".config." + "sapphireore")
 							.define("GenerateSapphireOre", true);
 					generateRubyOre = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "rubyore").define("GenerateRubyOre", true);
+					generateRustyIronOre = builder.comment("Disable or Enable Rusty Iron Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateRustyIronOre")
+							.define("GenerateRustyIronOre", true);
 					builder.pop();
 					builder.push("Tree Generation");
 					generateRubberTrees = builder.comment("Disable or Enable Rubber Tree Generation.").translation(StaticPower.MOD_ID + ".config." + "generateRubberTrees")

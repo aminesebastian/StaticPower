@@ -169,6 +169,10 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		return visualFillLevel / this.getCapacity();
 	}
 
+	public void setVisualFillLevel(float level) {
+		this.visualFillLevel = level;
+	}
+
 	/**
 	 * This method syncs the current state of this fluid tank component to all
 	 * clients within a 64 block radius.

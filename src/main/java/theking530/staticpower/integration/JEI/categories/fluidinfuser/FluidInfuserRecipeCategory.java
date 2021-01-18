@@ -41,6 +41,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_infuser");
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
+	private static final int FLUID_SLOT = 2;
 
 	private final TranslationTextComponent locTitle;
 	private final IDrawable background;
@@ -147,7 +148,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		guiItemStacks.init(INTPUT_SLOT, true, 30, 16);
 		guiItemStacks.set(ingredients);
-		
+
 		// Set the outputs.
 		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
 		probabilityStacks.init(OUTPUT_SLOT, false, 124, 17);
@@ -155,7 +156,7 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 
 		// Add the fluid.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(3, true, 77, 4, 16, 52, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
+		fluids.init(FLUID_SLOT, true, 77, 4, 16, 52, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
 		fluids.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);

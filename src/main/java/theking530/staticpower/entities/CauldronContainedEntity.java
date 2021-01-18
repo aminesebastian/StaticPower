@@ -15,10 +15,12 @@ import net.minecraft.entity.EntityType;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.IPacket;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.PacketThreadUtil;
 import net.minecraft.particles.ParticleTypes;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
@@ -33,30 +35,32 @@ import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.init.ModItems;
+import theking530.staticpower.tileentities.nonpowered.rustycauldron.BlockCauldron;
+import theking530.staticpower.tileentities.nonpowered.rustycauldron.TileEntityCauldron;
 
-public class RubberWoodBarkEntity extends ItemEntity {
+public class CauldronContainedEntity extends ItemEntity {
+	private int cookingTime;
 
-	public RubberWoodBarkEntity(EntityType<? extends RubberWoodBarkEntity> p_i50217_1_, World world) {
+	public CauldronContainedEntity(EntityType<? extends CauldronContainedEntity> p_i50217_1_, World world) {
 		super(p_i50217_1_, world);
 	}
 
-	public RubberWoodBarkEntity(World worldIn, double x, double y, double z) {
-		this(ModEntities.RubberWoodBark.getType(), worldIn);
+	public CauldronContainedEntity(World worldIn, double x, double y, double z) {
+		this(ModEntities.CauldronContainedEntity.getType(), worldIn);
 		this.setPosition(x, y, z);
 		this.rotationYaw = this.rand.nextFloat() * 360.0F;
 		this.setMotion(this.rand.nextDouble() * 0.2D - 0.1D, 0.2D, this.rand.nextDouble() * 0.2D - 0.1D);
 	}
 
-	public RubberWoodBarkEntity(World worldIn, double x, double y, double z, ItemStack stack) {
-		this(ModEntities.RubberWoodBark.getType(), worldIn);
+	public CauldronContainedEntity(World worldIn, double x, double y, double z, ItemStack stack, int cookingTime) {
+		this(ModEntities.CauldronContainedEntity.getType(), worldIn);
 		this.setPosition(x, y, z);
 		this.rotationYaw = this.rand.nextFloat() * 360.0F;
 		this.setMotion(this.rand.nextDouble() * 0.2D - 0.1D, 0.2D, this.rand.nextDouble() * 0.2D - 0.1D);
 		this.setItem(stack);
 		this.lifespan = (stack.getItem() == null ? 6000 : stack.getEntityLifespan(worldIn));
+		this.cookingTime = cookingTime;
 	}
 
 	@Override
@@ -79,17 +83,19 @@ public class RubberWoodBarkEntity extends ItemEntity {
 		}
 
 		BlockState currentBlockState = getEntityWorld().getBlockState(this.getPosition());
-		if (currentBlockState.getBlock() == ModBlocks.RustyCauldron) {
-			if (getAge() > 100) {
-				ItemEntity latex = new ItemEntity(this.getEntityWorld(), getPosX(), getPosY(), getPosZ(), new ItemStack(ModItems.LatexChunk, getItem().getCount()));
-				latex.setMotion(0, 0.275, 0);
-				getEntityWorld().addEntity(latex);
+		if (currentBlockState.getBlock() instanceof BlockCauldron) {
+			if (getAge() >= cookingTime) {
+				TileEntity te = getEntityWorld().getTileEntity(getPosition());
+				if (te instanceof TileEntityCauldron) {
+					TileEntityCauldron cauldron = (TileEntityCauldron) te;
+					if (cauldron.completeCooking(this, getItem())) {
+						getEntityWorld().playSound(null, this.getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.5f, 1.0f);
+						((ServerWorld) getEntityWorld()).spawnParticle(ParticleTypes.SPLASH, getPosX(), getPosY() + 0.8, getPosZ(), 10, 0.0D, 0.0D, 0.0D, 0.0D);
 
-				getEntityWorld().playSound(null, this.getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.5f, 1.0f);
-				((ServerWorld) getEntityWorld()).spawnParticle(ParticleTypes.SPLASH, getPosX(), getPosY() + 0.8, getPosZ(), 10, 0.0D, 0.0D, 0.0D, 0.0D);
-
-				// Remove ourselves
-				remove();
+						// Remove ourselves
+						remove();
+					}
+				}
 			}
 		} else {
 			ItemEntity regularBark = new ItemEntity(this.getEntityWorld(), this.getPosX(), this.getPosY(), this.getPosZ(), getItem().copy());
@@ -109,15 +115,32 @@ public class RubberWoodBarkEntity extends ItemEntity {
 		super.onCollideWithPlayer(entityIn);
 	}
 
-	@Override
-	public IPacket<?> createSpawnPacket() {
-		return new RubberWoodBarkEntitySpawn(this);
+	public void setCookTime(int time) {
+		cookingTime = time;
 	}
 
-	public static class RubberWoodBarkEntityType extends AbstractEntityType<RubberWoodBarkEntity> {
+	@Override
+	public void writeAdditional(CompoundNBT compound) {
+		super.writeAdditional(compound);
+		compound.putInt("cooking_time", cookingTime);
 
-		public RubberWoodBarkEntityType(String name) {
-			super(name, EntityType.Builder.<RubberWoodBarkEntity>create(RubberWoodBarkEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).trackingRange(6).func_233608_b_(20));
+	}
+
+	@Override
+	public void readAdditional(CompoundNBT compound) {
+		super.readAdditional(compound);
+		cookingTime = compound.getInt("cooking_time");
+	}
+
+	@Override
+	public IPacket<?> createSpawnPacket() {
+		return new CauldronContainedEntitySpawnPacket(this);
+	}
+
+	public static class CauldronContainedEntityType extends AbstractEntityType<CauldronContainedEntity> {
+
+		public CauldronContainedEntityType(String name) {
+			super(name, EntityType.Builder.<CauldronContainedEntity>create(CauldronContainedEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).trackingRange(6).func_233608_b_(20));
 		}
 
 		@Override
@@ -128,13 +151,13 @@ public class RubberWoodBarkEntity extends ItemEntity {
 		@Override
 		@OnlyIn(Dist.CLIENT)
 		public void registerRenderers(FMLClientSetupEvent event) {
-			RenderingRegistry.registerEntityRenderingHandler(ModEntities.RubberWoodBark.getType(), (EntityRendererManager manager) -> {
+			RenderingRegistry.registerEntityRenderingHandler(ModEntities.CauldronContainedEntity.getType(), (EntityRendererManager manager) -> {
 				return new ItemRenderer(manager, Minecraft.getInstance().getItemRenderer());
 			});
 		}
 	}
 
-	public static class RubberWoodBarkEntitySpawn implements IPacket<IClientPlayNetHandler> {
+	public static class CauldronContainedEntitySpawnPacket implements IPacket<IClientPlayNetHandler> {
 		private int entityId;
 		private UUID uniqueId;
 		private double x;
@@ -146,12 +169,12 @@ public class RubberWoodBarkEntity extends ItemEntity {
 		private int pitch;
 		private int yaw;
 		private EntityType<?> type;
-		private int data;
+		private int cookingTime;
 
-		public RubberWoodBarkEntitySpawn() {
+		public CauldronContainedEntitySpawnPacket() {
 		}
 
-		public RubberWoodBarkEntitySpawn(int entityId, UUID uuid, double xPos, double yPos, double zPos, float pitch, float yaw, EntityType<?> entityType, int entityData,
+		public CauldronContainedEntitySpawnPacket(int entityId, UUID uuid, double xPos, double yPos, double zPos, float pitch, float yaw, EntityType<?> entityType, int entityData,
 				Vector3d speedVector) {
 			this.entityId = entityId;
 			this.uniqueId = uuid;
@@ -161,13 +184,13 @@ public class RubberWoodBarkEntity extends ItemEntity {
 			this.pitch = MathHelper.floor(pitch * 256.0F / 360.0F);
 			this.yaw = MathHelper.floor(yaw * 256.0F / 360.0F);
 			this.type = entityType;
-			this.data = entityData;
+			this.cookingTime = entityData;
 			this.speedX = (int) (MathHelper.clamp(speedVector.x, -3.9D, 3.9D) * 8000.0D);
 			this.speedY = (int) (MathHelper.clamp(speedVector.y, -3.9D, 3.9D) * 8000.0D);
 			this.speedZ = (int) (MathHelper.clamp(speedVector.z, -3.9D, 3.9D) * 8000.0D);
 		}
 
-		public RubberWoodBarkEntitySpawn(Entity entityIn) {
+		public CauldronContainedEntitySpawnPacket(Entity entityIn) {
 			this(entityIn.getEntityId(), entityIn.getUniqueID(), entityIn.getPosX(), entityIn.getPosY(), entityIn.getPosZ(), entityIn.rotationPitch, entityIn.rotationYaw, entityIn.getType(),
 					0, entityIn.getMotion());
 		}
@@ -185,7 +208,7 @@ public class RubberWoodBarkEntity extends ItemEntity {
 			this.z = buf.readDouble();
 			this.pitch = buf.readByte();
 			this.yaw = buf.readByte();
-			this.data = buf.readInt();
+			this.cookingTime = buf.readInt();
 			this.speedX = buf.readShort();
 			this.speedY = buf.readShort();
 			this.speedZ = buf.readShort();
@@ -204,7 +227,7 @@ public class RubberWoodBarkEntity extends ItemEntity {
 			buf.writeDouble(this.z);
 			buf.writeByte(this.pitch);
 			buf.writeByte(this.yaw);
-			buf.writeInt(this.data);
+			buf.writeInt(this.cookingTime);
 			buf.writeShort(this.speedX);
 			buf.writeShort(this.speedY);
 			buf.writeShort(this.speedZ);
@@ -216,14 +239,15 @@ public class RubberWoodBarkEntity extends ItemEntity {
 		public void processPacket(IClientPlayNetHandler handler) {
 			PacketThreadUtil.checkThreadAndEnqueue(this, handler, Minecraft.getInstance());
 			if (Minecraft.getInstance().player.world.isAreaLoaded(new BlockPos(x, y, z), 1)) {
-				// Create and add a rubber wood bark entity.
-				RubberWoodBarkEntity rubberEntity = new RubberWoodBarkEntity(Minecraft.getInstance().player.world, x, y, z);
+				// Create and add a cauldron contained entity.
+				CauldronContainedEntity rubberEntity = new CauldronContainedEntity(Minecraft.getInstance().player.world, x, y, z);
 				rubberEntity.setPacketCoordinates(x, y, z);
 				rubberEntity.moveForced(x, y, z);
 				rubberEntity.rotationPitch = (float) (pitch * 360) / 256.0F;
 				rubberEntity.rotationYaw = (float) (yaw * 360) / 256.0F;
 				rubberEntity.setEntityId(entityId);
 				rubberEntity.setUniqueId(uniqueId);
+				rubberEntity.setCookTime(cookingTime);
 				((ClientWorld) Minecraft.getInstance().player.world).addEntity(entityId, rubberEntity);
 			}
 		}

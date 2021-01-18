@@ -61,7 +61,6 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 */
 	@Override
 	public void render(T tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		Direction facing = tileEntity.getFacingDirection();
 		BlockPos tileEntityPos = tileEntity.getPos();
 		ItemRenderer = Minecraft.getInstance().getItemRenderer();
 
@@ -69,6 +68,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 		// Rotate to face the side this tile is facing.
 		if (shouldPreRotateTowardsFacingDirection) {
+			Direction facing = getFacingDirection(tileEntity);
 			renderToFaceSide(facing, matrixStack);
 		}
 
@@ -89,6 +89,10 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		matrixStack.pop();
 		RenderHelper.setupLevelDiffuseLighting(matrixStack.getLast().getMatrix());
 		matrixStack.push();
+	}
+
+	protected Direction getFacingDirection(T tileEntity) {
+		return tileEntity.getFacingDirection();
 	}
 
 	/**

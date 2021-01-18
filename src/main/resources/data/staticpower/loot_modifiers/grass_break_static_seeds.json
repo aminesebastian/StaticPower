@@ -5,8 +5,9 @@
 			"block": "minecraft:grass"
 		}
 	],
-	"type": "staticpower:grass_static_seeds",
-	"minSeeds": 1,
-	"maxSeeds": 3,
+	"type": "staticpower:static_power_loot_modifier",
+	"item": "staticpower:seed_static",
+	"minCount": 1,
+	"maxCount": 3,
 	"chance": 0.05
 }

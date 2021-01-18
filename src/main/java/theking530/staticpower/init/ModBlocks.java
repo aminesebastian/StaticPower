@@ -42,7 +42,7 @@ import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
 import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
 import theking530.staticpower.tileentities.nonpowered.experiencehopper.BlockExperienceHopper;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
-import theking530.staticpower.tileentities.nonpowered.rustycauldron.BlockRustyCauldron;
+import theking530.staticpower.tileentities.nonpowered.rustycauldron.BlockCauldron;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
@@ -121,6 +121,7 @@ public class ModBlocks {
 	public static StaticPowerOre OreAluminium;
 	public static StaticPowerOre OreRuby;
 	public static StaticPowerOre OreSapphire;
+	public static StaticPowerOre OreRustyIron;
 
 	// Storage Blocks
 	public static StaticPowerBlock BlockCopper;
@@ -201,7 +202,8 @@ public class ModBlocks {
 	public static BlockTurbine Turbine;
 	public static BlockPackager Packager;
 	public static BlockExperienceHopper ExperienceHopper;
-	public static BlockRustyCauldron RustyCauldron;
+	public static BlockCauldron RustyCauldron;
+	public static BlockCauldron CleanCauldron;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -323,9 +325,10 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", Block.Properties.from(Blocks.GOLD_ORE).setRequiresTool()));
 		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", Block.Properties.from(Blocks.GOLD_ORE).setRequiresTool()));
 		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", Block.Properties.from(Blocks.GOLD_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", Block.Properties.from(Blocks.DIAMOND_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", Block.Properties.from(Blocks.DIAMOND_ORE).setRequiresTool()));
+		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", Block.Properties.from(Blocks.DIAMOND_ORE).setRequiresTool(), 2, 5));
+		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", Block.Properties.from(Blocks.DIAMOND_ORE).setRequiresTool(), 2, 5));
 		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", Block.Properties.from(Blocks.ANCIENT_DEBRIS).setRequiresTool()));
+		StaticPowerRegistry.preRegisterBlock(OreRustyIron = new StaticPowerOre("ore_rusty_iron", Block.Properties.from(Blocks.COAL_ORE).setRequiresTool(), 1, 3));
 
 		// Metal Blocks
 		StaticPowerRegistry.preRegisterBlock(BlockCopper = new StaticPowerBlock("block_copper",
@@ -425,7 +428,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Turbine = new BlockTurbine("machine_turbine"));
 		StaticPowerRegistry.preRegisterBlock(Packager = new BlockPackager("machine_packager"));
 		StaticPowerRegistry.preRegisterBlock(ExperienceHopper = new BlockExperienceHopper("experience_hopper"));
-		StaticPowerRegistry.preRegisterBlock(RustyCauldron = new BlockRustyCauldron("rusty_cauldron"));
+		StaticPowerRegistry.preRegisterBlock(RustyCauldron = new BlockCauldron("rusty_cauldron", false));
+		StaticPowerRegistry.preRegisterBlock(CleanCauldron = new BlockCauldron("clean_cauldron", true));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

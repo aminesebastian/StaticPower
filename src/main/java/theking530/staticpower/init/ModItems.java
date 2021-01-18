@@ -132,6 +132,7 @@ public class ModItems {
 	public static StaticPowerItem PlateRedstoneAlloy;
 	public static StaticPowerItem PlateBrass;
 	public static StaticPowerItem PlateBronze;
+	public static StaticPowerItem RustyIronScrap;
 
 	public static StaticPowerItem GearCopper;
 	public static StaticPowerItem GearTin;
@@ -732,6 +733,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(PlateRedstoneAlloy = new StaticPowerItem("plate_redstone_alloy"));
 		StaticPowerRegistry.preRegisterItem(PlateBrass = new StaticPowerItem("plate_brass"));
 		StaticPowerRegistry.preRegisterItem(PlateBronze = new StaticPowerItem("plate_bronze"));
+		StaticPowerRegistry.preRegisterItem(RustyIronScrap = new StaticPowerItem("rusty_iron_scrap"));
 
 		// Gears
 		StaticPowerRegistry.preRegisterItem(GearCopper = new StaticPowerItem("gear_copper"));

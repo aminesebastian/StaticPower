@@ -45,7 +45,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.data.loot.GrassLootModifier;
+import theking530.staticpower.data.loot.StaticPowerLootModifier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.TOP.PluginTOP;
 
@@ -166,6 +166,6 @@ public class StaticPowerModEventRegistry {
 
 	@SubscribeEvent
 	public static void registerModifierSerializers(@Nonnull final RegistryEvent.Register<GlobalLootModifierSerializer<?>> event) {
-		event.getRegistry().register(new GrassLootModifier.Serializer().setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "grass_static_seeds")));
+		event.getRegistry().register(new StaticPowerLootModifier.Serializer().setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "static_power_loot_modifier")));
 	}
 }

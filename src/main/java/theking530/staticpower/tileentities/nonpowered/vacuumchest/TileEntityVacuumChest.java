@@ -23,6 +23,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.items.itemfilter.ItemFilter;
@@ -83,17 +84,20 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 		if (!world.isRemote) {
 			upgradeTick();
 
-			// Create the AABB to search within.
-			AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
-			aabb = aabb.expand(vacuumDiamater, vacuumDiamater, vacuumDiamater);
-			aabb = aabb.offset(-vacuumDiamater / 2, -vacuumDiamater / 2, -vacuumDiamater / 2);
+			// Vacuum every other tick.
+			if (SDMath.diceRoll(0.75)) {
+				// Create the AABB to search within.
+				AxisAlignedBB aabb = new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+				aabb = aabb.expand(vacuumDiamater, vacuumDiamater, vacuumDiamater);
+				aabb = aabb.offset(-vacuumDiamater / 2, -vacuumDiamater / 2, -vacuumDiamater / 2);
 
-			// Vacuum the items.
-			vacuumItems(aabb);
+				// Vacuum the items.
+				vacuumItems(aabb);
 
-			// Vacuum experience if requested.
-			if (shouldVacuumExperience) {
-				vacuumExperience(aabb);
+				// Vacuum experience if requested.
+				if (shouldVacuumExperience) {
+					vacuumExperience(aabb);
+				}
 			}
 		}
 	}

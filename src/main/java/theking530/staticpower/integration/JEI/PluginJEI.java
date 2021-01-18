@@ -30,6 +30,7 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
+import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
@@ -54,6 +55,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.categories.bottler.BottleRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.caster.CasterRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.cauldron.CauldronRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.centrifuge.CentrifugeRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.condenser.CondenserRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.covers.CoverRecipeCategory;
@@ -142,6 +144,8 @@ public class PluginJEI implements IModPlugin {
 	private PackagerRecipeCategory packagerRecipeCategory;
 	@Nullable
 	private HammerRecipeCategory hammerRecipeCategory;
+	@Nullable
+	private CauldronRecipeCategory cauldronRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -262,6 +266,10 @@ public class PluginJEI implements IModPlugin {
 		// Hammer
 		hammerRecipeCategory = new HammerRecipeCategory(guiHelper);
 		registration.addRecipeCategories(hammerRecipeCategory);
+
+		// Cauldron
+		cauldronRecipeCategory = new CauldronRecipeCategory(guiHelper);
+		registration.addRecipeCategories(cauldronRecipeCategory);
 	}
 
 	@Override
@@ -342,6 +350,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(TumblerRecipe.RECIPE_TYPE), TumblerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(PackagerRecipe.RECIPE_TYPE), PackagerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(HammerRecipe.RECIPE_TYPE), HammerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CauldronRecipe.RECIPE_TYPE), CauldronRecipeCategory.UID);
 	}
 
 	@Override
@@ -388,6 +397,9 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModItems.IronMetalHammer), HammerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.TungstenMetalHammer), HammerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.ZincMetalHammer), HammerRecipeCategory.UID);
+
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RustyCauldron), CauldronRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CleanCauldron), CauldronRecipeCategory.UID);
 	}
 
 	@Override
