@@ -14,7 +14,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.rendering.BlockModel;
-import theking530.staticpower.tileentities.nonpowered.rustycauldron.TileEntityCauldron;
+import theking530.staticpower.tileentities.nonpowered.cauldron.TileEntityCauldron;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderCauldron extends StaticPowerTileEntitySpecialRenderer<TileEntityCauldron> {

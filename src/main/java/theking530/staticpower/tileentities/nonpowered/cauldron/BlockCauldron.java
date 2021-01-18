@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.rustycauldron;
+package theking530.staticpower.tileentities.nonpowered.cauldron;
 
 import java.util.List;
 

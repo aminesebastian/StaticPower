@@ -38,11 +38,11 @@ import theking530.staticpower.tileentities.digistorenetwork.ioport.BlockDigistor
 import theking530.staticpower.tileentities.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.tileentities.digistorenetwork.patternstorage.BlockPatternStorage;
 import theking530.staticpower.tileentities.digistorenetwork.severrack.BlockDigistoreServerRack;
+import theking530.staticpower.tileentities.nonpowered.cauldron.BlockCauldron;
 import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
 import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
 import theking530.staticpower.tileentities.nonpowered.experiencehopper.BlockExperienceHopper;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
-import theking530.staticpower.tileentities.nonpowered.rustycauldron.BlockCauldron;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;

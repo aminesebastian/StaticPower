@@ -36,8 +36,8 @@ import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.tileentities.nonpowered.rustycauldron.BlockCauldron;
-import theking530.staticpower.tileentities.nonpowered.rustycauldron.TileEntityCauldron;
+import theking530.staticpower.tileentities.nonpowered.cauldron.BlockCauldron;
+import theking530.staticpower.tileentities.nonpowered.cauldron.TileEntityCauldron;
 
 public class CauldronContainedEntity extends ItemEntity {
 	private int cookingTime;
