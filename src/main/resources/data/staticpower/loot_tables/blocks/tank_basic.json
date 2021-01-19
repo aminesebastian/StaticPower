@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "staticpower:tank_creative"
+          "name": "staticpower:tank_basic"
         }
       ],
       "conditions": [

@@ -40,6 +40,7 @@ import theking530.staticpower.tileentities.digistorenetwork.patternstorage.Block
 import theking530.staticpower.tileentities.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.cauldron.BlockCauldron;
 import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
+import theking530.staticpower.tileentities.nonpowered.directdropper.BlockDirectDropper;
 import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
 import theking530.staticpower.tileentities.nonpowered.experiencehopper.BlockExperienceHopper;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
@@ -204,6 +205,7 @@ public class ModBlocks {
 	public static BlockExperienceHopper ExperienceHopper;
 	public static BlockCauldron RustyCauldron;
 	public static BlockCauldron CleanCauldron;
+	public static BlockDirectDropper DirectDropper;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -430,6 +432,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(ExperienceHopper = new BlockExperienceHopper("experience_hopper"));
 		StaticPowerRegistry.preRegisterBlock(RustyCauldron = new BlockCauldron("rusty_cauldron", false));
 		StaticPowerRegistry.preRegisterBlock(CleanCauldron = new BlockCauldron("clean_cauldron", true));
+		StaticPowerRegistry.preRegisterBlock(DirectDropper = new BlockDirectDropper("direct_dropper"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

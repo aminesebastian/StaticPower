@@ -249,9 +249,18 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachments[side.ordinal()].getItem();
 			attachmentItem.onAddedToCable(attachments[side.ordinal()], side, this);
 
+			// Initialize the data container on the server.
+			if (!getWorld().isRemote) {
+				ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
+				cable.reinitializeAttachmentDataForSide(side, attachmentItem.getRegistryName());
+				attachmentItem.initializeServerDataContainer(attachments[side.ordinal()], side, this, cable.getAttachmentDataForSide(side));
+			}
+
+			// Re-sync the tile entity.
 			getTileEntity().markTileEntityForSynchronization();
 			return true;
 		}
+
 		return false;
 	}
 
@@ -275,6 +284,12 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			// Remove the attachment and return it.
 			attachments[side.ordinal()] = ItemStack.EMPTY;
 			getTileEntity().markTileEntityForSynchronization();
+
+			// Clear the attachment data from the server.
+			if (!getWorld().isRemote) {
+				CableNetworkManager.get(getWorld()).getCable(getPos()).clearAttachmentDataForSide(side);
+			}
+
 			return output;
 		}
 		return ItemStack.EMPTY;

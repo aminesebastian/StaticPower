@@ -117,7 +117,7 @@ public class BlockCauldron extends StaticPowerTileEntityBlock {
 		if (isClean) {
 
 		} else {
-			tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.rusty_cauldron")).mergeStyle(TextFormatting.GRAY));
+			tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.rusty_cauldron_description")).mergeStyle(TextFormatting.GRAY));
 		}
 	}
 }

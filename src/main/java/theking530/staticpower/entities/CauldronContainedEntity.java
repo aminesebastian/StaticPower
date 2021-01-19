@@ -65,41 +65,66 @@ public class CauldronContainedEntity extends ItemEntity {
 
 	@Override
 	public void tick() {
+		// We have to do this trick to prevent these entities from combining together
+		// since all the methods for handling this are private. We set the stack size to
+		// make so it cannot be combined, then we set it back to the original after the
+		// super call.
+		int originalStackSize = getItem().getCount();
+		getItem().setCount(getItem().getMaxStackSize());
 		super.tick();
+		getItem().setCount(originalStackSize);
 
 		// Only perfrom the following on the server.
 		if (getEntityWorld().isRemote) {
 			return;
 		}
 
+		// Render the splash particles every few ticks.
 		if (SDMath.diceRoll(0.25)) {
 			float randomOffset = this.getEntityWorld().getRandom().nextFloat();
 			randomOffset *= 2;
 			randomOffset -= 1;
-			randomOffset *= 0.1;
+			randomOffset *= 0.0;
 
 			((ServerWorld) getEntityWorld()).spawnParticle(ParticleTypes.SPLASH, getPosX() + randomOffset, getPosY() + 0.35, getPosZ() + randomOffset, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-			((ServerWorld) getEntityWorld()).spawnParticle(ParticleTypes.BUBBLE_COLUMN_UP, getPosX() + randomOffset, getPosY() + 0.7, getPosZ() + randomOffset, 1, 0.0D, 0.0D, 0.0D, 1.0D);
+			if (SDMath.diceRoll(0.25)) {
+				((ServerWorld) getEntityWorld()).spawnParticle(ParticleTypes.BUBBLE_COLUMN_UP, getPosX() + randomOffset, getPosY() + 0.7, getPosZ() + randomOffset, 1, 0.0D, 0.0D, 0.0D,
+						1.0D);
+			}
 		}
 
+		// Get the current blockstate and check if it is a cauldron.
 		BlockState currentBlockState = getEntityWorld().getBlockState(this.getPosition());
 		if (currentBlockState.getBlock() instanceof BlockCauldron) {
+			// See if we aged enough.
 			if (getAge() >= cookingTime) {
+				// Get the tile entity and confirm it is a cauldron.
 				TileEntity te = getEntityWorld().getTileEntity(getPosition());
 				if (te instanceof TileEntityCauldron) {
+					// Get the tile entity for the cauldron.
 					TileEntityCauldron cauldron = (TileEntityCauldron) te;
-					if (cauldron.completeCooking(this, getItem())) {
+
+					// Attempt to finalize the craft and see how many we can actually craft.
+					int craftedAmount = cauldron.completeCooking(this, getItem());
+
+					// If we crafted at least 1, render the effects and modify the stack size of
+					// this entity.
+					if (craftedAmount > 0) {
 						getEntityWorld().playSound(null, this.getPosition(), SoundEvents.ENTITY_GENERIC_SPLASH, SoundCategory.BLOCKS, 0.5f, 1.0f);
 						((ServerWorld) getEntityWorld()).spawnParticle(ParticleTypes.SPLASH, getPosX(), getPosY() + 0.8, getPosZ(), 10, 0.0D, 0.0D, 0.0D, 0.0D);
 
-						// Remove ourselves
-						remove();
+						// Lower the count of item. If the count hits 0, remove the entity.
+						getItem().shrink(craftedAmount);
+						if (getItem().getCount() == 0) {
+							remove();
+						}
 					}
 				}
 			}
 		} else {
-			ItemEntity regularBark = new ItemEntity(this.getEntityWorld(), this.getPosX(), this.getPosY(), this.getPosZ(), getItem().copy());
-			getEntityWorld().addEntity(regularBark);
+			// Replace with standard item.
+			ItemEntity regularItem = new ItemEntity(this.getEntityWorld(), this.getPosX(), this.getPosY(), this.getPosZ(), getItem().copy());
+			getEntityWorld().addEntity(regularItem);
 
 			// Remove ourselves
 			remove();

@@ -11,7 +11,9 @@ import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
@@ -20,6 +22,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -31,9 +34,11 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blocks.StaticPowerItemBlockCustomRenderer;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
+import theking530.staticpower.client.rendering.items.dynamic.ItemTankSpecialRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -48,8 +53,18 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString() + "Capacity: ").append(GuiTextUtilities
+		tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString() + "• Capacity ").append(GuiTextUtilities
 				.formatFluidToString(SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultTankCapacity.get(), TileEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
+
+		// Check to see if the stack has the serialized nbt.If it does, add the stored
+		// amount of fluid to the tooltip.
+		if (stack.hasTag() && stack.getTag().contains("SerializableNbt")) {
+			// If it does, get the tank tag and then the subsequent fluid tag.
+			CompoundNBT tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
+			CompoundNBT fluidTank = tankTag.getCompound("fluidStorage");
+			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
+			tooltip.add(new StringTextComponent(TextFormatting.AQUA.toString() + "• Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
+		}
 	}
 
 	@Override
@@ -60,6 +75,25 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@Override
 	public boolean hasModelOverride(BlockState state) {
 		return true;
+	}
+
+	@Override
+	public BlockItem getItemBlock() {
+		return new StaticPowerItemBlockCustomRenderer(this, () -> ItemTankSpecialRenderer::new);
+	}
+
+	@Override
+	public ITextComponent getDisplayName(ItemStack stack) {
+		// Check to see if the stack has the serialized nbt.
+		if (stack.hasTag() && stack.getTag().contains("SerializableNbt")) {
+			// If it does, get the tank tag and then the subsequent fluid tag.
+			CompoundNBT tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
+			CompoundNBT fluidTank = tankTag.getCompound("fluidStorage");
+			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
+			return new TranslationTextComponent(getTranslationKey()).appendString(" (").append(new TranslationTextComponent(fluid.getTranslationKey()).appendString(")"));
+		} else {
+			return new TranslationTextComponent(getTranslationKey());
+		}
 	}
 
 	@Override

@@ -26,7 +26,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	public static final int FLUID_SYNC_MAX_DELTA = 5;
 
 	@UpdateSerialize
-	protected StaticPowerFluidTank FluidStorage;
+	protected StaticPowerFluidTank fluidStorage;
 	@UpdateSerialize
 	protected int lastFluidStored;
 	@UpdateSerialize
@@ -58,7 +58,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	public FluidTankComponent(String name, int capacity, Predicate<FluidStack> fluidStackFilter) {
 		super(name);
-		FluidStorage = new StaticPowerFluidTank(capacity, fluidStackFilter);
+		fluidStorage = new StaticPowerFluidTank(capacity, fluidStackFilter);
 		canFill = true;
 		canDrain = true;
 		issueSyncPackets = false;
@@ -108,7 +108,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 			}
 
 			// Capture fluid metrics.
-			FluidStorage.captureFluidMetrics();
+			fluidStorage.captureFluidMetrics();
 		}
 	}
 
@@ -208,7 +208,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	}
 
 	public StaticPowerFluidTank getStorage() {
-		return FluidStorage;
+		return fluidStorage;
 	}
 
 	/**
@@ -261,48 +261,48 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public FluidStack getFluid() {
-		return FluidStorage.getFluid();
+		return fluidStorage.getFluid();
 	}
 
 	@Override
 	public int getFluidAmount() {
-		return FluidStorage.getFluidAmount();
+		return fluidStorage.getFluidAmount();
 	}
 
 	@Override
 	public int getCapacity() {
-		return FluidStorage.getCapacity();
+		return fluidStorage.getCapacity();
 	}
 
 	@Override
 	public boolean isFluidValid(FluidStack stack) {
-		return FluidStorage.isFluidValid(stack);
+		return fluidStorage.isFluidValid(stack);
 	}
 
 	@Override
 	public int getTanks() {
-		return FluidStorage.getTanks();
+		return fluidStorage.getTanks();
 	}
 
 	@Override
 	public FluidStack getFluidInTank(int tank) {
-		return FluidStorage.getFluidInTank(tank);
+		return fluidStorage.getFluidInTank(tank);
 	}
 
 	@Override
 	public int getTankCapacity(int tank) {
-		return FluidStorage.getTankCapacity(tank);
+		return fluidStorage.getTankCapacity(tank);
 	}
 
 	@Override
 	public boolean isFluidValid(int tank, FluidStack stack) {
-		return FluidStorage.isFluidValid(tank, stack);
+		return fluidStorage.isFluidValid(tank, stack);
 	}
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
 		// Perform the fill, and then sync the tile entity if this was a real fill.
-		int result = FluidStorage.fill(resource, action);
+		int result = fluidStorage.fill(resource, action);
 
 		return result;
 	}
@@ -310,7 +310,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	@Override
 	public FluidStack drain(FluidStack resource, FluidAction action) {
 		// Perform the drain, and then sync the tile entity if this was a real drain.
-		FluidStack result = FluidStorage.drain(resource, action);
+		FluidStack result = fluidStorage.drain(resource, action);
 
 		return result;
 	}
@@ -318,7 +318,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	@Override
 	public FluidStack drain(int maxDrain, FluidAction action) {
 		// Perform the drain, and then sync the tile entity if this was a real drain.
-		FluidStack result = FluidStorage.drain(maxDrain, action);
+		FluidStack result = fluidStorage.drain(maxDrain, action);
 
 		return result;
 	}

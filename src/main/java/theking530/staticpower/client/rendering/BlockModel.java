@@ -14,14 +14,14 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.StaticPowerSprites;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockModel {
 	@SuppressWarnings("unused")
 	private static final Color DEFAULT_COLOR = new Color(1.0f, 1.0f, 1.0f);
-	private static final Vector2D IDENTITY_VECTOR = new Vector2D(1.0f, 1.0f);
+	private static final Vector3D IDENTITY_VECTOR = new Vector3D(1.0f, 1.0f, 1.0f);
 
 	public void drawPreviewCube(Vector3f position, Vector3f scale, Color tint, MatrixStack matrixStack) {
 		// Bind a blank texture.
@@ -34,7 +34,7 @@ public class BlockModel {
 		drawPreviewCube(position, scale, tint, matrixStack, sprite, IDENTITY_VECTOR);
 	}
 
-	public void drawPreviewCube(Vector3f position, Vector3f scale, Color tint, MatrixStack matrixStack, TextureAtlasSprite sprite, Vector2D uv) {
+	public void drawPreviewCube(Vector3f position, Vector3f scale, Color tint, MatrixStack matrixStack, TextureAtlasSprite sprite, Vector3D uv) {
 		// Get the buffer.
 		IRenderTypeBuffer.Impl buffer = Minecraft.getInstance().getRenderTypeBuffers().getBufferSource();
 
@@ -67,40 +67,61 @@ public class BlockModel {
 		drawPreviewSide(side, sprite, tint, matrix, builder, IDENTITY_VECTOR);
 	}
 
-	protected void drawPreviewSide(Direction side, TextureAtlasSprite sprite, Color tint, Matrix4f matrix, IVertexBuilder builder, Vector2D uv) {
+	protected void drawPreviewSide(Direction side, TextureAtlasSprite sprite, Color tint, Matrix4f matrix, IVertexBuilder builder, Vector3D uv) {
 		float maxU = sprite.getMinU() + (sprite.getMaxU() - sprite.getMinU()) * uv.getX();
 		float maxV = sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * uv.getY();
+		float topBottomMaxV = sprite.getMinV() + (sprite.getMaxV() - sprite.getMinV()) * uv.getZ();
 
 		if (side == Direction.DOWN) {
-			builder.pos(matrix, 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, -1, 0).endVertex();
-			builder.pos(matrix, 0.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, maxV).lightmap(15728880).normal(0, -1, 0).endVertex();
-			builder.pos(matrix, 1.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(0, -1, 0).endVertex();
-			builder.pos(matrix, 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(0, -1, 0).endVertex();
+			builder.pos(matrix, 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, -1, 0)
+					.endVertex();
+			builder.pos(matrix, 0.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, topBottomMaxV).lightmap(15728880).normal(0, -1, 0)
+					.endVertex();
+			builder.pos(matrix, 1.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), topBottomMaxV).lightmap(15728880)
+					.normal(0, -1, 0).endVertex();
+			builder.pos(matrix, 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880)
+					.normal(0, -1, 0).endVertex();
 		} else if (side == Direction.UP) {
-			builder.pos(matrix, 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, 1, 0).endVertex();
-			builder.pos(matrix, 1.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, maxV).lightmap(15728880).normal(0, 1, 0).endVertex();
-			builder.pos(matrix, 0.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(0, 1, 0).endVertex();
-			builder.pos(matrix, 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(0, 1, 0).endVertex();
+			builder.pos(matrix, 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, 1, 0)
+					.endVertex();
+			builder.pos(matrix, 1.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, topBottomMaxV).lightmap(15728880).normal(0, 1, 0)
+					.endVertex();
+			builder.pos(matrix, 0.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), topBottomMaxV).lightmap(15728880)
+					.normal(0, 1, 0).endVertex();
+			builder.pos(matrix, 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880)
+					.normal(0, 1, 0).endVertex();
 		} else if (side == Direction.NORTH) {
-			builder.pos(matrix, 0.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, 0, -1).endVertex();
+			builder.pos(matrix, 0.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, 0, -1)
+					.endVertex();
 			builder.pos(matrix, 0.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, maxV).lightmap(15728880).normal(0, 0, -1).endVertex();
-			builder.pos(matrix, 1.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(0, 0, -1).endVertex();
-			builder.pos(matrix, 1.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(0, 0, -1).endVertex();
+			builder.pos(matrix, 1.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(0, 0, -1)
+					.endVertex();
+			builder.pos(matrix, 1.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880)
+					.normal(0, 0, -1).endVertex();
 		} else if (side == Direction.SOUTH) {
-			builder.pos(matrix, 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, 0, 1).endVertex();
+			builder.pos(matrix, 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(0, 0, 1)
+					.endVertex();
 			builder.pos(matrix, 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, maxV).lightmap(15728880).normal(0, 0, 1).endVertex();
-			builder.pos(matrix, 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(0, 0, 1).endVertex();
-			builder.pos(matrix, 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(0, 0, 1).endVertex();
+			builder.pos(matrix, 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(0, 0, 1)
+					.endVertex();
+			builder.pos(matrix, 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880)
+					.normal(0, 0, 1).endVertex();
 		} else if (side == Direction.WEST) {
-			builder.pos(matrix, 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
+			builder.pos(matrix, 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0)
+					.endVertex();
 			builder.pos(matrix, 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, maxV).lightmap(15728880).normal(-1, 0, 0).endVertex();
-			builder.pos(matrix, 0.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(-1, 0, 0).endVertex();
-			builder.pos(matrix, 0.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(-1, 0, 0).endVertex();
+			builder.pos(matrix, 0.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(-1, 0, 0)
+					.endVertex();
+			builder.pos(matrix, 0.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880)
+					.normal(-1, 0, 0).endVertex();
 		} else if (side == Direction.EAST) {
-			builder.pos(matrix, 1.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(1, 0, 0).endVertex();
+			builder.pos(matrix, 1.0f, 0.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, sprite.getMinV()).lightmap(15728880).normal(1, 0, 0)
+					.endVertex();
 			builder.pos(matrix, 1.0f, 1.0f, 0.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(maxU, maxV).lightmap(15728880).normal(1, 0, 0).endVertex();
-			builder.pos(matrix, 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(1, 0, 0).endVertex();
-			builder.pos(matrix, 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880).normal(1, 0, 0).endVertex();
+			builder.pos(matrix, 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), maxV).lightmap(15728880).normal(1, 0, 0)
+					.endVertex();
+			builder.pos(matrix, 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(sprite.getMinU(), sprite.getMinV()).lightmap(15728880)
+					.normal(1, 0, 0).endVertex();
 		}
 	}
 }

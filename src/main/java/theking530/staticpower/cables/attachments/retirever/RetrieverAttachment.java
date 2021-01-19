@@ -129,7 +129,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
 		return new FilterContainerProvider(attachment, cable, attachmentSide);
 	}
 

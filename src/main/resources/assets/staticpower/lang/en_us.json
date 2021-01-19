@@ -517,6 +517,7 @@
 	"block.staticpower.machine_vulcanizer": "Vulcanizer",
 	"block.staticpower.machine_turbine": "Turbine",
 	"block.staticpower.machine_packager": "Packager",
+	"block.staticpower.direct_dropper": "Bull's Eye Dropper",
 	"block.staticpower.experience_hopper": "Experience Hopper",
 	"block.staticpower.rusty_cauldron": "Rusty Cauldron",
 	"block.staticpower.clean_cauldron": "Cauldron 2.0",
@@ -799,6 +800,8 @@
 	"gui.staticpower.redstone_control_enabled": "Can be controlled by a redstone signal.",
 	"gui.staticpower.experience_hopper_tooltip": "Hoppin' full of XP!",
 	"gui.staticpower.experience_hopper_description": "This hopper is specifically engineered to drain the raw volatile power of liquid experience from a living thing!",
+	"gui.staticpower.rusty_cauldron_tooltip": "Double, double toil and trouble!",
+	"gui.staticpower.rusty_cauldron_description": "The BRAND NEW Static Industries Cauldron! Made from entirely recyled materials, this marvel of engineering will serve as a solid foundation for all your future endeavours. Warranty does not cover damages resulting from excessive rust. You have your tetanus shot, right?",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

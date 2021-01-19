@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.nonpowered.cauldron.TileEntityCauldron;
 
@@ -39,7 +39,7 @@ public class TileEntityRenderCauldron extends StaticPowerTileEntitySpecialRender
 			// Calculate the height and position, then render.
 			float height = tileEntity.internalTank.getVisualFillLevel();
 			CUBE_MODEL.drawPreviewCube(new Vector3f(2 * TEXEL, 4 * TEXEL, 2 * TEXEL), new Vector3f(12 * TEXEL, height * 11 * TEXEL, 12 * TEXEL), fluidColor, matrixStack, sprite,
-					new Vector2D(1.0f, height));
+					new Vector3D(1.0f, height, 1.0f));
 		}
 	}
 }

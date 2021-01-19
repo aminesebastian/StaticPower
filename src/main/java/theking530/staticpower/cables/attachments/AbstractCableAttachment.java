@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -26,11 +25,13 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsHoverResult;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.network.ServerAttachmentDataContainer;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
+	public static final String REDSTONE_MODE_TAG = "redstone_mode";
 	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);
 
 	public AbstractCableAttachment(String name) {
@@ -59,23 +60,17 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundNBT());
-		}
-
 		// Allocate the redstone mode if neeed.
-		attachment.getTag().putInt("redstone_mode", RedstoneMode.High.ordinal());
-
-		// Allocate the covers.
-		for (int i = 0; i < 6; i++) {
-			attachment.getTag().putString("cover_" + i, "");
-		}
-
+		attachment.getOrCreateTag().putInt(REDSTONE_MODE_TAG, RedstoneMode.High.ordinal());
 	}
 
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		IItemHandler upgradeInv = getUpgradeInventory(attachment);
 		InventoryUtilities.clearInventory(upgradeInv);
+		attachment.getTag().remove(REDSTONE_MODE_TAG);
+	}
+
+	public void initializeServerDataContainer(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, ServerAttachmentDataContainer dataContainer) {
 	}
 
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
@@ -83,7 +78,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cable) {
-		attachment.getTag().putInt("redstone_mode", mode.ordinal());
+		attachment.getTag().putInt(REDSTONE_MODE_TAG, mode.ordinal());
 		cable.getTileEntity().markDirty();
 	}
 
@@ -100,13 +95,13 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	public RedstoneMode getRedstoneMode(ItemStack attachment) {
-		if (attachment.getTag().contains("redstone_mode")) {
-			return RedstoneMode.values()[attachment.getTag().getInt("redstone_mode")];
+		if (attachment.getTag().contains(REDSTONE_MODE_TAG)) {
+			return RedstoneMode.values()[attachment.getTag().getInt(REDSTONE_MODE_TAG)];
 		}
 		return RedstoneMode.High;
 	}
 
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
 		return null;
 	}
 

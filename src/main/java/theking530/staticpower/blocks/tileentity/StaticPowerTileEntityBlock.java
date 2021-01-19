@@ -175,7 +175,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 		// If we're on the server and this machine has a tile entity of type
 		// IBreakSerializeable.
 		if (!world.isRemote && world.getTileEntity(pos) instanceof IBreakSerializeable) {
-			ItemStack machineStack = IBreakSerializeable.createItemDrop(this, player, world, pos, facing);
+			ItemStack machineStack = IBreakSerializeable.createItemDrop(this, player, world, pos);
 			// Drop the item.
 			WorldUtilities.dropItem(world, pos, machineStack);
 

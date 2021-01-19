@@ -10,6 +10,7 @@ import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
@@ -68,7 +69,7 @@ public class TileEntityCauldron extends TileEntityBase {
 					Vector2D offset = new Vector2D(getWorld().getRandom().nextFloat(), getWorld().getRandom().nextFloat());
 					offset.multiply(2.0f);
 					offset.subtract(new Vector2D(1, 1));
-					offset.multiply(0.4f);
+					offset.multiply(0.35f);
 
 					// Render boiling bubbles.
 					BasicParticleType bubbleParticle = internalTank.getFluid().getFluid().getAttributes().getTemperature() > 500 ? ParticleTypes.FALLING_LAVA : ParticleTypes.BUBBLE_POP;
@@ -90,11 +91,31 @@ public class TileEntityCauldron extends TileEntityBase {
 		return heatStorage.getStorage().getCurrentHeat() >= BOILING_TEMP;
 	}
 
-	public boolean completeCooking(CauldronContainedEntity entity, ItemStack item) {
+	/**
+	 * Attempts to complete the crafting from a cauldron. Returns the amount of
+	 * items that were crafted.
+	 * 
+	 * @param entity
+	 * @param item
+	 * @return The number of items that were crafted.
+	 */
+	public int completeCooking(CauldronContainedEntity entity, ItemStack item) {
 		// If there is no recipe, return false.
 		CauldronRecipe recipe = getRecipe(item).orElse(null);
 		if (recipe == null) {
-			return false;
+			return 0;
+		}
+
+		// Capture the max craftable.
+		int maxCraftable = recipe.shouldDrainCauldron() ? 1 : item.getCount();
+		if (!recipe.getOutputFluid().isEmpty()) {
+			int remainingTankSpace = internalTank.getCapacity() - internalTank.getFluidAmount();
+			maxCraftable = Math.min(item.getCount(), remainingTankSpace / recipe.getOutputFluid().getAmount());
+		}
+
+		// IF the max craftable is 0, return early.
+		if (maxCraftable <= 0) {
+			return 0;
 		}
 
 		// If there is an item output, perform the change.
@@ -102,7 +123,7 @@ public class TileEntityCauldron extends TileEntityBase {
 			// Get the output item and grow the stack size in relation to the input stack
 			// size.
 			ItemStack outputItem = recipe.getOutput().calculateOutput();
-			outputItem.setCount(outputItem.getCount() * item.getCount());
+			outputItem.setCount(outputItem.getCount() * maxCraftable);
 
 			// Create the entity and make it bounce up.
 			ItemEntity outputItemEntity = new ItemEntity(getWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), outputItem);
@@ -117,13 +138,14 @@ public class TileEntityCauldron extends TileEntityBase {
 
 		// Change/add the fluid.
 		if (!recipe.getOutputFluid().isEmpty()) {
-			// First, drain the tank, just incase we didn't before.
-			internalTank.drain(Integer.MAX_VALUE, FluidAction.EXECUTE);
-			internalTank.fill(recipe.getOutputFluid().copy(), FluidAction.EXECUTE);
+			// Create the fluid stack to fill with.
+			FluidStack fillFluid = recipe.getOutputFluid().copy();
+			fillFluid.setAmount(recipe.getOutputFluid().getAmount() * maxCraftable);
+			internalTank.fill(fillFluid, FluidAction.EXECUTE);
 		}
 
-		// If we made it this far, return true.
-		return true;
+		// If we made it this far, return the amount we crafted.
+		return maxCraftable;
 	}
 
 	protected void handleRecipes(AxisAlignedBB bounds) {
@@ -137,6 +159,14 @@ public class TileEntityCauldron extends TileEntityBase {
 
 			// Check to see if we have a recipe to produce.
 			getRecipe(item.getItem()).ifPresent(recipe -> {
+				// Make sure we can take the output fluid if the recipe has it.
+				if (!recipe.getOutputFluid().isEmpty()) {
+					int filled = internalTank.fill(recipe.getOutputFluid(), FluidAction.SIMULATE);
+					if (recipe.getOutputFluid().getAmount() != filled) {
+						return;
+					}
+				}
+
 				CauldronContainedEntity entity = new CauldronContainedEntity(this.getWorld(), item.getPosX(), item.getPosY(), item.getPosZ(), item.getItem().copy(),
 						recipe.getRequiredTimeInCauldron());
 				entity.setMotion(item.getMotion());

@@ -98,7 +98,7 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
 					if (!world.isRemote) {
-						NetworkGUI.openGui((ServerPlayerEntity) player, attachmentItem.getContainerProvider(attachment, component, hoveredDirection), buff -> {
+						NetworkGUI.openGui((ServerPlayerEntity) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
 							buff.writeInt(hoveredDirection.ordinal());
 							buff.writeBlockPos(pos);
 						});

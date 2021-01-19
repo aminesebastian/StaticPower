@@ -1,0 +1,12 @@
+{
+    "variants": {
+		"facing=north,is_on=false": { "model": "staticpower:block/machines/direct_dropper" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/direct_dropper", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/direct_dropper", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/direct_dropper", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/direct_dropper_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/direct_dropper_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/direct_dropper_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/direct_dropper_on", "y": 90 }
+    }
+}

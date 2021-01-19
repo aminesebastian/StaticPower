@@ -66,7 +66,7 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 		if (!inputFluid.isEmpty() && matchParams.shouldVerifyFluids()) {
 			matched &= matchParams.hasFluids() && matchParams.getFluids()[0].equals(inputFluid);
 			if (matched && matchParams.shouldVerifyFluidAmounts()) {
-				matched &= matchParams.hasFluids() && matchParams.getFluids()[0].getAmount() == 1000; // ALWAYS we check for a full bucket.
+				matched &= matchParams.hasFluids() && matchParams.getFluids()[0].getAmount() >= 1000; // ALWAYS we check for a full bucket.
 			}
 		}
 

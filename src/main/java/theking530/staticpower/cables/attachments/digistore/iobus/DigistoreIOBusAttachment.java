@@ -104,7 +104,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
 		return new RegulatorContainerProvider(attachment, cable, attachmentSide);
 	}
 

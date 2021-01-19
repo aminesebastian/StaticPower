@@ -19,7 +19,7 @@ public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachme
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
 		return new DigistoreCraftingTerminalContainerProvider(attachment, cable, attachmentSide);
 	}
 

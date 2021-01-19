@@ -156,7 +156,7 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 		// Thank the lord for Storage Drawers
 		// (https://github.com/jaquadro/StorageDrawers/blob/1.15/src/main/java/com/jaquadro/minecraft/storagedrawers/client/renderer/TileEntityDrawersRenderer.java).
-		// Spent hours on the bug that's caused when you dont have this called twice.
+		// Spent hours on the bug that's caused when you dont have this called before and after.
 		if (buffer instanceof IRenderTypeBuffer.Impl) {
 			((IRenderTypeBuffer.Impl) buffer).finish();
 		}

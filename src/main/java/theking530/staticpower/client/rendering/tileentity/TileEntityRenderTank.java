@@ -14,7 +14,7 @@ import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
@@ -38,13 +38,13 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-			boolean isGas = tileEntity.fluidTankComponent.getFluid().getFluid().getAttributes().isGaseous();
+			boolean isGas = fluid.getFluid().getAttributes().isGaseous();
 
 			// Calculate the hight and position, then render.
 			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
 			float yPosition = isGas ? 14.0f * TEXEL - (12.01f * TEXEL * height) : 1.99f * TEXEL;
 			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack,
-					sprite, new Vector2D(1.0f, height));
+					sprite, new Vector3D(1.0f, height, 1.0f));
 		}
 
 		// Draw the glass. We have to do it like this because of how mineraft orders

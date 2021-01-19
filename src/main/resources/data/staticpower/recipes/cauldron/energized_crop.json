@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:cauldron_recipe",
+	"input": {
+		"item": "staticpower:crop_energized"
+	},
+	"time": 200,
+	"empty_after_craft": false,
+	"output_fluid": {
+		"fluid": "staticpower:fluid_energized",
+		"volume": 100
+	},
+	"output": {
+		"item": "staticpower:crop_depleted"
+	}
+}

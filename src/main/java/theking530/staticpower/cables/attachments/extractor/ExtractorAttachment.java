@@ -39,11 +39,17 @@ import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.ServerAttachmentDataContainer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.digistorenetwork.ioport.TileEntityDigistoreIOPort;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ExtractorAttachment extends AbstractCableAttachment {
+	/**
+	 * When this property is added to a cable and its true, nothing can be inserted
+	 * through this attachment to the attached tile.
+	 */
+	public static final String INPUT_BLOCKED = "input_blocked";
 	public static final String EXTRACTION_TIMER_TAG = "extraction_timer";
 	private final ResourceLocation tierType;
 	private final ResourceLocation model;
@@ -145,7 +151,12 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public @Nullable AbstractCableAttachmentContainerProvider getContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
+	public void initializeServerDataContainer(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, ServerAttachmentDataContainer dataContainer) {
+		dataContainer.addProperty(INPUT_BLOCKED, true);
+	}
+
+	@Override
+	public @Nullable AbstractCableAttachmentContainerProvider getUIContainerProvider(ItemStack attachment, AbstractCableProviderComponent cable, Direction attachmentSide) {
 		return new ExtractorContainerProvider(attachment, cable, attachmentSide);
 	}
 

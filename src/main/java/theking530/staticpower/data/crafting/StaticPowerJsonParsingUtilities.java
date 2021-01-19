@@ -27,7 +27,7 @@ public class StaticPowerJsonParsingUtilities {
 			// Get the fluid. If there is no defined fluid by that name, return null.
 			Fluid fluid = GameRegistry.findRegistry(Fluid.class).getValue(new ResourceLocation(object.get("fluid").getAsString()));
 			if (fluid == null) {
-				return null;
+				throw new RuntimeException("An invalid fluid name was supplied.");
 			}
 
 			// Get the amount (if provided).

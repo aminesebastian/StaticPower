@@ -7,8 +7,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import theking530.staticpower.StaticPower;
 
@@ -48,11 +48,12 @@ public interface IBreakSerializeable {
 		}
 	}
 
-	public static ItemStack createItemDrop(Block block, PlayerEntity player, World world, BlockPos pos, Direction facing) {
+	public static ItemStack createItemDrop(Block block, PlayerEntity player, IBlockReader world, BlockPos pos) {
 		// Create a new itemstack to represent this block.
 		ItemStack blockStack = new ItemStack(block.asItem());
 
-		if (world.getTileEntity(pos) instanceof IBreakSerializeable) {
+		// If there is a tile entity that is serializeable, get it.
+		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof IBreakSerializeable) {
 			// Get a handle to the serializeable tile entity.
 			IBreakSerializeable tempSerializeable = (IBreakSerializeable) world.getTileEntity(pos);
 
@@ -68,6 +69,7 @@ public interface IBreakSerializeable {
 			}
 		}
 
+		// Return the output.
 		return blockStack;
 	}
 }

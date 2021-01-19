@@ -12,7 +12,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.tileentities.nonpowered.experiencehopper.TileEntityExperienceHopper;
 
@@ -40,7 +40,7 @@ public class TileEntityRenderHopper extends StaticPowerTileEntitySpecialRenderer
 			float height = tileEntity.internalTank.getVisualFillLevel();
 			float yPosition = TEXEL * 11f;
 			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, height * TEXEL * 4.8f, 11.95f * TEXEL), fluidColor, matrixStack,
-					sprite, new Vector2D(1.0f, height));
+					sprite, new Vector3D(1.0f, height, 1.0f));
 		}
 	}
 }

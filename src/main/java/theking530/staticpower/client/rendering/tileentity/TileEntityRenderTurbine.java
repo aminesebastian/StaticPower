@@ -25,7 +25,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.tileentities.powered.turbine.TileEntityTurbine;
@@ -130,7 +130,7 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 
 			// Render the fluid.
 			CUBE_MODEL.drawPreviewCube(new Vector3f(1 * TEXEL, yPosition - (TEXEL * 1), 1 * TEXEL), new Vector3f(14f * TEXEL, 16f * TEXEL * height, 14f * TEXEL), fluidColor, matrixStack,
-					sprite, new Vector2D(1.0f, height));
+					sprite, new Vector3D(1.0f, height, 1.0f));
 		}
 	}
 }

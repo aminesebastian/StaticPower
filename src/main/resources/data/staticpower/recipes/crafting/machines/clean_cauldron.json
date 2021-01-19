@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"i i",
+		"ici",
+		"iii"
+	],
+	"key": {
+		"c": {
+			"item": "staticpower:rusty_cauldron"
+		},
+		"i": {
+			"tag": "forge:ingots/silver"
+		}
+	},
+	"result": {
+		"item": "staticpower:clean_cauldron"
+	}
+}

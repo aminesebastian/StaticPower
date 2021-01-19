@@ -1,7 +1,9 @@
 package theking530.staticpower.cables.network;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
@@ -26,20 +28,23 @@ public class ServerCable {
 	public static final String DATA_TAG_KEY = "data";
 	protected CableNetwork Network;
 	protected final World World;
-	protected final HashSet<ResourceLocation> SupportedNetworkModules;
+	protected final HashSet<ResourceLocation> supportedNetworkModules;
 	private final BlockPos Position;
-	private final boolean[] DisabledSides;
+	private final boolean[] disabledSides;
 	/** This tag should be used to store any data about this server cable. */
 	private final CompoundNBT dataTag;
+	private final Map<Direction, ServerAttachmentDataContainer> attachmentData;
 
 	public ServerCable(World world, BlockPos position, HashSet<ResourceLocation> supportedModules) {
 		Position = position;
 		World = world;
-		this.dataTag = new CompoundNBT();
-		// Capture the types.
-		SupportedNetworkModules = supportedModules;
-
-		DisabledSides = new boolean[] { false, false, false, false, false, false };
+		dataTag = new CompoundNBT();
+		attachmentData = new HashMap<Direction, ServerAttachmentDataContainer>();
+		for (Direction dir : Direction.values()) {
+			attachmentData.put(dir, new ServerAttachmentDataContainer(dir));
+		}
+		supportedNetworkModules = supportedModules;
+		disabledSides = new boolean[] { false, false, false, false, false, false };
 	}
 
 	public ServerCable(World world, BlockPos position, HashSet<ResourceLocation> supportedModules, Consumer<ServerCable> propertiesHandle) {
@@ -55,19 +60,31 @@ public class ServerCable {
 		Position = BlockPos.fromLong(tag.getLong("position"));
 
 		// Create the disabled sides.
-		DisabledSides = new boolean[] { false, false, false, false, false, false };
+		disabledSides = new boolean[] { false, false, false, false, false, false };
+
+		// Deserialize the attachments.
+		attachmentData = new HashMap<Direction, ServerAttachmentDataContainer>();
+		CompoundNBT attachmentNBT = tag.getCompound("attachments");
+		for (Direction dir : Direction.values()) {
+			String key = String.valueOf(dir.ordinal());
+			if (attachmentNBT.contains(key)) {
+				attachmentData.put(dir, ServerAttachmentDataContainer.createFromTag(attachmentNBT.getCompound(String.valueOf(dir.ordinal()))));
+			} else {
+				attachmentData.put(dir, new ServerAttachmentDataContainer(dir));
+			}
+		}
 
 		// Get the supported network types.
-		SupportedNetworkModules = new HashSet<ResourceLocation>();
+		supportedNetworkModules = new HashSet<ResourceLocation>();
 		ListNBT modules = tag.getList("supported_modules", Constants.NBT.TAG_COMPOUND);
 		for (INBT moduleTag : modules) {
 			CompoundNBT moduleTagCompound = (CompoundNBT) moduleTag;
-			SupportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
+			supportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
 		}
 
 		// Serialize the disabled sides.
 		for (int i = 0; i < 6; i++) {
-			DisabledSides[i] = tag.getBoolean("disabled" + i);
+			disabledSides[i] = tag.getBoolean("disabled" + i);
 		}
 
 		dataTag = tag.getCompound(DATA_TAG_KEY);
@@ -125,6 +142,18 @@ public class ServerCable {
 		return dataTag;
 	}
 
+	public void clearAttachmentDataForSide(Direction side) {
+		attachmentData.put(side, new ServerAttachmentDataContainer(side));
+	}
+
+	public void reinitializeAttachmentDataForSide(Direction side, ResourceLocation id) {
+		attachmentData.put(side, new ServerAttachmentDataContainer(id, side));
+	}
+
+	public ServerAttachmentDataContainer getAttachmentDataForSide(Direction side) {
+		return attachmentData.get(side);
+	}
+
 	public BlockPos getPos() {
 		return Position;
 	}
@@ -149,7 +178,7 @@ public class ServerCable {
 		Network = network;
 
 		// Add all the supported modules if they're not present.
-		for (ResourceLocation moduleType : SupportedNetworkModules) {
+		for (ResourceLocation moduleType : supportedNetworkModules) {
 			if (!network.hasModule(moduleType)) {
 				network.addModule(CableNetworkModuleRegistry.get().create(moduleType));
 			}
@@ -167,11 +196,11 @@ public class ServerCable {
 	}
 
 	public HashSet<ResourceLocation> getSupportedNetworkModules() {
-		return SupportedNetworkModules;
+		return supportedNetworkModules;
 	}
 
 	public boolean supportsNetworkModule(ResourceLocation moduleType) {
-		return SupportedNetworkModules.contains(moduleType);
+		return supportedNetworkModules.contains(moduleType);
 	}
 
 	public boolean shouldConnectTo(ServerCable otherCable) {
@@ -192,11 +221,11 @@ public class ServerCable {
 	}
 
 	public boolean isDisabledOnSide(Direction side) {
-		return DisabledSides[side.ordinal()];
+		return disabledSides[side.ordinal()];
 	}
 
 	public void setDisabledStateOnSide(Direction side, boolean disabledState) {
-		DisabledSides[side.ordinal()] = disabledState;
+		disabledSides[side.ordinal()] = disabledState;
 	}
 
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
@@ -205,7 +234,7 @@ public class ServerCable {
 
 		// Serialize the supported module types.
 		ListNBT supportedModules = new ListNBT();
-		SupportedNetworkModules.forEach(moduleType -> {
+		supportedNetworkModules.forEach(moduleType -> {
 			CompoundNBT moduleTag = new CompoundNBT();
 			moduleTag.putString("module_type", moduleType.toString());
 			supportedModules.add(moduleTag);
@@ -214,9 +243,17 @@ public class ServerCable {
 
 		// Serialize the disabled sides.
 		for (int i = 0; i < 6; i++) {
-			tag.putBoolean("disabled" + i, DisabledSides[i]);
+			tag.putBoolean("disabled" + i, disabledSides[i]);
 		}
 
+		// Serailize the attachments.
+		CompoundNBT attachmentTags = new CompoundNBT();
+		for (Direction dir : Direction.values()) {
+			attachmentTags.put(String.valueOf(dir.ordinal()), attachmentData.get(dir).serialize());
+		}
+		tag.put("attachments", attachmentTags);
+
+		// Serialize the data.
 		tag.put(DATA_TAG_KEY, dataTag);
 
 		return tag;

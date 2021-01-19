@@ -22,7 +22,10 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
+import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
@@ -37,9 +40,10 @@ import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 
 /**
- * Basic implmentation of a static power block.
+ * Basic implementation of a static power block.
  * 
  * @author Amine Sebastian
  *
@@ -70,6 +74,15 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	@Override
 	public BlockItem getItemBlock() {
 		return new StaticPowerItemBlock(this);
+	}
+
+	@Override
+	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+		return IBreakSerializeable.createItemDrop(this, player, world, pos);
+	}
+
+	public ITextComponent getDisplayName(ItemStack stack) {
+		return new TranslationTextComponent(getTranslationKey());
 	}
 
 	/**

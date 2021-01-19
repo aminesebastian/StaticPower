@@ -9,6 +9,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
@@ -29,7 +30,9 @@ import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -49,6 +52,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar arrow;
+	private ITickTimer timer;
 
 	public CauldronRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
@@ -109,7 +113,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		float scale = 1.6f;
 		{
 			blockStack.push();
-			blockStack.translate(-4.5, -0.6, 0.5f);
+			blockStack.translate(1.95, -1.7, 1.0f);
 			blockStack.scale(scale, scale, 16);
 			blockStack.rotate(new Quaternion(32, 45, 0, true));
 
@@ -121,19 +125,45 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			blockStack.pop();
 		}
 
-		// Render the fluid.
-		{
+		// Render the fluid if it exists.
+		if (!recipe.getRequiredFluid().isEmpty()) {
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(recipe.getRequiredFluid());
 			Color fluidColor = GuiDrawUtilities.getFluidColor(recipe.getRequiredFluid());
 			float TEXEL = (1.0f / 16.0f);
+			float time = SDMath.clamp(timer.getValue(), 0, timer.getMaxValue() / 2);
+			float height = 1.0f;
+
+			if (recipe.shouldDrainCauldron() || !recipe.getOutputFluid().isEmpty()) {
+				height = (float) time / (timer.getMaxValue() / 2);
+				height = 1.0f - height;
+			}
 
 			blockStack.push();
-			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 235);
+			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
 			blockStack.rotate(new Quaternion(32, 45, 0, true));
-			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 4 * TEXEL, 2 * TEXEL), new Vector3f(12 * TEXEL, 1 * 11 * TEXEL, 12 * TEXEL), fluidColor, blockStack, sprite,
-					new Vector2D(1.0f, 1.0f));
+			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL), fluidColor,
+					blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
+			blockStack.pop();
+		}
+
+		// Render the output fluid if it exists.
+		if (!recipe.getOutputFluid().isEmpty()) {
+			// Get the fluid attributes.
+			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(recipe.getOutputFluid());
+			Color fluidColor = GuiDrawUtilities.getFluidColor(recipe.getOutputFluid());
+			float TEXEL = (1.0f / 16.0f);
+			float time = SDMath.clamp(timer.getValue(), timer.getMaxValue() / 2, timer.getMaxValue());
+			time -= timer.getMaxValue() / 2;
+			float height = (float) time / (timer.getMaxValue() / 2);
+
+			blockStack.push();
+			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 265);
+			blockStack.scale(scale * 16, scale * 16, scale);
+			blockStack.rotate(new Quaternion(32, 45, 0, true));
+			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL), fluidColor,
+					blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
 			blockStack.pop();
 		}
 	}
@@ -169,8 +199,16 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 
 		// Add the fluid.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(INPUT_FLUID_SLOT, true, 53, 16, 16, 16, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
-		fluids.init(OUTPUT_FLUID_SLOT, false, 90, 4, 16, 52, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
+		if (!recipe.getRequiredFluid().isEmpty()) {
+			fluids.init(INPUT_FLUID_SLOT, true, 56, 18, 10, 10, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
+		}
+		if (!recipe.getOutputFluid().isEmpty()) {
+			fluids.init(OUTPUT_FLUID_SLOT, false, 56, 30, 10, 10, getFluidTankDisplaySize(recipe.getRequiredFluid()), false, null);
+		}
 		fluids.set(ingredients);
+
+		// Set the timer.
+		int processingTime = SDMath.clamp(recipe.getRequiredTimeInCauldron() / 2, 0, recipe.getRequiredTimeInCauldron());
+		timer = guiHelper.createTickTimer(processingTime, processingTime, false);
 	}
 }
