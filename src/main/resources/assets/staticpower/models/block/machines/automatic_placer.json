@@ -1,22 +1,22 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"particle": "staticpower:blocks/machines/direct_dropper/direct_dropper_bottom",
-		"bottom": "staticpower:blocks/machines/direct_dropper/direct_dropper_bottom",
-		"side": "staticpower:blocks/machines/direct_dropper/direct_dropper_side",
-		"top": "staticpower:blocks/machines/direct_dropper/direct_dropper_top"
+		"particle": "staticpower:blocks/machines/automatic_placer/automatic_placer_back",
+		"back": "staticpower:blocks/machines/automatic_placer/automatic_placer_back",
+		"face": "staticpower:blocks/machines/automatic_placer/automatic_placer_face",
+		"side": "staticpower:blocks/machines/automatic_placer/automatic_placer_side"
 	},
 	"elements": [
 		{
 			"from": [0, 0, 0],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#side"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#face"},
 				"east": {"uv": [0, 0, 16, 16], "texture": "#side"},
-				"south": {"uv": [0, 0, 16, 16], "texture": "#side"},
-				"west": {"uv": [0, 0, 16, 16], "texture": "#side"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
-				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
+				"south": {"uv": [0, 0, 16, 16], "texture": "#back"},
+				"west": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 16], "rotation": 270, "texture": "#side"},
+				"down": {"uv": [0, 0, 16, 16], "rotation": 90, "texture": "#side"}
 			}
 		}
 	],

@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"tcc",
+		"pbr",
+		"tcc"
+	],
+	"key": {
+		"r": {
+			"tag": "forge:dusts/redstone"
+		},
+		"c": {
+			"tag": "forge:cobblestone"
+		},
+		"b": {
+			"item": "minecraft:iron_bars"
+		},
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"p": {
+			"item": "staticpower:processor_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:automatic_placer"
+	}
+}

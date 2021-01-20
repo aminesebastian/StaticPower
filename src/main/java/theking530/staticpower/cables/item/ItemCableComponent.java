@@ -178,8 +178,14 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 				if (getWorld().isRemote) {
 					disabled = isSideDisabled(side);
 				} else {
+					// If the cable is not valid, just assume disabled. Could be that the cable is
+					// not yet initailized server side.
 					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
-					disabled = cable.isDisabledOnSide(side);
+					if (cable != null) {
+						disabled = cable.isDisabledOnSide(side);
+					} else {
+						disabled = true;
+					}
 				}
 			}
 
@@ -257,7 +263,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 				owningCable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
 					// Attempt to insert the stack into the cable. We will use the default
 					// extraction speed.
-					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false, StaticPowerConfig.getTier(tier).cableExtractedItemInitialSpeed.get());
+					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false,
+							StaticPowerConfig.getTier(tier).cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < insertStack.getCount()) {
 						getTileEntity().markDirty();
 						stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());

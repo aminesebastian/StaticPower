@@ -1,0 +1,7 @@
+{
+	"parent": "staticpower:block/machines/automatic_placer",
+	"textures": {
+		"side": "staticpower:blocks/machines/automatic_placer/automatic_placer_side_on",
+		"face": "staticpower:blocks/machines/automatic_placer/automatic_placer_face_on"
+	}
+}

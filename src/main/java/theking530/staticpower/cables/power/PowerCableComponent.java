@@ -191,7 +191,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	protected Optional<PowerNetworkModule> getPowerNetworkModule() {
 		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 		ServerCable cable = manager.getCable(getTileEntity().getPos());
-		if (cable.getNetwork() != null) {
+		if (cable != null && cable.getNetwork() != null) {
 			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE));
 		}
 		return Optional.empty();

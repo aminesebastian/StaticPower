@@ -331,7 +331,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			// Make sure the block is empty.
 			if (block == Blocks.AIR) {
 				// Pick a random sapling from the input inventory.
-				int saplingSlot = InventoryUtilities.getRandomSlotWithItemFromInventory(inputInventory, 1, 8, 1, true);
+				int saplingSlot = InventoryUtilities.getRandomSlotWithItemFromInventory(inputInventory, 1, 8, 1);
 				// If no sapling was found, return early.
 				if (saplingSlot == -1) {
 					return false;
@@ -351,7 +351,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 					ActionResultType placementResult = sapling
 							.onItemUse(new ItemUseContext(player, Hand.MAIN_HAND, new BlockRayTraceResult(new Vector3d(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
 
-					if (placementResult.isSuccess()) {
+					if (placementResult.isSuccessOrConsume()) {
 						// Once planted, extract the sapling from the slot.
 						inputInventory.extractItem(saplingSlot, 1, false);
 						return true;

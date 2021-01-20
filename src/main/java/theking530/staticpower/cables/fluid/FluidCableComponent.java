@@ -200,8 +200,14 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				if (getWorld().isRemote) {
 					disabled = isSideDisabled(side);
 				} else {
+					// If the cable is not valid, just assume disabled. Could be that the cable is
+					// not yet initialized server side.
 					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
-					disabled = cable.isDisabledOnSide(side);
+					if (cable != null) {
+						disabled = cable.isDisabledOnSide(side);
+					} else {
+						disabled = true;
+					}
 				}
 			}
 

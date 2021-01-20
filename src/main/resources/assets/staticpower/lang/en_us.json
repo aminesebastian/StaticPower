@@ -518,6 +518,7 @@
 	"block.staticpower.machine_turbine": "Turbine",
 	"block.staticpower.machine_packager": "Packager",
 	"block.staticpower.direct_dropper": "Bull's Eye Dropper",
+	"block.staticpower.automatic_placer": "Automatic Placer",
 	"block.staticpower.experience_hopper": "Experience Hopper",
 	"block.staticpower.rusty_cauldron": "Rusty Cauldron",
 	"block.staticpower.clean_cauldron": "Cauldron 2.0",

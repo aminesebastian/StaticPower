@@ -1,7 +1,7 @@
 {
 	"parent": "staticpower:block/machines/direct_dropper",
 	"textures": {
-		"side": "staticpower:blocks/machines/direct_dropper_side_on",
-		"bottom": "staticpower:blocks/machines/direct_dropper_bottom_on"
+		"side": "staticpower:blocks/machines/direct_dropper/direct_dropper_side_on",
+		"bottom": "staticpower:blocks/machines/direct_dropper/direct_dropper_bottom_on"
 	}
 }

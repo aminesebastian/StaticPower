@@ -114,7 +114,7 @@ public class InventoryUtilities {
 		return inv.extractItem(targetSlot, amount, simulate);
 	}
 
-	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int startingSlot, int endingSlot, int amount, boolean simulate) {
+	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int startingSlot, int endingSlot, int amount) {
 		// Capture all the slots that have items in them.
 		List<Integer> valueSlots = new LinkedList<Integer>();
 		for (int i = startingSlot; i <= endingSlot; i++) {
@@ -136,8 +136,8 @@ public class InventoryUtilities {
 		return getRandomItemStackFromInventory(inv, 0, inv.getSlots() - 1, amount, simulate);
 	}
 
-	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int amount, boolean simulate) {
-		return getRandomSlotWithItemFromInventory(inv, 0, inv.getSlots() - 1, amount, simulate);
+	public static int getRandomSlotWithItemFromInventory(IItemHandler inv, int amount) {
+		return getRandomSlotWithItemFromInventory(inv, 0, inv.getSlots() - 1, amount);
 	}
 
 	public static boolean canFullyInsertAllItemsIntoInventory(IItemHandler inv, List<ItemStack> items) {
