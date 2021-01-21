@@ -9,24 +9,24 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.entities.ConveyorBeltEntity;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
 
 public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	private AxisAlignedBB entitySearchBounds;
-	@SaveSerialize
-	private double speed;
-	@SaveSerialize
+	private Vector3D velocity;
 	private double compensationRate;
+	private boolean affectEntitiesAbove;
 
-	public ConveyorMotionComponent(String name, double speed, double compensationRate) {
+	public ConveyorMotionComponent(String name, Vector3D velocity, double compensationRate) {
 		super(name);
 		this.compensationRate = compensationRate;
-		this.speed = speed;
+		this.velocity = velocity;
+		this.affectEntitiesAbove = true;
 	}
 
 	@Override
@@ -52,11 +52,29 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 			// coordinate
 			// on the block (0-3).
 			Vector3d directionVector = Vector3d.copy(facing.getDirectionVec());
-			Vector3d coordinate = determineEntityCoordinateOnBlock(entity, facing, directionVector);
+			Vector3d coordinate = determineEntityCoordinateOnBlock(entity, facing, 3, directionVector);
+
+			// Rotate the velocity towards the facing direction of the block (This should be
+			// cached!!!).
+			Vector3D rotatedVelocity = velocity.clone();
+			// If we're on the Z axis as forward instead of X, swap X and Z.
+			if (facing.getAxis() == Axis.Z) {
+				float tempX = rotatedVelocity.getX();
+				rotatedVelocity.setX(rotatedVelocity.getZ());
+				rotatedVelocity.setZ(tempX);
+			}
+
+			if (facing == Direction.SOUTH) {
+				rotatedVelocity.setZ(rotatedVelocity.getZ());
+			} else if (facing == Direction.NORTH) {
+				rotatedVelocity.setZ(-rotatedVelocity.getZ());
+			} else if (facing == Direction.WEST) {
+				rotatedVelocity.setZ(-rotatedVelocity.getZ());
+				rotatedVelocity.setX(-rotatedVelocity.getX());
+			}
 
 			// Move the entity.
-			moveEntity(entity, facing, directionVector.mul(speed, speed, speed), .2, coordinate);
-
+			moveEntity(entity, facing, rotatedVelocity, compensationRate, coordinate);
 			// If the entity is an item but NOT a conveyor item, convert it to a
 			// ConveyorBeltItem.
 			if (entity instanceof ItemEntity && !(entity instanceof ConveyorBeltEntity)) {
@@ -82,10 +100,16 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
+	public ConveyorMotionComponent setShouldAffectEntitiesAbove(boolean affectEntitiesAbove) {
+		this.affectEntitiesAbove = affectEntitiesAbove;
+		return this;
+	}
+
 	public boolean shouldEffectEntity(Entity entity) {
 		// Skip sneaking entities or entities are not considered to be ON this block
 		// (prevents two conveyors from fighting for an entity).
-		if (entity.isSneaking() || !entity.getPosition().offset(Direction.DOWN).equals(getPos())) {
+		BlockPos positionToCompare = affectEntitiesAbove ? getPos().offset(Direction.UP) : getPos();
+		if (entity.isSneaking() || !entity.getPosition().equals(positionToCompare)) {
 			return false;
 		}
 		return true;
@@ -93,7 +117,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	}
 
 	/**
-	 * Determines the entities coordinates in the grid like so:
+	 * Determines the entities coordinates in the grid like so. The following example is what would happen if the gridSize = 3.
 	 * // @formatter:off
 	 * 	       Block Front
 	 *  -------------------------
@@ -111,17 +135,19 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	 * 	       Block Back
 	 * // @formatter:on
 	 * 
-	 * The Y Axis will also increase from 0-2 with 0 being down and 2 being up.
+	 * The Y Axis will also increase from 0-gridSize with 0 being down and gridSize being up.
 	 * @param entity
 	 * @param conveyorFacing
 	 * @return
 	 */
-	protected Vector3d determineEntityCoordinateOnBlock(Entity entity, Direction conveyorFacing, Vector3d directionVector) {
+	protected Vector3d determineEntityCoordinateOnBlock(Entity entity, Direction conveyorFacing, int gridSize, Vector3d directionVector) {
 		// Get the entity's position.
 		Vector3D localizedEntityPosition = new Vector3D((float) entity.getPositionVec().getX(), (float) entity.getPositionVec().getY(), (float) entity.getPositionVec().getZ());
 
 		// Transform it to a relative offset from the position of the conveyor (0 - 1).
-		localizedEntityPosition = localizedEntityPosition.subtract(new Vector3D(getPos().getX(), getPos().getY() + 1, getPos().getZ()));
+		// Compensate for the y value being offset if entities are not inside the block
+		// space.
+		localizedEntityPosition = localizedEntityPosition.subtract(new Vector3D(getPos().getX(), getPos().getY() + (affectEntitiesAbove ? 1 : 0), getPos().getZ()));
 
 		// If we're on the Z axis as forward instead of X, swap X and Z.
 		if (conveyorFacing.getAxis() == Axis.Z) {
@@ -141,12 +167,12 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 			localizedEntityPosition.setX(1.0f - localizedEntityPosition.getX());
 		}
 
-		// Map it into the range (0 - 3)
-		localizedEntityPosition = localizedEntityPosition.multiply(3);
+		// Map it into the range (0 - gridSize)
+		localizedEntityPosition = localizedEntityPosition.multiply(gridSize);
 
 		// Create the output.
-		return new Vector3d(SDMath.clamp(Math.floor(localizedEntityPosition.getX()), 0, 2), SDMath.clamp(Math.floor(localizedEntityPosition.getY()), 0, 2),
-				SDMath.clamp(Math.floor(localizedEntityPosition.getZ()), 0, 2));
+		return new Vector3d(SDMath.clamp(Math.floor(localizedEntityPosition.getX()), 0, gridSize - 1), SDMath.clamp(Math.floor(localizedEntityPosition.getY()), 0, gridSize - 1),
+				SDMath.clamp(Math.floor(localizedEntityPosition.getZ()), 0, gridSize - 1));
 	}
 
 	/**
@@ -167,7 +193,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	 *                         from
 	 *                         {@link #determineEntityCoordinateOnBlock(Entity, Direction, Vector3d)}.
 	 */
-	protected void moveEntity(Entity entity, Direction conveyorForward, Vector3d newMotion, double compensationRate, Vector3d entityCoordinate) {
+	protected void moveEntity(Entity entity, Direction conveyorForward, Vector3D newMotion, double compensationRate, Vector3d entityCoordinate) {
 		// Calculate the X and Z compensation.
 		double compensationX = conveyorForward.getAxis() == Axis.X ? 0 : compensationRate;
 		double compensationZ = conveyorForward.getAxis() == Axis.Z ? 0 : compensationRate;

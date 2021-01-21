@@ -40,7 +40,9 @@ import theking530.staticpower.tileentities.digistorenetwork.patternstorage.Block
 import theking530.staticpower.tileentities.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.cauldron.BlockCauldron;
 import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
-import theking530.staticpower.tileentities.nonpowered.conveyors.BlockStraightConveyor;
+import theking530.staticpower.tileentities.nonpowered.conveyors.rampdown.BlockRampDownConveyor;
+import theking530.staticpower.tileentities.nonpowered.conveyors.rampup.BlockRampUpConveyor;
+import theking530.staticpower.tileentities.nonpowered.conveyors.straight.BlockStraightConveyor;
 import theking530.staticpower.tileentities.nonpowered.directdropper.BlockDirectDropper;
 import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
 import theking530.staticpower.tileentities.nonpowered.experiencehopper.BlockExperienceHopper;
@@ -211,6 +213,8 @@ public class ModBlocks {
 	public static BlockAutomaticPlacer AutomaticPlacer;
 
 	public static BlockStraightConveyor StraightConveyor;
+	public static BlockRampUpConveyor RampUpConveyor;
+	public static BlockRampDownConveyor RampDownConveyor;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -441,6 +445,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(AutomaticPlacer = new BlockAutomaticPlacer("automatic_placer"));
 
 		StaticPowerRegistry.preRegisterBlock(StraightConveyor = new BlockStraightConveyor("conveyor_straight"));
+		StaticPowerRegistry.preRegisterBlock(RampUpConveyor = new BlockRampUpConveyor("conveyor_ramp_up"));
+		StaticPowerRegistry.preRegisterBlock(RampDownConveyor = new BlockRampDownConveyor("conveyor_ramp_down"));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

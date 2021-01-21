@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.conveyors;
+package theking530.staticpower.tileentities.nonpowered.conveyors.straight;
 
 import java.util.List;
 

@@ -33,7 +33,7 @@ import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.tileentities.nonpowered.conveyors.BlockStraightConveyor;
+import theking530.staticpower.tileentities.nonpowered.conveyors.straight.BlockStraightConveyor;
 
 public class ConveyorBeltEntity extends ItemEntity {
 	public static final int CHANGE_BACK_TTL = 20;

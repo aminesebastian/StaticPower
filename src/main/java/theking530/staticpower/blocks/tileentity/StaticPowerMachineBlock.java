@@ -25,6 +25,11 @@ public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock
 		this.setDefaultState(stateContainer.getBaseState().with(IS_ON, false));
 	}
 
+	protected StaticPowerMachineBlock(String name, Properties properies) {
+		super(name, properies);
+		this.setDefaultState(stateContainer.getBaseState().with(IS_ON, false));
+	}
+
 	@Override
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
 		super.fillStateContainer(builder);
