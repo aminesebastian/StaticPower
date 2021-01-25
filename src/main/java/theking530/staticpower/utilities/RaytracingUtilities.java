@@ -6,7 +6,7 @@ import java.util.Collections;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
@@ -26,7 +26,7 @@ public class RaytracingUtilities {
 	 * @param fluidMode
 	 * @return
 	 */
-	public static BlockRayTraceResult findPlayerRayTrace(World worldIn, PlayerEntity player, RayTraceContext.FluidMode fluidMode) {
+	public static BlockRayTraceResult findPlayerRayTrace(World worldIn, LivingEntity player, RayTraceContext.FluidMode fluidMode) {
 		float f = player.rotationPitch;
 		float f1 = player.rotationYaw;
 		Vector3d vector3d = player.getEyePosition(1.0F);

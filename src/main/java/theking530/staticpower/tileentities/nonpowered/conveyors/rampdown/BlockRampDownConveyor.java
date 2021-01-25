@@ -31,10 +31,13 @@ public class BlockRampDownConveyor extends StaticPowerMachineBlock {
 
 	static {
 		{
-			int steps = 3;
-			float precision = 16.0f / steps;
+			float precision = 1.0f;
+			int steps = (int) (16.0f / precision);
 			ENTITY_SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 0, 16);
 			for (int i = 0; i < steps; i++) {
+				if (i == steps - 1) {
+					continue;
+				}
 				ENTITY_SHAPE = VoxelShapes.or(ENTITY_SHAPE, Block.makeCuboidShape(0, (i * precision), i * precision, 16, (i + 1) * precision, 16));
 			}
 		}
@@ -57,6 +60,7 @@ public class BlockRampDownConveyor extends StaticPowerMachineBlock {
 		return HasGuiType.NEVER;
 	}
 
+	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		if (context.getEntity() instanceof PlayerEntity) {
 			return INTERACTION_SHAPE;
@@ -64,6 +68,7 @@ public class BlockRampDownConveyor extends StaticPowerMachineBlock {
 		return ENTITY_SHAPE;
 	}
 
+	@Override
 	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return ENTITY_SHAPE;
 	}

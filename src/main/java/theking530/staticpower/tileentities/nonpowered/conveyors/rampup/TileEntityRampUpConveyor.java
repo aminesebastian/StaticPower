@@ -18,12 +18,13 @@ public class TileEntityRampUpConveyor extends TileEntityBase {
 
 	public TileEntityRampUpConveyor() {
 		super(TYPE);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, 0.1f, 0f), 0.2).setShouldAffectEntitiesAbove(false));
+		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.15f, 0.2f, 0f), 0.2));
 	}
 
 	@Override
 	public void onInitializedInWorld(World world, BlockPos pos) {
 		super.onInitializedInWorld(world, pos);
-		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() - 1.0, pos.getZ()-0.1, pos.getX() + 1, pos.getY() + 1.1, pos.getZ() + 1));
+		conveyor.setShouldAffectEntitiesAbove(false);
+		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ()-0.1, pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1));
 	}
 }

@@ -111,6 +111,7 @@ public class ConveyorBeltEntity extends ItemEntity {
 	@Override
 	public void onCollideWithPlayer(PlayerEntity entityIn) {
 		if (entityIn.isSneaking()) {
+			setPickupDelay(0); // Instant pickup.
 			super.onCollideWithPlayer(entityIn);
 		}
 	}

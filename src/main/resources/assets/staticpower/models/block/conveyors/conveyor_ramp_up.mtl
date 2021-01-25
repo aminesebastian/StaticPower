@@ -1,0 +1,4 @@
+newmtl lambert2SG
+map_Kd staticpower:blocks/conveyors/conveyor_top
+newmtl lambert4SG
+map_Kd staticpower:blocks/conveyors/conveyor_belt

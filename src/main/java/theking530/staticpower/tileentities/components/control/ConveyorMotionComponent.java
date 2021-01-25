@@ -26,7 +26,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		super(name);
 		this.compensationRate = compensationRate;
 		this.velocity = velocity;
-		this.affectEntitiesAbove = true;
+		this.affectEntitiesAbove = false;
 	}
 
 	@Override
@@ -203,9 +203,9 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		// If we're not in the 0 Z coordinat (middle channel), perform a compensation.
 		if (entityCoordinate.getZ() != 1) {
 			int delta = (int) (entityCoordinate.getZ() - 1);
-			entity.setMotion(compensationX * delta, 0, compensationZ * delta);
+			entity.setVelocity(compensationX * delta, 0, compensationZ * delta);
 		} else {
-			entity.setMotion(newMotion.getX(), newMotion.getY(), newMotion.getZ());
+			entity.setVelocity(newMotion.getX(), newMotion.getY(), newMotion.getZ());
 		}
 	}
 }
