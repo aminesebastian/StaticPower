@@ -1,11 +1,9 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors.straight;
 
-import javax.annotation.Nullable;
-
 import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.BlockPos;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
@@ -25,8 +23,8 @@ public class TileEntityStraightConveyor extends TileEntityBase {
 	}
 
 	@Override
-	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		super.onPlaced(state, placer, stack);
+	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+		super.updatePostPlacement(state, direction, facingState, FacingPos);
 
 		// If we're in the top state, look for entities slightly above the conveyor,
 		// otherwise check for entities in the same block as the conveyor.

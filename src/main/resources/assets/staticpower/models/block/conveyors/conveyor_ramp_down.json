@@ -1,3 +1,9 @@
 {
-	"parent": "staticpower:block/conveyors/conveyor_straight"
+  "parent": "forge:block/default",
+  "loader": "forge:obj",
+  "model": "staticpower:models/block/conveyors/conveyor_ramp_down.obj",
+  "flip-v": true,
+  "textures": {
+	"particle": "staticpower:blocks/conveyors/conveyor_top"
+  }
 }

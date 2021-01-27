@@ -32,24 +32,6 @@ public class BlockRampUpConveyor extends StaticPowerMachineBlock {
 	private static VoxelShape ENTITY_SHAPE;
 	private static VoxelShape INTERACTION_SHAPE;
 
-	static {
-		{
-			float precision = 4f;
-			int steps = (int) (16.0f / precision);
-			ENTITY_SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 0, 16);
-			for (int i = 0; i < steps; i++) {
-				ENTITY_SHAPE = VoxelShapes.or(ENTITY_SHAPE, Block.makeCuboidShape(0, i * precision, 0, 16, (i + 1) * precision, (steps - i) * precision));
-			}
-		}
-		{
-			float precision = 0.2f;
-			int steps = (int) (16.0f / precision);
-			INTERACTION_SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 0, 16);
-			for (int i = 0; i < steps; i++) {
-				INTERACTION_SHAPE = VoxelShapes.or(INTERACTION_SHAPE, Block.makeCuboidShape(0, ((i - 1) * precision), 0, 16, (i) * precision, (steps - i) * precision));
-			}
-		}
-	}
 
 	public BlockRampUpConveyor(String name) {
 		super(name, Properties.create(Material.IRON, MaterialColor.BLACK).notSolid());
@@ -64,43 +46,60 @@ public class BlockRampUpConveyor extends StaticPowerMachineBlock {
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
 		Direction facingDirection = state.get(StaticPowerTileEntityBlock.FACING);
 		if (context.getEntity() instanceof PlayerEntity) {
-			INTERACTION_SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 0, 0);
-
-			float yStart = 0;
-			float yEnd = 0;
-			float forwardStart = 0;
-			float forwardEnd = 0;
-
-			float precision = 0.5f;
-			float yStartOffset = -0.5f;
-			float yEndOffset = -0.05f;
-			float thickness = 3.5f;
-			float angle = 36.9f;
-			float angleOffset = (float) Math.tan(Math.toRadians(angle));
-			int steps = (int) (16.0f / precision);
-			for (int i = 0; i < steps; i++) {
-				yStart = i * angleOffset * precision - yStartOffset;
-				yEnd = (i + 1) * angleOffset * precision + thickness - yEndOffset;
-				forwardStart = (steps - i - 1) * precision;
-				forwardEnd = (steps - i) * precision;
-				if (facingDirection == Direction.NORTH) {
-					INTERACTION_SHAPE = VoxelShapes.combine(INTERACTION_SHAPE, Block.makeCuboidShape(0, yStart, forwardStart, 16, yEnd, forwardEnd), IBooleanFunction.OR);
-				} else if (facingDirection == Direction.EAST) {
-					INTERACTION_SHAPE = VoxelShapes.combine(INTERACTION_SHAPE, Block.makeCuboidShape(forwardStart, 16 - yStart, 0, forwardEnd, 16 - yEnd, 16), IBooleanFunction.OR);
-				} else if (facingDirection == Direction.WEST) {
-					INTERACTION_SHAPE = VoxelShapes.combine(INTERACTION_SHAPE, Block.makeCuboidShape(forwardStart, yStart, 0, forwardEnd, yEnd, 16), IBooleanFunction.OR);
-				} else if (facingDirection == Direction.SOUTH) {
-					INTERACTION_SHAPE = VoxelShapes.combine(INTERACTION_SHAPE, Block.makeCuboidShape(0, 16 - yStart, forwardStart, 16, 16 - yEnd, forwardEnd), IBooleanFunction.OR);
-				}
-			}
+			INTERACTION_SHAPE = generateSlantedBoundingBox(facingDirection, 4.0f, -3f, -0.05f, 1.0f, 36.9f, true);
 			return INTERACTION_SHAPE;
+		} else {
+			ENTITY_SHAPE = generateSlantedBoundingBox(facingDirection, 4.0f, -0.5f, -0.05f, 3.5f, 36.9f, true);
+			return ENTITY_SHAPE;
 		}
-		return ENTITY_SHAPE;
 	}
 
 	@Override
 	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
 		return ENTITY_SHAPE;
+	}
+
+	public static VoxelShape generateSlantedBoundingBox(Direction facingDirection, float precision, float yStartOffset, float yEndOffset, float thickness, float angle, boolean upwards) {
+		// Create an empty bounding box initially.
+		VoxelShape output = Block.makeCuboidShape(0, 0, 0, 0, 0, 0);
+
+		// Define helper variables.
+		float yStart = 0;
+		float yEnd = 0;
+		float forwardStart = 0;
+		float forwardEnd = 0;
+		float angleOffset = (float) Math.tan(Math.toRadians(angle));
+
+		// Calculate the amount of steps, and building the bounding box.
+		int steps = (int) (16.0f / precision);
+		for (int i = 0; i < steps; i++) {
+			// Calculate the y positions.
+			yStart = i * angleOffset * precision - yStartOffset;
+			yEnd = (i + 1) * angleOffset * precision + thickness - yEndOffset;
+
+			// Calculate the x & z positions.
+			if (upwards) {
+				forwardStart = (steps - i - 1) * precision;
+				forwardEnd = (steps - i) * precision;
+			} else {
+				forwardStart = (i - 1) * precision;
+				forwardEnd = i * precision;
+			}
+
+			// Build the bounds.
+			if (facingDirection == Direction.NORTH) {
+				output = VoxelShapes.combine(output, Block.makeCuboidShape(0, yStart, forwardStart, 16, yEnd, forwardEnd), IBooleanFunction.OR);
+			} else if (facingDirection == Direction.EAST) {
+				output = VoxelShapes.combine(output, Block.makeCuboidShape(forwardStart, 16 - yStart, 0, forwardEnd, 16 - yEnd, 16), IBooleanFunction.OR);
+			} else if (facingDirection == Direction.WEST) {
+				output = VoxelShapes.combine(output, Block.makeCuboidShape(forwardStart, yStart, 0, forwardEnd, yEnd, 16), IBooleanFunction.OR);
+			} else if (facingDirection == Direction.SOUTH) {
+				output = VoxelShapes.combine(output, Block.makeCuboidShape(0, 16 - yStart, forwardStart, 16, 16 - yEnd, forwardEnd), IBooleanFunction.OR);
+			}
+		}
+
+		// Return the output
+		return output;
 	}
 
 	@Override
