@@ -55,7 +55,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 
 	@Override
 	public void onBlockPlacedBy(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+		setFacingBlockStateOnPlacement(world, pos, state, placer, stack);
 		super.onBlockPlacedBy(world, pos, state, placer, stack);
 
 		if (world.getTileEntity(pos) != null) {
@@ -64,6 +64,20 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 				IBreakSerializeable.deserializeToTileEntity(world, pos, state, placer, stack);
 			}
 		}
+	}
+
+	/**
+	 * This method can be overriden to determine a different facing direction when
+	 * the block is first placed.
+	 * 
+	 * @param world
+	 * @param pos
+	 * @param state
+	 * @param placer
+	 * @param stack
+	 */
+	protected void setFacingBlockStateOnPlacement(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
 	}
 
 	@Override

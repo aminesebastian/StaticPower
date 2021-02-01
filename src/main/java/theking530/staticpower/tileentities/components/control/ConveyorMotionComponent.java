@@ -9,7 +9,6 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Direction.Axis;
 import net.minecraft.util.Direction.AxisDirection;
 import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.vector.Vector3d;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
@@ -108,8 +107,12 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	public boolean shouldEffectEntity(Entity entity) {
 		// Skip sneaking entities or entities are not considered to be ON this block
 		// (prevents two conveyors from fighting for an entity).
-		BlockPos positionToCompare = affectEntitiesAbove ? getPos().offset(Direction.UP) : getPos();
-		if (entity.isSneaking() || !entity.getPosition().equals(positionToCompare)) {
+//		BlockPos positionToCompare = affectEntitiesAbove ? getPos().offset(Direction.UP) : getPos();
+//		if (!entity.getPosition().equals(positionToCompare)) {
+//			return false;
+//		}
+
+		if (entity.isSneaking()) {
 			return false;
 		}
 		return true;

@@ -33,7 +33,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	}
 
 	@Override
-	protected void postInit() {
+	protected void postInit(World world, BlockPos pos, BlockState state) {
 		// Get all inventories for this tile entitiy.
 		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
 

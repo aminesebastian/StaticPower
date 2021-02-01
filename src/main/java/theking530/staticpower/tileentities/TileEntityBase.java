@@ -110,7 +110,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void tick() {
 		if (!hasPostInitRun) {
 			hasPostInitRun = true;
-			postInit();
+			postInit(world, pos, world.getBlockState(pos));
 		}
 		// Pre process all the components.
 		preProcessUpdateComponents();
@@ -131,7 +131,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		postProcessUpdateComponents();
 	}
 
-	protected void postInit() {
+	protected void postInit(World world, BlockPos pos, BlockState state) {
 
 	}
 

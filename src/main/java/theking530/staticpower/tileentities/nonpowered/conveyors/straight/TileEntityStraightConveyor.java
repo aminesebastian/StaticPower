@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors.straight;
 
 import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
@@ -23,17 +23,9 @@ public class TileEntityStraightConveyor extends TileEntityBase {
 	}
 
 	@Override
-	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
-		super.updatePostPlacement(state, direction, facingState, FacingPos);
-
-		// If we're in the top state, look for entities slightly above the conveyor,
-		// otherwise check for entities in the same block as the conveyor.
-		if (state.get(BlockStraightConveyor.IS_TOP)) {
-			conveyor.setShouldAffectEntitiesAbove(true);
-			conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 1.35, pos.getZ() + 1));
-		} else {
-			conveyor.setShouldAffectEntitiesAbove(false);
-			conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 0.35, pos.getZ() + 1));
-		}
+	protected void postInit(World world, BlockPos pos, BlockState state) {
+		super.postInit(world, pos, state);
+		conveyor.setShouldAffectEntitiesAbove(false);
+		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.0, pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1));
 	}
 }

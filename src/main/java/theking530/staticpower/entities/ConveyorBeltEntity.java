@@ -7,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.network.play.IClientPlayNetHandler;
 import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityClassification;
@@ -33,7 +32,7 @@ import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.tileentities.nonpowered.conveyors.straight.BlockStraightConveyor;
+import theking530.staticpower.tileentities.nonpowered.conveyors.IConveyorBlock;
 
 public class ConveyorBeltEntity extends ItemEntity {
 	public static final int CHANGE_BACK_TTL = 20;
@@ -77,8 +76,9 @@ public class ConveyorBeltEntity extends ItemEntity {
 		}
 
 		// Get the current blockstate and check if it is a cauldron.
-		BlockState currentBlockState = getEntityWorld().getBlockState(getPosition().offset(Direction.DOWN));
-		if (currentBlockState.getBlock() instanceof BlockStraightConveyor) {
+		BlockState downBlockState = getEntityWorld().getBlockState(getPosition().offset(Direction.DOWN));
+		BlockState currentBlockState = getEntityWorld().getBlockState(getPosition());
+		if (currentBlockState.getBlock() instanceof IConveyorBlock || downBlockState.getBlock() instanceof IConveyorBlock) {
 			timeNotOnConveyor = 0;
 		} else {
 			timeNotOnConveyor++;
@@ -152,7 +152,7 @@ public class ConveyorBeltEntity extends ItemEntity {
 		@OnlyIn(Dist.CLIENT)
 		public void registerRenderers(FMLClientSetupEvent event) {
 			RenderingRegistry.registerEntityRenderingHandler(ModEntities.ConveyorBeltEntity.getType(), (EntityRendererManager manager) -> {
-				return new ItemRenderer(manager, Minecraft.getInstance().getItemRenderer());
+				return new ConveyorBeltEntityRenderer(manager, Minecraft.getInstance().getItemRenderer());
 			});
 		}
 	}

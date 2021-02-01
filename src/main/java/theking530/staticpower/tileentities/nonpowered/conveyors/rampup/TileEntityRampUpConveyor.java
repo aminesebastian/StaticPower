@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors.rampup;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -18,13 +19,12 @@ public class TileEntityRampUpConveyor extends TileEntityBase {
 
 	public TileEntityRampUpConveyor() {
 		super(TYPE);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.15f, 0.2f, 0f), 0.2));
+		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.15f, 0.1f, 0f), 0.2).setShouldAffectEntitiesAbove(false));
 	}
 
 	@Override
-	public void onInitializedInWorld(World world, BlockPos pos) {
-		super.onInitializedInWorld(world, pos);
-		conveyor.setShouldAffectEntitiesAbove(false);
-		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ()-0.1, pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1));
+	protected void postInit(World world, BlockPos pos, BlockState state) {
+		super.postInit(world, pos, state);
+		conveyor.setBounds(new AxisAlignedBB(pos.getX() - 0.01, pos.getY(), pos.getZ() - 0.01, pos.getX() + 1.01, pos.getY() + 1, pos.getZ() + 1.01));
 	}
 }
