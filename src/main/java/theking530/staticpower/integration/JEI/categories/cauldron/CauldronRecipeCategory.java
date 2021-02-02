@@ -113,7 +113,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		float scale = 1.6f;
 		{
 			blockStack.push();
-			blockStack.translate(1.95, -1.7, 1.0f);
+			blockStack.translate(-4.5, -0.55f, 1.0f);
 			blockStack.scale(scale, scale, 16);
 			blockStack.rotate(new Quaternion(32, 45, 0, true));
 

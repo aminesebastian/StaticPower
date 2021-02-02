@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.nonpowered.conveyors.importer;
+package theking530.staticpower.tileentities.nonpowered.conveyors.supplier;
 
 import java.util.List;
 
@@ -22,30 +22,30 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 
-public class TileEntityConveyorImporter extends TileEntityConfigurable {
+public class TileEntityConveyorSupplier extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityConveyorImporter> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityConveyorImporter(), ModBlocks.ConveyorImporter);
+	public static final TileEntityTypeAllocator<TileEntityConveyorSupplier> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityConveyorSupplier(), ModBlocks.ConveyorSupplier);
 
 	public final InventoryComponent internalInventory;
 	protected final ConveyorMotionComponent conveyor;
 	protected AxisAlignedBB importBox;
 
-	public TileEntityConveyorImporter() {
+	public TileEntityConveyorSupplier() {
 		super(TYPE);
-		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, 0f, 0f), 0.2).setShouldAffectEntitiesAbove(false));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output).setCapabilityExtractEnabled(true).setCapabilityInsertEnabled(false));
-		registerComponent(new OutputServoComponent("OutputServo", 1, internalInventory));
+		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f), 0.3).setShouldAffectEntitiesAbove(false));
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output) {
+			public int getSlotLimit(int slot) {
+				return 64;
+			}
+		}.setCapabilityExtractEnabled(true).setCapabilityInsertEnabled(false));
+		registerComponent(new OutputServoComponent("OutputServo", 0, internalInventory));
+		enableFaceInteraction();
 	}
 
 	@Override
 	public void process() {
 		// Do nothing on the client.
 		if (world.isRemote) {
-			return;
-		}
-
-		// Do nothing if the internal inventory is not empty.
-		if (!internalInventory.getStackInSlot(0).isEmpty()) {
 			return;
 		}
 
@@ -91,15 +91,19 @@ public class TileEntityConveyorImporter extends TileEntityConfigurable {
 			conveyor.setBounds(new AxisAlignedBB(pos.getX() + inverseConveyorLength, pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + 1));
 		}
 
-		// Make sure the back is output only.
+		// Make sure the front is output only.
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, facing), MachineSideMode.Output);
 	}
 
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Output;
+		if (side == BlockSide.FRONT) {
+			return mode == MachineSideMode.Output;
+		} else {
+			return mode == MachineSideMode.Never;
+		}
 	}
 
 	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
+		return new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
 	}
 }

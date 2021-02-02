@@ -19,13 +19,13 @@ public class TileEntityStraightConveyor extends TileEntityBase {
 
 	public TileEntityStraightConveyor() {
 		super(TYPE);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, 0f, 0f), 0.2));
+		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f), 0.3));
 	}
 
 	@Override
 	protected void postInit(World world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
 		conveyor.setShouldAffectEntitiesAbove(false);
-		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.0, pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1));
+		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 	}
 }

@@ -40,10 +40,11 @@ import theking530.staticpower.tileentities.digistorenetwork.patternstorage.Block
 import theking530.staticpower.tileentities.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.cauldron.BlockCauldron;
 import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
-import theking530.staticpower.tileentities.nonpowered.conveyors.importer.BlockConveyorImporter;
+import theking530.staticpower.tileentities.nonpowered.conveyors.extractor.BlockConveyorExtractor;
 import theking530.staticpower.tileentities.nonpowered.conveyors.rampdown.BlockRampDownConveyor;
 import theking530.staticpower.tileentities.nonpowered.conveyors.rampup.BlockRampUpConveyor;
 import theking530.staticpower.tileentities.nonpowered.conveyors.straight.BlockStraightConveyor;
+import theking530.staticpower.tileentities.nonpowered.conveyors.supplier.BlockConveyorSupplier;
 import theking530.staticpower.tileentities.nonpowered.directdropper.BlockDirectDropper;
 import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator;
 import theking530.staticpower.tileentities.nonpowered.experiencehopper.BlockExperienceHopper;
@@ -216,7 +217,8 @@ public class ModBlocks {
 	public static BlockStraightConveyor StraightConveyor;
 	public static BlockRampUpConveyor RampUpConveyor;
 	public static BlockRampDownConveyor RampDownConveyor;
-	public static BlockConveyorImporter ConveyorImporter;
+	public static BlockConveyorSupplier ConveyorSupplier;
+	public static BlockConveyorExtractor ConveyorExtractor;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -449,8 +451,9 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(StraightConveyor = new BlockStraightConveyor("conveyor_straight"));
 		StaticPowerRegistry.preRegisterBlock(RampUpConveyor = new BlockRampUpConveyor("conveyor_ramp_up"));
 		StaticPowerRegistry.preRegisterBlock(RampDownConveyor = new BlockRampDownConveyor("conveyor_ramp_down"));
-		StaticPowerRegistry.preRegisterBlock(ConveyorImporter = new BlockConveyorImporter("conveyor_importer"));
-		
+		StaticPowerRegistry.preRegisterBlock(ConveyorSupplier = new BlockConveyorSupplier("conveyor_supplier"));
+		StaticPowerRegistry.preRegisterBlock(ConveyorExtractor = new BlockConveyorExtractor("conveyor_extractor"));
+
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));
 		StaticPowerRegistry.preRegisterBlock(TinHeatSink = new BlockHeatSink("heat_sink_tin", StaticPowerTiers.TIN));

@@ -40,7 +40,12 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		IBakedModel ibakedmodel = this.itemRenderer.getItemModelWithOverrides(itemstack, entityIn.world, (LivingEntity) null);
 		boolean flag = ibakedmodel.isGui3d();
 		int j = this.getModelCount(itemstack);
-		matrixStackIn.translate(0.0, -0.05, 0.0);
+		if(ibakedmodel.isGui3d()) {
+			matrixStackIn.translate(0.0, -0.01, 0.0);
+		}else {
+			matrixStackIn.translate(0.0, 0.1, 0.0);
+		}
+
 		float f3 = entityIn.getItemHover(partialTicks);
 		matrixStackIn.rotate(Vector3f.YP.rotation(f3));
 		if (!flag) {
