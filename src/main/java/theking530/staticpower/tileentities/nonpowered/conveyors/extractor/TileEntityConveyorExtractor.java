@@ -29,13 +29,13 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 
 	public TileEntityConveyorExtractor() {
 		super(TYPE);
-		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(-0.075f, 0f, 0f), 0.3).setShouldAffectEntitiesAbove(false));
+		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(-0.075f, 0f, 0f)).setShouldAffectEntitiesAbove(false));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Input) {
 			public int getSlotLimit(int slot) {
 				return 1;
 			}
 		}.setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(true));
-		registerComponent(new InputServoComponent("InputServo", 10, internalInventory));
+		registerComponent(new InputServoComponent("InputServo", 20, internalInventory));
 		enableFaceInteraction();
 	}
 
@@ -54,8 +54,13 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 		// Extract the stored item.
 		ItemStack extracted = internalInventory.extractItem(0, 1, false);
 
+		// Get the facing direction.
+		Direction facing = getFacingDirection();
+		Vector3D offset = new Vector3D(facing);
+		offset.multiply(0.3f);
+		
 		// Create the entity and spawn it.
-		ConveyorBeltEntity newEntity = new ConveyorBeltEntity(world, getPos().getX() + 0.5f, getPos().getY() + 0.6f, getPos().getZ() + 0.5f, extracted);
+		ConveyorBeltEntity newEntity = new ConveyorBeltEntity(world, getPos().getX() + 0.5f + offset.getX(), getPos().getY() + 0.5f, getPos().getZ() + 0.5f + offset.getZ(), extracted);
 		newEntity.setMotion(0, 0, 0);
 		world.addEntity(newEntity);
 	}

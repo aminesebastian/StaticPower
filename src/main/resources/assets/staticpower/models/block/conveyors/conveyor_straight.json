@@ -18,7 +18,7 @@
 				"east": {"uv": [16, 0, 0, 4], "texture": "#belt_sides"},
 				"south": {"uv": [0, 12, 16, 16], "texture": "#belt_sides"},
 				"west": {"uv": [0, 0, 16, 4], "texture": "#belt_sides"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#belt_top"},
+				"up": {"uv": [0, 16, 16, 0], "texture": "#belt_top"},
 				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#belt_top"}
 			}
 		},

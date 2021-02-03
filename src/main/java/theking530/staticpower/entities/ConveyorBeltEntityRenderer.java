@@ -1,6 +1,7 @@
 package theking530.staticpower.entities;
 
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -16,6 +17,7 @@ import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -24,12 +26,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 	private final net.minecraft.client.renderer.ItemRenderer itemRenderer;
 	private final Random random = new Random();
+	/**
+	 * This value is used to offset the y position of conveyor entities every so
+	 * slightly, such that two items that intersect eachother won't z fight (or y
+	 * fight I guess in this case lol).
+	 */
+	private final float randomYOffset;
 
 	public ConveyorBeltEntityRenderer(EntityRendererManager renderManagerIn, net.minecraft.client.renderer.ItemRenderer itemRendererIn) {
 		super(renderManagerIn);
 		this.itemRenderer = itemRendererIn;
 		this.shadowSize = 0.15F;
 		this.shadowOpaque = 0.75F;
+		this.randomYOffset = ThreadLocalRandom.current().nextFloat() * 0.01f;
 	}
 
 	public void render(ItemEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
@@ -40,10 +49,17 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		IBakedModel ibakedmodel = this.itemRenderer.getItemModelWithOverrides(itemstack, entityIn.world, (LivingEntity) null);
 		boolean flag = ibakedmodel.isGui3d();
 		int j = this.getModelCount(itemstack);
-		if(ibakedmodel.isGui3d()) {
+
+		// Add a random y offset to deal with stacked items.
+		matrixStackIn.translate(0, randomYOffset, 0);
+
+		if (ibakedmodel.isGui3d()) {
+			matrixStackIn.scale(1.25f, 1.25f, 1.25f);
 			matrixStackIn.translate(0.0, -0.01, 0.0);
-		}else {
-			matrixStackIn.translate(0.0, 0.1, 0.0);
+		} else {
+			matrixStackIn.translate(0.0, ((5-j) * 0.02) - 0.06, -0.1);
+			matrixStackIn.scale(1f, 1.1f, 1f);
+			matrixStackIn.rotate(new Quaternion(90, 0, 0, true));
 		}
 
 		float f3 = entityIn.getItemHover(partialTicks);
@@ -73,7 +89,7 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 			this.itemRenderer.renderItem(itemstack, ItemCameraTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ibakedmodel);
 			matrixStackIn.pop();
 			if (!flag) {
-				matrixStackIn.translate(0.0, 0.0, 0.09375F);
+				matrixStackIn.translate(0.0, 0.0, 0.03F);
 			}
 		}
 

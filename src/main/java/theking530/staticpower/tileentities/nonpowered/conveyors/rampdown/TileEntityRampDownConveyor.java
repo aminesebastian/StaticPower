@@ -19,7 +19,7 @@ public class TileEntityRampDownConveyor extends TileEntityBase {
 
 	public TileEntityRampDownConveyor() {
 		super(TYPE);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, 0.0f, 0f), 0.2));
+		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, 0.0f, 0f)));
 	}
 
 	@Override

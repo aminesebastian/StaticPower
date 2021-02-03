@@ -23,8 +23,8 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	private double minDistanceFromCenter;
 	private double maxDistanceFromCenter;
 
-	public ConveyorMotionComponent(String name, Vector3D velocity, double compensationRate) {
-		this(name, 0.01f, velocity, compensationRate);
+	public ConveyorMotionComponent(String name, Vector3D velocity) {
+		this(name, 0.05f, velocity, 0.225);
 	}
 
 	public ConveyorMotionComponent(String name, double centerChannelWidth, Vector3D velocity, double compensationRate) {

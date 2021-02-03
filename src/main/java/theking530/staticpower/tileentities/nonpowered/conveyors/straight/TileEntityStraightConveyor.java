@@ -19,7 +19,7 @@ public class TileEntityStraightConveyor extends TileEntityBase {
 
 	public TileEntityStraightConveyor() {
 		super(TYPE);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f), 0.3));
+		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f)));
 	}
 
 	@Override

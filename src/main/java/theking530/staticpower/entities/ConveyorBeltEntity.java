@@ -61,14 +61,7 @@ public class ConveyorBeltEntity extends ItemEntity {
 
 	@Override
 	public void tick() {
-		// We have to do this trick to prevent these entities from combining together
-		// since all the methods for handling this are private. We set the stack size to
-		// make so it cannot be combined, then we set it back to the original after the
-		// super call.
-		int originalStackSize = getItem().getCount();
-		getItem().setCount(getItem().getMaxStackSize());
 		super.tick();
-		getItem().setCount(originalStackSize);
 
 		// Only perfrom the following on the server.
 		if (getEntityWorld().isRemote) {

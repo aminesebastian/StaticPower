@@ -1,9 +1,9 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
-		"particle": "staticpower:blocks/conveyors/conveyor_top",
 		"belt_top": "staticpower:blocks/conveyors/conveyor_top",
 		"belt_sides": "staticpower:blocks/conveyors/conveyor_belt",
+		"particle": "staticpower:blocks/machines/sides/basic_machine_side",
 		"side_with_bolts": "staticpower:blocks/machines/sides/basic_machine_side",
 		"side": "staticpower:blocks/machines/sides/basic_machine_front",
 		"bottom": "staticpower:blocks/machines/sides/basic_machine_top",
@@ -13,15 +13,15 @@
 	"elements": [
 		{
 			"name": "Conveyor",
-			"from": [0, 4, 4],
+			"from": [0, 4, 8],
 			"to": [16, 8, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 12]},
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 12, 16]},
 			"faces": {
 				"north": {"uv": [0, 12, 16, 16], "texture": "#belt_sides"},
-				"east": {"uv": [16, 0, 4, 4], "texture": "#belt_sides"},
+				"east": {"uv": [16, 0, 8, 4], "texture": "#belt_sides"},
 				"south": {"uv": [0, 12, 16, 16], "texture": "#belt_sides"},
-				"west": {"uv": [4, 0, 16, 4], "texture": "#belt_sides"},
-				"up": {"uv": [0, 4, 16, 16], "texture": "#belt_top"},
+				"west": {"uv": [8, 0, 16, 4], "texture": "#belt_sides"},
+				"up": {"uv": [0, 8, 16, 0], "texture": "#belt_top"},
 				"down": {"uv": [0, 0, 16, 16], "rotation": 180, "texture": "#belt_top"}
 			}
 		},
@@ -39,28 +39,42 @@
 			}
 		},
 		{
-			"name": "TunnelTop",
-			"from": [0, 12, 0],
+			"name": "TunnelTop1",
+			"from": [0, 14, 0],
 			"to": [16, 16, 4],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 16, 8]},
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 18, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 4], "texture": "#side_with_bolts"},
-				"east": {"uv": [12, 0, 16, 4], "texture": "#side"},
-				"south": {"uv": [0, 0, 16, 4], "texture": "#side_with_bolts"},
-				"west": {"uv": [0, 0, 4, 4], "texture": "#side"},
-				"up": {"uv": [0, 6, 16, 10], "texture": "#bottom"},
-				"down": {"uv": [0, 0, 16, 4], "texture": "#side_with_bolts"}
+				"north": {"uv": [0, 0, 16, 2], "texture": "#side_with_bolts"},
+				"east": {"uv": [12, 0, 16, 2], "texture": "#side"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#side_with_bolts"},
+				"west": {"uv": [0, 0, 4, 2], "texture": "#side"},
+				"up": {"uv": [0, 0, 16, 4], "texture": "#bottom"},
+				"down": {"uv": [0, 8, 16, 12], "texture": "#side_with_bolts"}
+			}
+		},
+		{
+			"name": "TunnelTop2",
+			"from": [0, 14, 4],
+			"to": [16, 16, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 18, 12]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#side_with_bolts"},
+				"east": {"uv": [0, 0, 4, 2], "texture": "#side_with_bolts"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#side_with_bolts"},
+				"west": {"uv": [12, 0, 16, 2], "texture": "#side_with_bolts"},
+				"up": {"uv": [0, 4, 16, 0], "texture": "#side"},
+				"down": {"uv": [0, 8, 16, 12], "texture": "#side_with_bolts"}
 			}
 		},
 		{
 			"name": "TunnelBack",
-			"from": [4, 4, 0],
-			"to": [12, 12, 1],
-			"rotation": {"angle": 0, "axis": "y", "origin": [12, 6, 8]},
+			"from": [2, 4, 0],
+			"to": [14, 14, 1],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10, 6, 8]},
 			"faces": {
-				"north": {"uv": [4, 4, 12, 12], "texture": "#side_with_bolts"},
+				"north": {"uv": [2, 2, 14, 12], "texture": "#side_with_bolts"},
 				"east": {"uv": [0, 0, 1, 8], "texture": "#missing"},
-				"south": {"uv": [4, 8, 12, 16], "texture": "#side"},
+				"south": {"uv": [2, 8, 14, 14], "texture": "#side"},
 				"west": {"uv": [0, 0, 1, 8], "texture": "#missing"},
 				"up": {"uv": [0, 0, 8, 1], "texture": "#missing"},
 				"down": {"uv": [0, 0, 8, 1], "texture": "#missing"}
@@ -68,43 +82,71 @@
 		},
 		{
 			"name": "TunnelLeft",
-			"from": [12, 4, 0],
-			"to": [16, 12, 4],
-			"rotation": {"angle": 0, "axis": "y", "origin": [20, 6, 8]},
+			"from": [14, 4, 0],
+			"to": [16, 14, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [22, 6, 8]},
 			"faces": {
-				"north": {"uv": [0, 4, 4, 12], "texture": "#side_with_bolts"},
+				"north": {"uv": [0, 3, 2, 13], "texture": "#side_with_bolts"},
 				"east": {"uv": [12, 4, 16, 12], "texture": "#side"},
-				"south": {"uv": [12, 4, 16, 12], "texture": "#side_with_bolts"},
-				"west": {"uv": [12, 8, 16, 16], "texture": "#side_with_bolts"},
+				"south": {"uv": [14, 3, 16, 13], "texture": "#side_with_bolts"},
+				"west": {"uv": [14, 3, 16, 13], "texture": "#side_with_bolts"},
 				"up": {"uv": [0, 0, 4, 4], "texture": "#missing"},
 				"down": {"uv": [0, 0, 4, 4], "texture": "#missing"}
 			}
 		},
 		{
+			"name": "TunnelLeft2",
+			"from": [14, 4, 4],
+			"to": [16, 14, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [22, 6, 12]},
+			"faces": {
+				"north": {"uv": [0, 3, 2, 13], "texture": "#side"},
+				"east": {"uv": [0, 3, 4, 13], "texture": "#side"},
+				"south": {"uv": [14, 3, 16, 13], "texture": "#side"},
+				"west": {"uv": [0, 3, 2, 13], "texture": "#side"},
+				"up": {"uv": [0, 0, 4, 4], "texture": "#side"},
+				"down": {"uv": [0, 0, 4, 4], "texture": "#side"}
+			}
+		},
+		{
 			"name": "TunnelRight",
 			"from": [0, 4, 0],
-			"to": [4, 12, 4],
+			"to": [2, 14, 4],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 8]},
 			"faces": {
-				"north": {"uv": [12, 4, 16, 12], "texture": "#side_with_bolts"},
-				"east": {"uv": [0, 8, 4, 16], "texture": "#side_with_bolts"},
-				"south": {"uv": [0, 4, 4, 12], "texture": "#side_with_bolts"},
+				"north": {"uv": [14, 3, 16, 13], "texture": "#side_with_bolts"},
+				"east": {"uv": [0, 3, 2, 13], "texture": "#side_with_bolts"},
+				"south": {"uv": [0, 3, 2, 13], "texture": "#side_with_bolts"},
 				"west": {"uv": [0, 4, 4, 12], "texture": "#side"},
 				"up": {"uv": [0, 0, 4, 4], "texture": "#missing"},
 				"down": {"uv": [0, 0, 4, 4], "texture": "#missing"}
 			}
 		},
 		{
+			"name": "TunnelRight2",
+			"from": [0, 4, 4],
+			"to": [2, 14, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 6, 12]},
+			"faces": {
+				"north": {"uv": [14, 3, 16, 13], "texture": "#side_with_bolts"},
+				"east": {"uv": [14, 3, 16, 13], "texture": "#side_with_bolts"},
+				"south": {"uv": [0, 3, 2, 13], "texture": "#side_with_bolts"},
+				"west": {"uv": [12, 3, 16, 13], "texture": "#side"},
+				"up": {"uv": [0, 0, 4, 4], "texture": "#missing"},
+				"down": {"uv": [0, 0, 4, 4], "texture": "#missing"}
+			}
+		},
+		{
 			"name": "TunnelInside",
-			"from": [4, 4, 1],
-			"to": [12, 8, 4],
-			"rotation": {"angle": 0, "axis": "y", "origin": [12, 6, 9]},
+			"from": [2, 4, 1],
+			"to": [14, 8, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [10, 6, 9]},
 			"faces": {
 				"north": {"uv": [0, 0, 8, 4], "texture": "#missing"},
 				"east": {"uv": [0, 0, 4, 4], "texture": "#missing"},
 				"south": {"uv": [0, 0, 8, 4], "texture": "#missing"},
 				"west": {"uv": [0, 0, 4, 4], "texture": "#missing"},
-				"up": {"uv": [4, 0, 12, 3], "texture": "#belt_top"},
+				"up": {"uv": [2, 15, 14, 8], "texture": "#belt_top"},
 				"down": {"uv": [0, 0, 8, 4], "texture": "#missing"}
 			}
 		},
@@ -147,13 +189,13 @@
 			"scale": [0.375, 0.375, 0.375]
 		},
 		"firstperson_righthand": {
-			"rotation": [0, 174, 0],
-			"translation": [1.5, 3.25, 1.5],
+			"rotation": [0, 175, 0],
+			"translation": [1, 3.75, 1.5],
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"firstperson_lefthand": {
-			"rotation": [0, 174, 0],
-			"translation": [1.5, 3.25, 1.5],
+			"rotation": [0, 175, 0],
+			"translation": [1, 3.75, 1.5],
 			"scale": [0.4, 0.4, 0.4]
 		},
 		"ground": {

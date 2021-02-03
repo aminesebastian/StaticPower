@@ -28,31 +28,31 @@ public class BlockConveyorExtractor extends AbstractConveyorBlock {
 
 	@Override
 	public void cacheVoxelShapes() {
-		VoxelShape east = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(12, 12, 0, 16, 16, 16), IBooleanFunction.OR);
+		VoxelShape east = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(8, 14, 0, 16, 16, 16), IBooleanFunction.OR);
 		east = VoxelShapes.combine(east, Block.makeCuboidShape(15, 0, 0, 16, 16, 16), IBooleanFunction.OR);
-		east = VoxelShapes.combine(east, Block.makeCuboidShape(12, 0, 12, 16, 16, 16), IBooleanFunction.OR);
-		east = VoxelShapes.combine(east, Block.makeCuboidShape(12, 0, 0, 16, 16, 4), IBooleanFunction.OR);
+		east = VoxelShapes.combine(east, Block.makeCuboidShape(8, 0, 14, 16, 16, 16), IBooleanFunction.OR);
+		east = VoxelShapes.combine(east, Block.makeCuboidShape(8, 0, 0, 16, 16, 2), IBooleanFunction.OR);
 		ENTITY_SHAPES.put(Direction.EAST, east);
 		INTERACTION_SHAPES.put(Direction.EAST, east);
 
-		VoxelShape west = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 12, 0, 4, 16, 16), IBooleanFunction.OR);
+		VoxelShape west = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 14, 0, 8, 16, 16), IBooleanFunction.OR);
 		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 0, 1, 16, 16), IBooleanFunction.OR);
-		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 12, 4, 16, 16), IBooleanFunction.OR);
-		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 0, 4, 16, 4), IBooleanFunction.OR);
+		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 14, 8, 16, 16), IBooleanFunction.OR);
+		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 0, 8, 16, 2), IBooleanFunction.OR);
 		ENTITY_SHAPES.put(Direction.WEST, west);
 		INTERACTION_SHAPES.put(Direction.WEST, west);
 
-		VoxelShape south = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 12, 12, 16, 16, 16), IBooleanFunction.OR);
+		VoxelShape south = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 14, 8, 16, 16, 16), IBooleanFunction.OR);
 		south = VoxelShapes.combine(south, Block.makeCuboidShape(0, 0, 15, 16, 16, 16), IBooleanFunction.OR);
-		south = VoxelShapes.combine(south, Block.makeCuboidShape(12, 0, 12, 16, 16, 16), IBooleanFunction.OR);
-		south = VoxelShapes.combine(south, Block.makeCuboidShape(0, 0, 12, 4, 16, 16), IBooleanFunction.OR);
+		south = VoxelShapes.combine(south, Block.makeCuboidShape(14, 0, 8, 16, 16, 16), IBooleanFunction.OR);
+		south = VoxelShapes.combine(south, Block.makeCuboidShape(0, 0, 8, 2, 16, 16), IBooleanFunction.OR);
 		ENTITY_SHAPES.put(Direction.SOUTH, south);
 		INTERACTION_SHAPES.put(Direction.SOUTH, south);
 
-		VoxelShape north = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 12, 0, 16, 16, 4), IBooleanFunction.OR);
+		VoxelShape north = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 14, 0, 16, 16, 8), IBooleanFunction.OR);
 		north = VoxelShapes.combine(north, Block.makeCuboidShape(0, 0, 0, 16, 16, 1), IBooleanFunction.OR);
-		north = VoxelShapes.combine(north, Block.makeCuboidShape(12, 0, 0, 16, 16, 4), IBooleanFunction.OR);
-		north = VoxelShapes.combine(north, Block.makeCuboidShape(0, 0, 0, 4, 16, 4), IBooleanFunction.OR);
+		north = VoxelShapes.combine(north, Block.makeCuboidShape(14, 0, 0, 16, 16, 8), IBooleanFunction.OR);
+		north = VoxelShapes.combine(north, Block.makeCuboidShape(0, 0, 0, 2, 16, 8), IBooleanFunction.OR);
 		ENTITY_SHAPES.put(Direction.NORTH, north);
 		INTERACTION_SHAPES.put(Direction.NORTH, north);
 	}
