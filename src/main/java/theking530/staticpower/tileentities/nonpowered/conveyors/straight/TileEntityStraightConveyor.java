@@ -26,6 +26,6 @@ public class TileEntityStraightConveyor extends TileEntityBase {
 	protected void postInit(World world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
 		conveyor.setShouldAffectEntitiesAbove(false);
-		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 	}
 }

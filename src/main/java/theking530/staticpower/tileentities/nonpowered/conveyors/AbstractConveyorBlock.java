@@ -97,7 +97,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		int steps = (int) (16.0f / precision);
 		for (int i = 0; i < steps; i++) {
 			// Calculate the y positions.
-			yStart = i * angleOffset * precision - yStartOffset;
+			yStart = Math.max(0, i * angleOffset * precision - yStartOffset);
 			yEnd = (i + 1) * angleOffset * precision + thickness - yEndOffset;
 
 			// Calculate the x & z positions.

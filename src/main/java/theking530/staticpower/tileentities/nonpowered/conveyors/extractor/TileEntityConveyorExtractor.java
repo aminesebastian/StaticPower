@@ -58,7 +58,7 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 		Direction facing = getFacingDirection();
 		Vector3D offset = new Vector3D(facing);
 		offset.multiply(0.3f);
-		
+
 		// Create the entity and spawn it.
 		ConveyorBeltEntity newEntity = new ConveyorBeltEntity(world, getPos().getX() + 0.5f + offset.getX(), getPos().getY() + 0.5f, getPos().getZ() + 0.5f + offset.getZ(), extracted);
 		newEntity.setMotion(0, 0, 0);
@@ -68,7 +68,7 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 	@Override
 	protected void postInit(World world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
-		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 
 		// Make sure the front is input only.
 		Direction facing = getFacingDirection();

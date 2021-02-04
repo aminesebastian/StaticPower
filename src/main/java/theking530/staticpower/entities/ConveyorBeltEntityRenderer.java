@@ -1,7 +1,6 @@
 package theking530.staticpower.entities;
 
 import java.util.Random;
-import java.util.concurrent.ThreadLocalRandom;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -22,23 +21,24 @@ import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+/**
+ * Renderer for conveyor belt entities. We keep the generic parameter as an
+ * item entity because in rare cases, conveyor belt entities may convert back
+ * into regular entities, and that causes vanilla minecraft to crash.
+ * 
+ * @author amine
+ *
+ */
 @OnlyIn(Dist.CLIENT)
 public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 	private final net.minecraft.client.renderer.ItemRenderer itemRenderer;
 	private final Random random = new Random();
-	/**
-	 * This value is used to offset the y position of conveyor entities every so
-	 * slightly, such that two items that intersect eachother won't z fight (or y
-	 * fight I guess in this case lol).
-	 */
-	private final float randomYOffset;
 
 	public ConveyorBeltEntityRenderer(EntityRendererManager renderManagerIn, net.minecraft.client.renderer.ItemRenderer itemRendererIn) {
 		super(renderManagerIn);
 		this.itemRenderer = itemRendererIn;
 		this.shadowSize = 0.15F;
 		this.shadowOpaque = 0.75F;
-		this.randomYOffset = ThreadLocalRandom.current().nextFloat() * 0.01f;
 	}
 
 	public void render(ItemEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
@@ -50,14 +50,17 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		boolean flag = ibakedmodel.isGui3d();
 		int j = this.getModelCount(itemstack);
 
-		// Add a random y offset to deal with stacked items.
-		matrixStackIn.translate(0, randomYOffset, 0);
+		// Add a random y offset to deal with stacked items z-fighting.
+		if (entityIn instanceof ConveyorBeltEntity) {
+			matrixStackIn.translate(0, ((ConveyorBeltEntity) entityIn).getYRenderOffset(), 0);
+		}
 
+		// Trasnform blocks differently than items.
 		if (ibakedmodel.isGui3d()) {
 			matrixStackIn.scale(1.25f, 1.25f, 1.25f);
 			matrixStackIn.translate(0.0, -0.01, 0.0);
 		} else {
-			matrixStackIn.translate(0.0, ((5-j) * 0.02) - 0.06, -0.1);
+			matrixStackIn.translate(0.0, ((5 - j) * 0.02) - 0.06, -0.1);
 			matrixStackIn.scale(1f, 1.1f, 1f);
 			matrixStackIn.rotate(new Quaternion(90, 0, 0, true));
 		}

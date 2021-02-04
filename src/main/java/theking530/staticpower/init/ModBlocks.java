@@ -221,6 +221,7 @@ public class ModBlocks {
 	public static BlockConveyorSupplier ConveyorSupplier;
 	public static BlockConveyorExtractor ConveyorExtractor;
 	public static BlockConveyorHopper ConveyorHopper;
+	public static BlockConveyorHopper ConveyorFilteredHopper;
 
 	public static BlockHeatSink AluminiumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -455,7 +456,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(RampDownConveyor = new BlockRampDownConveyor("conveyor_ramp_down"));
 		StaticPowerRegistry.preRegisterBlock(ConveyorSupplier = new BlockConveyorSupplier("conveyor_supplier"));
 		StaticPowerRegistry.preRegisterBlock(ConveyorExtractor = new BlockConveyorExtractor("conveyor_extractor"));
-		StaticPowerRegistry.preRegisterBlock(ConveyorHopper = new BlockConveyorHopper("conveyor_hopper"));
+		StaticPowerRegistry.preRegisterBlock(ConveyorHopper = new BlockConveyorHopper("conveyor_hopper", false));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopper = new BlockConveyorHopper("conveyor_hopper_filtered", true));
 
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatSink = new BlockHeatSink("heat_sink_aluminium", StaticPowerTiers.ALUMINIUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));

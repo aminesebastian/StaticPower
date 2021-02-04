@@ -650,6 +650,7 @@
 	"block.staticpower.conveyor_extractor": "Conveyor Supplier",
 	"block.staticpower.conveyor_supplier": "Conveyor Consumer",
 	"block.staticpower.conveyor_hopper": "Conveyor Hopper",
+	"block.staticpower.conveyor_hopper_filtered": "Filtered Conveyor Hopper",
 	"fluid.staticpower.tree_sap": "Tree Sap",
 	"fluid.staticpower.infernal_tree_sap": "Infernal Tree Sap",
 	"fluid.staticpower.ethanol": "Ethanol",

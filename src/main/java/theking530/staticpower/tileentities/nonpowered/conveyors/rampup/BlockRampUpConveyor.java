@@ -25,10 +25,10 @@ public class BlockRampUpConveyor extends AbstractConveyorBlock {
 
 	@Override
 	public void cacheVoxelShapes() {
-		if (ENTITY_SHAPES.size() == 0 || INTERACTION_SHAPES.size() == 0) {
+		if (INTERACTION_SHAPES.isEmpty() || ENTITY_SHAPES.isEmpty()) {
 			for (Direction dir : Direction.values()) {
-				INTERACTION_SHAPES.put(dir, generateSlantedBoundingBox(dir, 0.15f, -0.2f, -0.42f, 3.5f, 36.9f, true));
-				ENTITY_SHAPES.put(dir, generateSlantedBoundingBox(dir, 1.0f, -0.8f, 0.25f, 3.5f, 36.9f, true));
+				INTERACTION_SHAPES.put(dir, generateSlantedBoundingBox(dir, 0.1f, 16f, -4.28f, 3.5f, 45f, true));
+				ENTITY_SHAPES.put(dir, generateSlantedBoundingBox(dir, 1.0f, 16f, -3.5f, 3.5f, 45f, true));
 			}
 		}
 	}

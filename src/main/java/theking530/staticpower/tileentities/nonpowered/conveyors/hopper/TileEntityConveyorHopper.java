@@ -4,6 +4,10 @@ import java.util.List;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.item.ItemEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -14,6 +18,7 @@ import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.entities.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -24,20 +29,23 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.IConveyorBlock;
 
 public class TileEntityConveyorHopper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityConveyorHopper> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityConveyorHopper(), ModBlocks.ConveyorHopper);
+	public static final TileEntityTypeAllocator<TileEntityConveyorHopper> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityConveyorHopper(type, false), ModBlocks.ConveyorHopper);
+	@TileEntityTypePopulator()
+	public static final TileEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityConveyorHopper(type, true),
+			ModBlocks.ConveyorFilteredHopper);
 
 	public final InventoryComponent internalInventory;
+	public final InventoryComponent filterInventory;
 	protected final ConveyorMotionComponent conveyor;
 	protected AxisAlignedBB hopperBox;
+	protected boolean filtered;
 
-	public TileEntityConveyorHopper() {
-		super(TYPE);
+	public TileEntityConveyorHopper(TileEntityTypeAllocator<TileEntityConveyorHopper> type, boolean filtered) {
+		super(type);
+		this.filtered = filtered;
 		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f)).setShouldAffectEntitiesAbove(false));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output) {
-			public int getSlotLimit(int slot) {
-				return 64;
-			}
-		}.setCapabilityExtractEnabled(true).setCapabilityInsertEnabled(false));
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output).setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
+		registerComponent(filterInventory = new InventoryComponent("FilterInventory", 1, MachineSideMode.Never).setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
 		registerComponent(new OutputServoComponent("OutputServo", 0, internalInventory));
 	}
 
@@ -60,6 +68,11 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 				// Get the item entity.
 				ConveyorBeltEntity conveyorEntity = (ConveyorBeltEntity) entity;
 
+				// Check if this item should be skipped.
+				if (!filterItem(conveyorEntity)) {
+					continue;
+				}
+
 				// Transfer the item into the internal inventory.
 				ItemStack stack = conveyorEntity.getItem().copy();
 				ItemStack remaining = internalInventory.insertItem(0, stack, false);
@@ -74,16 +87,41 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 		}
 	}
 
+	public boolean filterItem(ItemEntity entity) {
+		// If we're not filtered, do nothing. Perform this check here for safety.
+		if (!filtered) {
+			return true;
+		}
+
+		// If the filter inventory is empty, do nothing.
+		if (filterInventory.getStackInSlot(0).isEmpty()) {
+			return true;
+		}
+
+		// If this is an item entity, and there is a filter, perform the filter.
+		ItemStack filterStack = filterInventory.getStackInSlot(0);
+		if (filterStack.getItem() instanceof ItemFilter) {
+			// Get the filter item.
+			ItemFilter filter = (ItemFilter) filterStack.getItem();
+
+			// Get the item in the filter inventory.
+			ItemStack stack = entity.getItem();
+			return filter.evaluateItemStackAgainstFilter(filterStack, stack);
+		}
+		return true;
+	}
+
 	@Override
 	protected void postInit(World world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
 		hopperBox = new AxisAlignedBB(pos.getX() + .25, pos.getY(), pos.getZ() + .25, pos.getX() + .75, pos.getY() + 0.1, pos.getZ() + .75);
-		conveyor.setBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 
 		// Make sure the front is output only.
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(Direction.DOWN, MachineSideMode.Output);
 	}
 
+	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
 		if (side == BlockSide.BOTTOM) {
 			return mode == MachineSideMode.Output;
@@ -92,7 +130,13 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 		}
 	}
 
+	@Override
 	protected MachineSideMode[] getDefaultSideConfiguration() {
 		return new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
+	}
+
+	@Override
+	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		return new ContainerFilteredConveyorHopper(windowId, inventory, this);
 	}
 }

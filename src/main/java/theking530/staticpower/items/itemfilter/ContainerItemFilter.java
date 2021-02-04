@@ -68,20 +68,28 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+		// Flag to indicate if we already have this item in the filter.
 		boolean alreadyExists = false;
-		int firstEmptySlot = -1;
 
+		// Check to see if this item already exists in the filter. If it does, do
+		// nothing.
 		for (int i = 0; i < filterInventory.getSlots(); i++) {
-			if (firstEmptySlot == -1 && filterInventory.getStackInSlot(i).isEmpty()) {
-				firstEmptySlot = i;
-			}
 			if (ItemHandlerHelper.canItemStacksStack(filterInventory.getStackInSlot(i), stack)) {
 				alreadyExists = true;
 			}
 		}
-		if (!alreadyExists && !mergeItemStack(stack, firstEmptySlot, firstEmptySlot + 1, false)) {
-			return true;
+
+		// If this item doesn't exist, attempt to place it in a slot.
+		if (!alreadyExists) {
+			for (int i = 0; i < filterInventory.getSlots(); i++) {
+				if (filterInventory.getStackInSlot(i).isEmpty()) {
+					filterInventory.setStackInSlot(i, stack.copy());
+					return true;
+				}
+			}
 		}
+
+		// If we didn't return true earlier, return false now.
 		return false;
 	}
 

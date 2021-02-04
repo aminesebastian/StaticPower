@@ -1,6 +1,7 @@
 package theking530.staticpower.tileentities.components.control;
 
 import java.util.List;
+import java.util.function.Predicate;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -22,6 +23,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	private boolean affectEntitiesAbove;
 	private double minDistanceFromCenter;
 	private double maxDistanceFromCenter;
+	private Predicate<Entity> filter;
 
 	public ConveyorMotionComponent(String name, Vector3D velocity) {
 		this(name, 0.05f, velocity, 0.225);
@@ -34,6 +36,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		this.affectEntitiesAbove = false;
 		this.minDistanceFromCenter = SDMath.clamp(0.5 - centerChannelWidth, 0, 1);
 		this.maxDistanceFromCenter = SDMath.clamp(0.5 + centerChannelWidth, 0, 1);
+		this.filter = (entity) -> true;
 	}
 
 	@Override
@@ -98,12 +101,13 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		}
 	}
 
-	public void setBounds(AxisAlignedBB bounds) {
-		this.entitySearchBounds = bounds;
-	}
-
 	public ConveyorMotionComponent updateBounds(AxisAlignedBB newBounds) {
 		this.entitySearchBounds = newBounds;
+		return this;
+	}
+
+	public ConveyorMotionComponent setFilter(Predicate<Entity> filter) {
+		this.filter = filter;
 		return this;
 	}
 
@@ -116,8 +120,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		if (entity.isSneaking()) {
 			return false;
 		}
-		return true;
-
+		return filter.test(entity);
 	}
 
 	/**

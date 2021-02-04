@@ -37,6 +37,7 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.IConveyorBlock;
 public class ConveyorBeltEntity extends ItemEntity {
 	public static final int CHANGE_BACK_TTL = 20;
 	private int timeNotOnConveyor;
+	private float yRenderOffset;
 
 	public ConveyorBeltEntity(EntityType<? extends ConveyorBeltEntity> p_i50217_1_, World world) {
 		super(p_i50217_1_, world);
@@ -47,6 +48,7 @@ public class ConveyorBeltEntity extends ItemEntity {
 		this.setPosition(x, y, z);
 		this.rotationYaw = this.rand.nextFloat() * 360.0F;
 		this.setMotion(this.rand.nextDouble() * 0.2D - 0.1D, 0.2D, this.rand.nextDouble() * 0.2D - 0.1D);
+		this.yRenderOffset = this.rand.nextFloat() * 0.01f;
 	}
 
 	public ConveyorBeltEntity(World worldIn, double x, double y, double z, ItemStack stack) {
@@ -61,7 +63,21 @@ public class ConveyorBeltEntity extends ItemEntity {
 
 	@Override
 	public void tick() {
-		super.tick();
+		// If the entity is less than a second old, don't stack it up yet. This is to
+		// prevent issues where items enter a belt, and then a subsequent item stacks
+		// with it, causing the item to appear as though it dissapeared.
+		if (this.getAge() < 20) {
+			super.tick();
+		} else {
+			// We have to do this trick to prevent these entities from combining together
+			// since all the methods for handling this are private. We set the stack size to
+			// make so it cannot be combined, then we set it back to the original after the
+			// super call.
+			int originalStackSize = getItem().getCount();
+			getItem().setCount(getItem().getMaxStackSize());
+			super.tick();
+			getItem().setCount(originalStackSize);
+		}
 
 		// Only perfrom the following on the server.
 		if (getEntityWorld().isRemote) {
@@ -107,6 +123,10 @@ public class ConveyorBeltEntity extends ItemEntity {
 			setPickupDelay(0); // Instant pickup.
 			super.onCollideWithPlayer(entityIn);
 		}
+	}
+
+	public float getYRenderOffset() {
+		return this.yRenderOffset;
 	}
 
 	@Override
