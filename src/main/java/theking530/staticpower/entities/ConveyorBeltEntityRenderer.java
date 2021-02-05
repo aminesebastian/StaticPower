@@ -17,14 +17,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 /**
- * Renderer for conveyor belt entities. We keep the generic parameter as an
- * item entity because in rare cases, conveyor belt entities may convert back
- * into regular entities, and that causes vanilla minecraft to crash.
+ * Renderer for conveyor belt entities. We keep the generic parameter as an item
+ * entity because in rare cases, conveyor belt entities may convert back into
+ * regular entities, and that causes vanilla minecraft to crash.
  * 
  * @author amine
  *
@@ -53,6 +54,25 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		// Add a random y offset to deal with stacked items z-fighting.
 		if (entityIn instanceof ConveyorBeltEntity) {
 			matrixStackIn.translate(0, ((ConveyorBeltEntity) entityIn).getYRenderOffset(), 0);
+		}
+
+		// Normalize the motion vector.
+		Vector3d normalizedDirection = entityIn.getMotion().normalize();
+
+		// Calculate the rotation angle (and bias it a bit). Also, capture the sign of
+		// the angle.
+		double velocityFacingRotation = Math.toDegrees(Math.asin(normalizedDirection.getY()));
+		double angleSign = Math.signum(velocityFacingRotation);
+		if (velocityFacingRotation != 0) {
+			velocityFacingRotation += angleSign * 20;
+		}
+
+		// Rotate to face the y velocity and bias a bit down.
+		matrixStackIn.rotate(new Quaternion((float) (velocityFacingRotation * -normalizedDirection.getZ()), (float) 0, (float) (velocityFacingRotation * normalizedDirection.getX()), true));
+		if (angleSign < 0) {
+			matrixStackIn.translate(0.0, normalizedDirection.getY() * 0.2f, 0.0);
+		} else {
+			matrixStackIn.translate(0.0, normalizedDirection.getY() * -0.1f * angleSign, 0.0);
 		}
 
 		// Trasnform blocks differently than items.

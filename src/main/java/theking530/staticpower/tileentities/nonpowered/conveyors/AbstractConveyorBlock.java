@@ -97,27 +97,31 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		int steps = (int) (16.0f / precision);
 		for (int i = 0; i < steps; i++) {
 			// Calculate the y positions.
-			yStart = Math.max(0, i * angleOffset * precision - yStartOffset);
+			yStart = i * angleOffset * precision - yStartOffset;
 			yEnd = (i + 1) * angleOffset * precision + thickness - yEndOffset;
+			
+			// Make sure we clamp to not go below 0.
+			yStart = Math.max(yStart, 0);
+			yEnd = Math.max(yEnd, 0);
 
 			// Calculate the x & z positions.
 			if (upwards) {
 				forwardStart = (steps - i - 1) * precision;
 				forwardEnd = (steps - i) * precision;
 			} else {
-				forwardStart = (i - 1) * precision;
-				forwardEnd = i * precision;
+				forwardStart = (i - 1) * precision + 0.25f;
+				forwardEnd = i * precision + 0.25f;
 			}
 
 			// Build the bounds.
 			if (facingDirection == Direction.NORTH) {
 				output = VoxelShapes.combine(output, Block.makeCuboidShape(0, yStart, forwardStart, 16, yEnd, forwardEnd), IBooleanFunction.OR);
 			} else if (facingDirection == Direction.EAST) {
-				output = VoxelShapes.combine(output, Block.makeCuboidShape(forwardStart, 16 - yStart, 0, forwardEnd, 16 - yEnd, 16), IBooleanFunction.OR);
+				output = VoxelShapes.combine(output, Block.makeCuboidShape(16 - forwardStart, yStart, 0, 16 - forwardEnd, yEnd, 16), IBooleanFunction.OR);
 			} else if (facingDirection == Direction.WEST) {
 				output = VoxelShapes.combine(output, Block.makeCuboidShape(forwardStart, yStart, 0, forwardEnd, yEnd, 16), IBooleanFunction.OR);
 			} else if (facingDirection == Direction.SOUTH) {
-				output = VoxelShapes.combine(output, Block.makeCuboidShape(0, 16 - yStart, forwardStart, 16, 16 - yEnd, forwardEnd), IBooleanFunction.OR);
+				output = VoxelShapes.combine(output, Block.makeCuboidShape(0, yStart, 16 - forwardStart, 16, yEnd, 16 - forwardEnd), IBooleanFunction.OR);
 			}
 		}
 

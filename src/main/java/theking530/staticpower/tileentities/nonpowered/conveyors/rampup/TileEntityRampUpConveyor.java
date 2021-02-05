@@ -25,6 +25,6 @@ public class TileEntityRampUpConveyor extends TileEntityBase {
 	@Override
 	protected void postInit(World world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
-		conveyor.updateBounds(new AxisAlignedBB(pos.getX() - 0.01, pos.getY(), pos.getZ() - 0.01, pos.getX() + 1.01, pos.getY() + 1.5, pos.getZ() + 1.01));
+		conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
 	}
 }

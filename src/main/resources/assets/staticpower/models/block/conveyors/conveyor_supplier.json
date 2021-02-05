@@ -1,6 +1,7 @@
 {
 	"credit": "Made with Blockbench",
 	"textures": {
+		"7": "staticpower:blocks/conveyors/conveyor_direction_indicator",
 		"belt_top": "staticpower:blocks/conveyors/conveyor_top",
 		"belt_sides": "staticpower:blocks/conveyors/conveyor_belt",
 		"particle": "staticpower:blocks/machines/sides/basic_machine_side",
@@ -34,7 +35,7 @@
 				"east": {"uv": [0, 12, 16, 16], "texture": "#side"},
 				"south": {"uv": [0, 12, 16, 16], "texture": "#side"},
 				"west": {"uv": [0, 12, 16, 16], "texture": "#side"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#missing"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#bottom"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#bottom"}
 			}
 		},
@@ -144,7 +145,7 @@
 			"faces": {
 				"north": {"uv": [0, 0, 8, 4], "texture": "#missing"},
 				"east": {"uv": [0, 0, 4, 4], "texture": "#missing"},
-				"south": {"uv": [0, 0, 8, 4], "texture": "#missing"},
+				"south": {"uv": [0, 12, 8, 16], "texture": "#belt_sides"},
 				"west": {"uv": [0, 0, 4, 4], "texture": "#missing"},
 				"up": {"uv": [2, 15, 14, 8], "texture": "#belt_top"},
 				"down": {"uv": [0, 0, 8, 4], "texture": "#missing"}
@@ -174,6 +175,20 @@
 				"west": {"uv": [0, 0, 0.1, 15.999], "texture": "#output"},
 				"up": {"uv": [0, 0, 15.999, 0.1], "texture": "#output"},
 				"down": {"uv": [0, 0, 15.999, 0.1], "texture": "#output"}
+			}
+		},
+		{
+			"name": "Arrow",
+			"from": [3, 8.01, 4],
+			"to": [13, 8.01, 14],
+			"rotation": {"angle": 0, "axis": "y", "origin": [11, 15, 12]},
+			"faces": {
+				"north": {"uv": [0, 0, 10, 0], "texture": "#7"},
+				"east": {"uv": [0, 0, 10, 0], "texture": "#7"},
+				"south": {"uv": [0, 0, 10, 0], "texture": "#7"},
+				"west": {"uv": [0, 0, 10, 0], "texture": "#7"},
+				"up": {"uv": [0, 16, 16, 0], "texture": "#7"},
+				"down": {"uv": [0, 0, 10, 10], "texture": "#7"}
 			}
 		}
 	],

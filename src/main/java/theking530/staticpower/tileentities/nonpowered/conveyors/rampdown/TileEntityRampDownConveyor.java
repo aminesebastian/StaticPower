@@ -19,12 +19,12 @@ public class TileEntityRampDownConveyor extends TileEntityBase {
 
 	public TileEntityRampDownConveyor() {
 		super(TYPE);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, 0.0f, 0f)));
+		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, -0.1f, 0f)));
 	}
 
 	@Override
 	protected void postInit(World world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
-		conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() - 0.1f, pos.getZ(), pos.getX() + 1, pos.getY() + 1.1, pos.getZ() + 1));
+		conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
 	}
 }
