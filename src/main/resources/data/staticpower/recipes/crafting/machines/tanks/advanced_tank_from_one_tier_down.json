@@ -1,19 +1,22 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"pbp",
 		"p p",
-		"pbp"
+		"uiu",
+		"p p"
 	],
 	"key": {
+		"i": {
+			"item": "staticpower:io_port"
+		},
 		"p": {
 			"tag": "forge:plates/brass"
 		},
-		"b": {
-			"item": "staticpower:fluid_capsule_basic"
+		"u": {
+			"item": "staticpower:tank_basic"
 		}
 	},
 	"result": {
-		"item": "staticpower:fluid_capsule_advanced"
+		"item": "staticpower:tank_advanced"
 	}
 }

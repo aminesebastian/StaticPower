@@ -2,6 +2,8 @@
 	"replace": false,
 	"values": [
 		"staticpower:hammer_iron",
+		"staticpower:hammer_copper",
+		"staticpower:hammer_tin",
 		"staticpower:hammer_zinc",
 		"staticpower:hammer_bronze",
 		"staticpower:hammer_tungsten",

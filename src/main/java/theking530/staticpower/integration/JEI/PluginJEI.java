@@ -395,6 +395,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModItems.BronzeMetalHammer), HammerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.CreativeMetalHammer), HammerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.IronMetalHammer), HammerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.CopperMetalHammer), HammerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.TinMetalHammer), HammerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.TungstenMetalHammer), HammerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.ZincMetalHammer), HammerRecipeCategory.UID);
 

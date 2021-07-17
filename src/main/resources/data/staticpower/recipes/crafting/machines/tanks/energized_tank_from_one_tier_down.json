@@ -1,19 +1,22 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"pbp",
 		"p p",
-		"pbp"
+		"uiu",
+		"p p"
 	],
 	"key": {
+		"i": {
+			"item": "staticpower:io_port"
+		},
 		"p": {
 			"item": "staticpower:plate_energized"
 		},
-		"b": {
-			"item": "staticpower:fluid_capsule_static"
+		"u": {
+			"item": "staticpower:tank_static"
 		}
 	},
 	"result": {
-		"item": "staticpower:fluid_capsule_energized"
+		"item": "staticpower:tank_energized"
 	}
 }

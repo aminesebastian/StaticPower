@@ -17,6 +17,7 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -122,6 +123,12 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
 			blockRenderer.renderBlock(blockState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
 
+			blockStack.push();
+			blockStack.translate(0.2, -0.2, 0.05);
+			blockStack.scale(0.75f, 0.75f, 0.75f);
+			BlockState fireState = Blocks.FIRE.getDefaultState();
+			blockRenderer.renderBlock(fireState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+			blockStack.pop();
 			blockStack.pop();
 		}
 

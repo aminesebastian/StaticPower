@@ -21,8 +21,6 @@ import theking530.staticpower.cables.item.ItemCableRemovedPacket;
 import theking530.staticpower.cables.power.PowerMetricsSyncPacket;
 import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.PacketRevertToParentContainer;
-import theking530.staticpower.entities.CauldronContainedEntity.CauldronContainedEntitySpawnPacket;
-import theking530.staticpower.entities.ConveyorBeltEntity.ConveyorBeltEntitySpawnPacket;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.SSetSlotLargeItemStackPacket;
@@ -76,8 +74,8 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
-		StaticPowerMessageHandler.registerVanillaStyleMessage(CauldronContainedEntitySpawnPacket.class);
-		StaticPowerMessageHandler.registerVanillaStyleMessage(ConveyorBeltEntitySpawnPacket.class);
+//		StaticPowerMessageHandler.registerVanillaStyleMessage(CauldronContainedEntitySpawnPacket.class);
+//		StaticPowerMessageHandler.registerVanillaStyleMessage(ConveyorBeltEntitySpawnPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
 		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
 	}

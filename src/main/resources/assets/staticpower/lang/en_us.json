@@ -810,6 +810,8 @@
 	"gui.staticpower.experience_hopper_description": "This hopper is specifically engineered to drain the raw volatile power of liquid experience from a living thing!",
 	"gui.staticpower.rusty_cauldron_tooltip": "Double, double toil and trouble!",
 	"gui.staticpower.rusty_cauldron_description": "The BRAND NEW Static Industries Cauldron! Made from entirely recyled materials, this marvel of engineering will serve as a solid foundation for all your future endeavours. Warranty does not cover damages resulting from excessive rust. You have your tetanus shot, right?",
+	"gui.staticpower.clean_cauldron_tooltip": "An elegant bucket, for a more civilized age.",
+	"gui.staticpower.clean_cauldron_description": "None of those NASTY recycled materials here. Every atom of this glorious, lustrous metalic shell is sourced from only the most abusive and vile silver mines, resulting in near double the efficiency! Rest easy knowing that 6 full grown men and 3 donkeys died to bring you this shiny metal bucket.",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

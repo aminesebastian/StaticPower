@@ -85,7 +85,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		String heat = new StringTextComponent("Heat Generation: ").appendString(TextFormatting.GOLD.toString())
 				.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getHeatAmount())).getString();
 
-		String overheatTemp = new StringTextComponent("← Overheat: ").appendString(TextFormatting.RED.toString())
+		String overheatTemp = new StringTextComponent("<- Overheat: ").appendString(TextFormatting.RED.toString())
 				.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
 
 		int yPos = 15;

@@ -4,10 +4,10 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
-import theking530.staticpower.entities.CauldronContainedEntity;
-import theking530.staticpower.entities.CauldronContainedEntity.CauldronContainedEntityType;
-import theking530.staticpower.entities.ConveyorBeltEntity;
-import theking530.staticpower.entities.ConveyorBeltEntity.ConveyorBeltEntityType;
+import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
+import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntityType;
+import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
+import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntityType;
 import theking530.staticpower.entities.enox.TypeEnox;
 import theking530.staticpower.entities.smeep.TypeSmeep;
 

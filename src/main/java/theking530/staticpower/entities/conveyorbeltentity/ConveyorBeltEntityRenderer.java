@@ -1,4 +1,4 @@
-package theking530.staticpower.entities;
+package theking530.staticpower.entities.conveyorbeltentity;
 
 import java.util.Random;
 

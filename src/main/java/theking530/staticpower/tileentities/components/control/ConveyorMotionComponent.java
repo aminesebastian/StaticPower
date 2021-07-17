@@ -13,7 +13,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.vector.Vector3d;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.entities.ConveyorBeltEntity;
+import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 public class ConveyorMotionComponent extends AbstractTileEntityComponent {
@@ -26,7 +26,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	private Predicate<Entity> filter;
 
 	public ConveyorMotionComponent(String name, Vector3D velocity) {
-		this(name, 0.05f, velocity, 0.225);
+		this(name, 0.05f, velocity, 0.075);
 	}
 
 	public ConveyorMotionComponent(String name, double centerChannelWidth, Vector3D velocity, double compensationRate) {
@@ -186,12 +186,10 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		compensationX *= conveyorForward.getAxisDirection() == AxisDirection.NEGATIVE ? -1 : 1;
 		compensationZ *= conveyorForward.getAxisDirection() == AxisDirection.NEGATIVE ? 1 : -1;
 
-		// If we're not in the 0 Z coordinat (middle channel), perform a compensation.
-		if (entityCoordinate.getZ() < minDistanceFromCenter || entityCoordinate.getZ() > maxDistanceFromCenter) {
-			double delta = (entityCoordinate.getZ() - 0.5f);
-			entity.setVelocity(compensationX * delta, 0, compensationZ * delta);
-		} else {
-			entity.setVelocity(newMotion.getX(), newMotion.getY(), newMotion.getZ());
-		}
+		double delta = (entityCoordinate.getZ() - 0.5f);
+		double xMotion = (delta * compensationX) + (0.5 - Math.abs(delta)) * newMotion.getX();
+		double yMotion = (delta * compensationZ) + (0.5 - Math.abs(delta)) * newMotion.getZ();
+
+		entity.setMotion(xMotion, newMotion.getY(), yMotion);
 	}
 }

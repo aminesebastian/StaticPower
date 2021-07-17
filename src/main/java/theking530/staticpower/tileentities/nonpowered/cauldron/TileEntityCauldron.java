@@ -21,7 +21,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderCauldr
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
-import theking530.staticpower.entities.CauldronContainedEntity;
+import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -90,7 +90,6 @@ public class TileEntityCauldron extends TileEntityBase {
 	public boolean isBoiling() {
 		return heatStorage.getStorage().getCurrentHeat() >= BOILING_TEMP;
 	}
-
 	/**
 	 * Attempts to complete the crafting from a cauldron. Returns the amount of
 	 * items that were crafted.
@@ -167,18 +166,25 @@ public class TileEntityCauldron extends TileEntityBase {
 					}
 				}
 
+				// Double time for clean cauldron.
+				int procesingTime = recipe.getRequiredTimeInCauldron();
+				if(getType() == CLEAN.getType()) {
+					Math.max(1, procesingTime /= 2);
+				}
+				
+				// Create the new entity and add it to the world. Remove the incoming item stack.
 				CauldronContainedEntity entity = new CauldronContainedEntity(this.getWorld(), item.getPosX(), item.getPosY(), item.getPosZ(), item.getItem().copy(),
-						recipe.getRequiredTimeInCauldron());
+						procesingTime);
 				entity.setMotion(item.getMotion());
 				entity.setPickupDelay(80); // Set this value initially a little high!
-				this.getWorld().addEntity(entity);
+				getWorld().addEntity(entity);
 
 				item.remove();
 			});
 		}
 	}
 
-	protected Optional<CauldronRecipe> getRecipe(ItemStack input) {
+	public Optional<CauldronRecipe> getRecipe(ItemStack input) {
 		return StaticPowerRecipeRegistry.getRecipe(CauldronRecipe.RECIPE_TYPE, new RecipeMatchParameters(input).setFluids(internalTank.getFluid()));
 	}
 }

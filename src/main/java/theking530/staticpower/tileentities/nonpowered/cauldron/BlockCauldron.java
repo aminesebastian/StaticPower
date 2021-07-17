@@ -105,7 +105,7 @@ public class BlockCauldron extends StaticPowerTileEntityBlock {
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
 			if (isClean) {
-
+				tooltip.add(new TranslationTextComponent("gui.staticpower.clean_cauldron_tooltip").mergeStyle(TextFormatting.AQUA));
 			} else {
 				tooltip.add(new TranslationTextComponent("gui.staticpower.rusty_cauldron_tooltip").mergeStyle(TextFormatting.GOLD));
 			}
@@ -115,9 +115,9 @@ public class BlockCauldron extends StaticPowerTileEntityBlock {
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
 		if (isClean) {
-
+			tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.clean_cauldron_description")).mergeStyle(TextFormatting.YELLOW));
 		} else {
-			tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.rusty_cauldron_description")).mergeStyle(TextFormatting.GRAY));
+			tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.rusty_cauldron_description")).mergeStyle(TextFormatting.BLUE));
 		}
 	}
 }

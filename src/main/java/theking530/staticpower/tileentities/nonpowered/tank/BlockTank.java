@@ -31,9 +31,11 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerItemBlockCustomRenderer;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -79,7 +81,11 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 
 	@Override
 	public BlockItem getItemBlock() {
-		return new StaticPowerItemBlockCustomRenderer(this, () -> ItemTankSpecialRenderer::new);
+		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
+			return new StaticPowerItemBlock(this);
+		} else {
+			return new StaticPowerItemBlockCustomRenderer(this, () -> ItemTankSpecialRenderer::new);
+		}
 	}
 
 	@Override

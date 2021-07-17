@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:lumber_mill_recipe",
 	"input": {
-		"item": "minecraft:oak_planks"
+		"tag": "minecraft:planks"
 	},
 	"outputs": {
 		"primary": {
@@ -10,7 +10,7 @@
 		},
 		"fluid": {
 			"fluid": "staticpower:oil_tree",
-			"volume": 2
+			"volume": 4
 		}
 	}
 }

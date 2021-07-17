@@ -1,16 +1,20 @@
 {
 	"type": "staticpower:lumber_mill_recipe",
 	"input": {
-		"item": "minecraft:jungle_planks"
+		"item": "minecraft:crimson_stem"
 	},
 	"outputs": {
 		"primary": {
+			"item": "minecraft:oak_slab",
+			"count": 1
+		},
+		"secondary": {
 			"item": "staticpower:dust_wood",
-			"count": 10
+			"count": 1
 		},
 		"fluid": {
 			"fluid": "staticpower:oil_tree",
-			"volume": 2
+			"volume": 3
 		}
 	}
 }
