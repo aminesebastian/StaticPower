@@ -103,13 +103,13 @@ public class SDMath {
 			offset = new Vector3f(vector.getY(), vector.getZ(), vector.getY());
 			break;
 		case EAST:
-			offset = new Vector3f(-vector.getZ(), vector.getY(), vector.getX());
+			offset = new Vector3f(-vector.getZ(), vector.getY(), -vector.getX());
 			break;
 		case WEST:
 			offset = new Vector3f(vector.getZ(), vector.getY(), vector.getX());
 			break;
 		case NORTH:
-			offset = new Vector3f(vector.getX(), vector.getY(), vector.getZ());
+			offset = new Vector3f(-vector.getX(), vector.getY(), vector.getZ());
 			break;
 		case SOUTH:
 			offset = new Vector3f(vector.getX(), vector.getY(), -vector.getZ());

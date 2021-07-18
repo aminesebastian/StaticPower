@@ -35,7 +35,7 @@ public class GuiPowerBarUtilities {
 		float u1 = (float) currentEnergy / (float) maxEnergy;
 		float k1 = u1 * height;
 
-		GuiDrawUtilities.drawSlot(matrixStack, xpos, ypos - height, width, height);
+		GuiDrawUtilities.drawSlot(matrixStack, xpos, ypos - height, width, height, 0);
 
 		// Get the origin.
 		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrixStack, xpos, ypos);

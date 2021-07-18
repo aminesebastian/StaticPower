@@ -86,4 +86,11 @@ public class Color extends Vector4D {
 	public Color clone() {
 		return new Color(values.get(0), values.get(1), values.get(2), values.get(3));
 	}
+
+	public static Color lerp(Color first, Color second, float alpha) {
+		alpha = SDMath.clamp(alpha, 0, 1);
+		float inverseAlpha = 1.0f - alpha;
+		return new Color(first.getRed() * inverseAlpha + second.getRed() * alpha, first.getGreen() * inverseAlpha + second.getGreen() * alpha,
+				first.getBlue() * inverseAlpha + second.getBlue() * alpha);
+	}
 }

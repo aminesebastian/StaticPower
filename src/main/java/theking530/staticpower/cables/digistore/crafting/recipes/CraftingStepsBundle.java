@@ -89,9 +89,10 @@ public class CraftingStepsBundle {
 			this.bundles.sort(new Comparator<CraftingStepsBundle>() {
 				@Override
 				public int compare(CraftingStepsBundle first, CraftingStepsBundle second) {
-					// First compare based on missing matertials.
-					Boolean isMissing = new Boolean(first.getBillOfMaterials().isMissingMaterials());
-					int missingComparison = isMissing.compareTo(second.getBillOfMaterials().isMissingMaterials());
+					// First compare based on missing materials.
+					boolean firstMissing = first.getBillOfMaterials().isMissingMaterials();
+					boolean secondMissing = second.getBillOfMaterials().isMissingMaterials();
+					int missingComparison = (firstMissing == secondMissing) ? 0 : (firstMissing ? 1 : -1);
 
 					// If the missing values are not equal, just return that. Otherwise, sort such
 					// that the recipes with the least number of required items come first.

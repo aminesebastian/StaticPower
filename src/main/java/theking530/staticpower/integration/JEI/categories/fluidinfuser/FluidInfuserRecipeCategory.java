@@ -89,15 +89,15 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 
 	@Override
 	public void draw(FluidInfusionRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 31, 17, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 122, 15, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 31, 17, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 122, 15, 20, 20, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getRequiredFluid(), 0, 0, 77, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 99, 23, 17, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 99, 23, 17, 5, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 17;
 		FluidStack fluid = recipe.getRequiredFluid();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 99, 28, 1, progress, 5, false);

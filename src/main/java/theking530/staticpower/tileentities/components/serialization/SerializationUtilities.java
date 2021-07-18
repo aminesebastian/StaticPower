@@ -98,15 +98,15 @@ public class SerializationUtilities {
 		// Iterate through all the fields.
 		for (Field field : fields) {
 			// Check if the field is accessible.
-			boolean isAccessible = field.isAccessible();
+			boolean isAccessible = field.canAccess(object);
 			try {
 				// Mark it accessible if not.
 				field.setAccessible(true);
-				
+
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
 				if (t.isEnum()) {
-					Method m = t.getMethod("ordinal");	
+					Method m = t.getMethod("ordinal");
 					int value = (int) m.invoke(field.get(object));
 					nbt.putByte(field.getName(), (byte) value);
 				} else if (t == boolean.class) {
@@ -168,7 +168,7 @@ public class SerializationUtilities {
 			}
 
 			// Check if the field is accessible.
-			boolean isPrivate = !field.isAccessible();
+			boolean isAccessible = field.canAccess(object);
 			try {
 				// Mark it accessible if not.
 				field.setAccessible(true);
@@ -212,7 +212,7 @@ public class SerializationUtilities {
 				LOGGER.error(String.format("An error occured when attempting to deserialize field: %1$s to object: %2$s from NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
-				if (isPrivate) {
+				if (!isAccessible) {
 					field.setAccessible(false);
 				}
 			}

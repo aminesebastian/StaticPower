@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase;
 
+import java.util.List;
+
 import com.google.common.base.Strings;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -9,8 +11,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.fml.ModList;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.drawables.SpriteDrawable;
+import theking530.staticcore.gui.widgets.DrawableWidget;
 import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -29,6 +34,8 @@ import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.NoCountRenderSlot;
 import theking530.staticpower.events.StaticPowerModEventRegistry;
@@ -56,6 +63,9 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	public TextButton activeCraftingLeft;
 	public TextButton activeCraftingRight;
 	public SpriteButton craftingRequestCancelButton;
+
+	public DrawableWidget<SpriteDrawable> filledAmountSprite;
+	public DrawableWidget<SpriteDrawable> typeAmountSprite;
 
 	private int craftingRequestUpdateTimer;
 	private int currentCraftingRequestIndex;
@@ -85,14 +95,21 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		registerWidget(scrollBar = new ScrollBarWidget(179, 36, 100));
 
 		// Add island for the buttons.
-		registerWidget(new GuiIslandWidget(-24, 16, 24, 44));
+		registerWidget(new GuiIslandWidget(-24, 14, 28, 46));
+
+		// Add island for fill amount.
+		registerWidget(new GuiIslandWidget(-24, 60, 28, 44));
+
+		// Add the sprites for the fill amounts.
+		registerWidget(filledAmountSprite = new DrawableWidget<SpriteDrawable>(-18, 65, 6, 0, new SpriteDrawable(GuiTextures.DIGISTORE_FILLED_BAR, 6, 50)));
+		registerWidget(typeAmountSprite = new DrawableWidget<SpriteDrawable>(-8, 65, 6, 0, new SpriteDrawable(GuiTextures.DIGISTORE_FILLED_BAR, 6, 50)));
 
 		// Add sort button.
-		registerWidget(sortButton = new SpriteButton(-20, 20, 16, 16, StaticPowerSprites.SORT_NUMERICAL_DESC, null, this::onSortButtonPressed));
+		registerWidget(sortButton = new SpriteButton(-19, 18, 18, 18, StaticPowerSprites.SORT_NUMERICAL_DESC, null, this::onSortButtonPressed));
 
 		// Add search mode button.
 		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
-			registerWidget(searchModeButton = new SpriteButton(-20, 40, 16, 16, StaticPowerSprites.SEARCH_MODE_DEFAULT, null, this::onSearchModeButtonPressed));
+			registerWidget(searchModeButton = new SpriteButton(-19, 38, 18, 18, StaticPowerSprites.SEARCH_MODE_DEFAULT, null, this::onSearchModeButtonPressed));
 		}
 
 		// Add island for the armor.
@@ -182,7 +199,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		// Update the crafting widget and the tool tips.
 		if (getContainer().getCurrentCraftingQueue().size() > 0) {
 			CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
-			craftingStepsWidget.setRequest(currentRequest.getStepsBundle());
+			craftingStepsWidget.setRequest(currentRequest);
 			craftingViewButton.setTooltip(new StringTextComponent(String.format("%1$d jobs currently queued.", getContainer().getCurrentCraftingQueue().size())));
 		} else {
 			craftingStepsWidget.setRequest(null);
@@ -201,6 +218,47 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			scrollBar.setMaxScroll(getContainer().getMaxScroll());
 			getContainer().setScrollOffset(scrollBar.getScrollAmount());
 		}
+
+		// Update the capacity bar.
+		float filledPercent = (float) getContainer().getUsedCapacity() / getContainer().getTotalCapacity();
+		float filledHeight = 34 * filledPercent;
+		float filledYCoord = 99 - filledHeight;
+		filledAmountSprite.setPosition(-18, filledYCoord);
+		filledAmountSprite.setSize(6, filledHeight);
+		filledAmountSprite.getDrawable().setUV(0, 1 - filledPercent, 1, 1);
+
+		// Update the types bar.
+		float typesPercent = (float) getContainer().getUsedUniqueTypes() / getContainer().getMaxUniqueTypes();
+		float typesHeight = 34 * typesPercent;
+		float typesYCoord = 99 - typesHeight;
+		typeAmountSprite.setPosition(-8, typesYCoord);
+		typeAmountSprite.setSize(6, typesHeight);
+		typeAmountSprite.getDrawable().setUV(0, 1 - typesPercent, 1, 1);
+	}
+
+	@Override
+	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
+		super.getExtraTooltips(tooltips, stack, mouseX, mouseY);
+
+		// Add the tooltips for the capacity and types bars here so that even if the
+		// bars are small, the tooltip gets rendered.
+		if (mouseY - guiTop >= 65) {
+			if (mouseX - guiLeft >= -19 && mouseX - guiLeft <= -12 && mouseY - guiTop <= 99) {
+				float filledPercent = (float) getContainer().getUsedCapacity() / getContainer().getTotalCapacity();
+				tooltips.add(new TranslationTextComponent("gui.staticpower.digistore_capacity_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(filledPercent * 100)));
+			} else if (mouseX - guiLeft >= -9 && mouseX - guiLeft <= -2 && mouseY - guiTop <= 99) {
+				float typesPercent = (float) getContainer().getUsedUniqueTypes() / getContainer().getMaxUniqueTypes();
+				tooltips.add(new TranslationTextComponent("gui.staticpower.digistore_types_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(typesPercent * 100)));
+			}
+		}
+	}
+
+	@Override
+	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
+		// Draw the bar slots.
+		GuiDrawUtilities.drawSlot(stack, -18, 65, 6, 34, 0);
+		GuiDrawUtilities.drawSlot(stack, -8, 65, 6, 34, 0);
 	}
 
 	@Override
@@ -217,7 +275,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 					currentCraftingRequestIndex = getContainer().getCurrentCraftingQueue().size() - 1;
 				}
 				CraftingRequestResponse currentRequest = getContainer().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
-				this.itemRenderer.drawItem(currentRequest.getCraftingItem(), guiLeft, guiTop, (xSize / 2) - 8, 20, 1.0f);
+				itemRenderer.drawItem(currentRequest.getCraftingItem(), guiLeft, guiTop, (xSize / 2) - 8, 20, 1.0f);
 			}
 		}
 	}

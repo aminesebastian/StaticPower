@@ -441,12 +441,29 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
+		Optional<ServerCable> cable = getCable();
+		if (!cable.isEmpty()) {
+			if (cable.get().getNetwork().hasModule(moduleType)) {
+				return Optional.of(cable.get().getNetwork().getModule(moduleType));
+			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Gets the cable this component represents from this network if present. We
+	 * have to wrap it in an optional because while we can guarantee once this
+	 * component is validated that the network is valid, since this component
+	 * exposes external methods, other tile entity that are made valid before us may
+	 * call some of our methods.
+	 * 
+	 * @return
+	 */
+	public Optional<ServerCable> getCable() {
 		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
 		ServerCable cable = manager.getCable(getTileEntity().getPos());
 		if (cable != null && cable.getNetwork() != null) {
-			if (cable.getNetwork().hasModule(moduleType)) {
-				return Optional.of(cable.getNetwork().getModule(moduleType));
-			}
+			return Optional.of(cable);
 		}
 		return Optional.empty();
 	}

@@ -129,6 +129,12 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		maxDrain = newMaxExtract;
 	}
 
+	/**
+	 * This method only exists for internal usage, general gameplay should NOT call
+	 * this.
+	 * 
+	 * @param energy
+	 */
 	public void addPowerIgnoreTransferRate(long energy) {
 		try {
 			storedPower = SDMath.clamp(Math.addExact(storedPower, energy), 0, capacity);

@@ -87,7 +87,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 
 	@Override
 	public void draw(SolidFuelRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 66, 19, 16, 16);
+		GuiDrawUtilities.drawSlot(matrixStack, 66, 19, 16, 16, 0);
 
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 

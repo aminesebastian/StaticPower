@@ -16,7 +16,6 @@ import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
@@ -176,18 +175,13 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	 * Gets the heat network module for the network this cable belongs to. We have
 	 * to wrap it in an optional because while we can guarantee once this component
 	 * is validated that the network is valid, since this component exposes external
-	 * methods, other tile entity that are made valid before us may call some of our
-	 * methods.
+	 * methods, other tile entities that are made valid before us may call some of
+	 * our methods.
 	 * 
 	 * @return
 	 */
 	public Optional<HeatNetworkModule> getHeatNetworkModule() {
-		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
-		ServerCable cable = manager.getCable(getTileEntity().getPos());
-		if (cable.getNetwork() != null) {
-			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE));
-		}
-		return Optional.empty();
+		return getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
 	}
 
 	@Override
@@ -222,8 +216,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 				if (getWorld().isRemote) {
 					disabled = isSideDisabled(side);
 				} else {
-					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
-					disabled = cable.isDisabledOnSide(side);
+					Optional<ServerCable> cable = getCable();
+					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

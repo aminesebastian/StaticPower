@@ -156,6 +156,34 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
+	public void onNetworksSplitOff(List<CableNetwork> newNetworks) {
+		// Iterate through all the new networks and capture any new fluid modules.
+		List<FluidNetworkModule> newModules = new ArrayList<FluidNetworkModule>();
+		for (CableNetwork newNetwork : newNetworks) {
+			if (newNetwork.hasModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE)) {
+				FluidNetworkModule module = (FluidNetworkModule) newNetwork.getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
+				newModules.add(module);
+			}
+		}
+
+		// If there were any new fluid modules.
+		if (newModules.size() > 0) {
+			// Calculate the amount to spread to each (equally).
+			int amountToSpread = getFluidStorage().getFluidAmount() / newModules.size();
+
+			// Then, attempt to spread the fluid around. For any fluid that is successfully
+			// spread,
+			// drain it from this module.
+			for (FluidNetworkModule module : newModules) {
+				FluidStack toFill = getFluidStorage().getFluid().copy();
+				toFill.setAmount(Math.min(amountToSpread, module.getFluidStorage().getCapacity()));
+				int spreadAmount = module.getFluidStorage().fill(toFill, FluidAction.EXECUTE);
+				getFluidStorage().drain(spreadAmount, FluidAction.EXECUTE);
+			}
+		}
+	}
+
+	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper) {
 		// Allocate the total capacity.
 		int total = 0;

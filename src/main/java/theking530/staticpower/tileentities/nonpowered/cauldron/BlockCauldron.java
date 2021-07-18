@@ -57,7 +57,7 @@ public class BlockCauldron extends StaticPowerTileEntityBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getCutout();
+		return RenderType.getSolid();
 	}
 
 	@Override

@@ -2,6 +2,8 @@ package theking530.staticpower.cables.digistore.crafting;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 
 public class CraftingRequestResponse {
@@ -9,7 +11,9 @@ public class CraftingRequestResponse {
 	private final int craftableAmount;
 	private int currentCraftingStep;
 	private final ItemStack craftingTarget;
-	private final CraftingStepsBundle steps;
+	private final CraftingStepsBundle steps; // This is included here to access the steps stored internally. I know there's
+												// data redundancy here, but this is the safer approach.
+	private TranslationTextComponent currentBlocker;
 
 	public CraftingRequestResponse(long id, int craftableAmount, ItemStack craftingTarget, CraftingStepsBundle steps) {
 		this.id = id;
@@ -19,6 +23,7 @@ public class CraftingRequestResponse {
 		this.craftingTarget = itemToSerialize;
 		this.steps = steps;
 		this.currentCraftingStep = 0;
+		this.currentBlocker = null;
 	}
 
 	public CraftingStepsBundle getStepsBundle() {
@@ -45,15 +50,35 @@ public class CraftingRequestResponse {
 		currentCraftingStep++;
 	}
 
+	public void setBlocker(TranslationTextComponent currentCraftingError) {
+		this.currentBlocker = currentCraftingError;
+	}
+
+	public void clearBlocker() {
+		currentBlocker = null;
+	}
+
+	public boolean isBlocked() {
+		return currentBlocker != null;
+	}
+
+	public TranslationTextComponent getBlockerMessage() {
+		return currentBlocker;
+	}
+
 	public boolean isDone() {
 		return currentCraftingStep >= steps.getSteps().size();
+	}
+
+	public int getCurrentCraftingStepIndex() {
+		return currentCraftingStep;
 	}
 
 	public RequiredAutoCraftingMaterials getBillOfMaterials() {
 		return steps.getBillOfMaterials();
 	}
 
-	public CompoundNBT serialze() {
+	public CompoundNBT serialize() {
 		// Create the output.
 		CompoundNBT output = new CompoundNBT();
 
@@ -74,6 +99,11 @@ public class CraftingRequestResponse {
 		// Store the steps.
 		output.put("steps", steps.serialize());
 
+		// Store the blocker if it exists.
+		if (currentBlocker != null) {
+			output.putString("blocker", ITextComponent.Serializer.toJson(currentBlocker));
+		}
+
 		return output;
 	}
 
@@ -93,8 +123,15 @@ public class CraftingRequestResponse {
 		// Read the steps.
 		CraftingStepsBundle steps = CraftingStepsBundle.read(nbt.getCompound("steps"));
 
+		// Create the output.
 		CraftingRequestResponse output = new CraftingRequestResponse(id, amount, target, steps);
 		output.currentCraftingStep = currentCraftingStep;
+
+		// Read the blocker if it was supplied.
+		if (nbt.contains("blocker")) {
+			output.currentBlocker = (TranslationTextComponent) ITextComponent.Serializer.getComponentFromJson(nbt.getString("blocker"));
+		}
+
 		return output;
 	}
 }

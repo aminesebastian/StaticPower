@@ -14,6 +14,7 @@ import theking530.staticcore.gui.widgets.textinput.TextInputWidget.TextAlignment
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.network.PacketMakeDigistoreCraftingRequest;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -68,8 +69,10 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		registerWidget(plusTen = new TextButton(134, 176, 25, 16, "+10", (b, n) -> modifyCraftingAmmount(10)));
 		registerWidget(confirm = new TextButton(61, 176, 45, 16, "Confirm", (b, n) -> confirmCraft()));
 
-		registerWidget(leftRecipe = (TextButton) new TextButton(60, 18, 14, 14, "<", (b, n) -> modifyBundleIndex(-1)).setTooltip(new TranslationTextComponent("gui.staticpower.previous_recipe")));
-		registerWidget(rightRecipe = (TextButton) new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)).setTooltip(new TranslationTextComponent("gui.staticpower.next_recipe")));
+		registerWidget(
+				leftRecipe = (TextButton) new TextButton(60, 18, 14, 14, "<", (b, n) -> modifyBundleIndex(-1)).setTooltip(new TranslationTextComponent("gui.staticpower.previous_recipe")));
+		registerWidget(
+				rightRecipe = (TextButton) new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)).setTooltip(new TranslationTextComponent("gui.staticpower.next_recipe")));
 
 		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 119));
 		registerWidget(stepsWidget = new AutoCraftingStepsWidget(8, 53, 136, 95, MAX_ROWS, COLUMNS));
@@ -118,7 +121,9 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	@Override
 	public void updateData() {
 		// Update the request.
-		stepsWidget.setRequest(getCurrentBundle());
+		CraftingStepsBundle currentBundle = getCurrentBundle();
+		CraftingRequestResponse requestWrapper = new CraftingRequestResponse(-1, currentBundle.getCraftableAmount(), getCurrentBundle().getOutput(), currentBundle);
+		stepsWidget.setRequest(requestWrapper);
 
 		// Update the scroll offset.
 		scrollBar.setMaxScroll(stepsWidget.getMaxScrollPosition());

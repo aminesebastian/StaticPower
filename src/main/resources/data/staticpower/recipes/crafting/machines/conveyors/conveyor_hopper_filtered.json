@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" b ",
+		"rhr",
+		"igi"
+	],
+	"key": {
+		"r": {
+			"tag": "forge:plates/rubber"
+		},
+		"h": {
+			"item": "minecraft:hopper"
+		},
+		"b": {
+			"item": "minecraft:iron_bars"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		},
+		"i": {
+			"tag": "forge:ingots/tin"
+		}
+	},
+	"result": {
+		"item": "staticpower:conveyor_hopper_filtered"
+	}
+}

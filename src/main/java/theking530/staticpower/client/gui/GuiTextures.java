@@ -37,6 +37,7 @@ public class GuiTextures {
 	public static final ResourceLocation CENTRIFUGE_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/centrifuge_progress_bar.png");
 	public static final ResourceLocation AUTO_SMITH_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/auto_smith_progress_bar.png");
 	public static final ResourceLocation MIXER_PROGRESS_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/mixer_progress_bar.png");
+	public static final ResourceLocation DIGISTORE_FILLED_BAR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/digistore_filled_percentage.png");
 
 	public static final ResourceLocation DAY_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/day_indicator.png");
 	public static final ResourceLocation NIGHT_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/night_indicator.png");

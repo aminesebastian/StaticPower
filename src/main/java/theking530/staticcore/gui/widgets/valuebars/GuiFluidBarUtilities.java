@@ -36,9 +36,9 @@ public class GuiFluidBarUtilities {
 	public static void drawFluidBar(@Nullable MatrixStack matrixStack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height,
 			MachineSideMode mode, boolean drawOverlay) {
 		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
-			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, mode.getColor());
+			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, 0, mode.getColor());
 		} else {
-			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height);
+			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, 0);
 		}
 
 		// 3D effect controls.

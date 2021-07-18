@@ -79,8 +79,8 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void draw(HammerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 4, 16, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 86, 14, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 4, 16, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 86, 14, 20, 20, 0);
 
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 

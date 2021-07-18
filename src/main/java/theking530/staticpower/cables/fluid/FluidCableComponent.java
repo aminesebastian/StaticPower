@@ -1,5 +1,6 @@
 package theking530.staticpower.cables.fluid;
 
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -19,7 +20,6 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
-import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
@@ -202,12 +202,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
 					// not yet initialized server side.
-					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
-					if (cable != null) {
-						disabled = cable.isDisabledOnSide(side);
-					} else {
-						disabled = true;
-					}
+					Optional<ServerCable> cable = getCable();
+					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

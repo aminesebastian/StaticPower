@@ -3,5 +3,5 @@
 	"blocks": [
 		"minecraft:air"
 	],
-	"conductivity": "0.25"
+	"conductivity": "0.1"
 }

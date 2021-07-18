@@ -193,12 +193,11 @@ public class CableNetworkManager extends WorldSavedData {
 		markDirty();
 	}
 
-	private void formNetworkAt(World world, BlockPos pos) {
+	private CableNetwork formNetworkAt(World world, BlockPos pos) {
 		CableNetwork network = new CableNetwork(pos, CurrentNetworkId++);
-
 		addNetwork(network);
-
 		network.updateGraph(world, pos);
+		return network;
 	}
 
 	private void mergeNetworksIntoOne(List<ServerCable> candidates, World world, BlockPos pos) {
@@ -206,17 +205,18 @@ public class CableNetworkManager extends WorldSavedData {
 			throw new RuntimeException("Cannot merge networks: no candidates");
 		}
 
+		// Get all network (use a set to ensure uniqueness).
 		Set<CableNetwork> networkCandidates = new HashSet<>();
 		for (ServerCable candidate : candidates) {
 			networkCandidates.add(candidate.getNetwork());
 		}
 
+		// Iterate through all the networks.
 		Iterator<CableNetwork> networks = networkCandidates.iterator();
-
 		CableNetwork mainNetwork = networks.next();
 
+		// Keep track of the merged networks.
 		Set<CableNetwork> mergedNetworks = new HashSet<>();
-
 		while (networks.hasNext()) {
 			// Remove all the other networks.
 			CableNetwork otherNetwork = networks.next();
@@ -239,21 +239,32 @@ public class CableNetworkManager extends WorldSavedData {
 	}
 
 	private void splitNetworks(ServerCable originCable) {
-		// Get all adjacent cables.
+		// Get all adjacent cables. This accounts for diabled sides.
 		List<ServerCable> adjacents = getAdjacents(originCable);
 
 		if (adjacents.size() > 0) {
+			// Because all adjacent cables belong to this network, the first one's network
+			// is the same as this cable's network.
+			// We update the network so that it's origin is now the adjacent cable (to make
+			// sure the cable we're removing is never the adjacent).
 			ServerCable firstAdjacentCable = adjacents.get(0);
+			CableNetwork network = firstAdjacentCable.getNetwork();
+			network.setOrigin(firstAdjacentCable.getPos());
 
-			firstAdjacentCable.getNetwork().setOrigin(firstAdjacentCable.getPos());
+			// Then, remap the network.
+			NetworkMapper result = network.updateGraph(firstAdjacentCable.getWorld(), firstAdjacentCable.getPos());
 
-			NetworkMapper result = firstAdjacentCable.getNetwork().updateGraph(firstAdjacentCable.getWorld(), firstAdjacentCable.getPos());
+			// Keep track of any new networks.
+			List<CableNetwork> newNetworks = new ArrayList<CableNetwork>();
 
 			// For sanity checking
 			boolean removedCableFound = false;
 
+			// Iterate through all networks.
 			for (ServerCable removed : result.getRemovedCables()) {
-				// Skip the removed cables if it is the origin one of the remove.
+				// Skip a removed cable when it's the one that trigged this split, but update
+				// the flag so we know we found it.
+				// This is a simple sanity check.
 				if (removed.getPos().equals(originCable.getPos())) {
 					removedCableFound = true;
 					continue;
@@ -261,18 +272,26 @@ public class CableNetworkManager extends WorldSavedData {
 
 				// If the removed does not have a network, create a network.
 				if (removed.getNetwork() == null) {
-					formNetworkAt(removed.getWorld(), removed.getPos());
+					newNetworks.add(formNetworkAt(removed.getWorld(), removed.getPos()));
 				}
 			}
 
+			// If the cable that triggered this split was NOT removed, we got a problem!
 			if (!removedCableFound) {
 				throw new RuntimeException("Didn't find removed cable when splitting network");
 			}
 
+			// Let the source network know of any new networks that were split off of it.
+			if(newNetworks.size() > 0) {
+				network.onNetworksSplitOff(newNetworks);	
+			}
+			
+			// Mark this cable network as dirty.
 			markDirty();
 		} else {
+			// If the adjacents list is empty, then this was the only cable in this network,
+			// remove the whole network.
 			LOGGER.debug("Removing empty network {}", originCable.getNetwork().getId());
-
 			removeNetwork(originCable.getNetwork().getId());
 		}
 	}

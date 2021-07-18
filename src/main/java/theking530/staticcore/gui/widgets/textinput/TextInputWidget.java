@@ -83,7 +83,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 	@Override
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiDrawUtilities.drawSlot(matrix, getPosition().getX(), getPosition().getY(), getSize().getX(), getSize().getY());
+		GuiDrawUtilities.drawSlot(matrix, getPosition().getX(), getPosition().getY(), getSize().getX(), getSize().getY(), 0);
 		textField.x = getPosition().getXi() + 2;
 		textField.y = getPosition().getYi() + 2;
 

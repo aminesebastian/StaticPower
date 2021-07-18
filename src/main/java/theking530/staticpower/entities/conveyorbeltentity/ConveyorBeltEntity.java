@@ -45,6 +45,7 @@ public class ConveyorBeltEntity extends ItemEntity {
 		this.setPosition(x, y, z);
 		this.rotationYaw = this.rand.nextFloat() * 360.0F;
 		this.setMotion(this.rand.nextDouble() * 0.2D - 0.1D, 0.2D, this.rand.nextDouble() * 0.2D - 0.1D);
+		this.getDataManager().set(Y_RENDER_OFFSET, rand.nextFloat() * 0.01f);
 		this.setItem(stack);
 		this.lifespan = (stack.getItem() == null ? 6000 : stack.getEntityLifespan(worldIn));
 		lifespan *= 10; // Need to expose this to a config.
@@ -116,7 +117,7 @@ public class ConveyorBeltEntity extends ItemEntity {
 	}
 
 	public float getYRenderOffset() {
-		return getDataManager().get(TIME_NOT_ON_CONVEYOR);
+		return getDataManager().get(Y_RENDER_OFFSET);
 	}
 
 	@Override

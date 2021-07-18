@@ -10,7 +10,7 @@
 		},
 		"fluid": {
 			"fluid": "staticpower:latex",
-			"volume": 100
+			"volume": 200
 		}
 	}
 }

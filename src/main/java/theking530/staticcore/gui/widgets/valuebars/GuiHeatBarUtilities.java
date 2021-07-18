@@ -29,7 +29,7 @@ public class GuiHeatBarUtilities {
 		float u1 = (float) (currentHeat / maxHeat);
 		float k1 = u1 * height;
 
-		GuiDrawUtilities.drawSlot(stack, xpos, ypos - height, width, height);
+		GuiDrawUtilities.drawSlot(stack, xpos, ypos - height, width, height, 0);
 
 		// Get the origin.
 		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(stack, xpos, ypos);

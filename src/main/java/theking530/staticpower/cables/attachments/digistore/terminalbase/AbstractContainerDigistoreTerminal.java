@@ -30,6 +30,7 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Abstract
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreTerminalFilters;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketGetCurrentCraftingQueue;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketSyncDigistoreNetworkMetrics;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
@@ -105,6 +106,22 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	 * the server.
 	 */
 	private boolean resyncInv;
+	/**
+	 * Current number of items in the network.
+	 */
+	private int usedNetworkCapacity;
+	/**
+	 * Maximum amount of items supported by this network.
+	 */
+	private int maxNetworkCapacity;
+	/**
+	 * Current amount of unique type slots in the network.
+	 */
+	private int usedNetworkTypes;
+	/**
+	 * Maximum amount of unqiue type slots in the network.
+	 */
+	private int maxNetworkTypes;
 
 	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
 			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
@@ -183,7 +200,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 							// out like usual.
 							if (shouldCraft) {
 								// Calculate the max craftable.
-								CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().getAllCraftingLists(stackInSlot, 1);
+								CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().calculateAllPossibleCraftingTrees(stackInSlot, 1);
 
 								// Open prompt for crafting if we can actually craft some.
 								// Create the container opener.
@@ -259,6 +276,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 	 * CLIENT ONLY. Sets all the container contents from the server.
 	 */
 	@OnlyIn(Dist.CLIENT)
+	@Override
 	public void setAll(List<ItemStack> items) {
 		// Capture how many digistore slots we need.
 		int digistoreItems = items.size() - getFirstDigistoreSlotIndex();
@@ -454,6 +472,29 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		return (int) Math.max(0, Math.ceil((double) nonEmptySlots / itemsPerRow) - maxRows);
 	}
 
+	public int getTotalCapacity() {
+		return this.maxNetworkCapacity;
+	}
+
+	public int getUsedCapacity() {
+		return this.usedNetworkCapacity;
+	}
+
+	public int getMaxUniqueTypes() {
+		return this.maxNetworkTypes;
+	}
+
+	public int getUsedUniqueTypes() {
+		return this.usedNetworkTypes;
+	}
+
+	public void updateMetrics(int usedCapacity, int maxCapacity, int usedTypes, int maxTypes) {
+		this.usedNetworkCapacity = usedCapacity;
+		this.maxNetworkCapacity = maxCapacity;
+		this.usedNetworkTypes = usedTypes;
+		this.maxNetworkTypes = maxTypes;
+	}
+
 	protected void setMaxRows(int maxRows) {
 		this.maxRows = maxRows;
 		resyncInv = true;
@@ -531,24 +572,43 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 			DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
 			addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
 
+			// Capture a flag to indicate a resync occured.
+			boolean resynced = false;
 			if (oldInv != null && !resyncInv) {
 				if (oldInv.getSlots() == digistoreInv.getSlots()) {
+					// If the size of the inventory has not changed, then only sync the slots that
+					// have changed.
 					for (int i = 0; i < oldInv.getSlots(); i++) {
 						ItemStack oldStack = oldInv.getStackInSlot(i);
 						if (!ItemStack.areItemStacksEqual(oldStack, digistoreInv.getStackInSlot(i))) {
 							sendLargeItemSlotContents((ServerPlayerEntity) player, this, getFirstDigistoreSlotIndex() + i, digistoreInv.getStackInSlot(i));
+							resynced = true;
 						}
 					}
 				} else {
 					// Sync the whole thing.
 					sendAllLargeItemContents((ServerPlayerEntity) player, this, this.getInventory());
+					resynced = true;
 				}
 			} else {
 				// Sync the whole thing.
 				sendAllLargeItemContents((ServerPlayerEntity) player, this, this.getInventory());
 				resyncInv = false;
+				resynced = true;
+			}
+
+			// If we resynced, also resync the metrics.
+			// Do it this way to ensure we only perform the sync once per call to this
+			// method.
+			if (resynced) {
+				syncMetricsToClient(digistoreInv);
 			}
 		});
+	}
+
+	public void syncMetricsToClient(DigistoreInventorySnapshot digistoreInv) {
+		StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player, new PacketSyncDigistoreNetworkMetrics(
+				windowId, digistoreInv.getUsedCapacity(), digistoreInv.getTotalCapacity(), digistoreInv.getUsedUniqueTypes(), digistoreInv.getMaxUniqueTypes()));
 	}
 
 	/**

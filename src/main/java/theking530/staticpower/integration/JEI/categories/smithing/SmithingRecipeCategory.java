@@ -94,11 +94,11 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 
 	@Override
 	public void draw(AutoSmithRecipeJEIWrapper recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 50, 0, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 80, 20, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 48, 40, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 50, 0, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 80, 20, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 48, 40, 20, 20, 0);
 
-		GuiDrawUtilities.drawSlot(matrixStack, 102, 0, 68, 60);
+		GuiDrawUtilities.drawSlot(matrixStack, 102, 0, 68, 60, 0);
 		GuiDrawUtilities.drawColoredRectangle(matrixStack, 102, 0, 68, 60, 0.0f, Color.DARK_GREY);
 
 		// This doesn't actually draw the fluid, just the bars.

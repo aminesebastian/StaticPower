@@ -48,7 +48,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		float valueScale = maxDataHeight / xAxisDifference;
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(matrix, getPosition().getX(), this.getPosition().getY(), getSize().getX(), getSize().getY());
+		GuiDrawUtilities.drawSlot(matrix, getPosition().getX(), this.getPosition().getY(), getSize().getX(), getSize().getY(), 0);
 
 		// Move us down and a little to the left so the origin of the graph is the
 		// bottom right corner.

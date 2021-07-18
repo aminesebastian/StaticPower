@@ -9,23 +9,34 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.utilities.Vector2D;
 
-public class DrawableWidget extends AbstractGuiWidget {
-	private IDrawable drawable;
+public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
+	private T drawable;
 	private ITextComponent tooltip;
 
-	public DrawableWidget(float xPosition, float yPosition, float width, float height, IDrawable drawable) {
+	public DrawableWidget(float xPosition, float yPosition, float width, float height, T drawable) {
 		super(xPosition, yPosition, width, height);
 		this.drawable = drawable;
+		this.drawable.setSize(width, height);
 	}
 
-	public DrawableWidget setDrawable(IDrawable drawable) {
+	@Override
+	public AbstractGuiWidget setSize(float width, float height) {
+		this.drawable.setSize(width, height);
+		return super.setSize(width, height);
+	}
+
+	public DrawableWidget<T> setDrawable(T drawable) {
 		this.drawable = drawable;
 		return this;
 	}
 
-	public DrawableWidget setTooltip(ITextComponent tooltip) {
+	public DrawableWidget<T> setTooltip(ITextComponent tooltip) {
 		this.tooltip = tooltip;
 		return this;
+	}
+
+	public T getDrawable() {
+		return drawable;
 	}
 
 	@Override

@@ -812,6 +812,11 @@
 	"gui.staticpower.rusty_cauldron_description": "The BRAND NEW Static Industries Cauldron! Made from entirely recyled materials, this marvel of engineering will serve as a solid foundation for all your future endeavours. Warranty does not cover damages resulting from excessive rust. You have your tetanus shot, right?",
 	"gui.staticpower.clean_cauldron_tooltip": "An elegant bucket, for a more civilized age.",
 	"gui.staticpower.clean_cauldron_description": "None of those NASTY recycled materials here. Every atom of this glorious, lustrous metalic shell is sourced from only the most abusive and vile silver mines, resulting in near double the efficiency! Rest easy knowing that 6 full grown men and 3 donkeys died to bring you this shiny metal bucket.",
+	"gui.staticpower.digistore_crafting_missing_items": "This crafting request cannot continue due to the missing items below!",
+	"gui.staticpower.digistore_crafting_missing_interface": "This crafting request cannot continue as there is no crafting interface capable of crafting one of the required items!",
+	"gui.staticpower.digistore_crafting_out_of_storage": "This crafting request cannot continue as this network is out of storage space!",
+	"gui.staticpower.digistore_capacity_utilization": "Using %s%% of Capacity",
+	"gui.staticpower.digistore_types_utilization": "Using %s%% of Unique Types",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

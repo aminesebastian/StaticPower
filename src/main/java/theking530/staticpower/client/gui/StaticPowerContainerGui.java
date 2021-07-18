@@ -501,9 +501,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 */
 	public void drawEmptySlot(MatrixStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
 		if (slotMode == MachineSideMode.Regular) {
-			GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height);
+			GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, 0);
 		} else {
-			GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, slotMode.getColor());
+			GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, 0, slotMode.getColor());
 		}
 	}
 
@@ -519,7 +519,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param height The height of the slot.
 	 */
 	public void drawEmptySlot(MatrixStack matrixStack, int xPos, int yPos, int width, int height) {
-		GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height);
+		GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, 0);
 	}
 
 	public void drawSlotOverlays(List<Slot> slots) {

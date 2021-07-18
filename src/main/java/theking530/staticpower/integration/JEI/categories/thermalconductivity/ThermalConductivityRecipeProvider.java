@@ -50,7 +50,14 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 			}
 
 			// Create the recipe (may be dropped).
-			ThermalConductivityJEIRecipeWrapper jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe);
+			ThermalConductivityJEIRecipeWrapper jeiRecipe;
+
+			// If this is a fire input recipe, mark it.
+			if (recipe.getBlockTags().length > 0 && recipe.getBlockTags()[0].toString().equals("minecraft:fire")) {
+				jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe, true);
+			} else {
+				jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe);
+			}
 
 			// Add blocks.
 			if (recipe.getBlockTags().length > 0) {
@@ -164,6 +171,8 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 
 	public static class ThermalConductivityJEIRecipeWrapper implements IRecipe<IInventory> {
 		public static final IRecipeType<ThermalConductivityJEIRecipeWrapper> RECIPE_TYPE = IRecipeType.register("thermal_conductivity_jei");
+		private final boolean isFireInput;
+		private final boolean hasFireOutput;
 		private final ResourceLocation id;
 		private final ThermalConductivityRecipe recipe;
 		private final ItemStack blockOutput;
@@ -174,7 +183,12 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		private FluidStack fluid;
 
 		public ThermalConductivityJEIRecipeWrapper(ThermalConductivityRecipe recipe) {
+			this(recipe, false);
+		}
+
+		public ThermalConductivityJEIRecipeWrapper(ThermalConductivityRecipe recipe, boolean isFireInput) {
 			super();
+			this.isFireInput = isFireInput;
 			this.recipe = recipe;
 			this.blockOutput = generateOutputIngredient(recipe);
 			this.id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_jei");
@@ -190,10 +204,20 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 			} else {
 				fluidOutput = FluidStack.EMPTY;
 			}
+
+			this.hasFireOutput = recipe.getOverheatedBlock() != null ? recipe.getOverheatedBlock().getBlock().getRegistryName().toString().equals("minecraft:fire") : false;
 		}
 
 		public void addInput(ItemStack input) {
 			rawInputs.add(input);
+		}
+
+		public boolean getIsFireInput() {
+			return isFireInput;
+		}
+
+		public boolean getHasFireOutput() {
+			return hasFireOutput;
 		}
 
 		public FluidStack getFluidInput() {

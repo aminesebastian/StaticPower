@@ -27,7 +27,7 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 		Vector2D offset = new Vector2D(screenSpacePosition.getX() + (getSize().getX() / 2.0f), screenSpacePosition.getY() + (getSize().getY() / 2.0f) + scale);
 
 		// Draw the slot border.
-		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
+		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0);
 
 		// Then the background.
 		GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 1.0f, Color.BLACK);

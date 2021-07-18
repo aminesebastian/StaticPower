@@ -32,7 +32,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 	private final List<IDigistoreInventory> digistores;
 	private final List<ServerCable> powerUsingDigistores;
-	private final List<TileEntityPatternStorage> constructors;
+	private final List<TileEntityPatternStorage> patternStorages;
 	private final List<CraftingInterfaceWrapper> craftingInterfaces;
 
 	private final DigistoreNetworkTransactionManager transactionManager;
@@ -46,7 +46,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		transactionManager = new DigistoreNetworkTransactionManager(this);
 		powerUsingDigistores = new LinkedList<ServerCable>();
 		craftingInterfaces = new LinkedList<CraftingInterfaceWrapper>();
-		constructors = new LinkedList<TileEntityPatternStorage>();
+		patternStorages = new LinkedList<TileEntityPatternStorage>();
 		craftingManager = new DigistoreNetworkCraftingManager(this);
 	}
 
@@ -69,7 +69,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 		// Clear the initial values back to their defaults.
 		digistores.clear();
-		constructors.clear();
+		patternStorages.clear();
 		powerUsingDigistores.clear();
 		craftingInterfaces.clear();
 		manager = null;
@@ -87,7 +87,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 				// Capture the constructors.
 				if (te instanceof TileEntityPatternStorage) {
-					constructors.add((TileEntityPatternStorage) te);
+					patternStorages.add((TileEntityPatternStorage) te);
 				}
 
 				// If this cable has a power usage tag, capture it as a power user.
@@ -164,8 +164,8 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		return usage;
 	}
 
-	public List<TileEntityPatternStorage> getConstructors() {
-		return constructors;
+	public List<TileEntityPatternStorage> getPatternStorageTileEntities() {
+		return patternStorages;
 	}
 
 	public List<CraftingInterfaceWrapper> getCraftingInterfaces() {

@@ -10,4 +10,6 @@ public interface IDrawable {
 	}
 
 	public void draw(float x, float y, float z);
+
+	public void setSize(float width, float height);
 }

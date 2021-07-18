@@ -116,7 +116,16 @@ public class CableNetwork {
 		// Return the mapping result.
 		return output;
 	}
-
+	public void onNetworksSplitOff(List<CableNetwork> newNetworks) {
+		// Let all the modules know the graph was updated.
+		for (AbstractCableNetworkModule module : Modules.values()) {
+			try {
+				module.onNetworksSplitOff(newNetworks);
+			} catch (Exception e) {
+				throw new RuntimeException(String.format("An error occured when attempting to let a network module of type: %1$s know of new networks that resulted from a split.", module.getType().toString()), e);
+			}
+		}
+	}
 	public List<ITextComponent> getReaderOutput() {
 		// Allocate the output list.
 		List<ITextComponent> output = new LinkedList<ITextComponent>();

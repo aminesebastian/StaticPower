@@ -31,4 +31,9 @@ public class ItemDrawable implements IDrawable {
 			Minecraft.getInstance().getItemRenderer().zLevel = initialValue;
 		}
 	}
+
+	@Override
+	public void setSize(float width, float height) {
+		
+	}
 }

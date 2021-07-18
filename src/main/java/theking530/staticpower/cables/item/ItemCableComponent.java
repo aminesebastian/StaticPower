@@ -3,6 +3,7 @@ package theking530.staticpower.cables.item;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.annotation.Nullable;
 
@@ -180,12 +181,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
 					// not yet initailized server side.
-					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
-					if (cable != null) {
-						disabled = cable.isDisabledOnSide(side);
-					} else {
-						disabled = true;
-					}
+					Optional<ServerCable> cable = getCable();
+					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

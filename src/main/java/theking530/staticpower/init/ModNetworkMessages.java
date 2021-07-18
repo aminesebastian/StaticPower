@@ -10,6 +10,7 @@ import theking530.staticpower.cables.attachments.digistore.patternencoder.Packet
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreTerminalFilters;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketGetCurrentCraftingQueue;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketReturnCurrentCraftingQueue;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketSyncDigistoreNetworkMetrics;
 import theking530.staticpower.cables.digistore.crafting.network.PacketCancelDigistoreCraftingRequest;
 import theking530.staticpower.cables.digistore.crafting.network.PacketMakeDigistoreCraftingRequest;
 import theking530.staticpower.cables.digistore.crafting.network.PacketRequestDigistoreCraftRecalculation;
@@ -78,5 +79,6 @@ public class ModNetworkMessages {
 //		StaticPowerMessageHandler.registerVanillaStyleMessage(ConveyorBeltEntitySpawnPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
 		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreNetworkMetrics.class);
 	}
 }

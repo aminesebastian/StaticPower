@@ -19,6 +19,10 @@ public abstract class AbstractCableNetworkModule {
 
 	}
 
+	public void onNetworksSplitOff(List<CableNetwork> newNetworks) {
+
+	}
+
 	public void onAddedToNetwork(CableNetwork network) {
 		Network = network;
 	}

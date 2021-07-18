@@ -11,6 +11,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -102,7 +103,11 @@ public class TileEntityTank extends TileEntityBase {
 
 	@Override
 	public void process() {
-		// markTileEntityForSynchronization(); // Need to improve this.
+		// Creative tanks should automatically fill up with the first provided fluid.
+		if (getType() == TYPE_CREATIVE.getType() && fluidTankComponent.getFluidAmount() > 0) {
+			FluidStack existingStack = fluidTankComponent.getFluid();
+			existingStack.setAmount(fluidTankComponent.getCapacity());
+		}
 	}
 
 	@Override

@@ -86,11 +86,11 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		// Draw the slots.
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
-				GuiDrawUtilities.drawSlot(matrixStack, 40 + j * 18, 4 + i * 18, 16, 16);
+				GuiDrawUtilities.drawSlot(matrixStack, 40 + j * 18, 4 + i * 18, 16, 16, 0);
 			}
 		}
 
-		GuiDrawUtilities.drawSlot(matrixStack, 112, 34, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 112, 34, 20, 20, 0);
 
 		// Draw the power bar.
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
@@ -99,7 +99,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluidStack(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 97, 24, 48, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 97, 24, 48, 5, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 45;
 		FluidStack fluid = recipe.getOutputFluidStack();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 97, 29, 1, progress, 5, false);

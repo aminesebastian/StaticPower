@@ -52,7 +52,7 @@ public class ContainerCraftingAmount extends StaticPowerContainer {
 			CableNetwork network = CableNetworkManager.get(getPlayerInventory().player.world).getNetworkById(networkId);
 			DigistoreNetworkModule digistoreModule = network.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 			if (digistoreModule != null && digistoreModule.isManagerPresent()) {
-				CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().getAllCraftingLists(target, amount);
+				CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().calculateAllPossibleCraftingTrees(target, amount);
 				PacketSimulateDigistoreCraftingRequestResponse newCraftingRequest = new PacketSimulateDigistoreCraftingRequestResponse(windowId, newBundles);
 				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player, newCraftingRequest);
 			}

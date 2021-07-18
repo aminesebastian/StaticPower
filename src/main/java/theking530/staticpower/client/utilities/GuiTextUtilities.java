@@ -260,6 +260,14 @@ public class GuiTextUtilities {
 		return new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(number));
 	}
 
+	public static IFormattableTextComponent formatNumberAsStringNoDecimal(double number) {
+		return new StringTextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(number));
+	}
+
+	public static IFormattableTextComponent formatNumberAsStringOneDecimal(double number) {
+		return new StringTextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(number));
+	}
+
 	public static IFormattableTextComponent formatNumberAsString(int number) {
 		return new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(number));
 	}

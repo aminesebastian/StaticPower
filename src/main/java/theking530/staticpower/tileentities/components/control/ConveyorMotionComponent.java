@@ -21,8 +21,6 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	private Vector3D velocity;
 	private double compensationRate;
 	private boolean affectEntitiesAbove;
-	private double minDistanceFromCenter;
-	private double maxDistanceFromCenter;
 	private Predicate<Entity> filter;
 
 	public ConveyorMotionComponent(String name, Vector3D velocity) {
@@ -34,8 +32,8 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		this.compensationRate = compensationRate;
 		this.velocity = velocity;
 		this.affectEntitiesAbove = false;
-		this.minDistanceFromCenter = SDMath.clamp(0.5 - centerChannelWidth, 0, 1);
-		this.maxDistanceFromCenter = SDMath.clamp(0.5 + centerChannelWidth, 0, 1);
+		SDMath.clamp(0.5 - centerChannelWidth, 0, 1);
+		SDMath.clamp(0.5 + centerChannelWidth, 0, 1);
 		this.filter = (entity) -> true;
 	}
 

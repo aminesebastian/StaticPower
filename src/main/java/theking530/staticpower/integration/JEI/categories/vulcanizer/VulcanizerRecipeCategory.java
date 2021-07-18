@@ -81,14 +81,14 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	@Override
 	public void draw(VulcanizerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 112, 15, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 112, 15, 20, 20, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 40, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 62, 23, 43, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 62, 23, 43, 5, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 43;
 		FluidStack fluid = recipe.getInputFluid();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 62, 28, 1, progress, 5, false);

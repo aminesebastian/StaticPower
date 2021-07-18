@@ -42,6 +42,10 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	private final boolean simulated;
 	private boolean isEmpty;
 
+	private int usedCapacity;
+	private int maxCapacity;
+	private int usedTypes;
+	private int maxTypes;
 	private DigistoreNetworkModule module;
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
@@ -92,6 +96,13 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 		// Populate the stacks.
 		for (IDigistoreInventory digistore : module.getAllDigistores()) {
+			// Capture metrics.
+			usedCapacity += digistore.getTotalContainedCount();
+			maxCapacity += digistore.getItemCapacity();
+			usedTypes += digistore.getCurrentUniqueItemTypeCount();
+			maxTypes += digistore.getUniqueItemCapacity();
+
+			// Capture all the items contained in the network.
 			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
 				// Stack in slot.
 				ItemStack stackInSlot = digistore.getDigistoreStack(i).getStoredItem();
@@ -109,7 +120,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		}
 
 		// Add the craftable items.
-		for (TileEntityPatternStorage constructor : module.getConstructors()) {
+		for (TileEntityPatternStorage constructor : module.getPatternStorageTileEntities()) {
 			// Iterate through all the patterns.
 			for (ItemStack pattern : constructor.patternInventory) {
 				// If we're able to get the encoded pattern and it is for a crafting table.
@@ -310,6 +321,22 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public ItemStack insertItemStack(ItemStack stack, boolean simulate) {
 		return InventoryUtilities.insertItemIntoInventory(this, stack, simulate);
+	}
+
+	public int getTotalCapacity() {
+		return this.maxCapacity;
+	}
+
+	public int getUsedCapacity() {
+		return this.usedCapacity;
+	}
+
+	public int getMaxUniqueTypes() {
+		return this.maxTypes;
+	}
+
+	public int getUsedUniqueTypes() {
+		return this.usedTypes;
 	}
 
 	protected void cacheCraftable(ItemStack stack, EncodedDigistorePattern pattern) {

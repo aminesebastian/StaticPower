@@ -84,15 +84,15 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 
 	@Override
 	public void draw(SqueezerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 50, 12, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 75, 32, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 50, 12, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 75, 32, 20, 20, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 106, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 72, 18, 28, 5);
+		GuiDrawUtilities.drawSlot(matrixStack, 72, 18, 28, 5, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
 		FluidStack fluid = recipe.getOutputFluid();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 72, 23, 1, progress, 5, false);

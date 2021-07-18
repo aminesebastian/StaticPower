@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"   ",
+		"rrr",
+		"igi"
+	],
+	"key": {
+		"r": {
+			"tag": "forge:plates/rubber"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		},
+		"i": {
+			"tag": "forge:ingots/tin"
+		}
+	},
+	"result": {
+		"item": "staticpower:conveyor_straight"
+	}
+}

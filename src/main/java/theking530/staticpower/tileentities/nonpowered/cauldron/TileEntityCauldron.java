@@ -49,8 +49,9 @@ public class TileEntityCauldron extends TileEntityBase {
 	public TileEntityCauldron(TileEntityTypeAllocator<TileEntityCauldron> allocator) {
 		super(allocator);
 		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000).setCanFill(true).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
-		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", 200.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+		
+		// Only allow this to be heated by other sources.
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 200.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
 	}
 
 	@Override

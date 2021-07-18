@@ -15,9 +15,15 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -74,10 +80,11 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		return icon;
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void draw(ThermalConductivityJEIRecipeWrapper recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 5, 5, 20, 20);
-		GuiDrawUtilities.drawSlot(matrixStack, 30, 5, 135, 55);
+		GuiDrawUtilities.drawSlot(matrixStack, 5, 5, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 30, 5, 135, 55, 0);
 
 		String conductivity = new StringTextComponent("Heat Conductivity: ").appendString(TextFormatting.BLUE.toString())
 				.append(GuiTextUtilities.formatConductivityToString(recipe.getRecipe().getThermalConductivity())).getString();
@@ -91,15 +98,17 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		int yPos = 15;
 		int xPos = 160;
 
-		GuiDrawUtilities.drawStringWithSize(matrixStack, conductivity, xPos, yPos, 1.0f, Color.EIGHT_BIT_WHITE, true);
+		if (recipe.getRecipe().getThermalConductivity() > 0) {
+			GuiDrawUtilities.drawStringWithSize(matrixStack, conductivity, xPos, yPos, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			yPos += 10;
+		}
 
 		if (recipe.getRecipe().getHeatAmount() > 0) {
-			yPos += 10;
 			GuiDrawUtilities.drawStringWithSize(matrixStack, heat, xPos, yPos, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 35, 32, 20, 20);
+			GuiDrawUtilities.drawSlot(matrixStack, 35, 32, 20, 20, 0);
 			GuiDrawUtilities.drawStringWithSize(matrixStack, overheatTemp, xPos, 44f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
@@ -116,6 +125,33 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 58, 0.5f, TextFormatting.WHITE, false);
 			} else {
 				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 58, 0.5f, TextFormatting.WHITE, false);
+			}
+		}
+
+		// If the input or output is fire, manually render it.
+		if (recipe.getIsFireInput() || recipe.getHasFireOutput()) {
+			Minecraft mc = Minecraft.getInstance();
+			BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
+			MatrixStack blockStack = new MatrixStack();
+
+			if (recipe.getIsFireInput()) {
+				blockStack.push();
+				blockStack.translate(-0.5, 4.7f, 0.0f);
+				blockStack.scale(0.7f, 0.7f, 0.7f);
+				blockStack.rotate(new Quaternion(32, 45, 0, true));
+
+				BlockState fireState = Blocks.FIRE.getDefaultState();
+				blockRenderer.renderBlock(fireState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+				blockStack.pop();
+			} else if (recipe.getHasFireOutput()) {
+				blockStack.push();
+				blockStack.translate(1.4, -2.0f, -1.0f);
+				blockStack.scale(0.7f, 0.7f, 0.7f);
+				blockStack.rotate(new Quaternion(32, 45, 0, true));
+
+				BlockState fireState = Blocks.FIRE.getDefaultState();
+				blockRenderer.renderBlock(fireState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+				blockStack.pop();
 			}
 		}
 	}

@@ -94,8 +94,8 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	@SuppressWarnings("deprecation")
 	@Override
 	public void draw(CauldronRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 4, 6, 16, 16);
-		GuiDrawUtilities.drawSlot(matrixStack, 105, 22, 20, 20);
+		GuiDrawUtilities.drawSlot(matrixStack, 4, 6, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 105, 22, 20, 20, 0);
 
 		arrow.setPosition(23, 6);
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);

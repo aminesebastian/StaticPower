@@ -33,7 +33,7 @@ public class FluidProgressBar extends AbstractProgressBar {
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY());
+		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0);
 
 		// Draw the fluid.
 		if (!displayFluidStack.isEmpty()) {

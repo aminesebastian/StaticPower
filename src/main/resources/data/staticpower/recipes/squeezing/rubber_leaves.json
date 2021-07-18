@@ -6,7 +6,7 @@
 	"outputs": {
 		"fluid": {
 			"fluid": "staticpower:latex",
-			"volume": 10
+			"volume": 20
 		}
 	}
 }

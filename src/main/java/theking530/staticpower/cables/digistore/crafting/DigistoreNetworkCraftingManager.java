@@ -14,6 +14,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.ListNBT;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
@@ -78,7 +79,7 @@ public class DigistoreNetworkCraftingManager {
 		return craftingRequests.containsKey(id);
 	}
 
-	public CraftingStepsBundleContainer getAllCraftingLists(ItemStack requestedItem, int amount) {
+	public CraftingStepsBundleContainer calculateAllPossibleCraftingTrees(ItemStack requestedItem, int amount) {
 		// Strip any autocrafting data from the stack if needed. Set the count to 1 to
 		// so we have an example stack of exactly one.
 		ItemStack strippedItem = requestedItem.copy();
@@ -109,7 +110,7 @@ public class DigistoreNetworkCraftingManager {
 
 	public @Nullable CraftingRequestResponse addAutomationCraftingRequest(ItemStack requestedItem, int amount) {
 		// Get all the possible ways to craft this item.
-		CraftingStepsBundleContainer bundleContainer = getAllCraftingLists(requestedItem, amount);
+		CraftingStepsBundleContainer bundleContainer = calculateAllPossibleCraftingTrees(requestedItem, amount);
 
 		// If there are none, return null.
 		if (bundleContainer.isEmpty()) {
@@ -147,6 +148,9 @@ public class DigistoreNetworkCraftingManager {
 
 		// Get the next step.
 		AutoCraftingStep step = request.peekTopStep();
+		
+		// Clear the blocker (they will be re-applied through this method).
+		request.clearBlocker();
 
 		// If this is a crafting step, make sure we can craft it. If it is not, make
 		// sure we still have the required items. If we do not, see if we can resolve
@@ -163,6 +167,7 @@ public class DigistoreNetworkCraftingManager {
 			for (EncodedIngredient requiredItem : request.peekTopStep().getCraftingPattern().getRequiredItems()) {
 				int simulatedExtract = snapshot.extractWithIngredient(requiredItem.getIngredient(), requiredItem.getCount(), false);
 				if (simulatedExtract != requiredItem.getCount()) {
+					request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_missing_items"));
 					return false;
 				}
 			}
@@ -171,13 +176,19 @@ public class DigistoreNetworkCraftingManager {
 			// the recipe. If there is no crafting interface for this recipe, return false.
 			if (step.getCraftingPattern().getRecipeType() == RecipeEncodingType.MACHINE) {
 				if (getCraftingInterfaceForIngredient(step.getIngredientToCraft()) == null) {
+					request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_missing_interface"));
 					return false;
 				}
 			}
 
 			// Check to see if we have space to insert the crafted item.
 			ItemStack remaining = module.insertItem(request.peekTopStep().getCraftingPattern().getOutput().copy(), true);
-			return remaining.isEmpty();
+			if (!remaining.isEmpty()) {
+				request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_out_of_storage"));
+				return false;
+			}
+
+			return true;
 		} else {
 			// See if we have enough.
 			int simulatedExtract = snapshot.extractWithIngredient(step.getIngredientToCraft(), step.getTotalRequiredAmount(), true);
@@ -201,6 +212,7 @@ public class DigistoreNetworkCraftingManager {
 						}
 					}
 				}
+				request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_missing_items"));
 				return false;
 			} else {
 				return true;
@@ -322,7 +334,7 @@ public class DigistoreNetworkCraftingManager {
 		// Serialize the requests to the list.
 		ListNBT requestNBTList = new ListNBT();
 		craftingRequests.values().forEach(request -> {
-			requestNBTList.add(request.serialze());
+			requestNBTList.add(request.serialize());
 		});
 		return requestNBTList;
 	}

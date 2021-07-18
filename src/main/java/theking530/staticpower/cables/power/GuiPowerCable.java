@@ -114,7 +114,7 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 		float netPosition = xPos + 110;
 
 		// Draw the values background.
-		GuiDrawUtilities.drawSlot(stack, xPos, yPos, 146, 12);
+		GuiDrawUtilities.drawSlot(stack, xPos, yPos, 146, 12, 0);
 
 		// Draw the labels.
 		GuiDrawUtilities.drawStringWithSize(stack, "In:", inPosition, yPos + 4.5f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);

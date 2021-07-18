@@ -79,16 +79,15 @@ public class GuiDrawUtilities {
 	public static void drawPlayerInventorySlots(MatrixStack matrixStack, int xPos, int yPos) {
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				drawSlot(matrixStack, xPos + j * 18, yPos + 1 + i * 18, 16, 16);
+				drawSlot(matrixStack, xPos + j * 18, yPos + 1 + i * 18, 16, 16, 0);
 			}
 		}
 		for (int i = 0; i < 9; i++) {
-			drawSlot(matrixStack, xPos + i * 18, yPos + 59, 16, 16);
+			drawSlot(matrixStack, xPos + i * 18, yPos + 59, 16, 16, 0);
 		}
 	}
 
-	public static void drawSlot(@Nullable MatrixStack matrixStack, float xPos, float yPos, float width, float height, Color color) {
-		float zLevel = 0.0f;
+	public static void drawSlot(@Nullable MatrixStack matrixStack, float xPos, float yPos, float width, float height, float zLevel, Color color) {
 		Vector2D origin = translatePositionByMatrix(matrixStack, xPos, yPos);
 
 		if (color != null) {
@@ -105,12 +104,12 @@ public class GuiDrawUtilities {
 		drawColoredRectangle(origin.getX(), origin.getY(), width, height, zLevel, DEFAULT_SLOT_CORNER_COLOR);
 	}
 
-	public static void drawSlot(@Nullable MatrixStack matrixStack, float xPos, float yPos, float width, float height) {
-		drawSlot(matrixStack, xPos, yPos, width, height, null);
+	public static void drawSlot(@Nullable MatrixStack matrixStack, float xPos, float yPos, float width, float height, float zLevel) {
+		drawSlot(matrixStack, xPos, yPos, width, height, zLevel, null);
 	}
 
 	public void drawVerticalBar(MatrixStack matrixStack, float xPos, float yPos, float width, float height, float fillAmount, Color color) {
-		drawSlot(null, xPos, yPos, width, height);
+		drawSlot(null, xPos, yPos, width, height, 0);
 		int filledHeight = (int) (fillAmount * height);
 		float zLevel = 0.0f;
 		drawColoredRectangle(xPos, yPos + (height - filledHeight), xPos + width, yPos + height, zLevel, color);

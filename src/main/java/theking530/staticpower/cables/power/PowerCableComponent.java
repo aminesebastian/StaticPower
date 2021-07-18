@@ -17,7 +17,6 @@ import theking530.api.power.CapabilityStaticVolt;
 import theking530.api.power.IStaticVoltHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
@@ -189,12 +188,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	 * @return
 	 */
 	protected Optional<PowerNetworkModule> getPowerNetworkModule() {
-		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
-		ServerCable cable = manager.getCable(getTileEntity().getPos());
-		if (cable != null && cable.getNetwork() != null) {
-			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE));
-		}
-		return Optional.empty();
+		return getNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 	}
 
 	@Override
@@ -206,8 +200,8 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 				if (getWorld().isRemote) {
 					disabled = isSideDisabled(side);
 				} else {
-					ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
-					disabled = cable.isDisabledOnSide(side);
+					Optional<ServerCable> cable = getCable();
+					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

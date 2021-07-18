@@ -12,12 +12,12 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
-import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 
 public class AutoCraftingStepsWidget extends AbstractGuiWidget {
-	private CraftingStepsBundle bundle;
+	private CraftingRequestResponse request;
 	private int rows;
 	private int columns;
 	private int scrollPosition;
@@ -38,19 +38,19 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		}
 	}
 
-	public void setRequest(CraftingStepsBundle bundle) {
-		this.bundle = bundle;
+	public void setRequest(CraftingRequestResponse request) {
+		this.request = request;
 	}
 
 	@Override
 	public void updateData() {
 		// If there is no request, do nothing.
-		if (bundle == null) {
+		if (request == null) {
 			return;
 		}
 
 		// Get the required materials.
-		RequiredAutoCraftingMaterials materials = bundle.getBillOfMaterials();
+		RequiredAutoCraftingMaterials materials = request.getBillOfMaterials();
 
 		// Capture the min and max indicies.
 		int start = 0 + (scrollPosition * columns);
@@ -60,7 +60,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Draw the steps.
 		for (int i = end - 1; i >= start; i--) {
 			int zeroIndex = i - start;
-			stepRenderers.get(zeroIndex).setMaterial(materials.getMaterials().get(i));
+			stepRenderers.get(zeroIndex).setStepData(request, materials.getMaterials().get(i), request.getCurrentCraftingStepIndex() - 1 == zeroIndex);
 			stepRenderers.get(zeroIndex).updateData();
 		}
 	}
@@ -68,7 +68,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	@Override
 	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
 		// If there is no request, do nothing.
-		if (bundle == null) {
+		if (request == null) {
 			return;
 		}
 
@@ -84,10 +84,10 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		Vector2D screenSpacePos = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(null, screenSpacePos.getX(), screenSpacePos.getY(), getSize().getX(), (rows * 24) - 1);
+		GuiDrawUtilities.drawSlot(null, screenSpacePos.getX(), screenSpacePos.getY(), getSize().getX(), (rows * 24) - 1, 0);
 
 		// If there is no request, do nothing else.
-		if (bundle == null) {
+		if (request == null) {
 			return;
 		}
 
@@ -104,11 +104,10 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 			// If the widget has a cooresponding material, set it and render. Otherwise, set
 			// it to null and do nothing.
 			if (i < materials.size()) {
-				widget.setMaterial(materials.get(i));
 				widget.updateBeforeRender(matrix, getSize(), partialTicks, mouseX, mouseY);
 				widget.renderForeground(matrix, mouseX, mouseY, partialTicks);
 			} else {
-				widget.setMaterial(null);
+				widget.setStepData(null, null, false);
 			}
 		}
 
@@ -124,12 +123,12 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 
 	public List<RequiredAutoCraftingMaterial> getMaterialsForScrollPosition() {
 		// If there is no request, do nothing.
-		if (bundle == null) {
+		if (request == null) {
 			return Collections.emptyList();
 		}
 
 		// Get the required materials.
-		RequiredAutoCraftingMaterials materials = bundle.getBillOfMaterials();
+		RequiredAutoCraftingMaterials materials = request.getBillOfMaterials();
 
 		// Capture the min and max indicies.
 		int start = 0 + (scrollPosition * columns);
@@ -156,11 +155,11 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 
 	public int getMaxScrollPosition() {
 		// If there is no request, do nothing.
-		if (bundle == null) {
+		if (request == null) {
 			return 0;
 		}
 
-		int materialRows = (int) Math.ceil((double) bundle.getBillOfMaterials().getMaterials().size() / columns);
+		int materialRows = (int) Math.ceil((double) request.getBillOfMaterials().getMaterials().size() / columns);
 		return Math.max(0, materialRows - rows);
 	}
 

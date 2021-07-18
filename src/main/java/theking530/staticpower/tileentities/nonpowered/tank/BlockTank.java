@@ -15,6 +15,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
@@ -29,9 +30,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.common.ToolType;
+import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.items.CapabilityItemHandler;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -72,6 +76,38 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@Override
 	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
 		return HasGuiType.ALWAYS;
+	}
+
+	@Override
+	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+		// Check if the player is holding anything.
+		if (!player.getHeldItem(hand).isEmpty()) {
+			// Get the held item and a pointer to the cauldron.
+			ItemStack heldItem = player.getHeldItem(hand);
+			TileEntityTank cauldron = (TileEntityTank) world.getTileEntity(pos);
+			FluidActionResult actionResult = null;
+			boolean shouldManuallyReplace = heldItem.getCount() == 1;
+
+			// If the cauldron already has contents, attempt to fill the held item,
+			// otherwise, fill the cauldron.
+			if (cauldron.fluidTankComponent.getFluidAmount() > 0) {
+				actionResult = FluidUtil.tryFillContainerAndStow(heldItem, cauldron.fluidTankComponent, player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000,
+						player, true);
+			} else {
+				actionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, cauldron.fluidTankComponent, player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000,
+						player, true);
+			}
+
+			// Check what happened.
+			if (actionResult.isSuccess()) {
+				if (shouldManuallyReplace) {
+					player.setHeldItem(hand, actionResult.getResult());
+				}
+				return ActionResultType.SUCCESS;
+			}
+		}
+		return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
+
 	}
 
 	@Override
