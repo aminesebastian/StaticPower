@@ -4,6 +4,7 @@ import io.netty.buffer.Unpooled;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.Direction;
@@ -13,13 +14,13 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.container.StaticPowerContainer;
 
-public class AbstractCableAttachmentContainer<T extends AbstractCableAttachment> extends StaticPowerContainer {
+public class AbstractCableAttachmentContainer<T extends Item> extends StaticPowerContainer {
 	private final Direction attachmentSide;
 	private final AbstractCableProviderComponent cableComponent;
 	private final ItemStack attachment;
 
-	protected AbstractCableAttachmentContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, PlayerInventory inv, ItemStack attachment, Direction attachmentSide,
-			AbstractCableProviderComponent cableComponent) {
+	protected AbstractCableAttachmentContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, PlayerInventory inv, ItemStack attachment,
+			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(allocator, id, inv);
 		this.attachment = attachment;
 		this.attachmentSide = attachmentSide;

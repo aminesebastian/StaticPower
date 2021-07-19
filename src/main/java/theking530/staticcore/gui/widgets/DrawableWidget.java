@@ -12,11 +12,17 @@ import theking530.staticcore.utilities.Vector2D;
 public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 	private T drawable;
 	private ITextComponent tooltip;
+	private float zLevel;
 
 	public DrawableWidget(float xPosition, float yPosition, float width, float height, T drawable) {
 		super(xPosition, yPosition, width, height);
 		this.drawable = drawable;
 		this.drawable.setSize(width, height);
+		this.zLevel = 0.0f;
+	}
+
+	public DrawableWidget(float xPosition, float yPosition, T drawable) {
+		this(xPosition, yPosition, drawable.getSize().getX(), drawable.getSize().getY(), drawable);
 	}
 
 	@Override
@@ -39,13 +45,22 @@ public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 		return drawable;
 	}
 
+	public DrawableWidget<T> setZLevel(float zLevel) {
+		this.zLevel = zLevel;
+		return this;
+	}
+
+	public float getZLevel() {
+		return zLevel;
+	}
+
 	@Override
 	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Get the screen space position and offset it by the scale to center the
 		// entity.
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		if (drawable != null) {
-			drawable.draw(screenSpacePosition.getX(), screenSpacePosition.getY());
+			drawable.draw(screenSpacePosition.getX(), screenSpacePosition.getY(), zLevel);
 		}
 	}
 

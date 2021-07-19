@@ -4,6 +4,7 @@ import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
+import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderEncode;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderRecipeTypeChange;
@@ -22,6 +23,7 @@ import theking530.staticpower.cables.item.ItemCableRemovedPacket;
 import theking530.staticpower.cables.power.PowerMetricsSyncPacket;
 import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.PacketRevertToParentContainer;
+import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.SSetSlotLargeItemStackPacket;
@@ -75,10 +77,10 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
 		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
-//		StaticPowerMessageHandler.registerVanillaStyleMessage(CauldronContainedEntitySpawnPacket.class);
-//		StaticPowerMessageHandler.registerVanillaStyleMessage(ConveyorBeltEntitySpawnPacket.class);
+		StaticPowerMessageHandler.registerMessage(PacketRestorePreviousCraftingRecipe.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
 		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreNetworkMetrics.class);
+		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
 	}
 }

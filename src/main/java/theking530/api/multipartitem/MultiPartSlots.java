@@ -1,4 +1,4 @@
-package theking530.api.multipart;
+package theking530.api.multipartitem;
 
 import theking530.staticpower.items.tools.chainsaw.ChainsawBlade;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;

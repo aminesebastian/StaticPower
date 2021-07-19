@@ -2,6 +2,7 @@ package theking530.staticcore.gui.drawables;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public interface IDrawable {
@@ -12,4 +13,6 @@ public interface IDrawable {
 	public void draw(float x, float y, float z);
 
 	public void setSize(float width, float height);
+
+	public Vector2D getSize();
 }

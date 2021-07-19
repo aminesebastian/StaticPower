@@ -7,17 +7,21 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IItemProvider;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemDrawable implements IDrawable {
 	private final ItemStack itemStack;
+	private final Vector2D size;
 
 	public ItemDrawable(@Nonnull IItemProvider item) {
 		itemStack = new ItemStack(item);
+		size = new Vector2D(16, 16);
 	}
 
 	public ItemDrawable(@Nonnull ItemStack stack) {
 		itemStack = stack.copy();
+		size = new Vector2D(16, 16);
 	}
 
 	@Override
@@ -34,6 +38,11 @@ public class ItemDrawable implements IDrawable {
 
 	@Override
 	public void setSize(float width, float height) {
-		
+
+	}
+
+	@Override
+	public Vector2D getSize() {
+		return size;
 	}
 }

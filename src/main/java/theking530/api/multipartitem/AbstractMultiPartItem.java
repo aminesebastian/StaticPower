@@ -1,4 +1,4 @@
-package theking530.api.multipart;
+package theking530.api.multipartitem;
 
 import java.util.List;
 

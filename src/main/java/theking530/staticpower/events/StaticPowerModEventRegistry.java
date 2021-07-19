@@ -46,6 +46,7 @@ import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;
+import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.TOP.PluginTOP;
 
@@ -72,6 +73,7 @@ public class StaticPowerModEventRegistry {
 		CapabilityStaticVolt.register();
 		CapabilityHeatable.register();
 		CapabilityAttributable.register();
+		CapabilityStaticPowerPlayerData.register();
 
 		// Register composter recipes.
 		DeferredWorkQueue.runLater(() -> {

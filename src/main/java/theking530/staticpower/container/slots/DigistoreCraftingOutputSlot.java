@@ -55,7 +55,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 			});
 		}
 		stack.getItem().onCreated(stack, thePlayer.world, thePlayer);
-		container.onItemCrafted(stack);
+		container.onItemCrafted(currentMatrixContents, stack);
 		return stack;
 	}
 }

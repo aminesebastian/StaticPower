@@ -28,7 +28,7 @@ import theking530.api.attributes.defenitions.PromotedAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
-import theking530.api.multipart.AbstractToolPart;
+import theking530.api.multipartitem.AbstractToolPart;
 import theking530.staticcore.utilities.ItemTierUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.StaticPowerAdditionalModels;

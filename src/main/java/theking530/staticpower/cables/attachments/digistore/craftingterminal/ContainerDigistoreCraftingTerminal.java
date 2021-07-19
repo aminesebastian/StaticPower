@@ -180,13 +180,6 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		}
 	}
 
-	@Override
-	protected void onManagerStateChanged(boolean isPresent) {
-		if (!isPresent) {
-			clearCraftingSlots();
-		}
-	}
-
 	public void clearCraftingSlots() {
 		// Clear the crafting slots back into the network. Do this part only on the
 		// server. The client should just visually clear the slots.
@@ -229,8 +222,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		clearCraftingSlots();
 	}
 
-	public void onItemCrafted(ItemStack output) {
-
+	public void onItemCrafted(ItemStack[] recipe, ItemStack output) {
 	}
 
 	/**
@@ -239,6 +231,13 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 */
 	public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
 		return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
+	}
+
+	@Override
+	protected void onManagerStateChanged(boolean isPresent) {
+		if (!isPresent) {
+			clearCraftingSlots();
+		}
 	}
 
 	/**

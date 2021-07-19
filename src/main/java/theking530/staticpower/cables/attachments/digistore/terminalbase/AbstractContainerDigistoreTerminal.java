@@ -12,6 +12,7 @@ import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.IContainerListener;
 import net.minecraft.inventory.container.Slot;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.StringTextComponent;
@@ -23,7 +24,6 @@ import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal.TerminalViewType;
@@ -47,7 +47,7 @@ import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCableAttachment> extends AbstractCableAttachmentContainer<T> {
+public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends AbstractCableAttachmentContainer<T> {
 	public static final int DEFAULT_ITEMS_PER_ROW = 9;
 	public static final int DEFAULT_MAX_ROWS_ON_SCREEN = 8;
 	public static final Vector2D DEFAULT_INVENTORY_START_POSITION = new Vector2D(8, 22);
@@ -148,10 +148,10 @@ public abstract class AbstractContainerDigistoreTerminal<T extends AbstractCable
 		managerPresentLastState = getCableComponent().isManagerPresent();
 
 		// Armor
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -18, 109, EquipmentSlotType.HEAD));
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -18, 127, EquipmentSlotType.CHEST));
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -18, 145, EquipmentSlotType.LEGS));
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -18, 163, EquipmentSlotType.FEET));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -18, 113, EquipmentSlotType.HEAD));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -18, 131, EquipmentSlotType.CHEST));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -18, 149, EquipmentSlotType.LEGS));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -18, 167, EquipmentSlotType.FEET));
 
 		// On both the client and the server, add the player slots.
 		addPlayerHotbar(getPlayerInventory(), 8, 246);

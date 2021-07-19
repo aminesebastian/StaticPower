@@ -29,7 +29,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	public TextInputWidget searchBar;
 	public ItemDrawable craftingStack;
 
-	public DrawableWidget craftingStackDrawableWidget;
+	public DrawableWidget<ItemDrawable> craftingStackDrawableWidget;
 	public SpriteDrawable missingIngredientDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 8, 8);
 
 	public TextButton plusOne;
@@ -59,7 +59,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		missingIngredientDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 
 		craftingStack = new ItemDrawable(getCurrentBundle().getOutput());
-		registerWidget(craftingStackDrawableWidget = new DrawableWidget(75, 16, 16, 16, craftingStack));
+		registerWidget(craftingStackDrawableWidget = new DrawableWidget<ItemDrawable>(75, 16, 16, 16, craftingStack));
 		craftingStackDrawableWidget.setTooltip(getCurrentBundle().getOutput().getDisplayName());
 
 		registerWidget(close = new SpriteButton(152, 4, 8, 8, StaticPowerSprites.CLOSE, null, (b, n) -> goBack()));

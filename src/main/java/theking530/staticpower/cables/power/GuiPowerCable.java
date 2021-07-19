@@ -66,9 +66,9 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 			provided = -metrics.getProvidedData().get(i);
 
 			// Capture the data.
-			providedData.add(new Double(CapabilityStaticVolt.convertmSVtoSV((long) recieved)));
-			receivedData.add(new Double(CapabilityStaticVolt.convertmSVtoSV((long) provided)));
-			netData.add(new Double(CapabilityStaticVolt.convertmSVtoSV((long) (recieved + provided))));
+			providedData.add(Double.valueOf(CapabilityStaticVolt.convertmSVtoSV((long) recieved)));
+			receivedData.add(Double.valueOf(CapabilityStaticVolt.convertmSVtoSV((long) provided)));
+			netData.add(Double.valueOf(CapabilityStaticVolt.convertmSVtoSV((long) (recieved + provided))));
 		}
 
 		// Add the data.

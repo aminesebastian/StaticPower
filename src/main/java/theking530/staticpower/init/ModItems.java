@@ -46,6 +46,7 @@ import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.TurbineBlades;
 import theking530.staticpower.items.tools.WireCutters;
+import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.items.tools.chainsaw.Chainsaw;
 import theking530.staticpower.items.tools.chainsaw.ChainsawBlade;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
@@ -462,7 +463,7 @@ public class ModItems {
 	public static SprinklerAttachment SprinklerAttachment;
 
 	public static DigistorePatternCard PatternCard;
-
+	public static DigistoreWirelessTerminal DigistoreWirelessTerminal;
 	public static DigistoreCard BasicDigistoreCard;
 	public static DigistoreCard AdvancedDigistoreCard;
 	public static DigistoreCard StaticDigistoreCard;
@@ -933,7 +934,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DigistorePatternEncoderAttachment = new DigistorePatternEncoder("cable_attachment_digistore_pattern_encoder"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingInterfaceAttachment = new DigistoreCraftingInterfaceAttachment("cable_attachment_digistore_crafting_interface"));
 		StaticPowerRegistry.preRegisterItem(DigistoreScreenAttachment = new DigistoreScreen("cable_attachment_digistore_screen"));
-		StaticPowerRegistry.preRegisterItem(DigistoreLightAttachment = new DigistoreLight("cable_attachment_digistore_light"));
+		StaticPowerRegistry.preRegisterItem(DigistoreWirelessTerminal = new DigistoreWirelessTerminal("digistore_wireless_terminal"));
 
 		StaticPowerRegistry.preRegisterItem(SprinklerAttachment = new SprinklerAttachment("cable_attachment_sprinkler", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));
 

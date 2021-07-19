@@ -98,7 +98,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		registerWidget(new GuiIslandWidget(-24, 14, 28, 46));
 
 		// Add island for fill amount.
-		registerWidget(new GuiIslandWidget(-24, 60, 28, 44));
+		registerWidget(new GuiIslandWidget(-24, 62, 28, 44));
 
 		// Add the sprites for the fill amounts.
 		registerWidget(filledAmountSprite = new DrawableWidget<SpriteDrawable>(-18, 65, 6, 0, new SpriteDrawable(GuiTextures.DIGISTORE_FILLED_BAR, 6, 50)));
@@ -113,7 +113,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		}
 
 		// Add island for the armor.
-		registerWidget(new GuiIslandWidget(-24, 104, 30, 80));
+		registerWidget(new GuiIslandWidget(-24, 108, 30, 80));
 
 		// Add island for the regular tab.
 		registerWidget(new GuiIslandWidget(this.xSize - 4, 143, 25, 24));
@@ -222,7 +222,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		// Update the capacity bar.
 		float filledPercent = (float) getContainer().getUsedCapacity() / getContainer().getTotalCapacity();
 		float filledHeight = 34 * filledPercent;
-		float filledYCoord = 99 - filledHeight;
+		float filledYCoord = 101 - filledHeight;
 		filledAmountSprite.setPosition(-18, filledYCoord);
 		filledAmountSprite.setSize(6, filledHeight);
 		filledAmountSprite.getDrawable().setUV(0, 1 - filledPercent, 1, 1);
@@ -230,7 +230,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		// Update the types bar.
 		float typesPercent = (float) getContainer().getUsedUniqueTypes() / getContainer().getMaxUniqueTypes();
 		float typesHeight = 34 * typesPercent;
-		float typesYCoord = 99 - typesHeight;
+		float typesYCoord = 101 - typesHeight;
 		typeAmountSprite.setPosition(-8, typesYCoord);
 		typeAmountSprite.setSize(6, typesHeight);
 		typeAmountSprite.getDrawable().setUV(0, 1 - typesPercent, 1, 1);
@@ -257,17 +257,17 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 		// Draw the bar slots.
-		GuiDrawUtilities.drawSlot(stack, -18, 65, 6, 34, 0);
-		GuiDrawUtilities.drawSlot(stack, -8, 65, 6, 34, 0);
+		GuiDrawUtilities.drawSlot(stack, -18, 67, 6, 34, 0);
+		GuiDrawUtilities.drawSlot(stack, -8, 67, 6, 34, 0);
 	}
 
 	@Override
 	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
-		itemRenderer.drawItem(Items.IRON_HELMET, guiLeft, guiTop, -18, 109, 0.3f);
-		itemRenderer.drawItem(Items.IRON_CHESTPLATE, guiLeft, guiTop, -18, 127, 0.3f);
-		itemRenderer.drawItem(Items.IRON_LEGGINGS, guiLeft, guiTop, -18, 145, 0.3f);
-		itemRenderer.drawItem(Items.IRON_BOOTS, guiLeft, guiTop, -18, 163, 0.3f);
+		itemRenderer.drawItem(Items.IRON_HELMET, guiLeft, guiTop, -18, 113, 0.3f);
+		itemRenderer.drawItem(Items.IRON_CHESTPLATE, guiLeft, guiTop, -18, 131, 0.3f);
+		itemRenderer.drawItem(Items.IRON_LEGGINGS, guiLeft, guiTop, -18, 149, 0.3f);
+		itemRenderer.drawItem(Items.IRON_BOOTS, guiLeft, guiTop, -18, 167, 0.3f);
 
 		if (viewType == TerminalViewType.CRAFTING) {
 			if (getContainer().getCurrentCraftingQueue().size() > 0) {

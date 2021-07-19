@@ -27,6 +27,7 @@ public class StandardButton extends AbstractGuiWidget {
 	protected BiConsumer<StandardButton, MouseButton> onClicked;
 	protected int mouseX;
 	protected int mouseY;
+	protected Object data;
 
 	private boolean hovered;
 	private MouseButton currentlyPressedMouseButton;
@@ -53,6 +54,19 @@ public class StandardButton extends AbstractGuiWidget {
 
 	public StandardButton setShouldDrawButtonBackground(boolean shouldDraw) {
 		drawBackground = shouldDraw;
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> T getData() {
+		if (data == null) {
+			return null;
+		}
+		return (T) data;
+	}
+
+	public StandardButton setContainedData(Object dataIn) {
+		data = dataIn;
 		return this;
 	}
 
@@ -117,8 +131,8 @@ public class StandardButton extends AbstractGuiWidget {
 		hovered = false;
 	}
 
-	protected void drawButton(MatrixStack stack, int buttonLeft, int buttonTop) {
-		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 0.0f);
+	protected void drawButton(MatrixStack stack, int transformedButtonLeft, int transformedButtonTop) {
+		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), transformedButtonLeft, transformedButtonTop, getSize().getX(), getSize().getY(), 0.0f);
 	}
 
 	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {

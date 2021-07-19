@@ -31,7 +31,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceContext;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.server.ServerWorld;
-import theking530.api.multipart.AbstractMultiPartItem;
+import theking530.api.multipartitem.AbstractMultiPartItem;
 import theking530.staticpower.StaticPower;
 
 public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {

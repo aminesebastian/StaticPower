@@ -5,12 +5,16 @@ import java.util.List;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -20,8 +24,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,13 +46,20 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
+import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
+import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
+import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCapabilityProvider;
+import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.world.ore.ModOres;
 import theking530.staticpower.world.trees.ModTrees;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
 public class StaticPowerForgeEventRegistry {
+	public static final ResourceLocation STATIC_POWER_PLAYER_DATA = new ResourceLocation(StaticPower.MOD_ID, "player_data");
+
 	@SubscribeEvent
 	public static void worldTickEvent(TickEvent.WorldTickEvent event) {
 		if (!event.world.isRemote) {
@@ -80,6 +94,36 @@ public class StaticPowerForgeEventRegistry {
 		ModOres.addOreGenFeatures(event);
 		ModTrees.addTreeFeatures(event);
 		ModEntities.addSpawns(event);
+	}
+
+	@SubscribeEvent
+	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
+		if (event.getObject() instanceof PlayerEntity) {
+			if (!event.getObject().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).isPresent()) {
+				event.addCapability(STATIC_POWER_PLAYER_DATA, new StaticPowerPlayerCapabilityProvider());
+			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
+		// If on the server, send a sync packet for the static power player data
+		// capability.
+		if (!event.getEntity().getEntityWorld().isRemote()) {
+			event.getPlayer().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
+				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) event.getPlayer(),
+						new PacketSyncStaticPowerPlayerDataCapability(((StaticPowerPlayerData) data).serializeNBT()));
+			});
+		}
+	}
+
+	@SubscribeEvent
+	public static void onItemCrafted(ItemCraftedEvent event) {
+		if (event.getEntityLiving() instanceof PlayerEntity) {
+			event.getEntityLiving().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
+				data.addToCraftingHistory(event.getCrafting(), event.getInventory());
+			});
+		}
 	}
 
 	@SubscribeEvent

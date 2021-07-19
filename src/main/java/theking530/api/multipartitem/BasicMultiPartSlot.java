@@ -1,4 +1,4 @@
-package theking530.api.multipart;
+package theking530.api.multipartitem;
 
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
