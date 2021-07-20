@@ -575,7 +575,7 @@ public class StaticPowerConfig {
 				{
 					builder.push("Pump");
 					pumpPowerUsage = builder.comment("Controls how much power is used per pump action in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "pumpPowerUsage").defineInRange("PumpPowerUsage", 250 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+							.translation(StaticPower.MOD_ID + ".config." + "pumpPowerUsage").defineInRange("PumpPowerUsage", 200 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
 					builder.pop();
 				}
 				{

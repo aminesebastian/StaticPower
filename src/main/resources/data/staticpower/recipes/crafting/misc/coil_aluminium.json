@@ -14,6 +14,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:coil_aluminium"
+		"item": "staticpower:coil_aluminium",
+		"count": 4
 	}
 }

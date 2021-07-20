@@ -934,6 +934,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DigistorePatternEncoderAttachment = new DigistorePatternEncoder("cable_attachment_digistore_pattern_encoder"));
 		StaticPowerRegistry.preRegisterItem(DigistoreCraftingInterfaceAttachment = new DigistoreCraftingInterfaceAttachment("cable_attachment_digistore_crafting_interface"));
 		StaticPowerRegistry.preRegisterItem(DigistoreScreenAttachment = new DigistoreScreen("cable_attachment_digistore_screen"));
+		StaticPowerRegistry.preRegisterItem(DigistoreLightAttachment = new DigistoreLight("cable_attachment_digistore_light"));
 		StaticPowerRegistry.preRegisterItem(DigistoreWirelessTerminal = new DigistoreWirelessTerminal("digistore_wireless_terminal"));
 
 		StaticPowerRegistry.preRegisterItem(SprinklerAttachment = new SprinklerAttachment("cable_attachment_sprinkler", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));

@@ -414,6 +414,7 @@
 	"item.staticpower.digistore_card_singular_lumum": "Lumum Digistore Mono Card",
 	"item.staticpower.digistore_card_singular_creative": "Creative Digistore Mono Card",
 	"item.staticpower.digistore_pattern_card": "Pattern Card",
+	"item.staticpower.digistore_wireless_terminal": "Wireless Terminal",
 	"item.staticpower.cover": "Cover",
 	"item.staticpower.upgrade_plate_basic": "Basic Upgrade Plate",
 	"item.staticpower.upgrade_plate_advanced": "Advanced Upgrade Plate",
@@ -817,6 +818,9 @@
 	"gui.staticpower.digistore_crafting_out_of_storage": "This crafting request cannot continue as this network is out of storage space!",
 	"gui.staticpower.digistore_capacity_utilization": "Using %s%% of Capacity",
 	"gui.staticpower.digistore_types_utilization": "Using %s%% of Unique Types",
+	"gui.staticpower.digistore_wireless_terminal_bound": "Wireless Terminal bound!",
+	"gui.staticpower.digistore_wireless_terminal_not_bound": "Wireless Terminal must be first bound to a crafting terminal!",
+	"gui.staticpower.digistore_wireless_terminal_out_of_range": "Wireless Terminal's crafting terminal out of range!",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

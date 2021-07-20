@@ -19,7 +19,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -90,7 +90,7 @@ public class DigistoreWirelessTerminal extends StaticPowerItem {
 				});
 				return ActionResult.resultSuccess(item);
 			} else {
-				player.sendStatusMessage(new StringTextComponent("Wireless access terminal not bound!"), true);
+				player.sendStatusMessage(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
 				return ActionResult.resultPass(item);
 			}
 		}
@@ -106,7 +106,7 @@ public class DigistoreWirelessTerminal extends StaticPowerItem {
 				CompoundNBT itemNBT = item.getOrCreateTag();
 				itemNBT.putLong(TERMINAL_POSITION_KEY, pos.toLong());
 				itemNBT.putInt(TERMINAL_SIDE_KEY, face.ordinal());
-				player.sendStatusMessage(new StringTextComponent("Wireless access terminal bound!"), true);
+				player.sendStatusMessage(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_bound"), true);
 				return ActionResultType.SUCCESS;
 			}
 		}
