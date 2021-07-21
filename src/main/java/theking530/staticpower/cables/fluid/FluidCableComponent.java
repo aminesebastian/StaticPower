@@ -203,7 +203,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 					// If the cable is not valid, just assume disabled. Could be that the cable is
 					// not yet initialized server side.
 					Optional<ServerCable> cable = getCable();
-					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
+					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

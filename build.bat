@@ -1,2 +1,2 @@
-call gradlew build -Pbuild_number=34
+call gradlew build -Pbuild_number=40
 pause

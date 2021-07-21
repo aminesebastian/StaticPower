@@ -1,5 +1,6 @@
 package theking530.staticpower.integration.JEI;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 
 /**
@@ -9,5 +10,5 @@ import net.minecraft.item.ItemStack;
  *
  */
 public interface IJEIReipceTransferHandler {
-	public void consumeJEITransferRecipe(ItemStack[][] recipe);
+	public void consumeJEITransferRecipe(PlayerEntity playerIn, ItemStack[][] recipe);
 }

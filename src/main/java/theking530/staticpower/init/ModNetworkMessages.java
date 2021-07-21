@@ -4,6 +4,7 @@ import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
+import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketClearDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderEncode;
@@ -82,5 +83,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreNetworkMetrics.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
+		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
 	}
 }

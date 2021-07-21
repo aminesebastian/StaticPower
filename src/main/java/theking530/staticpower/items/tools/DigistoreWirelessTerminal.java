@@ -24,19 +24,21 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.network.NetworkGUI;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
-import theking530.staticpower.items.StaticPowerItem;
+import theking530.staticpower.items.StaticPowerEnergyStoringItem;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 
-public class DigistoreWirelessTerminal extends StaticPowerItem {
+public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	private static final String TERMINAL_POSITION_KEY = "terminal_position";
 	private static final String TERMINAL_SIDE_KEY = "terminal_side";
 
 	public DigistoreWirelessTerminal(String name) {
-		super(name, new Properties().maxStackSize(1));
+		super(name, 0);
 	}
 
 	public boolean isBound(World world, ItemStack wirelessDevice) {
@@ -77,18 +79,37 @@ public class DigistoreWirelessTerminal extends StaticPowerItem {
 		return ItemStack.EMPTY;
 	}
 
+	public long getCapacity() {
+		return StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerCapacity.get();
+	}
+
+	public boolean usePower(ItemStack itemstack) {
+		// Should move to config, but 10SV per opening.
+		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerUsage.get()) {
+			EnergyHandlerItemStackUtilities.drainPower(itemstack, StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerUsage.get(), false);
+			return true;
+		}
+		return false;
+	}
+
 	/**
 	 * When right clicked, open the filter UI.
 	 */
 	@Override
 	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
 		if (!world.isRemote && !player.isSneaking()) {
+			// Check to make sure it's bound.
 			if (isBound(world, item)) {
-				NetworkGUI.openGui((ServerPlayerEntity) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
-					buff.writeInt(getTerminalAttachDirection(item).ordinal());
-					buff.writeBlockPos(BlockPos.fromLong(item.getTag().getLong(TERMINAL_POSITION_KEY)));
-				});
-				return ActionResult.resultSuccess(item);
+				// Check if it has power.
+				if (usePower(item)) {
+					NetworkGUI.openGui((ServerPlayerEntity) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
+						buff.writeInt(getTerminalAttachDirection(item).ordinal());
+						buff.writeBlockPos(BlockPos.fromLong(item.getTag().getLong(TERMINAL_POSITION_KEY)));
+					});
+					return ActionResult.resultSuccess(item);
+				} else {
+					player.sendStatusMessage(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_not_enough_power"), true);
+				}
 			} else {
 				player.sendStatusMessage(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
 				return ActionResult.resultPass(item);

@@ -13,6 +13,7 @@ import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.button.FakeSlotButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
+import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -25,7 +26,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<ContainerDigistoreCraftingTerminal, DigistoreCraftingTerminal> {
 	private ArrowProgressBar progressBar;
 	private EntityRenderWidget entityRenderer;
-
+	private TextButton clearCurrentRecipe;
 	private List<FakeSlotButton> previousRecipes;
 
 	public GuiDigistoreCraftingTerminal(ContainerDigistoreCraftingTerminal container, PlayerInventory invPlayer, ITextComponent name) {
@@ -57,6 +58,11 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		for (FakeSlotButton fakeSlot : previousRecipes) {
 			registerWidget(fakeSlot);
 		}
+
+		// Add clear button.
+		registerWidget(clearCurrentRecipe = new TextButton(118, 119, 8, 8, "x", (button, mouseButton) -> {
+			this.getContainer().clearCraftingSlots(playerInventory.player);
+		}));
 	}
 
 	protected void onPreviousRecipeButtonPressed(StandardButton button, MouseButton mouseButton) {
@@ -86,6 +92,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	protected boolean switchToCraftingStatusView() {
 		if (super.switchToCraftingStatusView()) {
 			this.entityRenderer.setVisible(false);
+			this.clearCurrentRecipe.setVisible(false);
 			return true;
 		}
 		return false;
@@ -95,6 +102,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	protected boolean switchToDefaultView() {
 		if (super.switchToDefaultView()) {
 			this.entityRenderer.setVisible(true);
+			this.clearCurrentRecipe.setVisible(true);
 			return true;
 		}
 		return false;

@@ -13,6 +13,7 @@ import net.minecraft.nbt.INBT;
 import net.minecraft.nbt.ListNBT;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.INBTSerializable;
+import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreCraftingTerminalHistory implements INBTSerializable<CompoundNBT> {
 	protected Queue<DigistoreCraftingTerminalHistoryEntry> entries;
@@ -28,7 +29,7 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 		boolean wasDifferent = true;
 		for (DigistoreCraftingTerminalHistoryEntry history : entries) {
 			// Check the outputs. IF they are the same, just update the recipe.
-			if (history.output.equals(output, false)) {
+			if (ItemUtilities.areItemStacksStackable(history.output, output)) {
 				wasDifferent = false;
 				history.recipe = recipe;
 				break;
@@ -67,7 +68,7 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 	public void deserializeNBT(CompoundNBT nbt) {
 		// Clear the original entries list.
 		entries.clear();
-		
+
 		// Capture the max history.
 		maxHistory = nbt.getInt("max_history");
 

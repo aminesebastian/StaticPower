@@ -182,7 +182,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
 					// not yet initailized server side.
 					Optional<ServerCable> cable = getCable();
-					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
+					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

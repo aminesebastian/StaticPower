@@ -95,6 +95,9 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> minRubberWoodBarkPerStrip;
 		public final ConfigValue<Integer> maxRubberWoodBarkPerStrip;
 
+		public final ConfigValue<Integer> digistoreCardUniqueTypes;
+		public final ConfigValue<Integer> digistoreStackedCardUniqueTypes;
+
 		public final ConfigValue<Integer> digistoreRegulatorRate;
 		public final ConfigValue<Integer> digistoreRegulatorStackSize;
 		public final ConfigValue<Integer> digistoreRegulatorSlots;
@@ -114,6 +117,9 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> digistoreCraftingInterfaceSlots;
 
 		public final ConfigValue<Double> acceleratorCardImprovment;
+
+		public final ConfigValue<Integer> digistoreWirelessTerminalPowerCapacity;
+		public final ConfigValue<Integer> digistoreWirelessTerminalPowerUsage;
 
 		public final ConfigValue<Integer> minerHeatGeneration;
 		public final ConfigValue<Integer> minerFuelUsage;
@@ -277,11 +283,26 @@ public class StaticPowerConfig {
 				maxRubberWoodBarkPerStrip = builder.comment("Controls the maximum number of strips of bark are removed from a rubber wood log when stripped with an axe.")
 						.translation(StaticPower.MOD_ID + ".config." + "maxRubberWoodBarkPerStrip").define("MaxRubberWoodBarkPerStrip", 4);
 				builder.pop();
+
+				builder.push("WirelessTerminal");
+				digistoreWirelessTerminalPowerCapacity = builder.comment("Sets the power capacity of the Digistore Wireless Terminal (in mSV [1SV = 1000mSV]).")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreWirelessTerminalPowerCapacity").define("DigistoreWirelessTerminalPowerCapacity", 10000000);
+				digistoreWirelessTerminalPowerUsage = builder.comment("Sets the power used every time the digistore network is accessed by the wireless terminal (in mSV [1SV = 1000mSV]).")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreWirelessTerminalPowerUsage").define("DigistoreWirelessTerminalPowerUsage", 50000);
+				builder.pop();
 			}
 			builder.pop();
 
 			builder.push("Digistore");
 			{
+				{
+					builder.push("Cards");
+					digistoreCardUniqueTypes = builder.comment("The number of unique types that can be contained in a stacked digistore card of this tier.")
+							.translation(StaticPower.MOD_ID + ".config." + "digistoreCardUniqueTypes").define("DigistoreCardUniqueTypes", 64);
+					digistoreStackedCardUniqueTypes = builder.comment("The number of unique types that can be contained in a stacked digistore card of this tier.")
+							.translation(StaticPower.MOD_ID + ".config." + "digistoreStackedCardUniqueTypes").define("DigistoreStackedCardUniqueTypes", 256);
+					builder.pop();
+				}
 				builder.push("Regulator");
 				digistoreRegulatorRate = builder
 						.comment("Controls how many ticks between each digistore regulator operation. The higher, the faster the operations, but the stronger hit to performance.")

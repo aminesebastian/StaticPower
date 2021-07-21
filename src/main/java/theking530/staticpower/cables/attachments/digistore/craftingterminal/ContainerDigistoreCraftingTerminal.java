@@ -2,6 +2,8 @@ package theking530.staticpower.cables.attachments.digistore.craftingterminal;
 
 import java.util.Optional;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
@@ -25,6 +27,8 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Abstract
 import theking530.staticpower.container.slots.CraftingRecipeInputSlot;
 import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
+import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.PlayerUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -133,8 +137,8 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	}
 
 	@Override
-	public void consumeJEITransferRecipe(ItemStack[][] recipe) {
-		clearCraftingSlots();
+	public void consumeJEITransferRecipe(PlayerEntity playerIn, ItemStack[][] recipe) {
+		clearCraftingSlots(playerIn);
 		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				for (int i = 0; i < recipe.length; i++) {
@@ -180,7 +184,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		}
 	}
 
-	public void clearCraftingSlots() {
+	public void clearCraftingSlots(@Nullable PlayerEntity playerIn) {
 		// Clear the crafting slots back into the network. Do this part only on the
 		// server. The client should just visually clear the slots.
 		if (!getCableComponent().getWorld().isRemote) {
@@ -191,26 +195,51 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 						continue;
 					}
 
+					boolean haveLeftover = true;
+					ItemStack leftover = ItemStack.EMPTY;
 					// If there is a manager, attempt to put the crafting grid contents back into
 					// the system. Otherwise, drop them on the floor.
 					if (digistoreModule.isManagerPresent()) {
 						// Attempt to insert the item.
 						ItemStack output = digistoreModule.insertItem(craftMatrix.getStackInSlot(i), false);
 
-						// If we were unable to insert the item back to the network, drop it on the
+						// If we were unable to insert the item back to the network, try to insert it
+						// into the player. If we can't, drop it on the
 						// floor.
 						if (!output.isEmpty()) {
-							WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(), output);
+							haveLeftover = false;
+						} else {
+							haveLeftover = true;
+							leftover = output;
 						}
 					} else {
-						WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(), craftMatrix.getStackInSlot(i));
+						haveLeftover = true;
+						leftover = craftMatrix.getStackInSlot(i);
+					}
 
+					// If we have leftover, try to insert it into the player. If the
+					// player is null, drop it in the world.
+					// If the player also can't take it, drop it into the world.
+					if (haveLeftover) {
+						if (playerIn != null) {
+							if (InventoryUtilities.canPartiallyInsertItemIntoPlayerInventory(leftover, playerIn.inventory)) {
+								if (!playerIn.addItemStackToInventory(leftover)) {
+									WorldUtilities.dropItem(getCableComponent().getWorld(), playerIn.getPosition(), leftover);
+								}
+							} else {
+								WorldUtilities.dropItem(getCableComponent().getWorld(), playerIn != null ? playerIn.getPosition() : getCableComponent().getPos(), leftover);
+
+							}
+						}
 					}
 				}
 			});
+		} else {
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketClearDigistoreCraftingTerminal(windowId));
 		}
 
 		// Clear the matrix and the output slot.
+		this.craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
 		craftMatrix.clear();
 	}
 
@@ -219,7 +248,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 */
 	public void onContainerClosed(PlayerEntity playerIn) {
 		super.onContainerClosed(playerIn);
-		clearCraftingSlots();
+		clearCraftingSlots(playerIn);
 	}
 
 	public void onItemCrafted(ItemStack[] recipe, ItemStack output) {
@@ -236,7 +265,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	@Override
 	protected void onManagerStateChanged(boolean isPresent) {
 		if (!isPresent) {
-			clearCraftingSlots();
+			clearCraftingSlots(null);
 		}
 	}
 

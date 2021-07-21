@@ -112,7 +112,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	}
 
 	@Override
-	public void consumeJEITransferRecipe(ItemStack[][] recipe) {
+	public void consumeJEITransferRecipe(PlayerEntity player, ItemStack[][] recipe) {
 		clearRecipe();
 		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 			for (int i = 0; i < recipe.length; i++) {

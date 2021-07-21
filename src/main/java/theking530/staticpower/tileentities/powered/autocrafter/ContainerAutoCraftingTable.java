@@ -3,6 +3,7 @@ package theking530.staticpower.tileentities.powered.autocrafter;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketBuffer;
@@ -66,7 +67,7 @@ public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<T
 	}
 
 	@Override
-	public void consumeJEITransferRecipe(ItemStack[][] recipe) {
+	public void consumeJEITransferRecipe(PlayerEntity entity, ItemStack[][] recipe) {
 		if (recipe.length == 9) {
 			for (int i = 0; i < 9; i++) {
 				// Skip holes in the recipe.

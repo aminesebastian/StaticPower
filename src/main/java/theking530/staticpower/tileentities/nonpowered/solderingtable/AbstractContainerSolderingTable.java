@@ -88,7 +88,7 @@ public abstract class AbstractContainerSolderingTable<T extends AbstractSolderin
 	}
 
 	@Override
-	public void consumeJEITransferRecipe(ItemStack[][] recipe) {
+	public void consumeJEITransferRecipe(PlayerEntity playerIn, ItemStack[][] recipe) {
 		if (recipe.length == 9) {
 			for (int i = 0; i < 9; i++) {
 				// Skip holes in the recipe.

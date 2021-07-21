@@ -442,7 +442,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
 		Optional<ServerCable> cable = getCable();
-		if (!cable.isEmpty()) {
+		if (cable.isPresent()) {
 			if (cable.get().getNetwork().hasModule(moduleType)) {
 				return Optional.of(cable.get().getNetwork().getModule(moduleType));
 			}

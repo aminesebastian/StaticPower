@@ -60,7 +60,7 @@ public class JEIRecipeTransferPacket extends NetworkMessage {
 			ServerPlayerEntity player = ctx.get().getSender();
 			if (player.openContainer.windowId == windowId) {
 				if (player.openContainer instanceof IJEIReipceTransferHandler) {
-					((IJEIReipceTransferHandler) player.openContainer).consumeJEITransferRecipe(recipe);
+					((IJEIReipceTransferHandler) player.openContainer).consumeJEITransferRecipe(player, recipe);
 				}
 			}
 		});

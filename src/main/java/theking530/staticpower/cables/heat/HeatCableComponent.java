@@ -217,7 +217,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 					disabled = isSideDisabled(side);
 				} else {
 					Optional<ServerCable> cable = getCable();
-					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
+					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

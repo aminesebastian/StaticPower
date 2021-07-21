@@ -21,7 +21,6 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreCard extends StaticPowerItem {
-	public static final int MAX_UNIQUE_ITEM_TYPES_PER_CARD = 64;
 	public final ResourceLocation tierType;
 	public final ResourceLocation model;
 	private final boolean shouldGlow;
@@ -43,7 +42,7 @@ public class DigistoreCard extends StaticPowerItem {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
-		return new DigistoreInventoryCapabilityProvider(stack, MAX_UNIQUE_ITEM_TYPES_PER_CARD, StaticPowerConfig.getTier(tierType).digistoreCardCapacity.get(), nbt);
+		return new DigistoreInventoryCapabilityProvider(stack, StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get(), StaticPowerConfig.getTier(tierType).digistoreCardCapacity.get(), nbt);
 	}
 
 	public static IDigistoreInventory getInventory(ItemStack stack) {

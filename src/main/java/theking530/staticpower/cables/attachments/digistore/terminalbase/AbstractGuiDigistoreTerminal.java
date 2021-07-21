@@ -246,9 +246,19 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			if (mouseX - guiLeft >= -19 && mouseX - guiLeft <= -12 && mouseY - guiTop <= 99) {
 				float filledPercent = (float) getContainer().getUsedCapacity() / getContainer().getTotalCapacity();
 				tooltips.add(new TranslationTextComponent("gui.staticpower.digistore_capacity_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(filledPercent * 100)));
+
+				// Include actual numbers.
+				MetricConverter totalCapacity = new MetricConverter(getContainer().getTotalCapacity());
+				MetricConverter usedCapacity = new MetricConverter(getContainer().getUsedCapacity());
+				tooltips.add(new StringTextComponent(usedCapacity.getValueAsString(true) + "/" + totalCapacity.getValueAsString(true)));
 			} else if (mouseX - guiLeft >= -9 && mouseX - guiLeft <= -2 && mouseY - guiTop <= 99) {
 				float typesPercent = (float) getContainer().getUsedUniqueTypes() / getContainer().getMaxUniqueTypes();
 				tooltips.add(new TranslationTextComponent("gui.staticpower.digistore_types_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(typesPercent * 100)));
+
+				// Include actual numbers.
+				MetricConverter totalTypes = new MetricConverter(getContainer().getMaxUniqueTypes());
+				MetricConverter usedTypes = new MetricConverter(getContainer().getUsedUniqueTypes());
+				tooltips.add(new StringTextComponent(usedTypes.getValueAsString(true) + "/" + totalTypes.getValueAsString(true)));
 			}
 		}
 	}

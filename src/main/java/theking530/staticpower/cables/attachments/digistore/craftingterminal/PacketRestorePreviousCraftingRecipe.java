@@ -57,7 +57,7 @@ public class PacketRestorePreviousCraftingRecipe extends NetworkMessage {
 					recipe[i][0] = itemStacks[i];
 				}
 				// Consume the recipe.
-				((ContainerDigistoreCraftingTerminal) sender.openContainer).consumeJEITransferRecipe(recipe);
+				((ContainerDigistoreCraftingTerminal) sender.openContainer).consumeJEITransferRecipe(sender, recipe);
 			}
 		});
 	}

@@ -201,7 +201,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 					disabled = isSideDisabled(side);
 				} else {
 					Optional<ServerCable> cable = getCable();
-					disabled = !cable.isEmpty() ? cable.get().isDisabledOnSide(side) : true;
+					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
 				}
 			}
 

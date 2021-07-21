@@ -45,6 +45,7 @@ import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
+import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends AbstractCableAttachmentContainer<T> {
@@ -168,6 +169,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 	@Override
 	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+		// Edge case for wireless terminals, don't let players modify their held item.
+		if (slotId >= 0 && getSlot(slotId) != null && !getSlot(slotId).getStack().isEmpty() && getSlot(slotId).getStack() == player.getHeldItemMainhand()
+				&& (player.getHeldItemMainhand().getItem() instanceof DigistoreWirelessTerminal)) {
+			return ItemStack.EMPTY;
+		}
+
 		// If we clicked on a digistore network slot, perform the appropriate action.
 		if (isDigistoreSlot(slotId)) {
 			// If we're picking up (or inserting).

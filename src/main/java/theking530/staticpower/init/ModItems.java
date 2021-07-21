@@ -25,6 +25,7 @@ import theking530.staticpower.items.BatteryPack;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistorePatternCard;
+import theking530.staticpower.items.DigistoreStackedCard;
 import theking530.staticpower.items.GearBox;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
@@ -39,6 +40,7 @@ import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.items.tools.CableNetworkAnalyzer;
 import theking530.staticpower.items.tools.CoverSaw;
+import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.items.tools.Magnet;
@@ -46,7 +48,6 @@ import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.TurbineBlades;
 import theking530.staticpower.items.tools.WireCutters;
-import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.items.tools.chainsaw.Chainsaw;
 import theking530.staticpower.items.tools.chainsaw.ChainsawBlade;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
@@ -464,12 +465,20 @@ public class ModItems {
 
 	public static DigistorePatternCard PatternCard;
 	public static DigistoreWirelessTerminal DigistoreWirelessTerminal;
+
 	public static DigistoreCard BasicDigistoreCard;
 	public static DigistoreCard AdvancedDigistoreCard;
 	public static DigistoreCard StaticDigistoreCard;
 	public static DigistoreCard EnergizedDigistoreCard;
 	public static DigistoreCard LumumDigistoreCard;
 	public static DigistoreCard CreativeDigistoreCard;
+
+	public static DigistoreStackedCard BasicStackedDigistoreCard;
+	public static DigistoreStackedCard AdvancedStackedDigistoreCard;
+	public static DigistoreStackedCard StaticStackedDigistoreCard;
+	public static DigistoreStackedCard EnergizedStackedDigistoreCard;
+	public static DigistoreStackedCard LumumStackedDigistoreCard;
+	public static DigistoreStackedCard CreativeStackedDigistoreCard;
 
 	public static DigistoreMonoCard BasicSingularDigistoreCard;
 	public static DigistoreMonoCard AdvancedSingularDigistoreCard;
@@ -952,6 +961,19 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
 		StaticPowerRegistry
 				.preRegisterItem(CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
+
+		StaticPowerRegistry.preRegisterItem(
+				BasicStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				AdvancedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				StaticStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(EnergizedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_energized", StaticPowerTiers.ENERGIZED,
+				StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				LumumStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(CreativeStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_creative", StaticPowerTiers.CREATIVE,
+				StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
 		StaticPowerRegistry.preRegisterItem(
 				BasicSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
