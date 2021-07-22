@@ -118,6 +118,10 @@ public class ServerCable {
 		return dataTag.getBoolean(key);
 	}
 
+	public String getStringProperty(String key) {
+		return dataTag.getString(key);
+	}
+
 	public void setProperty(String key, int value) {
 		dataTag.putInt(key, value);
 	}
@@ -136,6 +140,10 @@ public class ServerCable {
 
 	public void setProperty(String key, double value) {
 		dataTag.putDouble(key, value);
+	}
+
+	public void setProperty(String key, String value) {
+		dataTag.putString(key, value);
 	}
 
 	public CompoundNBT getCompleteDataTag() {

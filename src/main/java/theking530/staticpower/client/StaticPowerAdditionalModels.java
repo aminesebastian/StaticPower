@@ -1,8 +1,11 @@
 package theking530.staticpower.client;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -155,6 +158,12 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_SCAFFOLD_EXTENSION = registerModel("block/cables/scaffold/extension");
 	public static final ResourceLocation CABLE_SCAFFOLD_ATTACHMENT = registerModel("block/cables/scaffold/attachment");
 
+	public static final ResourceLocation CABLE_REDSTOND_BASIC_ATTACHMENT = registerModel("block/cables/redstone/basic/attachment");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_STRAIGHT = registerModel("block/cables/redstone/basic/naked/straight");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_EXTENSION = registerModel("block/cables/redstone/basic/naked/extension");
+	
+	public static final Map<String, ResourceLocation[]> CABLE_REDSTONE_BASIC;
+
 	public static final ResourceLocation CABLE_BASIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/basic_extractor");
 	public static final ResourceLocation CABLE_ADVANCED_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/advanced_extractor");
 	public static final ResourceLocation CABLE_STATIC_EXTRACTOR_ATTACHMENT = registerModel("block/cables/attachments/static_extractor");
@@ -193,7 +202,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_DIGISTORE_IO_BUS_ATTACHMENT = registerModel("block/cables/attachments/digistore_io_bus");
 	public static final ResourceLocation CABLE_DIGISTORE_REGULATOR_ATTACHMENT = registerModel("block/cables/attachments/digistore_regulator");
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_INTERFACE_ATTACHMENT = registerModel("block/cables/attachments/digistore_crafting_interface");
-	
+
 	public static final ResourceLocation SPRINKLER = registerModel("block/cables/attachments/sprinkler");
 
 	public static final ResourceLocation BASIC_DIGISTORE_CARD = registerModel("block/machines/digistore_card_basic");
@@ -239,6 +248,16 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation TURBINE_BLADES_ENERGIZED = registerModel("block/machines/turbine_blades/turbine_blades_energized");
 	public static final ResourceLocation TURBINE_BLADES_LUMUM = registerModel("block/machines/turbine_blades/turbine_blades_lumum");
 	public static final ResourceLocation TURBINE_BLADES_CREATIVE = registerModel("block/machines/turbine_blades/turbine_blades_creative");
+
+	static {
+		CABLE_REDSTONE_BASIC = new HashMap<>();
+		for (int i = 0; i < 16; i++) {
+			TextFormatting formatting = TextFormatting.values()[i];
+			String name = formatting.name().toLowerCase();
+			CABLE_REDSTONE_BASIC.put(name,
+					new ResourceLocation[] { registerModel("block/cables/redstone/basic/" + name + "/straight"), registerModel("block/cables/redstone/basic/" + name + "/extension") });
+		}
+	}
 
 	@OnlyIn(Dist.CLIENT)
 	public static void regsiterModels() {

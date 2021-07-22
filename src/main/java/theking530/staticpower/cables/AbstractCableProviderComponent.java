@@ -434,17 +434,20 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * Gets the module from this network if present. We have to wrap it in an
 	 * optional because while we can guarantee once this component is validated that
 	 * the network is valid, since this component exposes external methods, other
-	 * tile entity that are made valid before us may call some of our methods.
+	 * tile entity that are made valid before us may call some of our methods. When
+	 * called from the client, we always return an empty optional.
 	 * 
 	 * @param <T>        The type of the module.
 	 * @param moduleType The resource location model type.
 	 * @return
 	 */
 	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
-		Optional<ServerCable> cable = getCable();
-		if (cable.isPresent()) {
-			if (cable.get().getNetwork().hasModule(moduleType)) {
-				return Optional.of(cable.get().getNetwork().getModule(moduleType));
+		if (!getWorld().isRemote) {
+			Optional<ServerCable> cable = getCable();
+			if (cable.isPresent()) {
+				if (cable.get().getNetwork().hasModule(moduleType)) {
+					return Optional.of(cable.get().getNetwork().getModule(moduleType));
+				}
 			}
 		}
 		return Optional.empty();
@@ -455,15 +458,18 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * have to wrap it in an optional because while we can guarantee once this
 	 * component is validated that the network is valid, since this component
 	 * exposes external methods, other tile entity that are made valid before us may
-	 * call some of our methods.
+	 * call some of our methods. When called from the client, we always return an
+	 * empty optional.
 	 * 
 	 * @return
 	 */
 	public Optional<ServerCable> getCable() {
-		CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
-		ServerCable cable = manager.getCable(getTileEntity().getPos());
-		if (cable != null && cable.getNetwork() != null) {
-			return Optional.of(cable);
+		if (!getWorld().isRemote) {
+			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
+			ServerCable cable = manager.getCable(getTileEntity().getPos());
+			if (cable != null && cable.getNetwork() != null) {
+				return Optional.of(cable);
+			}
 		}
 		return Optional.empty();
 	}

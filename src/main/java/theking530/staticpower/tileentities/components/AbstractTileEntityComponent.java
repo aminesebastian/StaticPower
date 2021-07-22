@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
@@ -90,6 +91,14 @@ public abstract class AbstractTileEntityComponent {
 	 */
 	public void getModelData(ModelDataMap.Builder builder) {
 
+	}
+
+	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return 0;
+	}
+
+	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		return 0;
 	}
 
 	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {

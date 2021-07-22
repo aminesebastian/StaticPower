@@ -1,0 +1,8 @@
+{
+	"parent": "staticpower:block/cables/cable_2_attachment_large",
+	"textures": {
+		"0": "staticpower:blocks/cables/attachments/cable_redstone_basic_attachment",
+		"1": "staticpower:blocks/cables/attachments/cable_redstone_basic_attachment",
+		"particle": "staticpower:blocks/cables/attachments/cable_redstone_basic_attachment"
+	}
+}

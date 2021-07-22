@@ -43,6 +43,7 @@ import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
 import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
+import theking530.staticpower.cables.redstone.RedstoneNetworkModuleFactory;
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;
@@ -67,6 +68,7 @@ public class StaticPowerModEventRegistry {
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE, new DigistoreNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.HEAT_NETWORK_MODULE, new HeatNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE, new ScaffoldNetworkModuleFactory());
+		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE, new RedstoneNetworkModuleFactory());
 
 		// Register capabilities.
 		CapabilityDigistoreInventory.register();

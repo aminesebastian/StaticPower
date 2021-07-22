@@ -31,6 +31,7 @@ import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockIndustrialPowerCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
+import theking530.staticpower.cables.redstone.BlockRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.BlockDigistore;
@@ -287,6 +288,24 @@ public class ModBlocks {
 
 	public static BlockScaffoldCable ScaffoldCable;
 
+	public static BlockRedstoneCable BasicRedstoneCableNaked;
+	public static BlockRedstoneCable BasicRedstoneCableBlack;
+	public static BlockRedstoneCable BasicRedstoneCableDarkBlue;
+	public static BlockRedstoneCable BasicRedstoneCableDarkGreen;
+	public static BlockRedstoneCable BasicRedstoneCableDarkAqua;
+	public static BlockRedstoneCable BasicRedstoneCableDarkRed;
+	public static BlockRedstoneCable BasicRedstoneCableDarkPurple;
+	public static BlockRedstoneCable BasicRedstoneCableGold;
+	public static BlockRedstoneCable BasicRedstoneCableGray;
+	public static BlockRedstoneCable BasicRedstoneCableDarkGray;
+	public static BlockRedstoneCable BasicRedstoneCableBlue;
+	public static BlockRedstoneCable BasicRedstoneCableGreen;
+	public static BlockRedstoneCable BasicRedstoneCableAqua;
+	public static BlockRedstoneCable BasicRedstoneCableRed;
+	public static BlockRedstoneCable BasicRedstoneCableLightPurple;
+	public static BlockRedstoneCable BasicRedstoneCableYellow;
+	public static BlockRedstoneCable BasicRedstoneCableWhite;
+
 	// Batteries
 	public static BlockBattery BatteryBasic;
 	public static BlockBattery BatteryAdvanced;
@@ -533,6 +552,24 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(AluminiumHeatCable = new BlockHeatCable("cable_heat_aluminium", StaticPowerTiers.ALUMINIUM));
 
 		StaticPowerRegistry.preRegisterBlock(ScaffoldCable = new BlockScaffoldCable("cable_scaffold"));
+
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableNaked = new BlockRedstoneCable("cable_redstone_basic_naked"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableBlack = new BlockRedstoneCable("cable_redstone_basic_black"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkBlue = new BlockRedstoneCable("cable_redstone_basic_dark_blue"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkGreen = new BlockRedstoneCable("cable_redstone_basic_dark_green"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkAqua = new BlockRedstoneCable("cable_redstone_basic_dark_aqua"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkRed = new BlockRedstoneCable("cable_redstone_basic_dark_red"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkPurple = new BlockRedstoneCable("cable_redstone_basic_dark_purple"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableGold = new BlockRedstoneCable("cable_redstone_basic_gold"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableGray = new BlockRedstoneCable("cable_redstone_basic_gray"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkGray = new BlockRedstoneCable("cable_redstone_basic_dark_gray"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableBlue = new BlockRedstoneCable("cable_redstone_basic_blue"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableGreen = new BlockRedstoneCable("cable_redstone_basic_green"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableAqua = new BlockRedstoneCable("cable_redstone_basic_aqua"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableRed = new BlockRedstoneCable("cable_redstone_basic_red"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableLightPurple = new BlockRedstoneCable("cable_redstone_basic_light_purple"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableYellow = new BlockRedstoneCable("cable_redstone_basic_yellow"));
+		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableWhite = new BlockRedstoneCable("cable_redstone_basic_white"));
 
 		StaticPowerRegistry.preRegisterBlock(BatteryBasic = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(BatteryAdvanced = new BlockBattery("battery_block_advanced", StaticPowerTiers.ADVANCED));

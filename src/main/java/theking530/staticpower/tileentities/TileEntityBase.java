@@ -36,6 +36,7 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -449,6 +450,22 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 		// Return the sorted list.
 		return inventories;
+	}
+
+	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		int output = 0;
+		for (AbstractTileEntityComponent comp : components.values()) {
+			output = Math.max(output, comp.getWeakPower(blockState, blockAccess, pos, side));
+		}
+		return output;
+	}
+
+	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		int output = 0;
+		for (AbstractTileEntityComponent comp : components.values()) {
+			output = Math.max(output, comp.getStrongPower(blockState, blockAccess, pos, side));
+		}
+		return output;
 	}
 
 	@Override

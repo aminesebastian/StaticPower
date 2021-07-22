@@ -200,4 +200,22 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 		}
 		return super.sneakWrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 	}
+
+	@Override
+	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		TileEntity tileEntity = blockAccess.getTileEntity(pos);
+		if (tileEntity instanceof TileEntityBase) {
+			return ((TileEntityBase) tileEntity).getWeakPower(blockState, blockAccess, pos, side);
+		}
+		return 0;
+	}
+
+	@Override
+	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+		TileEntity tileEntity = blockAccess.getTileEntity(pos);
+		if (tileEntity instanceof TileEntityBase) {
+			return ((TileEntityBase) tileEntity).getStrongPower(blockState, blockAccess, pos, side);
+		}
+		return 0;
+	}
 }

@@ -10,4 +10,5 @@ public class CableNetworkModuleTypes {
 	public static final ResourceLocation DIGISTORE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_digistore_network");
 	public static final ResourceLocation HEAT_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_heat_network");
 	public static final ResourceLocation SCAFFOLD_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_scaffold_network");
+	public static final ResourceLocation REDSTONE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_redstone_network");
 }
