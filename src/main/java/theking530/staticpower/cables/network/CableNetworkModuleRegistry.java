@@ -19,7 +19,7 @@ public class CableNetworkModuleRegistry {
 
 	public AbstractCableNetworkModule create(ResourceLocation type, CompoundNBT nbt) {
 		if (Factories.containsKey(type)) {
-			AbstractCableNetworkModule output = Factories.get(type).create();
+			AbstractCableNetworkModule output = Factories.get(type).create(type);
 			output.readFromNbt(nbt);
 			return output;
 		}
@@ -28,7 +28,7 @@ public class CableNetworkModuleRegistry {
 
 	public AbstractCableNetworkModule create(ResourceLocation type) {
 		if (Factories.containsKey(type)) {
-			return Factories.get(type).create();
+			return Factories.get(type).create(type);
 		}
 		throw new RuntimeException(String.format("Factory not registered for network attachment type: %1$s.", type));
 	}

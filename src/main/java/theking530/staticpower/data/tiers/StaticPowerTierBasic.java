@@ -255,4 +255,15 @@ public class StaticPowerTierBasic extends StaticPowerTier {
 	protected int getTurbineBladeDurabilityTicks() {
 		return 108000;
 	}
+
+	@Override
+	protected long getMagnetPowerCapacity() {
+		return getPortableBatteryCapacity() * 2;
+	}
+
+	@Override
+	protected int getMagnetRadius() {
+		return 2;
+	}
+
 }

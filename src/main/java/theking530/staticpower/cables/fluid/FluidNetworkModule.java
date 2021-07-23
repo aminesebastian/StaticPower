@@ -70,6 +70,11 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				// Get the connected side.
 				Direction cableSide = destination.getConnectedCables().get(cablePos);
 
+				// Skip NON tile entity destinations.
+				if (!destination.hasTileEntity()) {
+					continue;
+				}
+
 				// Skip destinations that don't support fluid interaction.
 				if (!destination.supportsTypeOnSide(cableSide, DestinationType.FLUID)) {
 					continue;

@@ -214,6 +214,11 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			// Get the cable pos.
 			Direction connectedSide = wrapper.getConnectedCables().get(cablePos);
 
+			// Skip NON tile entity destinations.
+			if (!wrapper.hasTileEntity()) {
+				continue;
+			}
+
 			if (wrapper.supportsType(DestinationType.POWER)) {
 				IStaticVoltHandler powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, connectedSide).orElse(null);
 				if (powerStorage != null && powerStorage.canRecievePower() && powerStorage.receivePower(Integer.MAX_VALUE, true) > 0) {

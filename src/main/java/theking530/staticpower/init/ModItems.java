@@ -651,11 +651,11 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedWrench = new StaticWrench("wrench_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumWrench = new StaticWrench("wrench_lumum"));
 
-		StaticPowerRegistry.preRegisterItem(BasicMagnet = new Magnet("magnet_basic", 1000, 2));
-		StaticPowerRegistry.preRegisterItem(AdvancedMagnet = new Magnet("magnet_advanced", 2000, 3));
-		StaticPowerRegistry.preRegisterItem(StaticMagnet = new Magnet("magnet_static", 5000, 4));
-		StaticPowerRegistry.preRegisterItem(EnergizedMagnet = new Magnet("magnet_energized", 10000, 6));
-		StaticPowerRegistry.preRegisterItem(LumumMagnet = new Magnet("magnet_lumum", 20000, 8));
+		StaticPowerRegistry.preRegisterItem(BasicMagnet = new Magnet("magnet_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterItem(AdvancedMagnet = new Magnet("magnet_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(StaticMagnet = new Magnet("magnet_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedMagnet = new Magnet("magnet_energized", StaticPowerTiers.ENERGIZED));;
+		StaticPowerRegistry.preRegisterItem(LumumMagnet = new Magnet("magnet_lumum", StaticPowerTiers.LUMUM));
 
 		StaticPowerRegistry.preRegisterItem(IronCoverSaw = new CoverSaw("saw_iron", 100));
 		StaticPowerRegistry.preRegisterItem(TungstenCoverSaw = new CoverSaw("saw_tungsten", 2500));

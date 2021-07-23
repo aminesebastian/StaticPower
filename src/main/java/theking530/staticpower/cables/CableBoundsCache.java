@@ -37,7 +37,7 @@ public class CableBoundsCache {
 	private static final Direction[] YAxisDirectionPriority = new Direction[] { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN };
 
 	private VoxelShape CoreShape;
-	private final HashMap<Direction, VoxelShape> CableAttachmentShapes;
+	private final HashMap<Direction, VoxelShape> CableExtensionShapes;
 	private final double CableRadius;
 	private final Vector3D defaultAttachmentBounds;
 	private boolean IsCached;
@@ -46,7 +46,7 @@ public class CableBoundsCache {
 		this.defaultAttachmentBounds = defaultAttachmentBounds;
 		CableRadius = cableRadius;
 		IsCached = false;
-		CableAttachmentShapes = new HashMap<Direction, VoxelShape>();
+		CableExtensionShapes = new HashMap<Direction, VoxelShape>();
 	}
 
 	/**
@@ -68,7 +68,7 @@ public class CableBoundsCache {
 			// Mark the shapes as cached.
 			IsCached = true;
 		}
-		
+
 		// Get the output.
 		VoxelShape output = CoreShape;
 
@@ -78,7 +78,7 @@ public class CableBoundsCache {
 		for (Direction dir : Direction.values()) {
 			if ((cable != null && cable.hasAttachment(dir)) || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE
 					|| CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.TILE_ENTITY) {
-				output = VoxelShapes.or(output, CableAttachmentShapes.get(dir));
+				output = VoxelShapes.or(output, CableExtensionShapes.get(dir));
 			}
 		}
 
@@ -161,7 +161,7 @@ public class CableBoundsCache {
 			// Finally, put the bounds for the cable.
 			if (CableUtilities.getConnectionState(entity.world, pos, dir) == CableConnectionState.CABLE
 					|| CableUtilities.getConnectionState(entity.world, pos, dir) == CableConnectionState.TILE_ENTITY) {
-				bounds.add(new CableHoverCheckRequest(CableAttachmentShapes.get(dir), dir, CableBoundsHoverType.CABLE));
+				bounds.add(new CableHoverCheckRequest(CableExtensionShapes.get(dir), dir, CableBoundsHoverType.CABLE));
 			}
 
 		}
@@ -202,12 +202,12 @@ public class CableBoundsCache {
 		double coreMax = 8.0D + CableRadius;
 		CoreShape = Block.makeCuboidShape(coreMin, coreMin, coreMin, coreMax, coreMax, coreMax);
 
-		CableAttachmentShapes.put(Direction.NORTH, Block.makeCuboidShape(coreMin, coreMin, 0.0D, coreMax, coreMax, coreMin));
-		CableAttachmentShapes.put(Direction.SOUTH, Block.makeCuboidShape(coreMin, coreMin, coreMax, coreMax, coreMax, 16.0D));
-		CableAttachmentShapes.put(Direction.EAST, Block.makeCuboidShape(coreMax, coreMin, coreMin, 16.0D, coreMax, coreMax));
-		CableAttachmentShapes.put(Direction.WEST, Block.makeCuboidShape(0.0D, coreMin, coreMin, coreMin, coreMax, coreMax));
-		CableAttachmentShapes.put(Direction.UP, Block.makeCuboidShape(coreMin, coreMax, coreMin, coreMax, 16.0D, coreMax));
-		CableAttachmentShapes.put(Direction.DOWN, Block.makeCuboidShape(coreMin, 0.0D, coreMin, coreMax, coreMin, coreMax));
+		CableExtensionShapes.put(Direction.NORTH, Block.makeCuboidShape(coreMin, coreMin, 0.0D, coreMax, coreMax, coreMin));
+		CableExtensionShapes.put(Direction.SOUTH, Block.makeCuboidShape(coreMin, coreMin, coreMax, coreMax, coreMax, 16.0D));
+		CableExtensionShapes.put(Direction.EAST, Block.makeCuboidShape(coreMax, coreMin, coreMin, 16.0D, coreMax, coreMax));
+		CableExtensionShapes.put(Direction.WEST, Block.makeCuboidShape(0.0D, coreMin, coreMin, coreMin, coreMax, coreMax));
+		CableExtensionShapes.put(Direction.UP, Block.makeCuboidShape(coreMin, coreMax, coreMin, coreMax, 16.0D, coreMax));
+		CableExtensionShapes.put(Direction.DOWN, Block.makeCuboidShape(coreMin, 0.0D, coreMin, coreMax, coreMin, coreMax));
 	}
 
 	protected VoxelShape getAttachmentShapeForSide(IBlockReader world, BlockPos pos, @Nullable ItemStack attachment, Direction side) {
@@ -226,7 +226,6 @@ public class CableBoundsCache {
 				attachmentMax = 16.0D;
 				attachmentDepth = 2.0D;
 			}
-
 		}
 
 		switch (side) {
@@ -293,8 +292,9 @@ public class CableBoundsCache {
 				}
 			}
 
+			// Also include the extension shape if required.
 			if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY || cable.hasAttachment(hoveredDirection)) {
-				shape = VoxelShapes.or(shape, CableAttachmentShapes.get(hoveredDirection));
+				shape = VoxelShapes.or(shape, CableExtensionShapes.get(hoveredDirection));
 			}
 		} else {
 			for (Direction dir : Direction.values()) {
@@ -302,6 +302,8 @@ public class CableBoundsCache {
 					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(dir), dir));
 				} else if (cable.hasAttachment(dir)) {
 					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(dir), dir));
+				} else if (cable.getConnectionState(dir) == CableConnectionState.TILE_ENTITY && !cable.hasAttachment(dir)) {
+					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(cable.getWorld(), pos, null, dir));
 				}
 			}
 		}

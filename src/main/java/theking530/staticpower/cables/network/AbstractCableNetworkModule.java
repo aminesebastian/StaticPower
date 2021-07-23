@@ -39,7 +39,10 @@ public abstract class AbstractCableNetworkModule {
 
 	public abstract void tick(World world);
 
-	public abstract void readFromNbt(CompoundNBT tag);
+	public void readFromNbt(CompoundNBT tag) {
+	}
 
-	public abstract CompoundNBT writeToNbt(CompoundNBT tag);
+	public CompoundNBT writeToNbt(CompoundNBT tag) {
+		return tag;
+	}
 }

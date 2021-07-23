@@ -265,4 +265,15 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	protected int getTurbineBladeDurabilityTicks() {
 		return 1728000;
 	}
+
+	@Override
+	protected long getMagnetPowerCapacity() {
+		return getPortableBatteryCapacity() * 2;
+	}
+
+	@Override
+	protected int getMagnetRadius() {
+		return 8;
+	}
+
 }

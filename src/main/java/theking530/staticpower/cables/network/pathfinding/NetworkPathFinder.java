@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.function.BiFunction;
 
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
@@ -28,8 +29,14 @@ public class NetworkPathFinder {
 	private final ResourceLocation SupportedNetworkType;
 	private final Queue<BlockPos> BFSQueue;
 	private final World world;
+	private final BiFunction<BlockPos, BlockPos, Boolean> filter;
 
 	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType) {
+		this(graph, world, startingCablePosition, targetPosition, supportedNetworkType, null);
+	}
+
+	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType,
+			BiFunction<BlockPos, BlockPos, Boolean> filter) {
 		// Capture all the positions in the network graph.
 		GraphNodes = new HashSet<BlockPos>();
 		graph.getCables().values().forEach(cable -> {
@@ -55,6 +62,7 @@ public class NetworkPathFinder {
 		VisitedPositions = new HashSet<BlockPos>();
 		Predecessors = new HashMap<BlockPos, PathEntry>();
 		BFSQueue = new LinkedList<BlockPos>();
+		this.filter = filter;
 		this.world = world;
 	}
 
@@ -94,8 +102,10 @@ public class NetworkPathFinder {
 				}
 
 				// Get the adjacent and check if we have visited it before. If we have, skip it.
+				// Also, skip it if it's not part of our graph nodes list.
+				// Finally, skip it if the filter fails.
 				BlockPos adjacent = curr.offset(dir);
-				if (!GraphNodes.contains(adjacent) || VisitedPositions.contains(adjacent)) {
+				if (!GraphNodes.contains(adjacent) || VisitedPositions.contains(adjacent) || (filter != null && !filter.apply(curr, adjacent))) {
 					continue;
 				}
 

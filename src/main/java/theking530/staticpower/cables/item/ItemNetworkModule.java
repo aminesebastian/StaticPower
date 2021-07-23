@@ -231,6 +231,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 		// If we have a path, get the source inventory.
 		if (shortestPath != null) {
+			// The method #getSourcesForItemRetrieval should only return sources that have tile entities, so no need to check that here.
 			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity()
 					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getFirstConnectedDestinationSide()).orElse(null);
 
@@ -752,6 +753,12 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			if (!dest.supportsType(DestinationType.ITEM)) {
 				continue;
 			}
+
+			// Skip NON tile entity destinations.
+			if (!dest.hasTileEntity()) {
+				continue;
+			}
+
 			// Skip trying to go to the same position the item came from or is at.
 			if (dest.getPos().equals(sourcePosition)) {
 				continue;

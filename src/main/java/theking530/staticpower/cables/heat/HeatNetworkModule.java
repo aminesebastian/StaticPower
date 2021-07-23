@@ -180,7 +180,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 
 		// Check each destination and capture the ones that can recieve heat.
 		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-			if (wrapper.supportsType(DestinationType.HEAT) && !Network.getGraph().getCables().containsKey(pos)) {
+			if (wrapper.hasTileEntity() && wrapper.supportsType(DestinationType.HEAT) && !Network.getGraph().getCables().containsKey(pos)) {
 				IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getFirstConnectedDestinationSide()).orElse(null);
 				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), true) > 0) {
 					destinations.put(otherHeatStorage, wrapper);

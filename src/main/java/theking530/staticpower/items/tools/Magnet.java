@@ -12,6 +12,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -24,16 +25,16 @@ import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.power.CapabilityStaticVolt;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 
 public class Magnet extends StaticPowerEnergyStoringItem {
 	private static final String ACTIVATED_TAG = "activated";
+	private final ResourceLocation tier;
 
-	private final int radius;
-
-	public Magnet(String name, int capacity, int radius) {
-		super(name, capacity);
-		this.radius = radius;
+	public Magnet(String name, ResourceLocation tier) {
+		super(name, 0);
+		this.tier = tier;
 	}
 
 	public boolean isActivated(ItemStack stack) {
@@ -65,6 +66,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 		if (world.isRemote) {
 			return;
 		}
+
+		int radius = getRadius(stack);
 
 		// Create the AABB to search within.
 		AxisAlignedBB aabb = new AxisAlignedBB(player.getPosX() - radius, player.getPosY() - radius, player.getPosZ() - radius, player.getPosX() + radius, player.getPosY() + radius,
@@ -115,8 +118,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
 		tooltip.add(new TranslationTextComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
 				.mergeStyle(isActivated(stack) ? TextFormatting.GREEN : TextFormatting.RED));
-		tooltip.add(
-				new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.radius")).appendString(" " + TextFormatting.GREEN.toString() + String.valueOf(radius)));
+		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.radius"))
+				.appendString(" " + TextFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
 
 		tooltip.add(new StringTextComponent(""));
 
@@ -126,6 +129,10 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	public boolean showDurabilityBar(ItemStack stack) {
 		return true;
+	}
+
+	public int getRadius(ItemStack stack) {
+		return StaticPowerConfig.getTier(tier).magnetRadius.get();
 	}
 
 	@Override
@@ -150,6 +157,11 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	public boolean hasEffect(ItemStack stack) {
 		return isActivated(stack);
+	}
+
+	@Override
+	public long getCapacity() {
+		return StaticPowerConfig.getTier(tier).magnetPowerCapacity.get();
 	}
 
 	/**

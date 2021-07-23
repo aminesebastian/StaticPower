@@ -21,13 +21,15 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 
 public class BlockRedstoneCable extends AbstractCableBlock {
+	private static boolean canProvidePower;
 	private final String color;
 
 	public BlockRedstoneCable(String name) {
-		super(name, new CableBoundsCache(1.5D, new Vector3D(8.0f, 1.0f, 1.0f)));
+		super(name, new CableBoundsCache(name.contains("naked") ? 0.75D : 1.5D, new Vector3D(4.0f, 4.0f, 1.0f)));
 
 		// String the color from the last section of the registry name.
 		this.color = name.substring(name.indexOf("_", name.indexOf("_", name.indexOf("_") + 1) + 1) + 1);
+		canProvidePower = true;
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -53,7 +55,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	public boolean canProvidePower(BlockState state) {
-		return true;
+		return canProvidePower;
 	}
 
 	@Override

@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"wiw",
+		"wiw",
+		"wiw"
+	],
+	"key": {
+		"i": {
+			"item": "staticpower:ingot_redstone_alloy"
+		},	
+		"w": {
+			"item": "minecraft:purple_wool"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_redstone_basic_dark_purple",
+		"count": 8
+	}
+}

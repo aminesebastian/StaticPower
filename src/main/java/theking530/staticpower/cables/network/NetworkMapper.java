@@ -8,7 +8,6 @@ import java.util.Set;
 import javax.annotation.Nullable;
 
 import net.minecraft.block.Blocks;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -80,7 +79,7 @@ public class NetworkMapper {
 			if (scanLocation(world, cable, facing, testPos)) {
 				// Add the block to the visited list.
 				visited.add(testPos);
-				
+
 				// Recurse.
 				_updateNetworkWorker(world, visited, testPos);
 			}
@@ -127,18 +126,15 @@ public class NetworkMapper {
 			RemovedCables.remove(cable);
 			return true;
 		} else {
-			// Get the tileentiy at the block position.
-			TileEntity te = world.getTileEntity(location);
-
 			// Make sure it is valid.
-			if (te != null && !te.isRemoved()) {
-				if (!Destinations.containsKey(location)) {
-					// Cache a destination wrapper for it.
-					DestinationWrapper wrapper = new DestinationWrapper(te, scanningCable.getPos(), facing.getOpposite());
+			if (!Destinations.containsKey(location)) {
+				// Cache a destination wrapper for it.
+				DestinationWrapper wrapper = new DestinationWrapper(world, location, world.getTileEntity(location), scanningCable.getPos(), facing.getOpposite());
+				if (!wrapper.shouldBeDropped()) {
 					Destinations.put(location, wrapper);
-				} else {
-					Destinations.get(location).addConnectedCable(scanningCable.getPos(), facing.getOpposite());
 				}
+			} else {
+				Destinations.get(location).addConnectedCable(scanningCable.getPos(), facing.getOpposite());
 			}
 			return false;
 		}

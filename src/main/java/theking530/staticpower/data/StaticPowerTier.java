@@ -149,6 +149,8 @@ public abstract class StaticPowerTier {
 	public final ConfigValue<Boolean> hardenedDurabilityBoostAdditive;
 	public final ConfigValue<Integer> hammerUses;
 	public final ConfigValue<Integer> wireCutterUses;
+	public final LongValue magnetPowerCapacity;
+	public final ConfigValue<Integer> magnetRadius;
 
 	/****************
 	 * Turbine Blades
@@ -370,6 +372,10 @@ public abstract class StaticPowerTier {
 				.define("HammerUses", this.getHammerUses());
 		wireCutterUses = builder.comment("The number of items that can be processed by a wire cutter of this tier.").translation(StaticPower.MOD_ID + ".config." + "wireCutterUses")
 				.define("WireCutterUses", this.getWireCutterUses());
+		magnetPowerCapacity = builder.comment("The amount of power that can be stored in a magnet of this tier (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "magnetPowerCapacity").defineInRange("MagnetPowerCapacity", this.getMagnetPowerCapacity(), 0, Long.MAX_VALUE);
+		magnetRadius = builder.comment("The number of blocks away from which items will be pulled towards the wielder.").translation(StaticPower.MOD_ID + ".config." + "magnetRadius")
+				.define("MagnetRadius", this.getMagnetRadius());
 		builder.pop();
 
 		builder.push("Upgrade");
@@ -582,6 +588,14 @@ public abstract class StaticPowerTier {
 	}
 
 	protected int getWireCutterUses() {
+		return 0;
+	}
+
+	protected long getMagnetPowerCapacity() {
+		return 0;
+	}
+
+	protected int getMagnetRadius() {
 		return 0;
 	}
 
