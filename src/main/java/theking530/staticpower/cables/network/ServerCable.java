@@ -122,6 +122,10 @@ public class ServerCable {
 		return dataTag.getString(key);
 	}
 
+	public CompoundNBT getTagProperty(String key) {
+		return dataTag.getCompound(key);
+	}
+
 	public void setProperty(String key, int value) {
 		dataTag.putInt(key, value);
 	}
@@ -146,6 +150,10 @@ public class ServerCable {
 		dataTag.putString(key, value);
 	}
 
+	public void setProperty(String key, CompoundNBT value) {
+		dataTag.put(key, value);
+	}
+
 	public CompoundNBT getCompleteDataTag() {
 		return dataTag;
 	}
@@ -158,7 +166,7 @@ public class ServerCable {
 		attachmentData.put(side, new ServerAttachmentDataContainer(id, side));
 	}
 
-	public ServerAttachmentDataContainer getAttachmentDataForSide(Direction side) {
+	public ServerAttachmentDataContainer getAttachmentDataContainerForSide(Direction side) {
 		return attachmentData.get(side);
 	}
 

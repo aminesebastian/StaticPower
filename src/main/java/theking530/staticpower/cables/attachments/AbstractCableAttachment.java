@@ -115,6 +115,14 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	public abstract ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent);
 
+	public boolean shouldAppearOnPickBlock(ItemStack attachment) {
+		return true;
+	}
+
+	public boolean shouldDropOnOwningCableBreak(ItemStack attachment) {
+		return true;
+	}
+
 	protected IItemHandler getUpgradeInventory(ItemStack attachment) {
 		return attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, Direction.DOWN).orElse(null);
 	}

@@ -59,9 +59,11 @@ public class TileEntityRedstoneCable extends TileEntityBase {
 	public static final TileEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_WHITE = new TileEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator) -> new TileEntityRedstoneCable(allocator, "white"), ModBlocks.BasicRedstoneCableWhite);
 
+	public final RedstoneCableComponent cableComponent;
+
 	public TileEntityRedstoneCable(TileEntityTypeAllocator<TileEntityRedstoneCable> allocator, String selector) {
 		super(allocator);
-		registerComponent(new RedstoneCableComponent("RedstoneCableComponent", selector));
+		registerComponent(cableComponent = new RedstoneCableComponent("RedstoneCableComponent", selector));
 	}
 
 	@Override

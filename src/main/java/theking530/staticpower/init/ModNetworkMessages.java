@@ -22,6 +22,7 @@ import theking530.staticpower.cables.heat.HeatCableUpdatePacket;
 import theking530.staticpower.cables.item.ItemCableAddedPacket;
 import theking530.staticpower.cables.item.ItemCableRemovedPacket;
 import theking530.staticpower.cables.power.PowerMetricsSyncPacket;
+import theking530.staticpower.cables.redstone.network.PacketUpdateRedstoneCableConfiguration;
 import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.PacketRevertToParentContainer;
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
@@ -84,5 +85,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreNetworkMetrics.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
 		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
+		StaticPowerMessageHandler.registerMessage(PacketUpdateRedstoneCableConfiguration.class);
 	}
 }

@@ -131,6 +131,11 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
 	}
 
+	@Override
+	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
+		return onPreStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), stack);
+	}
+
 	/**
 	 * Expanded version of onItemRightClick.
 	 * 
@@ -166,6 +171,21 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @return The result of the action (SUCCESS, PASS, FAIL, CONSUME).
 	 */
 	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+		return ActionResultType.PASS;
+	}
+
+	/**
+	 * Expanded version of onItemFirstUse.
+	 * 
+	 * @param context
+	 * @param world
+	 * @param pos
+	 * @param face
+	 * @param player
+	 * @param item
+	 * @return
+	 */
+	protected ActionResultType onPreStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
 		return ActionResultType.PASS;
 	}
 

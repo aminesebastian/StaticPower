@@ -107,7 +107,9 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 				}
 			}
 		}
+
 		// IF we didn't return earlier, go to the super call.
+		hit.hitInfo = hoverResult;
 		return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
 	}
 
@@ -198,9 +200,12 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 					ItemStack attachment = component.getAttachment(hoverResult.direction);
 
 					if (!attachment.isEmpty()) {
-						// Make a clean version of attachment with clear inventory.
-						ItemStack cleanAttachment = new ItemStack(attachment.getItem());
-						return cleanAttachment.copy();
+						// Check to see if this attachment should appear as a pick block.
+						if (((AbstractCableAttachment) attachment.getItem()).shouldAppearOnPickBlock(attachment)) {
+							// Make a clean version of attachment with clear inventory.
+							ItemStack cleanAttachment = new ItemStack(attachment.getItem());
+							return cleanAttachment.copy();
+						}
 					}
 				}
 			} else if (hoverResult.type == CableBoundsHoverType.ATTACHED_COVER) {

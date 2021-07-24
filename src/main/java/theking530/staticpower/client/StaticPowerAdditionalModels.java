@@ -158,7 +158,8 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_SCAFFOLD_EXTENSION = registerModel("block/cables/scaffold/extension");
 	public static final ResourceLocation CABLE_SCAFFOLD_ATTACHMENT = registerModel("block/cables/scaffold/attachment");
 
-	public static final ResourceLocation CABLE_REDSTOND_BASIC_ATTACHMENT = registerModel("block/cables/redstone/basic/attachment");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT = registerModel("block/cables/redstone/basic/attachment_input");
+	public static final ResourceLocation CABLE_REDSTONE_BASIC_ATTACHMENT_OUTPUT = registerModel("block/cables/redstone/basic/attachment_output");
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_STRAIGHT = registerModel("block/cables/redstone/basic/naked/straight");
 	public static final ResourceLocation CABLE_REDSTONE_BASIC_NAKED_EXTENSION = registerModel("block/cables/redstone/basic/naked/extension");
 	

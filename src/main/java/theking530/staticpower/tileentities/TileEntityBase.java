@@ -45,6 +45,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.common.util.Constants.BlockFlags;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
@@ -173,6 +174,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void markTileEntityForSynchronization() {
 		updateQueued = true;
 		markDirty();
+	}
+
+	public void refreshRenderState() {
+		getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), BlockFlags.DEFAULT_AND_RERENDER);
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {

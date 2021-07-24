@@ -99,8 +99,8 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				}
 
 				// Don't insert on block sides that have an extractor.
-				if (cable.getAttachmentDataForSide(cableSide.getOpposite()).hasProperty(ExtractorAttachment.INPUT_BLOCKED)) {
-					if (cable.getAttachmentDataForSide(cableSide.getOpposite()).getBooleanProperty(ExtractorAttachment.INPUT_BLOCKED)) {
+				if (cable.getAttachmentDataContainerForSide(cableSide.getOpposite()).hasProperty(ExtractorAttachment.INPUT_BLOCKED)) {
+					if (cable.getAttachmentDataContainerForSide(cableSide.getOpposite()).getBooleanProperty(ExtractorAttachment.INPUT_BLOCKED)) {
 						continue;
 					}
 				}

@@ -31,12 +31,12 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<CableRenderingState> CABLE_RENDERING_STATE = new ModelProperty<>();
 	/** The type of this cable. */
-	private final HashSet<ResourceLocation> SupportedNetworkModules;
+	private final HashSet<ResourceLocation> supportedNetworkModules;
 	/**
 	 * Keeps track of which sides of the cable are disabled. This value is a client
 	 * copy of the master value which exists on the server.
 	 */
-	private final boolean[] DisabledSides;
+	private final boolean[] disabledSides;
 	/**
 	 * Cache for the connection states. This is updated every time a new baked model
 	 * is requested AND also, on first placement.
@@ -55,16 +55,16 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super(name);
 
 		// Capture the types.
-		SupportedNetworkModules = new HashSet<ResourceLocation>();
+		supportedNetworkModules = new HashSet<ResourceLocation>();
 		for (ResourceLocation module : supportedModules) {
-			SupportedNetworkModules.add(module);
+			supportedNetworkModules.add(module);
 		}
 
 		// Initialize the valid attachments set.
 		validAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
 
 		// Initialize the disabled sides, connection states, and attachments arrays.
-		DisabledSides = new boolean[] { false, false, false, false, false, false };
+		disabledSides = new boolean[] { false, false, false, false, false, false };
 		connectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
 				CableConnectionState.NONE };
 		attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
@@ -72,6 +72,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		connectionStatesInitialized = false;
 	}
 
+	@Override
 	public void preProcessUpdate() {
 		if (getWorld().isRemote || (!getWorld().isRemote && getNetwork() != null)) {
 			for (Direction dir : Direction.values()) {
@@ -99,7 +100,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			}
 		}
 
+		// Scan for attachments now, and then do it again in two ticks to be safe.
 		scanForAttachments();
+		getTileEntity().refreshRenderState();
 	}
 
 	@Override
@@ -107,7 +110,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// Drop the covers and attachments.
 		for (Direction dir : Direction.values()) {
 			if (hasAttachment(dir)) {
-				WorldUtilities.dropItem(getWorld(), getPos(), removeAttachment(dir));
+				ItemStack attachment = getAttachment(dir);
+				if (((AbstractCableAttachment) attachment.getItem()).shouldDropOnOwningCableBreak(attachment)) {
+					WorldUtilities.dropItem(getWorld(), getPos(), removeAttachment(dir));
+				}
 			}
 			if (hasCover(dir)) {
 				WorldUtilities.dropItem(getWorld(), getPos(), removeCover(dir));
@@ -123,11 +129,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public boolean isSideDisabled(Direction side) {
-		return DisabledSides[side.ordinal()];
+		return disabledSides[side.ordinal()];
 	}
 
 	public void setSideDisabledState(Direction side, boolean disabledState) {
-		DisabledSides[side.ordinal()] = disabledState;
+		disabledSides[side.ordinal()] = disabledState;
 		scanForAttachments();
 		getTileEntity().markTileEntityForSynchronization();
 		if (!getWorld().isRemote) {
@@ -164,11 +170,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	public CableRenderingState getRenderingState() {
-		return new CableRenderingState(connectionStates, getAttachmentModels(), attachments, covers, DisabledSides, getPos());
+		return new CableRenderingState(connectionStates, getAttachmentModels(), attachments, covers, disabledSides, getPos());
 	}
 
 	public HashSet<ResourceLocation> getSupportedNetworkModuleTypes() {
-		return this.SupportedNetworkModules;
+		return this.supportedNetworkModules;
 	}
 
 	/**
@@ -187,6 +193,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				ServerCable wrapper = createCable();
 				initializeCableProperties(wrapper);
 				manager.addCable(wrapper);
+				onCableFirstAddedToNetwork(wrapper);
 			} else {
 				initializeCableProperties(manager.getCable(getPos()));
 			}
@@ -253,7 +260,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			if (!getWorld().isRemote) {
 				ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
 				cable.reinitializeAttachmentDataForSide(side, attachmentItem.getRegistryName());
-				attachmentItem.initializeServerDataContainer(attachments[side.ordinal()], side, this, cable.getAttachmentDataForSide(side));
+				attachmentItem.initializeServerDataContainer(attachments[side.ordinal()], side, this, cable.getAttachmentDataContainerForSide(side));
 			}
 
 			// Re-sync the tile entity.
@@ -273,7 +280,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public ItemStack removeAttachment(Direction side) {
 		// Ensure we have an attachment on the provided side.
-		if (hasAttachment(side)) {
+		if (hasAttachment(side) && canRemoveAttachment(side)) {
 			// Get the attachment for the side.
 			ItemStack output = attachments[side.ordinal()];
 
@@ -293,6 +300,16 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			return output;
 		}
 		return ItemStack.EMPTY;
+	}
+
+	/**
+	 * Indicates whether or not the attachment on the provided side can be removed.
+	 * 
+	 * @param side
+	 * @return
+	 */
+	public boolean canRemoveAttachment(Direction side) {
+		return true;
 	}
 
 	/**
@@ -479,7 +496,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			return false;
 		}
 		for (ResourceLocation moduleType : otherProvider.getSupportedNetworkModuleTypes()) {
-			if (SupportedNetworkModules.contains(moduleType)) {
+			if (supportedNetworkModules.contains(moduleType)) {
 				return true;
 			}
 		}
@@ -491,8 +508,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		// Serialize the disabled states.
-		for (int i = 0; i < DisabledSides.length; i++) {
-			nbt.putBoolean("disabledState" + i, DisabledSides[i]);
+		for (int i = 0; i < disabledSides.length; i++) {
+			nbt.putBoolean("disabledState" + i, disabledSides[i]);
 		}
 
 		// Serialize the attachments.
@@ -521,8 +538,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		// Deserialize the disabled states.
-		for (int i = 0; i < DisabledSides.length; i++) {
-			DisabledSides[i] = nbt.getBoolean("disabledState" + i);
+		for (int i = 0; i < disabledSides.length; i++) {
+			disabledSides[i] = nbt.getBoolean("disabledState" + i);
 		}
 
 		// Deserialize the attachments.
@@ -548,6 +565,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		}
 	}
 
+	protected boolean getInitialSideDisabledState(Direction side) {
+		return false;
+	}
+
 	protected void scanForAttachments() {
 		// Do this synchronized (may cause a hicup, will have to watch and see. May need
 		// to rethink this if that ends up being the case).
@@ -565,6 +586,18 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	protected ServerCable createCable() {
 		return new ServerCable(getWorld(), getPos(), getSupportedNetworkModuleTypes());
+	}
+
+	protected void onCableFirstAddedToNetwork(ServerCable cable) {
+		// Check for any initial states.
+		for (int i = 0; i < 6; i++) {
+			disabledSides[i] = getInitialSideDisabledState(Direction.values()[i]);
+		}
+
+		// Handle the initial states of the disabled sides.
+		for (Direction side : Direction.values()) {
+			cable.setDisabledStateOnSide(side, disabledSides[side.ordinal()]);
+		}
 	}
 
 	protected void initializeCableProperties(ServerCable cable) {

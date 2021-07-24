@@ -39,6 +39,7 @@ public class CableBoundsCache {
 	private VoxelShape CoreShape;
 	private final HashMap<Direction, VoxelShape> CableExtensionShapes;
 	private final double CableRadius;
+	@Nullable
 	private final Vector3D defaultAttachmentBounds;
 	private boolean IsCached;
 
@@ -158,7 +159,14 @@ public class CableBoundsCache {
 				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(dir), dir), dir, CableBoundsHoverType.ATTACHED_COVER));
 			}
 
-			// Finally, put the bounds for the cable.
+			// If the side has neither an attachment, nor a cover, but is still attached to
+			// a tile entity, check the default attachment.
+			if (CableUtilities.getConnectionState(entity.world, pos, dir) == CableConnectionState.TILE_ENTITY && cable.getCover(dir).isEmpty() && cable.getAttachment(dir).isEmpty()) {
+				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, ItemStack.EMPTY, dir), dir, CableBoundsHoverType.DEFAULT_ATTACHMENT));
+			}
+
+			// Finally, put the bounds for the cable. Include the bounds for the default
+			// attachment too if an attachment does not exist.
 			if (CableUtilities.getConnectionState(entity.world, pos, dir) == CableConnectionState.CABLE
 					|| CableUtilities.getConnectionState(entity.world, pos, dir) == CableConnectionState.TILE_ENTITY) {
 				bounds.add(new CableHoverCheckRequest(CableExtensionShapes.get(dir), dir, CableBoundsHoverType.CABLE));
@@ -211,9 +219,9 @@ public class CableBoundsCache {
 	}
 
 	protected VoxelShape getAttachmentShapeForSide(IBlockReader world, BlockPos pos, @Nullable ItemStack attachment, Direction side) {
-		double attachmentMin = 8.0D - defaultAttachmentBounds.getX();
-		double attachmentMax = 8.0D + defaultAttachmentBounds.getX();
-		double attachmentDepth = defaultAttachmentBounds.getZ();
+		double attachmentMin = 8.0D - getDefaultAttachmentBounds(world, pos, side).getX();
+		double attachmentMax = 8.0D + getDefaultAttachmentBounds(world, pos, side).getX();
+		double attachmentDepth = getDefaultAttachmentBounds(world, pos, side).getZ();
 
 		if (attachment != null) {
 			if (attachment.getItem() instanceof AbstractCableAttachment) {
@@ -243,8 +251,11 @@ public class CableBoundsCache {
 			return Block.makeCuboidShape(attachmentMin, 0.0D, attachmentMin, attachmentMax, attachmentDepth, attachmentMax);
 		}
 
-		System.out.println("CACHE THIS");
 		return CoreShape;
+	}
+
+	protected Vector3D getDefaultAttachmentBounds(IBlockReader world, BlockPos pos, Direction side) {
+		return defaultAttachmentBounds;
 	}
 
 	/**

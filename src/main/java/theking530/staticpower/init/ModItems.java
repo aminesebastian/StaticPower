@@ -654,7 +654,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(BasicMagnet = new Magnet("magnet_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedMagnet = new Magnet("magnet_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterItem(StaticMagnet = new Magnet("magnet_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedMagnet = new Magnet("magnet_energized", StaticPowerTiers.ENERGIZED));;
+		StaticPowerRegistry.preRegisterItem(EnergizedMagnet = new Magnet("magnet_energized", StaticPowerTiers.ENERGIZED));
+		;
 		StaticPowerRegistry.preRegisterItem(LumumMagnet = new Magnet("magnet_lumum", StaticPowerTiers.LUMUM));
 
 		StaticPowerRegistry.preRegisterItem(IronCoverSaw = new CoverSaw("saw_iron", 100));

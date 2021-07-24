@@ -15,7 +15,7 @@ import theking530.staticcore.utilities.Vector2D;
 @OnlyIn(Dist.CLIENT)
 public class ItemButton extends StandardButton {
 
-	protected final ItemStack itemIcon;
+	protected ItemStack itemIcon;
 	protected final ItemRenderer customRenderer;
 
 	/**
@@ -45,6 +45,20 @@ public class ItemButton extends StandardButton {
 	 */
 	public ItemButton(Item icon, int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClicked) {
 		this(new ItemStack(icon), xPos, yPos, width, height, onClicked);
+	}
+
+	public ItemButton setItemStack(ItemStack stack) {
+		this.itemIcon = stack;
+		return this;
+	}
+
+	public ItemButton setItem(Item item) {
+		this.itemIcon = new ItemStack(item);
+		return this;
+	}
+
+	public ItemStack getItemStack() {
+		return itemIcon;
 	}
 
 	/**

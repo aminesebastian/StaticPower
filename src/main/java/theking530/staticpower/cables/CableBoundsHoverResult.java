@@ -4,7 +4,7 @@ import net.minecraft.util.Direction;
 
 public class CableBoundsHoverResult {
 	public enum CableBoundsHoverType {
-		NONE, CABLE, HELD_ATTACHMENT, ATTACHED_ATTACHMENT, HELD_COVER, ATTACHED_COVER
+		NONE, CABLE, DEFAULT_ATTACHMENT, HELD_ATTACHMENT, ATTACHED_ATTACHMENT, HELD_COVER, ATTACHED_COVER
 	}
 
 	public static final CableBoundsHoverResult EMPTY = new CableBoundsHoverResult(CableBoundsHoverType.NONE, null, null);
