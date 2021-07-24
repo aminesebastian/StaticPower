@@ -5,7 +5,7 @@ import net.minecraftforge.common.util.INBTSerializable;
 
 public class RedstoneCableSideConfiguration implements INBTSerializable<CompoundNBT> {
 	public enum RedstoneCableSignalLogic {
-		INPUT, OUTPUT
+		INPUT, OUTPUT, INOUT
 	}
 
 	private RedstoneCableSignalLogic logicType;
