@@ -1,5 +1,5 @@
 {
-  "parent": "staticpower:block/cables/cable_2_straight",
+  "parent": "staticpower:block/cables/cable_3_straight",
   "textures": {
     "cable_texture": "staticpower:blocks/cables/cable_digistore",
     "particle": "staticpower:blocks/cables/cable_digistore"

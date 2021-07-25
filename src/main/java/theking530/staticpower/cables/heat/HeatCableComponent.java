@@ -193,7 +193,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {

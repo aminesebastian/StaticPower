@@ -8,8 +8,8 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.redstone.RedstoneCableComponent;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
+import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketUpdateRedstoneCableConfiguration extends NetworkMessage {

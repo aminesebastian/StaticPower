@@ -31,7 +31,7 @@ import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockIndustrialPowerCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
-import theking530.staticpower.cables.redstone.BlockRedstoneCable;
+import theking530.staticpower.cables.redstone.basic.BlockRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.BlockDigistore;

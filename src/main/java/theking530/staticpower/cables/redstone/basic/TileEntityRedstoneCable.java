@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.redstone;
+package theking530.staticpower.cables.redstone.basic;
 
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;

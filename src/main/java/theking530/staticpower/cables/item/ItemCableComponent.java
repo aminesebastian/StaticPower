@@ -153,7 +153,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	 * USED ONLY to render client blocks.
 	 */
 	@Override
-	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
 		// Check to see if there is a cable on this side that can connect to this one.
 		// If true, connect. If not, check if there is a TE that we can connect to. If
 		// not, return non.

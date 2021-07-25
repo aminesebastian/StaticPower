@@ -44,8 +44,8 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.Constants.BlockFlags;
+import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
@@ -113,6 +113,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		if (!hasPostInitRun) {
 			hasPostInitRun = true;
 			postInit(world, pos, world.getBlockState(pos));
+			for (AbstractTileEntityComponent comp : components.values()) {
+				comp.onInitializedInWorld(world, pos);
+			}
 		}
 		// Pre process all the components.
 		preProcessUpdateComponents();
@@ -140,7 +143,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public void setWorldAndPos(World world, BlockPos pos) {
 		super.setWorldAndPos(world, pos);
-		onInitializedInWorld(world, pos);
+	}
+
+	@Override
+	public void updateContainingBlockInfo() {
+		super.updateContainingBlockInfo();
+
 	}
 
 	@Override
@@ -237,10 +245,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		for (AbstractTileEntityComponent comp : components.values()) {
 			comp.onNeighborChanged(currentState, neighborPos, isMoving);
 		}
-	}
-
-	public void onInitializedInWorld(World world, BlockPos pos) {
-
 	}
 
 	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {

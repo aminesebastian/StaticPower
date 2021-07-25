@@ -43,7 +43,7 @@ import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
 import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
-import theking530.staticpower.cables.redstone.RedstoneNetworkModuleFactory;
+import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModuleFactory;
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;

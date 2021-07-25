@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.redstone;
+package theking530.staticpower.cables.redstone.basic;
 
 import net.minecraft.util.ResourceLocation;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;

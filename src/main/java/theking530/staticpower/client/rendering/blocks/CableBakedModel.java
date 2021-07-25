@@ -1,6 +1,7 @@
 package theking530.staticpower.client.rendering.blocks;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -71,6 +72,9 @@ public class CableBakedModel extends AbstractBakedModel {
 
 		// Get the model properties.
 		CableRenderingState renderingState = data.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
+		if (renderingState == null) {
+			return Collections.emptyList();
+		}
 
 		// Render the covers when we're on the NULL render side. Reason for this is, as
 		// much as we lose some render optimization, if we don't do this, chests placed
@@ -108,7 +112,7 @@ public class CableBakedModel extends AbstractBakedModel {
 
 				// Get the connection state.
 				CableConnectionState connectionState = renderingState.connectionStates[dir.ordinal()];
-				
+
 				// Decide what to render based on the connection state.
 				if (connectionState == CableConnectionState.CABLE) {
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));

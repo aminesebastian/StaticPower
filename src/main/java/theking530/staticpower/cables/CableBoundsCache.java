@@ -79,8 +79,12 @@ public class CableBoundsCache {
 		for (Direction dir : Direction.values()) {
 			if ((cable != null && cable.hasAttachment(dir)) || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE
 					|| CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.TILE_ENTITY) {
-				output = VoxelShapes.or(output, CableExtensionShapes.get(dir));
+				if (!cable.isSideDisabled(dir)) {
+					output = VoxelShapes.or(output, CableExtensionShapes.get(dir));
+				}
+
 			}
+
 		}
 
 		// Add the attachment outline. Don't perform an OR here, let it take in the
@@ -284,37 +288,41 @@ public class CableBoundsCache {
 			// Get the hovered direction.
 			Direction hoveredDirection = hoverResult.direction;
 
-			switch (hoverResult.type) {
-			case ATTACHED_COVER:
-				shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(hoveredDirection), hoveredDirection));
-				break;
-			case ATTACHED_ATTACHMENT:
-				shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
-				break;
-			case HELD_COVER:
-				shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
-				break;
-			case HELD_ATTACHMENT:
-				shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
-				break;
-			default:
-				if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY) {
-					shape = getAttachmentShapeForSide(entity.getEntityWorld(), pos, null, hoveredDirection);
+			if (!cable.isSideDisabled(hoveredDirection)) {
+				switch (hoverResult.type) {
+				case ATTACHED_COVER:
+					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(hoveredDirection), hoveredDirection));
+					break;
+				case ATTACHED_ATTACHMENT:
+					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
+					break;
+				case HELD_COVER:
+					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					break;
+				case HELD_ATTACHMENT:
+					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					break;
+				default:
+					if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY) {
+						shape = getAttachmentShapeForSide(entity.getEntityWorld(), pos, null, hoveredDirection);
+					}
 				}
-			}
 
-			// Also include the extension shape if required.
-			if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY || cable.hasAttachment(hoveredDirection)) {
-				shape = VoxelShapes.or(shape, CableExtensionShapes.get(hoveredDirection));
+				// Also include the extension shape if required.
+				if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY || cable.hasAttachment(hoveredDirection)) {
+					shape = VoxelShapes.or(shape, CableExtensionShapes.get(hoveredDirection));
+				}
 			}
 		} else {
 			for (Direction dir : Direction.values()) {
-				if (cable.hasCover(dir)) {
-					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(dir), dir));
-				} else if (cable.hasAttachment(dir)) {
-					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(dir), dir));
-				} else if (cable.getConnectionState(dir) == CableConnectionState.TILE_ENTITY && !cable.hasAttachment(dir)) {
-					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(cable.getWorld(), pos, null, dir));
+				if (!cable.isSideDisabled(dir)) {
+					if (cable.hasCover(dir)) {
+						shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getCover(dir), dir));
+					} else if (cable.hasAttachment(dir)) {
+						shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(dir), dir));
+					} else if (cable.getConnectionState(dir) == CableConnectionState.TILE_ENTITY && !cable.hasAttachment(dir)) {
+						shape = VoxelShapes.or(shape, getAttachmentShapeForSide(cable.getWorld(), pos, null, dir));
+					}
 				}
 			}
 		}

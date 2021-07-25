@@ -23,6 +23,10 @@ public class RedstoneCableSideConfiguration implements INBTSerializable<Compound
 		return logicType == RedstoneCableSignalLogic.INPUT;
 	}
 
+	public boolean isInputOutputSide() {
+		return logicType == RedstoneCableSignalLogic.INOUT;
+	}
+
 	public String getSelector() {
 		return selector;
 	}
@@ -34,6 +38,12 @@ public class RedstoneCableSideConfiguration implements INBTSerializable<Compound
 
 	public RedstoneCableSideConfiguration setLogicType(RedstoneCableSignalLogic newType) {
 		logicType = newType;
+		return this;
+	}
+
+	public RedstoneCableSideConfiguration incrementLogicType() {
+		int newValue = ((logicType.ordinal() + 1) % RedstoneCableSignalLogic.values().length);
+		logicType = RedstoneCableSignalLogic.values()[newValue];
 		return this;
 	}
 

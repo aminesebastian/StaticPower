@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.redstone.gui.basic;
+package theking530.staticpower.cables.redstone.basic.gui;
 
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketBuffer;
@@ -7,10 +7,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
-import theking530.staticpower.cables.redstone.RedstoneCableComponent;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.RedstoneCableSideConfiguration;
-import theking530.staticpower.cables.redstone.TileEntityRedstoneCable;
+import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
+import theking530.staticpower.cables.redstone.basic.TileEntityRedstoneCable;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 
 public class ContainerBasicRedstoneIO extends StaticPowerTileEntityContainer<TileEntityRedstoneCable> {

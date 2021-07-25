@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.redstone;
+package theking530.staticpower.cables.redstone.basic;
 
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -22,6 +22,7 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.network.PacketUpdateRedstoneCableConfiguration;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -54,7 +55,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected CableConnectionState cacheConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null) {
 			if (otherProvider.areCableCompatible(this, side)) {
@@ -97,7 +98,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		// Check to make sure the side is not disabled and configured to be an output.
-		if (!isSideDisabled(side.getOpposite())) {
+		if (!isSideDisabled(side.getOpposite()) && !configuration.getSideConfig(side.getOpposite()).isInputSide()) {
 			AtomicInteger output = new AtomicInteger(0);
 			getRedstoneNetworkModule().ifPresent((module) -> {
 				output.set(module.getNetworkSignalStrength(configuration.getSideConfig(side.getOpposite()).getSelector()));
@@ -110,7 +111,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	@Override
 	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		// Check to make sure the side is not disabled and configured to be an output.
-		if (getWorld() != null && !isSideDisabled(side.getOpposite())) {
+		if (!isSideDisabled(side.getOpposite()) && !configuration.getSideConfig(side.getOpposite()).isInputSide()) {
 			AtomicInteger output = new AtomicInteger(0);
 			getRedstoneNetworkModule().ifPresent((module) -> {
 				output.set(module.getNetworkSignalStrength(configuration.getSideConfig(side.getOpposite()).getSelector()));
@@ -184,8 +185,13 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	@Override
 	protected ResourceLocation getAttachmentModelForSide(Direction side) {
 		if (getConnectionState(side) == CableConnectionState.TILE_ENTITY) {
-			return configuration.getSideConfig(side).isInputSide() ? StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT
-					: StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_OUTPUT;
+			if (configuration.getSideConfig(side).isInputSide()) {
+				return StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT;
+			} else if (configuration.getSideConfig(side).isOutputSide()) {
+				return StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_OUTPUT;
+			} else {
+				return StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT_OUTPUT;
+			}
 		} else {
 			return super.getAttachmentModelForSide(side);
 		}
@@ -193,6 +199,15 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected boolean getInitialSideDisabledState(Direction side) {
+		CableConnectionState rawState = getUncachedConnectionState(side, getWorld().getTileEntity(getPos().offset(side)), getPos().offset(side));
+		if (rawState == CableConnectionState.TILE_ENTITY) {
+			if (getWorld().getTileEntity(getPos().offset(side)) != null) {
+				return false;
+			} else {
+				return true;
+			}
+		}
+
 		return false;
 	}
 

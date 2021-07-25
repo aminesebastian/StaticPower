@@ -846,6 +846,7 @@
 	"gui.staticpower.digistore_wireless_terminal_out_of_range": "Wireless Terminal's crafting terminal out of range!",
 	"gui.staticpower.redstone_cable_input_mode": "This cable will read a redstone signal.",
 	"gui.staticpower.redstone_cable_output_mode": "This cable will provide a redstone signal",
+	"gui.staticpower.redstone_cable_input_output_mode": "This cable will both provide and read a redstone signal (not recommended!)",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

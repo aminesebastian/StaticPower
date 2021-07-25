@@ -29,6 +29,8 @@ public abstract class AbstractTileEntityComponent {
 	private String name;
 	private boolean isEnabled;
 	private TileEntityBase tileEntity;
+	/** Indicates that the world and chunk have been loaded. */
+	private boolean worldLoaded;
 
 	private final List<Field> saveSerializeableFields;
 	private final List<Field> updateSerializeableFields;
@@ -36,6 +38,7 @@ public abstract class AbstractTileEntityComponent {
 	public AbstractTileEntityComponent(String name) {
 		this.name = name;
 		this.isEnabled = true;
+		worldLoaded = false;
 		this.saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		this.updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
 	}
@@ -63,6 +66,14 @@ public abstract class AbstractTileEntityComponent {
 	}
 
 	public void postProcessUpdate() {
+	}
+
+	public void onInitializedInWorld(World world, BlockPos pos) {
+		worldLoaded = true;
+	}
+
+	protected boolean isWorldLoaded() {
+		return worldLoaded;
 	}
 
 	/**
@@ -144,10 +155,10 @@ public abstract class AbstractTileEntityComponent {
 	}
 
 	public BlockPos getPos() {
-		return tileEntity.getPos();
+		return getTileEntity().getPos();
 	}
 
 	public World getWorld() {
-		return tileEntity.getWorld();
+		return getTileEntity().getWorld();
 	}
 }
