@@ -15,8 +15,8 @@ public abstract class BaseDigistoreBlock extends StaticPowerMachineBlock {
 	}
 
 	@Override
-	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
-		super.onStaticPowerNeighborChanged(state, world, pos, neighbor);
+	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor, boolean isMoving) {
+		super.onStaticPowerNeighborChanged(state, world, pos, neighbor, isMoving);
 		if (!world.isRemote()) {
 			ServerCable cable = CableNetworkManager.get((ServerWorld) world).getCable(pos);
 			if (cable != null && cable.getNetwork() != null) {

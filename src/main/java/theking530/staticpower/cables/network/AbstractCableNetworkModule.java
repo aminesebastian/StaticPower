@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 
@@ -15,7 +16,7 @@ public abstract class AbstractCableNetworkModule {
 		Type = type;
 	}
 
-	public void onNetworkGraphUpdated(NetworkMapper mapper) {
+	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 
 	}
 
@@ -33,6 +34,14 @@ public abstract class AbstractCableNetworkModule {
 
 	public CableNetwork getNetwork() {
 		return Network;
+	}
+
+	public void onNetworkUpdatesDisabled() {
+
+	}
+
+	public void onNetworkUpdatesEnabled() {
+
 	}
 
 	public abstract void getReaderOutput(List<ITextComponent> components);

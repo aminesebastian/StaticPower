@@ -7,6 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
@@ -64,8 +65,8 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void onNetworkGraphUpdated(NetworkMapper mapper) {
-		super.onNetworkGraphUpdated(mapper);
+	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
+		super.onNetworkGraphUpdated(mapper, startingPosition);
 
 		// Clear the initial values back to their defaults.
 		digistores.clear();

@@ -75,7 +75,7 @@ public abstract class AbstractTileEntityComponent {
 
 	}
 
-	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
 
 	}
 

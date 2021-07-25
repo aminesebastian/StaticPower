@@ -7,6 +7,7 @@ import java.util.Optional;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -145,7 +146,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void onNetworkGraphUpdated(NetworkMapper mapper) {
+	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		// Allocate the total capacity.
 		float total = 0;
 

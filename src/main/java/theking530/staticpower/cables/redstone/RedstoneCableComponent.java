@@ -97,27 +97,27 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	@Override
 	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		// Check to make sure the side is not disabled and configured to be an output.
-		if (!isSideDisabled(side.getOpposite()) && configuration.getSideConfig(side.getOpposite()).isOutputSide()) {
+		if (!isSideDisabled(side.getOpposite())) {
 			AtomicInteger output = new AtomicInteger(0);
 			getRedstoneNetworkModule().ifPresent((module) -> {
-				output.set(module.getCurrentSignalStrength(configuration.getSideConfig(side.getOpposite()).getSelector()));
+				output.set(module.getNetworkSignalStrength(configuration.getSideConfig(side.getOpposite()).getSelector()));
 			});
 			return output.get();
 		}
-		return clientSidePowerLevel;
+		return 0;
 	}
 
 	@Override
 	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
 		// Check to make sure the side is not disabled and configured to be an output.
-		if (!isSideDisabled(side.getOpposite()) && configuration.getSideConfig(side.getOpposite()).isOutputSide()) {
+		if (getWorld() != null && !isSideDisabled(side.getOpposite())) {
 			AtomicInteger output = new AtomicInteger(0);
 			getRedstoneNetworkModule().ifPresent((module) -> {
-				output.set(module.getCurrentSignalStrength(configuration.getSideConfig(side.getOpposite()).getSelector()));
+				output.set(module.getNetworkSignalStrength(configuration.getSideConfig(side.getOpposite()).getSelector()));
 			});
 			return output.get();
 		}
-		return clientSidePowerLevel;
+		return 0;
 	}
 
 	/**

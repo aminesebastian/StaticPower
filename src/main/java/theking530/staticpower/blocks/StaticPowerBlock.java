@@ -187,7 +187,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 
 	}
 
-	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor) {
+	public void onStaticPowerNeighborChanged(BlockState state, IWorldReader world, BlockPos pos, BlockPos neighbor, boolean isMoving) {
 
 	}
 
@@ -331,8 +331,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 	public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, fromPos);
+			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
 		}
-		onStaticPowerNeighborChanged(state, world, pos, fromPos);
+		onStaticPowerNeighborChanged(state, world, pos, fromPos, isMoving);
 	}
 }

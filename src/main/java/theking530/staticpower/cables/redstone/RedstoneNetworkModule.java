@@ -2,7 +2,6 @@ package theking530.staticpower.cables.redstone;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -17,14 +16,18 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.World;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
+import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
+import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
 
 public class RedstoneNetworkModule extends AbstractCableNetworkModule {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(RedstoneNetworkModule.class);
+	private boolean canProvidePower = true;
 	private HashMap<String, Integer> currentSignalStrengths;
-	private boolean isEnabled;
+	private HashMap<BlockPos, CableSignalWrapper> cableWrappers;
+	private NetworkMapper latestMapper;
 
 	public RedstoneNetworkModule(ResourceLocation name) {
 		super(name);
@@ -38,33 +41,71 @@ public class RedstoneNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void tick(World world) {
-		updateNetworkValues(world);
+		if (latestMapper != null) {
+			updateNetworkValues(world, latestMapper);
+			// latestMapper = null;
+		}
 	}
 
-	public int getCurrentSignalStrength(String selector) {
-		return !isEnabled ? 0 : currentSignalStrengths.containsKey(selector) ? currentSignalStrengths.get(selector) : 0;
+	@Override
+	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
+		latestMapper = mapper;
 	}
 
-	protected void updateNetworkValues(World world) {
-		// Set the current signal strengths to the previous map and create a new map for
-		// the current values.
+	protected void updateNetworkValues(World world, NetworkMapper mapper) {
 		HashMap<String, Integer> previous = currentSignalStrengths;
 		currentSignalStrengths = new HashMap<String, Integer>();
 
+		System.out.println(getType());
+		
+		// Create a new cable wrappers map.
+		cableWrappers = new HashMap<BlockPos, CableSignalWrapper>();
+
 		// Capture the signal for each cable and keep the maximum.
-		isEnabled = false;
+		canProvidePower = false;
+
+		updateAllConnectedBlocks(world, getNetwork(), mapper);
 
 		// Iterate through all the cables and capture the recieved redstone values.
-		for (ServerCable cable : getNetwork().getGraph().getCables().values().stream().collect(Collectors.toList())) {
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// Get the configuration for the cable
 			RedstoneCableConfiguration configuration = getSideConfiguration(cable);
+
+			// Create a wrapper for this cable.
+			CableSignalWrapper wrapper = new CableSignalWrapper(cable);
+			cableWrappers.put(cable.getPos(), wrapper);
 
 			// Check all sides of the cable, and capture the max input for that side's
 			// selector.
 			for (Direction dir : Direction.values()) {
 				int signal = getSignal(world, cable, configuration, dir);
 				String selector = configuration.getSideConfig(dir).getSelector();
-				currentSignalStrengths.put(selector, Math.max(getStrengthForSelector(selector, currentSignalStrengths), signal));
+				wrapper.addSignal(selector, signal);
+			}
+		}
+
+		// Now do a second pass.
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			// Get the configuration for the cable
+			RedstoneCableConfiguration configuration = getSideConfiguration(cable);
+
+			// Create a wrapper for this cable.
+			CableSignalWrapper wrapper = new CableSignalWrapper(cable);
+			cableWrappers.put(cable.getPos(), wrapper);
+
+			// Check all sides of the cable, and capture the max input for that side's
+			// selector.
+			for (Direction dir : Direction.values()) {
+				int signal = getSignal(world, cable, configuration, dir);
+				String selector = configuration.getSideConfig(dir).getSelector();
+				wrapper.addSignal(selector, signal);
+			}
+		}
+
+		// Capture the max signals.
+		for (CableSignalWrapper wrapper : cableWrappers.values()) {
+			for (String selector : wrapper.signals.keySet()) {
+				currentSignalStrengths.put(selector, Math.max(getStrengthForSelector(selector, currentSignalStrengths), wrapper.signals.get(selector)));
 			}
 		}
 
@@ -75,12 +116,39 @@ public class RedstoneNetworkModule extends AbstractCableNetworkModule {
 			currentSignalStrengths.put("naked", 0);
 		}
 
+		// Print out the signals.
+		for (String selector : currentSignalStrengths.keySet()) {
+			System.out.println(String.format("Selector: %1$s Power: %2$d", selector, currentSignalStrengths.get(selector)).toString());
+		}
+
 		// Re-enable the network.
-		isEnabled = true;
+		canProvidePower = true;
 
 		// Only trigger an update if the signals have changed.
 		if (checkIfValuesChanged(currentSignalStrengths, previous)) {
-			updateAllConnectedBlocks(world);
+			updateAllConnectedBlocks(world, mapper);
+		}
+		updateAllConnectedBlocks(world, mapper);
+	}
+
+	protected void updateAllConnectedBlocks(World world, NetworkMapper mapper) {
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			// If the event is not cancelled, iterate through all the sides of the cable and
+			// notify updates. This must be done for ALL sides, even those that are input
+			// only as they may have been output last tick.
+			if (neighborNotifyEvent(world, cable.getPos(), world.getBlockState(cable.getPos()))) {
+				for (Direction dir : Direction.values()) {
+					BlockPos updatePos = cable.getPos().offset(dir);
+					world.neighborChanged(updatePos, world.getBlockState(cable.getPos()).getBlock(), cable.getPos());
+
+					// We must also notify all blocks that are touching any blocks we're touching.
+					if (!neighborNotifyEvent(world, updatePos, world.getBlockState(updatePos))) {
+						for (Direction dir2 : Direction.values()) {
+							world.neighborChanged(updatePos.offset(dir2), world.getBlockState(updatePos).getBlock(), updatePos);
+						}
+					}
+				}
+			}
 		}
 	}
 
@@ -108,7 +176,18 @@ public class RedstoneNetworkModule extends AbstractCableNetworkModule {
 		}
 
 		// Get the redstone power.
-		return world.getRedstonePower(targetPos, side);
+		int power = 0;
+		if (cableWrappers.containsKey(targetPos)) {
+			if (cableWrappers.get(targetPos).signals.containsKey(selector)) {
+				power = cableWrappers.get(targetPos).signals.get(selector);
+			}
+		}
+		return Math.max(power, world.getRedstonePower(targetPos, side));
+	}
+
+	public int getNetworkSignalStrength(String selector) {
+		int strength = currentSignalStrengths.containsKey(selector) ? currentSignalStrengths.get(selector) : 0;
+		return canProvidePower ? strength : 0;
 	}
 
 	protected boolean checkIfValuesChanged(HashMap<String, Integer> current, HashMap<String, Integer> previous) {
@@ -141,21 +220,35 @@ public class RedstoneNetworkModule extends AbstractCableNetworkModule {
 		return valueMap.containsKey(selector) ? valueMap.get(selector) : 0;
 	}
 
-	protected void updateAllConnectedBlocks(World world) {
-		for (ServerCable cable : getNetwork().getGraph().getCables().values().stream().collect(Collectors.toList())) {
+	protected RedstoneCableConfiguration getSideConfiguration(ServerCable cable) {
+		RedstoneCableConfiguration configuration = new RedstoneCableConfiguration();
+		configuration.deserializeNBT(cable.getTagProperty(RedstoneCableComponent.CONFIGURATION_KEY));
+		return configuration;
+	}
+
+	protected static boolean neighborNotifyEvent(World world, @Nonnull BlockPos pos, @Nullable BlockState state) {
+		return !net.minecraftforge.event.ForgeEventFactory.onNeighborNotify(world, pos, state, java.util.EnumSet.allOf(Direction.class), false).isCanceled();
+	}
+
+	protected void updateAllCables(World world, CableNetwork network, NetworkMapper mapper) {
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			updateBlock(world, cable.getPos(), cable.getPos());
+		}
+	}
+
+	protected void updateAllConnectedBlocks(World world, CableNetwork network, NetworkMapper mapper) {
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If the event is not cancelled, iterate through all the sides of the cable and
-			// notify updates. This must be done for ALL sides, even those that are input
-			// only as they may have been output last tick.
-			if (!neighborNotifyEvent(world, cable.getPos(), world.getBlockState(cable.getPos()))) {
+			// notify updates.
+			if (neighborNotifyEvent(world, cable.getPos(), world.getBlockState(cable.getPos()))) {
 				for (Direction dir : Direction.values()) {
 					BlockPos updatePos = cable.getPos().offset(dir);
-					world.neighborChanged(updatePos, world.getBlockState(cable.getPos()).getBlock(), cable.getPos());
+					updateBlock(world, cable.getPos(), updatePos);
 
 					// We must also notify all blocks that are touching any blocks we're touching.
-					if (!neighborNotifyEvent(world, updatePos, world.getBlockState(updatePos))) {
+					if (neighborNotifyEvent(world, updatePos, world.getBlockState(updatePos))) {
 						for (Direction dir2 : Direction.values()) {
-							world.neighborChanged(updatePos.offset(dir2), world.getBlockState(updatePos).getBlock(), updatePos);
-
+							updateBlock(world, updatePos, updatePos.offset(dir2));
 						}
 					}
 				}
@@ -163,13 +256,28 @@ public class RedstoneNetworkModule extends AbstractCableNetworkModule {
 		}
 	}
 
-	protected RedstoneCableConfiguration getSideConfiguration(ServerCable cable) {
-		RedstoneCableConfiguration configuration = new RedstoneCableConfiguration();
-		configuration.deserializeNBT(cable.getTagProperty(RedstoneCableComponent.CONFIGURATION_KEY));
-		return configuration;
+	protected void updateBlock(World world, BlockPos sourcePos, BlockPos targetPos) {
+		// Skip cables in this network.
+		if (!getNetwork().getGraph().getCables().containsKey(targetPos)) {
+			world.neighborChanged(targetPos, world.getBlockState(targetPos).getBlock(), sourcePos);
+		}
 	}
 
-	protected boolean neighborNotifyEvent(World world, @Nonnull BlockPos pos, @Nullable BlockState state) {
-		return net.minecraftforge.event.ForgeEventFactory.onNeighborNotify(world, pos, state, java.util.EnumSet.allOf(Direction.class), false).isCanceled();
+	protected class CableSignalWrapper {
+		public final ServerCable cable;
+		private final HashMap<String, Integer> signals;
+
+		public CableSignalWrapper(ServerCable cable) {
+			this.cable = cable;
+			signals = new HashMap<String, Integer>();
+		}
+
+		public void addSignal(String selector, int power) {
+			if (!signals.containsKey(selector)) {
+				signals.put(selector, power);
+			} else {
+				signals.put(selector, Math.max(signals.get(selector), power));
+			}
+		}
 	}
 }

@@ -89,8 +89,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
-		super.onNeighborChanged(currentState, neighborPos);
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
+		super.onNeighborChanged(currentState, neighborPos, isMoving);
 
 		// Update the network graph.
 		if (!getWorld().isRemote()) {

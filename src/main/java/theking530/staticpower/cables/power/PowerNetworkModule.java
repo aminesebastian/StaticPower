@@ -146,7 +146,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void onNetworkGraphUpdated(NetworkMapper mapper) {
+	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		// Allocate a hash map to contain all the values.
 		HashMap<Long, Integer> averageMap = new HashMap<Long, Integer>();
 

@@ -233,9 +233,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	}
 
-	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
 		for (AbstractTileEntityComponent comp : components.values()) {
-			comp.onNeighborChanged(currentState, neighborPos);
+			comp.onNeighborChanged(currentState, neighborPos, isMoving);
 		}
 	}
 

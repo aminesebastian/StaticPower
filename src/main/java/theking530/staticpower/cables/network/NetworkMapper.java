@@ -3,6 +3,7 @@ package theking530.staticpower.cables.network;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.annotation.Nullable;
@@ -18,12 +19,13 @@ public class NetworkMapper {
 	private final Set<ServerCable> NewlyAddedCables;
 	private final Set<ServerCable> RemovedCables;
 	private HashMap<BlockPos, DestinationWrapper> Destinations;
+	private BlockPos startingPosition;
 
 	public NetworkMapper(Collection<ServerCable> startingCables) {
 		InitialCables = startingCables;
-		DiscoveredCables = new HashSet<ServerCable>();
-		NewlyAddedCables = new HashSet<ServerCable>();
-		RemovedCables = new HashSet<ServerCable>();
+		DiscoveredCables = new LinkedHashSet<ServerCable>();
+		NewlyAddedCables = new LinkedHashSet<ServerCable>();
+		RemovedCables = new LinkedHashSet<ServerCable>();
 		Destinations = new HashMap<BlockPos, DestinationWrapper>();
 
 		RemovedCables.addAll(startingCables);
@@ -33,6 +35,9 @@ public class NetworkMapper {
 		// Create the visited hash set and add the starting position as already visited.
 		HashSet<BlockPos> visited = new HashSet<BlockPos>();
 		visited.add(startingPos);
+
+		// Capture the starting position.
+		startingPosition = startingPos;
 
 		// Check the starting position.
 		scanLocation(world, CableNetworkManager.get(world).getCable(startingPos), null, startingPos);
@@ -55,6 +60,10 @@ public class NetworkMapper {
 
 	public HashMap<BlockPos, DestinationWrapper> getDestinations() {
 		return Destinations;
+	}
+
+	public BlockPos getStartingPosition() {
+		return startingPosition;
 	}
 
 	protected void _updateNetworkWorker(World world, HashSet<BlockPos> visited, BlockPos currentPosition) {
