@@ -602,7 +602,14 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Nullable
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbtTagCompound = new CompoundNBT();
-		serializeUpdateNbt(nbtTagCompound, true);
+		// Make sure we only run this AFTER the post init has run.
+		// Otherwise what happens is we send this update packet with data that MAY be
+		// modified
+		// during post init and therefore, for a tick or two, the client has the wrong
+		// data.
+		if (hasPostInitRun) {
+			serializeUpdateNbt(nbtTagCompound, true);
+		}
 		return new SUpdateTileEntityPacket(this.pos, 0, nbtTagCompound);
 	}
 
@@ -613,8 +620,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		deserializeUpdateNbt(pkt.getNbtCompound(), true);
-		this.markTileEntityForSynchronization();
+		// Because we wait for post init from the #getUpdatePacket() method, we must
+		// wait here too.
+		if (hasPostInitRun) {
+			deserializeUpdateNbt(pkt.getNbtCompound(), true);
+		}
+		markTileEntityForSynchronization();
 	}
 
 	/**

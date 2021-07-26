@@ -80,22 +80,20 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				}
 			}
 		}
-		if (!initialDisabledStateApplied) {
-			initialDisabledStateApplied = true;
-			// Handle the initial states of the disabled sides for the new cable.
-			for (Direction side : Direction.values()) {
-				disabledSides[side.ordinal()] = getInitialSideDisabledState(side);
-				if (!getWorld().isRemote) {
-					CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, getInitialSideDisabledState(side));
-				}
-			}
-			//getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), 1 | 2);
-		}
+		initialDisabledStateApplied = false;
 	}
 
 	@Override
 	public void onInitializedInWorld(World world, BlockPos pos) {
 		super.onInitializedInWorld(world, pos);
+		// Handle the initial states of the disabled sides for the new cable.
+		for (Direction side : Direction.values()) {
+			disabledSides[side.ordinal()] = getInitialSideDisabledState(side);
+			if (!getWorld().isRemote) {
+				CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, getInitialSideDisabledState(side));
+			}
+		}
+		getTileEntity().refreshRenderState();
 	}
 
 	@Override
@@ -118,12 +116,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
 		// Drop the covers and attachments.
 		for (Direction dir : Direction.values()) {
+			// Drop any attachments.
 			if (hasAttachment(dir)) {
 				ItemStack attachment = getAttachment(dir);
 				if (((AbstractCableAttachment) attachment.getItem()).shouldDropOnOwningCableBreak(attachment)) {
 					WorldUtilities.dropItem(getWorld(), getPos(), removeAttachment(dir));
 				}
 			}
+
+			// Drop the covers too.
 			if (hasCover(dir)) {
 				WorldUtilities.dropItem(getWorld(), getPos(), removeCover(dir));
 			}
@@ -158,7 +159,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public CableConnectionState getConnectionState(Direction side) {
-		return this.getUncachedConnectionState(side, getWorld().getTileEntity(getPos().offset(side)), getPos().offset(side));
+		return this.getUncachedConnectionState(side, getWorld().getTileEntity(getPos().offset(side)), getPos().offset(side), initialDisabledStateApplied);
 	}
 
 	/**
@@ -623,5 +624,5 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		return false;
 	}
 
-	protected abstract CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition);
+	protected abstract CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded);
 }

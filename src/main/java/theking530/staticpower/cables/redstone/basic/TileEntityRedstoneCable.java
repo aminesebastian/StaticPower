@@ -65,9 +65,4 @@ public class TileEntityRedstoneCable extends TileEntityBase {
 		super(allocator);
 		registerComponent(cableComponent = new RedstoneCableComponent("RedstoneCableComponent", selector));
 	}
-
-	@Override
-	public void process() {
-
-	}
 }

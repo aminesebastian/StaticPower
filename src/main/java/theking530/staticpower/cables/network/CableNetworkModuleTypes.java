@@ -13,6 +13,7 @@ public class CableNetworkModuleTypes {
 	public static final ResourceLocation HEAT_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_heat_network");
 	public static final ResourceLocation SCAFFOLD_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_scaffold_network");
 
+	public static final ResourceLocation BUNDLED_REDSTONE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_bundled_redstone_network");
 	public static final ResourceLocation REDSTONE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_redstone_network");
 
 	public static final ResourceLocation REDSTONE_NETWORK_MODULE_DARK_RED = new ResourceLocation(StaticPower.MOD_ID, "module_redstone_network_dark_red");
@@ -32,7 +33,7 @@ public class CableNetworkModuleTypes {
 	public static final ResourceLocation REDSTONE_NETWORK_MODULE_DARK_GRAY = new ResourceLocation(StaticPower.MOD_ID, "module_redstone_network_dark_gray");
 	public static final ResourceLocation REDSTONE_NETWORK_MODULE_BLACK = new ResourceLocation(StaticPower.MOD_ID, "module_redstone_network_black");
 
-	private static final HashSet<ResourceLocation> REDSTONE_MODULES = new HashSet<ResourceLocation>();
+	public static final HashSet<ResourceLocation> REDSTONE_MODULES = new HashSet<ResourceLocation>();
 	static {
 		REDSTONE_MODULES.add(REDSTONE_NETWORK_MODULE);
 		REDSTONE_MODULES.add(REDSTONE_NETWORK_MODULE_DARK_RED);
@@ -55,7 +56,7 @@ public class CableNetworkModuleTypes {
 
 	public static boolean doesNetworkSupportRedstoneAnyRedstoneModule(CableNetwork network) {
 		for (ResourceLocation type : REDSTONE_MODULES) {
-			if (network.hasModule(type)) {
+			if (network != null && network.hasModule(type)) {
 				return true;
 			}
 		}

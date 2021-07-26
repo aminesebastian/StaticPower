@@ -6,6 +6,7 @@ package theking530.staticpower.cables.network;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.annotation.Nullable;
@@ -259,5 +260,11 @@ public class CableNetwork {
 		tag.put("modules", modules);
 
 		return tag;
+	}
+
+	public void recieveCrossNetworkUpdate(CableNetwork sendingNetwork, Set<CableNetwork> previousNetworks) {
+		for (AbstractCableNetworkModule module : Modules.values()) {
+			module.recieveCrossNetworkUpdate(sendingNetwork, previousNetworks);
+		}
 	}
 }

@@ -55,7 +55,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null) {
 			if (otherProvider.areCableCompatible(this, side)) {
@@ -64,10 +64,11 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 				}
 			} else {
 				return getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE)
+						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE)
 						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ? CableConnectionState.TILE_ENTITY
 								: CableConnectionState.NONE;
 			}
-		} else if (otherProvider == null) {
+		} else if (!firstWorldLoaded && otherProvider == null) {
 			if (canConnectTo(getWorld(), getPos(), side.getOpposite())) {
 				return CableConnectionState.TILE_ENTITY;
 			}
@@ -199,16 +200,8 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected boolean getInitialSideDisabledState(Direction side) {
-		CableConnectionState rawState = getUncachedConnectionState(side, getWorld().getTileEntity(getPos().offset(side)), getPos().offset(side));
-		if (rawState == CableConnectionState.TILE_ENTITY) {
-			if (getWorld().getTileEntity(getPos().offset(side)) != null) {
-				return false;
-			} else {
-				return true;
-			}
-		}
 
-		return false;
+		return getWorld().getBlockState(getPos().offset(side)).isIn(Blocks.GRASS_BLOCK);
 	}
 
 	protected static ResourceLocation getModuleType(String selector) {

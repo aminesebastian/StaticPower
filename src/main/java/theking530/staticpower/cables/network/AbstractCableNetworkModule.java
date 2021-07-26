@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.network;
 
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ResourceLocation;
@@ -28,6 +29,10 @@ public abstract class AbstractCableNetworkModule {
 		Network = network;
 	}
 
+	public void onJoinedOtherNetwork(CableNetwork network) {
+
+	}
+
 	public ResourceLocation getType() {
 		return Type;
 	}
@@ -53,5 +58,9 @@ public abstract class AbstractCableNetworkModule {
 
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
 		return tag;
+	}
+
+	public void recieveCrossNetworkUpdate(CableNetwork sendingNetwork, Set<CableNetwork> previousNetworks) {
+
 	}
 }

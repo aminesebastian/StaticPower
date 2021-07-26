@@ -576,6 +576,7 @@
 	"block.staticpower.cable_redstone_basic_light_purple": "Magenta Redstone Cable",
 	"block.staticpower.cable_redstone_basic_yellow": "Yellow Redstone Cable",
 	"block.staticpower.cable_redstone_basic_white": "White Redstone Cable",
+	"block.staticpower.cable_bundled_redstone": "Bundled Redstone Cable",
 	"block.staticpower.cable_item_basic": "Item Tube",
 	"block.staticpower.cable_item_advanced": "Advanced Item Tube",
 	"block.staticpower.cable_item_static": "Static Item Tube",
