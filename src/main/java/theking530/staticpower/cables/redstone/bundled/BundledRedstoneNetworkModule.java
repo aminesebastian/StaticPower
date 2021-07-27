@@ -90,7 +90,7 @@ public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule 
 		// Begin providing power again.
 		startProvidingPower();
 		if (!signals.equals(getPreviousSignals())) {
-			updateAllConnectedBlocks(world, mapper);
+			updateAllCables(world, mapper);
 		}
 	}
 }

@@ -25,6 +25,7 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 	protected NetworkMapper lastNetworkMap;
 	private boolean canProvidePower;
 	private boolean shouldRescanConnections;
+	@SuppressWarnings("unused")
 	private String lastRescanSource;
 
 	public AbstractRedstoneNetworkModule(ResourceLocation type) {
@@ -103,74 +104,57 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 		return configuration;
 	}
 
-	@SuppressWarnings("deprecation")
-	protected void updateAllConnectedBlocks(World world, NetworkMapper mapper) {
-		CableNetworkManager manager = CableNetworkManager.get(world);
-
+	protected void updateAllCables(World world, NetworkMapper mapper) {
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
-			try {
-				// If the event is not cancelled, iterate through all the sides of the cable and
-				// notify updates. This must be done for ALL sides, even those that are input
-				// only as they may have been output last tick.
-				if (neighborNotifyEvent(world, cable.getPos(), world.getBlockState(cable.getPos()))) {
-					for (Direction dir : Direction.values()) {
-						BlockPos updatePos = cable.getPos().offset(dir);
+			updateAroundCable(world, cable);
+		}
+	}
 
-						// Skip cables part of networks we already updated.
-						if (manager.isTrackingCable(updatePos)) {
-							manager.getCable(updatePos).getNetwork().recieveCrossNetworkUpdate(getNetwork(), null);
-							continue;
-						}
+	@SuppressWarnings("deprecation")
+	protected void updateAroundCable(World world, ServerCable cable) {
+		CableNetworkManager manager = CableNetworkManager.get(world);
+		try {
+			// Skip cables in this network.
+			if (neighborNotifyEvent(world, cable.getPos(), world.getBlockState(cable.getPos()))) {
+				for (Direction dir : Direction.values()) {
+					BlockPos updatePos = cable.getPos().offset(dir);
 
-						if (!world.getBlockState(updatePos).isAir()) {
-							world.neighborChanged(updatePos, world.getBlockState(cable.getPos()).getBlock(), cable.getPos());
+					// Skip cables part of networks we already updated.
+					if (manager.isTrackingCable(updatePos)) {
+						manager.getCable(updatePos).getNetwork().recieveCrossNetworkUpdate(getNetwork(), null);
+						continue;
+					}
 
-							// We must also notify all blocks that are touching any blocks we're touching.
-							if (!neighborNotifyEvent(world, updatePos, world.getBlockState(updatePos))) {
-								for (Direction dir2 : Direction.values()) {
-									BlockPos updatePos2 = updatePos.offset(dir2);
-									// Skip cables part of networks we already updated.
-									if (manager.isTrackingCable(updatePos2)) {
-										manager.getCable(updatePos).getNetwork().recieveCrossNetworkUpdate(getNetwork(), null);
-										continue;
-									}
+					if (!world.getBlockState(updatePos).isAir()) {
+						updateBlock(world, cable.getPos(), updatePos);
 
-									if (!world.getBlockState(updatePos2).isAir()) {
-										world.neighborChanged(updatePos2, world.getBlockState(updatePos).getBlock(), updatePos);
-									}
+						// We must also notify all blocks that are touching any blocks we're touching.
+						if (!neighborNotifyEvent(world, updatePos, world.getBlockState(updatePos))) {
+							for (Direction dir2 : Direction.values()) {
+								BlockPos updatePos2 = updatePos.offset(dir2);
+								// Skip cables part of networks we already updated.
+								if (manager.isTrackingCable(updatePos2)) {
+									manager.getCable(updatePos).getNetwork().recieveCrossNetworkUpdate(getNetwork(), null);
+									continue;
+								}
+
+								if (!world.getBlockState(updatePos2).isAir()) {
+									updateBlock(world, cable.getPos(), updatePos2);
 								}
 							}
 						}
 					}
 				}
-			} catch (Exception e) {
-				System.out.println("WTF");
 			}
+		} catch (Exception e) {
+			System.out.println("How is this possible!?");
 		}
 	}
 
 	protected void updateBlock(World world, BlockPos sourcePos, BlockPos targetPos) {
 		// Skip cables in this network.
 		if (!getNetwork().getGraph().getCables().containsKey(targetPos)) {
-			world.neighborChanged(targetPos, world.getBlockState(targetPos).getBlock(), sourcePos);
-		}
-	}
-
-	public class CableSignalWrapper {
-		public final ServerCable cable;
-		public final HashMap<String, Integer> signals;
-
-		public CableSignalWrapper(ServerCable cable) {
-			this.cable = cable;
-			signals = new HashMap<String, Integer>();
-		}
-
-		public void addSignal(String selector, int power) {
-			if (!signals.containsKey(selector)) {
-				signals.put(selector, power);
-			} else {
-				signals.put(selector, Math.max(signals.get(selector), power));
-			}
+			world.neighborChanged(targetPos, world.getBlockState(sourcePos).getBlock(), sourcePos);
 		}
 	}
 

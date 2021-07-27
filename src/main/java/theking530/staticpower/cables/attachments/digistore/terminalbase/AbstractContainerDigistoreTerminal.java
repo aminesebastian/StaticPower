@@ -140,6 +140,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		filter = "";
 		resyncInv = false;
 		sortType = DigistoreInventorySortType.COUNT;
+		clientSimulatedInventory = new DigistoreSimulatedItemStackHandler(0);
 		this.craftingRequests = new LinkedList<CraftingRequestResponse>();
 	}
 

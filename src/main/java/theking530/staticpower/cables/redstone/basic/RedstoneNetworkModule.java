@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.redstone.basic;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.util.Direction;
@@ -17,10 +18,13 @@ import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModule;
 
 public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
-	private HashMap<BlockPos, CableSignalWrapper> cableWrappers;
+	private Map<ServerCable, CableConfigurationWrapper> outputCables;
+	private Map<ServerCable, CableConfigurationWrapper> inputCables;
 
 	public RedstoneNetworkModule(ResourceLocation name) {
 		super(name);
+		outputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
+		inputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
 	}
 
 	@Override
@@ -36,55 +40,40 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 
 	@Override
 	public void updateNetworkValues(World world, NetworkMapper mapper) {
+		// Clear any existing signals.
 		resetSignals();
 
-		// Create a new cable wrappers map.
-		cableWrappers = new HashMap<BlockPos, CableSignalWrapper>();
+		// Capture all eligible cables.
+		captureInputOutputCables(world, mapper);
 
-		// Iterate through all the cables and capture the recieved redstone values.
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
-			// Get the configuration for the cable
-			RedstoneCableConfiguration configuration = getConfigurationForCable(cable);
-
-			// Create a wrapper for this cable.
-			CableSignalWrapper wrapper = new CableSignalWrapper(cable);
-
+		// Read in all the input signals.
+		for (Map.Entry<ServerCable, CableConfigurationWrapper> entry : inputCables.entrySet()) {
 			// Check all sides of the cable, and capture the max input for that side's
 			// selector.
 			for (Direction dir : Direction.values()) {
-				int signal = getSignal(world, cable, configuration, dir);
-				String selector = configuration.getSideConfig(dir).getSelector();
-				wrapper.addSignal(selector, signal);
-			}
-
-			cableWrappers.put(cable.getPos(), wrapper);
-		}
-
-		// Capture the max signals.
-		for (CableSignalWrapper wrapper : cableWrappers.values()) {
-			for (String selector : wrapper.signals.keySet()) {
-				signals.addSignal(selector, wrapper.signals.get(selector));
+				if (!entry.getKey().isDisabledOnSide(dir) && !entry.getValue().configuration.getSideConfig(dir).isOutputSide()) {
+					int signal = getSignal(world, entry.getValue(), dir);
+					String selector = entry.getValue().configuration.getSideConfig(dir).getSelector();
+					signals.addSignal(selector, signal);
+				}
 			}
 		}
 
-		// Update all connected cables.
+		// Update all output cables.
 		if (!signals.equals(getPreviousSignals())) {
-			updateAllConnectedBlocks(world, mapper);
+			for (ServerCable cable : outputCables.keySet()) {
+				updateAroundCable(world, cable);
+			}
 		}
 	}
 
-	protected int getSignal(World world, ServerCable cable, RedstoneCableConfiguration configuration, Direction side) {
-		// Skip any sides that are not configuration as an input, or are disabled.
-		if (cable.isDisabledOnSide(side) || !configuration.getSideConfig(side).isInputSide()) {
-			return 0;
-		}
-
+	protected int getSignal(World world, CableConfigurationWrapper wrapper, Direction side) {
 		stopProvidingPower();
-		//updateBlock(world, cable.getPos(), cable.getPos().offset(side));
+		// updateBlock(world, cable.getPos(), cable.getPos().offset(side));
 
 		// Get the target position.
-		BlockPos targetPos = cable.getPos().offset(side);
-		String selector = configuration.getSideConfig(side).getSelector();
+		BlockPos targetPos = wrapper.cable.getPos().offset(side);
+		String selector = wrapper.configuration.getSideConfig(side).getSelector();
 		int power = 0;
 		boolean checkWorld = true;
 
@@ -112,14 +101,43 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 		// Get the redstone power in the world if requested.
 		if (checkWorld) {
 			power = world.getRedstonePower(targetPos, side);
-			if (cableWrappers.containsKey(targetPos)) {
-				if (cableWrappers.get(targetPos).signals.containsKey(selector)) {
-					power = Math.max(power, cableWrappers.get(targetPos).signals.get(selector));
-				}
-			}
 		}
 
 		startProvidingPower();
 		return power;
+	}
+
+	protected void captureInputOutputCables(World world, NetworkMapper mapper) {
+		outputCables.clear();
+		inputCables.clear();
+
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			// Get the configuration for the cable
+			RedstoneCableConfiguration configuration = getConfigurationForCable(cable);
+
+			// Check if this cable has inputs or outputs.
+			for (Direction side : Direction.values()) {
+				// If this is NOT an input side, and its not disabled, and we don't have an
+				// entry on this, add it to the output cables.
+				if (!configuration.getSideConfig(side).isInputSide() && !cable.isDisabledOnSide(side) && !outputCables.containsKey(cable)) {
+					outputCables.put(cable, new CableConfigurationWrapper(cable, configuration));
+				}
+				// If this is NOT an output side, and its not disabled, and we don't have an
+				// entry on this, add it to the input cables.
+				if (!configuration.getSideConfig(side).isOutputSide() && !cable.isDisabledOnSide(side) && !outputCables.containsKey(cable)) {
+					inputCables.put(cable, new CableConfigurationWrapper(cable, configuration));
+				}
+			}
+		}
+	}
+
+	public class CableConfigurationWrapper {
+		public final ServerCable cable;
+		public final RedstoneCableConfiguration configuration;
+
+		public CableConfigurationWrapper(ServerCable cable, RedstoneCableConfiguration configuration) {
+			this.cable = cable;
+			this.configuration = configuration;
+		}
 	}
 }
