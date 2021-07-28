@@ -1,6 +1,5 @@
 package theking530.staticpower.cables.redstone.basic;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,13 +17,9 @@ import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModule;
 
 public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
-	private Map<ServerCable, CableConfigurationWrapper> outputCables;
-	private Map<ServerCable, CableConfigurationWrapper> inputCables;
 
 	public RedstoneNetworkModule(ResourceLocation name) {
 		super(name);
-		outputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
-		inputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
 	}
 
 	@Override
@@ -105,39 +100,5 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 
 		startProvidingPower();
 		return power;
-	}
-
-	protected void captureInputOutputCables(World world, NetworkMapper mapper) {
-		outputCables.clear();
-		inputCables.clear();
-
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
-			// Get the configuration for the cable
-			RedstoneCableConfiguration configuration = getConfigurationForCable(cable);
-
-			// Check if this cable has inputs or outputs.
-			for (Direction side : Direction.values()) {
-				// If this is NOT an input side, and its not disabled, and we don't have an
-				// entry on this, add it to the output cables.
-				if (!configuration.getSideConfig(side).isInputSide() && !cable.isDisabledOnSide(side) && !outputCables.containsKey(cable)) {
-					outputCables.put(cable, new CableConfigurationWrapper(cable, configuration));
-				}
-				// If this is NOT an output side, and its not disabled, and we don't have an
-				// entry on this, add it to the input cables.
-				if (!configuration.getSideConfig(side).isOutputSide() && !cable.isDisabledOnSide(side) && !outputCables.containsKey(cable)) {
-					inputCables.put(cable, new CableConfigurationWrapper(cable, configuration));
-				}
-			}
-		}
-	}
-
-	public class CableConfigurationWrapper {
-		public final ServerCable cable;
-		public final RedstoneCableConfiguration configuration;
-
-		public CableConfigurationWrapper(ServerCable cable, RedstoneCableConfiguration configuration) {
-			this.cable = cable;
-			this.configuration = configuration;
-		}
 	}
 }

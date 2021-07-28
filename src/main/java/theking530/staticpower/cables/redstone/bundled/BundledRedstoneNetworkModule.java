@@ -2,6 +2,7 @@ package theking530.staticpower.cables.redstone.bundled;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -44,36 +45,43 @@ public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule 
 	public void updateNetworkValues(World world, NetworkMapper mapper) {
 		// Stop providing power.
 		stopProvidingPower();
+
+		// Reset all cached signals.
 		resetSignals();
 
 		List<RedstoneNetworkModule> hitModules = new ArrayList<RedstoneNetworkModule>();
-		for (ServerCable cable : mapper.getDiscoveredCables()) {
+		for (Map.Entry<ServerCable, CableConfigurationWrapper> entry : inputCables.entrySet()) {
 			// Look around the cable.
 			for (Direction dir : Direction.values()) {
-				// Get the target position.
-				BlockPos targetPos = cable.getPos().offset(dir);
-				// If this position contains a cable, let's see if its a valid redstone cable.
-				if (CableNetworkManager.get(world).isTrackingCable(targetPos)) {
-					// Get the cable at the target location.
-					ServerCable targetCable = CableNetworkManager.get(world).getCable(targetPos);
+				if (!entry.getKey().isDisabledOnSide(dir) && !entry.getValue().configuration.getSideConfig(dir).isOutputSide()) {
+					// Get the target position.
+					BlockPos targetPos = entry.getKey().getPos().offset(dir);
+					// If this position contains a cable, let's see if its a valid redstone cable.
+					if (CableNetworkManager.get(world).isTrackingCable(targetPos)) {
+						// Get the cable at the target location.
+						ServerCable targetCable = CableNetworkManager.get(world).getCable(targetPos);
 
-					// If that cable supports a regular redstone network, get the instance of that
-					// network.
-					if (CableNetworkModuleTypes.doesNetworkSupportRedstoneAnyRedstoneModule(targetCable.getNetwork())) {
-						// Then, capture all the selectors on that network (and keep the max value).
-						for (AbstractCableNetworkModule module : targetCable.getNetwork().getModules()) {
-							if (module instanceof RedstoneNetworkModule) {
-								RedstoneNetworkModule redstoneModule = (RedstoneNetworkModule) module;
-								hitModules.add(redstoneModule);
+						// Make sure the cable we're hitting is not disabled or an input.
+						if (!targetCable.isDisabledOnSide(dir.getOpposite())) {
+							// If that cable supports a regular redstone network, get the instance of that
+							// network.
+							if (CableNetworkModuleTypes.doesNetworkSupportRedstoneAnyRedstoneModule(targetCable.getNetwork())) {
+								// Then, capture all the selectors on that network (and keep the max value).
+								for (AbstractCableNetworkModule module : targetCable.getNetwork().getModules()) {
+									if (module instanceof RedstoneNetworkModule) {
+										RedstoneNetworkModule redstoneModule = (RedstoneNetworkModule) module;
+										hitModules.add(redstoneModule);
 
-								RedstoneCableConfiguration configuration = new RedstoneCableConfiguration();
-								configuration.deserializeNBT(targetCable.getTagProperty(RedstoneCableComponent.CONFIGURATION_KEY));
+										RedstoneCableConfiguration configuration = new RedstoneCableConfiguration();
+										configuration.deserializeNBT(targetCable.getTagProperty(RedstoneCableComponent.CONFIGURATION_KEY));
 
-								if (!configuration.getSideConfig(dir.getOpposite()).isInputSide()) {
-									for (String selector : redstoneModule.getAllSupportedSelectors()) {
-										signals.addSignal(selector, redstoneModule.getNetworkSignalStrength(selector));
+										if (!configuration.getSideConfig(dir.getOpposite()).isInputSide()) {
+											for (String selector : redstoneModule.getAllSupportedSelectors()) {
+												signals.addSignal(selector, redstoneModule.getNetworkSignalStrength(selector));
+											}
+											break;
+										}
 									}
-									break;
 								}
 							}
 						}

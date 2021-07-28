@@ -2,6 +2,7 @@ package theking530.staticpower.cables.redstone;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import javax.annotation.Nonnull;
@@ -20,6 +21,8 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 
 public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetworkModule {
+	protected Map<ServerCable, CableConfigurationWrapper> outputCables;
+	protected Map<ServerCable, CableConfigurationWrapper> inputCables;
 	protected SignalContainer signals;
 	protected SignalContainer previousSignals;
 	protected NetworkMapper lastNetworkMap;
@@ -32,11 +35,14 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 		super(type);
 		signals = new SignalContainer();
 		canProvidePower = true;
+		outputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
+		inputCables = new HashMap<ServerCable, CableConfigurationWrapper>();
 	}
 
 	@Override
 	public void tick(World world) {
 		if (shouldRescanConnections) {
+			captureInputOutputCables(world, lastNetworkMap);
 			updateNetworkValues(world, lastNetworkMap);
 			shouldRescanConnections = false;
 		}
@@ -155,6 +161,40 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 		// Skip cables in this network.
 		if (!getNetwork().getGraph().getCables().containsKey(targetPos)) {
 			world.neighborChanged(targetPos, world.getBlockState(sourcePos).getBlock(), sourcePos);
+		}
+	}
+
+	protected void captureInputOutputCables(World world, NetworkMapper mapper) {
+		outputCables.clear();
+		inputCables.clear();
+
+		for (ServerCable cable : mapper.getDiscoveredCables()) {
+			// Get the configuration for the cable
+			RedstoneCableConfiguration configuration = getConfigurationForCable(cable);
+
+			// Check if this cable has inputs or outputs.
+			for (Direction side : Direction.values()) {
+				// If this is NOT an input side, and its not disabled, and we don't have an
+				// entry on this, add it to the output cables.
+				if (!configuration.getSideConfig(side).isInputSide() && !cable.isDisabledOnSide(side) && !outputCables.containsKey(cable)) {
+					outputCables.put(cable, new CableConfigurationWrapper(cable, configuration));
+				}
+				// If this is NOT an output side, and its not disabled, and we don't have an
+				// entry on this, add it to the input cables.
+				if (!configuration.getSideConfig(side).isOutputSide() && !cable.isDisabledOnSide(side) && !outputCables.containsKey(cable)) {
+					inputCables.put(cable, new CableConfigurationWrapper(cable, configuration));
+				}
+			}
+		}
+	}
+
+	public class CableConfigurationWrapper {
+		public final ServerCable cable;
+		public final RedstoneCableConfiguration configuration;
+
+		public CableConfigurationWrapper(ServerCable cable, RedstoneCableConfiguration configuration) {
+			this.cable = cable;
+			this.configuration = configuration;
 		}
 	}
 
