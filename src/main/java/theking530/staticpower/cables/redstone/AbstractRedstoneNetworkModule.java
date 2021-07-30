@@ -87,7 +87,7 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		lastNetworkMap = mapper;
-		System.out.println("Updating graph of type: " + getType() + " from position: " + startingPosition);
+		//System.out.println("Updating graph of type: " + getType() + " from position: " + startingPosition);
 	}
 
 	protected static boolean neighborNotifyEvent(World world, @Nonnull BlockPos pos, @Nullable BlockState state) {

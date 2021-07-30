@@ -96,12 +96,6 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 		// Populate the stacks.
 		for (IDigistoreInventory digistore : module.getAllDigistores()) {
-			// Capture metrics.
-			usedCapacity += digistore.getTotalContainedCount();
-			maxCapacity += digistore.getItemCapacity();
-			usedTypes += digistore.getCurrentUniqueItemTypeCount();
-			maxTypes += digistore.getUniqueItemCapacity();
-
 			// Capture all the items contained in the network.
 			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
 				// Stack in slot.
@@ -116,6 +110,19 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				ItemStack stackToCache = stackInSlot.copy();
 				stackToCache.setCount(digistore.getDigistoreStack(i).getCount());
 				cacheOrIncreaseItemCount(stackToCache);
+			}
+			
+			// Capture metrics.
+			usedCapacity += digistore.getTotalContainedCount();
+			maxCapacity += digistore.getItemCapacity();
+			maxTypes += digistore.getUniqueItemCapacity();
+			
+			// If this digistore is full, then it doesn't matter how many unique items it can take.
+			// Add the max amount of unqiue items as used.
+			if(digistore.getRemainingStorage(true) == 0) {
+				usedTypes += digistore.getUniqueItemCapacity();
+			}else {
+				usedTypes += digistore.getCurrentUniqueItemTypeCount();
 			}
 		}
 
