@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.redstone;
+package theking530.staticpower.cables.redstone.basic;
 
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -64,10 +64,5 @@ public class TileEntityRedstoneCable extends TileEntityBase {
 	public TileEntityRedstoneCable(TileEntityTypeAllocator<TileEntityRedstoneCable> allocator, String selector) {
 		super(allocator);
 		registerComponent(cableComponent = new RedstoneCableComponent("RedstoneCableComponent", selector));
-	}
-
-	@Override
-	public void process() {
-
 	}
 }

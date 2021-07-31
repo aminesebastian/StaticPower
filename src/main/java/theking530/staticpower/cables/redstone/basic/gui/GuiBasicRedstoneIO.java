@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.redstone.gui.basic;
+package theking530.staticpower.cables.redstone.basic.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 
@@ -12,8 +12,7 @@ import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.cables.redstone.RedstoneCableSideConfiguration;
-import theking530.staticpower.cables.redstone.RedstoneCableSideConfiguration.RedstoneCableSignalLogic;
-import theking530.staticpower.cables.redstone.TileEntityRedstoneCable;
+import theking530.staticpower.cables.redstone.basic.TileEntityRedstoneCable;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiBasicRedstoneIO extends StaticPowerTileEntityGui<ContainerBasicRedstoneIO, TileEntityRedstoneCable> {
@@ -33,8 +32,8 @@ public class GuiBasicRedstoneIO extends StaticPowerTileEntityGui<ContainerBasicR
 	}
 
 	protected void inputLogicButtonPressed(StandardButton button, MouseButton mouse) {
-		RedstoneCableSideConfiguration configuration = getContainer().getSideConfiguration();
-		configuration.setLogicType(configuration.isInputSide() ? RedstoneCableSignalLogic.OUTPUT : RedstoneCableSignalLogic.INPUT);
+		// Increment the logic type, then update the configuration and update the UI.
+		getContainer().getSideConfiguration().incrementLogicType();
 		getContainer().getCableComponent().updateConfiguration(getContainer().getConfiguration());
 		updateSignalButton();
 	}
@@ -44,8 +43,16 @@ public class GuiBasicRedstoneIO extends StaticPowerTileEntityGui<ContainerBasicR
 		RedstoneCableSideConfiguration configuration = getContainer().getSideConfiguration();
 
 		// Update the icon and tooltip.
-		inputSignalButton.setItem(configuration.isInputSide() ? Items.REDSTONE : Blocks.REDSTONE_TORCH.asItem());
-		inputSignalButton.setTooltip(configuration.isInputSide() ? new TranslationTextComponent("gui.staticpower.redstone_cable_input_mode")
-				: new TranslationTextComponent("gui.staticpower.redstone_cable_output_mode"));
+		if (configuration.isInputSide()) {
+			inputSignalButton.setItem(Items.GUNPOWDER);
+			inputSignalButton.setTooltip(new TranslationTextComponent("gui.staticpower.redstone_cable_input_mode"));
+		} else if (configuration.isOutputSide()) {
+			inputSignalButton.setItem(Blocks.REDSTONE_TORCH.asItem());
+			inputSignalButton.setTooltip(new TranslationTextComponent("gui.staticpower.redstone_cable_output_mode"));
+		} else if (configuration.isInputOutputSide()) {
+			inputSignalButton.setItem(Items.REDSTONE);
+			inputSignalButton.setTooltip(new TranslationTextComponent("gui.staticpower.redstone_cable_input_output_mode"));
+		}
+
 	}
 }

@@ -6,6 +6,10 @@ package theking530.staticpower.cables.network;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nullable;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +39,7 @@ public class CableNetwork {
 	private boolean InitialScanComplete;
 	private World World;
 	private HashMap<ResourceLocation, AbstractCableNetworkModule> Modules;
+	private boolean networkUpdatesDisabled;
 
 	public CableNetwork(BlockPos origin, long id) {
 		NetworkId = id;
@@ -42,6 +47,7 @@ public class CableNetwork {
 		PathCache = new PathCache(this);
 		Graph = new CableNetworkGraph(this);
 		Modules = new HashMap<ResourceLocation, AbstractCableNetworkModule>();
+		networkUpdatesDisabled = false;
 	}
 
 	public void tick() {
@@ -97,7 +103,15 @@ public class CableNetwork {
 		return (T) Modules.get(type);
 	}
 
-	public NetworkMapper updateGraph(World world, BlockPos startingPosition) {
+	public List<AbstractCableNetworkModule> getModules() {
+		return Modules.values().stream().collect(Collectors.toList());
+	}
+
+	public @Nullable NetworkMapper updateGraph(World world, BlockPos startingPosition) {
+		if (networkUpdatesDisabled) {
+			return null;
+		}
+
 		// Invalidate the path cache.
 		PathCache.invalidateCache();
 
@@ -107,7 +121,7 @@ public class CableNetwork {
 		// Let all the modules know the graph was updated.
 		for (AbstractCableNetworkModule module : Modules.values()) {
 			try {
-				module.onNetworkGraphUpdated(output);
+				module.onNetworkGraphUpdated(output, startingPosition);
 			} catch (Exception e) {
 				throw new RuntimeException(String.format("An error occured when attempting to update a network module of type: %1$s with a new graph.", module.getType().toString()), e);
 			}
@@ -116,16 +130,42 @@ public class CableNetwork {
 		// Return the mapping result.
 		return output;
 	}
+
+	public boolean areNetworkUpdatesDisabled() {
+		return networkUpdatesDisabled;
+	}
+
+	public void disableNetworkUpdates() {
+		if (!networkUpdatesDisabled) {
+			networkUpdatesDisabled = true;
+			for (AbstractCableNetworkModule module : Modules.values()) {
+				module.onNetworkUpdatesDisabled();
+			}
+		}
+	}
+
+	public void enableNetworkUpdates() {
+		if (networkUpdatesDisabled) {
+			networkUpdatesDisabled = false;
+			for (AbstractCableNetworkModule module : Modules.values()) {
+				module.onNetworkUpdatesEnabled();
+			}
+		}
+	}
+
 	public void onNetworksSplitOff(List<CableNetwork> newNetworks) {
 		// Let all the modules know the graph was updated.
 		for (AbstractCableNetworkModule module : Modules.values()) {
 			try {
 				module.onNetworksSplitOff(newNetworks);
 			} catch (Exception e) {
-				throw new RuntimeException(String.format("An error occured when attempting to let a network module of type: %1$s know of new networks that resulted from a split.", module.getType().toString()), e);
+				throw new RuntimeException(
+						String.format("An error occured when attempting to let a network module of type: %1$s know of new networks that resulted from a split.", module.getType().toString()),
+						e);
 			}
 		}
 	}
+
 	public List<ITextComponent> getReaderOutput() {
 		// Allocate the output list.
 		List<ITextComponent> output = new LinkedList<ITextComponent>();
@@ -220,5 +260,11 @@ public class CableNetwork {
 		tag.put("modules", modules);
 
 		return tag;
+	}
+
+	public void recieveCrossNetworkUpdate(CableNetwork sendingNetwork, Set<CableNetwork> previousNetworks) {
+		for (AbstractCableNetworkModule module : Modules.values()) {
+			module.recieveCrossNetworkUpdate(sendingNetwork, previousNetworks);
+		}
 	}
 }

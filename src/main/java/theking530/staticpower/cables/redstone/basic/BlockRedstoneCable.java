@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.redstone;
+package theking530.staticpower.cables.redstone.basic;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ import theking530.staticpower.cables.CableBoundsHoverResult;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.cables.redstone.gui.basic.ContainerBasicRedstoneIO;
+import theking530.staticpower.cables.redstone.basic.gui.ContainerBasicRedstoneIO;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -43,7 +43,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	private final String color;
 
 	public BlockRedstoneCable(String name) {
-		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.5D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(4.0f, 4.0f, 1.0f)));
+		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)));
 
 		// String the color from the last section of the registry name.
 		this.color = name.substring(name.indexOf("_", name.indexOf("_", name.indexOf("_") + 1) + 1) + 1);

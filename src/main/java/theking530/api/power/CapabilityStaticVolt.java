@@ -9,7 +9,7 @@ import net.minecraftforge.common.capabilities.CapabilityManager;
 
 public class CapabilityStaticVolt {
 	public static final long mSV_TO_SV = 1000;
-	private static final long FE_TO_SV_CONVERSION = 100;
+	private static final long FE_TO_SV_CONVERSION = 10;
 
 	@CapabilityInject(IStaticVoltHandler.class)
 	public static Capability<IStaticVoltHandler> STATIC_VOLT_CAPABILITY = null;

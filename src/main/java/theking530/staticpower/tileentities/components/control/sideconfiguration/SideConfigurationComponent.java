@@ -63,6 +63,9 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 * @return The mode that block side is set to.
 	 */
 	public MachineSideMode getWorldSpaceDirectionConfiguration(@Nonnull Direction facing) {
+		if(facing == null) {
+			return MachineSideMode.Disabled;
+		}
 		return configuration[facing.ordinal()];
 	}
 

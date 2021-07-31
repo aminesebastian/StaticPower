@@ -189,7 +189,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void onNetworkGraphUpdated(NetworkMapper mapper) {
+	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		// Allocate the total capacity.
 		int total = 0;
 

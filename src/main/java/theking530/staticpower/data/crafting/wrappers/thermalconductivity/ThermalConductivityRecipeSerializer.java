@@ -105,7 +105,6 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 		// Read the float values.
 		float conductivity = buffer.readFloat();
 		float supply = buffer.readFloat();
-
 		// Read the over heat values.
 		float overheatTemp = buffer.readFloat();
 		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);

@@ -1,5 +1,5 @@
 {
-	"parent": "staticpower:block/cables/cable_2_attachment_small",
+	"parent": "staticpower:block/cables/cable_3_attachment_small",
 	"textures": {
 		"0": "staticpower:blocks/cables/attachments/cable_redstone_basic_input_attachment",
 		"1": "staticpower:blocks/cables/attachments/cable_redstone_basic_input_attachment",

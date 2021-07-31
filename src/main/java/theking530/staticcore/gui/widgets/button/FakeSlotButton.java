@@ -64,13 +64,10 @@ public class FakeSlotButton extends StandardButton {
 			int halfSizeY = size.getYi() / 2;
 			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + (halfSizeX - 8), (int) buttonTop + (halfSizeY - 8));
 		}
-
-		// Render the ghost overlay.
-		GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, 16, 16, 1000, new Color(0.0f, 0.0f, 0.0f, 0.1f));
-
+		
 		// Render the hover effect.
 		if (isHovered()) {
-			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, 16, 16, 1000, new Color(1.0f, 0.8f, 0.1f, 0.5f));
+			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, 16, 16, 200, new Color(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
 }

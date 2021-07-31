@@ -44,8 +44,8 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.common.util.Constants.BlockFlags;
+import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
@@ -113,6 +113,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		if (!hasPostInitRun) {
 			hasPostInitRun = true;
 			postInit(world, pos, world.getBlockState(pos));
+			for (AbstractTileEntityComponent comp : components.values()) {
+				comp.onInitializedInWorld(world, pos);
+			}
 		}
 		// Pre process all the components.
 		preProcessUpdateComponents();
@@ -140,7 +143,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public void setWorldAndPos(World world, BlockPos pos) {
 		super.setWorldAndPos(world, pos);
-		onInitializedInWorld(world, pos);
+	}
+
+	@Override
+	public void updateContainingBlockInfo() {
+		super.updateContainingBlockInfo();
+
 	}
 
 	@Override
@@ -233,14 +241,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	}
 
-	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos) {
+	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
 		for (AbstractTileEntityComponent comp : components.values()) {
-			comp.onNeighborChanged(currentState, neighborPos);
+			comp.onNeighborChanged(currentState, neighborPos, isMoving);
 		}
-	}
-
-	public void onInitializedInWorld(World world, BlockPos pos) {
-
 	}
 
 	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
@@ -598,7 +602,14 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Nullable
 	public SUpdateTileEntityPacket getUpdatePacket() {
 		CompoundNBT nbtTagCompound = new CompoundNBT();
-		serializeUpdateNbt(nbtTagCompound, true);
+		// Make sure we only run this AFTER the post init has run.
+		// Otherwise what happens is we send this update packet with data that MAY be
+		// modified
+		// during post init and therefore, for a tick or two, the client has the wrong
+		// data.
+		if (hasPostInitRun) {
+			serializeUpdateNbt(nbtTagCompound, true);
+		}
 		return new SUpdateTileEntityPacket(this.pos, 0, nbtTagCompound);
 	}
 
@@ -609,8 +620,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	@Override
 	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
 		super.onDataPacket(net, pkt);
-		deserializeUpdateNbt(pkt.getNbtCompound(), true);
-		this.markTileEntityForSynchronization();
+		// Because we wait for post init from the #getUpdatePacket() method, we must
+		// wait here too.
+		if (hasPostInitRun) {
+			deserializeUpdateNbt(pkt.getNbtCompound(), true);
+		}
+		markTileEntityForSynchronization();
 	}
 
 	/**

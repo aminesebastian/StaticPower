@@ -31,7 +31,8 @@ import theking530.staticpower.cables.heat.BlockHeatCable;
 import theking530.staticpower.cables.item.BlockItemCable;
 import theking530.staticpower.cables.power.BlockIndustrialPowerCable;
 import theking530.staticpower.cables.power.BlockPowerCable;
-import theking530.staticpower.cables.redstone.BlockRedstoneCable;
+import theking530.staticpower.cables.redstone.basic.BlockRedstoneCable;
+import theking530.staticpower.cables.redstone.bundled.BlockBundledRedstoneCable;
 import theking530.staticpower.cables.scaffold.BlockScaffoldCable;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.BlockDigistore;
@@ -305,6 +306,7 @@ public class ModBlocks {
 	public static BlockRedstoneCable BasicRedstoneCableLightPurple;
 	public static BlockRedstoneCable BasicRedstoneCableYellow;
 	public static BlockRedstoneCable BasicRedstoneCableWhite;
+	public static BlockBundledRedstoneCable BundledRedstoneCable;
 
 	// Batteries
 	public static BlockBattery BatteryBasic;
@@ -570,6 +572,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableLightPurple = new BlockRedstoneCable("cable_redstone_basic_light_purple"));
 		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableYellow = new BlockRedstoneCable("cable_redstone_basic_yellow"));
 		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableWhite = new BlockRedstoneCable("cable_redstone_basic_white"));
+		StaticPowerRegistry.preRegisterBlock(BundledRedstoneCable = new BlockBundledRedstoneCable("cable_bundled_redstone"));
 
 		StaticPowerRegistry.preRegisterBlock(BatteryBasic = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(BatteryAdvanced = new BlockBattery("battery_block_advanced", StaticPowerTiers.ADVANCED));
