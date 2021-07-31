@@ -39,6 +39,7 @@ import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundP
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStop;
 import theking530.staticpower.tileentities.components.power.PacketEnergyStorageComponent;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLockDigistore;
+import theking530.staticpower.tileentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
 import theking530.staticpower.tileentities.powered.packager.PacketPackagerSizeChange;
@@ -86,5 +87,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
 		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
 		StaticPowerMessageHandler.registerMessage(PacketUpdateRedstoneCableConfiguration.class);
+		StaticPowerMessageHandler.registerMessage(PacketSyncSolderingFakeSlotRecipe.class);
 	}
 }

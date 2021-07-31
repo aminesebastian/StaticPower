@@ -66,6 +66,7 @@ public class GuiAutoSolderingTable
 
 	@Override
 	public void updateData() {
+		super.updateData();
 
 	}
 }

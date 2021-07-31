@@ -11,6 +11,6 @@ public class GuiSolderingTable extends AbstractGuiSolderingTable<TileEntitySolde
 
 	@Override
 	public void updateData() {
-
+		super.updateData();
 	}
 }

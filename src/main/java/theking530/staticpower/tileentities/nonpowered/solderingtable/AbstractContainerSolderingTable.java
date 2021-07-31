@@ -1,8 +1,5 @@
 package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
@@ -12,13 +9,11 @@ import theking530.api.ISolderingIron;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.IJEIReipceTransferHandler;
 
 public abstract class AbstractContainerSolderingTable<T extends AbstractSolderingTable> extends StaticPowerTileEntityContainer<T> implements IJEIReipceTransferHandler {
-	private List<ItemStack> lastCraftingPattern;
 	protected boolean enableSolderingIronSlot;
 	protected int craftingGridXOffset;
 
@@ -33,16 +28,6 @@ public abstract class AbstractContainerSolderingTable<T extends AbstractSolderin
 
 	@Override
 	public void initializeContainer() {
-		lastCraftingPattern = new ArrayList<ItemStack>();
-
-		// Add the pattern slots.
-		for (int y = 0; y < 3; y++) {
-			for (int x = 0; x < 3; x++) {
-				addSlot(new PhantomSlot(getTileEntity().patternInventory, x + (y * 3), 62 + craftingGridXOffset + x * 18, 20 + y * 18, true));
-				lastCraftingPattern.add(getTileEntity().patternInventory.getStackInSlot(x + (y * 3)));
-			}
-		}
-
 		// Add the inventory slots.
 		for (int i = 0; i < 9; i++) {
 			addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, i, 8 + i * 18, 78));
@@ -62,29 +47,30 @@ public abstract class AbstractContainerSolderingTable<T extends AbstractSolderin
 
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-		// Get the slot and the slot's contents.
-		Slot slot = inventorySlots.get(slotIndex);
-		ItemStack stack = slot.getStack();
-
-		// If this is a soldering iron, place it in the soldering iron slot.
-		if (stack.getItem() instanceof ISolderingIron && slotIndex != 18 && !mergeItemStack(stack, 18)) {
-			return stack;
-		}
-
-		// If we shift clicked an item in the soldering table inventory, move it to the
-		// player inventory. If we shift clicked in the player inventory, attempt to
-		// move the item to the soldering iron inventory.
-		if (slotIndex <= 18) {
-			if (!mergeItemStack(stack, 19, 48, false)) {
-				return stack;
-			}
-		} else {
-			if (!mergeItemStack(stack, 9, 18, false)) {
-				return stack;
-			}
-		}
-
-		return stack;
+//		// Get the slot and the slot's contents.
+//		Slot slot = inventorySlots.get(slotIndex);
+//		ItemStack stack = slot.getStack();
+//
+//		// If this is a soldering iron, place it in the soldering iron slot.
+//		if (stack.getItem() instanceof ISolderingIron && slotIndex != 18 && !mergeItemStack(stack, 18)) {
+//			return stack;
+//		}
+//
+//		// If we shift clicked an item in the soldering table inventory, move it to the
+//		// player inventory. If we shift clicked in the player inventory, attempt to
+//		// move the item to the soldering iron inventory.
+////		if (slotIndex <= 9) {
+////			if (!mergeItemStack(stack, 9, 17, false)) {
+////				return stack;
+////			}
+////		} else {
+////			if (!mergeItemStack(stack, 0, 9, false)) {
+////				return stack;
+////			}
+////		}
+//		System.out.println(slotIndex);
+//		return stack;
+		return super.transferStackInSlot(player, slotIndex);
 	}
 
 	@Override
