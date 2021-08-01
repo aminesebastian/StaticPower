@@ -11,26 +11,22 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.inventory.container.ClickType;
 import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
 import net.minecraft.util.text.StringTextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.items.IItemHandler;
-import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticcore.container.ContainerOpener;
+import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
-import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentContainer;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal.TerminalViewType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreFakeSlotClicked;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreTerminalFilters;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketGetCurrentCraftingQueue;
-import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketSyncDigistoreNetworkMetrics;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketSyncDigistoreInventory;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
@@ -42,50 +38,28 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.container.StaticPowerContainer;
-import theking530.staticpower.container.slots.DigistoreSlot;
-import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends AbstractCableAttachmentContainer<T> {
-	public static final int DEFAULT_ITEMS_PER_ROW = 9;
-	public static final int DEFAULT_MAX_ROWS_ON_SCREEN = 8;
-	public static final Vector2D DEFAULT_INVENTORY_START_POSITION = new Vector2D(8, 22);
 
-	/**
-	 * List of active crafting requests.
-	 */
-	private List<CraftingRequestResponse> craftingRequests;
-	/**
-	 * Indicates how many items will be displayed per row of digitsore inventory.
-	 */
-	protected int itemsPerRow;
-	/**
-	 * Indicates the maximum amount of digitstore inventory rows to render.
-	 */
-	protected int maxRows;
-	/**
-	 * Sets the position of the digistore inventory to render at.
-	 */
-	protected Vector2D digistoreInventoryPosition;
 	/**
 	 * Indicates whether or not the manager was present last tick.
 	 */
 	protected boolean managerPresentLastState;
 	/**
-	 * If true, digistore items will not be rendered.
+	 * Client side simulated digistore inventory.
 	 */
-	protected boolean hideDigistoreItems;
-
+	private DigistoreInventorySnapshot clientInventory;
 	/**
-	 * The scroll offset (the scroll bar's position).
+	 * The view type of the terminal (Items, Crafting Reqeusts, etc).
 	 */
-	private int scrollOffset;
+	private TerminalViewType viewType;
 	/**
-	 * The sorting order for the digistore items.
+	 * List of active crafting requests.
 	 */
-	private boolean sortDescending;
+	private List<CraftingRequestResponse> craftingRequests;
 	/**
 	 * The string filter to use on the digistore items.
 	 */
@@ -95,53 +69,22 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	 */
 	private DigistoreInventorySortType sortType;
 	/**
-	 * Client side simulated digistore inventory.
+	 * The sorting order for the digistore items.
 	 */
-	private DigistoreSimulatedItemStackHandler clientSimulatedInventory;
-	/**
-	 * The view type of the terminal (Items, Crafting Reqeusts, etc).
-	 */
-	private TerminalViewType viewType;
-	/**
-	 * If true, a new simulated digitstore inventory will be created and sent from
-	 * the server.
-	 */
-	private boolean resyncInv;
-	/**
-	 * Current number of items in the network.
-	 */
-	private int usedNetworkCapacity;
-	/**
-	 * Maximum amount of items supported by this network.
-	 */
-	private int maxNetworkCapacity;
-	/**
-	 * Current amount of unique type slots in the network.
-	 */
-	private int usedNetworkTypes;
-	/**
-	 * Maximum amount of unqiue type slots in the network.
-	 */
-	private int maxNetworkTypes;
+	private boolean sortDescending;
 
 	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
 			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(allocator, windowId, playerInventory, attachment, attachmentSide, cableComponent);
+		sortDescending = true;
+		filter = "";
+		sortType = DigistoreInventorySortType.COUNT;
 	}
 
 	@Override
 	public void preInitializeContainer() {
-		itemsPerRow = DEFAULT_ITEMS_PER_ROW;
-		maxRows = DEFAULT_MAX_ROWS_ON_SCREEN;
-		digistoreInventoryPosition = DEFAULT_INVENTORY_START_POSITION;
-		scrollOffset = 0;
-		sortDescending = true;
-		hideDigistoreItems = false;
-		filter = "";
-		resyncInv = false;
-		sortType = DigistoreInventorySortType.COUNT;
-		clientSimulatedInventory = new DigistoreSimulatedItemStackHandler(0);
-		this.craftingRequests = new LinkedList<CraftingRequestResponse>();
+		craftingRequests = new LinkedList<CraftingRequestResponse>();
+		clientInventory = DigistoreInventorySnapshot.createEmpty();
 	}
 
 	@Override
@@ -158,14 +101,6 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		// On both the client and the server, add the player slots.
 		addPlayerHotbar(getPlayerInventory(), 8, 246);
 		addPlayerInventory(getPlayerInventory(), 8, 188);
-
-		// If on the server, populate the digistore container slots.
-		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
-			getDigistoreNetwork().ifPresent(digistoreModule -> {
-				DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
-				addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
-			});
-		}
 	}
 
 	@Override
@@ -176,86 +111,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 			return ItemStack.EMPTY;
 		}
 
-		// If we clicked on a digistore network slot, perform the appropriate action.
-		if (isDigistoreSlot(slotId)) {
-			// If we're picking up (or inserting).
-			if (clickTypeIn == ClickType.PICKUP || clickTypeIn == ClickType.SWAP) {
-				// Get the contents in the slot and the stack the player is currently holding on
-				// their mouse. Check to make sure the slot is a valid one and not a dummy.
-				final ItemStack actualSlotContents = slotId < inventorySlots.size() ? inventorySlots.get(slotId).getStack() : ItemStack.EMPTY;
-				ItemStack playerMouseHeldItem = getPlayerInventory().getItemStack();
-
-				// Only perform on the server.
-				if (!player.getEntityWorld().isRemote && getCableComponent().isManagerPresent()) {
-					getDigistoreNetwork().ifPresent(digistoreModule -> {
-						// If on the server, attempt to either insert into the network if the held stack
-						// is not empty, otherwise, attempt to extract. Extract up to a full stack if
-						// left
-						// clicking, or a half stack if not.
-						if (playerMouseHeldItem.isEmpty() && !inventorySlots.get(slotId).getStack().isEmpty()) {
-							// Get the stack in the slot.
-							ItemStack stackInSlot = inventorySlots.get(slotId).getStack();
-
-							// Get its craftable state.
-							DigistoreItemCraftableState itemCraftableState = DigistoreInventorySnapshot.getCraftableStateOfItem(stackInSlot);
-
-							// Check if we should craft it. This is true if the item is ONLY craftable, or
-							// if the player held the craft button.
-							boolean shouldCraft = itemCraftableState == DigistoreItemCraftableState.ONLY_CRAFTABLE;
-							shouldCraft |= itemCraftableState == DigistoreItemCraftableState.CRAFTABLE && dragType == INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON;
-
-							// If we should craft it, attempt to add a request for it. IF not, just pull it
-							// out like usual.
-							if (shouldCraft) {
-								// Calculate the max craftable.
-								CraftingStepsBundleContainer newBundles = digistoreModule.getCraftingManager().calculateAllPossibleCraftingTrees(stackInSlot, 1);
-
-								// Open prompt for crafting if we can actually craft some.
-								// Create the container opener.
-								ContainerOpener<?> requestUi = new ContainerOpener<>(new StringTextComponent("Crafting Request"), (id, inv, data) -> {
-									return new ContainerCraftingAmount(id, inv, newBundles, digistoreModule.getNetwork().getId());
-								}).fromParent(this);
-
-								// Open the UI.
-								requestUi.open((ServerPlayerEntity) player, buff -> {
-									buff.writeString(newBundles.serializeCompressed());
-									buff.writeLong(digistoreModule.getNetwork().getId());
-								});
-							} else {
-								// Get the half stack size.
-								int halfStackSize = actualSlotContents.getCount() >= actualSlotContents.getMaxStackSize() ? (actualSlotContents.getMaxStackSize() + 1) / 2
-										: (actualSlotContents.getCount() + 1) / 2;
-								// Calculate the take amount based on whether the user requested left or right
-								// click.
-								int takeAmount = dragType == 0 ? actualSlotContents.getMaxStackSize() : halfStackSize;
-								// Perform the extract.
-								ItemStack actuallyExtracted = digistoreModule.extractItem(actualSlotContents, takeAmount, false);
-								// And then place it into the item stack under the mouse.
-								getPlayerInventory().setItemStack(actuallyExtracted);
-							}
-						} else {
-							// If left click, insert the whole stack, if right click, only one at a time.
-							int insertAmount = dragType == 0 ? playerMouseHeldItem.getCount() : 1;
-							ItemStack insertStack = ItemHandlerHelper.copyStackWithSize(playerMouseHeldItem, insertAmount);
-							ItemStack remaining = digistoreModule.insertItem(insertStack, false);
-							getPlayerInventory().getItemStack().shrink(insertStack.getCount() - remaining.getCount());
-						}
-
-						// Update the held item.
-						((ServerPlayerEntity) player).updateHeldItem();
-					});
-				}
-				return actualSlotContents;
-			} else if (clickTypeIn == ClickType.QUICK_MOVE) {
-				// If we're handling a quick move (shift click), hand that off to the
-				// #transferStaclInSlot method.
-				return transferStackInSlot(player, slotId);
-			} else {
-				return ItemStack.EMPTY;
-			}
-		} else {
-			return super.slotClick(slotId, dragType, clickTypeIn, player);
-		}
+		return super.slotClick(slotId, dragType, clickTypeIn, player);
 	}
 
 	/**
@@ -263,43 +119,33 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	 */
 	@Override
 	public void detectAndSendChanges() {
-		// super.detectAndSendChanges();
+		// This probably won't do anything, but keep it for compatability reasons.
+		super.detectAndSendChanges();
+
+		// Check for the manager state.
 		if (managerPresentLastState != getCableComponent().isManagerPresent()) {
 			managerPresentLastState = getCableComponent().isManagerPresent();
 			onManagerStateChanged(managerPresentLastState);
 		}
 
-		for (IContainerListener listener : this.listeners) {
-			if (listener instanceof ServerPlayerEntity) {
-				syncContainerSlots((ServerPlayerEntity) listener);
+		// Sync the snapshots.
+		getDigistoreNetwork().ifPresent((network) -> {
+			DigistoreInventorySnapshot snapshot = network.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
+			for (IContainerListener listener : this.listeners) {
+				if (listener instanceof ServerPlayerEntity) {
+					this.syncContentsToClient(snapshot);
+				}
+			}
+		});
+
+		// Because of the way the shift click goes between a slot and a fake slot, we
+		// have to manually do this.
+		// There is a way to optimize this, TO-DO.
+		for (IContainerListener icontainerlistener : this.listeners) {
+			if (icontainerlistener instanceof ServerPlayerEntity) {
+				((ServerPlayerEntity) icontainerlistener).sendContainerToPlayer(this);
 			}
 		}
-	}
-
-	protected void onManagerStateChanged(boolean isPresent) {
-
-	}
-
-	/**
-	 * CLIENT ONLY. Sets all the container contents from the server.
-	 */
-	@OnlyIn(Dist.CLIENT)
-	@Override
-	public void setAll(List<ItemStack> items) {
-		// Capture how many digistore slots we need.
-		int digistoreItems = items.size() - getFirstDigistoreSlotIndex();
-
-		// Create a simulated inventory and add the slots.
-		clientSimulatedInventory = new DigistoreSimulatedItemStackHandler(digistoreItems);
-		addDigistoreSlots(clientSimulatedInventory, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
-
-		// Let the parent handle populating the slots with items.
-		super.setAll(items);
-	}
-
-	@Override
-	public DigistoreCableProviderComponent getCableComponent() {
-		return (DigistoreCableProviderComponent) super.getCableComponent();
 	}
 
 	@Override
@@ -307,7 +153,6 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
 			AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
-				resyncInv = true;
 				// Get the targeted item.
 				ItemStack targetItem = inventorySlots.get(slotIndex).getStack();
 
@@ -328,59 +173,107 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 					// Return the remaining stack.
 					output.set(remaining);
 					return;
-				} else {
-					// Get the max amount to pull (either the amount there is, or the max stack size
-					// if we have more than the max stack size in the network).
-					ItemStack actualSizeTargetItem = ItemHandlerHelper.copyStackWithSize(targetItem, Math.min(targetItem.getCount(), targetItem.getMaxStackSize()));
-
-					// Simulate extracting that amount.
-					ItemStack simulatedExtract = digistoreModule.extractItem(actualSizeTargetItem, actualSizeTargetItem.getCount(), true);
-
-					// Allocate a new copy of the extract to use when inserting into the player's
-					// inventory.
-					ItemStack insertAttempt = simulatedExtract.copy();
-
-					// Attempt the insert.
-					player.inventory.addItemStackToInventory(insertAttempt);
-
-					// If the extracted amount is different than the amount remaining after the
-					// attempt to insert into the player's inventory, that means at least one item
-					// was inserted.
-					if (simulatedExtract.getCount() != insertAttempt.getCount()) {
-						// Perform the extract for real now with the amount we were able to insert into
-						// the player's inventory.
-						ItemStack extracted = digistoreModule.extractItem(simulatedExtract, simulatedExtract.getCount() - insertAttempt.getCount(), false);
-						output.set(extracted);
-						return;
-					}
 				}
 			});
 
 		}
+
+		// We have to return empty, do NOT call super.
 		return ItemStack.EMPTY;
 	}
 
-	public void updateSortAndFilter(String filter, DigistoreSearchMode mode, DigistoreInventorySortType sortType, boolean sortDescending) {
+	public void digistoreFakeSlotClickedOnClient(ItemStack stack, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreFakeSlotClicked(windowId, stack, button, shiftHeld, controlHeld, altHeld));
+	}
+
+	public void digistoreFakeSlotClickedOnServer(ItemStack stack, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
+		if (!getPlayerInventory().player.getEntityWorld().isRemote()) {
+			getDigistoreNetwork().ifPresent((network) -> {
+				// If the player is holding an item, attempt to insert it.
+				// Otherwise, attempt to extract items/trigger a crafting job.
+				if (!getPlayerInventory().getItemStack().isEmpty()) {
+					getPlayerInventory().setItemStack(network.insertItem(getPlayerInventory().getItemStack(), false));
+					((ServerPlayerEntity) (getPlayerInventory().player)).updateHeldItem();
+				} else if (!stack.isEmpty()) {
+					// Get its craftable state.
+					DigistoreItemCraftableState itemCraftableState = DigistoreInventorySnapshot.getCraftableStateOfItem(stack);
+
+					// Check if we should craft it. This is true if the item is ONLY craftable, or
+					// if the player held the craft button.
+					boolean shouldCraft = itemCraftableState == DigistoreItemCraftableState.ONLY_CRAFTABLE;
+					shouldCraft |= itemCraftableState == DigistoreItemCraftableState.CRAFTABLE && controlHeld;
+
+					// If we should craft it, attempt to add a request for it. IF not, just pull it
+					// out like usual.
+					if (shouldCraft) {
+						// Calculate the max craftable.
+						CraftingStepsBundleContainer newBundles = network.getCraftingManager().calculateAllPossibleCraftingTrees(stack, 1);
+
+						// Open prompt for crafting if we can actually craft some.
+						// Create the container opener.
+						ContainerOpener<?> requestUi = new ContainerOpener<>(new StringTextComponent("Crafting Request"), (id, inv, data) -> {
+							return new ContainerCraftingAmount(id, inv, newBundles, network.getNetwork().getId());
+						}).fromParent(this);
+
+						// Open the UI.
+						requestUi.open((ServerPlayerEntity) getPlayerInventory().player, buff -> {
+							buff.writeString(newBundles.serializeCompressed());
+							buff.writeLong(network.getNetwork().getId());
+						});
+					} else {
+						// Get the amount of item to actually extract.
+						int extract = stack.getMaxStackSize();
+
+						// Simulate an extract to make sure we have the item on the server side and the
+						// correct number.
+						ItemStack adjustedStack = network.extractItem(stack, extract, true);
+
+						// If shift is held, add up to a whole stack to the player's inventory.
+						if (shiftHeld) {
+							// If we fail to do so, return early.
+							if (!getPlayerInventory().addItemStackToInventory(adjustedStack)) {
+								return;
+							}
+						} else if (button == MouseButton.MIDDLE) {
+							// If we're scrolling, just grab a single item.
+							extract = 1;
+							adjustedStack.setCount(extract);
+
+							// If we fail to do so, return early.
+							if (!getPlayerInventory().addItemStackToInventory(adjustedStack)) {
+								return;
+							}
+						} else {
+							// If the mouse button used was the right mouse button, split the stack.
+							if (button == MouseButton.RIGHT) {
+								extract = adjustedStack.getCount() / 2;
+								adjustedStack.setCount(extract);
+							}
+
+							// Set the player's held item.
+							getPlayerInventory().setItemStack(adjustedStack);
+							((ServerPlayerEntity) (getPlayerInventory().player)).updateHeldItem();
+						}
+
+						// Extract the item for real now.
+						network.extractItem(stack, extract, false);
+					}
+				}
+			});
+		}
+	}
+
+	public void updateSortAndFilter(String filter, DigistoreSyncedSearchMode mode, DigistoreInventorySortType sortType, boolean sortDescending) {
 		this.filter = filter;
 		this.sortType = sortType;
 		this.sortDescending = sortDescending;
 		DigistoreTerminal.setSortType(getAttachment(), sortType);
 		DigistoreTerminal.setSortDescending(getAttachment(), sortDescending);
-		resyncInv = true;
+		DigistoreTerminal.setSearchMode(getAttachment(), mode);
+
+		// If on the client, send an update to the server to update these values too.
 		if (getCableComponent().getWorld().isRemote) {
 			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
-		}
-	}
-
-	/**
-	 * Sets the position of the scroll bar from the client.
-	 * 
-	 * @param offset
-	 */
-	public void setScrollOffset(int offset) {
-		if (scrollOffset != offset) {
-			scrollOffset = offset;
-			addDigistoreSlots(clientSimulatedInventory, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
 		}
 	}
 
@@ -396,44 +289,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		return sortDescending;
 	}
 
-	public int getItemsPerRow() {
-		return itemsPerRow;
-	}
-
-	protected void setItemsPerRow(int itemsPerRow) {
-		this.itemsPerRow = itemsPerRow;
-		resyncInv = true;
-	}
-
-	public int getMaxRows() {
-		return maxRows;
-	}
-
 	public void setViewType(TerminalViewType type) {
 		this.viewType = type;
 	}
 
 	public TerminalViewType getViewType() {
 		return this.viewType;
-	}
-
-	public void setHideDigistoreInventory(boolean hideItems) {
-		this.hideDigistoreItems = hideItems;
-		if (hideItems) {
-			// Remove all the digistore slots.
-			for (int i = inventorySlots.size() - 1; i >= getFirstDigistoreSlotIndex(); i--) {
-				if (inventorySlots.get(i) instanceof DigistoreSlot) {
-					DigistoreSlot digiSlot = (DigistoreSlot) inventorySlots.get(i);
-					digiSlot.setEnabledState(false);
-				}
-			}
-		} else {
-			addDigistoreSlots(clientSimulatedInventory, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
-		}
-	}
-
-	public boolean isHidingDigistoreInventory() {
-		return this.hideDigistoreItems;
 	}
 
 	public List<CraftingRequestResponse> getCurrentCraftingQueue() {
@@ -455,246 +316,26 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		refreshCraftingQueue();
 	}
 
-	/**
-	 * Returns how many digistore slots are on screen.
-	 * 
-	 * @return
-	 */
-	public int getDigistoreSlotCount() {
-		return itemsPerRow * maxRows;
+	public boolean isManagerOnline() {
+		return managerPresentLastState;
 	}
 
-	/**
-	 * Gets the maximum amount of scroll that should be available to the user.
-	 * 
-	 * @return
-	 */
-	public int getMaxScroll() {
-		int nonEmptySlots = 0;
-		for (int i = 0; i < clientSimulatedInventory.getSlots(); i++) {
-			if (!clientSimulatedInventory.getStackInSlot(i).isEmpty()) {
-				nonEmptySlots++;
-			}
-		}
-
-		return (int) Math.max(0, Math.ceil((double) nonEmptySlots / itemsPerRow) - maxRows);
+	public void syncContentsToClient(DigistoreInventorySnapshot digistoreInv) {
+		StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player,
+				new PacketSyncDigistoreInventory(windowId, digistoreInv));
 	}
 
-	public int getTotalCapacity() {
-		return this.maxNetworkCapacity;
+	public void syncContentsFromServer(DigistoreInventorySnapshot snapshot) {
+		clientInventory = snapshot;
 	}
 
-	public int getUsedCapacity() {
-		return this.usedNetworkCapacity;
+	public DigistoreInventorySnapshot getDigistoreClientInventory() {
+		return this.clientInventory;
 	}
 
-	public int getMaxUniqueTypes() {
-		return this.maxNetworkTypes;
-	}
-
-	public int getUsedUniqueTypes() {
-		return this.usedNetworkTypes;
-	}
-
-	public void updateMetrics(int usedCapacity, int maxCapacity, int usedTypes, int maxTypes) {
-		this.usedNetworkCapacity = usedCapacity;
-		this.maxNetworkCapacity = maxCapacity;
-		this.usedNetworkTypes = usedTypes;
-		this.maxNetworkTypes = maxTypes;
-	}
-
-	protected void setMaxRows(int maxRows) {
-		this.maxRows = maxRows;
-		resyncInv = true;
-	}
-
-	protected void markForResync() {
-		resyncInv = true;
-	}
-
-	public Vector2D getDigistoreInventoryPosition() {
-		return digistoreInventoryPosition;
-	}
-
-	protected void setDigistoreInventoryPosition(Vector2D digistoreInventoryPosition) {
-		this.digistoreInventoryPosition = digistoreInventoryPosition;
-		resyncInv = true;
-	}
-
-	/**
-	 * Determines if the provided slot is a digistore slot or a slot belonging to
-	 * some other purpose (ie. Upgrade slot, etc).
-	 * 
-	 * @param slot
-	 * @return
-	 */
-	protected boolean isDigistoreSlot(int slot) {
-		return slot >= getFirstDigistoreSlotIndex();
-	}
-
-	/**
-	 * Indicates the first index belonging to a digistore.
-	 * 
-	 * @return
-	 */
-	protected int getFirstDigistoreSlotIndex() {
-		return playerInventoryEnd + 1;
-	}
-
-	/**
-	 * Returns true if any digistore slots are in this container. Always true except
-	 * the first time the container is opened.
-	 * 
-	 * @return
-	 */
-	protected boolean hasDigistoreSlots() {
-		return getFirstDigistoreSlotIndex() < inventorySlots.size();
-	}
-
-	/**
-	 * Sends an update packet from the server to the client that synchronizes the
-	 * containers.
-	 * 
-	 * @param player
-	 */
-	protected void syncContainerSlots(PlayerEntity player) {
-		// If being called on the client, throw an exception.
-		if (getCableComponent().getWorld().isRemote) {
-			throw new RuntimeException("Containers should only be synced from the server!");
-		}
-
-		getDigistoreNetwork().ifPresent(digistoreModule -> {
-			// Get the old inventory if we have initialized this container and there is a
-			// atleast one digistore slot.
-			DigistoreInventorySnapshot oldInv = null;
-			if (hasDigistoreSlots() && inventorySlots.get(getFirstDigistoreSlotIndex()) instanceof DigistoreSlot) {
-				oldInv = (DigistoreInventorySnapshot) ((DigistoreSlot) inventorySlots.get(getFirstDigistoreSlotIndex())).getItemHandler();
-			}
-
-			// Clear the digistore slots.
-			for (int i = inventorySlots.size() - 1; i >= getFirstDigistoreSlotIndex(); i--) {
-				inventorySlots.remove(i);
-			}
-
-			// Get the network inventory.
-			DigistoreInventorySnapshot digistoreInv = digistoreModule.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
-			addDigistoreSlots(digistoreInv, itemsPerRow, digistoreInventoryPosition.getXi(), digistoreInventoryPosition.getYi());
-
-			// Capture a flag to indicate a resync occured.
-			boolean resynced = false;
-			if (oldInv != null && !resyncInv) {
-				if (oldInv.getSlots() == digistoreInv.getSlots()) {
-					// If the size of the inventory has not changed, then only sync the slots that
-					// have changed.
-					for (int i = 0; i < oldInv.getSlots(); i++) {
-						ItemStack oldStack = oldInv.getStackInSlot(i);
-						if (!ItemStack.areItemStacksEqual(oldStack, digistoreInv.getStackInSlot(i))) {
-							sendLargeItemSlotContents((ServerPlayerEntity) player, this, getFirstDigistoreSlotIndex() + i, digistoreInv.getStackInSlot(i));
-							resynced = true;
-						}
-					}
-				} else {
-					// Sync the whole thing.
-					sendAllLargeItemContents((ServerPlayerEntity) player, this, this.getInventory());
-					resynced = true;
-				}
-			} else {
-				// Sync the whole thing.
-				sendAllLargeItemContents((ServerPlayerEntity) player, this, this.getInventory());
-				resyncInv = false;
-				resynced = true;
-			}
-
-			// If we resynced, also resync the metrics.
-			// Do it this way to ensure we only perform the sync once per call to this
-			// method.
-			if (resynced) {
-				syncMetricsToClient(digistoreInv);
-			}
-		});
-	}
-
-	public void syncMetricsToClient(DigistoreInventorySnapshot digistoreInv) {
-		StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player, new PacketSyncDigistoreNetworkMetrics(
-				windowId, digistoreInv.getUsedCapacity(), digistoreInv.getTotalCapacity(), digistoreInv.getUsedUniqueTypes(), digistoreInv.getMaxUniqueTypes()));
-	}
-
-	/**
-	 * Adds the digistore slots to the container.
-	 * 
-	 * @param digistoreInv
-	 * @param rowSize
-	 * @param xPos
-	 * @param yPos
-	 */
-	protected void addDigistoreSlots(IItemHandler digistoreInv, int rowSize, int xPos, int yPos) {
-		// Remove all the digistore slots.
-		for (int i = inventorySlots.size() - 1; i >= getFirstDigistoreSlotIndex(); i--) {
-			inventorySlots.remove(i);
-		}
-
-		// This is just a constant used to indicate the size of a slot (16 + 2(1) for
-		// each border).
-		final int adjustedSlotSize = 18;
-
-		// Keep track of how many slots were enabled.
-		int enabledSlots = 0;
-
-		// Iterate through all the digistore inventory slots.
-		for (int i = 0; i < digistoreInv.getSlots(); i++) {
-			// Get the row the slot should render on.
-			int row = i / rowSize;
-
-			// Create the slot at the proper x and y positions in the grid (accounting for
-			// the scroll offset).
-			DigistoreSlot output = new DigistoreSlot(digistoreInv, i, xPos + ((i % rowSize) * adjustedSlotSize), yPos + ((row - scrollOffset) * adjustedSlotSize),
-					getCableComponent().isManagerPresent()) {
-				@Override
-				public boolean isEnabled() {
-					if (hideDigistoreItems) {
-						return false;
-					} else {
-						return super.isEnabled();
-					}
-				}
-			};
-
-			// We then update the enabled state if this slot should be enabled. A slot is
-			// enabled IF it's row is beyond the row that the scroll bar is set to AND it is
-			// added before we run out of slots we can display on screen. This only has an
-			// effect on the client, only reason we dont do a remote check is to save a some
-			// minor performance.
-			output.setEnabledState(row >= this.scrollOffset);
-
-			if (getCableComponent().getWorld().isRemote) {
-				if (output.isEnabled()) {
-					output.setEnabledState((i - (scrollOffset * rowSize)) < itemsPerRow * maxRows);
-				}
-
-				// If the slot is enabled, increment the enabled slots count.
-				enabledSlots += output.isEnabled() ? 1 : 0;
-			}
-
-			// Add the slot.
-			addSlot(output);
-		}
-
-		// Get the count of missing slots (ie. if we only have 20 items in the network
-		// but we can render up to 50, we must render 30 blank slots).
-		int missingSlots = (itemsPerRow * maxRows) - enabledSlots;
-
-		// If we're hiding the items, no missing slots.
-		if (hideDigistoreItems) {
-			missingSlots = 0;
-		}
-
-		// Add a dummy slot for each of the missing slots if we're not hiding the items.
-		for (int i = 0; i < missingSlots; i++) {
-			int index = enabledSlots + i;
-			int row = index / rowSize;
-			Slot output = new DummySlot(index, xPos + ((i + (rowSize - (missingSlots % rowSize))) * adjustedSlotSize), yPos + (row * adjustedSlotSize));
-			addSlot(output);
-		}
+	@Override
+	public DigistoreCableProviderComponent getCableComponent() {
+		return (DigistoreCableProviderComponent) super.getCableComponent();
 	}
 
 	/**
@@ -720,4 +361,11 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
 	}
 
+	protected void onManagerStateChanged(boolean isPresent) {
+
+	}
+
+	protected void markForResync() {
+
+	}
 }

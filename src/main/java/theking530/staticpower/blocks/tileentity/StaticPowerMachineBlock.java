@@ -53,7 +53,7 @@ public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock
 		if (state.hasProperty(IS_ON) && state.get(IS_ON)) {
 			return 15;
 		}
-		return state.getLightValue();
+		return super.getLightValue(state, world, pos);
 	}
 
 }

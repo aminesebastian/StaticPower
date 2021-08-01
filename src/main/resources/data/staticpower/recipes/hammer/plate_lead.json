@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:hammer_recipe",
+	"input_item": {
+		"tag": "forge:ingots/lead"
+	},
+	"output": {
+		"item": "staticpower:plate_lead",
+		"count": 2
+	}
+}

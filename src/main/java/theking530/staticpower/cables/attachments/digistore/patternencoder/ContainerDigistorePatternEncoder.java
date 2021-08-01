@@ -65,8 +65,6 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			encoderInventory = (ItemStackHandler) handler;
 		});
 
-		// Limit the view to only show 5 rows to make room for the crafting GUI.
-		setMaxRows(5);
 
 		// Add the crafting input slots.
 		for (int y = 0; y < 3; y++) {

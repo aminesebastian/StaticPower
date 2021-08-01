@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore.terminal;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -7,6 +9,9 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
@@ -36,5 +41,10 @@ public class DigistoreTerminal extends AbstractDigistoreTerminalAttachment {
 	@Override
 	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
 		return 2000;
+	}
+	
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslationTextComponent("gui.staticpower.digistore_terminal_tooltip"));
 	}
 }

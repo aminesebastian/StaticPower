@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:hammer_recipe",
+	"input_item": {
+		"tag": "forge:ingots/brass"
+	},
+	"output": {
+		"item": "staticpower:plate_brass",
+		"count": 2
+	}
+}

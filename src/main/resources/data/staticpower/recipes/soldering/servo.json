@@ -13,7 +13,7 @@
 			"item": "staticpower:coil_copper"
 		},
 		"w": {
-			"tag": "forge:wires/tin"
+			"tag": "forge:nuggets/tin"
 		}
 	},
 	"result": {

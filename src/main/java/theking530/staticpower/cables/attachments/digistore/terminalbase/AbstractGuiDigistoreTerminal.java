@@ -1,10 +1,14 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.google.common.base.Strings;
 import com.mojang.blaze3d.matrix.MatrixStack;
 
+import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.recipe.IFocus.Mode;
+import mezz.jei.config.KeyBindings;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -25,6 +29,7 @@ import theking530.staticcore.gui.widgets.scrollbar.ScrollBarWidget;
 import theking530.staticcore.gui.widgets.textinput.TextInputWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
@@ -50,6 +55,9 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	public static final int MAX_CRAFTING_STEP_COLUMNS = 2;
 	public static final int MAX_CRAFTING_STEPS_ROWS = 5;
 	public static final int CRAFTING_LIST_UPDATE_RATE = 10;
+	public static final int DEFAULT_ITEMS_PER_ROW = 9;
+	public static final int DEFAULT_MAX_ROWS_ON_SCREEN = 8;
+	public static final Vector2D DEFAULT_INVENTORY_START_POSITION = new Vector2D(8, 22);
 
 	public TerminalViewType viewType;
 	public TextInputWidget searchBar;
@@ -67,23 +75,43 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	public DrawableWidget<SpriteDrawable> filledAmountSprite;
 	public DrawableWidget<SpriteDrawable> typeAmountSprite;
 
+	/**
+	 * Indicates how many items will be displayed per row of digitsore inventory.
+	 */
+	protected int itemsPerRow;
+	/**
+	 * Indicates the maximum amount of digitstore inventory rows to render.
+	 */
+	protected int maxRows;
+	/**
+	 * Sets the position of the digistore inventory to render at.
+	 */
+	protected Vector2D digistoreInventoryPosition;
+
+	private List<DigistoreSlotButton> fakeContainerSlots;
+
 	private int craftingRequestUpdateTimer;
 	private int currentCraftingRequestIndex;
 
 	public AbstractGuiDigistoreTerminal(T container, PlayerInventory invPlayer, ITextComponent name, int width, int height) {
 		super(container, invPlayer, name, width, height);
 		craftingRequestUpdateTimer = 0;
+		itemsPerRow = DEFAULT_ITEMS_PER_ROW;
+		maxRows = DEFAULT_MAX_ROWS_ON_SCREEN;
+		digistoreInventoryPosition = DEFAULT_INVENTORY_START_POSITION;
 	}
 
 	@Override
 	public void initializeGui() {
 		super.initializeGui();
+		fakeContainerSlots = new ArrayList<DigistoreSlotButton>();
+
 		// Set the default view type.
 		viewType = TerminalViewType.ITEMS;
 
 		// Add search bar and sync it with JEI if requested.
 		String initialSerachString = "";
-		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSearchMode.TWO_WAY) {
+		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSyncedSearchMode.TWO_WAY) {
 			initialSerachString = Strings.nullToEmpty(PluginJEI.RUNTIME.getIngredientFilter().getFilterText());
 		}
 		registerWidget(searchBar = new TextInputWidget(initialSerachString, 79, 6, 89, 12).setTypedCallback(this::onSearchTextChanged));
@@ -141,6 +169,22 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		craftingRequestCancelButton.setTooltip(new StringTextComponent("Cancel"));
 		craftingRequestCancelButton.setVisible(false);
 
+		// This is just a constant used to indicate the size of a slot (16 + 2(1) for
+		// each border).
+		final int adjustedSlotSize = 18;
+
+		// Add fake slots.
+		for (int y = 0; y < maxRows; y++) {
+			for (int x = 0; x < itemsPerRow; x++) {
+				DigistoreSlotButton slotButton = new DigistoreSlotButton(ItemStack.EMPTY, digistoreInventoryPosition.getXi() + (x * adjustedSlotSize),
+						digistoreInventoryPosition.getXi() + (y * adjustedSlotSize) + 14, this::digistoreSlotPressed);
+
+				// Add the button to the recipe button array and register it.
+				fakeContainerSlots.add(slotButton);
+				registerWidget(slotButton);
+			}
+		}
+
 		// Set default settings for tooltips/sprites.
 		updateSortAndFilter();
 
@@ -175,11 +219,14 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 	@Override
 	public void updateData() {
+		// Get the inventory.
+		DigistoreInventorySnapshot snapshot = getContainer().getDigistoreClientInventory();
+
 		// If we have JEI installed two way syncing enabled, changes to the JEI search
 		// bar will also
 		// affect the digistore search bar.
 		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
-			if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSearchMode.TWO_WAY) {
+			if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) == DigistoreSyncedSearchMode.TWO_WAY) {
 				String jeiSearchString = Strings.nullToEmpty(PluginJEI.RUNTIME.getIngredientFilter().getFilterText());
 				searchBar.setText(jeiSearchString);
 			}
@@ -215,12 +262,24 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			craftingStepsWidget.setScrollPosition(scrollBar.getScrollAmount());
 		} else {
 			// Update the scroll bar.
-			scrollBar.setMaxScroll(getContainer().getMaxScroll());
-			getContainer().setScrollOffset(scrollBar.getScrollAmount());
+			scrollBar.setMaxScroll(getMaxScroll());
+		}
+
+		// Update the fake items slots.
+		for (int i = 0; i < fakeContainerSlots.size(); i++) {
+			int adjustedIndex = (i + (scrollBar.getScrollAmount() * itemsPerRow));
+			if (adjustedIndex < snapshot.getSlots()) {
+				fakeContainerSlots.get(i).setItemStack(snapshot.getStackInSlot(adjustedIndex));
+			} else {
+				fakeContainerSlots.get(i).setItemStack(ItemStack.EMPTY);
+			}
+
+			// Update the enabled state of the slot.
+			fakeContainerSlots.get(i).setEnabled(getContainer().isManagerOnline());
 		}
 
 		// Update the capacity bar.
-		float filledPercent = (float) getContainer().getUsedCapacity() / getContainer().getTotalCapacity();
+		float filledPercent = (float) snapshot.getUsedCapacity() / snapshot.getTotalCapacity();
 		float filledHeight = 34 * filledPercent;
 		float filledYCoord = 101 - filledHeight;
 		filledAmountSprite.setPosition(-18, filledYCoord);
@@ -228,7 +287,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		filledAmountSprite.getDrawable().setUV(0, 1 - filledPercent, 1, 1);
 
 		// Update the types bar.
-		float typesPercent = (float) getContainer().getUsedUniqueTypes() / getContainer().getMaxUniqueTypes();
+		float typesPercent = (float) snapshot.getUsedUniqueTypes() / snapshot.getMaxUniqueTypes();
 		float typesHeight = 34 * typesPercent;
 		float typesYCoord = 101 - typesHeight;
 		typeAmountSprite.setPosition(-8, typesYCoord);
@@ -237,27 +296,92 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	}
 
 	@Override
+	public boolean keyPressed(int key, int scanCode, int modifiers) {
+		if (!super.keyPressed(key, scanCode, modifiers)) {
+			// Update the fake items slots.
+			for (DigistoreSlotButton slot : fakeContainerSlots) {
+				if (slot.isEnabled() && slot.isHovered()) {
+					// Get the stack represented by the fake slot.
+					ItemStack buttonStack = slot.getItemStack();
+
+					// Do a little extra work here to support JEI lookups.
+					if (KeyBindings.showRecipe.getKey().getKeyCode() == key) {
+						if (!buttonStack.isEmpty()) {
+							IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.OUTPUT, buttonStack);
+							PluginJEI.RUNTIME.getRecipesGui().show(focus);
+							return true;
+						}
+					} else if (KeyBindings.showUses.getKey().getKeyCode() == key) {
+						if (!buttonStack.isEmpty()) {
+							IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.INPUT, buttonStack);
+							PluginJEI.RUNTIME.getRecipesGui().show(focus);
+							return true;
+						}
+					}
+				}
+			}
+		}
+
+		// Return false (same as the super).
+		return true;
+	}
+
+	public int getItemsPerRow() {
+		return itemsPerRow;
+	}
+
+	public int getMaxRows() {
+		return maxRows;
+	}
+
+	/**
+	 * Gets the maximum amount of scroll that should be available to the user.
+	 * 
+	 * @return
+	 */
+	public int getMaxScroll() {
+		int overflow = container.getDigistoreClientInventory().getSlots() - getMaximumVisibleDigistoreSlots();
+		return (int) Math.max(0, Math.ceil((float) overflow / itemsPerRow));
+	}
+
+	/**
+	 * Returns how many digistore slots are on screen.
+	 * 
+	 * @return
+	 */
+	public int getMaximumVisibleDigistoreSlots() {
+		return itemsPerRow * maxRows;
+	}
+
+	public Vector2D getDigistoreInventoryPosition() {
+		return digistoreInventoryPosition;
+	}
+
+	@Override
 	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
 		super.getExtraTooltips(tooltips, stack, mouseX, mouseY);
+
+		// Get the inventory.
+		DigistoreInventorySnapshot snapshot = getContainer().getDigistoreClientInventory();
 
 		// Add the tooltips for the capacity and types bars here so that even if the
 		// bars are small, the tooltip gets rendered.
 		if (mouseY - guiTop >= 65) {
 			if (mouseX - guiLeft >= -19 && mouseX - guiLeft <= -12 && mouseY - guiTop <= 99) {
-				float filledPercent = (float) getContainer().getUsedCapacity() / getContainer().getTotalCapacity();
+				float filledPercent = (float) snapshot.getUsedCapacity() / snapshot.getTotalCapacity();
 				tooltips.add(new TranslationTextComponent("gui.staticpower.digistore_capacity_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(filledPercent * 100)));
 
 				// Include actual numbers.
-				MetricConverter totalCapacity = new MetricConverter(getContainer().getTotalCapacity());
-				MetricConverter usedCapacity = new MetricConverter(getContainer().getUsedCapacity());
+				MetricConverter totalCapacity = new MetricConverter(snapshot.getTotalCapacity());
+				MetricConverter usedCapacity = new MetricConverter(snapshot.getUsedCapacity());
 				tooltips.add(new StringTextComponent(usedCapacity.getValueAsString(true) + "/" + totalCapacity.getValueAsString(true)));
 			} else if (mouseX - guiLeft >= -9 && mouseX - guiLeft <= -2 && mouseY - guiTop <= 99) {
-				float typesPercent = (float) getContainer().getUsedUniqueTypes() / getContainer().getMaxUniqueTypes();
+				float typesPercent = (float) snapshot.getUsedUniqueTypes() / snapshot.getMaxUniqueTypes();
 				tooltips.add(new TranslationTextComponent("gui.staticpower.digistore_types_utilization", GuiTextUtilities.formatNumberAsStringNoDecimal(typesPercent * 100)));
 
 				// Include actual numbers.
-				MetricConverter totalTypes = new MetricConverter(getContainer().getMaxUniqueTypes());
-				MetricConverter usedTypes = new MetricConverter(getContainer().getUsedUniqueTypes());
+				MetricConverter totalTypes = new MetricConverter(snapshot.getMaxUniqueTypes());
+				MetricConverter usedTypes = new MetricConverter(snapshot.getUsedUniqueTypes());
 				tooltips.add(new StringTextComponent(usedTypes.getValueAsString(true) + "/" + totalTypes.getValueAsString(true)));
 			}
 		}
@@ -290,6 +414,34 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		}
 	}
 
+	protected void setItemsPerRow(int itemsPerRow) {
+		this.itemsPerRow = itemsPerRow;
+	}
+
+	protected void setMaxRows(int maxRows) {
+		this.maxRows = maxRows;
+	}
+
+	protected void setDigistoreInventoryPosition(Vector2D digistoreInventoryPosition) {
+		this.digistoreInventoryPosition = digistoreInventoryPosition;
+	}
+
+	protected void digistoreSlotPressed(StandardButton button, MouseButton mouse) {
+		// Get the stack represented by the fake slot.
+		ItemStack buttonStack = ((DigistoreSlotButton) button).getItemStack();
+
+		// We call the method even if the fake slot is empty because the server uses
+		// clicks on these buttons for other things beyond picking items (such as
+		// inserting items).
+		container.digistoreFakeSlotClickedOnClient(buttonStack, mouse, hasShiftDown(), hasControlDown(), hasAltDown());
+	}
+
+	protected void setHideDigistoreInventory(boolean hide) {
+		for (DigistoreSlotButton slot : fakeContainerSlots) {
+			slot.setVisible(!hide);
+		}
+	}
+
 	protected void rotateCurrentlyViewedRecipeStatus(int direction) {
 		if (getContainer().getCurrentCraftingQueue().size() == 0) {
 			return;
@@ -308,7 +460,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		if (viewType != TerminalViewType.CRAFTING && getContainer().getCurrentCraftingQueue().size() > 0) {
 			getContainer().refreshCraftingQueue();
 			viewType = TerminalViewType.CRAFTING;
-			getContainer().setHideDigistoreInventory(true);
+			setHideDigistoreInventory(true);
 			getContainer().setViewType(TerminalViewType.CRAFTING);
 			searchBar.setVisible(false);
 			craftingStepsWidget.setVisible(true);
@@ -324,7 +476,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	protected boolean switchToDefaultView() {
 		if (viewType != TerminalViewType.ITEMS) {
 			viewType = TerminalViewType.ITEMS;
-			getContainer().setHideDigistoreInventory(false);
+			setHideDigistoreInventory(false);
 			getContainer().setViewType(TerminalViewType.ITEMS);
 			searchBar.setVisible(true);
 			craftingStepsWidget.setVisible(false);
@@ -340,7 +492,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	protected void onSearchTextChanged(TextInputWidget searchBar, String text) {
 		// If we have one way or two way syncing enabled, changes to the digistore
 		// search bar will also affect the JEI search bar.
-		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) != DigistoreSearchMode.DEFAULT) {
+		if (DigistoreTerminal.getSearchMode(getContainer().getAttachment()) != DigistoreSyncedSearchMode.DEFAULT) {
 			PluginJEI.RUNTIME.getIngredientFilter().setFilterText(text);
 		}
 
@@ -389,7 +541,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		ItemStack attachment = getContainer().getAttachment();
 
 		// Get all the modes and filter settings.
-		DigistoreSearchMode searchMode = DigistoreTerminal.getSearchMode(attachment);
+		DigistoreSyncedSearchMode searchMode = DigistoreTerminal.getSearchMode(attachment);
 		DigistoreInventorySortType sortType = DigistoreTerminal.getSortType(attachment);
 		boolean descending = DigistoreTerminal.getSortDescending(attachment);
 

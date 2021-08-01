@@ -121,7 +121,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		if (manager == null) {
 			Network.updateGraph(Network.getWorld(), Network.getOrigin());
 		}
-		return manager != null && manager.energyStorage.getStorage().getStoredPower() > 0;
+		return manager != null && manager.energyStorage.getStorage().getStoredPower() >= getPowerUsage();
 	}
 
 	public DigistoreInventorySnapshot getNetworkInventorySnapshotForDisplay(String filter, DigistoreInventorySortType sortType, boolean sortDescending) {

@@ -52,9 +52,9 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 		if (cable instanceof DigistoreCableProviderComponent) {
 			DigistoreCableProviderComponent digistoreCable = (DigistoreCableProviderComponent) cable;
 			if (digistoreCable.hasAttachmentOfType(DigistoreLight.class) && digistoreCable.isManagerPresent()) {
-				return 16;
+				return 15;
 			}
 		}
-		return state.getLightValue();
+		return super.getLightValue(state, world, pos);
 	}
 }

@@ -1,0 +1,23 @@
+{
+	"type": "staticpower:soldering_recipe",
+	"pattern": [
+		" t ",
+		"tcw",
+		" t "
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"c": {
+			"item": "staticpower:coil_copper"
+		},
+		"w": {
+			"tag": "forge:nuggets/tin"
+		}
+	},
+	"result": {
+		"item": "staticpower:servo",
+		"count": 3
+	}
+}

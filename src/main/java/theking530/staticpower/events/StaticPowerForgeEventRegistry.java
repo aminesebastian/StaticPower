@@ -29,6 +29,7 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,6 +53,7 @@ import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCa
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.world.ore.ModOres;
 import theking530.staticpower.world.trees.ModTrees;
@@ -232,6 +234,16 @@ public class StaticPowerForgeEventRegistry {
 
 			// Cancel the event so no further events occur.
 			event.setCanceled(true);
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerLeftClick(LeftClickBlock event) {
+		if (event.getPlayer().getHeldItemMainhand().getItem() instanceof Hammer) {
+			Hammer hammer = (Hammer) event.getPlayer().getHeldItemMainhand().getItem();
+			if (hammer.onHitBlockLeftClick(event.getItemStack(), event.getPlayer(), event.getPos(), event.getFace())) {
+				event.setCanceled(true);
+			}
 		}
 	}
 }

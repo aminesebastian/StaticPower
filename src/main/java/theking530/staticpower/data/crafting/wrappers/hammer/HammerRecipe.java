@@ -10,20 +10,35 @@ import net.minecraftforge.common.Tags.IOptionalNamedTag;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class HammerRecipe extends AbstractStaticPowerRecipe {
 	public static final IRecipeType<HammerRecipe> RECIPE_TYPE = IRecipeType.register("hammer");
 
 	private final Ingredient hammer;
+	private final StaticPowerIngredient inputItem;
 	private final ResourceLocation block;
 	private final IOptionalNamedTag<Block> blockTag;
 	private final ProbabilityItemStackOutput outputItem;
+	private final boolean isBlockType;
 
 	public HammerRecipe(ResourceLocation name, Ingredient hammer, ResourceLocation block, ProbabilityItemStackOutput outputItem) {
 		super(name);
 		this.hammer = hammer;
 		this.block = block;
 		this.blockTag = BlockTags.createOptional(block);
+		this.outputItem = outputItem;
+		this.isBlockType = true;
+		this.inputItem = null;
+	}
+
+	public HammerRecipe(ResourceLocation name, Ingredient hammer, StaticPowerIngredient inputItem, ProbabilityItemStackOutput outputItem) {
+		super(name);
+		this.hammer = hammer;
+		this.inputItem = inputItem;
+		this.block = null;
+		this.blockTag = null;
+		this.isBlockType = false;
 		this.outputItem = outputItem;
 	}
 
@@ -33,6 +48,14 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 
 	public IOptionalNamedTag<Block> getInputTag() {
 		return blockTag;
+	}
+
+	public boolean isBlockType() {
+		return isBlockType;
+	}
+
+	public StaticPowerIngredient getInputItem() {
+		return inputItem;
 	}
 
 	public ResourceLocation getRawInputTag() {
@@ -45,9 +68,11 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
-		// Check items.
-		if (matchParams.shouldVerifyBlocks() && matchParams.hasBlocks()) {
+		// Check blocks.
+		if (isBlockType() && matchParams.shouldVerifyBlocks() && matchParams.hasBlocks()) {
 			return blockTag.contains(matchParams.getBlocks()[0].getBlock());
+		} else if (inputItem != null && matchParams.shouldVerifyItems() && matchParams.hasItems()) {
+			return inputItem.test(matchParams.getItems()[0]);
 		}
 
 		return true;

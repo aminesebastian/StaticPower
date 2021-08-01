@@ -20,4 +20,9 @@ public abstract class BaseDigistoreTileEntity extends TileEntityBase {
 	public boolean isManagerPresent() {
 		return digistoreCableProvider.isManagerPresent();
 	}
+
+	@Override
+	public boolean shouldSerializeWhenBroken() {
+		return true;
+	}
 }

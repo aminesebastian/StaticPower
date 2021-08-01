@@ -95,19 +95,23 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 	@Override
 	public void setIngredients(HammerRecipe recipe, IIngredients ingredients) {
-		// Create the input ingrdients.
+		// Create the input ingredients.
 		List<Ingredient> input = new ArrayList<Ingredient>();
 
-		// Allocate the inputs block array.
-		ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getAllElements().size()];
-		int index = 0;
-		for (Block block : recipe.getInputTag().getAllElements()) {
-			inputBlocks[index] = new ItemStack(block);
-			index++;
+		if (recipe.isBlockType()) {
+			// Allocate the inputs block array.
+			ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getAllElements().size()];
+			int index = 0;
+			for (Block block : recipe.getInputTag().getAllElements()) {
+				inputBlocks[index] = new ItemStack(block);
+				index++;
+			}
+			input.add(Ingredient.fromStacks(inputBlocks));
+		} else {
+			input.add(recipe.getInputItem().getIngredient());
 		}
 
 		// Add the hammer and input blocks.
-		input.add(Ingredient.fromStacks(inputBlocks));
 		ingredients.setInputIngredients(input);
 
 		// Set the output.

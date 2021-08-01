@@ -35,6 +35,7 @@ public class StandardButton extends AbstractGuiWidget {
 	private boolean toggled;
 	private boolean drawBackground;
 	private float clickSoundPitch;
+	private boolean clickSoundEnabled;
 	private List<ITextComponent> tooltip;
 
 	public StandardButton(int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClickedEvent) {
@@ -45,6 +46,7 @@ public class StandardButton extends AbstractGuiWidget {
 		currentlyPressedMouseButton = MouseButton.NONE;
 		toggleable = false;
 		toggled = false;
+		clickSoundEnabled = true;
 		drawBackground = true;
 	}
 
@@ -148,9 +150,11 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	protected void playSound(MouseButton state) {
-		float pitch = state == MouseButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
-		ClientPlayerEntity player = Minecraft.getInstance().player;
-		player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f, pitch);
+		if (clickSoundEnabled) {
+			float pitch = state == MouseButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
+			ClientPlayerEntity player = Minecraft.getInstance().player;
+			player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f, pitch);
+		}
 	}
 
 	public StandardButton setToggleable(boolean toggleable) {
@@ -185,6 +189,15 @@ public class StandardButton extends AbstractGuiWidget {
 
 	public StandardButton setClicked(MouseButton newClickedState) {
 		this.currentlyPressedMouseButton = newClickedState;
+		return this;
+	}
+
+	public boolean isClickSoundEnabled() {
+		return clickSoundEnabled;
+	}
+
+	public StandardButton setClickSoundEnabled(boolean enabled) {
+		clickSoundEnabled = enabled;
 		return this;
 	}
 

@@ -241,7 +241,6 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
 				return true;
 			}
-			return false;
 		}
 
 		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);

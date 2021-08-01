@@ -9,8 +9,6 @@ import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal;
@@ -34,12 +32,6 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		searchBar.setSize(70, 12);
 		searchBar.setPosition(98, 6);
 
-		GuiInfoTab tab = new GuiInfoTab(100);
-		tab.setTabSide(TabSide.RIGHT);
-		getTabManager().setPosition(0, -5);
-		getTabManager().registerTab(tab);
-		setOutputSlotSize(16);
-
 		// Add recipe type button.
 		registerWidget(recipeTypeButton = new SpriteButton(67, 154, 16, 16, StaticPowerSprites.CRAFTING_TABLE_ICON, null, this::onRecipeTypeButtonPressed));
 		recipeTypeButton.setTooltip(new StringTextComponent("Crafting Table Recipe"));
@@ -51,6 +43,9 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		// Add encode button.
 		registerWidget(encodeButton = new SpriteButton(152, 136, 16, 16, StaticPowerSprites.ARROW_DOWN, null, this::onEncodePressed));
 		encodeButton.setTooltip(new StringTextComponent("Encode Recipe"));
+
+		// Limit the view to only show 5 rows to make room for the crafting GUI.
+		setMaxRows(5);
 	}
 
 	@Override

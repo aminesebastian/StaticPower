@@ -15,8 +15,6 @@ import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
-import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminalHistory.DigistoreCraftingTerminalHistoryEntry;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal;
@@ -42,27 +40,23 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		searchBar.setSize(70, 12);
 		searchBar.setPosition(98, 6);
 
-		GuiInfoTab tab = new GuiInfoTab(100);
-		tab.setTabSide(TabSide.RIGHT);
-		getTabManager().setPosition(0, -5);
-		getTabManager().registerTab(tab);
-
 		// Add island for previous crafting recipes.
 		registerWidget(new GuiIslandWidget(-24, 190, 30, 80));
 
 		// Create the widegts for the previous crafts and register them.
-		previousRecipes.add(new FakeSlotButton(ItemStack.EMPTY, -18, 195, this::onPreviousRecipeButtonPressed));
-		previousRecipes.add(new FakeSlotButton(ItemStack.EMPTY, -18, 213, this::onPreviousRecipeButtonPressed));
-		previousRecipes.add(new FakeSlotButton(ItemStack.EMPTY, -18, 231, this::onPreviousRecipeButtonPressed));
-		previousRecipes.add(new FakeSlotButton(ItemStack.EMPTY, -18, 249, this::onPreviousRecipeButtonPressed));
-		for (FakeSlotButton fakeSlot : previousRecipes) {
-			registerWidget(fakeSlot);
+		for (int i = 0; i < 4; i++) {
+			FakeSlotButton button = new FakeSlotButton(ItemStack.EMPTY, -18, 195 + (i * 18), this::onPreviousRecipeButtonPressed);
+			previousRecipes.add(button);
+			registerWidget(button);
 		}
 
 		// Add clear button.
 		registerWidget(clearCurrentRecipe = new TextButton(118, 119, 8, 8, "x", (button, mouseButton) -> {
 			this.getContainer().clearCraftingSlots(playerInventory.player);
 		}));
+
+		// Limit the view to only show 5 rows to make room for the crafting GUI.
+		setMaxRows(5);
 	}
 
 	protected void onPreviousRecipeButtonPressed(StandardButton button, MouseButton mouseButton) {
