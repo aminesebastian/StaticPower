@@ -36,6 +36,19 @@ public class StaticPowerTierTungsten extends StaticPowerTier {
 		return 1000;
 	}
 
+	protected double getHammerSwingSpeed() {
+		return -1;
+
+	}
+
+	protected double getHammerDamage() {
+		return 8;
+	}
+
+	protected int getHammerCooldown() {
+		return 20;
+	}
+
 	@Override
 	protected int getWireCutterUses() {
 		return 1000;

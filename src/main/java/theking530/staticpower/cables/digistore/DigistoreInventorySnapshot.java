@@ -13,7 +13,10 @@ import javax.annotation.Nullable;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.INBT;
+import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
@@ -39,6 +42,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	private final String filterString;
 	private final DigistoreInventorySortType sortType;
 	private final boolean sortDescending;
+	/** If true, modifications attempted on this snapshot will fail. */
 	private final boolean simulated;
 	private boolean isEmpty;
 
@@ -111,17 +115,18 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				stackToCache.setCount(digistore.getDigistoreStack(i).getCount());
 				cacheOrIncreaseItemCount(stackToCache);
 			}
-			
+
 			// Capture metrics.
 			usedCapacity += digistore.getTotalContainedCount();
 			maxCapacity += digistore.getItemCapacity();
 			maxTypes += digistore.getUniqueItemCapacity();
-			
-			// If this digistore is full, then it doesn't matter how many unique items it can take.
+
+			// If this digistore is full, then it doesn't matter how many unique items it
+			// can take.
 			// Add the max amount of unqiue items as used.
-			if(digistore.getRemainingStorage(true) == 0) {
+			if (digistore.getRemainingStorage(true) == 0) {
 				usedTypes += digistore.getUniqueItemCapacity();
-			}else {
+			} else {
 				usedTypes += digistore.getCurrentUniqueItemTypeCount();
 			}
 		}
@@ -346,6 +351,13 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		return this.usedTypes;
 	}
 
+	@Override
+	public String toString() {
+		return "DigistoreInventorySnapshot [stacks=" + stacks + ", craftingItemPatterns=" + craftingItemPatterns + ", filterString=" + filterString + ", sortType=" + sortType
+				+ ", sortDescending=" + sortDescending + ", simulated=" + simulated + ", isEmpty=" + isEmpty + ", usedCapacity=" + usedCapacity + ", maxCapacity=" + maxCapacity
+				+ ", usedTypes=" + usedTypes + ", maxTypes=" + maxTypes + ", module=" + module + "]";
+	}
+
 	protected void cacheCraftable(ItemStack stack, EncodedDigistorePattern pattern) {
 		// Create a copy of the output item to cache, and set the count to 1.
 		ItemStack stackToCache = stack.copy();
@@ -457,5 +469,47 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 		// Otherwise, get the craftable tag.
 		return DigistoreItemCraftableState.values()[metadata.getInt(CRAFTABLE_TAG)];
+	}
+
+	public CompoundNBT serialize() {
+		CompoundNBT output = new CompoundNBT();
+
+		// Handle the metrics.
+		output.putInt("used_capacity", usedCapacity);
+		output.putInt("max_capacity", maxCapacity);
+		output.putInt("used_types", usedTypes);
+		output.putInt("max_types", maxTypes);
+
+		// Handle the item stacks.
+		ListNBT itemList = new ListNBT();
+		stacks.forEach(stack -> {
+			itemList.add(ItemUtilities.writeLargeStackItemToNBT(stack));
+		});
+		output.put("item_list", itemList);
+
+		return output;
+	}
+
+	public static DigistoreInventorySnapshot deserialize(CompoundNBT nbt) {
+		DigistoreInventorySnapshot output = new DigistoreInventorySnapshot();
+
+		// Handle the metrics.
+		output.usedCapacity = nbt.getInt("used_capacity");
+		output.maxCapacity = nbt.getInt("max_capacity");
+		output.usedTypes = nbt.getInt("used_types");
+		output.maxTypes = nbt.getInt("max_types");
+
+		// Handle the item stacks.
+		ListNBT itemList = nbt.getList("item_list", Constants.NBT.TAG_COMPOUND);
+		for (INBT itemRawTag : itemList) {
+			CompoundNBT itemTag = (CompoundNBT) itemRawTag;
+			output.stacks.add(ItemUtilities.readLargeStackItemFromNBT(itemTag));
+		}
+
+		return output;
+	}
+
+	public static DigistoreInventorySnapshot createEmpty() {
+		return new DigistoreInventorySnapshot();
 	}
 }

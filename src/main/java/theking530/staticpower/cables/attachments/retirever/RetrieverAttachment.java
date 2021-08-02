@@ -150,6 +150,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslationTextComponent("gui.staticpower.retriever_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableRetrievalFilterSlots.get(), tooltip);
 	}
 

@@ -7,9 +7,15 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreWire extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityDigistoreWire> TYPE = new TileEntityTypeAllocator<TileEntityDigistoreWire>((type) -> new TileEntityDigistoreWire(), ModBlocks.DigistoreWire);
+	public static final TileEntityTypeAllocator<TileEntityDigistoreWire> TYPE = new TileEntityTypeAllocator<TileEntityDigistoreWire>((type) -> new TileEntityDigistoreWire(),
+			ModBlocks.DigistoreWire);
 
 	public TileEntityDigistoreWire() {
 		super(TYPE);
+	}
+
+	@Override
+	public boolean shouldSerializeWhenBroken() {
+		return false;
 	}
 }

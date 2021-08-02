@@ -9,10 +9,11 @@ import theking530.staticpower.cables.attachments.digistore.craftingterminal.Pack
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderEncode;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderRecipeTypeChange;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreFakeSlotClicked;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketDigistoreTerminalFilters;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketGetCurrentCraftingQueue;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketReturnCurrentCraftingQueue;
-import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketSyncDigistoreNetworkMetrics;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.network.PacketSyncDigistoreInventory;
 import theking530.staticpower.cables.digistore.crafting.network.PacketCancelDigistoreCraftingRequest;
 import theking530.staticpower.cables.digistore.crafting.network.PacketMakeDigistoreCraftingRequest;
 import theking530.staticpower.cables.digistore.crafting.network.PacketRequestDigistoreCraftRecalculation;
@@ -28,8 +29,6 @@ import theking530.staticpower.container.PacketRevertToParentContainer;
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
-import theking530.staticpower.network.SSetSlotLargeItemStackPacket;
-import theking530.staticpower.network.SWindowLargeItemsPacket;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
@@ -78,15 +77,15 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketGetCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketReturnCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
-		StaticPowerMessageHandler.registerVanillaStyleMessage(SWindowLargeItemsPacket.class);
-		StaticPowerMessageHandler.registerVanillaStyleMessage(SSetSlotLargeItemStackPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketRestorePreviousCraftingRecipe.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
 		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
-		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreNetworkMetrics.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
 		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
 		StaticPowerMessageHandler.registerMessage(PacketUpdateRedstoneCableConfiguration.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncSolderingFakeSlotRecipe.class);
+
+		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreInventory.class);
+		StaticPowerMessageHandler.registerMessage(PacketDigistoreFakeSlotClicked.class);
 	}
 }

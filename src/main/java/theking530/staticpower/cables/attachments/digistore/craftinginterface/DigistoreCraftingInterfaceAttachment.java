@@ -14,6 +14,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -25,7 +26,6 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
-import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -79,7 +79,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+	public long getPowerUsage(ItemStack attachment) {
 		return 1000;
 	}
 
@@ -237,6 +237,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslationTextComponent("gui.staticpower.crafting_interface_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreCraftingInterfaceSlots.get(), tooltip);
 	}
 

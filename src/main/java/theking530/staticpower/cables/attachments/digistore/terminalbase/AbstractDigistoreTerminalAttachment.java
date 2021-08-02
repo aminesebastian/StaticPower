@@ -29,7 +29,7 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractDigist
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
-		attachment.getTag().putInt(TERMINAL_SEARCH_MODE, DigistoreSearchMode.DEFAULT.ordinal());
+		attachment.getOrCreateTag().putInt(TERMINAL_SEARCH_MODE, DigistoreSyncedSearchMode.DEFAULT.ordinal());
 		attachment.getTag().putInt(TERMINAL_SORT_TYPE, DigistoreInventorySortType.COUNT.ordinal());
 		attachment.getTag().putBoolean(TERMINAL_SORT_DESC, true);
 	}
@@ -55,15 +55,15 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractDigist
 	}
 
 	public static void setSortType(ItemStack attachment, DigistoreInventorySortType type) {
-		attachment.getTag().putInt(TERMINAL_SORT_TYPE, type.ordinal());
+		attachment.getOrCreateTag().putInt(TERMINAL_SORT_TYPE, type.ordinal());
 	}
 
-	public static DigistoreSearchMode getSearchMode(ItemStack attachment) {
-		return DigistoreSearchMode.values()[attachment.getTag().getInt(TERMINAL_SEARCH_MODE)];
+	public static DigistoreSyncedSearchMode getSearchMode(ItemStack attachment) {
+		return DigistoreSyncedSearchMode.values()[attachment.getTag().getInt(TERMINAL_SEARCH_MODE)];
 	}
 
-	public static void setSearchMode(ItemStack attachment, DigistoreSearchMode mode) {
-		attachment.getTag().putInt(TERMINAL_SEARCH_MODE, mode.ordinal());
+	public static void setSearchMode(ItemStack attachment, DigistoreSyncedSearchMode mode) {
+		attachment.getOrCreateTag().putInt(TERMINAL_SEARCH_MODE, mode.ordinal());
 	}
 
 	public static boolean getSortDescending(ItemStack attachment) {
@@ -71,6 +71,6 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractDigist
 	}
 
 	public static void setSortDescending(ItemStack attachment, boolean descnding) {
-		attachment.getTag().putBoolean(TERMINAL_SORT_DESC, descnding);
+		attachment.getOrCreateTag().putBoolean(TERMINAL_SORT_DESC, descnding);
 	}
 }

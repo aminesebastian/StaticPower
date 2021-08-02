@@ -7,21 +7,21 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraftforge.fml.network.NetworkEvent.Context;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
-import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreSearchMode;
+import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreSyncedSearchMode;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	protected int windowId;
 	protected String searchString;
 	protected DigistoreInventorySortType sortType;
-	protected DigistoreSearchMode searchMode;
+	protected DigistoreSyncedSearchMode searchMode;
 	protected boolean sortDescending;
 
 	public PacketDigistoreTerminalFilters() {
 
 	}
 
-	public PacketDigistoreTerminalFilters(int windowId, String searchString, DigistoreSearchMode searchMode, DigistoreInventorySortType sortType, boolean sortDescending) {
+	public PacketDigistoreTerminalFilters(int windowId, String searchString, DigistoreSyncedSearchMode searchMode, DigistoreInventorySortType sortType, boolean sortDescending) {
 		this.windowId = windowId;
 		this.searchString = searchString;
 		this.searchMode = searchMode;
@@ -42,7 +42,7 @@ public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	public void decode(PacketBuffer buffer) {
 		windowId = buffer.readInt();
 		searchString = readStringOnServer(buffer);
-		searchMode = DigistoreSearchMode.values()[buffer.readInt()];
+		searchMode = DigistoreSyncedSearchMode.values()[buffer.readInt()];
 		sortType = DigistoreInventorySortType.values()[buffer.readInt()];
 		sortDescending = buffer.readBoolean();
 	}

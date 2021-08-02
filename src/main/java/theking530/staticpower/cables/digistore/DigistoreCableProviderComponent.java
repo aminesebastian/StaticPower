@@ -112,7 +112,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			for (ItemStack attachment : attachments) {
 				if (attachment.getItem() instanceof AbstractDigistoreCableAttachment) {
 					AbstractDigistoreCableAttachment attachmentItem = (AbstractDigistoreCableAttachment) attachment.getItem();
-					attachmentPowerUsage += attachmentItem.getPowerUsage(attachment, this);
+					attachmentPowerUsage += attachmentItem.getPowerUsage(attachment);
 				}
 			}
 

@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:hammer_recipe",
+	"input_item": {
+		"tag": "forge:ingots/bronze"
+	},
+	"output": {
+		"item": "staticpower:plate_bronze",
+		"count": 2
+	}
+}

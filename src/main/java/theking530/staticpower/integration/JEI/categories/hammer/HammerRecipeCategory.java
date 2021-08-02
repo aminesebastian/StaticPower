@@ -22,6 +22,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -91,23 +92,31 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		RenderSystem.scalef(2.5F, 2.5F, 2.5F);
 		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(new ItemStack(ModItems.IronMetalHammer), 0, 0);
 		RenderSystem.popMatrix();
+
+		if (!recipe.isBlockType()) {
+			GuiDrawUtilities.drawStringWithSize(matrixStack, "Requires Anvil", 89, 47, 1.0f, Color.EIGHT_BIT_GREY, false);
+		}
 	}
 
 	@Override
 	public void setIngredients(HammerRecipe recipe, IIngredients ingredients) {
-		// Create the input ingrdients.
+		// Create the input ingredients.
 		List<Ingredient> input = new ArrayList<Ingredient>();
 
-		// Allocate the inputs block array.
-		ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getAllElements().size()];
-		int index = 0;
-		for (Block block : recipe.getInputTag().getAllElements()) {
-			inputBlocks[index] = new ItemStack(block);
-			index++;
+		if (recipe.isBlockType()) {
+			// Allocate the inputs block array.
+			ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getAllElements().size()];
+			int index = 0;
+			for (Block block : recipe.getInputTag().getAllElements()) {
+				inputBlocks[index] = new ItemStack(block);
+				index++;
+			}
+			input.add(Ingredient.fromStacks(inputBlocks));
+		} else {
+			input.add(recipe.getInputItem().getIngredient());
 		}
 
 		// Add the hammer and input blocks.
-		input.add(Ingredient.fromStacks(inputBlocks));
 		ingredients.setInputIngredients(input);
 
 		// Set the output.

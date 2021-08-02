@@ -58,9 +58,6 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		craftMatrix = new CraftingInventory(this, 3, 3);
 		craftResult = new CraftResultInventory();
 
-		// Limit the view to only show 5 rows to make room for the crafting GUI.
-		setMaxRows(5);
-
 		// Add the crafting input slot.
 		addSlotsInGrid(craftMatrix, 0, 89, 120, 3, (index, xPos, yPos) -> new CraftingRecipeInputSlot(craftMatrix, index, xPos, yPos) {
 			@Override

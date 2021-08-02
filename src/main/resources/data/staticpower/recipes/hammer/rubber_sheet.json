@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:hammer_recipe",
+	"input_item": {
+		"item": "staticpower:rubber_bar"
+	},
+	"output": {
+		"item": "staticpower:rubber_sheet",
+		"count": 1
+	}
+}

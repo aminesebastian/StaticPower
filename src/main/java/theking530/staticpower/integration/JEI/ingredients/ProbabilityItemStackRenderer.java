@@ -20,6 +20,7 @@ import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 
@@ -41,7 +42,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 
 			// Draw the percentage string manually.
 			if (ingredient.getOutputChance() != 1.0f) {
-				String percentageString = (ingredient.getOutputChance() * 100) + "%";
+				String percentageString = GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
 				int width = Minecraft.getInstance().fontRenderer.getStringWidth(percentageString);
 				GuiDrawUtilities.drawStringWithSize(matrixStack, percentageString, xPosition - 1.5f + (width / 2), yPosition + 2, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 			} else if (ingredient.getAdditionalBonus() > 0) {
@@ -73,7 +74,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			if (ingredient.getAdditionalBonus() > 0) {
 				ITextComponent bonus = new TranslationTextComponent("gui.staticpower.bonus_output").mergeStyle(TextFormatting.GREEN).appendString(": ")
 						.appendString(TextFormatting.GOLD.toString() + String.valueOf(ingredient.getAdditionalBonus()) + TextFormatting.GRAY.toString() + TextFormatting.ITALIC.toString()
-								+ " (" + String.valueOf((int) (ingredient.getBonusChance() * 100)) + "%)");
+								+ " (" + GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100) + "%)");
 				tooltip.add(bonus);
 			}
 

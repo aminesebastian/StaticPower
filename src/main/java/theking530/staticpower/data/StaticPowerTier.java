@@ -148,6 +148,9 @@ public abstract class StaticPowerTier {
 	public final ConfigValue<Double> hardenedDurabilityBoost;
 	public final ConfigValue<Boolean> hardenedDurabilityBoostAdditive;
 	public final ConfigValue<Integer> hammerUses;
+	public final ConfigValue<Double> hammerSwingSpeed;
+	public final ConfigValue<Double> hammerDamage;
+	public final ConfigValue<Integer> hammerCooldown;
 	public final ConfigValue<Integer> wireCutterUses;
 	public final LongValue magnetPowerCapacity;
 	public final ConfigValue<Integer> magnetRadius;
@@ -370,6 +373,13 @@ public abstract class StaticPowerTier {
 
 		hammerUses = builder.comment("The number of blocks/items that can be processed by a hammer of this tier.").translation(StaticPower.MOD_ID + ".config." + "hammerUses")
 				.define("HammerUses", this.getHammerUses());
+		hammerSwingSpeed = builder.comment("How fast a hammer of this tier swings.").translation(StaticPower.MOD_ID + ".config." + "hammerSwingSpeed").define("HammerSwingSpeed",
+				this.getHammerSwingSpeed());
+		hammerDamage = builder.comment("How much damage a hammer of this tier does.").translation(StaticPower.MOD_ID + ".config." + "hammerDamage").define("HammerDamage",
+				this.getHammerDamage());
+		hammerCooldown = builder.comment("How long the cooldown is (in ticks) between each anvil based crafting operation performed by a hammer of this tier..")
+				.translation(StaticPower.MOD_ID + ".config." + "hammerCooldown").define("HammerCooldown", this.getHammerCooldown());
+
 		wireCutterUses = builder.comment("The number of items that can be processed by a wire cutter of this tier.").translation(StaticPower.MOD_ID + ".config." + "wireCutterUses")
 				.define("WireCutterUses", this.getWireCutterUses());
 		magnetPowerCapacity = builder.comment("The amount of power that can be stored in a magnet of this tier (in mSV [1SV = 1000mSV]).")
@@ -584,6 +594,19 @@ public abstract class StaticPowerTier {
 	}
 
 	protected int getHammerUses() {
+		return 0;
+	}
+
+	protected double getHammerSwingSpeed() {
+		return 0;
+
+	}
+
+	protected double getHammerDamage() {
+		return 0;
+	}
+
+	protected int getHammerCooldown() {
 		return 0;
 	}
 

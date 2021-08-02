@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore.patternencoder;
 
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.entity.player.PlayerEntity;
@@ -8,12 +10,14 @@ import net.minecraft.inventory.container.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.World;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
-import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment {
@@ -57,7 +61,12 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+	public long getPowerUsage(ItemStack attachment) {
 		return 1000;
+	}
+
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslationTextComponent("gui.staticpower.digistore_pattern_encoder"));
 	}
 }

@@ -4,6 +4,6 @@
 	"output": {
 		"item": "staticpower:raw_silicon",
 		"count": 1,
-		"chance": 0.05
+		"chance": 0.15
 	}
 }

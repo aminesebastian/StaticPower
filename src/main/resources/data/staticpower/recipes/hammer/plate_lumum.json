@@ -1,0 +1,10 @@
+{
+	"type": "staticpower:hammer_recipe",
+	"input_item": {
+		"item": "staticpower:ingot_lumum"
+	},
+	"output": {
+		"item": "staticpower:plate_lumum",
+		"count": 2
+	}
+}

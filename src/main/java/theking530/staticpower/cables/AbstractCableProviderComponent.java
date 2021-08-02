@@ -26,6 +26,7 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
@@ -59,6 +60,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			supportedNetworkModules.add(module);
 		}
 
+		initialDisabledStateApplied = false;
+
 		// Initialize the valid attachments set.
 		validAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
 
@@ -80,20 +83,22 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				}
 			}
 		}
-		initialDisabledStateApplied = false;
 	}
 
 	@Override
 	public void onInitializedInWorld(World world, BlockPos pos) {
 		super.onInitializedInWorld(world, pos);
-		// Handle the initial states of the disabled sides for the new cable.
-		for (Direction side : Direction.values()) {
-			disabledSides[side.ordinal()] = getInitialSideDisabledState(side);
-			if (!getWorld().isRemote) {
-				CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, getInitialSideDisabledState(side));
+		if (!initialDisabledStateApplied) {
+			// Handle the initial states of the disabled sides for the new cable.
+			for (Direction side : Direction.values()) {
+				disabledSides[side.ordinal()] = getInitialSideDisabledState(side);
+				if (!getWorld().isRemote) {
+					CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, getInitialSideDisabledState(side));
+				}
 			}
+			getTileEntity().refreshRenderState();
+			initialDisabledStateApplied = true;
 		}
-		getTileEntity().refreshRenderState();
 	}
 
 	@Override
@@ -315,13 +320,13 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 			// Remove the attachment and return it.
 			attachments[side.ordinal()] = ItemStack.EMPTY;
-			getTileEntity().markTileEntityForSynchronization();
-
 			// Clear the attachment data from the server.
 			if (!getWorld().isRemote) {
 				CableNetworkManager.get(getWorld()).getCable(getPos()).clearAttachmentDataForSide(side);
 			}
 
+			getTileEntity().markTileEntityForSynchronization();
+			getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
 			return output;
 		}
 		return ItemStack.EMPTY;
@@ -551,6 +556,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			nbt.put("cover" + i, itemNbt);
 		}
 
+		// Save the initial disabled state applied.
+		nbt.putBoolean("initial_disabled_applied", initialDisabledStateApplied);
+
 		return nbt;
 	}
 
@@ -566,6 +574,17 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// Deserialize the attachments.
 		for (int i = 0; i < attachments.length; i++) {
 			CompoundNBT itemNbt = nbt.getCompound("attachment" + i);
+			ItemStack incomingAttachment = ItemStack.read(itemNbt);
+
+			// If the attachments have changed on the server, just check for the lights to
+			// be safe (digistore lights for example). TO-DO Watch the performance of this.
+			if (!ItemUtilities.areItemStacksStackable(incomingAttachment, attachments[i])) {
+				if(getWorld() != null) {
+					getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
+				}	
+			}
+
+			// Update the local attachment.
 			attachments[i] = ItemStack.read(itemNbt);
 		}
 
@@ -574,6 +593,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			CompoundNBT itemNbt = nbt.getCompound("cover" + i);
 			covers[i] = ItemStack.read(itemNbt);
 		}
+
+		// Deserialize the initial disabled state.
+		initialDisabledStateApplied = nbt.getBoolean("initial_disabled_applied");
 
 		// If on the client, update the blocks.
 		if (getWorld() != null && getWorld().isRemote) {

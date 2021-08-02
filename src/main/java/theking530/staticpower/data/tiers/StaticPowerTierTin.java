@@ -56,6 +56,19 @@ public class StaticPowerTierTin extends StaticPowerTier {
 		return 200;
 	}
 
+	protected double getHammerSwingSpeed() {
+		return -3;
+
+	}
+
+	protected double getHammerDamage() {
+		return 4;
+	}
+
+	protected int getHammerCooldown() {
+		return 40;
+	}
+
 	@Override
 	protected int getWireCutterUses() {
 		return 200;

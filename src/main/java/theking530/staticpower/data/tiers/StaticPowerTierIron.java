@@ -66,6 +66,19 @@ public class StaticPowerTierIron extends StaticPowerTier {
 		return 250;
 	}
 
+	protected double getHammerSwingSpeed() {
+		return -2;
+
+	}
+
+	protected double getHammerDamage() {
+		return 7;
+	}
+
+	protected int getHammerCooldown() {
+		return 30;
+	}
+
 	@Override
 	protected int getWireCutterUses() {
 		return 500;

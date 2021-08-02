@@ -36,7 +36,7 @@ public class AbstractCableAttachmentContainer<T extends Item> extends StaticPowe
 
 	@Override
 	public boolean canDragIntoSlot(Slot slot) {
-		return false;
+		return true;
 	}
 
 	public Direction getAttachmentSide() {
