@@ -54,6 +54,11 @@ public class WireCutters extends StaticPowerItem {
 	}
 
 	@Override
+	public boolean isDamageable(ItemStack stack) {
+		return true;
+	}
+
+	@Override
 	public boolean hasContainerItem() {
 		return true;
 	}

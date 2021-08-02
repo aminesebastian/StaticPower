@@ -26,6 +26,7 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
@@ -294,7 +295,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 			// Re-sync the tile entity.
 			getTileEntity().markTileEntityForSynchronization();
-            getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
 			return true;
 		}
 
@@ -326,7 +326,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			}
 
 			getTileEntity().markTileEntityForSynchronization();
-	        getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
+			getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
 			return output;
 		}
 		return ItemStack.EMPTY;
@@ -574,6 +574,17 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// Deserialize the attachments.
 		for (int i = 0; i < attachments.length; i++) {
 			CompoundNBT itemNbt = nbt.getCompound("attachment" + i);
+			ItemStack incomingAttachment = ItemStack.read(itemNbt);
+
+			// If the attachments have changed on the server, just check for the lights to
+			// be safe (digistore lights for example). TO-DO Watch the performance of this.
+			if (!ItemUtilities.areItemStacksStackable(incomingAttachment, attachments[i])) {
+				if(getWorld() != null) {
+					getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
+				}	
+			}
+
+			// Update the local attachment.
 			attachments[i] = ItemStack.read(itemNbt);
 		}
 

@@ -18,7 +18,6 @@ import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
-import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment {
@@ -62,7 +61,7 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+	public long getPowerUsage(ItemStack attachment) {
 		return 1000;
 	}
 

@@ -56,6 +56,19 @@ public class StaticPowerTierCopper extends StaticPowerTier {
 		return 100;
 	}
 
+	protected double getHammerSwingSpeed() {
+		return -3;
+
+	}
+
+	protected double getHammerDamage() {
+		return 6;
+	}
+
+	protected int getHammerCooldown() {
+		return 40;
+	}
+
 	@Override
 	protected int getWireCutterUses() {
 		return 100;

@@ -156,6 +156,19 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 		return Integer.MAX_VALUE;
 	}
 
+	protected double getHammerSwingSpeed() {
+		return 0;
+
+	}
+
+	protected double getHammerDamage() {
+		return 10;
+	}
+
+	protected int getHammerCooldown() {
+		return 1;
+	}
+
 	@Override
 	protected int getWireCutterUses() {
 		return Integer.MAX_VALUE;

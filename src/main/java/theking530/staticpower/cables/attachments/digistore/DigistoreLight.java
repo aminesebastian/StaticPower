@@ -26,7 +26,7 @@ public class DigistoreLight extends DigistoreScreen {
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+	public long getPowerUsage(ItemStack attachment) {
 		return 500;
 	}
 

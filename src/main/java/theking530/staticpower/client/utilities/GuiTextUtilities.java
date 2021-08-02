@@ -261,7 +261,7 @@ public class GuiTextUtilities {
 	}
 
 	public static IFormattableTextComponent formatNumberAsStringNoDecimal(double number) {
-		return new StringTextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(number));
+		return new StringTextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number));
 	}
 
 	public static IFormattableTextComponent formatNumberAsStringOneDecimal(double number) {

@@ -241,8 +241,10 @@ public class StaticPowerForgeEventRegistry {
 	public static void onPlayerLeftClick(LeftClickBlock event) {
 		if (event.getPlayer().getHeldItemMainhand().getItem() instanceof Hammer) {
 			Hammer hammer = (Hammer) event.getPlayer().getHeldItemMainhand().getItem();
-			if (hammer.onHitBlockLeftClick(event.getItemStack(), event.getPlayer(), event.getPos(), event.getFace())) {
-				event.setCanceled(true);
+			if (!event.getPlayer().getCooldownTracker().hasCooldown(hammer)) {
+				if (hammer.onHitBlockLeftClick(event.getItemStack(), event.getPlayer(), event.getPos(), event.getFace())) {
+					event.setCanceled(true);
+				}
 			}
 		}
 	}

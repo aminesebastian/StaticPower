@@ -55,6 +55,6 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 				return 15;
 			}
 		}
-		return super.getLightValue(state, world, pos);
+		return 0;
 	}
 }

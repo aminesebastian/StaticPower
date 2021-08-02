@@ -26,6 +26,19 @@ public class StaticPowerTierZinc extends StaticPowerTier {
 		return 300;
 	}
 
+	protected double getHammerSwingSpeed() {
+		return -3;
+
+	}
+
+	protected double getHammerDamage() {
+		return 4;
+	}
+
+	protected int getHammerCooldown() {
+		return 50;
+	}
+
 	@Override
 	protected int getWireCutterUses() {
 		return 300;

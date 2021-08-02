@@ -69,13 +69,17 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	@Override
 	public boolean isValid(RecipeMatchParameters matchParams) {
 		// Check blocks.
-		if (isBlockType() && matchParams.shouldVerifyBlocks() && matchParams.hasBlocks()) {
-			return blockTag.contains(matchParams.getBlocks()[0].getBlock());
-		} else if (inputItem != null && matchParams.shouldVerifyItems() && matchParams.hasItems()) {
-			return inputItem.test(matchParams.getItems()[0]);
+		if (isBlockType()) {
+			if (matchParams.shouldVerifyBlocks() && matchParams.hasBlocks()) {
+				return blockTag.contains(matchParams.getBlocks()[0].getBlock());
+			}
+		} else {
+			if (matchParams.shouldVerifyItems() && matchParams.hasItems()) {
+				return inputItem.test(matchParams.getItems()[0]);
+			}
 		}
 
-		return true;
+		return false;
 	}
 
 	@Override

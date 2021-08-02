@@ -14,7 +14,6 @@ import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
-import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachment {
@@ -40,7 +39,7 @@ public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachme
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment, DigistoreCableProviderComponent cableComponent) {
+	public long getPowerUsage(ItemStack attachment) {
 		return 1000;
 	}
 
