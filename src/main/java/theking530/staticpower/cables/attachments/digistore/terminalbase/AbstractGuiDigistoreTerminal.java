@@ -8,7 +8,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocus.Mode;
-import mezz.jei.config.KeyBindings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -297,25 +298,27 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 	@Override
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
-		if (!super.keyPressed(key, scanCode, modifiers)) {
-			// Update the fake items slots.
-			for (DigistoreSlotButton slot : fakeContainerSlots) {
-				if (slot.isEnabled() && slot.isHovered()) {
-					// Get the stack represented by the fake slot.
-					ItemStack buttonStack = slot.getItemStack();
+		// Update the fake items slots.
+		for (DigistoreSlotButton slot : fakeContainerSlots) {
+			if (slot.isEnabled() && slot.isHovered()) {
+				// Get the stack represented by the fake slot.
+				ItemStack buttonStack = slot.getItemStack();
 
-					// Do a little extra work here to support JEI lookups.
-					if (KeyBindings.showRecipe.getKey().getKeyCode() == key) {
-						if (!buttonStack.isEmpty()) {
-							IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.OUTPUT, buttonStack);
-							PluginJEI.RUNTIME.getRecipesGui().show(focus);
-							return true;
-						}
-					} else if (KeyBindings.showUses.getKey().getKeyCode() == key) {
-						if (!buttonStack.isEmpty()) {
-							IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.INPUT, buttonStack);
-							PluginJEI.RUNTIME.getRecipesGui().show(focus);
-							return true;
+				// Do a little extra work here to support JEI lookups.
+				for (KeyBinding binding : Minecraft.getInstance().gameSettings.keyBindings) {
+					if (binding.getKey().getKeyCode() == key) {
+						if (binding.getKeyDescription() == "key.jei.showRecipe") {
+							if (!buttonStack.isEmpty()) {
+								IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.OUTPUT, buttonStack);
+								PluginJEI.RUNTIME.getRecipesGui().show(focus);
+								return true;
+							}
+						} else if (binding.getKeyDescription() == "key.jei.showUses") {
+							if (!buttonStack.isEmpty()) {
+								IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.INPUT, buttonStack);
+								PluginJEI.RUNTIME.getRecipesGui().show(focus);
+								return true;
+							}
 						}
 					}
 				}
@@ -323,7 +326,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		}
 
 		// Return false (same as the super).
-		return true;
+		return super.keyPressed(key, scanCode, modifiers);
 	}
 
 	public int getItemsPerRow() {

@@ -131,8 +131,6 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 				}
 			}
 		}
-		// Sync the tile entity.
-		getTileEntity().markTileEntityForSynchronization();
 	}
 
 	/**
@@ -170,8 +168,6 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 				}
 			}
 		}
-		// Sync the tile entity.
-		getTileEntity().markTileEntityForSynchronization();
 	}
 
 	/**

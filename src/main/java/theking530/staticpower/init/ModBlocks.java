@@ -79,6 +79,7 @@ import theking530.staticpower.tileentities.powered.mixer.BlockMixer;
 import theking530.staticpower.tileentities.powered.packager.BlockPackager;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
+import theking530.staticpower.tileentities.powered.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
@@ -315,6 +316,9 @@ public class ModBlocks {
 	public static BlockBattery BatteryEnergized;
 	public static BlockBattery BatteryLumum;
 	public static BlockBattery BatteryCreative;
+
+	// Monitors
+	public static BlockPowerMonitor PowerMonitor;
 
 	// Rubber Tree
 	public static StaticPowerTreeLog RubberTreeWood;
@@ -580,6 +584,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BatteryEnergized = new BlockBattery("battery_block_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(BatteryLumum = new BlockBattery("battery_block_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(BatteryCreative = new BlockBattery("battery_block_creative", StaticPowerTiers.CREATIVE));
+
+		StaticPowerRegistry.preRegisterBlock(PowerMonitor = new BlockPowerMonitor("power_monitor"));
 
 		StaticPowerRegistry
 				.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_WOOD)));

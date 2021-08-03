@@ -27,6 +27,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
@@ -63,7 +64,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
-					getTileEntity().markTileEntityForSynchronization();
+					getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(), false);
 				}
 
 				// Update the on/off state of the block.
@@ -93,14 +94,21 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@Override
 	public ItemStack removeAttachment(Direction side) {
 		ItemStack superResult = super.removeAttachment(side);
-		updatePowerUsage();
+		if (!getWorld().isRemote) {
+			updatePowerUsage();
+		}
 		return superResult;
 	}
 
 	public void updatePowerUsage() {
 		// Update the power usage on the server.
-		if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
-			updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
+		if (!getWorld().isRemote()) {
+			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
+				updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
+			}
+		} else {
+			StaticPower.LOGGER
+					.warn(String.format("Updating the power usage should only be performed on the server! A call from the client was made at position: %1$s.", getPos().toString()));
 		}
 	}
 

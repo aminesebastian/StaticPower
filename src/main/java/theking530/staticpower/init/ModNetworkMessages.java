@@ -42,6 +42,7 @@ import theking530.staticpower.tileentities.nonpowered.solderingtable.PacketSyncS
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
 import theking530.staticpower.tileentities.powered.packager.PacketPackagerSizeChange;
+import theking530.staticpower.tileentities.powered.powermonitor.PacketPowerMonitorSync;
 
 public class ModNetworkMessages {
 	public static void init() {
@@ -87,5 +88,7 @@ public class ModNetworkMessages {
 
 		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreInventory.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreFakeSlotClicked.class);
+		
+		StaticPowerMessageHandler.registerMessage(PacketPowerMonitorSync.class);
 	}
 }

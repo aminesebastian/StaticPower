@@ -139,7 +139,6 @@ public class TileEntityTurbine extends TileEntityMachine {
 						if (!isGenerating) {
 							isGenerating = true;
 							generatingSoundComponent.startPlayingSound(SoundEvents.BLOCK_BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundCategory.BLOCKS, 2.0f, 1.5f, getPos(), 32);
-							markTileEntityForSynchronization();
 						}
 
 						// Draw the input and fill the output.
@@ -162,7 +161,6 @@ public class TileEntityTurbine extends TileEntityMachine {
 			if (!generated && isGenerating) {
 				isGenerating = false;
 				generatingSoundComponent.stopPlayingSound();
-				markTileEntityForSynchronization();
 			}
 
 			// Perform the fluid suck from below.

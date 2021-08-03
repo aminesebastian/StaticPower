@@ -64,7 +64,6 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 			// Play a sound and synchronize if there were any experience filled.
 			if (filled > 0) {
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.15F, (RANDOM.nextFloat() + 1) / 2);
-				markTileEntityForSynchronization();
 			}
 		}
 	}

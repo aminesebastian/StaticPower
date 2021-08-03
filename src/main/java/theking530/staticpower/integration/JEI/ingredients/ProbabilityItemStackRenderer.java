@@ -74,7 +74,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			if (ingredient.getAdditionalBonus() > 0) {
 				ITextComponent bonus = new TranslationTextComponent("gui.staticpower.bonus_output").mergeStyle(TextFormatting.GREEN).appendString(": ")
 						.appendString(TextFormatting.GOLD.toString() + String.valueOf(ingredient.getAdditionalBonus()) + TextFormatting.GRAY.toString() + TextFormatting.ITALIC.toString()
-								+ " (" + GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100) + "%)");
+								+ " (" + GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100).getString() + "%)");
 				tooltip.add(bonus);
 			}
 

@@ -138,8 +138,6 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 
 		// Use the heat.
 		heatStorage.getStorage().heat(recipe.getHeatGeneration(), false);
-
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

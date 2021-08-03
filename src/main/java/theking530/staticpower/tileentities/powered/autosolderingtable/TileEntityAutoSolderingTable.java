@@ -114,8 +114,6 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 					}
 				}
 			}
-
-			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.error("ERROR");

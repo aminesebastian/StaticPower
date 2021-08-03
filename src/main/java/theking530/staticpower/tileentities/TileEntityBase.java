@@ -5,7 +5,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import java.util.Random;
 
 import javax.annotation.Nonnull;
@@ -40,13 +42,16 @@ import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticpower.StaticPower;
+import theking530.staticpower.network.NetworkMessage;
+import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -67,18 +72,13 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	private final List<Field> saveSerializeableFields;
 	private final List<Field> updateSerializeableFields;
 	private boolean hasPostInitRun;
-
-	/**
-	 * If true, on the next tick, the tile entity will be synced using the methods
-	 * {@link #serializeUpdateNbt(CompoundNBT)} and
-	 * {@link #deserializeUpdateNbt(CompoundNBT)}.
-	 */
-	private boolean updateQueued;
+	private Queue<TileEntityUpdateRequest> updateRequestQueue;
+	private boolean shouldMarkDirty;
 
 	public TileEntityBase(TileEntityTypeAllocator<? extends TileEntity> allocator) {
 		super(allocator.getType());
 		components = new LinkedHashMap<String, AbstractTileEntityComponent>();
-		updateQueued = false;
+		updateRequestQueue = new LinkedList<TileEntityUpdateRequest>();
 		isValid = true;
 		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
@@ -124,12 +124,40 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		process();
 
 		// If an update is queued, perform the update.
-		if (updateQueued) {
-			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2, 512);
-			if (world.isRemote) {
-				ModelDataManager.requestModelDataRefresh(this);
+		if (updateRequestQueue.size() > 0) {
+			// Debug the update.
+			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getPos().toString(), getWorld().getBlockState(getPos()),
+					updateRequestQueue.size()));
+
+			// Calculate the flag to use.
+			int flags = 0;
+			boolean shouldSync = false;
+			while (!updateRequestQueue.isEmpty()) {
+				TileEntityUpdateRequest request = updateRequestQueue.poll();
+				flags |= request.getFlags();
+				if (request.syncData()) {
+					shouldSync = true;
+				}
 			}
-			updateQueued = false;
+
+			requestModelDataUpdate();
+
+			// Perform the block update.
+			if (flags > 0) {
+				world.markAndNotifyBlock(pos, world.getChunkAt(pos), getBlockState(), getBlockState(), flags, 512);
+			}
+
+			// Perform a data sync if requested.
+			if (shouldSync && !getWorld().isRemote()) {
+				NetworkMessage msg = new TileEntityBasicSyncPacket(this);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 100, msg);
+			}
+
+			// If we also want to mark dirty, do so.
+			if (shouldMarkDirty) {
+				shouldMarkDirty = false;
+				markDirty();
+			}
 		}
 
 		// Post process all the components
@@ -179,13 +207,11 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	}
 
-	public void markTileEntityForSynchronization() {
-		updateQueued = true;
-		markDirty();
-	}
-
-	public void refreshRenderState() {
-		getWorld().notifyBlockUpdate(getPos(), getWorld().getBlockState(getPos()), getWorld().getBlockState(getPos()), BlockFlags.DEFAULT_AND_RERENDER);
+	public void addUpdateRequest(TileEntityUpdateRequest request, boolean markDirty) {
+		this.updateRequestQueue.add(request);
+		if (markDirty) {
+			shouldMarkDirty = true;
+		}
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
@@ -625,7 +651,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		if (hasPostInitRun) {
 			deserializeUpdateNbt(pkt.getNbtCompound(), true);
 		}
-		markTileEntityForSynchronization();
+		
+		// Call mark and notify locally.
+		getWorld().markAndNotifyBlock(getPos(), getWorld().getChunkAt(getPos()), getBlockState(), getBlockState(), BlockFlags.DEFAULT_AND_RERENDER, 512);
 	}
 
 	/**

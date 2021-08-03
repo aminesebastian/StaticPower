@@ -8,6 +8,7 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 /**
@@ -63,7 +64,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 * @return The mode that block side is set to.
 	 */
 	public MachineSideMode getWorldSpaceDirectionConfiguration(@Nonnull Direction facing) {
-		if(facing == null) {
+		if (facing == null) {
 			return MachineSideMode.Disabled;
 		}
 		return configuration[facing.ordinal()];
@@ -77,7 +78,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 */
 	public void setWorldSpaceDirectionConfiguration(@Nonnull Direction facing, @Nonnull MachineSideMode newMode) {
 		configuration[facing.ordinal()] = newMode;
-		getTileEntity().markTileEntityForSynchronization();
+		getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		callback.accept(facing, newMode);
 	}
 
@@ -86,7 +87,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 			throw new RuntimeException("Attempted to update the world space side configuration with an array that was not of length 6.");
 		}
 		configuration = modes;
-		getTileEntity().markTileEntityForSynchronization();
+		getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		callback.accept(null, null);
 	}
 
@@ -133,7 +134,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 			configuration[side.ordinal()] = newMode;
 		} while (!sideModeFilter.test(side, newMode) && newMode != originalMode);
 
-		getTileEntity().markTileEntityForSynchronization();
+		getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 
 		// Finally, raise the changed callback.
 		callback.accept(side, newMode);
@@ -154,8 +155,12 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 			configuration[i] = defaultConfiguration[i];
 			if (!suppressEvent) {
 				callback.accept(Direction.values()[i], defaultConfiguration[i]);
-				getTileEntity().markTileEntityForSynchronization();
 			}
+		}
+
+		// If we're not suspending the event, perform a block update.
+		if (!suppressEvent) {
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		}
 	}
 

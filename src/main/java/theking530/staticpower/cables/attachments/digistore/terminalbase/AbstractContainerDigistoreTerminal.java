@@ -128,15 +128,24 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 			onManagerStateChanged(managerPresentLastState);
 		}
 
-		// Sync the snapshots.
-		getDigistoreNetwork().ifPresent((network) -> {
-			DigistoreInventorySnapshot snapshot = network.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
-			for (IContainerListener listener : this.listeners) {
-				if (listener instanceof ServerPlayerEntity) {
-					this.syncContentsToClient(snapshot);
+		// Sync the snapshots. Only do this on the server. This check shouldn't be
+		// required but vanilla has a bug. Only do so if the inventory actually changed.
+		if (!getPlayerInventory().player.getEntityWorld().isRemote()) {
+			getDigistoreNetwork().ifPresent((network) -> {
+				// Hold on to the old inventory and get a new snapshot.
+				DigistoreInventorySnapshot oldSnapshot = clientInventory;
+				clientInventory = network.getNetworkInventorySnapshotForDisplay(filter, sortType, sortDescending);
+
+				// Only do the following if the inventory has changed.
+				if (!clientInventory.equals(oldSnapshot)) {
+					for (IContainerListener listener : this.listeners) {
+						if (listener instanceof ServerPlayerEntity) {
+							syncContentsToClient(clientInventory, (ServerPlayerEntity) listener);
+						}
+					}
 				}
-			}
-		});
+			});
+		}
 
 		// Because of the way the shift click goes between a slot and a fake slot, we
 		// have to manually do this.
@@ -192,7 +201,18 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 				// If the player is holding an item, attempt to insert it.
 				// Otherwise, attempt to extract items/trigger a crafting job.
 				if (!getPlayerInventory().getItemStack().isEmpty()) {
-					getPlayerInventory().setItemStack(network.insertItem(getPlayerInventory().getItemStack(), false));
+					// Get the item to insert. When right clicking, only insert a single item.
+					ItemStack stackToInsert = getPlayerInventory().getItemStack().copy();
+					if (button == MouseButton.RIGHT) {
+						stackToInsert.setCount(1);
+					}
+
+					// Insert the item and capture the amount inserted.
+					ItemStack remaining = network.insertItem(stackToInsert, false);
+					int inserted = stackToInsert.getCount() - remaining.getCount();
+
+					// Update the player's held item.
+					getPlayerInventory().getItemStack().shrink(inserted);
 					((ServerPlayerEntity) (getPlayerInventory().player)).updateHeldItem();
 				} else if (!stack.isEmpty()) {
 					// Get its craftable state.
@@ -320,9 +340,10 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		return managerPresentLastState;
 	}
 
-	public void syncContentsToClient(DigistoreInventorySnapshot digistoreInv) {
-		StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) getPlayerInventory().player,
-				new PacketSyncDigistoreInventory(windowId, digistoreInv));
+	public void syncContentsToClient(DigistoreInventorySnapshot digistoreInv, ServerPlayerEntity player) {
+		if (!player.getEntityWorld().isRemote()) {
+			StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, player, new PacketSyncDigistoreInventory(windowId, digistoreInv));
+		}
 	}
 
 	public void syncContentsFromServer(DigistoreInventorySnapshot snapshot) {

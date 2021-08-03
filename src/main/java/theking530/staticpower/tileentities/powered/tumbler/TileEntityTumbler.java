@@ -114,7 +114,6 @@ public class TileEntityTumbler extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -140,7 +139,6 @@ public class TileEntityTumbler extends TileEntityMachine {
 
 		InventoryUtilities.clearInventory(internalInventory);
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

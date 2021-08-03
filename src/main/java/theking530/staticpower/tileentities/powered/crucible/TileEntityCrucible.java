@@ -141,7 +141,6 @@ public class TileEntityCrucible extends TileEntityMachine {
 
 		// Transfer the items to the internal inventory.
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -182,7 +181,6 @@ public class TileEntityCrucible extends TileEntityMachine {
 
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

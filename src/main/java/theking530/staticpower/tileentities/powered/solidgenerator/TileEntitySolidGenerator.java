@@ -109,7 +109,6 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		}
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
 		processingComponent.setMaxProcessingTime(recipe.getFuelAmount());
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -122,7 +121,6 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	protected ProcessingCheckState processingCompleted(SolidFuelRecipe recipe) {
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

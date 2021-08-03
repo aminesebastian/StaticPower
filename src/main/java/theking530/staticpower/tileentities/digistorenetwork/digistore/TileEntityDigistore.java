@@ -31,6 +31,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigist
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
@@ -88,7 +89,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 						world.playSound(null, pos, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 0.1f, 1.8f);
 						world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
-						markTileEntityForSynchronization();
+						addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 						return ActionResultType.SUCCESS;
 					}
 				} else {
@@ -99,7 +100,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 					if (initialCount != remaining.getCount()) {
 						world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
-						markTileEntityForSynchronization();
+						addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 						return ActionResultType.SUCCESS;
 					} else {
 						return ActionResultType.PASS;
@@ -131,7 +132,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 				if (itemInserted) {
 					world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 1.0f, 1.0f);
-					markTileEntityForSynchronization();
+					addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 					return ActionResultType.SUCCESS;
 				}
 			}

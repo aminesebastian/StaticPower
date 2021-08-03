@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 
 /**
@@ -145,7 +146,7 @@ public abstract class AbstractTileEntityComponent {
 	public void setEnabled(boolean isEnabled) {
 		if (this.isEnabled != isEnabled) {
 			this.isEnabled = isEnabled;
-			getTileEntity().markTileEntityForSynchronization();
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(), true);
 			getTileEntity().markDirty();
 		}
 	}

@@ -8,6 +8,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.items.DigistoreCard;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
@@ -214,6 +215,11 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 	}
 
 	public void onChanged() {
-		getTileEntity().markTileEntityForSynchronization();
+		// We do this only to sync the mono card render bar.
+		if (getWorld().isRemote()) {
+			getTileEntity().requestModelDataUpdate();
+		} else {
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(), true);
+		}
 	}
 }

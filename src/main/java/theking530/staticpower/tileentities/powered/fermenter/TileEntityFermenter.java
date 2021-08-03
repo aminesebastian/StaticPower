@@ -119,7 +119,6 @@ public class TileEntityFermenter extends TileEntityMachine {
 
 		int slot = getSlotToProccess();
 		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, slot, internalInventory, 0);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -140,7 +139,6 @@ public class TileEntityFermenter extends TileEntityMachine {
 		fluidTankComponent.fill(recipe.getOutputFluidStack(), FluidAction.EXECUTE);
 		outputInventory.insertItem(0, new ItemStack(ModItems.DistilleryGrain), false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

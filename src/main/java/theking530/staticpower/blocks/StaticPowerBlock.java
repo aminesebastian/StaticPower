@@ -199,6 +199,10 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 
 	}
 
+	public void onStaticPowerObservedNeighborChange(BlockState observerState, World world, BlockPos observerPos, Block changedBlock, BlockPos changedBlockPos) {
+
+	}
+
 	// ***********//
 	// Overrides //
 	// ***********//
@@ -334,5 +338,11 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IBloc
 			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
 		}
 		onStaticPowerNeighborChanged(state, world, pos, fromPos, isMoving);
+	}
+
+	@Override
+	public void observedNeighborChange(BlockState observerState, World world, BlockPos observerPos, Block changedBlock, BlockPos changedBlockPos) {
+		super.observedNeighborChange(observerState, world, observerPos, changedBlock, changedBlockPos);
+		onStaticPowerObservedNeighborChange(observerState, world, observerPos, changedBlock, changedBlockPos);
 	}
 }

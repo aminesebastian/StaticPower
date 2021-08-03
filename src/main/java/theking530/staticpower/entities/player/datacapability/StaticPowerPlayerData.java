@@ -18,11 +18,13 @@ public class StaticPowerPlayerData implements IStaticPowerPlayerData, INBTSerial
 
 	@Override
 	public void addToCraftingHistory(ItemStack crafting, IInventory craftMatrix) {
-		ItemStack[] recipe = new ItemStack[craftMatrix.getSizeInventory()];
-		for (int i = 0; i < recipe.length; i++) {
-			recipe[i] = craftMatrix.getStackInSlot(i).copy();
+		if (craftMatrix != null) {
+			ItemStack[] recipe = new ItemStack[craftMatrix.getSizeInventory()];
+			for (int i = 0; i < recipe.length; i++) {
+				recipe[i] = craftMatrix.getStackInSlot(i).copy();
+			}
+			craftingHistory.addCraft(recipe, crafting.copy());
 		}
-		craftingHistory.addCraft(recipe, crafting.copy());
 	}
 
 	public List<DigistoreCraftingTerminalHistoryEntry> getCraftingHistory() {

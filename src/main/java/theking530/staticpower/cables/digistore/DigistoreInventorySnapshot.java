@@ -3,10 +3,8 @@ package theking530.staticpower.cables.digistore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Nullable;
 
@@ -38,7 +36,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public static final DigistoreInventorySnapshot EMPTY = new DigistoreInventorySnapshot();
 	private final List<ItemStack> stacks;
-	private final Map<ItemStack, List<EncodedDigistorePattern>> craftingItemPatterns;
+	private final List<CachedCraftingRecipe> craftingItemPatterns;
 	private final String filterString;
 	private final DigistoreInventorySortType sortType;
 	private final boolean sortDescending;
@@ -51,6 +49,58 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	private int usedTypes;
 	private int maxTypes;
 	private DigistoreNetworkModule module;
+
+	@Override
+	public boolean equals(Object other) {
+		if (!(other instanceof DigistoreInventorySnapshot)) {
+			return false;
+		}
+
+		DigistoreInventorySnapshot snapshot = (DigistoreInventorySnapshot) other;
+
+		// Check inventory sizes.
+		if (stacks.size() != snapshot.stacks.size()) {
+			return false;
+		}
+
+		// Check crafting pattern sizes.
+		if (craftingItemPatterns.size() != snapshot.craftingItemPatterns.size()) {
+			return false;
+		}
+
+		// Check crafting patterns.
+		for (int i = 0; i < craftingItemPatterns.size(); i++) {
+			if (!craftingItemPatterns.get(i).equals(snapshot.craftingItemPatterns.get(i))) {
+				return false;
+			}
+		}
+
+		// Check filtering types.
+		if (sortType != snapshot.sortType) {
+			return false;
+		}
+		if (filterString != snapshot.filterString) {
+			return false;
+		}
+		if (sortDescending != snapshot.sortDescending) {
+			return false;
+		}
+		if (simulated != snapshot.simulated) {
+			return false;
+		}
+
+		// Check inventory.
+		for (int i = 0; i < stacks.size(); i++) {
+			if (!ItemUtilities.areItemStacksStackable(stacks.get(i), snapshot.stacks.get(i))) {
+				return false;
+			} else if (stacks.get(i).getCount() != snapshot.stacks.get(i).getCount()) {
+				return false;
+			}
+		}
+
+		// If we made it this far, return true.
+		return true;
+	}
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
 		this(module, filter, sortType, sortDescending, true);
@@ -65,7 +115,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		}
 
 		// But just add references to the recipes.
-		craftingItemPatterns.putAll(otherSnapshot.craftingItemPatterns);
+		craftingItemPatterns.addAll(otherSnapshot.craftingItemPatterns);
 	}
 
 	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending, boolean simulated) {
@@ -75,7 +125,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		this.simulated = simulated;
 		stacks = new ArrayList<ItemStack>();
 		filterString = filter.toLowerCase();
-		craftingItemPatterns = new HashMap<ItemStack, List<EncodedDigistorePattern>>();
+		craftingItemPatterns = new ArrayList<CachedCraftingRecipe>();
 
 		// Perform an initial update when first created.
 		if (module != null) {
@@ -273,22 +323,22 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public List<EncodedDigistorePattern> getAllPatternsForIngredient(Ingredient ingredient) {
 		List<EncodedDigistorePattern> output = new ArrayList<EncodedDigistorePattern>();
-		for (ItemStack key : craftingItemPatterns.keySet()) {
-			if (ingredient.test(key)) {
-				output.addAll(craftingItemPatterns.get(key));
+		for (CachedCraftingRecipe cache : craftingItemPatterns) {
+			if (ingredient.test(cache.item)) {
+				output.addAll(cache.recipes);
 			}
 		}
 		return output;
 	}
 
 	public List<EncodedDigistorePattern> getAllPatternsForItem(ItemStack item) {
-		for (ItemStack key : craftingItemPatterns.keySet()) {
-			if (ItemUtilities.areItemStacksStackable(key, item)) {
-				return craftingItemPatterns.get(key);
+		for (CachedCraftingRecipe cache : craftingItemPatterns) {
+			if (ItemUtilities.areItemStacksStackable(cache.item, item)) {
+				return cache.recipes;
 			} else {
 				for (ResourceLocation resource : item.getItem().getTags()) {
-					if (key.getItem().getTags().contains(resource)) {
-						return craftingItemPatterns.get(key);
+					if (cache.item.getItem().getTags().contains(resource)) {
+						return cache.recipes;
 					}
 				}
 			}
@@ -366,18 +416,18 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		// Check if we have already cached this item. If we already have cached this,
 		// just add this new pattern to the existing map entry.
 		boolean patternCached = false;
-		for (ItemStack key : craftingItemPatterns.keySet()) {
-			if (ItemUtilities.areItemStacksStackable(key, stackToCache)) {
-				craftingItemPatterns.get(key).add(pattern);
+		for (CachedCraftingRecipe cache : craftingItemPatterns) {
+			if (ItemUtilities.areItemStacksStackable(cache.item, stackToCache)) {
+				cache.recipes.add(pattern);
 				patternCached = true;
 			}
 		}
 
 		// Otherwise, create a new map entry.
 		if (!patternCached) {
-			LinkedList<EncodedDigistorePattern> patternList = new LinkedList<EncodedDigistorePattern>();
-			patternList.add(pattern);
-			craftingItemPatterns.put(stackToCache.copy(), patternList);
+			CachedCraftingRecipe newCache = new CachedCraftingRecipe(stackToCache.copy());
+			newCache.recipes.add(pattern);
+			craftingItemPatterns.add(newCache);
 		}
 
 		// Iterate through all the craftables to mark them with their craftable state.
@@ -511,5 +561,45 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public static DigistoreInventorySnapshot createEmpty() {
 		return new DigistoreInventorySnapshot();
+	}
+
+	public class CachedCraftingRecipe {
+		public ItemStack item;
+		public List<EncodedDigistorePattern> recipes;
+
+		public CachedCraftingRecipe(ItemStack item) {
+			this.item = item;
+			this.recipes = new LinkedList<EncodedDigistorePattern>();
+		}
+
+		@Override
+		public boolean equals(Object other) {
+			if (!(other instanceof CachedCraftingRecipe)) {
+				return false;
+			}
+
+			// Cast the object.
+			CachedCraftingRecipe recipe = (CachedCraftingRecipe) other;
+
+			// Check the items.
+			if (!ItemUtilities.areItemStacksStackable(item, recipe.item)) {
+				return false;
+			}
+
+			// Check the recipes.
+			if (recipes.size() != recipe.recipes.size()) {
+				return false;
+			}
+
+			// Check individual recipes.
+			for (int i = 0; i < recipes.size(); i++) {
+				if (!recipes.get(i).equals(recipe.recipes.get(i))) {
+					return false;
+				}
+			}
+
+			// If we made it this far, return true.
+			return true;
+		}
 	}
 }

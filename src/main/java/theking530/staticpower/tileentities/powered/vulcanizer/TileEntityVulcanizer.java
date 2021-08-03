@@ -112,7 +112,6 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -130,7 +129,6 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 
 		// Clear the processing stack.
 		currentProcessingFluidStack = FluidStack.EMPTY;
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

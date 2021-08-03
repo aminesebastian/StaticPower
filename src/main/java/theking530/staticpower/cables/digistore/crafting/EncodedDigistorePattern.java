@@ -207,6 +207,21 @@ public class EncodedDigistorePattern {
 				+ craftingRecipeId + ", isValid=" + isValid + "]";
 	}
 
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof EncodedDigistorePattern)) {
+			return false;
+		}
+
+		// We only need to check id here.
+		EncodedDigistorePattern pattern = (EncodedDigistorePattern) object;
+		if (id != pattern.id) {
+			return false;
+		}
+
+		return true;
+	}
+
 	public CompoundNBT serialize() {
 		// Create the pattern tag.
 		CompoundNBT pattern = new CompoundNBT();

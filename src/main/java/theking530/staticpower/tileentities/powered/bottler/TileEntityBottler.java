@@ -86,7 +86,7 @@ public class TileEntityBottler extends TileEntityMachine {
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
 				.setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
-		
+
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
 
@@ -131,7 +131,6 @@ public class TileEntityBottler extends TileEntityMachine {
 			}
 
 			// Trigger a block update.
-			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.skip();
@@ -187,7 +186,6 @@ public class TileEntityBottler extends TileEntityMachine {
 
 			// Clear the internal inventory.
 			internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-			markTileEntityForSynchronization();
 		}
 		return ProcessingCheckState.ok();
 	}

@@ -246,6 +246,8 @@ public class StaticPowerRecipeRegistry {
 						fluid.getAttributes().getDisplayName(fluidStack).getString()));
 			}
 		}
+		// Log the completion.
+		LOGGER.info("Succesfully cached dynamic bottler recipes!");
 	}
 
 	public static void cachePackagerRecipes(RecipeManager manager, @Nullable World world) {
@@ -285,7 +287,9 @@ public class StaticPowerRecipeRegistry {
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
-				StaticPower.LOGGER.error("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
+				StaticPower.LOGGER.error(
+						"An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported. Check the debug log for more details.");
+				StaticPower.LOGGER.debug("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
 			}
 
 			try {
@@ -300,8 +304,12 @@ public class StaticPowerRecipeRegistry {
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
-				StaticPower.LOGGER.error("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
+				StaticPower.LOGGER.error(
+						"An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported. Check the debug log for more details.");
+				StaticPower.LOGGER.debug("An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
 			}
 		}
+		// Log the completion.
+		LOGGER.info("Succesfully cached packager recipes!");
 	}
 }

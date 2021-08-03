@@ -410,7 +410,6 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			}
 		}
 		refreshBlocksInRange(range);
-		markTileEntityForSynchronization();
 
 		// Refresh the preview if it is currently begin drawn.
 		if (getShouldDrawRadiusPreview()) {

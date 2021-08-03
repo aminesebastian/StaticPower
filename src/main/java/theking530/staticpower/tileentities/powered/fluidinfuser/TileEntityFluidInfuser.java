@@ -116,7 +116,6 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -137,7 +136,6 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 
 		// Clear the internal inventory.
 		InventoryUtilities.clearInventory(internalInventory);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

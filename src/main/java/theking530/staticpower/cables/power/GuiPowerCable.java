@@ -49,6 +49,9 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 	public void updateData() {
 		// Get the metrics.
 		TransferMetrics metrics = getMetrics();
+		if(metrics == null) {
+			return;
+		}
 
 		// Allocate the metrics containers.
 		List<Double> receivedData = new ArrayList<Double>();

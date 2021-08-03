@@ -141,8 +141,6 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 		// Use the heat.
 		heatStorage.getStorage().cool(DEFAULT_EVAPORATION_HEAT, false);
-
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

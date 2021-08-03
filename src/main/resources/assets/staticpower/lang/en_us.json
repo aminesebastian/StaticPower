@@ -801,7 +801,7 @@
 	"gui.staticpower.pump_rate_format": "Pumps every %1$s seconds",
 	"gui.staticpower.cable_transfer_rate": "%1$d %2$s/s",
 	"gui.staticpower.max_transfer_rate": "Maximum Transfer Rate",
-	"gui.staticpower.max_power_rate": "Maximum Power Rate",
+	"gui.staticpower.power_cable_max_rate": "Maximum Power Rate",
 	"gui.staticpower.max_fluid_rate": "Maximum Fluid Rate",
 	"gui.staticpower.item_cable_acceleration": "Acceleration: %1$d%%",
 	"gui.staticpower.item_cable_friction": "Friction: -%1$d%%",

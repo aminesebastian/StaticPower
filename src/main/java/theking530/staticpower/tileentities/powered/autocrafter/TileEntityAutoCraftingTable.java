@@ -154,7 +154,6 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 				}
 			}
 
-			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.skip();

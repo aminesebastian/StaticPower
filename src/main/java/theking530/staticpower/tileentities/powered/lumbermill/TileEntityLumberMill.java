@@ -116,7 +116,6 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		this.processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -142,7 +141,6 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
