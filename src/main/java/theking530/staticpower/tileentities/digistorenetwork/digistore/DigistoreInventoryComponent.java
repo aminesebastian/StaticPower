@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
+import java.util.function.BiConsumer;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -8,12 +10,13 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.items.DigistoreCard;
-import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 
 public class DigistoreInventoryComponent extends InventoryComponent implements IDigistoreInventory {
+	private BiConsumer<InventoryChangeType, ItemStack> digistoreChangeCallback;
+
 	public DigistoreInventoryComponent(String name, int slotCount) {
 		super(name, slotCount, MachineSideMode.Regular);
 		setFilter(new ItemStackHandlerFilter() {
@@ -149,7 +152,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 
 		// Raise the onChanged method if the contents changed.
 		if (stack.getCount() != initialCount) {
-			onChanged();
+			onChanged(InventoryChangeType.ADDED, stack);
 		}
 
 		return stack;
@@ -176,7 +179,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 		}
 		// Raise the onChanged method if we were able to extract contents.
 		if (output.getCount() > 0) {
-			onChanged();
+			onChanged(InventoryChangeType.REMOVED, stack);
 		}
 		return output;
 	}
@@ -214,12 +217,14 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 		return (float) getTotalContainedCount() / (float) getItemCapacity();
 	}
 
-	public void onChanged() {
-		// We do this only to sync the mono card render bar.
-		if (getWorld().isRemote()) {
-			getTileEntity().requestModelDataUpdate();
-		} else {
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(), true);
+	public InventoryComponent setDigistoreModifiedCallback(BiConsumer<InventoryChangeType, ItemStack> callback) {
+		digistoreChangeCallback = callback;
+		return this;
+	}
+
+	public void onChanged(InventoryChangeType changeType, ItemStack stack) {
+		if (digistoreChangeCallback != null) {
+			digistoreChangeCallback.accept(changeType, stack);
 		}
 	}
 }

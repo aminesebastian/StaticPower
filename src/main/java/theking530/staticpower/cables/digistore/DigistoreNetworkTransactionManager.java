@@ -186,8 +186,10 @@ public class DigistoreNetworkTransactionManager {
 		// accept the item.
 		for (IDigistoreInventory digistore : digistores) {
 			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
-				if (!digistore.getDigistoreStack(i).isEmpty() && ItemUtilities.areItemStacksStackable(extractItem, digistore.getDigistoreStack(i).getStoredItem())) {
-					potentials.add(digistore);
+				if (!digistore.getDigistoreStack(i).isEmpty()) {
+					if (ItemUtilities.areItemStacksStackable(extractItem, digistore.getDigistoreStack(i).getStoredItem())) {
+						potentials.add(digistore);
+					}
 				}
 			}
 

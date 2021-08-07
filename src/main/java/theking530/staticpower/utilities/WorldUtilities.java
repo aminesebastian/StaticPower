@@ -280,8 +280,6 @@ public class WorldUtilities {
 			item = dropItem(worldIn, x, y, z, stack, count);
 		}
 
-		// Don't tell me why, but this helps make it NOT launch...go figure.
-		// item.setVelocity(100.0f, 0.0f, 0.0f);
 		return item;
 	}
 

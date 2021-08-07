@@ -134,10 +134,12 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		return ActionResultType.PASS;
 	}
 
-	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-
+	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+		if (worldIn != null && isBound(worldIn, stack)) {
+			tooltip.add(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
+					BlockPos.fromLong(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
+		}
 	}
 
 	public class WirelessDigistoreAccessContainerProvider implements INamedContainerProvider {

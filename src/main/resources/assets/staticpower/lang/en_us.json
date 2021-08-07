@@ -861,6 +861,7 @@
 	"gui.staticpower.io_bus_tooltip": "An importer and exporter all in one!",
 	"gui.staticpower.regulator_tooltip": "Keeps an inventory always  topped up to a specified amount!",
 	"gui.staticpower.crafting_interface_tooltip": "Give it recipes, watch it go! Attach to any machines and the machines become part of the digistore network.",
+	"gui.staticpower.digistore_wireless_terminal_advanced_tooltip": "Bound to terminal: %1$s",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox"
 }

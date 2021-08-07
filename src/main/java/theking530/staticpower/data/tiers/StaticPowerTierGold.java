@@ -48,6 +48,6 @@ public class StaticPowerTierGold extends StaticPowerTier {
 
 	@Override
 	protected int getHeatSinkElectricHeatPowerUsage() {
-		return 32;
+		return 16000;
 	}
 }

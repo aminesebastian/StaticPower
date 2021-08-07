@@ -146,7 +146,7 @@ public abstract class AbstractTileEntityComponent {
 	public void setEnabled(boolean isEnabled) {
 		if (this.isEnabled != isEnabled) {
 			this.isEnabled = isEnabled;
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(), true);
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), true);
 			getTileEntity().markDirty();
 		}
 	}

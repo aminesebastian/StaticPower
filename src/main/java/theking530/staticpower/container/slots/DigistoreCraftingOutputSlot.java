@@ -20,10 +20,10 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 	}
 
 	public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
-		// Get current recipe.
-		ItemStack[] currentMatrixContents = new ItemStack[9];
+		// Get current recipe and cache a copy.
+		ItemStack[] originalrecipe = new ItemStack[9];
 		for (int i = 0; i < craftMatrix.getSizeInventory(); i++) {
-			currentMatrixContents[i] = craftMatrix.getStackInSlot(i).copy();
+			originalrecipe[i] = craftMatrix.getStackInSlot(i).copy();
 		}
 
 		// Call the parent.
@@ -31,12 +31,8 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 
 		// On the client, set the items back to the original for a moment.
 		if (container.getCableComponent().getWorld().isRemote()) {
-			for (int i = 0; i < currentMatrixContents.length; i++) {
-				ItemStack originalStack = currentMatrixContents[i];
-				// Skip holes.
-				if (originalStack.isEmpty()) {
-					continue;
-				}
+			for (int i = 0; i < originalrecipe.length; i++) {
+				ItemStack originalStack = originalrecipe[i];
 
 				// Get the stack to put back into the slot.
 				ItemStack putBackStack = originalStack.copy();
@@ -49,8 +45,8 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 			}
 		} else {
 			// On the server, use the items and handle any container items.
-			for (int i = 0; i < currentMatrixContents.length; i++) {
-				ItemStack originalStack = currentMatrixContents[i];
+			for (int i = 0; i < originalrecipe.length; i++) {
+				ItemStack originalStack = originalrecipe[i];
 
 				// Skip holes.
 				if (originalStack.isEmpty()) {
@@ -76,7 +72,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 			container.getDigistoreNetwork().ifPresent(digistoreModule -> {
 				for (int i = 0; i < craftMatrix.getSizeInventory(); i++) {
 					// Get the original item
-					ItemStack originalItem = currentMatrixContents[i];
+					ItemStack originalItem = originalrecipe[i];
 
 					// Skip holes in the recipe.
 					if (originalItem.isEmpty()) {
@@ -101,8 +97,9 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 						// Pull a replacement item
 						ItemStack pulledItem = digistoreModule.extractItem(originalItem, 1, false);
 
-						// Extract the item and put it into the craft matrix if something was extracted.
-						if (!pulledItem.isEmpty()) {
+						// Extract the item and put it into the craft matrix if something was extracted
+						// and it won't somehow overflow the stack size.
+						if (!pulledItem.isEmpty() && craftMatrix.getStackInSlot(i).getCount() + pulledItem.getCount() < originalItem.getMaxStackSize()) {
 							if (craftMatrix.getStackInSlot(i).isEmpty()) {
 								craftMatrix.setInventorySlotContents(i, pulledItem);
 							} else {
@@ -113,8 +110,10 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 				}
 			});
 		}
+
+		// Raise the on created and on crafted methods.
 		stack.getItem().onCreated(stack, thePlayer.world, thePlayer);
-		container.onItemCrafted(currentMatrixContents, stack);
+		container.onItemCrafted(originalrecipe, stack);
 		return stack;
 	}
 }

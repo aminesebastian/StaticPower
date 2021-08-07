@@ -48,6 +48,6 @@ public class StaticPowerTierAluminium extends StaticPowerTier {
 
 	@Override
 	protected int getHeatSinkElectricHeatPowerUsage() {
-		return 1;
+		return 1000;
 	}
 }

@@ -41,10 +41,19 @@ import theking530.staticpower.utilities.WorldUtilities;
 public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
 	public final CableBoundsCache cableBoundsCache;
+	public final float coverHoleSize;
 
-	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator) {
+	/**
+	 * 
+	 * @param name
+	 * @param cableBoundsGenerator
+	 * @param coverHoleSize        The size of the hole to render in a cover when
+	 *                             this cable passes through a cover.
+	 */
+	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator, float coverHoleSize) {
 		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid().harvestTool(ToolType.PICKAXE).setRequiresTool());
 		cableBoundsCache = cableBoundsGenerator;
+		this.coverHoleSize = coverHoleSize;
 	}
 
 	@Override
@@ -55,13 +64,13 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	@Deprecated
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return cableBoundsCache.getShape(state, worldIn, pos, context);
+		return cableBoundsCache.getShape(state, worldIn, pos, context, false);
 	}
 
 	@Deprecated
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return cableBoundsCache.getShape(state, worldIn, pos, context);
+		return cableBoundsCache.getShape(state, worldIn, pos, context, true);
 	}
 
 	@Override
@@ -72,6 +81,11 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+
+	@Override
+	public boolean shouldHaveFacingProperty() {
+		return false;
 	}
 
 	@Override

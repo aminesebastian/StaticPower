@@ -132,15 +132,22 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			// Calculate the flag to use.
 			int flags = 0;
 			boolean shouldSync = false;
+			boolean renderOnDataSync = false;
 			while (!updateRequestQueue.isEmpty()) {
 				TileEntityUpdateRequest request = updateRequestQueue.poll();
 				flags |= request.getFlags();
-				if (request.syncData()) {
+				if (request.getShouldSyncData()) {
 					shouldSync = true;
+				}
+				if (request.getShouldRenderOnDataSync()) {
+					renderOnDataSync = true;
 				}
 			}
 
-			requestModelDataUpdate();
+			// Update the block rendering state.
+			if (getWorld().isRemote()) {
+				addRenderingUpdateRequest();
+			}
 
 			// Perform the block update.
 			if (flags > 0) {
@@ -149,7 +156,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 			// Perform a data sync if requested.
 			if (shouldSync && !getWorld().isRemote()) {
-				NetworkMessage msg = new TileEntityBasicSyncPacket(this);
+				NetworkMessage msg = new TileEntityBasicSyncPacket(this, renderOnDataSync);
 				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 100, msg);
 			}
 
@@ -211,6 +218,16 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		this.updateRequestQueue.add(request);
 		if (markDirty) {
 			shouldMarkDirty = true;
+		}
+	}
+
+	public void addRenderingUpdateRequest() {
+		if (getWorld().isRemote()) {
+			world.markAndNotifyBlock(pos, world.getChunkAt(pos), getBlockState(), getBlockState(), BlockFlags.BLOCK_UPDATE, 512);
+			requestModelDataUpdate();
+			StaticPower.LOGGER.debug(String.format("Executing rendering state update at position: %1$s.", getPos().toString()));
+		} else {
+			StaticPower.LOGGER.warn(String.format("Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.", getPos().toString()));
 		}
 	}
 
@@ -651,7 +668,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		if (hasPostInitRun) {
 			deserializeUpdateNbt(pkt.getNbtCompound(), true);
 		}
-		
+
 		// Call mark and notify locally.
 		getWorld().markAndNotifyBlock(getPos(), getWorld().getChunkAt(getPos()), getBlockState(), getBlockState(), BlockFlags.DEFAULT_AND_RERENDER, 512);
 	}

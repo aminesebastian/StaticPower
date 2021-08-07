@@ -275,7 +275,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			for (Direction dir : Direction.values()) {
 				AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), getPos().offset(dir));
 				if (otherProvider != null) {
-					otherProvider.getTileEntity().requestModelDataUpdate();
+					otherProvider.getTileEntity().addRenderingUpdateRequest();
 				}
 			}
 			StaticPower.LOGGER.debug(String.format("Performing cable rendering state update at position: %1$s and all adjacent cables.", getPos().toString()));
@@ -287,7 +287,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	public void updateRenderingStateForCable() {
 		// Only execute on the client.
 		if (getWorld().isRemote()) {
-			getTileEntity().requestModelDataUpdate();
+			getTileEntity().addRenderingUpdateRequest();
 			StaticPower.LOGGER.debug(String.format("Performing cable rendering state update at position: %1$s.", getPos().toString()));
 		} else {
 			StaticPower.LOGGER.warn(String.format("Calling #updateRenderingStateForCable() on the server is a no-op. Called at position: %1$s.", getPos().toString()));
@@ -335,11 +335,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 			// Re-sync the tile entity.
 			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
-
-			if (getWorld().isRemote()) {
-				updateRenderingStateForCable();
-			}
-
 			return true;
 		}
 
@@ -372,9 +367,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
-			if (getWorld().isRemote()) {
-				updateRenderingStateForCable();
-			}
 			return output;
 		}
 		return ItemStack.EMPTY;
@@ -404,9 +396,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			covers[side.ordinal()] = attachment.copy();
 			covers[side.ordinal()].setCount(1);
 
-			if (getWorld().isRemote()) {
-				updateRenderingStateForCable();
-			}
+			// Re-sync the tile entity.
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			return true;
 		}
 		return false;
@@ -427,9 +418,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 			// Remove the attachment and return it.
 			covers[side.ordinal()] = ItemStack.EMPTY;
-			if (getWorld().isRemote()) {
-				updateRenderingStateForCable();
-			}
+
+			// Re-sync the tile entity.
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			return output;
 		}
 		return ItemStack.EMPTY;

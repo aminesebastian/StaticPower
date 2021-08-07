@@ -34,7 +34,7 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.IPlantable;
-import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
+import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
 /**
  * Base class for a simple single block plant.
@@ -42,7 +42,7 @@ import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
  * @author Amine Sebastian
  *
  */
-public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable, IBlockRenderLayerProvider {
+public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable, IRenderLayerProvider {
 	public static final Logger LOGGER = LogManager.getLogger(BaseSimplePlant.class);
 
 	/**

@@ -41,6 +41,7 @@ import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
 import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends AbstractCableAttachmentContainer<T> {
 
@@ -191,11 +192,11 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		return ItemStack.EMPTY;
 	}
 
-	public void digistoreFakeSlotClickedOnClient(ItemStack stack, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
-		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreFakeSlotClicked(windowId, stack, button, shiftHeld, controlHeld, altHeld));
+	public void digistoreFakeSlotClickedOnClient(int slot, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreFakeSlotClicked(windowId, slot, button, shiftHeld, controlHeld, altHeld));
 	}
 
-	public void digistoreFakeSlotClickedOnServer(ItemStack stack, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
+	public void digistoreFakeSlotClickedOnServer(int slot, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
 		if (!getPlayerInventory().player.getEntityWorld().isRemote()) {
 			getDigistoreNetwork().ifPresent((network) -> {
 				// If the player is holding an item, attempt to insert it.
@@ -214,7 +215,18 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 					// Update the player's held item.
 					getPlayerInventory().getItemStack().shrink(inserted);
 					((ServerPlayerEntity) (getPlayerInventory().player)).updateHeldItem();
-				} else if (!stack.isEmpty()) {
+				} else {
+					// Get the clicked stack (if it event exists.
+					ItemStack stack = ItemStack.EMPTY;
+					if (slot >= 0 && slot < clientInventory.getSlots()) {
+						stack = clientInventory.getStackInSlot(slot);
+					}
+
+					// Stop if the stack is empty.
+					if (stack.isEmpty()) {
+						return;
+					}
+
 					// Get its craftable state.
 					DigistoreItemCraftableState itemCraftableState = DigistoreInventorySnapshot.getCraftableStateOfItem(stack);
 
@@ -241,42 +253,43 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 							buff.writeLong(network.getNetwork().getId());
 						});
 					} else {
-						// Get the amount of item to actually extract.
-						int extract = stack.getMaxStackSize();
-
-						// Simulate an extract to make sure we have the item on the server side and the
-						// correct number.
-						ItemStack adjustedStack = network.extractItem(stack, extract, true);
-
-						// If shift is held, add up to a whole stack to the player's inventory.
-						if (shiftHeld) {
-							// If we fail to do so, return early.
-							if (!getPlayerInventory().addItemStackToInventory(adjustedStack)) {
+						// If this is the left click without shift held or right mouse button, then
+						// we're going to set the player's inventory itemstack under the cursor.
+						if ((button == MouseButton.LEFT && !shiftHeld) || button == MouseButton.RIGHT) {
+							// Get the item (up to a full stack). If empty, return.
+							ItemStack simulatedStack = network.extractItem(stack, stack.getMaxStackSize(), true);
+							if (simulatedStack.isEmpty()) {
 								return;
 							}
-						} else if (button == MouseButton.MIDDLE) {
-							// If we're scrolling, just grab a single item.
-							extract = 1;
-							adjustedStack.setCount(extract);
 
-							// If we fail to do so, return early.
-							if (!getPlayerInventory().addItemStackToInventory(adjustedStack)) {
-								return;
-							}
-						} else {
-							// If the mouse button used was the right mouse button, split the stack.
+							// If this is the right mouse, the split the stack.
 							if (button == MouseButton.RIGHT) {
-								extract = adjustedStack.getCount() / 2;
-								adjustedStack.setCount(extract);
+								simulatedStack.setCount(Math.max(1, simulatedStack.getCount() / 2));
 							}
 
-							// Set the player's held item.
-							getPlayerInventory().setItemStack(adjustedStack);
+							// Then, set the held item after extracting.
+							getPlayerInventory().setItemStack(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
 							((ServerPlayerEntity) (getPlayerInventory().player)).updateHeldItem();
-						}
+						} else if (button == MouseButton.LEFT && shiftHeld) {
+							// Get the item (up to a full stack). If empty, return.
+							ItemStack simulatedStack = network.extractItem(stack, stack.getMaxStackSize(), true);
+							if (simulatedStack.isEmpty()) {
+								return;
+							}
 
-						// Extract the item for real now.
-						network.extractItem(stack, extract, false);
+							// Check if we can insert this stack into the player's inventory. Return if we
+							// inserted nothing.
+							ItemStack remaining = InventoryUtilities.simulatePlayerInventoryInsert(simulatedStack, getPlayerInventory());
+							if (remaining.getCount() == simulatedStack.getCount()) {
+								return;
+							}
+
+							// Update the simulated stack's size.
+							simulatedStack.setCount(simulatedStack.getCount() - remaining.getCount());
+
+							// Extract from the network into the player's inventory.
+							getPlayerInventory().addItemStackToInventory(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
+						}
 					}
 				}
 			});

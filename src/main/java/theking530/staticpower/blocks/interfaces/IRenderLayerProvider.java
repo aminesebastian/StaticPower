@@ -11,7 +11,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  * @author Amine Sebastian
  *
  */
-public interface IBlockRenderLayerProvider {
+public interface IRenderLayerProvider {
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType();
 }

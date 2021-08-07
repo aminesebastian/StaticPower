@@ -36,7 +36,7 @@ import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.utilities.ITooltipProvider;
-import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
+import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -48,7 +48,7 @@ import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerBlock extends Block implements IItemBlockProvider, IBlockRenderLayerProvider, IWrenchable, ITooltipProvider {
+public class StaticPowerBlock extends Block implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider {
 	/**
 	 * Facing property used by blocks that require keeping track of the direction
 	 * they face (does not have to be used).

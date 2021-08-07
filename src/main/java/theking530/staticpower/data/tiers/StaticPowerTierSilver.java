@@ -48,6 +48,6 @@ public class StaticPowerTierSilver extends StaticPowerTier {
 
 	@Override
 	protected int getHeatSinkElectricHeatPowerUsage() {
-		return 16;
+		return 8000;
 	}
 }

@@ -35,7 +35,7 @@ public class BlockPowerCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
 
 	public BlockPowerCable(String name, ResourceLocation tier) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)));
+		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
 		this.tier = tier;
 	}
 

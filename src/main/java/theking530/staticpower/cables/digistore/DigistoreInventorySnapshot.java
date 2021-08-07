@@ -251,7 +251,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				stacks.sort(new Comparator<ItemStack>() {
 					@Override
 					public int compare(ItemStack o1, ItemStack o2) {
-						return (o2.getCount() - o1.getCount()) * sortModifier;
+						int comparison = (o2.getCount() - o1.getCount()) * sortModifier;
+						return comparison != 0 ? comparison : (o1.getDisplayName().getString().compareToIgnoreCase(o2.getDisplayName().getString())) * sortModifier;
 					}
 				});
 			} else {

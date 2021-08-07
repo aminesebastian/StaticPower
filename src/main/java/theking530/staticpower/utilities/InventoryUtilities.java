@@ -35,15 +35,15 @@ public class InventoryUtilities {
 		return canPartiallyInsertItemIntoInventory(testHandler, stack);
 	}
 
-	public static ItemStack insertItemIntoPlayerInventory(ItemStack stack, PlayerInventory inventory) {
+	public static ItemStack simulatePlayerInventoryInsert(ItemStack stack, PlayerInventory inventory) {
 		// Create and populate an inventory identical to the player's, but do NOT copy
 		// the items.
 		ItemStackHandler testHandler = new ItemStackHandler(inventory.mainInventory.size());
 		for (int i = 0; i < inventory.mainInventory.size(); i++) {
-			testHandler.setStackInSlot(i, inventory.mainInventory.get(i));
+			testHandler.setStackInSlot(i, inventory.mainInventory.get(i).copy());
 		}
 
-		// Perform the insert.
+		// Perform the insert. Do NOT mark simulate here.
 		return insertItemIntoInventory(testHandler, stack, false);
 	}
 

@@ -41,10 +41,12 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 			boolean isGas = fluid.getFluid().getAttributes().isGaseous();
 
 			// Calculate the hight and position, then render.
-			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
+			float height = tileEntity.fluidTankComponent.getVisualFillLevel(); 
+
 			float yPosition = isGas ? 14.0f * TEXEL - (12.01f * TEXEL * height) : 1.99f * TEXEL;
 			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack,
 					sprite, new Vector3D(1.0f, height, 1.0f));
+			
 		}
 
 		// Draw the glass. We have to do it like this because of how mineraft orders

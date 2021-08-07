@@ -32,15 +32,30 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	public static final String POWER_USAGE_TAG = "power_usage";
+	public static final int MANAGER_PRESENCE_UPDATE_TIME = 20;
 	@UpdateSerialize
 	private boolean managerPresent;
+	private int managerPresenceUpdateTimer;
 	private boolean shouldControlOnBlockState;
 	private long powerUsage;
 
+	/**
+	 * This is for any tile entities or blocks that must attach to the digistore
+	 * network.
+	 * 
+	 * @param name
+	 */
 	public DigistoreCableProviderComponent(String name) {
 		this(name, 0);
 	}
 
+	/**
+	 * This is for any cables. Do not use this constructor on a digitstore network
+	 * tile entity or block.
+	 * 
+	 * @param name
+	 * @param powerUsage
+	 */
 	public DigistoreCableProviderComponent(String name, long powerUsage) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 		shouldControlOnBlockState = false;
@@ -64,16 +79,29 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
-					getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(), false);
+					getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), false);
 				}
 
 				// Update the on/off state of the block.
+				boolean shouldUpdateBlockState = false;
 				if (shouldControlOnBlockState) {
 					if (managerPresent && !getIsOnBlockState()) {
-						setIsOnBlockState(true);
+						shouldUpdateBlockState = true;
 					} else if (!managerPresent && getIsOnBlockState()) {
-						setIsOnBlockState(false);
+						shouldUpdateBlockState = true;
 					}
+				}
+
+				// If we should update the block state, wait the appropriate amount of time,
+				// then do it.
+				if (shouldUpdateBlockState) {
+					if (managerPresenceUpdateTimer >= MANAGER_PRESENCE_UPDATE_TIME) {
+						setIsOnBlockState(managerPresent);
+					} else {
+						managerPresenceUpdateTimer++;
+					}
+				} else {
+					managerPresenceUpdateTimer = 0;
 				}
 			});
 		}

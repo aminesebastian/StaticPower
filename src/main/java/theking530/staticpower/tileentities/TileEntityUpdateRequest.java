@@ -5,23 +5,30 @@ import net.minecraftforge.common.util.Constants.BlockFlags;
 public class TileEntityUpdateRequest {
 	private final int flags;
 	private final boolean dataSync;
+	private final boolean renderOnDataSync;
 
 	private TileEntityUpdateRequest(int flags) {
 		this.flags = flags;
 		this.dataSync = false;
+		renderOnDataSync = false;
 	}
 
-	private TileEntityUpdateRequest(int flags, boolean dataSync) {
+	private TileEntityUpdateRequest(int flags, boolean dataSync, boolean renderOnDataSync) {
 		this.flags = flags;
-		this.dataSync = true;
+		this.dataSync = dataSync;
+		this.renderOnDataSync = renderOnDataSync;
 	}
 
 	public int getFlags() {
 		return this.flags;
 	}
 
-	public boolean syncData() {
+	public boolean getShouldSyncData() {
 		return dataSync;
+	}
+
+	public boolean getShouldRenderOnDataSync() {
+		return renderOnDataSync;
 	}
 
 	public static TileEntityUpdateRequest blockUpdate() {
@@ -40,7 +47,7 @@ public class TileEntityUpdateRequest {
 		return new TileEntityUpdateRequest(BlockFlags.RERENDER_MAIN_THREAD);
 	}
 
-	public static TileEntityUpdateRequest syncDataOnly() {
-		return new TileEntityUpdateRequest(0, true);
+	public static TileEntityUpdateRequest syncDataOnly(boolean renderOnDataSync) {
+		return new TileEntityUpdateRequest(0, true, renderOnDataSync);
 	}
 }

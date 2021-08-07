@@ -12,13 +12,15 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
+import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreInventoryComponent;
 
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new TileEntityTypeAllocator<TileEntityDigistoreServerRack>((type) -> new TileEntityDigistoreServerRack(),
-			ModBlocks.DigistoreServerRack);
+	public static final TileEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new TileEntityTypeAllocator<TileEntityDigistoreServerRack>(
+			(type) -> new TileEntityDigistoreServerRack(), ModBlocks.DigistoreServerRack);
 
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<ServerRackRenderingState> CARD_RENDERING_STATE = new ModelProperty<ServerRackRenderingState>();
@@ -28,7 +30,11 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 		super(TYPE, 5000);
 		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8).setShiftClickEnabled(true));
 		inventory.setModifiedCallback((type, stack, comp) -> {
-			//markTileEntityForSynchronization();
+			if (type != InventoryChangeType.MODIFIED) {
+				if (!getWorld().isRemote()) {
+					addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), true);
+				}
+			}
 		});
 	}
 

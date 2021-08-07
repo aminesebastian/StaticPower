@@ -70,7 +70,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 			Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
 				// Get the cable and skip if its industrial.
 				ServerCable cable = CableNetworkManager.get(world).getCable(wrapper.getFirstConnectedCable());
-				if (cable.getBooleanProperty(PowerCableComponent.POWER_INDUSTRIAL_DATA_TAG_KEY)) {
+				if (cable == null || cable.getBooleanProperty(PowerCableComponent.POWER_INDUSTRIAL_DATA_TAG_KEY)) {
 					return;
 				}
 
