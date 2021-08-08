@@ -36,10 +36,13 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 
 @OnlyIn(Dist.CLIENT)
 public class DefaultMachineBakedModel extends AbstractBakedModel {
@@ -48,16 +51,32 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMachineBakedModel.class);
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 	private final HashMap<Direction, Boolean> sideConfigurationRenderControl;
+	private final HashMap<BlockSide, Vector3f> sideOffsets;
 
 	public DefaultMachineBakedModel(IBakedModel baseModel) {
 		super(baseModel);
 		sideConfigurationRenderControl = new HashMap<Direction, Boolean>();
+		sideOffsets = new HashMap<BlockSide, Vector3f>();
 
 		// Populate with defaults.
 		for (Direction dir : Direction.values()) {
 			sideConfigurationRenderControl.put(dir, true);
 		}
 		sideConfigurationRenderControl.put(null, true);
+	}
+
+	/**
+	 * Set a side offset for any side i/o rendering.
+	 * 
+	 * @param side   The block side of the block to modify.
+	 * @param offset The offset to apply RELATIVE TO THE CENTER OF THE BLOCK.
+	 *               Example: A negative value will bring the side render CLOSER to
+	 *               the center of the block.
+	 * @return
+	 */
+	public DefaultMachineBakedModel setSideOffset(BlockSide side, Vector3f offset) {
+		sideOffsets.put(side, offset);
+		return this;
 	}
 
 	public DefaultMachineBakedModel setSideConfigVisiblity(Direction side, boolean visible) {
@@ -111,7 +130,7 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 				MachineSideMode sideMode = sideConfigurations.get()[renderingSide.ordinal()];
 				try {
 					// Attempt to render the quad for the side.
-					renderQuadsForSide(newQuads, renderingSide, blocksTexture, quad, sideMode);
+					renderQuadsForSide(state, newQuads, renderingSide, blocksTexture, quad, sideMode);
 				} catch (Exception e) {
 					LOGGER.warn("An error occured when attempting to render the model.", e);
 				}
@@ -125,7 +144,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		return newQuads.build();
 	}
 
-	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad,
+			MachineSideMode sideConfiguration) {
 		// Add the original quads.
 		newQuads.add(originalQuad);
 
@@ -149,7 +169,25 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 			BlockPartFace blockPartFace = new BlockPartFace(side, -1, sideSprite.getName().toString(), blockFaceUV);
 			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.005f));
 			posOffset.add(16.0f, 16.0f, 16.0f);
+
 			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.005f));
+
+			// Check if we have a facing property.
+			if (state != null && state.hasProperty(StaticPowerTileEntityBlock.FACING)) {
+				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.get(StaticPowerTileEntityBlock.FACING));
+
+				// If we do, see if we have a requested offset. If we do, apply it.
+				if (sideOffsets.containsKey(blockSide)) {
+					Vector3f offset = sideOffsets.get(blockSide);
+
+					// Make sure we handle positive vs negative side offsets.
+					if (blockSide.getSign() == Direction.AxisDirection.POSITIVE) {
+						posOffset.add(offset.getX(), offset.getY(), offset.getZ());
+					} else {
+						negOffset.add(-1 * offset.getX(), -1 * offset.getY(), -1 * offset.getZ());
+					}
+				}
+			}
 
 			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
 			newQuads.add(newQuad);

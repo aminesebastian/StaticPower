@@ -35,7 +35,7 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(102, 41, 17, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));

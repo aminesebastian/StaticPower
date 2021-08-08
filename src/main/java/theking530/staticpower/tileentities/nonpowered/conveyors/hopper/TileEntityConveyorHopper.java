@@ -21,6 +21,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.itemfilter.ItemFilter;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -131,8 +132,8 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 	}
 
 	@Override
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return new DefaultSideConfiguration().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
 	}
 
 	@Override

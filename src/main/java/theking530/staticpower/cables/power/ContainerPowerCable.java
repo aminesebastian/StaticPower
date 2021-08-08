@@ -9,12 +9,14 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
-import theking530.staticpower.cables.power.PowerNetworkModule.TransferMetrics;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
+import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
+import theking530.staticpower.tileentities.components.power.TransferMetrics;
 
-public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEntityPowerCable> {
+public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEntityPowerCable> implements IPowerMetricsSyncConsumer {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerPowerCable, GuiPowerCable> TYPE = new ContainerTypeAllocator<>("power_cable", ContainerPowerCable::new);
 	static {
@@ -69,14 +71,15 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 		getTileEntity().powerCableComponent.getPowerNetworkModule().ifPresent(module -> {
 			for (IContainerListener listener : this.listeners) {
 				if (listener instanceof ServerPlayerEntity) {
-					NetworkMessage msg = new PowerMetricsSyncPacket(this.windowId, module.getSecondsMetrics(), module.getMinutesMetrics(), module.getHoursMetrics());
+					NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.windowId, module.getSecondsMetrics(), module.getMinutesMetrics(), module.getHoursMetrics());
 					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) listener), msg);
 				}
 			}
 		});
 	}
 
-	public void recievedMetrics(TransferMetrics secondsMetrics, TransferMetrics minuteMetrics, TransferMetrics hourlyMetrics) {
+	@Override
+	public void recieveMetrics(TransferMetrics secondsMetrics, TransferMetrics minuteMetrics, TransferMetrics hourlyMetrics) {
 		this.secondsMetrics = secondsMetrics;
 		this.minuteMetrics = minuteMetrics;
 		this.hourlyMetrics = hourlyMetrics;

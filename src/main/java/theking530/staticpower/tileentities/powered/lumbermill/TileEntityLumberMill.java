@@ -17,6 +17,7 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -173,7 +174,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	}
 
 	@Override
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output2, MachineSideMode.Output2, MachineSideMode.Output3, MachineSideMode.Output3 };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.BACK, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3);
 	}
 }

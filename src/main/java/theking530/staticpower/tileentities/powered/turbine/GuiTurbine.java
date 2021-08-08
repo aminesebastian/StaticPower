@@ -33,7 +33,7 @@ public class GuiTurbine extends StaticPowerTileEntityGui<ContainerTurbine, TileE
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().outputFluidTankComponent, 110, 18, 16, 58, MachineSideMode.Output, getTileEntity()));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().inputFluidTankComponent).setTabSide(TabSide.LEFT));

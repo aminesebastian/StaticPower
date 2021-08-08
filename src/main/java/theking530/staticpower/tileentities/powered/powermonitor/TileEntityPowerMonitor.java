@@ -9,21 +9,29 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPowerMonitor;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
+import theking530.staticpower.network.NetworkMessage;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityMachine;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
+import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
+import theking530.staticpower.tileentities.components.power.TransferMetrics;
+import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
 
-public class TileEntityPowerMonitor extends TileEntityMachine {
+public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerMetricsSyncConsumer {
 	@TileEntityTypePopulator()
 	public static final TileEntityTypeAllocator<TileEntityPowerMonitor> TYPE = new TileEntityTypeAllocator<TileEntityPowerMonitor>((allocator) -> new TileEntityPowerMonitor(allocator),
 			ModBlocks.PowerMonitor);
@@ -36,6 +44,13 @@ public class TileEntityPowerMonitor extends TileEntityMachine {
 
 	public final BatteryInventoryComponent batteryInventory;
 	public final InventoryComponent chargingInventory;
+
+	@SaveSerialize
+	private TransferMetrics secondsMetrics;
+	@SaveSerialize
+	private TransferMetrics minuteMetrics;
+	@SaveSerialize
+	private TransferMetrics hourlyMetrics;
 
 	private long minPowerThreshold;
 	private long maxPowerThreshold;
@@ -89,6 +104,11 @@ public class TileEntityPowerMonitor extends TileEntityMachine {
 
 		// Add the charging input.
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+
+		// Create the metric capturing values.
+		secondsMetrics = new TransferMetrics();
+		minuteMetrics = new TransferMetrics();
+		hourlyMetrics = new TransferMetrics();
 	}
 
 	@Override
@@ -111,7 +131,40 @@ public class TileEntityPowerMonitor extends TileEntityMachine {
 					}
 				}
 			}
+
+			// Sync every second on the server.
+			if ((world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
+				NetworkMessage msg = new TileEntityPowerMetricsSyncPacket(this.getPos(), this.secondsMetrics, this.getMinutesMetrics(), this.hourlyMetrics);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 25, msg);
+			}
+
+			// Capture the seconds metric.
+			if (secondsMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
+				secondsMetrics.addMetrics(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
+			}
+
+			// Capture the minutes metric.
+			if (minuteMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_MINUTE) == 0) {
+				minuteMetrics.addMetrics(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
+			}
+
+			// Capture the hours metric.
+			if (hourlyMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_HOUR) == 0) {
+				hourlyMetrics.addMetrics(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
+			}
 		}
+	}
+
+	public TransferMetrics getSecondsMetrics() {
+		return this.secondsMetrics;
+	}
+
+	public TransferMetrics getMinutesMetrics() {
+		return this.minuteMetrics;
+	}
+
+	public TransferMetrics getHoursMetrics() {
+		return this.hourlyMetrics;
 	}
 
 	public void setMinimumPowerThreshold(int newThreshold) {
@@ -191,6 +244,11 @@ public class TileEntityPowerMonitor extends TileEntityMachine {
 		return nbt;
 	}
 
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.TOP, false, MachineSideMode.Never).setSide(BlockSide.BOTTOM, false, MachineSideMode.Never).setSide(BlockSide.BACK,
+				false, MachineSideMode.Never);
+	}
+
 	// Tab Integration
 	public boolean shouldOutputRedstoneSignal() {
 		if (minPowerThreshold == 0 && maxPowerThreshold == 0) {
@@ -201,5 +259,12 @@ public class TileEntityPowerMonitor extends TileEntityMachine {
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void recieveMetrics(TransferMetrics secondsMetrics, TransferMetrics minuteMetrics, TransferMetrics hourlyMetrics) {
+		this.secondsMetrics = secondsMetrics;
+		this.minuteMetrics = minuteMetrics;
+		this.hourlyMetrics = hourlyMetrics;
 	}
 }

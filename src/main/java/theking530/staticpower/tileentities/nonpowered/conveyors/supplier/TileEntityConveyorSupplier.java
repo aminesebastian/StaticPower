@@ -16,6 +16,7 @@ import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -103,7 +104,7 @@ public class TileEntityConveyorSupplier extends TileEntityConfigurable {
 		}
 	}
 
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return new DefaultSideConfiguration();
 	}
 }

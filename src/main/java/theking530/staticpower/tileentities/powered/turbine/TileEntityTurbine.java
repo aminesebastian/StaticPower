@@ -33,6 +33,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.tools.TurbineBlades;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -189,8 +190,9 @@ public class TileEntityTurbine extends TileEntityMachine {
 	}
 
 	@Override
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return new DefaultSideConfiguration().setSide(BlockSide.LEFT, true, MachineSideMode.Output).setSide(BlockSide.RIGHT, true, MachineSideMode.Output)
+				.setSide(BlockSide.FRONT, true, MachineSideMode.Output).setSide(BlockSide.BACK, true, MachineSideMode.Output);
 	}
 
 	@Override
@@ -307,7 +309,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 		public static final float ACCELERATION = 120;
 		public static final float DECELERATION = 180;
 		public static final float MAX_SPEED = 1080;
-		
+
 		public float speed;
 		public float rotationAngle;
 		public ResourceLocation bladesTier;

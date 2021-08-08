@@ -2,22 +2,16 @@ package theking530.staticpower.cables.power;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.api.power.CapabilityStaticVolt;
@@ -34,11 +28,10 @@ import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.tileentities.components.power.TransferMetrics;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule {
-	public static final int MAX_METRIC_SAMPLES = 60;
-
 	private final StaticVoltAutoConverter energyInterface;
 	private final StaticVoltHandler storage;
 	private TransferMetrics secondsMetrics;
@@ -182,17 +175,23 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void readFromNbt(CompoundNBT tag) {
 		storage.deserializeNBT(tag.getCompound("energy_storage"));
-		secondsMetrics = TransferMetrics.deserialize(tag.getCompound("seconds"));
-		minuteMetrics = TransferMetrics.deserialize(tag.getCompound("minutes"));
-		hourlyMetrics = TransferMetrics.deserialize(tag.getCompound("hours"));
+
+		secondsMetrics = new TransferMetrics();
+		secondsMetrics.deserializeNBT(tag.getCompound("seconds"));
+
+		minuteMetrics = new TransferMetrics();
+		minuteMetrics.deserializeNBT(tag.getCompound("minutes"));
+
+		hourlyMetrics = new TransferMetrics();
+		hourlyMetrics.deserializeNBT(tag.getCompound("hours"));
 	}
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
 		tag.put("energy_storage", storage.serializeNBT());
-		tag.put("seconds", this.secondsMetrics.serialize());
-		tag.put("minutes", this.minuteMetrics.serialize());
-		tag.put("hours", this.hourlyMetrics.serialize());
+		tag.put("seconds", this.secondsMetrics.serializeNBT());
+		tag.put("minutes", this.minuteMetrics.serializeNBT());
+		tag.put("hours", this.hourlyMetrics.serializeNBT());
 		return tag;
 	}
 
@@ -249,108 +248,6 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		protected PowerEnergyInterfaceWrapper(PowerEnergyInterface powerInterface, BlockPos cablePos) {
 			this.powerInterface = powerInterface;
 			this.cablePos = cablePos;
-		}
-	}
-
-	protected static class TransferMetrics {
-		private final Queue<Float> received;
-		private final Queue<Float> provided;
-
-		/**
-		 * @param received
-		 * @param provided
-		 */
-		public TransferMetrics() {
-			this.received = new LinkedList<Float>();
-			this.provided = new LinkedList<Float>();
-		}
-
-		protected TransferMetrics(Queue<Float> received, Queue<Float> provided) {
-			this.received = received;
-			this.provided = provided;
-		}
-
-		public boolean isEmpty() {
-			return received.isEmpty() || provided.isEmpty();
-		}
-
-		public void addMetrics(float received, float provided) {
-			// Add the values.
-			this.received.add(received);
-			this.provided.add(provided);
-
-			// Make sure our queues only keep the correct values.
-			if (this.received.size() > MAX_METRIC_SAMPLES) {
-				this.received.poll();
-			}
-
-			if (this.provided.size() > MAX_METRIC_SAMPLES) {
-				this.provided.poll();
-			}
-		}
-
-		public List<Float> getReceivedData() {
-			return new ArrayList<Float>(received);
-		}
-
-		public List<Float> getProvidedData() {
-			return new ArrayList<Float>(provided);
-		}
-
-		public CompoundNBT serialize() {
-			// Allocate the output.
-			CompoundNBT output = new CompoundNBT();
-
-			// Convert the queues to lists.
-			List<Float> receivedList = new ArrayList<Float>(received);
-			List<Float> providedList = new ArrayList<Float>(provided);
-
-			// Serialize the recieved list.
-			ListNBT receivedNBTList = new ListNBT();
-			receivedList.forEach(value -> {
-				FloatNBT recievedTag = FloatNBT.valueOf(value);
-				receivedNBTList.add(recievedTag);
-			});
-			output.put("received", receivedNBTList);
-
-			// Serialize the provided list.
-			ListNBT providedNBTList = new ListNBT();
-			providedList.forEach(value -> {
-				FloatNBT providedTag = FloatNBT.valueOf(value);
-				providedNBTList.add(providedTag);
-			});
-			output.put("provided", providedNBTList);
-
-			// Return the outputs.
-			return output;
-		}
-
-		public static TransferMetrics deserialize(CompoundNBT data) {
-			// Allocate the inputs.
-			List<Float> receivedList = new ArrayList<Float>();
-			List<Float> providedList = new ArrayList<Float>();
-
-			// Read the serialized lists.
-			ListNBT receivedNBT = data.getList("received", Constants.NBT.TAG_FLOAT);
-			ListNBT providedNBT = data.getList("provided", Constants.NBT.TAG_FLOAT);
-
-			// Populate the arrays.
-			for (INBT receivedTag : receivedNBT) {
-				FloatNBT receivedValue = (FloatNBT) receivedTag;
-				receivedList.add(receivedValue.getFloat());
-			}
-			for (INBT providedTag : providedNBT) {
-				FloatNBT providedValue = (FloatNBT) providedTag;
-				providedList.add(providedValue.getFloat());
-			}
-
-			// Create the transfer metrics.
-			return new TransferMetrics(new LinkedList<Float>(receivedList), new LinkedList<Float>(providedList));
-		}
-
-		@Override
-		public String toString() {
-			return "TransferMetrics [received=" + received + ", provided=" + provided + "]";
 		}
 	}
 }

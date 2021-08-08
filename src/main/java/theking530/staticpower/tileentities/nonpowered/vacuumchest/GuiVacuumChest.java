@@ -31,7 +31,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 	public void initializeGui() {
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		registerWidget(fluidBar = new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 176, 20, 16, 74, MachineSideMode.Output, getTileEntity()));
 

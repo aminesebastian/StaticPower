@@ -6,6 +6,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 
 import net.minecraft.client.Minecraft;
@@ -156,7 +157,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 		// Thank the lord for Storage Drawers
 		// (https://github.com/jaquadro/StorageDrawers/blob/1.15/src/main/java/com/jaquadro/minecraft/storagedrawers/client/renderer/TileEntityDrawersRenderer.java).
-		// Spent hours on the bug that's caused when you dont have this called before and after.
+		// Spent hours on the bug that's caused when you dont have this called before
+		// and after.
 		if (buffer instanceof IRenderTypeBuffer.Impl) {
 			((IRenderTypeBuffer.Impl) buffer).finish();
 		}
@@ -253,6 +255,27 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, uv, tint, 15728880);
 	}
 
+	protected void drawRectangleLit(MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Color tint, int combinedLight) {
+		matrixStack.push();
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getTranslucent());
+
+		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
+		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).lightmap(combinedLight).normal(1, 0, 0)
+				.endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).lightmap(combinedLight).normal(1, 0, 0)
+				.endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).lightmap(combinedLight).normal(1, 0, 0)
+				.endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).lightmap(combinedLight).normal(1, 0, 0)
+				.endVertex();
+		matrixStack.pop();
+	}
+
+	protected void drawRectangleUnlit(MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Color color) {
+		drawRectangleLit(matrixStack, buffer, offset, scale, color, 15728880);
+	}
+
 	protected int getForwardFacingLightLevel(T tileEntity) {
 		return WorldRenderer.getCombinedLight(tileEntity.getWorld(), tileEntity.getPos().offset(tileEntity.getFacingDirection()));
 	}
@@ -265,6 +288,13 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 
 	protected void drawFluidQuadUnlit(FluidStack fluid, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D offset, Vector3D scale, Vector4D uv) {
 		drawFluidQuadLit(fluid, matrixStack, buffer, offset, scale, uv, 15728880);
+	}
+
+	protected void drawLine(T tileEntity, MatrixStack matrixStack, IRenderTypeBuffer buffer, Vector3D start, Vector3D end, float thickness, Color color) {
+		GlStateManager.lineWidth(thickness);
+		IVertexBuilder builder = buffer.getBuffer(RenderType.getLines());
+		builder.pos(matrixStack.getLast().getMatrix(), start.getX(), start.getY(), start.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		builder.pos(matrixStack.getLast().getMatrix(), end.getX(), end.getY(), end.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
 	}
 
 	/**

@@ -22,7 +22,6 @@ import theking530.staticpower.cables.fluid.FluidCableUpdatePacket;
 import theking530.staticpower.cables.heat.HeatCableUpdatePacket;
 import theking530.staticpower.cables.item.ItemCableAddedPacket;
 import theking530.staticpower.cables.item.ItemCableRemovedPacket;
-import theking530.staticpower.cables.power.PowerMetricsSyncPacket;
 import theking530.staticpower.cables.redstone.network.PacketUpdateRedstoneCableConfiguration;
 import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.PacketRevertToParentContainer;
@@ -36,7 +35,9 @@ import theking530.staticpower.tileentities.components.fluids.PacketFluidTankComp
 import theking530.staticpower.tileentities.components.heat.PacketHeatStorageComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStart;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStop;
+import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
 import theking530.staticpower.tileentities.components.power.PacketEnergyStorageComponent;
+import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLockDigistore;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
@@ -80,7 +81,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerMessage(PacketRestorePreviousCraftingRecipe.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
-		StaticPowerMessageHandler.registerMessage(PowerMetricsSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(ContainerPowerMetricsSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
 		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
 		StaticPowerMessageHandler.registerMessage(PacketUpdateRedstoneCableConfiguration.class);
@@ -90,5 +91,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreFakeSlotClicked.class);
 		
 		StaticPowerMessageHandler.registerMessage(PacketPowerMonitorSync.class);
+		StaticPowerMessageHandler.registerMessage(TileEntityPowerMetricsSyncPacket.class);
 	}
 }

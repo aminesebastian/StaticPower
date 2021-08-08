@@ -30,7 +30,7 @@ public class GuiCondenser extends StaticPowerTileEntityGui<ContainerCondenser, T
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(75, 44, 26, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiPassiveHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().inputTankComponent).setTabSide(TabSide.LEFT));

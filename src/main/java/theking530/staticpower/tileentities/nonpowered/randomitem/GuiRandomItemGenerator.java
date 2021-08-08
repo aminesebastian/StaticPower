@@ -15,7 +15,7 @@ public class GuiRandomItemGenerator extends StaticPowerTileEntityGui<ContainerRa
 	@Override
 	public void initializeGui() {
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		setOutputSlotSize(16);
 	}
 

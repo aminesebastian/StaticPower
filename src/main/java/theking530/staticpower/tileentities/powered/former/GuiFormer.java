@@ -29,7 +29,7 @@ public class GuiFormer extends StaticPowerTileEntityGui<ContainerFormer, TileEnt
 		infoTab.addLine("desc1", new StringTextComponent("The former transforms items into other items=by shaping them against molds."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 	}
 }

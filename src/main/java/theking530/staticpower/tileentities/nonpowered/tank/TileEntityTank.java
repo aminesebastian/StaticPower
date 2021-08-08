@@ -90,7 +90,7 @@ public class TileEntityTank extends TileEntityBase {
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", (side, mode) -> {
 		}, (side, mode) -> {
 			return mode == MachineSideMode.Input || mode == MachineSideMode.Output || mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular;
-		}, new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Input, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular, MachineSideMode.Regular }));
+		}));
 
 		// Add the inventory for the fluid containers.
 		registerComponent(inputFluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent));

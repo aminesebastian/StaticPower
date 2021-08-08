@@ -15,6 +15,7 @@ import net.minecraft.world.World;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
@@ -23,6 +24,16 @@ import theking530.staticpower.tileentities.components.items.CompoundInventoryCom
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class TileEntityConfigurable extends TileEntityBase {
+	public static final DefaultSideConfiguration DEFAULT_NO_FACE_SIDE_CONFIGURATION = new DefaultSideConfiguration();
+	static {
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Input);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.BACK, true, MachineSideMode.Output);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.LEFT, true, MachineSideMode.Input);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.RIGHT, true, MachineSideMode.Output);
+	}
+
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final RedstoneControlComponent redstoneControlComponent;
 
@@ -101,7 +112,11 @@ public class TileEntityConfigurable extends TileEntityBase {
 		return true;
 	}
 
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		if (isFaceInteractionDisabled()) {
+			return DEFAULT_NO_FACE_SIDE_CONFIGURATION;
+		} else {
+			return SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION;
+		}
 	}
 }

@@ -18,9 +18,9 @@ import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.cables.power.PowerNetworkModule.TransferMetrics;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.tileentities.components.power.TransferMetrics;
 
 public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable, TileEntityPowerCable> {
 	protected enum MetricDisplayType {

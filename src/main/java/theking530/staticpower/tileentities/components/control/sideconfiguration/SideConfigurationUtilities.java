@@ -8,16 +8,23 @@ import net.minecraft.util.text.TranslationTextComponent;
 public class SideConfigurationUtilities {
 
 	public enum BlockSide {
-		TOP("Top"), BOTTOM("Bottom"), FRONT("Front"), BACK("Back"), RIGHT("Right"), LEFT("Left");
+		TOP("Top", Direction.AxisDirection.POSITIVE), BOTTOM("Bottom", Direction.AxisDirection.NEGATIVE), FRONT("Front", Direction.AxisDirection.POSITIVE),
+		BACK("Back", Direction.AxisDirection.NEGATIVE), RIGHT("Right", Direction.AxisDirection.POSITIVE), LEFT("Left", Direction.AxisDirection.NEGATIVE);
 
 		private String name;
+		private Direction.AxisDirection sign;
 
-		private BlockSide(String name) {
+		private BlockSide(String name, Direction.AxisDirection sign) {
 			this.name = name;
+			this.sign = sign;
 		}
 
 		public TranslationTextComponent getName() {
 			return new TranslationTextComponent("gui.staticpower.side." + name.toLowerCase());
+		}
+
+		public Direction.AxisDirection getSign() {
+			return sign;
 		}
 
 		public BlockSide getOpposite() {

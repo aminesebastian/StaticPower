@@ -38,7 +38,7 @@ public class GuiTumbler extends StaticPowerTileEntityGui<ContainerTumbler, TileE
 				TextFormatting.GREEN);
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		setOutputSlotSize(20);
 	}
