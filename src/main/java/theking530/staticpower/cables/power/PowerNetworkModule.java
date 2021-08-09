@@ -19,7 +19,6 @@ import theking530.api.power.IStaticVoltHandler;
 import theking530.api.power.PowerEnergyInterface;
 import theking530.api.power.StaticVoltAutoConverter;
 import theking530.api.power.StaticVoltHandler;
-import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -28,15 +27,13 @@ import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.tileentities.components.power.TransferMetrics;
+import theking530.staticpower.tileentities.components.power.PowerTransferMetrics;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule {
 	private final StaticVoltAutoConverter energyInterface;
 	private final StaticVoltHandler storage;
-	private TransferMetrics secondsMetrics;
-	private TransferMetrics minuteMetrics;
-	private TransferMetrics hourlyMetrics;
+	private PowerTransferMetrics metrics;
 
 	public PowerNetworkModule() {
 		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
@@ -48,9 +45,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		energyInterface = new StaticVoltAutoConverter(storage);
 
 		// Create the metric capturing values.
-		secondsMetrics = new TransferMetrics();
-		minuteMetrics = new TransferMetrics();
-		hourlyMetrics = new TransferMetrics();
+		metrics = new PowerTransferMetrics();
 	}
 
 	@Override
@@ -101,32 +96,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 		// Capture metrics.
 		storage.captureEnergyMetric();
 
-		// Capture the seconds metric.
-		if (secondsMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
-			secondsMetrics.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
-		}
-
-		// Capture the minutes metric.
-		if (minuteMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_MINUTE) == 0) {
-			minuteMetrics.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
-		}
-
-		// Capture the hours metric.
-		if (hourlyMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_HOUR) == 0) {
-			hourlyMetrics.addMetrics(storage.getReceivedPerTick(), storage.getExtractedPerTick());
-		}
+		// Capture time metrics.
+		metrics.addMetric(storage.getReceivedPerTick(), storage.getExtractedPerTick());
 	}
 
-	public TransferMetrics getSecondsMetrics() {
-		return this.secondsMetrics;
-	}
-
-	public TransferMetrics getMinutesMetrics() {
-		return this.minuteMetrics;
-	}
-
-	public TransferMetrics getHoursMetrics() {
-		return this.hourlyMetrics;
+	public PowerTransferMetrics getMetrics() {
+		return metrics;
 	}
 
 	@Override
@@ -176,22 +151,14 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	public void readFromNbt(CompoundNBT tag) {
 		storage.deserializeNBT(tag.getCompound("energy_storage"));
 
-		secondsMetrics = new TransferMetrics();
-		secondsMetrics.deserializeNBT(tag.getCompound("seconds"));
-
-		minuteMetrics = new TransferMetrics();
-		minuteMetrics.deserializeNBT(tag.getCompound("minutes"));
-
-		hourlyMetrics = new TransferMetrics();
-		hourlyMetrics.deserializeNBT(tag.getCompound("hours"));
+		metrics = new PowerTransferMetrics();
+		metrics.deserializeNBT(tag.getCompound("metrics"));
 	}
 
 	@Override
 	public CompoundNBT writeToNbt(CompoundNBT tag) {
 		tag.put("energy_storage", storage.serializeNBT());
-		tag.put("seconds", this.secondsMetrics.serializeNBT());
-		tag.put("minutes", this.minuteMetrics.serializeNBT());
-		tag.put("hours", this.hourlyMetrics.serializeNBT());
+		tag.put("metrics", metrics.serializeNBT());
 		return tag;
 	}
 

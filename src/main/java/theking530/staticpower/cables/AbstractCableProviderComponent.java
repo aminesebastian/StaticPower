@@ -88,8 +88,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public void onInitializedInWorld(World world, BlockPos pos) {
-		super.onInitializedInWorld(world, pos);
+	public void onInitializedInWorld(World world, BlockPos pos, boolean firstTimePlaced) {
+		super.onInitializedInWorld(world, pos, firstTimePlaced);
 		if (!initialDisabledStateApplied) {
 			// Handle the initial states of the disabled sides for the new cable.
 			for (Direction side : Direction.values()) {
@@ -118,6 +118,17 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				cable.getNetwork().updateGraph((ServerWorld) getWorld(), getPos());
 			}
 		}
+		System.out.println("Changed");
+	}
+
+	/**
+	 * After placed, we update the connection states.
+	 */
+	@Override
+	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+		super.onNeighborReplaced(state, direction, facingState, FacingPos);
+		System.out.println("Replaced");
+		this.updateRenderingStateForCable();
 	}
 
 	@Override
@@ -206,8 +217,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * wrapper in the network for this cable. If not, we provide one.
 	 */
 	@Override
-	public void onOwningTileEntityValidate() {
-		super.onOwningTileEntityValidate();
+	public void onOwningTileEntityValidate(boolean isInitialPlacement) {
+		super.onOwningTileEntityValidate(isInitialPlacement);
 
 		// If we're on the server, check to see if the cable network manager for this
 		// world is tracking a cable at this position. If it is not, add this cable for
@@ -233,14 +244,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				initializeCableProperties(manager.getCable(getPos()));
 			}
 		}
-	}
-
-	/**
-	 * After placed, we update the connection states.
-	 */
-	@Override
-	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
-		super.updatePostPlacement(state, direction, facingState, FacingPos);
 	}
 
 	/**

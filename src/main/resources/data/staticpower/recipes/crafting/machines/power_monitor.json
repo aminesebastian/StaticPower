@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" g ",
+		"pmp",
+		" g "
+	],
+	"key": {
+		"m": {
+			"item": "staticpower:machine_block_basic"
+		},
+		"g": {
+			"tag": "forge:dusts/glowstone"
+		},
+		"p": {
+			"item": "staticpower:plug"
+		}
+	},
+	"result": {
+		"item": "staticpower:power_monitor"
+	}
+}

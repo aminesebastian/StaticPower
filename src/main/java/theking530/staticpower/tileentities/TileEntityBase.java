@@ -8,7 +8,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
-import java.util.Random;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -55,24 +54,50 @@ import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, INamedContainerProvider, IBreakSerializeable {
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityBase.class);
-	protected final static Random RANDOM = new Random();
-	private boolean isValid;
-	private boolean disableFaceInteraction;
-	private LinkedHashMap<String, AbstractTileEntityComponent> components;
-	private final List<Field> saveSerializeableFields;
-	private final List<Field> updateSerializeableFields;
+	@UpdateSerialize
+	/**
+	 * This is set to true after the first tick this tile entity has experienced.
+	 * This value is also saved, so it will only be false the first time this tile
+	 * entity is placed.
+	 */
+	private boolean hasFirstPlacedMethodRun;
+	/**
+	 * This is set to true after the first tick this tile entity has experienced.
+	 * This value is NOT saved, so it will be false the first time this tile entity
+	 * is placed and every subsequent time it is loaded.
+	 */
 	private boolean hasPostInitRun;
+	/**
+	 * Indicates whether or not this tile entity is valid.
+	 */
+	private boolean isValid;
+	/**
+	 * Collection of all the components on this tile entity.
+	 */
+	private LinkedHashMap<String, AbstractTileEntityComponent> components;
+	/**
+	 * Cached list of all fields that are save serializable.
+	 */
+	private final List<Field> saveSerializeableFields;
+	/**
+	 * Cached list of all fields that are update serializeable.
+	 */
+	private final List<Field> updateSerializeableFields;
+	/**
+	 * Queue of all update requests that are requested for this tile entity.
+	 */
 	private Queue<TileEntityUpdateRequest> updateRequestQueue;
+	/**
+	 * Indicates whether or not this tile entity should be marked dirty.
+	 */
 	private boolean shouldMarkDirty;
 
 	public TileEntityBase(TileEntityTypeAllocator<? extends TileEntity> allocator) {
@@ -80,32 +105,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		components = new LinkedHashMap<String, AbstractTileEntityComponent>();
 		updateRequestQueue = new LinkedList<TileEntityUpdateRequest>();
 		isValid = true;
+		hasFirstPlacedMethodRun = false;
 		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
-		disableFaceInteraction();
-	}
-
-	/**
-	 * Disables capability interaction with the face of this block.
-	 */
-	public void disableFaceInteraction() {
-		disableFaceInteraction = true;
-	}
-
-	/**
-	 * Enables capability interaction with the face of this block.
-	 */
-	public void enableFaceInteraction() {
-		disableFaceInteraction = false;
-	}
-
-	/**
-	 * Checks to see if face interaction is disabled.
-	 * 
-	 * @return
-	 */
-	public boolean isFaceInteractionDisabled() {
-		return disableFaceInteraction;
 	}
 
 	@Override
@@ -114,8 +116,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			hasPostInitRun = true;
 			postInit(world, pos, world.getBlockState(pos));
 			for (AbstractTileEntityComponent comp : components.values()) {
-				comp.onInitializedInWorld(world, pos);
+				comp.onInitializedInWorld(world, pos, !hasFirstPlacedMethodRun);
 			}
+			hasFirstPlacedMethodRun = true;
 		}
 		// Pre process all the components.
 		preProcessUpdateComponents();
@@ -190,7 +193,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	public void validate() {
 		super.validate();
 		for (AbstractTileEntityComponent component : components.values()) {
-			component.onOwningTileEntityValidate();
+			component.onOwningTileEntityValidate(hasFirstPlacedMethodRun);
 		}
 	}
 
@@ -232,12 +235,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		if (hasComponentOfType(SideConfigurationComponent.class)) {
-			if (disableFaceInteraction) {
-				getComponent(SideConfigurationComponent.class).setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
-						MachineSideMode.Never);
-			}
-		}
+
 	}
 
 	public ActionResultType onBlockActivated(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
@@ -290,9 +288,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		}
 	}
 
-	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
 		for (AbstractTileEntityComponent comp : components.values()) {
-			comp.updatePostPlacement(state, direction, facingState, FacingPos);
+			comp.onNeighborReplaced(state, direction, facingState, FacingPos);
 		}
 	}
 
@@ -458,6 +456,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		return false;
 	}
 
+	public boolean hasPostInitRun() {
+		return hasPostInitRun;
+	}
+
 	/**
 	 * Calls the pre-process methods on all the components.
 	 */
@@ -572,7 +574,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
-		nbt.putBoolean("DISABLE_FACE", disableFaceInteraction);
 		SerializationUtilities.serializeFieldsToNbt(nbt, updateSerializeableFields, this);
 		return nbt;
 	}
@@ -591,7 +592,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 				component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()), fromUpdate);
 			}
 		}
-		disableFaceInteraction = nbt.getBoolean("DISABLE_FACE");
 		SerializationUtilities.deserializeFieldsToNbt(nbt, updateSerializeableFields, this);
 	}
 

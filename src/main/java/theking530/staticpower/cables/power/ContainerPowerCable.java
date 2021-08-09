@@ -14,7 +14,7 @@ import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
 import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
-import theking530.staticpower.tileentities.components.power.TransferMetrics;
+import theking530.staticpower.tileentities.components.power.PowerTransferMetrics;
 
 public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEntityPowerCable> implements IPowerMetricsSyncConsumer {
 	@ContainerTypePopulator
@@ -24,10 +24,14 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 			TYPE.setScreenFactory(GuiPowerCable::new);
 		}
 	}
+	/**
+	 * How frequently we update the client side metrics.
+	 */
 	public static final int METRIC_UPDATE_INTERVAL = 20;
-	private TransferMetrics secondsMetrics;
-	private TransferMetrics minuteMetrics;
-	private TransferMetrics hourlyMetrics;
+	/**
+	 * Container to store all metrics.
+	 */
+	private PowerTransferMetrics metrics;
 	private long nextUpdateTime;
 
 	public ContainerPowerCable(int windowId, PlayerInventory inv, PacketBuffer data) {
@@ -43,18 +47,19 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 		nextUpdateTime = 0;
 	}
 
-	public TransferMetrics getSecondsMetrics() {
-		return secondsMetrics;
+	/**
+	 * Gets the metrics that were synced to the client by the server.
+	 * 
+	 * @return
+	 */
+	public PowerTransferMetrics getMetrics() {
+		return metrics;
 	}
 
-	public TransferMetrics getMinuteMetrics() {
-		return minuteMetrics;
-	}
-
-	public TransferMetrics getHourlyMetrics() {
-		return hourlyMetrics;
-	}
-
+	/**
+	 * This method is run every tick. In here, we keep track of when to update the
+	 * client, and if required to, send over the data.
+	 */
 	@Override
 	public void detectAndSendChanges() {
 		super.detectAndSendChanges();
@@ -71,7 +76,7 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 		getTileEntity().powerCableComponent.getPowerNetworkModule().ifPresent(module -> {
 			for (IContainerListener listener : this.listeners) {
 				if (listener instanceof ServerPlayerEntity) {
-					NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.windowId, module.getSecondsMetrics(), module.getMinutesMetrics(), module.getHoursMetrics());
+					NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.windowId, module.getMetrics());
 					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) listener), msg);
 				}
 			}
@@ -79,9 +84,7 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 	}
 
 	@Override
-	public void recieveMetrics(TransferMetrics secondsMetrics, TransferMetrics minuteMetrics, TransferMetrics hourlyMetrics) {
-		this.secondsMetrics = secondsMetrics;
-		this.minuteMetrics = minuteMetrics;
-		this.hourlyMetrics = hourlyMetrics;
+	public void recieveMetrics(PowerTransferMetrics metrics) {
+		this.metrics = metrics;
 	}
 }

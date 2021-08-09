@@ -246,7 +246,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 	public void useAxe() {
 		if (hasAxe()) {
-			if (inputInventory.getStackInSlot(0).attemptDamageItem(StaticPowerConfig.SERVER.treeFarmerToolUsage.get(), RANDOM, null)) {
+			if (inputInventory.getStackInSlot(0).attemptDamageItem(StaticPowerConfig.SERVER.treeFarmerToolUsage.get(), getWorld().rand, null)) {
 				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
@@ -313,8 +313,8 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		Block block = getWorld().getBlockState(pos).getBlock();
 		if (block instanceof IGrowable && SDMath.diceRoll(getGrowthBonus())) {
 			IGrowable growable = (IGrowable) block;
-			if (growable.canUseBonemeal(getWorld(), RANDOM, pos, getWorld().getBlockState(pos)) && growable.canGrow(getWorld(), pos, getWorld().getBlockState(pos), false)) {
-				growable.grow((ServerWorld) getWorld(), RANDOM, pos, getWorld().getBlockState(pos));
+			if (growable.canUseBonemeal(getWorld(), getWorld().rand, pos, getWorld().getBlockState(pos)) && growable.canGrow(getWorld(), pos, getWorld().getBlockState(pos), false)) {
+				growable.grow((ServerWorld) getWorld(), getWorld().rand, pos, getWorld().getBlockState(pos));
 				return true;
 			}
 		}

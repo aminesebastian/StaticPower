@@ -15,6 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -53,10 +54,10 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 
 		// Determine which scale to use when drawing.
 		if (render3D) {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, getItemParcelRotation(renderRotation),
+			WorldRenderingUtilities.drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, getItemParcelRotation(renderRotation),
 					partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		} else {
-			drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, getItemParcelRotation(renderRotation),
+			WorldRenderingUtilities.drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, getItemParcelRotation(renderRotation),
 					partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		}
 	}

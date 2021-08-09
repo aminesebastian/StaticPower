@@ -120,7 +120,6 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		// Get the block atlas texture.
 		try {
 			AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-
 			// Iterate through all the quads.
 			for (BakedQuad quad : baseQuads) {
 				// Get the rendering side.

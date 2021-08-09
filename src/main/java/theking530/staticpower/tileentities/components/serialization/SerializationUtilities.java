@@ -102,47 +102,49 @@ public class SerializationUtilities {
 			boolean isAccessible = field.isAccessible();
 			try {
 				// Mark it accessible if not.
-				field.setAccessible(true);
-
-				// Get the type of the field and then serialize it if possible.
-				Class<?> t = field.getType();
-				if (t.isEnum()) {
-					Method m = t.getMethod("ordinal");
-					int value = (int) m.invoke(field.get(object));
-					nbt.putByte(field.getName(), (byte) value);
-				} else if (t == boolean.class) {
-					nbt.putBoolean(field.getName(), field.getBoolean(object));
-				} else if (t == int.class) {
-					nbt.putInt(field.getName(), field.getInt(object));
-				} else if (t == float.class) {
-					nbt.putFloat(field.getName(), field.getFloat(object));
-				} else if (t == double.class) {
-					nbt.putDouble(field.getName(), field.getDouble(object));
-				} else if (t == long.class) {
-					nbt.putLong(field.getName(), field.getLong(object));
-				} else if (t == String.class) {
-					nbt.putString(field.getName(), (String) field.get(object));
-				} else if (t == BlockPos.class) {
-					BlockPos pos = (BlockPos) field.get(object);
-					nbt.putLong(field.getName(), pos.toLong());
-				} else if (t == ResourceLocation.class) {
-					ResourceLocation loc = (ResourceLocation) field.get(object);
-					nbt.putString(field.getName(), loc.toString());
-				} else if (t == FluidStack.class) {
-					FluidStack fluid = (FluidStack) field.get(object);
-					CompoundNBT tag = new CompoundNBT();
-					fluid.writeToNBT(tag);
-					nbt.put(field.getName(), tag);
-				} else if (INBTSerializable.class.isAssignableFrom(t)) {
-					@SuppressWarnings("unchecked")
-					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
-					CompoundNBT serialized = serializeable.serializeNBT();
-					nbt.put(field.getName(), serialized);
+				if (field.trySetAccessible()) {
+					// Get the type of the field and then serialize it if possible.
+					Class<?> t = field.getType();
+					if (t.isEnum()) {
+						Method m = t.getMethod("ordinal");
+						int value = (int) m.invoke(field.get(object));
+						nbt.putByte(field.getName(), (byte) value);
+					} else if (t == boolean.class) {
+						nbt.putBoolean(field.getName(), field.getBoolean(object));
+					} else if (t == int.class) {
+						nbt.putInt(field.getName(), field.getInt(object));
+					} else if (t == float.class) {
+						nbt.putFloat(field.getName(), field.getFloat(object));
+					} else if (t == double.class) {
+						nbt.putDouble(field.getName(), field.getDouble(object));
+					} else if (t == long.class) {
+						nbt.putLong(field.getName(), field.getLong(object));
+					} else if (t == String.class) {
+						nbt.putString(field.getName(), (String) field.get(object));
+					} else if (t == BlockPos.class) {
+						BlockPos pos = (BlockPos) field.get(object);
+						nbt.putLong(field.getName(), pos.toLong());
+					} else if (t == ResourceLocation.class) {
+						ResourceLocation loc = (ResourceLocation) field.get(object);
+						nbt.putString(field.getName(), loc.toString());
+					} else if (t == FluidStack.class) {
+						FluidStack fluid = (FluidStack) field.get(object);
+						CompoundNBT tag = new CompoundNBT();
+						fluid.writeToNBT(tag);
+						nbt.put(field.getName(), tag);
+					} else if (INBTSerializable.class.isAssignableFrom(t)) {
+						@SuppressWarnings("unchecked")
+						INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
+						CompoundNBT serialized = serializeable.serializeNBT();
+						nbt.put(field.getName(), serialized);
+					} else {
+						LOGGER.error(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					}
 				} else {
-					LOGGER.warn(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					LOGGER.warn(String.format("Unable to mark serializeable field %1$s as accessible.", field.getName()));
 				}
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to serialize field: %1$s from object: %2$s to NBT.", field.getName(), object), e);
+				LOGGER.debug(String.format("An error occured when attempting to serialize field: %1$s from object: %2$s to NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {
@@ -173,45 +175,47 @@ public class SerializationUtilities {
 			boolean isAccessible = field.isAccessible();
 			try {
 				// Mark it accessible if not.
-				field.setAccessible(true);
-
-				// Get the type of the field and then serialize it if possible.
-				Class<?> t = field.getType();
-				if (t.isEnum()) {
-					Method m = t.getMethod("values");
-					Object[] values = (Object[]) m.invoke(field.get(object));
-					Object result = values[nbt.getByte(field.getName())];
-					field.set(object, result);
-				} else if (t == boolean.class) {
-					field.set(object, nbt.getBoolean(field.getName()));
-				} else if (t == int.class) {
-					field.set(object, nbt.getInt(field.getName()));
-				} else if (t == float.class) {
-					field.set(object, nbt.getFloat(field.getName()));
-				} else if (t == double.class) {
-					field.set(object, nbt.getDouble(field.getName()));
-				} else if (t == long.class) {
-					field.set(object, nbt.getLong(field.getName()));
-				} else if (t == String.class) {
-					field.set(object, nbt.getString(field.getName()));
-				} else if (t == BlockPos.class) {
-					BlockPos pos = BlockPos.fromLong(nbt.getLong(field.getName()));
-					field.set(object, pos);
-				} else if (t == ResourceLocation.class) {
-					ResourceLocation loc = new ResourceLocation(nbt.getString(field.getName()));
-					field.set(object, loc);
-				} else if (t == FluidStack.class) {
-					FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt.getCompound(field.getName()));
-					field.set(object, stack);
-				} else if (INBTSerializable.class.isAssignableFrom(t)) {
-					@SuppressWarnings("unchecked")
-					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
-					serializeable.deserializeNBT(nbt.getCompound(field.getName()));
+				if (field.trySetAccessible()) {
+					// Get the type of the field and then serialize it if possible.
+					Class<?> t = field.getType();
+					if (t.isEnum()) {
+						Method m = t.getMethod("values");
+						Object[] values = (Object[]) m.invoke(field.get(object));
+						Object result = values[nbt.getByte(field.getName())];
+						field.set(object, result);
+					} else if (t == boolean.class) {
+						field.set(object, nbt.getBoolean(field.getName()));
+					} else if (t == int.class) {
+						field.set(object, nbt.getInt(field.getName()));
+					} else if (t == float.class) {
+						field.set(object, nbt.getFloat(field.getName()));
+					} else if (t == double.class) {
+						field.set(object, nbt.getDouble(field.getName()));
+					} else if (t == long.class) {
+						field.set(object, nbt.getLong(field.getName()));
+					} else if (t == String.class) {
+						field.set(object, nbt.getString(field.getName()));
+					} else if (t == BlockPos.class) {
+						BlockPos pos = BlockPos.fromLong(nbt.getLong(field.getName()));
+						field.set(object, pos);
+					} else if (t == ResourceLocation.class) {
+						ResourceLocation loc = new ResourceLocation(nbt.getString(field.getName()));
+						field.set(object, loc);
+					} else if (t == FluidStack.class) {
+						FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt.getCompound(field.getName()));
+						field.set(object, stack);
+					} else if (INBTSerializable.class.isAssignableFrom(t)) {
+						@SuppressWarnings("unchecked")
+						INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
+						serializeable.deserializeNBT(nbt.getCompound(field.getName()));
+					} else {
+						LOGGER.error(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					}
 				} else {
-					LOGGER.warn(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					LOGGER.warn(String.format("Unable to mark serializeable field %1$s as accessible.", field.getName()));
 				}
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to deserialize field: %1$s to object: %2$s from NBT.", field.getName(), object), e);
+				LOGGER.debug(String.format("An error occured when attempting to deserialize field: %1$s to object: %2$s from NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {

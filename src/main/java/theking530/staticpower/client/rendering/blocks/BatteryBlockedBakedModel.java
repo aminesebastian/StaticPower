@@ -64,14 +64,11 @@ public class BatteryBlockedBakedModel extends DefaultMachineBakedModel {
 		} else {
 			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), SIDE_MODE_UV_LAYOUTS.get(sideConfiguration));
 			if (side.getAxis() == Direction.Axis.X) {
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0, 5.0f, 5.0f), new Vector3f(16.0f, 11.0f, 11.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(-0.01f, 5.0f, 5.0f), new Vector3f(16.0f, 11.0f, 11.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
 						new ResourceLocation("dummy_name"));
 				newQuads.add(newQuad);
 			} else {
-				System.out.println(blockPartFace);
-				System.out.println(sideSprite);
-				System.out.println(side);
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(5.0f, 5.0f, 0.0f), new Vector3f(11.0f, 11.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(5.0f, 5.0f, -0.01f), new Vector3f(11.0f, 11.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
 						new ResourceLocation("dummy_name"));
 				newQuads.add(newQuad);
 			}

@@ -9,14 +9,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPowerMonitor;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
@@ -27,8 +25,8 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.PowerTransferMetrics;
 import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
-import theking530.staticpower.tileentities.components.power.TransferMetrics;
 import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
 
 public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerMetricsSyncConsumer {
@@ -46,11 +44,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	public final InventoryComponent chargingInventory;
 
 	@SaveSerialize
-	private TransferMetrics secondsMetrics;
-	@SaveSerialize
-	private TransferMetrics minuteMetrics;
-	@SaveSerialize
-	private TransferMetrics hourlyMetrics;
+	private PowerTransferMetrics metrics;
 
 	private long minPowerThreshold;
 	private long maxPowerThreshold;
@@ -86,8 +80,8 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 			return true;
 		});
 
-		// Get the tier.
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.BASIC);
+		// Get the maximum tier possible.
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.LUMUM);
 
 		// Calculate the IO.
 		maxPowerIO = tierObject.batteryMaxIO.get();
@@ -95,7 +89,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 		outputRFTick = maxPowerIO / 2;
 
 		// Set the capacities and IO.
-		energyStorage.getStorage().setCapacity(tierObject.batteryCapacity.get());
+		energyStorage.getStorage().setCapacity(maxPowerIO);
 		energyStorage.getStorage().setMaxReceive(inputRFTick);
 		energyStorage.getStorage().setMaxExtract(outputRFTick);
 
@@ -106,9 +100,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
 		// Create the metric capturing values.
-		secondsMetrics = new TransferMetrics();
-		minuteMetrics = new TransferMetrics();
-		hourlyMetrics = new TransferMetrics();
+		metrics = new PowerTransferMetrics();
 	}
 
 	@Override
@@ -132,39 +124,18 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 				}
 			}
 
-			// Sync every second on the server.
-			if ((world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
-				NetworkMessage msg = new TileEntityPowerMetricsSyncPacket(this.getPos(), this.secondsMetrics, this.getMinutesMetrics(), this.hourlyMetrics);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 25, msg);
-			}
+			// Capture metrics.
+			metrics.addMetric(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
 
-			// Capture the seconds metric.
-			if (secondsMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_SECOND) == 0) {
-				secondsMetrics.addMetrics(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
-			}
-
-			// Capture the minutes metric.
-			if (minuteMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_MINUTE) == 0) {
-				minuteMetrics.addMetrics(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
-			}
-
-			// Capture the hours metric.
-			if (hourlyMetrics.isEmpty() || (world.getGameTime() % SDTime.TICKS_PER_HOUR) == 0) {
-				hourlyMetrics.addMetrics(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
+			if (!getWorld().isRemote() && getWorld().getGameTime() % 20 == 0) {
+				TileEntityPowerMetricsSyncPacket msg = new TileEntityPowerMetricsSyncPacket(getPos(), metrics);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 20, msg);
 			}
 		}
 	}
 
-	public TransferMetrics getSecondsMetrics() {
-		return this.secondsMetrics;
-	}
-
-	public TransferMetrics getMinutesMetrics() {
-		return this.minuteMetrics;
-	}
-
-	public TransferMetrics getHoursMetrics() {
-		return this.hourlyMetrics;
+	public PowerTransferMetrics getMetrics() {
+		return metrics;
 	}
 
 	public void setMinimumPowerThreshold(int newThreshold) {
@@ -262,9 +233,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	}
 
 	@Override
-	public void recieveMetrics(TransferMetrics secondsMetrics, TransferMetrics minuteMetrics, TransferMetrics hourlyMetrics) {
-		this.secondsMetrics = secondsMetrics;
-		this.minuteMetrics = minuteMetrics;
-		this.hourlyMetrics = hourlyMetrics;
+	public void recieveMetrics(PowerTransferMetrics metrics) {
+		this.metrics = metrics;
 	}
 }

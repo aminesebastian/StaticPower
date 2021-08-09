@@ -10,45 +10,28 @@ import theking530.staticpower.network.NetworkMessage;
 
 public class ContainerPowerMetricsSyncPacket extends NetworkMessage {
 	private int windowId;
-	private TransferMetrics secondsMetrics;
-	private TransferMetrics minuteMetrics;
-	private TransferMetrics hourlyMetrics;
+	private PowerTransferMetrics metrics;
 
 	public ContainerPowerMetricsSyncPacket() {
 
 	}
 
-	/**
-	 * @param secondsMetrics
-	 * @param minuteMetrics
-	 * @param hourlyMetrics
-	 */
-	public ContainerPowerMetricsSyncPacket(int windowId, TransferMetrics secondsMetrics, TransferMetrics minuteMetrics, TransferMetrics hourlyMetrics) {
+	public ContainerPowerMetricsSyncPacket(int windowId, PowerTransferMetrics metrics) {
 		this.windowId = windowId;
-		this.secondsMetrics = secondsMetrics;
-		this.minuteMetrics = minuteMetrics;
-		this.hourlyMetrics = hourlyMetrics;
+		this.metrics = metrics;
 	}
 
 	@Override
 	public void encode(PacketBuffer buffer) {
 		buffer.writeInt(windowId);
-		buffer.writeCompoundTag(secondsMetrics.serializeNBT());
-		buffer.writeCompoundTag(minuteMetrics.serializeNBT());
-		buffer.writeCompoundTag(hourlyMetrics.serializeNBT());
+		buffer.writeCompoundTag(metrics.serializeNBT());
 	}
 
 	@Override
 	public void decode(PacketBuffer buffer) {
 		windowId = buffer.readInt();
-		secondsMetrics = new TransferMetrics();
-		secondsMetrics.deserializeNBT(buffer.readCompoundTag());
-
-		minuteMetrics = new TransferMetrics();
-		minuteMetrics.deserializeNBT(buffer.readCompoundTag());
-
-		hourlyMetrics = new TransferMetrics();
-		hourlyMetrics.deserializeNBT(buffer.readCompoundTag());
+		metrics = new PowerTransferMetrics();
+		metrics.deserializeNBT(buffer.readCompoundTag());
 	}
 
 	@Override
@@ -57,7 +40,7 @@ public class ContainerPowerMetricsSyncPacket extends NetworkMessage {
 			Container container = Minecraft.getInstance().player.openContainer;
 			if (container instanceof IPowerMetricsSyncConsumer && container.windowId == windowId) {
 				IPowerMetricsSyncConsumer powerCableContainer = (IPowerMetricsSyncConsumer) container;
-				powerCableContainer.recieveMetrics(secondsMetrics, minuteMetrics, hourlyMetrics);
+				powerCableContainer.recieveMetrics(metrics);
 			}
 		});
 	}

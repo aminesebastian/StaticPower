@@ -4,6 +4,7 @@ import java.text.NumberFormat;
 
 import net.minecraft.util.text.IFormattableTextComponent;
 import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.TranslationTextComponent;
 import theking530.staticpower.utilities.MetricConverter;
 
@@ -270,5 +271,9 @@ public class GuiTextUtilities {
 
 	public static IFormattableTextComponent formatNumberAsString(int number) {
 		return new StringTextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(number));
+	}
+
+	public static IFormattableTextComponent createTooltipBulletpoint(String localizationKey, TextFormatting color) {
+		return new StringTextComponent(color.toString() + "• " + new TranslationTextComponent(localizationKey).getString() + " ");
 	}
 }

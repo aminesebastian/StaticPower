@@ -84,8 +84,7 @@ public class TileEntityTank extends TileEntityBase {
 				fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
 		fluidTankComponent.setCanFill(true);
 		fluidTankComponent.setAutoSyncPacketsEnabled(true);
-		enableFaceInteraction();
-
+		
 		// Add the side configuration component.
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", (side, mode) -> {
 		}, (side, mode) -> {

@@ -195,11 +195,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 	}
 
-	public void onStaticPowerPostPlacement(BlockState state, Direction dir, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
-
-	}
-
-	public void onStaticPowerObservedNeighborChange(BlockState observerState, World world, BlockPos observerPos, Block changedBlock, BlockPos changedBlockPos) {
+	public void onNeighborReplaced(BlockState state, Direction dir, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
 
 	}
 
@@ -324,9 +320,9 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	public BlockState updatePostPlacement(BlockState state, Direction dir, BlockState facingState, IWorld world, BlockPos pos, BlockPos facingPos) {
 		super.updatePostPlacement(state, dir, facingState, world, pos, facingPos);
 		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getTileEntity(pos)).updatePostPlacement(state, dir, facingState, facingPos);
+			((TileEntityBase) world.getTileEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
 		}
-		onStaticPowerPostPlacement(state, dir, facingState, world, pos, facingPos);
+		onNeighborReplaced(state, dir, facingState, world, pos, facingPos);
 		return state;
 	}
 
@@ -338,11 +334,5 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 			((TileEntityBase) world.getTileEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
 		}
 		onStaticPowerNeighborChanged(state, world, pos, fromPos, isMoving);
-	}
-
-	@Override
-	public void observedNeighborChange(BlockState observerState, World world, BlockPos observerPos, Block changedBlock, BlockPos changedBlockPos) {
-		super.observedNeighborChange(observerState, world, observerPos, changedBlock, changedBlockPos);
-		onStaticPowerObservedNeighborChange(observerState, world, observerPos, changedBlock, changedBlockPos);
 	}
 }

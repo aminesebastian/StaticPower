@@ -1,6 +1,7 @@
 package theking530.staticcore.gui.widgets;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -210,50 +211,124 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 	public static class SupplierGraphDataSet extends AbstractGraphDataSet {
 		private Supplier<double[]> dataSupplier;
+		private Vector2D minMaxValues;
 
 		public SupplierGraphDataSet(Color color, Supplier<double[]> dataSupplier) {
 			super(color);
+			this.minMaxValues = new Vector2D();
 			this.dataSupplier = dataSupplier;
 		}
 
 		@Override
 		public double[] getData() {
-			return dataSupplier.get();
+			double[] data = dataSupplier.get();
+			for (int i = 0; i < data.length; i++) {
+				if (data[i] > minMaxValues.getY()) {
+					minMaxValues.setY((float) data[i]);
+				} else if (data[i] < minMaxValues.getX()) {
+					minMaxValues.setX((float) data[i]);
+				}
+			}
+			return data;
+		}
+
+		@Override
+		public Vector2D getMinMaxValues() {
+			return minMaxValues;
 		}
 	}
 
-	public static class ListGraphDataSet extends AbstractGraphDataSet {
-		private List<Double> data;
+	public static class DoubleGraphDataSet extends AbstractGraphDataSet {
+		private double[] data;
+		private Vector2D minMaxValues;
 
-		public ListGraphDataSet(Color color, List<Double> data) {
+		public DoubleGraphDataSet(Color color, Collection<Double> data) {
 			super(color);
-			this.data = data;
+
+			this.minMaxValues = new Vector2D();
+			this.data = new double[data.size()];
+
+			// Populate the data array.
+			int index = 0;
+			for (Double value : data) {
+				this.data[index] = value;
+				if (value > minMaxValues.getY()) {
+					minMaxValues.setY(value.floatValue());
+				} else if (value < minMaxValues.getX()) {
+					minMaxValues.setX(value.floatValue());
+				}
+				index++;
+			}
 		}
 
 		@Override
 		public double[] getData() {
-			double[] array = new double[data.size()];
-			for (int i = 0; i < array.length; i++) {
-				array[i] = data.get(i);
+			return data;
+		}
+
+		@Override
+		public Vector2D getMinMaxValues() {
+			return minMaxValues;
+		}
+	}
+
+	public static class FloatGraphDataSet extends AbstractGraphDataSet {
+		private double[] data;
+		private Vector2D minMaxValues;
+
+		public FloatGraphDataSet(Color color, Collection<Float> data) {
+			super(color);
+
+			this.minMaxValues = new Vector2D();
+			this.data = new double[data.size()];
+			
+			// Populate the data array.
+			int index = 0;
+			for (Float value : data) {
+				this.data[index] = value;
+				if (value > minMaxValues.getY()) {
+					minMaxValues.setY(value);
+				} else if (value < minMaxValues.getX()) {
+					minMaxValues.setX(value);
+				}
+				index++;
 			}
-			return array;
+		}
+
+		@Override
+		public double[] getData() {
+			return data;
+		}
+
+		@Override
+		public Vector2D getMinMaxValues() {
+			return minMaxValues;
 		}
 	}
 
 	public static class DynamicGraphDataSet extends AbstractGraphDataSet {
 		private List<Double> data;
 		private int maxDataLength;
+		private Vector2D minMaxValues;
 
 		public DynamicGraphDataSet(Color color) {
 			super(color);
 			this.data = new ArrayList<Double>();
 			this.maxDataLength = 0;
+			this.minMaxValues = new Vector2D();
 		}
 
 		public void addNewDataPoint(double newData) {
 			data.add(newData);
 			if (maxDataLength > 0 && data.size() > maxDataLength) {
 				data.remove(0);
+			}
+
+			// Capture the updated min and max values.
+			if (newData > minMaxValues.getY()) {
+				minMaxValues.setY((float) newData);
+			} else if (newData < minMaxValues.getX()) {
+				minMaxValues.setX((float) newData);
 			}
 		}
 
@@ -269,6 +344,11 @@ public class DataGraphWidget extends AbstractGuiWidget {
 				target[i] = data.get(i);
 			}
 			return target;
+		}
+
+		@Override
+		public Vector2D getMinMaxValues() {
+			return minMaxValues;
 		}
 	}
 
@@ -302,5 +382,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		public float getLineThickness();
 
 		public double[] getData();
+
+		public Vector2D getMinMaxValues();
 	}
 }

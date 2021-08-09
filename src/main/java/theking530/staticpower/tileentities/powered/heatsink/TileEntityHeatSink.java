@@ -67,7 +67,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements INamedConta
 		}
 
 		// If under water, generate bubbles.
-		float randomOffset = (3 * RANDOM.nextFloat()) - 1.5f;
+		float randomOffset = (3 * getWorld().rand.nextFloat()) - 1.5f;
 		if (SDMath.diceRoll(0.25f) && world.getBlockState(getPos().offset(Direction.UP)).getBlock() == Blocks.WATER) {
 			randomOffset /= 3.5f;
 			getWorld().addParticle(ParticleTypes.BUBBLE, getPos().getX() + 0.5f + randomOffset, getPos().getY() + 1.1f, getPos().getZ() + 0.5f + randomOffset, 0.0f, 0.5f, 0.0f);

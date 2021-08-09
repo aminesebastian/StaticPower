@@ -8,6 +8,7 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
@@ -42,10 +43,10 @@ public class TileEntityRenderBatteryBlock extends StaticPowerTileEntitySpecialRe
 
 			// Rotate to face the direction.
 			matrixStack.push();
-			renderToFaceSide(dir, matrixStack);
+			WorldRenderingUtilities.rotateMatrixToFaceSide(dir, matrixStack);
 
 			// Render the bar.
-			drawTexturedQuadUnlit(StaticPowerSprites.BATTERY_BLOCK_BAR, matrixStack, buffer, new Vector3D(0.225f, 0.225f, -0.03f), new Vector3D(0.55f, height, 1.0f), uv, Color.WHITE);
+			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.BATTERY_BLOCK_BAR, matrixStack, buffer, new Vector3D(0.225f, 0.225f, -0.03f), new Vector3D(0.55f, height, 1.0f), uv, Color.WHITE);
 
 			matrixStack.pop();
 		}

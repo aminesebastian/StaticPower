@@ -170,7 +170,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 			if (isGenerating) {
 				// Render water particles.
 				if (SDMath.diceRoll(0.4f)) {
-					float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
+					float randomOffset = (2 * getWorld().rand.nextFloat()) - 1.0f;
 					randomOffset /= 2f;
 					getWorld().addParticle(ParticleTypes.FALLING_WATER, getPos().getX() + 0.5 + randomOffset, getPos().getY() - 0.5, getPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
 				}
