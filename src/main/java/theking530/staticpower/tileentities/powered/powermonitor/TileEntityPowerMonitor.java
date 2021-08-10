@@ -7,8 +7,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPowerMonitor;
 import theking530.staticpower.data.StaticPowerTier;
@@ -26,6 +28,7 @@ import theking530.staticpower.tileentities.components.power.EnergyStorageCompone
 import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
 import theking530.staticpower.tileentities.components.power.PowerTransferMetrics;
+import theking530.staticpower.tileentities.components.power.PowerTransferMetrics.MetricCategory;
 import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
 import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
 
@@ -45,6 +48,8 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 
 	@SaveSerialize
 	private PowerTransferMetrics metrics;
+	private FloatGraphDataSet recievedData;
+	private FloatGraphDataSet providedData;
 
 	private long minPowerThreshold;
 	private long maxPowerThreshold;
@@ -235,5 +240,21 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	@Override
 	public void recieveMetrics(PowerTransferMetrics metrics) {
 		this.metrics = metrics;
+		recievedData = new FloatGraphDataSet(new Color(0.1f, 1.0f, 0.2f, 0.75f), metrics.getData(MetricCategory.SECONDS).getInputValues());
+		providedData = new FloatGraphDataSet(new Color(1.0f, 0.1f, 0.2f, 0.75f), metrics.getData(MetricCategory.SECONDS).getOutputValues());
+	}
+
+	/**
+	 * @return the recievedData
+	 */
+	public FloatGraphDataSet getRecievedData() {
+		return recievedData;
+	}
+
+	/**
+	 * @return the providedData
+	 */
+	public FloatGraphDataSet getProvidedData() {
+		return providedData;
 	}
 }

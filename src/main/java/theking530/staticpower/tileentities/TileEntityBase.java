@@ -226,7 +226,6 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	public void addRenderingUpdateRequest() {
 		if (getWorld().isRemote()) {
-			world.markAndNotifyBlock(pos, world.getChunkAt(pos), getBlockState(), getBlockState(), BlockFlags.BLOCK_UPDATE, 512);
 			requestModelDataUpdate();
 			StaticPower.LOGGER.debug(String.format("Executing rendering state update at position: %1$s.", getPos().toString()));
 		} else {

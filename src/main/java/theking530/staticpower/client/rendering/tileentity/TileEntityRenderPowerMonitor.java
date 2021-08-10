@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.rendering.WorldLineGraphRenderer;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
@@ -22,7 +21,6 @@ public class TileEntityRenderPowerMonitor extends StaticPowerTileEntitySpecialRe
 
 	public TileEntityRenderPowerMonitor(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
-		graphRenderer = new WorldLineGraphRenderer(0.02f, 13f, 7f);
 	}
 
 	@Override
@@ -38,18 +36,15 @@ public class TileEntityRenderPowerMonitor extends StaticPowerTileEntitySpecialRe
 
 		matrixStack.push();
 		matrixStack.scale(0.8125f, 0.433f, 1.0f);
-		
-		FloatGraphDataSet recievedData = new FloatGraphDataSet(new Color(0.1f, 1.0f, 0.2f, 0.75f), tileEntity.getMetrics().getData(MetricCategory.SECONDS).getInputValues());
-		FloatGraphDataSet providedData = new FloatGraphDataSet(new Color(1.0f, 0.1f, 0.2f, 0.75f), tileEntity.getMetrics().getData(MetricCategory.SECONDS).getOutputValues());
 
-		graphRenderer.addUpdateData("Received", recievedData);
-		graphRenderer.addUpdateData("Provided", providedData);
+		graphRenderer.addUpdateData("Received", tileEntity.getRecievedData());
+		graphRenderer.addUpdateData("Provided", tileEntity.getProvidedData());
 		graphRenderer.render(partialTicks, matrixStack, buffer, combinedLight);
 
 		matrixStack.pop();
 
-		double maxValue = recievedData.getMinMaxValues().getY();
-		double minValue = providedData.getMinMaxValues().getX();
+		double maxValue = tileEntity.getRecievedData().getMinMaxValues().getY();
+		double minValue = tileEntity.getProvidedData().getMinMaxValues().getX();
 
 		// Draw the max value.
 		WorldRenderingUtilities.drawTextInWorld(this.renderDispatcher, GuiTextUtilities.formatEnergyRateToString(maxValue).getString(), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),

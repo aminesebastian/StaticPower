@@ -118,7 +118,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				cable.getNetwork().updateGraph((ServerWorld) getWorld(), getPos());
 			}
 		}
-		System.out.println("Changed");
 	}
 
 	/**
@@ -127,7 +126,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	@Override
 	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
 		super.onNeighborReplaced(state, direction, facingState, FacingPos);
-		System.out.println("Replaced");
 		this.updateRenderingStateForCable();
 	}
 

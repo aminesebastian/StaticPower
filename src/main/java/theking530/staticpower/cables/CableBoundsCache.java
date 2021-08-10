@@ -93,7 +93,7 @@ public class CableBoundsCache {
 		// original and modify that internally.
 		if (!forCollision) {
 			if (ctx.getEntity() != null && ctx.getEntity() instanceof PlayerEntity) {
-				output = addAttachmentOutline(pos, (PlayerEntity) ctx.getEntity(), ctx, output);
+				output = addAttachmentOutline(pos, (PlayerEntity) ctx.getEntity(), ctx, output, forCollision);
 			}
 		}
 
@@ -276,7 +276,7 @@ public class CableBoundsCache {
 	 * @param shape  The shape to add the outline too.
 	 * @return
 	 */
-	protected VoxelShape addAttachmentOutline(BlockPos pos, PlayerEntity entity, ISelectionContext context, VoxelShape shape) {
+	protected VoxelShape addAttachmentOutline(BlockPos pos, PlayerEntity entity, ISelectionContext context, VoxelShape shape, boolean forCollision) {
 		// Gets the hovered result.
 		CableBoundsHoverResult hoverResult = getHoveredAttachmentOrCover(pos, entity);
 
@@ -302,10 +302,16 @@ public class CableBoundsCache {
 					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
 					break;
 				case HELD_COVER:
-					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					// Don't add for held items when checking for collision.
+					if (!forCollision) {
+						shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					}
 					break;
 				case HELD_ATTACHMENT:
-					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					// Don't add for held items when checking for collision.
+					if (!forCollision) {
+						shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					}
 					break;
 				default:
 					if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY) {
