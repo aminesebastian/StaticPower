@@ -3,6 +3,7 @@ package theking530.staticpower.cables.digistore;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.item.ItemStack;
@@ -93,7 +94,7 @@ public class DigistoreNetworkTransactionManager {
 		 * Cards.
 		 */
 
-		// Start filling momo-digistores that already have the item, break if we finish
+		// Start filling mono-digistores that already have the item, break if we finish
 		// the fill.
 		for (IDigistoreInventory digistore : potentials) {
 			// Skip empty digistores first time around.
@@ -182,17 +183,14 @@ public class DigistoreNetworkTransactionManager {
 		// Allocate a list of all potential digistores to insert into.
 		List<IDigistoreInventory> potentials = new ArrayList<IDigistoreInventory>();
 
-		// Go through each digistore and add them to the potentials list if it can
-		// accept the item.
+		// Go through each digistore and add them to the potentials list if it has the
+		// item.
 		for (IDigistoreInventory digistore : digistores) {
 			for (int i = 0; i < digistore.getUniqueItemCapacity(); i++) {
-				if (!digistore.getDigistoreStack(i).isEmpty()) {
-					if (ItemUtilities.areItemStacksStackable(extractItem, digistore.getDigistoreStack(i).getStoredItem())) {
-						potentials.add(digistore);
-					}
+				if (ItemUtilities.areItemStacksStackable(extractItem, digistore.getDigistoreStack(i).getStoredItem())) {
+					potentials.add(digistore);
 				}
 			}
-
 		}
 
 		// If we found no matches, return early.
@@ -231,6 +229,13 @@ public class DigistoreNetworkTransactionManager {
 
 		// Return what remains.
 		return output;
+	}
+
+	public void rebalanceInventory() {
+		List<ItemStack> stacks = new LinkedList<ItemStack>();
+		for (IDigistoreInventory digistore : digistores) {
+
+		}
 	}
 
 	/**

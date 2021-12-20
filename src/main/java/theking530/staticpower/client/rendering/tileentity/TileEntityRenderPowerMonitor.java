@@ -21,6 +21,7 @@ public class TileEntityRenderPowerMonitor extends StaticPowerTileEntitySpecialRe
 
 	public TileEntityRenderPowerMonitor(TileEntityRendererDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
+		graphRenderer= new WorldLineGraphRenderer(0.02f, 13, 7);
 	}
 
 	@Override
