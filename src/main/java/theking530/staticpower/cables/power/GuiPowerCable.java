@@ -9,31 +9,28 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
-import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.DataGraphWidget;
-import theking530.staticcore.gui.widgets.DataGraphWidget.ListGraphDataSet;
+import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.cables.power.PowerNetworkModule.TransferMetrics;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.tileentities.components.power.PowerTransferMetrics.MetricCategory;
+import theking530.staticpower.tileentities.components.power.PowerTransferMetrics.PowerTransferMetricWrapper;
 
 public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable, TileEntityPowerCable> {
-	protected enum MetricDisplayType {
-		SECONDS, MINUTES, HOURS
-	}
 
 	private DataGraphWidget graphWidget;
-	private MetricDisplayType displayType;
+	private MetricCategory displayType;
 	private TextButton metricTypeButton;
 
 	public GuiPowerCable(ContainerPowerCable container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 190, 125);
-		displayType = MetricDisplayType.SECONDS;
+		displayType = MetricCategory.SECONDS;
 	}
 
 	@Override
@@ -48,59 +45,51 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 	@Override
 	public void updateData() {
 		// Get the metrics.
-		TransferMetrics metrics = getMetrics();
+		PowerTransferMetricWrapper metrics = getMetrics();
+		if (metrics == null) {
+			return;
+		}
 
 		// Allocate the metrics containers.
-		List<Double> receivedData = new ArrayList<Double>();
-		List<Double> providedData = new ArrayList<Double>();
-		List<Double> netData = new ArrayList<Double>();
+		List<Float> netData = new ArrayList<Float>();
 
-		// Avoid extra allocations.
-		float recieved;
-		float provided;
-
-		// Capture the data.
-		for (int i = 0; i < metrics.getProvidedData().size(); i++) {
-			// Get the value.
-			recieved = metrics.getProvidedData().get(i);
-			provided = -metrics.getProvidedData().get(i);
-
-			// Capture the data.
-			providedData.add(Double.valueOf(CapabilityStaticVolt.convertmSVtoSV((long) recieved)));
-			receivedData.add(Double.valueOf(CapabilityStaticVolt.convertmSVtoSV((long) provided)));
-			netData.add(Double.valueOf(CapabilityStaticVolt.convertmSVtoSV((long) (recieved + provided))));
+		for (Float value : metrics.getInputValues()) {
+			netData.add(value);
 		}
-
+		
+		int index = 0;
+		for (Float value : metrics.getOutputValues()) {
+			netData.set(index, netData.get(index) - value);
+			index++;
+		}
+		
 		// Add the data.
-		graphWidget.setDataSet("received", new ListGraphDataSet(new Color(0, 1.0f, 0.2f, 0.75f), receivedData));
-		graphWidget.setDataSet("provided", new ListGraphDataSet(new Color(1.0f, 0, 0.1f, 0.75f), providedData));
-		graphWidget.setDataSet("net", new ListGraphDataSet(new Color(0, 0.1f, 1.0f, 1), netData));
+		graphWidget.setDataSet("received", new FloatGraphDataSet(new Color(0, 1.0f, 0.2f, 0.75f), metrics.getInputValues()));
+		graphWidget.setDataSet("provided", new FloatGraphDataSet(new Color(1.0f, 0, 0.1f, 0.75f), metrics.getOutputValues()));
+		graphWidget.setDataSet("net", new FloatGraphDataSet(new Color(0, 0.1f, 1.0f, 1), netData));
 	}
 
-	protected TransferMetrics getMetrics() {
-		if (displayType == MetricDisplayType.SECONDS) {
-			return getContainer().getSecondsMetrics();
-		} else if (displayType == MetricDisplayType.MINUTES) {
-			return getContainer().getMinuteMetrics();
-		} else if (displayType == MetricDisplayType.HOURS) {
-			return getContainer().getHourlyMetrics();
-		}
-		return null;
+	protected PowerTransferMetricWrapper getMetrics() {
+		return getContainer().getMetrics().getData(displayType);
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
-		if (displayType == MetricDisplayType.SECONDS) {
-			displayType = MetricDisplayType.MINUTES;
+		if (displayType == MetricCategory.TICKS) {
+			displayType = MetricCategory.SECONDS;
+			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_minutes"));
+			metricTypeButton.setText("S");
+		} else if (displayType == MetricCategory.SECONDS) {
+			displayType = MetricCategory.MINUTES;
 			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_minutes"));
 			metricTypeButton.setText("M");
-		} else if (displayType == MetricDisplayType.MINUTES) {
-			displayType = MetricDisplayType.HOURS;
+		} else if (displayType == MetricCategory.MINUTES) {
+			displayType = MetricCategory.HOURS;
 			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_hours"));
 			metricTypeButton.setText("H");
-		} else if (displayType == MetricDisplayType.HOURS) {
-			displayType = MetricDisplayType.SECONDS;
-			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_seconds"));
-			metricTypeButton.setText("S");
+		} else if (displayType == MetricCategory.HOURS) {
+			displayType = MetricCategory.TICKS;
+			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_ticks"));
+			metricTypeButton.setText("T");
 		}
 	}
 

@@ -5,7 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.container.Container;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.network.PacketBuffer;
@@ -57,12 +57,10 @@ public class PacketSyncDigistoreInventory extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			PlayerEntity player = Minecraft.getInstance().player;
-			if (player.openContainer.windowId == windowId) {
-				if (player.openContainer instanceof AbstractContainerDigistoreTerminal) {
-					DigistoreInventorySnapshot snapshot = DigistoreInventorySnapshot.deserialize(inventory);
-					((AbstractContainerDigistoreTerminal) player.openContainer).syncContentsFromServer(snapshot);
-				}
+			Container container = Minecraft.getInstance().player.openContainer;
+			if (container instanceof AbstractContainerDigistoreTerminal && container.windowId == windowId) {
+				DigistoreInventorySnapshot snapshot = DigistoreInventorySnapshot.deserialize(inventory);
+				((AbstractContainerDigistoreTerminal) container).syncContentsFromServer(snapshot);
 			}
 		});
 	}

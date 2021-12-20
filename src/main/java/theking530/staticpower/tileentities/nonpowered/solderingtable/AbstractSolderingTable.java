@@ -105,38 +105,61 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 		return true;
 	}
 
-	public ItemStack craftItem() {
+	public ItemStack craftItem(int amount) {
 		// Get the recipe. If we dont have a valid recipe, return 0.
 		SolderingRecipe recipe = getCurrentRecipe().orElse(null);
 		if (recipe == null || recipe.getIngredients().size() == 0) {
 			return ItemStack.EMPTY;
 		}
 
-		// Check the pattern.
-		for (int i = 0; i < patternInventory.getSlots(); i++) {
-			// Get the used ingredient.
-			Ingredient ing = recipe.getIngredients().get(i);
+		// Crafted results.
+		ItemStack output = ItemStack.EMPTY;
 
-			// Skip holes in the recipe.
-			if (ing.equals(Ingredient.EMPTY)) {
-				continue;
+		// Check the pattern.
+		for (int k = 0; k < amount; k++) {
+			// If we can't craft anymore, stop.
+			if (output.getCount() + recipe.getRecipeOutput().getCount() > recipe.getRecipeOutput().getMaxStackSize()) {
+				break;
 			}
 
-			// Remove the item.
-			for (int j = 0; j < inventory.getSlots(); j++) {
-				if (ing.test(inventory.getStackInSlot(j))) {
-					inventory.extractItem(j, 1, false);
-					break;
+			// Break out of the loop if we're out of items.
+			if (!hasRequiredItems()) {
+				break;
+			}
+
+			// Use the crafting items.
+			for (int i = 0; i < patternInventory.getSlots(); i++) {
+				// Get the used ingredient.
+				Ingredient ing = recipe.getIngredients().get(i);
+
+				// Skip holes in the recipe.
+				if (ing.equals(Ingredient.EMPTY)) {
+					continue;
 				}
+
+				// Remove the item.
+				for (int j = 0; j < inventory.getSlots(); j++) {
+					if (ing.test(inventory.getStackInSlot(j))) {
+						inventory.extractItem(j, 1, false);
+						break;
+					}
+				}
+			}
+
+			// Use the soldering iron.
+			ISolderingIron iron = (ISolderingIron) solderingIronInventory.getStackInSlot(0).getItem();
+			iron.useSolderingItem(solderingIronInventory.getStackInSlot(0));
+
+			// Grow the output.
+			if (output.isEmpty()) {
+				output = recipe.getRecipeOutput().copy();
+			} else {
+				output.grow(recipe.getRecipeOutput().copy().getCount());
 			}
 		}
 
-		// Use the soldering iron.
-		ISolderingIron iron = (ISolderingIron) solderingIronInventory.getStackInSlot(0).getItem();
-		iron.useSolderingItem(solderingIronInventory.getStackInSlot(0));
-
 		// Return the output.
-		return recipe.getRecipeOutput().copy();
+		return output;
 	}
 
 	public Optional<SolderingRecipe> getCurrentRecipe() {

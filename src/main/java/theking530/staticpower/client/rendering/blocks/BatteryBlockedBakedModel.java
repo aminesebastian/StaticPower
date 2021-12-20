@@ -5,8 +5,11 @@ import static net.minecraftforge.client.model.SimpleModelTransform.IDENTITY;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList.Builder;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.BlockFaceUV;
 import net.minecraft.client.renderer.model.BlockPartFace;
@@ -46,7 +49,7 @@ public class BatteryBlockedBakedModel extends DefaultMachineBakedModel {
 	}
 
 	@Override
-	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
 		// Add the original quads.
 		newQuads.add(originalQuad);
 
@@ -61,11 +64,11 @@ public class BatteryBlockedBakedModel extends DefaultMachineBakedModel {
 		} else {
 			BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), SIDE_MODE_UV_LAYOUTS.get(sideConfiguration));
 			if (side.getAxis() == Direction.Axis.X) {
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0, 5.0f, 5.0f), new Vector3f(16.0f, 11.0f, 11.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(-0.01f, 5.0f, 5.0f), new Vector3f(16.0f, 11.0f, 11.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
 						new ResourceLocation("dummy_name"));
 				newQuads.add(newQuad);
 			} else {
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(5.0f, 5.0f, 0.0f), new Vector3f(11.0f, 11.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
+				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(5.0f, 5.0f, -0.01f), new Vector3f(11.0f, 11.0f, 16.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
 						new ResourceLocation("dummy_name"));
 				newQuads.add(newQuad);
 			}

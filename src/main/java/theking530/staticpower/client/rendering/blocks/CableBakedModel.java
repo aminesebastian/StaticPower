@@ -83,7 +83,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		if (side == null) {
 			for (Direction dir : Direction.values()) {
 				if (renderingState.covers[dir.ordinal()] != null) {
-					coverBuilder.buildFacadeQuads(renderingState, layer, rand, newQuads, dir);
+					coverBuilder.buildFacadeQuads(state, renderingState, layer, rand, newQuads, dir);
 				}
 			}
 		}

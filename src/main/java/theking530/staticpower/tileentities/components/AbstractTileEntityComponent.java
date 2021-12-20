@@ -14,6 +14,7 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 
 /**
@@ -50,7 +51,7 @@ public abstract class AbstractTileEntityComponent {
 	public void onRemovedFromOwner(TileEntityBase owner) {
 	}
 
-	public void onOwningTileEntityValidate() {
+	public void onOwningTileEntityValidate(boolean isInitialPlacement) {
 
 	}
 
@@ -68,7 +69,7 @@ public abstract class AbstractTileEntityComponent {
 	public void postProcessUpdate() {
 	}
 
-	public void onInitializedInWorld(World world, BlockPos pos) {
+	public void onInitializedInWorld(World world, BlockPos pos, boolean firstTimePlaced) {
 		worldLoaded = true;
 	}
 
@@ -86,11 +87,26 @@ public abstract class AbstractTileEntityComponent {
 
 	}
 
+	/**
+	 * This method is called only on the server when a neighbor changes.
+	 * 
+	 * @param currentState
+	 * @param neighborPos
+	 * @param isMoving
+	 */
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
 
 	}
 
-	public void updatePostPlacement(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+	/**
+	 * This method is called on the server AND client when a neighbor changes.
+	 * 
+	 * @param state
+	 * @param direction
+	 * @param facingState
+	 * @param FacingPos
+	 */
+	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
 
 	}
 
@@ -145,7 +161,7 @@ public abstract class AbstractTileEntityComponent {
 	public void setEnabled(boolean isEnabled) {
 		if (this.isEnabled != isEnabled) {
 			this.isEnabled = isEnabled;
-			getTileEntity().markTileEntityForSynchronization();
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), true);
 			getTileEntity().markDirty();
 		}
 	}

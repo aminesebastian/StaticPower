@@ -127,8 +127,6 @@ public class TileEntitySqueezer extends TileEntityMachine {
 		// Set the power usage.
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -167,7 +165,6 @@ public class TileEntitySqueezer extends TileEntityMachine {
 
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

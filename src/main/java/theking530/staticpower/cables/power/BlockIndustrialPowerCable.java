@@ -35,7 +35,7 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	private ResourceLocation tier;
 
 	public BlockIndustrialPowerCable(String name, ResourceLocation tier) {
-		super(name, new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)));
+		super(name, new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)), 4.5f);
 		this.tier = tier;
 	}
 
@@ -47,7 +47,7 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.max_power_rate"));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.power_cable_max_rate"));
 		tooltip.add(new StringTextComponent("• ").append(new StringTextComponent(
 				TextFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerDelivery.get()).getString())));
 		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.industrial_cable_warning").mergeStyle(TextFormatting.RED)));

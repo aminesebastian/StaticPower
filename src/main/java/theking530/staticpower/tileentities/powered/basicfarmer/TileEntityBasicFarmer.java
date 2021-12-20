@@ -296,7 +296,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void useHoe() {
 		// If we have an hoe, and we're on the server, use it.
 		if (hasHoe() && !getWorld().isRemote) {
-			if (inputInventory.getStackInSlot(0).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), RANDOM, null)) {
+			if (inputInventory.getStackInSlot(0).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getWorld().rand, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
@@ -306,7 +306,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public void useAxe() {
 		// If we have an axe, and we're on the server, use it.
 		if (hasAxe() && !getWorld().isRemote) {
-			if (inputInventory.getStackInSlot(1).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), RANDOM, null)) {
+			if (inputInventory.getStackInSlot(1).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getWorld().rand, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
 				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
 			}
@@ -458,11 +458,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public boolean growCrop(BlockPos pos) {
 		for (int i = 0; i < getGrowthBonus() / 100; i++) {
-			if (RANDOM.nextInt(100) < getGrowthBonus()) {
+			if (getWorld().rand.nextInt(100) < getGrowthBonus()) {
 				if (getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos).getBlock() instanceof IGrowable) {
 					IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
 					if (tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), false)) {
-						tempCrop.grow((ServerWorld) getWorld(), RANDOM, pos, getWorld().getBlockState(pos));
+						tempCrop.grow((ServerWorld) getWorld(), getWorld().rand, pos, getWorld().getBlockState(pos));
 						((ServerWorld) getWorld()).spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 					}
 				}
@@ -480,7 +480,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			}
 		}
 		refreshBlocksInRange(range);
-		markTileEntityForSynchronization();
 
 		// Refresh the preview if it is currently begin drawn.
 		if (getShouldDrawRadiusPreview()) {

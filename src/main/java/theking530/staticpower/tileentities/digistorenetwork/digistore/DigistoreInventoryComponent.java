@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
+import java.util.function.BiConsumer;
+
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
@@ -13,6 +15,8 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 
 public class DigistoreInventoryComponent extends InventoryComponent implements IDigistoreInventory {
+	private BiConsumer<InventoryChangeType, ItemStack> digistoreChangeCallback;
+
 	public DigistoreInventoryComponent(String name, int slotCount) {
 		super(name, slotCount, MachineSideMode.Regular);
 		setFilter(new ItemStackHandlerFilter() {
@@ -148,7 +152,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 
 		// Raise the onChanged method if the contents changed.
 		if (stack.getCount() != initialCount) {
-			onChanged();
+			onChanged(InventoryChangeType.ADDED, stack);
 		}
 
 		return stack;
@@ -175,7 +179,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 		}
 		// Raise the onChanged method if we were able to extract contents.
 		if (output.getCount() > 0) {
-			onChanged();
+			onChanged(InventoryChangeType.REMOVED, stack);
 		}
 		return output;
 	}
@@ -213,7 +217,14 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 		return (float) getTotalContainedCount() / (float) getItemCapacity();
 	}
 
-	public void onChanged() {
-		getTileEntity().markTileEntityForSynchronization();
+	public InventoryComponent setDigistoreModifiedCallback(BiConsumer<InventoryChangeType, ItemStack> callback) {
+		digistoreChangeCallback = callback;
+		return this;
+	}
+
+	public void onChanged(InventoryChangeType changeType, ItemStack stack) {
+		if (digistoreChangeCallback != null) {
+			digistoreChangeCallback.accept(changeType, stack);
+		}
 	}
 }

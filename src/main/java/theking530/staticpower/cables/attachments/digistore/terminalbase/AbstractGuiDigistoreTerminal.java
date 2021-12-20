@@ -8,7 +8,8 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocus.Mode;
-import mezz.jei.config.KeyBindings;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.container.Slot;
 import net.minecraft.item.ItemStack;
@@ -297,7 +298,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 	@Override
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
-		if (!super.keyPressed(key, scanCode, modifiers)) {
+		if (!searchBar.isFocused()) {
 			// Update the fake items slots.
 			for (DigistoreSlotButton slot : fakeContainerSlots) {
 				if (slot.isEnabled() && slot.isHovered()) {
@@ -305,17 +306,21 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 					ItemStack buttonStack = slot.getItemStack();
 
 					// Do a little extra work here to support JEI lookups.
-					if (KeyBindings.showRecipe.getKey().getKeyCode() == key) {
-						if (!buttonStack.isEmpty()) {
-							IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.OUTPUT, buttonStack);
-							PluginJEI.RUNTIME.getRecipesGui().show(focus);
-							return true;
-						}
-					} else if (KeyBindings.showUses.getKey().getKeyCode() == key) {
-						if (!buttonStack.isEmpty()) {
-							IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.INPUT, buttonStack);
-							PluginJEI.RUNTIME.getRecipesGui().show(focus);
-							return true;
+					for (KeyBinding binding : Minecraft.getInstance().gameSettings.keyBindings) {
+						if (binding.getKey().getKeyCode() == key) {
+							if (binding.getKeyDescription() == "key.jei.showRecipe") {
+								if (!buttonStack.isEmpty()) {
+									IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.OUTPUT, buttonStack);
+									PluginJEI.RUNTIME.getRecipesGui().show(focus);
+									return true;
+								}
+							} else if (binding.getKeyDescription() == "key.jei.showUses") {
+								if (!buttonStack.isEmpty()) {
+									IFocus<ItemStack> focus = PluginJEI.RUNTIME.getRecipeManager().createFocus(Mode.INPUT, buttonStack);
+									PluginJEI.RUNTIME.getRecipesGui().show(focus);
+									return true;
+								}
+							}
 						}
 					}
 				}
@@ -323,7 +328,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		}
 
 		// Return false (same as the super).
-		return true;
+		return super.keyPressed(key, scanCode, modifiers);
 	}
 
 	public int getItemsPerRow() {
@@ -427,13 +432,23 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	}
 
 	protected void digistoreSlotPressed(StandardButton button, MouseButton mouse) {
-		// Get the stack represented by the fake slot.
-		ItemStack buttonStack = ((DigistoreSlotButton) button).getItemStack();
+		// Get the index of the button pressed.
+		int index = -1;
+		for (int i = 0; i < fakeContainerSlots.size(); i++) {
+			if (fakeContainerSlots.get(i) == button) {
+				index = i;
+			}
+		}
+
+		// If we found the button, offset it by the scroll.
+		if (index != -1) {
+			index += scrollBar.getScrollAmount() * getItemsPerRow();
+		}
 
 		// We call the method even if the fake slot is empty because the server uses
 		// clicks on these buttons for other things beyond picking items (such as
 		// inserting items).
-		container.digistoreFakeSlotClickedOnClient(buttonStack, mouse, hasShiftDown(), hasControlDown(), hasAltDown());
+		container.digistoreFakeSlotClickedOnClient(index, mouse, hasShiftDown(), hasControlDown(), hasAltDown());
 	}
 
 	protected void setHideDigistoreInventory(boolean hide) {

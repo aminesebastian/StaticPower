@@ -45,7 +45,7 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 		infoTab.addLine("desc2", new StringTextComponent("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
-		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 

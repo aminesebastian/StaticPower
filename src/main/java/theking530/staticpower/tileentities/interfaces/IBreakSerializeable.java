@@ -72,4 +72,15 @@ public interface IBreakSerializeable {
 		// Return the output.
 		return blockStack;
 	}
+
+	public static boolean doesItemStackHaveSerializeData(ItemStack stack) {
+		return stack.hasTag() && stack.getTag().contains(SERIALIZEABLE_NBT);
+	}
+
+	public static CompoundNBT getSerializeDataFromItemStack(ItemStack stack) {
+		if (doesItemStackHaveSerializeData(stack)) {
+			return stack.getTag().getCompound(SERIALIZEABLE_NBT);
+		}
+		return null;
+	}
 }

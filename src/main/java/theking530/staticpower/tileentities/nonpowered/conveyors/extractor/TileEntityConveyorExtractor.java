@@ -13,6 +13,7 @@ import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -75,6 +76,7 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, facing), MachineSideMode.Input);
 	}
 
+	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
 		if (side == BlockSide.FRONT) {
 			return mode == MachineSideMode.Input;
@@ -83,7 +85,8 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 		}
 	}
 
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
+	@Override
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return new DefaultSideConfiguration();
 	}
 }

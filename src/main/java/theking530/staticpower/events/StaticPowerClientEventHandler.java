@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.AtlasTexture;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
@@ -47,7 +48,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
+import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
@@ -75,10 +76,21 @@ public class StaticPowerClientEventHandler {
 		LOGGER.info("Initializing Block Render Layers!");
 		for (Block block : StaticPowerRegistry.BLOCKS) {
 			// Check and update the render type as needed.
-			if (block instanceof IBlockRenderLayerProvider) {
-				IBlockRenderLayerProvider renderLayerProvider = (IBlockRenderLayerProvider) block;
+			if (block instanceof IRenderLayerProvider) {
+				IRenderLayerProvider renderLayerProvider = (IRenderLayerProvider) block;
 				if (renderLayerProvider.getRenderType() != RenderType.getSolid()) {
 					RenderTypeLookup.setRenderLayer(block, renderLayerProvider.getRenderType());
+				}
+			}
+		}
+
+		LOGGER.info("Initializing Fluid Render Layers!");
+		for (Fluid fluid : StaticPowerRegistry.FLUIDS) {
+			// Check and update the render type as needed.
+			if (fluid instanceof IRenderLayerProvider) {
+				IRenderLayerProvider renderLayerProvider = (IRenderLayerProvider) fluid;
+				if (renderLayerProvider.getRenderType() != RenderType.getSolid()) {
+					RenderTypeLookup.setRenderLayer(fluid, renderLayerProvider.getRenderType());
 				}
 			}
 		}

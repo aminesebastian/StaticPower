@@ -98,7 +98,6 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		}
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
 		processingComponent.setMaxProcessingTime(TileEntityPoweredFurnace.getCookTime(recipe));
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -112,7 +111,6 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	protected ProcessingCheckState processingCompleted(FurnaceRecipe recipe) {
 		outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

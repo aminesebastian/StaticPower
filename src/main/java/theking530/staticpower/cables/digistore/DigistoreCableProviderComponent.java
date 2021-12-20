@@ -27,19 +27,35 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	public static final String POWER_USAGE_TAG = "power_usage";
+	public static final int MANAGER_PRESENCE_UPDATE_TIME = 20;
 	@UpdateSerialize
 	private boolean managerPresent;
+	private int managerPresenceUpdateTimer;
 	private boolean shouldControlOnBlockState;
 	private long powerUsage;
 
+	/**
+	 * This is for any tile entities or blocks that must attach to the digistore
+	 * network.
+	 * 
+	 * @param name
+	 */
 	public DigistoreCableProviderComponent(String name) {
 		this(name, 0);
 	}
 
+	/**
+	 * This is for any cables. Do not use this constructor on a digitstore network
+	 * tile entity or block.
+	 * 
+	 * @param name
+	 * @param powerUsage
+	 */
 	public DigistoreCableProviderComponent(String name, long powerUsage) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 		shouldControlOnBlockState = false;
@@ -63,16 +79,29 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
-					getTileEntity().markTileEntityForSynchronization();
+					getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), false);
 				}
 
 				// Update the on/off state of the block.
+				boolean shouldUpdateBlockState = false;
 				if (shouldControlOnBlockState) {
 					if (managerPresent && !getIsOnBlockState()) {
-						setIsOnBlockState(true);
+						shouldUpdateBlockState = true;
 					} else if (!managerPresent && getIsOnBlockState()) {
-						setIsOnBlockState(false);
+						shouldUpdateBlockState = true;
 					}
+				}
+
+				// If we should update the block state, wait the appropriate amount of time,
+				// then do it.
+				if (shouldUpdateBlockState) {
+					if (managerPresenceUpdateTimer >= MANAGER_PRESENCE_UPDATE_TIME) {
+						setIsOnBlockState(managerPresent);
+					} else {
+						managerPresenceUpdateTimer++;
+					}
+				} else {
+					managerPresenceUpdateTimer = 0;
 				}
 			});
 		}
@@ -93,14 +122,21 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@Override
 	public ItemStack removeAttachment(Direction side) {
 		ItemStack superResult = super.removeAttachment(side);
-		updatePowerUsage();
+		if (!getWorld().isRemote) {
+			updatePowerUsage();
+		}
 		return superResult;
 	}
 
 	public void updatePowerUsage() {
 		// Update the power usage on the server.
-		if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
-			updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
+		if (!getWorld().isRemote()) {
+			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
+				updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
+			}
+		} else {
+			StaticPower.LOGGER
+					.warn(String.format("Updating the power usage should only be performed on the server! A call from the client was made at position: %1$s.", getPos().toString()));
 		}
 	}
 

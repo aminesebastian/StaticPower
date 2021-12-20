@@ -35,7 +35,7 @@ public class BlockPowerCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
 
 	public BlockPowerCable(String name, ResourceLocation tier) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)));
+		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
 		this.tier = tier;
 	}
 
@@ -47,7 +47,7 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.max_power_rate"));
+		tooltip.add(new TranslationTextComponent("gui.staticpower.power_cable_max_rate"));
 		tooltip.add(new StringTextComponent("• ").append(
 				new StringTextComponent(TextFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cablePowerDelivery.get()).getString())));
 	}

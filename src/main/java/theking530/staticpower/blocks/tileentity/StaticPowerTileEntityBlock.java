@@ -46,11 +46,19 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	protected StaticPowerTileEntityBlock(String name, Properties properies) {
 		super(name, properies);
 		this.shouldDropContents = true;
-		this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
+		if (shouldHaveFacingProperty()) {
+			this.setDefaultState(stateContainer.getBaseState().with(FACING, Direction.NORTH));
+		}
 	}
 
 	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		builder.add(FACING);
+		if (shouldHaveFacingProperty()) {
+			builder.add(FACING);
+		}
+	}
+
+	public boolean shouldHaveFacingProperty() {
+		return true;
 	}
 
 	@Override
@@ -77,7 +85,9 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 	 * @param stack
 	 */
 	protected void setFacingBlockStateOnPlacement(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+		if (shouldHaveFacingProperty()) {
+			world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing().getOpposite()), 2);
+		}
 	}
 
 	@Override
@@ -165,7 +175,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock {
 
 	@Override
 	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
-		if (mode == RegularWrenchMode.ROTATE) {
+		if (mode == RegularWrenchMode.ROTATE && shouldHaveFacingProperty()) {
 			if (facing != Direction.UP && facing != Direction.DOWN) {
 				if (facing != world.getBlockState(pos).get(FACING)) {
 					world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing), 1 | 2);

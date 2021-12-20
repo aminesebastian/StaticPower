@@ -5,8 +5,11 @@ import static net.minecraftforge.client.model.SimpleModelTransform.IDENTITY;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableList.Builder;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.BakedQuad;
 import net.minecraft.client.renderer.model.BlockFaceUV;
 import net.minecraft.client.renderer.model.BlockPartFace;
@@ -47,7 +50,8 @@ public class TankMachineBakedModel extends DefaultMachineBakedModel {
 	}
 
 	@Override
-	protected void renderQuadsForSide(Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
+	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad,
+			MachineSideMode sideConfiguration) {
 		// Add the original quads.
 		newQuads.add(originalQuad);
 

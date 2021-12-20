@@ -121,7 +121,6 @@ public class TileEntityPackager extends TileEntityMachine {
 		currentProcessingGridSize = gridSize;
 
 		// Sync
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -136,7 +135,6 @@ public class TileEntityPackager extends TileEntityMachine {
 		ItemStack output = recipe.getOutput().calculateOutput();
 		outputInventory.insertItem(0, output, false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

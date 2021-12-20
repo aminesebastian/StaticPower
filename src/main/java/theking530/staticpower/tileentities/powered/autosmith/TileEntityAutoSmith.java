@@ -141,7 +141,6 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -185,7 +184,6 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

@@ -29,7 +29,7 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
-		getTabManager().registerTab(new GuiSideConfigTab(true, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));

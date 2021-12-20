@@ -45,7 +45,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 120));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));

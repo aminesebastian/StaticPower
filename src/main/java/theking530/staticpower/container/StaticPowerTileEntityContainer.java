@@ -69,7 +69,7 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 			// Send a packet to all listening players.
 			for (IContainerListener listener : this.listeners) {
 				if (listener instanceof ServerPlayerEntity) {
-					NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity());
+					NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity(), false);
 					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) listener), msg);
 				}
 			}

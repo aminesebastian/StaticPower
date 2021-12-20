@@ -7,6 +7,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.FlowingFluidBlock;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.fluid.FluidState;
@@ -23,8 +24,9 @@ import net.minecraft.world.IWorldReader;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
-public abstract class AbstractStaticPowerFluid extends FlowingFluid {
+public abstract class AbstractStaticPowerFluid extends FlowingFluid implements IRenderLayerProvider {
 
 	public Supplier<Item> Bucket;
 	public Supplier<StaticPowerFluidBlock> FluidBlock;
@@ -141,6 +143,11 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid {
 		} else {
 			super.tick(worldIn, pos, state);
 		}
+	}
+
+	@Override
+	public RenderType getRenderType() {
+		return RenderType.getTranslucent();
 	}
 
 	@Override

@@ -104,7 +104,6 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -125,7 +124,6 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		}
 
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

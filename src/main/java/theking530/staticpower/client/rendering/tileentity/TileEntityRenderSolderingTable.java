@@ -13,6 +13,7 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.TileEntitySolderingTable;
 
@@ -41,12 +42,12 @@ public class TileEntityRenderSolderingTable extends StaticPowerTileEntitySpecial
 				boolean render3D = itemModel.isGui3d();
 
 				if (render3D) {
-					drawItemInWorld(tileEntity, stack, TransformType.GUI,
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, stack, TransformType.GUI,
 							new Vector3D(0.35f + xOffsetFactor, -0.38f - yOffsetFactor, 0.88f),
 							new Vector3D(0.135f, 0.135f, 0.03f), partialTicks, matrixStack, buffer, combinedLight,
 							combinedOverlay);
 				} else {
-					drawItemInWorld(tileEntity, stack, TransformType.GUI,
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, stack, TransformType.GUI,
 							new Vector3D(0.35f + xOffsetFactor, -0.38f - yOffsetFactor, 0.88f),
 							new Vector3D(0.125f, 0.125f, 0.125f), partialTicks, matrixStack, buffer, combinedLight,
 							combinedOverlay);
@@ -57,7 +58,7 @@ public class TileEntityRenderSolderingTable extends StaticPowerTileEntitySpecial
 
 		// Render the soldering iron.
 		if (!tileEntity.solderingIronInventory.getStackInSlot(0).isEmpty()) {
-			drawItemInWorld(tileEntity, tileEntity.solderingIronInventory.getStackInSlot(0), TransformType.FIXED,
+			WorldRenderingUtilities.drawItemInWorld(tileEntity, tileEntity.solderingIronInventory.getStackInSlot(0), TransformType.FIXED,
 					new Vector3D(0.2f, 1.07f, 0.185f), new Vector3D(0.3f, 0.3f, 0.3f), new Vector3D(0, 0, 30), partialTicks, matrixStack,
 					buffer, combinedLight, combinedOverlay);
 		}

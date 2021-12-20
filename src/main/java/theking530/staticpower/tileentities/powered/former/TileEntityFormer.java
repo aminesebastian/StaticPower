@@ -99,7 +99,6 @@ public class TileEntityFormer extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -114,7 +113,6 @@ public class TileEntityFormer extends TileEntityMachine {
 		ItemStack output = recipe.getOutput().calculateOutput();
 		outputInventory.insertItem(0, output, false);
 		InventoryUtilities.clearInventory(internalInventory);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

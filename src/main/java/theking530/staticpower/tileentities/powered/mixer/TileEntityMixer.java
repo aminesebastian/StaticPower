@@ -16,6 +16,7 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
@@ -116,7 +117,6 @@ public class TileEntityMixer extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -139,7 +139,6 @@ public class TileEntityMixer extends TileEntityMachine {
 
 		// Clear the internal inventory.
 		InventoryUtilities.clearInventory(internalInventory);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -155,7 +154,7 @@ public class TileEntityMixer extends TileEntityMachine {
 	}
 
 	@Override
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Input2, MachineSideMode.Input3, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.LEFT, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input3);
 	}
 }

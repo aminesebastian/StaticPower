@@ -254,7 +254,6 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			onBlockMined(minedPos, minedBlockState);
 
 			// Mark the te as dirty.
-			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.error("Items backed up in internal inventory.");

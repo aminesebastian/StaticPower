@@ -249,6 +249,8 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	}
 
 	public void onItemCrafted(ItemStack[] recipe, ItemStack output) {
+		// Update the output slot.
+		updateOutputSlot(getPlayerInventory().player.world, getPlayerInventory().player, this.craftMatrix, this.craftResult);
 	}
 
 	/**

@@ -31,7 +31,9 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderDigist
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
+import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -49,7 +51,10 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 	public final DigistoreInventoryComponent inventory;
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<DigistoreRenderingState> RENDERING_STATE = new ModelProperty<DigistoreRenderingState>();
+	private static final float RENDER_UPDATE_THRESHOLD = 0.05f;
 
+	@UpdateSerialize
+	private float lastRenderUpdateFilledRatio;
 	@UpdateSerialize
 	private boolean locked;
 
@@ -65,6 +70,26 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 				}
 
 				return inventory.getUniqueItemCapacity() == 1;
+			}
+		});
+
+		// If the inventory changes (new card), re-render the block.
+		inventory.setModifiedCallback((type, stack, comp) -> {
+			if (type != InventoryChangeType.MODIFIED) {
+				if (!getWorld().isRemote()) {
+					float filledRatio = inventory.getFilledRatio();
+					if (Math.abs(filledRatio - lastRenderUpdateFilledRatio) > RENDER_UPDATE_THRESHOLD) {
+						lastRenderUpdateFilledRatio = filledRatio;
+						addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), true);
+					}
+				}
+			}
+		});
+
+		// If the digistore inventory contents change (new card), re-render the block.
+		inventory.setDigistoreModifiedCallback((type, stack) -> {
+			if (!getWorld().isRemote()) {
+				addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), true);
 			}
 		});
 	}
@@ -88,7 +113,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 						world.playSound(null, pos, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.PLAYERS, 0.1f, 1.8f);
 						world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
-						markTileEntityForSynchronization();
+						addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 						return ActionResultType.SUCCESS;
 					}
 				} else {
@@ -99,7 +124,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 					if (initialCount != remaining.getCount()) {
 						world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 0.8f, 1.0f);
-						markTileEntityForSynchronization();
+						addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 						return ActionResultType.SUCCESS;
 					} else {
 						return ActionResultType.PASS;
@@ -131,7 +156,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 
 				if (itemInserted) {
 					world.playSound(null, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 1.0f, 1.0f);
-					markTileEntityForSynchronization();
+					addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 					return ActionResultType.SUCCESS;
 				}
 			}
@@ -150,6 +175,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 			} else {
 				extractItemInWorld(true);
 			}
+			addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 		}
 	}
 
@@ -184,7 +210,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 			return;
 		}
 
-		// If someone the card in the slot is not a monostore card, return early.
+		// If somehow the card in the slot is not a monostore card, return early.
 		if (!(inventory.getStackInSlot(0).getItem() instanceof DigistoreMonoCard)) {
 			return;
 		}
@@ -209,8 +235,9 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 		ItemStack output = inv.extractItem(inv.getDigistoreStack(0).getStoredItem(), countToDrop, false);
 
 		// Drop the item. Check the count just in case again (edge case coverage).
-		if (countToDrop > 0) {
-			WorldUtilities.dropItem(getWorld(), getFacingDirection(), getPos(), output, output.getCount());
+		if (!output.isEmpty()) {
+			Direction facingDirection = getFacingDirection();
+			WorldUtilities.dropItem(getWorld(), facingDirection, getPos().offset(facingDirection), output, output.getCount());
 		}
 	}
 

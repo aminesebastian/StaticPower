@@ -29,6 +29,9 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 
 	public GuiDigistoreCraftingTerminal(ContainerDigistoreCraftingTerminal container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 270);
+
+		// Limit the view to only show 5 rows to make room for the crafting GUI.
+		setMaxRows(5);
 	}
 
 	@Override
@@ -54,9 +57,6 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		registerWidget(clearCurrentRecipe = new TextButton(118, 119, 8, 8, "x", (button, mouseButton) -> {
 			this.getContainer().clearCraftingSlots(playerInventory.player);
 		}));
-
-		// Limit the view to only show 5 rows to make room for the crafting GUI.
-		setMaxRows(5);
 	}
 
 	protected void onPreviousRecipeButtonPressed(StandardButton button, MouseButton mouseButton) {

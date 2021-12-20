@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
@@ -37,14 +38,14 @@ public class TileEntityRenderFluidInfuser extends StaticPowerTileEntitySpecialRe
 			float secondSectionHeight = secondSectionFilledPercentage * 0.284f;
 			float lastSectionHeight = lastSectionFilledPercentage * 0.095f;
 
-			drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.186f, 0.001f), new Vector3D(0.376f, firstSectionHeight, 1.0f),
-					new Vector4D(0.0f, 0.0f, 1.0f, firstSectionFilledPercentage * 0.45f), getForwardFacingLightLevel(tileEntity));
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.186f, 0.001f), new Vector3D(0.376f, firstSectionHeight, 1.0f),
+					new Vector4D(0.0f, 0.0f, 1.0f, firstSectionFilledPercentage * 0.45f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
-			drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.218f, 0.28f, 0.001f), new Vector3D(0.564f, secondSectionHeight, 1.0f),
-					new Vector4D(0.0f, 0.0f, 1.0f, secondSectionFilledPercentage * 0.75f), getForwardFacingLightLevel(tileEntity));
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.218f, 0.28f, 0.001f), new Vector3D(0.564f, secondSectionHeight, 1.0f),
+					new Vector4D(0.0f, 0.0f, 1.0f, secondSectionFilledPercentage * 0.75f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
-			drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.562f, 0.001f), new Vector3D(0.376f, lastSectionHeight, 1.0f),
-					new Vector4D(0.0f, 0.0f, 1.0f, lastSectionFilledPercentage * 0.45f), getForwardFacingLightLevel(tileEntity));
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.3125f, 0.562f, 0.001f), new Vector3D(0.376f, lastSectionHeight, 1.0f),
+					new Vector4D(0.0f, 0.0f, 1.0f, lastSectionFilledPercentage * 0.45f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
 			// Render the item inside the infuser.
 			if (!tileEntity.internalInventory.getStackInSlot(0).isEmpty()) {
@@ -55,10 +56,10 @@ public class TileEntityRenderFluidInfuser extends StaticPowerTileEntitySpecialRe
 				int forwardBlockLightLevel = WorldRenderer.getCombinedLight(tileEntity.getWorld(), tileEntity.getPos().offset(tileEntity.getFacingDirection()));
 
 				if (render3D) {
-					drawItemInWorld(tileEntity, tileEntity.internalInventory.getStackInSlot(0), TransformType.GUI, new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.02f),
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, tileEntity.internalInventory.getStackInSlot(0), TransformType.GUI, new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.02f),
 							partialTicks, matrixStack, buffer, forwardBlockLightLevel, combinedOverlay);
 				} else {
-					drawItemInWorld(tileEntity, tileEntity.internalInventory.getStackInSlot(0), TransformType.GUI, new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.16f),
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, tileEntity.internalInventory.getStackInSlot(0), TransformType.GUI, new Vector3D(0.5f, 0.42f, 1.005f), new Vector3D(0.3f, 0.3f, 0.16f),
 							partialTicks, matrixStack, buffer, forwardBlockLightLevel, combinedOverlay);
 				}
 			}

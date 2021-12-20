@@ -23,6 +23,9 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 
 	public GuiDigistorePatternEncoder(ContainerDigistorePatternEncoder container, PlayerInventory invPlayer, ITextComponent name) {
 		super(container, invPlayer, name, 176, 270);
+
+		// Limit the view to only show 5 rows to make room for the crafting GUI.
+		setMaxRows(5);
 	}
 
 	@Override
@@ -43,9 +46,6 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		// Add encode button.
 		registerWidget(encodeButton = new SpriteButton(152, 136, 16, 16, StaticPowerSprites.ARROW_DOWN, null, this::onEncodePressed));
 		encodeButton.setTooltip(new StringTextComponent("Encode Recipe"));
-
-		// Limit the view to only show 5 rows to make room for the crafting GUI.
-		setMaxRows(5);
 	}
 
 	@Override

@@ -6,9 +6,15 @@ import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 
 /**
  * Tile entity component responsible for provided side configuration.
@@ -21,29 +27,47 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		FORWARD, BACKWARDS;
 	}
 
+	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
+	static {
+		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input);
+		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
+		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.FRONT, true, MachineSideMode.Input);
+		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.BACK, true, MachineSideMode.Input);
+		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.LEFT, true, MachineSideMode.Input);
+		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.RIGHT, true, MachineSideMode.Input);
+	}
+
 	private MachineSideMode[] configuration;
-	private final MachineSideMode[] defaultConfiguration;
+	private boolean[] enabledState;
+	private DefaultSideConfiguration defaultConfiguration;
 	private final BiConsumer<Direction, MachineSideMode> callback;
 	private final BiPredicate<Direction, MachineSideMode> sideModeFilter;
 
 	public SideConfigurationComponent(String name, MachineSideMode[] defaultConfiguration) {
 		this(name, (dir, side) -> {
-		}, (dir, side) -> true, defaultConfiguration);
+		}, (dir, side) -> true, DEFAULT_SIDE_CONFIGURATION);
 	}
 
 	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter) {
-		this(name, onConfigurationChangedCallback, sideModeFilter,
-				new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output });
+		this(name, onConfigurationChangedCallback, sideModeFilter, DEFAULT_SIDE_CONFIGURATION);
 	}
 
 	public SideConfigurationComponent(String name, BiConsumer<Direction, MachineSideMode> onConfigurationChangedCallback, BiPredicate<Direction, MachineSideMode> sideModeFilter,
-			MachineSideMode[] defaultConfiguration) {
+			DefaultSideConfiguration defaultConfiguration) {
 		super(name);
 		this.callback = onConfigurationChangedCallback;
 		this.sideModeFilter = sideModeFilter;
 		this.defaultConfiguration = defaultConfiguration;
-		configuration = new MachineSideMode[6];
-		setToDefault(true);
+		configuration = new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
+		enabledState = new boolean[] { false, false, false, false, false, false };
+	}
+
+	@Override
+	public void onInitializedInWorld(World world, BlockPos pos, boolean firstTimePlaced) {
+		super.onInitializedInWorld(world, pos, firstTimePlaced);
+		if (firstTimePlaced) {
+			setToDefault(true);
+		}
 	}
 
 	/**
@@ -63,10 +87,41 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 * @return The mode that block side is set to.
 	 */
 	public MachineSideMode getWorldSpaceDirectionConfiguration(@Nonnull Direction facing) {
-		if(facing == null) {
+		if (facing == null) {
 			return MachineSideMode.Disabled;
 		}
 		return configuration[facing.ordinal()];
+	}
+
+	public boolean getWorldSpaceEnabledState(@Nonnull Direction direction) {
+		return enabledState[direction.ordinal()];
+	}
+
+	public boolean getBlockSideEnabledState(@Nonnull BlockSide side) {
+		// Get the block state and update the configuration.
+		BlockState currentBlockState = getTileEntity().getBlockState();
+		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
+			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, currentFacingDirection);
+			return getWorldSpaceEnabledState(worldSpaceSide);
+		}
+		return false;
+	}
+
+	public SideConfigurationComponent setWorldSpaceEnabledState(@Nonnull Direction direction, boolean enabled) {
+		enabledState[direction.ordinal()] = enabled;
+		return this;
+	}
+
+	public SideConfigurationComponent setBlockSideEnabledState(@Nonnull BlockSide side, boolean enabled) {
+		// Get the block state and update the configuration.
+		BlockState currentBlockState = getTileEntity().getBlockState();
+		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
+			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, currentFacingDirection);
+			setWorldSpaceEnabledState(worldSpaceSide, enabled);
+		}
+		return this;
 	}
 
 	/**
@@ -77,8 +132,24 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 */
 	public void setWorldSpaceDirectionConfiguration(@Nonnull Direction facing, @Nonnull MachineSideMode newMode) {
 		configuration[facing.ordinal()] = newMode;
-		getTileEntity().markTileEntityForSynchronization();
+		getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		callback.accept(facing, newMode);
+	}
+
+	/**
+	 * Sets the side configuration for a particular block's block side.
+	 * 
+	 * @param side    The block side of the block to change.
+	 * @param newMode The new mode for that side.
+	 */
+	public void setBlockSpaceConfiguration(@Nonnull BlockSide side, @Nonnull MachineSideMode newMode) {
+		// Get the block state and update the configuration.
+		BlockState currentBlockState = getTileEntity().getBlockState();
+		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
+			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, currentFacingDirection);
+			setWorldSpaceDirectionConfiguration(worldSpaceSide, newMode);
+		}
 	}
 
 	public void setWorldSpaceConfiguration(@Nonnull MachineSideMode... modes) {
@@ -86,18 +157,12 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 			throw new RuntimeException("Attempted to update the world space side configuration with an array that was not of length 6.");
 		}
 		configuration = modes;
-		getTileEntity().markTileEntityForSynchronization();
+		getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		callback.accept(null, null);
 	}
 
-	public void setDefaultConfiguration(@Nonnull MachineSideMode... modes) {
-		if (modes.length != 6) {
-			throw new RuntimeException("Attempted to update the default side configuration with an array that was not of length 6.");
-		}
-		for (int i = 0; i < modes.length; i++) {
-			defaultConfiguration[i] = modes[i];
-		}
-		setToDefault(true);
+	public void setDefaultConfiguration(DefaultSideConfiguration configuration) {
+		defaultConfiguration = configuration;
 	}
 
 	/**
@@ -133,7 +198,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 			configuration[side.ordinal()] = newMode;
 		} while (!sideModeFilter.test(side, newMode) && newMode != originalMode);
 
-		getTileEntity().markTileEntityForSynchronization();
+		getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 
 		// Finally, raise the changed callback.
 		callback.accept(side, newMode);
@@ -149,13 +214,29 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		setToDefault(false);
 	}
 
+	@Override
+	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
+		//setToDefault(true);
+	}
+
 	private void setToDefault(boolean suppressEvent) {
-		for (int i = 0; i < configuration.length; i++) {
-			configuration[i] = defaultConfiguration[i];
-			if (!suppressEvent) {
-				callback.accept(Direction.values()[i], defaultConfiguration[i]);
-				getTileEntity().markTileEntityForSynchronization();
+		// Get the block state and update the configuration.
+		BlockState currentBlockState = getTileEntity().getBlockState();
+		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
+			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			for (Direction dir : Direction.values()) {
+				BlockSide side = SideConfigurationUtilities.getBlockSide(dir, currentFacingDirection);
+				configuration[dir.ordinal()] = defaultConfiguration.getSideDefaultMode(side);
+				enabledState[dir.ordinal()] = defaultConfiguration.getSideDefaultEnabled(side);
+				if (!suppressEvent) {
+					callback.accept(dir, configuration[side.ordinal()]);
+				}
 			}
+		}
+
+		// If we're not suspending the event, perform a block update.
+		if (!suppressEvent) {
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		}
 	}
 
@@ -181,7 +262,10 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		for (int i = 0; i < 6; i++) {
-			nbt.putInt("SIDEMODE" + i, configuration[i].ordinal());
+			nbt.putInt("mode" + i, configuration[i].ordinal());
+		}
+		for (int i = 0; i < 6; i++) {
+			nbt.putBoolean("enabled" + i, enabledState[i]);
 		}
 		return nbt;
 	}
@@ -190,12 +274,15 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		for (int i = 0; i < 6; i++) {
-			configuration[i] = MachineSideMode.values()[nbt.getInt("SIDEMODE" + i)];
+			configuration[i] = MachineSideMode.values()[nbt.getInt("mode" + i)];
+		}
+		for (int i = 0; i < 6; i++) {
+			enabledState[i] = nbt.getBoolean("enabled" + i);
 		}
 	}
 
 	@Override
 	public String toString() {
-		return "SideConfiguration [configuration=" + Arrays.toString(configuration) + "]";
+		return "SideConfiguration [configuration=" + Arrays.toString(configuration) + ", " + "enabledState=" + Arrays.toString(enabledState) + "]";
 	}
 }

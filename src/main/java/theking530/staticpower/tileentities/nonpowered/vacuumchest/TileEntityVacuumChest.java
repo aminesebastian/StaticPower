@@ -148,10 +148,9 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements INa
 				if (true) {// experienceTank.canFill() && experienceTank.fill(new
 							// FluidStack(ModFluids.LiquidExperience, orb.getXpValue()), false) > 0) {
 					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
-					markTileEntityForSynchronization();
 					orb.remove();
 					getWorld().playSound(null, (double) pos.getX(), (double) pos.getY(), (double) pos.getZ(), SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.5F,
-							(RANDOM.nextFloat() + 1) / 2);
+							(getWorld().rand.nextFloat() + 1) / 2);
 				}
 			} else {
 				double var11 = 1.0 - distance / 15.0;

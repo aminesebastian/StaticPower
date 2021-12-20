@@ -8,6 +8,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraft.util.Hand;
@@ -15,9 +16,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -28,6 +27,7 @@ import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 
 public class BlockBattery extends StaticPowerMachineBlock {
 
@@ -46,13 +46,23 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString() + "• Capacity ")
+		// Add tooltip for any break serializeable values.
+		if (IBreakSerializeable.doesItemStackHaveSerializeData(stack)) {
+			CompoundNBT nbt = IBreakSerializeable.getSerializeDataFromItemStack(stack);
+			if (nbt.contains("MainEnergyStorage")) {
+				CompoundNBT energyNbt = nbt.getCompound("MainEnergyStorage").getCompound("EnergyStorage");
+				tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.stored_power", TextFormatting.AQUA)
+						.append(GuiTextUtilities.formatEnergyToString(energyNbt.getLong("current_power"))));
+			}
+		}
+
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.capacity", TextFormatting.GREEN)
 				.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.getTier(tier).batteryCapacity.get())));
-		tooltip.add(new StringTextComponent(TextFormatting.BLUE.toString() + "• Max Input ")
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_input", TextFormatting.BLUE)
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
-		tooltip.add(new StringTextComponent(TextFormatting.GOLD.toString() + "• Max Output ")
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_output", TextFormatting.GOLD)
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
-		tooltip.add(new StringTextComponent(TextFormatting.GRAY.toString() + "• ").append(new TranslationTextComponent("gui.staticpower.battery_block_charging_tooltip").mergeStyle(TextFormatting.GRAY)));
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.battery_block_charging_tooltip", TextFormatting.GRAY));
 	}
 
 	@Override

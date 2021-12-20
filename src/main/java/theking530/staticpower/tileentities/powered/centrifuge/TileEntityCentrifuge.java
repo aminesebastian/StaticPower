@@ -126,7 +126,6 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 			processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		} else {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
@@ -160,7 +159,6 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 			InventoryUtilities.insertItemIntoInventory(thirdOutputInventory, output3, false);
 
 			InventoryUtilities.clearInventory(internalInventory);
-			markTileEntityForSynchronization();
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.outputsCannotTakeRecipe();

@@ -13,6 +13,7 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.tileentities.powered.autocrafter.TileEntityAutoCraftingTable;
 
@@ -29,7 +30,7 @@ public class TileEntityRenderAutoCraftingTable
 			MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.push();
 		matrixStack.rotate(new Quaternion(new Vector3f(0.0f, 0.0f, 0.0f), -90, true));
-		int forwardBlockLightLevel = getForwardFacingLightLevel(tileEntity);
+		int forwardBlockLightLevel = WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity);
 		// Render any pattern items.
 		for (int i = 0; i < 9; i++) {
 			ItemStack stack = tileEntity.patternInventory.getStackInSlot(i);
@@ -42,12 +43,12 @@ public class TileEntityRenderAutoCraftingTable
 				boolean render3D = itemModel.isGui3d();
 
 				if (render3D) {
-					drawItemInWorld(tileEntity, stack, TransformType.GUI,
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, stack, TransformType.GUI,
 							new Vector3D(0.31f + xOffsetFactor, 0.687f - yOffsetFactor, 1.005f),
 							new Vector3D(0.11f, 0.11f, 0.02f), partialTicks, matrixStack, buffer,
 							forwardBlockLightLevel, combinedOverlay);
 				} else {
-					drawItemInWorld(tileEntity, stack, TransformType.GUI,
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, stack, TransformType.GUI,
 							new Vector3D(0.31f + xOffsetFactor, 0.687f - yOffsetFactor, 1.005f),
 							new Vector3D(0.11f, 0.11f, 0.11f), partialTicks, matrixStack, buffer,
 							forwardBlockLightLevel, combinedOverlay);

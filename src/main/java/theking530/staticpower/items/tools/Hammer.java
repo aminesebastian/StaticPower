@@ -99,7 +99,8 @@ public class Hammer extends StaticPowerItem {
 
 	public boolean onHitBlockLeftClick(ItemStack stack, PlayerEntity player, BlockPos pos, Direction face) {
 		// Only craft if on an anvil.
-		if (player.getEntityWorld().getBlockState(pos).isIn(Blocks.ANVIL)) {
+		if (player.getEntityWorld().getBlockState(pos).isIn(Blocks.ANVIL) || player.getEntityWorld().getBlockState(pos).isIn(Blocks.CHIPPED_ANVIL)
+				|| player.getEntityWorld().getBlockState(pos).isIn(Blocks.DAMAGED_ANVIL)) {
 			// Check for all items on the block above the one we hit.
 			boolean crafted = false;
 			AxisAlignedBB bounds = new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1);

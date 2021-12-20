@@ -18,6 +18,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderHopper
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -63,8 +64,7 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 
 			// Play a sound and synchronize if there were any experience filled.
 			if (filled > 0) {
-				getWorld().playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.15F, (RANDOM.nextFloat() + 1) / 2);
-				markTileEntityForSynchronization();
+				getWorld().playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.15F, (getWorld().rand.nextFloat() + 1) / 2);
 			}
 		}
 	}
@@ -115,7 +115,8 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 		}
 	}
 
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
+	@Override
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return new DefaultSideConfiguration().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
 	}
 }

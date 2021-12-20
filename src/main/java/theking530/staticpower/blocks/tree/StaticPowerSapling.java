@@ -23,10 +23,10 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
-import theking530.staticpower.blocks.interfaces.IBlockRenderLayerProvider;
+import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 
-public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlockProvider, IBlockRenderLayerProvider {
+public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlockProvider, IRenderLayerProvider {
 	public static final IntegerProperty STAGE = BlockStateProperties.STAGE_0_1;
 	protected static final VoxelShape SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
 	private final Supplier<Tree> tree;

@@ -53,6 +53,7 @@ import theking530.staticpower.tileentities.nonpowered.evaporator.BlockEvaporator
 import theking530.staticpower.tileentities.nonpowered.experiencehopper.BlockExperienceHopper;
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.tileentities.nonpowered.placer.BlockAutomaticPlacer;
+import theking530.staticpower.tileentities.nonpowered.randomitem.BlockRandomItemGenerator;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
@@ -79,6 +80,7 @@ import theking530.staticpower.tileentities.powered.mixer.BlockMixer;
 import theking530.staticpower.tileentities.powered.packager.BlockPackager;
 import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFurnace;
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
+import theking530.staticpower.tileentities.powered.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
@@ -216,6 +218,7 @@ public class ModBlocks {
 	public static BlockCauldron CleanCauldron;
 	public static BlockDirectDropper DirectDropper;
 	public static BlockAutomaticPlacer AutomaticPlacer;
+	public static BlockRandomItemGenerator RandomItemGenerator;
 
 	public static BlockStraightConveyor StraightConveyor;
 	public static BlockRampUpConveyor RampUpConveyor;
@@ -315,6 +318,9 @@ public class ModBlocks {
 	public static BlockBattery BatteryEnergized;
 	public static BlockBattery BatteryLumum;
 	public static BlockBattery BatteryCreative;
+
+	// Monitors
+	public static BlockPowerMonitor PowerMonitor;
 
 	// Rubber Tree
 	public static StaticPowerTreeLog RubberTreeWood;
@@ -471,6 +477,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(CleanCauldron = new BlockCauldron("clean_cauldron", true));
 		StaticPowerRegistry.preRegisterBlock(DirectDropper = new BlockDirectDropper("direct_dropper"));
 		StaticPowerRegistry.preRegisterBlock(AutomaticPlacer = new BlockAutomaticPlacer("automatic_placer"));
+		StaticPowerRegistry.preRegisterBlock(RandomItemGenerator = new BlockRandomItemGenerator("random_item_generator"));
 
 		StaticPowerRegistry.preRegisterBlock(StraightConveyor = new BlockStraightConveyor("conveyor_straight"));
 		StaticPowerRegistry.preRegisterBlock(RampUpConveyor = new BlockRampUpConveyor("conveyor_ramp_up"));
@@ -580,6 +587,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BatteryEnergized = new BlockBattery("battery_block_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(BatteryLumum = new BlockBattery("battery_block_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(BatteryCreative = new BlockBattery("battery_block_creative", StaticPowerTiers.CREATIVE));
+
+		StaticPowerRegistry.preRegisterBlock(PowerMonitor = new BlockPowerMonitor("power_monitor"));
 
 		StaticPowerRegistry
 				.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_WOOD)));

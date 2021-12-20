@@ -60,7 +60,7 @@ public class CableBoundsCache {
 	 * @param ctx
 	 * @return
 	 */
-	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx) {
+	public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext ctx, boolean forCollision) {
 		// Cache the shapes if need be.
 		if (!IsCached) {
 			// Cache the shapes
@@ -87,10 +87,14 @@ public class CableBoundsCache {
 
 		}
 
-		// Add the attachment outline. Don't perform an OR here, let it take in the
+		// Add the attachment outline if this is NOT a collision check (we don't want
+		// outlines for unattached attachments to disturb collision). Don't perform an
+		// OR here, let it take in the
 		// original and modify that internally.
-		if (ctx.getEntity() != null && ctx.getEntity() instanceof PlayerEntity) {
-			output = addAttachmentOutline(pos, (PlayerEntity) ctx.getEntity(), ctx, output);
+		if (!forCollision) {
+			if (ctx.getEntity() != null && ctx.getEntity() instanceof PlayerEntity) {
+				output = addAttachmentOutline(pos, (PlayerEntity) ctx.getEntity(), ctx, output, forCollision);
+			}
 		}
 
 		return output;
@@ -147,9 +151,10 @@ public class CableBoundsCache {
 				if (entity.getHeldItemMainhand().getItem() instanceof CableCover) {
 					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir, CableBoundsHoverType.HELD_COVER));
 				}
-				if (entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment) {
+				if (entity.getHeldItemMainhand().getItem() instanceof AbstractCableAttachment && CableUtilities.getConnectionState(entity.world, pos, dir) != CableConnectionState.CABLE) {
 					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), dir), dir,
 							CableBoundsHoverType.HELD_ATTACHMENT));
+					bounds.add(new CableHoverCheckRequest(CableExtensionShapes.get(dir), dir, CableBoundsHoverType.HELD_ATTACHMENT));
 				}
 			}
 
@@ -271,7 +276,7 @@ public class CableBoundsCache {
 	 * @param shape  The shape to add the outline too.
 	 * @return
 	 */
-	protected VoxelShape addAttachmentOutline(BlockPos pos, PlayerEntity entity, ISelectionContext context, VoxelShape shape) {
+	protected VoxelShape addAttachmentOutline(BlockPos pos, PlayerEntity entity, ISelectionContext context, VoxelShape shape, boolean forCollision) {
 		// Gets the hovered result.
 		CableBoundsHoverResult hoverResult = getHoveredAttachmentOrCover(pos, entity);
 
@@ -297,10 +302,16 @@ public class CableBoundsCache {
 					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
 					break;
 				case HELD_COVER:
-					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					// Don't add for held items when checking for collision.
+					if (!forCollision) {
+						shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					}
 					break;
 				case HELD_ATTACHMENT:
-					shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					// Don't add for held items when checking for collision.
+					if (!forCollision) {
+						shape = VoxelShapes.or(shape, getAttachmentShapeForSide(entity.getEntityWorld(), pos, entity.getHeldItemMainhand(), hoveredDirection));
+					}
 					break;
 				default:
 					if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY) {

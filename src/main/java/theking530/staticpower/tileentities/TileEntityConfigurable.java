@@ -15,19 +15,38 @@ import net.minecraft.world.World;
 import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
 
 public class TileEntityConfigurable extends TileEntityBase {
+	public static final DefaultSideConfiguration DEFAULT_NO_FACE_SIDE_CONFIGURATION = new DefaultSideConfiguration();
+	static {
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.BACK, true, MachineSideMode.Output);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.LEFT, true, MachineSideMode.Input);
+		DEFAULT_NO_FACE_SIDE_CONFIGURATION.setSide(BlockSide.RIGHT, true, MachineSideMode.Output);
+	}
+
 	public final SideConfigurationComponent ioSideConfiguration;
 	public final RedstoneControlComponent redstoneControlComponent;
+	/**
+	 * Indicates whether or not face interaction should be disabled on this tile
+	 * entity.
+	 */
+	@SaveSerialize
+	private boolean disableFaceInteraction;
 
 	public TileEntityConfigurable(TileEntityTypeAllocator<? extends TileEntityConfigurable> allocator) {
 		super(allocator);
+		disableFaceInteraction();
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration, getDefaultSideConfiguration()));
 		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 	}
@@ -91,6 +110,43 @@ public class TileEntityConfigurable extends TileEntityBase {
 		return isValidSideConfiguration(SideConfigurationUtilities.getBlockSide(direction, getFacingDirection()), mode);
 	}
 
+	/**
+	 * Disables capability interaction with the face of this block.
+	 */
+	public void disableFaceInteraction() {
+		// Setting this value will ensure the default side configuration returned by
+		// this machine will have the face interaction disabled.
+		disableFaceInteraction = true;
+
+		// If the post init has run, then update the enabled state in the world.
+		if (hasPostInitRun()) {
+			ioSideConfiguration.setBlockSideEnabledState(BlockSide.FRONT, false);
+		}
+	}
+
+	/**
+	 * Enables capability interaction with the face of this block.
+	 */
+	public void enableFaceInteraction() {
+		// Setting this value will ensure the default side configuration returned by
+		// this machine will have the face interaction enabled.
+		disableFaceInteraction = false;
+
+		// If the post init has run, then update the enabled state in the world.
+		if (hasPostInitRun()) {
+			ioSideConfiguration.setBlockSideEnabledState(BlockSide.FRONT, true);
+		}
+	}
+
+	/**
+	 * Checks to see if face interaction is disabled.
+	 * 
+	 * @return
+	 */
+	public boolean isFaceInteractionDisabled() {
+		return disableFaceInteraction;
+	}
+
 	@Override
 	public boolean shouldSerializeWhenBroken() {
 		return true;
@@ -101,7 +157,11 @@ public class TileEntityConfigurable extends TileEntityBase {
 		return true;
 	}
 
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Input, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		if (disableFaceInteraction) {
+			return DEFAULT_NO_FACE_SIDE_CONFIGURATION;
+		} else {
+			return SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION;
+		}
 	}
 }

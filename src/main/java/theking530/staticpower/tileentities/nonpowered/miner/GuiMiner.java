@@ -49,7 +49,7 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100), true);
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiUpgradeTab(container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));

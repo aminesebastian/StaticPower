@@ -19,6 +19,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
@@ -43,7 +44,8 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	private final String color;
 
 	public BlockRedstoneCable(String name) {
-		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)));
+		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),
+				name.contains("naked") ? 1.0f : 1.5f);
 
 		// String the color from the last section of the registry name.
 		this.color = name.substring(name.indexOf("_", name.indexOf("_", name.indexOf("_") + 1) + 1) + 1);
@@ -183,7 +185,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 		@Override
 		public ITextComponent getDisplayName() {
-			return owningBlock.getTranslatedName();
+			return new TranslationTextComponent(owningBlock.getTranslationKey());
 		}
 
 	}

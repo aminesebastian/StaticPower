@@ -29,7 +29,7 @@ public class GuiFusionFurnace extends StaticPowerTileEntityGui<ContainerFusionFu
 		infoTab.addLine("desc1", new StringTextComponent("Combines basic items into their more complex constructions."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiSideConfigTab(false, getTileEntity()));
+		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		setOutputSlotSize(20);
 	}

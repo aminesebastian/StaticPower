@@ -103,7 +103,6 @@ public class SerializationUtilities {
 			try {
 				// Mark it accessible if not.
 				field.setAccessible(true);
-
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
 				if (t.isEnum()) {
@@ -139,10 +138,10 @@ public class SerializationUtilities {
 					CompoundNBT serialized = serializeable.serializeNBT();
 					nbt.put(field.getName(), serialized);
 				} else {
-					LOGGER.warn(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					LOGGER.error(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
 				}
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to serialize field: %1$s from object: %2$s to NBT.", field.getName(), object), e);
+				LOGGER.debug(String.format("An error occured when attempting to serialize field: %1$s from object: %2$s to NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {
@@ -174,7 +173,6 @@ public class SerializationUtilities {
 			try {
 				// Mark it accessible if not.
 				field.setAccessible(true);
-
 				// Get the type of the field and then serialize it if possible.
 				Class<?> t = field.getType();
 				if (t.isEnum()) {
@@ -208,10 +206,10 @@ public class SerializationUtilities {
 					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
 					serializeable.deserializeNBT(nbt.getCompound(field.getName()));
 				} else {
-					LOGGER.warn(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
+					LOGGER.error(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
 				}
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to deserialize field: %1$s to object: %2$s from NBT.", field.getName(), object), e);
+				LOGGER.debug(String.format("An error occured when attempting to deserialize field: %1$s to object: %2$s from NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {

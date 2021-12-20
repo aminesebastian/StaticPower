@@ -36,6 +36,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -118,8 +119,7 @@ public class TileEntityPump extends TileEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
 		// Set the default side configuration.
-		ioSideConfiguration.setDefaultConfiguration(MachineSideMode.Disabled, MachineSideMode.Output, MachineSideMode.Disabled, MachineSideMode.Disabled, MachineSideMode.Disabled,
-				MachineSideMode.Disabled);
+		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input));
 
 		// Enable face interaction.
 		enableFaceInteraction();

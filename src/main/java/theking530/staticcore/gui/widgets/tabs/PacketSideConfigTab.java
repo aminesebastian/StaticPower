@@ -24,6 +24,19 @@ public class PacketSideConfigTab extends NetworkMessage {
 	}
 
 	@Override
+	public void encode(PacketBuffer buf) {
+		buf.writeBlockPos(position);
+
+		// Convert the configuration to an array of ordinals.
+		int[] configOrdinals = new int[configuration.length];
+		for (int i = 0; i < configOrdinals.length; i++) {
+			configOrdinals[i] = configuration[i].ordinal();
+		}
+		// Write the ordinals to the buffer.
+		buf.writeVarIntArray(configOrdinals);
+	}
+
+	@Override
 	public void decode(PacketBuffer buf) {
 		position = buf.readBlockPos();
 
@@ -37,19 +50,6 @@ public class PacketSideConfigTab extends NetworkMessage {
 		for (int i = 0; i < configOrdinals.length; i++) {
 			configuration[i] = MachineSideMode.values()[configOrdinals[i]];
 		}
-	}
-
-	@Override
-	public void encode(PacketBuffer buf) {
-		buf.writeBlockPos(position);
-
-		// Convert the configuration to an array of ordinals.
-		int[] configOrdinals = new int[configuration.length];
-		for (int i = 0; i < configOrdinals.length; i++) {
-			configOrdinals[i] = configuration[i].ordinal();
-		}
-		// Write the ordinals to the buffer.
-		buf.writeVarIntArray(configOrdinals);
 	}
 
 	@Override

@@ -33,6 +33,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.tools.TurbineBlades;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -139,7 +140,6 @@ public class TileEntityTurbine extends TileEntityMachine {
 						if (!isGenerating) {
 							isGenerating = true;
 							generatingSoundComponent.startPlayingSound(SoundEvents.BLOCK_BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundCategory.BLOCKS, 2.0f, 1.5f, getPos(), 32);
-							markTileEntityForSynchronization();
 						}
 
 						// Draw the input and fill the output.
@@ -162,7 +162,6 @@ public class TileEntityTurbine extends TileEntityMachine {
 			if (!generated && isGenerating) {
 				isGenerating = false;
 				generatingSoundComponent.stopPlayingSound();
-				markTileEntityForSynchronization();
 			}
 
 			// Perform the fluid suck from below.
@@ -171,7 +170,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 			if (isGenerating) {
 				// Render water particles.
 				if (SDMath.diceRoll(0.4f)) {
-					float randomOffset = (2 * RANDOM.nextFloat()) - 1.0f;
+					float randomOffset = (2 * getWorld().rand.nextFloat()) - 1.0f;
 					randomOffset /= 2f;
 					getWorld().addParticle(ParticleTypes.FALLING_WATER, getPos().getX() + 0.5 + randomOffset, getPos().getY() - 0.5, getPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
 				}
@@ -191,8 +190,9 @@ public class TileEntityTurbine extends TileEntityMachine {
 	}
 
 	@Override
-	protected MachineSideMode[] getDefaultSideConfiguration() {
-		return new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Input, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output, MachineSideMode.Output };
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return new DefaultSideConfiguration().setSide(BlockSide.LEFT, true, MachineSideMode.Output).setSide(BlockSide.RIGHT, true, MachineSideMode.Output)
+				.setSide(BlockSide.FRONT, true, MachineSideMode.Output).setSide(BlockSide.BACK, true, MachineSideMode.Output);
 	}
 
 	@Override
@@ -309,7 +309,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 		public static final float ACCELERATION = 120;
 		public static final float DECELERATION = 180;
 		public static final float MAX_SPEED = 1080;
-		
+
 		public float speed;
 		public float rotationAngle;
 		public ResourceLocation bladesTier;

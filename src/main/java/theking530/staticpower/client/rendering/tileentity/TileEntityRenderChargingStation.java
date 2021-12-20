@@ -14,6 +14,7 @@ import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.tileentities.powered.chargingstation.TileEntityChargingStation;
 
@@ -43,12 +44,12 @@ public class TileEntityRenderChargingStation extends StaticPowerTileEntitySpecia
 				boolean render3D = itemModel.isGui3d();
 
 				if (render3D) {
-					drawItemInWorld(tileEntity, stack, TransformType.GUI,
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, stack, TransformType.GUI,
 							new Vector3D(0.395f + xOffsetFactor, 0.715f - yOffsetFactor, 1.005f),
 							new Vector3D(0.12f, 0.12f, 0.02f), partialTicks, matrixStack, buffer,
 							forwardBlockLightLevel, combinedOverlay);
 				} else {
-					drawItemInWorld(tileEntity, stack, TransformType.GUI,
+					WorldRenderingUtilities.drawItemInWorld(tileEntity, stack, TransformType.GUI,
 							new Vector3D(0.395f + xOffsetFactor, 0.715f - yOffsetFactor, 1.005f),
 							new Vector3D(0.12f, 0.12f, 0.16f), partialTicks, matrixStack, buffer,
 							forwardBlockLightLevel, combinedOverlay);

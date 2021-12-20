@@ -2,6 +2,7 @@ package theking530.staticpower.init;
 
 import net.minecraft.item.Items;
 import net.minecraft.util.SoundEvents;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.fluid.StaticPowerFluidBundle.StaticPowerFluidBuilder;
@@ -74,7 +75,7 @@ public class ModFluids {
 		registerFluidBundle(LiquidExperience = new StaticPowerFluidBuilder("experience").addAutoBucket().build());
 
 		registerFluidBundle(Steam = new StaticPowerFluidBuilder("steam").addAutoBucket().addAttributes(builder -> {
-			builder.gaseous().density(-500).viscosity(500);
+			builder.gaseous().density(-500).viscosity(500).color(new Color(255f, 255f, 255f, 128f).encodeInInteger());
 		}).build());
 
 		registerFluidBundle(SeedOil = new StaticPowerFluidBuilder("oil_seed").addAutoBucket().addAttributes(builder -> {

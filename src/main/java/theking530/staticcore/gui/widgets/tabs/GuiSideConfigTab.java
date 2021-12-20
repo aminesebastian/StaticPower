@@ -42,22 +42,25 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	private TextButton backButton;
 	private TextButton frontButton;
 
-	private boolean allowFaceInteraction;
-
-	public GuiSideConfigTab(boolean faceInteraction, TileEntityBase te) {
+	public GuiSideConfigTab(TileEntityBase te) {
 		super("Side Config", Color.EIGHT_BIT_WHITE, 80, 80, GuiTextures.BLUE_TAB, te.getBlockState().getBlock());
 		tileEntity = te;
-		allowFaceInteraction = faceInteraction;
 
 		int xOffset = 3;
 		int yOffset = 8;
 		widgetContainer.registerWidget(topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 17, 20, 20, "T", this::buttonPressed));
 		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 13, 20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(frontButton = new TextButton(xOffset + 15, yOffset + 17, 20, 20, "F", this::buttonPressed));
+		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + 2 + tabHeight / 2, 20, 20, "B", this::buttonPressed));
 		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15, yOffset + 2 + tabHeight / 2, 20, 20, "L", this::buttonPressed));
 		widgetContainer.registerWidget(leftButton = new TextButton(xOffset + 15, yOffset + 2 + tabHeight / 2, 20, 20, "R", this::buttonPressed));
-		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + 2 + tabHeight / 2, 20, 20, "B", this::buttonPressed));
-		widgetContainer.registerWidget(frontButton = new TextButton(xOffset + 15, yOffset + 17, 20, 20, "F", this::buttonPressed));
-		frontButton.setVisible(allowFaceInteraction);
+
+		topButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.TOP));
+		bottomButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.BOTTOM));
+		frontButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.FRONT));
+		backButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.BACK));
+		rightButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.RIGHT));
+		leftButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.LEFT));
 
 		updateTooltips();
 	}
@@ -99,7 +102,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.LEFT, tileEntity.getFacingDirection()), direction);
 		} else if (button == rightButton) {
 			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, tileEntity.getFacingDirection()), direction);
-		} else if (button == frontButton && allowFaceInteraction) {
+		} else if (button == frontButton) {
 			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, tileEntity.getFacingDirection()), direction);
 		} else if (button == backButton) {
 			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.BACK, tileEntity.getFacingDirection()), direction);

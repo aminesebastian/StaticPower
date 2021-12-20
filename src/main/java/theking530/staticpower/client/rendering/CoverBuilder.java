@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
@@ -24,8 +26,10 @@ import net.minecraftforge.client.ForgeHooksClient;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableRenderingState;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
+import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.thirdparty.codechicken.lib.model.CachedFormat;
 import theking530.thirdparty.codechicken.lib.model.Quad;
 import theking530.thirdparty.codechicken.lib.model.pipeline.BakedPipeline;
@@ -38,6 +42,8 @@ import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadTin
 
 /**
  * The FacadeBuilder builds for facades..
+ *
+ * MASSIVE THANKS to the below. Huge help and fantastic code to learn from!
  *
  * @author covers1624
  */
@@ -74,7 +80,7 @@ public class CoverBuilder {
 	private final ThreadLocal<Quad> collectors = ThreadLocal.withInitial(Quad::new);
 
 	@SuppressWarnings("deprecation")
-	public void buildFacadeQuads(CableRenderingState cableState, RenderType layer, Random rand, List<BakedQuad> quads, Direction dir) {
+	public void buildFacadeQuads(@Nullable BlockState state, CableRenderingState cableState, RenderType layer, Random rand, List<BakedQuad> quads, Direction dir) {
 		// Get the blockstate for the cover and return early if its empty.
 		BlockState blockState = cableState.covers[dir.ordinal()];
 		if (blockState.isAir()) {
@@ -123,7 +129,7 @@ public class CoverBuilder {
 		QuadTinter tinter = pipeline.getElement("tinter", QuadTinter.class);
 		QuadCornerKicker kicker = pipeline.getElement("corner_kicker", QuadCornerKicker.class);
 
-		List<AxisAlignedBB> holeStrips = getBoxes(facadeBox,
+		List<AxisAlignedBB> holeStrips = getBoxes(facadeBox, state, cableState.connectionStates[sideIndex],
 				cableState.attachmentItems[sideIndex].isEmpty() ? null : (AbstractCableAttachment) cableState.attachmentItems[sideIndex].getItem(), dir.getAxis());
 
 		// calculate the side mask.
@@ -240,14 +246,27 @@ public class CoverBuilder {
 	 *
 	 * @return The box segments.
 	 */
-	private static List<AxisAlignedBB> getBoxes(AxisAlignedBB fb, AbstractCableAttachment attachment, Axis axis) {
-		if (attachment == null) {
+	private static List<AxisAlignedBB> getBoxes(AxisAlignedBB fb, @Nullable BlockState state, CableConnectionState connectionState, AbstractCableAttachment attachment, Axis axis) {
+		// Setup the bounds.
+		Vector3D bounds = null;
+
+		// If we're connected to another cable, set the bounds to the requested hole
+		// size.
+		if (connectionState == CableConnectionState.CABLE && state != null) {
+			if (state.getBlock() instanceof AbstractCableBlock) {
+				AbstractCableBlock cableBlock = (AbstractCableBlock) state.getBlock();
+				final float holeSize = cableBlock.coverHoleSize / 16.0f;
+				bounds = new Vector3D(holeSize, holeSize, holeSize);
+			}
+		} else if (attachment != null) {
+			// If we have an attachment, create a hole the size of the attachment.
+			bounds = attachment.getBounds().clone().divide(16.0f);
+		} else {
+			// Otherwise, return early.
 			return Collections.singletonList(fb);
 		}
 
 		List<AxisAlignedBB> boxes = new ArrayList<>();
-		final Vector3D bounds = attachment.getBounds().clone().divide(16.0f);
-
 		switch (axis) {
 		case Y:
 			boxes.add(new AxisAlignedBB(fb.minX, fb.minY, fb.minZ, 0.5f - bounds.getX(), fb.maxY, fb.maxZ));

@@ -116,7 +116,6 @@ public class TileEntityLathe extends TileEntityMachine {
 		this.processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 
@@ -142,7 +141,6 @@ public class TileEntityLathe extends TileEntityMachine {
 		fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		InventoryUtilities.clearInventory(internalInventory);
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

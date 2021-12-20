@@ -17,7 +17,9 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.TileEntityMachine;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -49,6 +51,8 @@ public class TileEntityBattery extends TileEntityMachine {
 	public static final TileEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityBattery>(
 			(allocator) -> new TileEntityBattery(allocator, StaticPowerTiers.CREATIVE), ModBlocks.BatteryCreative);
 
+	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
+
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE_BASIC.setTileEntitySpecialRenderer(TileEntityRenderBatteryBlock::new);
@@ -75,7 +79,9 @@ public class TileEntityBattery extends TileEntityMachine {
 
 	public TileEntityBattery(TileEntityTypeAllocator<TileEntityBattery> allocator, ResourceLocation tier) {
 		super(allocator, tier);
+		// Enable face interaction.
 		enableFaceInteraction();
+		this.ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION);
 
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));

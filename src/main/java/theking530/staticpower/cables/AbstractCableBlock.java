@@ -41,10 +41,19 @@ import theking530.staticpower.utilities.WorldUtilities;
 public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
 	public final CableBoundsCache cableBoundsCache;
+	public final float coverHoleSize;
 
-	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator) {
+	/**
+	 * 
+	 * @param name
+	 * @param cableBoundsGenerator
+	 * @param coverHoleSize        The size of the hole to render in a cover when
+	 *                             this cable passes through a cover.
+	 */
+	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator, float coverHoleSize) {
 		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid().harvestTool(ToolType.PICKAXE).setRequiresTool());
 		cableBoundsCache = cableBoundsGenerator;
+		this.coverHoleSize = coverHoleSize;
 	}
 
 	@Override
@@ -55,13 +64,13 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	@Deprecated
 	@Override
 	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return cableBoundsCache.getShape(state, worldIn, pos, context);
+		return cableBoundsCache.getShape(state, worldIn, pos, context, false);
 	}
 
 	@Deprecated
 	@Override
 	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		return cableBoundsCache.getShape(state, worldIn, pos, context);
+		return cableBoundsCache.getShape(state, worldIn, pos, context, true);
 	}
 
 	@Override
@@ -72,6 +81,11 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	@Override
 	public boolean hasTileEntity(BlockState state) {
 		return true;
+	}
+
+	@Override
+	public boolean shouldHaveFacingProperty() {
+		return false;
 	}
 
 	@Override
@@ -136,56 +150,54 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	@Override
 	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
 		super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
-		// Only perform on the server.
-		if (!world.isRemote) {
-			// Get the cable component and make sure its valid.
-			AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
-			if (component == null) {
-				return ActionResultType.FAIL;
-			}
+		// Get the cable component and make sure its valid.
+		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
+		if (component == null) {
+			return ActionResultType.FAIL;
+		}
 
-			// Check for the hover result.
-			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
+		// Check for the hover result.
+		CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 
-			// If non null, check for any attached cover or attachment.
-			if (!hoverResult.isEmpty()) {
-				Direction hoveredDirection = cableBoundsCache.getHoveredAttachmentOrCover(pos, player).direction;
+		// If non null, check for any attached cover or attachment.
+		if (!hoverResult.isEmpty()) {
+			Direction hoveredDirection = cableBoundsCache.getHoveredAttachmentOrCover(pos, player).direction;
 
-				// Remove the attachment on that side if there is one.
-				if (hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
-					ItemStack output = component.removeAttachment(hoveredDirection);
-					if (!output.isEmpty()) {
-						WorldUtilities.dropItem(world, pos, output, 1);
-						return ActionResultType.SUCCESS;
-					}
-				} else if (hoverResult.type == CableBoundsHoverType.ATTACHED_COVER) {
-					// Now also remove the cover if there is one.
-					ItemStack output = component.removeCover(hoveredDirection);
-					if (!output.isEmpty()) {
-						WorldUtilities.dropItem(world, pos, output, 1);
-						return ActionResultType.SUCCESS;
-					}
+			// Remove the attachment on that side if there is one.
+			if (hoverResult.type == CableBoundsHoverType.ATTACHED_ATTACHMENT) {
+				ItemStack output = component.removeAttachment(hoveredDirection);
+				if (!output.isEmpty()) {
+					WorldUtilities.dropItem(world, pos, output, 1);
+					return ActionResultType.SUCCESS;
+				}
+			} else if (hoverResult.type == CableBoundsHoverType.ATTACHED_COVER) {
+				// Now also remove the cover if there is one.
+				ItemStack output = component.removeCover(hoveredDirection);
+				if (!output.isEmpty()) {
+					WorldUtilities.dropItem(world, pos, output, 1);
+					return ActionResultType.SUCCESS;
 				}
 			}
-
-			// If we didnt return earlier, we probably hit the cable itseelf, lets see if we
-			// can disable or enabled part of it.
-			Direction hitSide = !hoverResult.isEmpty() ? hoverResult.direction : facing;
-			component.setSideDisabledState(hitSide, !component.isSideDisabled(hitSide));
-
-			// Update the cable opposite from the side we just toggled if a cable exists
-			// there.
-			AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.offset(hitSide));
-			if (oppositeComponent != null) {
-				oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
-			}
-
-			// Refresh the cable.
-			CableNetworkManager.get(world).refreshCable(CableNetworkManager.get(world).getCable(pos));
-
-			return ActionResultType.SUCCESS;
 		}
-		return ActionResultType.FAIL;
+
+		// If we didnt return earlier, we probably hit the cable itseelf, lets see if we
+		// can disable or enabled part of it.
+		Direction hitSide = !hoverResult.isEmpty() ? hoverResult.direction : facing;
+		component.setSideDisabledState(hitSide, !component.isSideDisabled(hitSide));
+
+		// Update the cable opposite from the side we just toggled if a cable exists
+		// there.
+		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.offset(hitSide));
+		if (oppositeComponent != null) {
+			oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
+		}
+
+		// Refresh the cable on the server.
+		if (!world.isRemote) {
+			CableNetworkManager.get(world).refreshCable(CableNetworkManager.get(world).getCable(pos));
+		}
+
+		return ActionResultType.SUCCESS;
 	}
 
 	@Override

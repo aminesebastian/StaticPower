@@ -118,8 +118,6 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		internalInventory.setStackInSlot(2, ItemStack.EMPTY);
 		internalInventory.setStackInSlot(3, ItemStack.EMPTY);
 		internalInventory.setStackInSlot(4, ItemStack.EMPTY);
-
-		markTileEntityForSynchronization();
 		return ProcessingCheckState.ok();
 	}
 

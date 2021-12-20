@@ -1,9 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"pip",
+		"igi",
 		"ubu",
-		"gmg"
+		"pmp"
 	],
 	"key": {
 		"b": {
@@ -16,7 +16,7 @@
 			"tag": "forge:gears/tin"
 		},
 		"p": {
-			"tag": "forge:plates/tin"
+			"tag": "forge:ingots/tin"
 		},
 		"m": {
 			"item": "staticpower:motor"
