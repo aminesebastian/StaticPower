@@ -1,6 +1,6 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -49,7 +49,7 @@ public class PhantomSlot extends StaticPowerContainerSlot {
 	}
 
 	@Override
-	public int getSlotStackLimit() {
+	public int getMaxStackSize() {
 		return Integer.MAX_VALUE;
 	}
 }

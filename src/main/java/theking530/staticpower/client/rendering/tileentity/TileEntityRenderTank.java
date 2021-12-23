@@ -1,13 +1,13 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -23,12 +23,12 @@ import theking530.staticpower.tileentities.nonpowered.tank.TileEntityTank;
 public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<TileEntityTank> {
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
 
-	public TileEntityRenderTank(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public TileEntityRenderTank(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	protected void renderTileEntityBase(TileEntityTank tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+	protected void renderTileEntityBase(TileEntityTank tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		// Render the contained fluid if it exists.
 		if (tileEntity.fluidTankComponent.getVisualFillLevel() > 0) {
@@ -53,7 +53,7 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 		// transparency.
 		if (ModelLoader.instance() != null && ModelLoader.instance().getSpriteMap() != null) {
 			@SuppressWarnings("deprecation")
-			AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+			TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 			TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
 			CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL),
 					new Color(0.4f, 0.45f, 0.55f, 0.35f), matrixStack, sprite);

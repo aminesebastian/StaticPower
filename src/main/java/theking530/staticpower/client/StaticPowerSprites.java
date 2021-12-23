@@ -2,7 +2,7 @@ package theking530.staticpower.client;
 
 import java.util.HashSet;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerSprites {

@@ -5,12 +5,14 @@ import org.lwjgl.opengl.GL11;
 import com.mojang.blaze3d.platform.GlStateManager;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.ResourceLocation;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
@@ -62,7 +64,7 @@ public class SpriteDrawable implements IDrawable {
 
 	@SuppressWarnings("deprecation")
 	public TextureAtlasSprite getSpriteTexture() {
-		return Minecraft.getInstance().getAtlasSpriteGetter(AtlasTexture.LOCATION_BLOCKS_TEXTURE).apply(sprite);
+		return Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(sprite);
 	}
 
 	public void setSprite(ResourceLocation sprite) {
@@ -74,40 +76,40 @@ public class SpriteDrawable implements IDrawable {
 	public void draw(float x, float y, float z) {
 		if (sprite != null) {
 			// Allocate the rendering utilities/buffers.
-			Tessellator tessellator = Tessellator.getInstance();
-			BufferBuilder tes = tessellator.getBuffer();
-			BufferBuilder vertexbuffer = tessellator.getBuffer();
-			tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
+			Tesselator tessellator = Tesselator.getInstance();
+			BufferBuilder tes = tessellator.getBuilder();
+			BufferBuilder vertexbuffer = tessellator.getBuilder();
+			tes.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
 
 			// Get the actual texture.
 			TextureAtlasSprite spriteTexture = getSpriteTexture();
 
 			// Turn on the blending just in case its not on.
-			GlStateManager.enableBlend();
+			GlStateManager._enableBlend();
 			GL11.glDisable(GL11.GL_CULL_FACE);
 
 			if (spriteTexture.getName().toString().equals("minecraft:missingno")) {
 				// Bind the texture.
-				Minecraft.getInstance().getTextureManager().bindTexture(sprite);
+				Minecraft.getInstance().getTextureManager().bindForSetup(sprite);
 				// Draw the sprite.
-				vertexbuffer.pos(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(uv.getX(), uv.getW()).endVertex();
-				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(uv.getX(), uv.getY()).endVertex();
-				vertexbuffer.pos(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(uv.getZ(), uv.getY()).endVertex();
-				vertexbuffer.pos(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(uv.getZ(), uv.getW()).endVertex();
-				tessellator.draw();
+				vertexbuffer.vertex(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getX(), uv.getW()).endVertex();
+				vertexbuffer.vertex(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getX(), uv.getY()).endVertex();
+				vertexbuffer.vertex(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getZ(), uv.getY()).endVertex();
+				vertexbuffer.vertex(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getZ(), uv.getW()).endVertex();
+				tessellator.end();
 
 			} else {
 				// TO-DO: Implement UV here.
-				Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+				Minecraft.getInstance().getTextureManager().bindForSetup(TextureAtlas.LOCATION_BLOCKS);
 				// Draw the sprite.
-				vertexbuffer.pos(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMinU(), spriteTexture.getMaxV())
+				vertexbuffer.vertex(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(spriteTexture.getU0(), spriteTexture.getV1())
 						.endVertex();
-				vertexbuffer.pos(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMinU(), spriteTexture.getMinV()).endVertex();
-				vertexbuffer.pos(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).tex(spriteTexture.getMaxU(), spriteTexture.getMinV())
+				vertexbuffer.vertex(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(spriteTexture.getU0(), spriteTexture.getV0()).endVertex();
+				vertexbuffer.vertex(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(spriteTexture.getU1(), spriteTexture.getV0())
 						.endVertex();
-				vertexbuffer.pos(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
-						.tex(spriteTexture.getMaxU(), spriteTexture.getMaxV()).endVertex();
-				tessellator.draw();
+				vertexbuffer.vertex(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.uv(spriteTexture.getU1(), spriteTexture.getV1()).endVertex();
+				tessellator.end();
 			}
 			GL11.glEnable(GL11.GL_CULL_FACE);
 		}

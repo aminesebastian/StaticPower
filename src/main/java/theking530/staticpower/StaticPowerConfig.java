@@ -7,13 +7,12 @@ import java.util.function.Function;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.LongValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
@@ -42,11 +41,6 @@ public class StaticPowerConfig {
 		COMMON = commonPair.getLeft();
 
 		TIERS = new HashMap<>();
-	}
-
-	@SubscribeEvent
-	public static void onModConfigEvent(final ModConfig.ModConfigEvent configEvent) {
-
 	}
 
 	/**

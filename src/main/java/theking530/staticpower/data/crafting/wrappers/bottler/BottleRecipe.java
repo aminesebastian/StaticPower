@@ -1,16 +1,16 @@
 package theking530.staticpower.data.crafting.wrappers.bottler;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class BottleRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<BottleRecipe> RECIPE_TYPE = IRecipeType.register("bottler");
+	public static final RecipeType<BottleRecipe> RECIPE_TYPE = RecipeType.register("bottler");
 
 	private final ItemStack filledBottle;
 	private final ItemStack emptyBottle;
@@ -36,12 +36,12 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return BottlerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 
@@ -63,11 +63,11 @@ public class BottleRecipe extends AbstractStaticPowerRecipe {
 			// Get the other bottle recipe.
 			BottleRecipe otherBottleRecipe = (BottleRecipe) otherRecipe;
 			// Check the filled bottles.
-			if (!ItemStack.areItemsEqual(filledBottle, otherBottleRecipe.filledBottle)) {
+			if (!ItemStack.isSame(filledBottle, otherBottleRecipe.filledBottle)) {
 				return false;
 			}
 			// Check the empty bottles.
-			if (!ItemStack.areItemsEqual(emptyBottle, otherBottleRecipe.emptyBottle)) {
+			if (!ItemStack.isSame(emptyBottle, otherBottleRecipe.emptyBottle)) {
 				return false;
 			}
 			// Check the fluids.

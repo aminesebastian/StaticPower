@@ -9,15 +9,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 
 public class StaticPowerJsonParsingUtilities {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerJsonParsingUtilities.class);
@@ -42,7 +42,7 @@ public class StaticPowerJsonParsingUtilities {
 			// If there is additional nbt provided, take that into consideration.
 			if (object.has("nbt")) {
 				try {
-					output.setTag(JsonToNBT.getTagFromJson(object.get("nbt").getAsString()));
+					output.setTag(TagParser.parseTag(object.get("nbt").getAsString()));
 				} catch (Exception e) {
 					throw new RuntimeException("An error occured when attempting to apply the nbt to fluid stack from a recipe.", e);
 				}
@@ -56,17 +56,17 @@ public class StaticPowerJsonParsingUtilities {
 	}
 
 	public static ItemStack parseItemWithNbt(JsonObject itemJson) {
-		ItemStack item = ShapedRecipe.deserializeItem(itemJson);
+		ItemStack item = ShapedRecipe.itemStackFromJson(itemJson);
 		if (itemJson.has("nbt")) {
 			if (!item.hasTag()) {
-				item.setTag(new CompoundNBT());
+				item.setTag(new CompoundTag());
 			}
 			parseNbtFromJson(itemJson.getAsJsonObject("nbt"), item.getTag());
 		}
 		return item;
 	}
 
-	public static void parseNbtFromJson(JsonObject object, CompoundNBT outputTag) {
+	public static void parseNbtFromJson(JsonObject object, CompoundTag outputTag) {
 		// Iterate through all the members and attempt to parse them.
 		for (Entry<String, JsonElement> member : object.entrySet()) {
 			// Only consider primitives for now.

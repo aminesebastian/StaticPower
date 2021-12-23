@@ -2,14 +2,14 @@ package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.network.play.server.SSetSlotPacket;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -29,13 +29,13 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	}
 
 	private @Nullable SolderingTableOutputSlot outputSlot;
-	private CraftResultInventory craftResult;
+	private ResultContainer craftResult;
 
-	public ContainerSolderingTable(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerSolderingTable(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntitySolderingTable) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerSolderingTable(int windowId, PlayerInventory playerInventory, TileEntitySolderingTable owner) {
+	public ContainerSolderingTable(int windowId, Inventory playerInventory, TileEntitySolderingTable owner) {
 		super(TYPE, windowId, playerInventory, owner);
 		enableSolderingIronSlot = true;
 
@@ -54,7 +54,7 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	@Override
 	protected void addOutputSlot() {
 		// Craft result inventory.
-		craftResult = new CraftResultInventory();
+		craftResult = new ResultContainer();
 		// Output slot.
 		addSlot(outputSlot = new SolderingTableOutputSlot(getPlayerInventory().player, craftResult, 0, 129, 38));
 	}
@@ -62,13 +62,13 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	/**
 	 * Handles checking for if the crafting pattern has changed.
 	 */
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
+	public void broadcastChanges() {
+		super.broadcastChanges();
 		updateOutputSlot();
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		// If we clicked on the output slot, do the crafting.
 		if (slotId == 10) {
 			// Get the recipe. If we dont currently have a valid recipe, just return an
@@ -81,14 +81,14 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 			if (clickTypeIn == ClickType.PICKUP) {
 				// If the player clicked on the output and their held item does not stack with
 				// the output, do nothing and return an empty itemstack.
-				ItemStack heldItem = getPlayerInventory().getItemStack();
-				if (!heldItem.isEmpty() && !ItemUtilities.areItemStacksStackable(heldItem, recipe.getRecipeOutput())) {
+				ItemStack heldItem = getPlayerInventory().getCarried();
+				if (!heldItem.isEmpty() && !ItemUtilities.areItemStacksStackable(heldItem, recipe.getResultItem())) {
 					return ItemStack.EMPTY;
 				}
 
 				// If crafting the item would result in a stack larger than the max stack size,
 				// do nothing.
-				if (recipe.getRecipeOutput().getCount() + heldItem.getCount() > recipe.getRecipeOutput().getMaxStackSize()) {
+				if (recipe.getResultItem().getCount() + heldItem.getCount() > recipe.getResultItem().getMaxStackSize()) {
 					return ItemStack.EMPTY;
 				}
 
@@ -96,15 +96,15 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 				ItemStack craftedResult = getTileEntity().craftItem(1);
 
 				// Update the player's held item.
-				if (getPlayerInventory().getItemStack().isEmpty()) {
-					getPlayerInventory().setItemStack(craftedResult);
+				if (getPlayerInventory().getCarried().isEmpty()) {
+					getPlayerInventory().setCarried(craftedResult);
 				} else {
-					getPlayerInventory().getItemStack().grow(craftedResult.getCount());
+					getPlayerInventory().getCarried().grow(craftedResult.getCount());
 				}
 
 				// If on the server, update the held item.
-				if (!getTileEntity().getWorld().isRemote) {
-					((ServerPlayerEntity) player).updateHeldItem();
+				if (!getTileEntity().getLevel().isClientSide) {
+					((ServerPlayer) player).broadcastCarriedItem();
 				}
 
 				// Tell the slot we crafted.
@@ -116,11 +116,11 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 				return craftedResult;
 			} else if (clickTypeIn == ClickType.QUICK_MOVE) {
 				// Craft the output.
-				if (!getTileEntity().getWorld().isRemote) {
+				if (!getTileEntity().getLevel().isClientSide) {
 					int amount = 0;
-					while (InventoryUtilities.canFullyInsertItemIntoPlayerInventory(recipe.getRecipeOutput().copy(), player.inventory)) {
+					while (InventoryUtilities.canFullyInsertItemIntoPlayerInventory(recipe.getResultItem().copy(), player.inventory)) {
 						ItemStack craftedResult = getTileEntity().craftItem(1);
-						player.addItemStackToInventory(craftedResult);
+						player.addItem(craftedResult);
 						// Tell the slot we crafted.
 						outputSlot.onCrafted(player, craftedResult);
 						amount++;
@@ -130,14 +130,14 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 						}
 					}
 					System.out.println(amount);
-					((ServerPlayerEntity) player).sendAllContents(this, this.getInventory());
+					((ServerPlayer) player).refreshContainer(this, this.getItems());
 				}
 				return ItemStack.EMPTY;
 			} else {
 				return ItemStack.EMPTY;
 			}
 		} else {
-			return super.slotClick(slotId, dragType, clickTypeIn, player);
+			return super.clicked(slotId, dragType, clickTypeIn, player);
 		}
 	}
 
@@ -152,18 +152,18 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	 */
 	protected void updateOutputSlot() {
 		// Update the output slot if this is NOT the auto variant.
-		if (!getPlayerInventory().player.world.isRemote && getType() == TYPE.getType()) {
+		if (!getPlayerInventory().player.level.isClientSide && getType() == TYPE.getType()) {
 			ItemStack output = ItemStack.EMPTY;
 			// Set the slot contents on the server.
 			if (getTileEntity().hasRequiredItems()) {
-				output = getTileEntity().getCurrentRecipe().get().getRecipeOutput().copy();
+				output = getTileEntity().getCurrentRecipe().get().getResultItem().copy();
 			}
 
-			craftResult.setInventorySlotContents(0, output);
+			craftResult.setItem(0, output);
 
 			// Sync the slot.
-			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) getPlayerInventory().player;
-			serverplayerentity.connection.sendPacket(new SSetSlotPacket(windowId, 10, output));
+			ServerPlayer serverplayerentity = (ServerPlayer) getPlayerInventory().player;
+			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 10, output));
 		}
 	}
 

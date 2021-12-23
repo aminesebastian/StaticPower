@@ -4,15 +4,15 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -45,7 +45,7 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 12));
 	}
 
@@ -55,7 +55,7 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory playerInv, Player player) {
 			return new ContainerDigistorePatternEncoder(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}
@@ -66,7 +66,7 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.digistore_pattern_encoder"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslatableComponent("gui.staticpower.digistore_pattern_encoder"));
 	}
 }

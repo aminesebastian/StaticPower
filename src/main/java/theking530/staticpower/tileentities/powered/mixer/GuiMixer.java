@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.powered.mixer;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.MixerProgressBar;
@@ -24,7 +24,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiMixer extends StaticPowerTileEntityGui<ContainerMixer, TileEntityMixer> {
 	private FluidProgressBar progressBar;
 
-	public GuiMixer(ContainerMixer container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiMixer(ContainerMixer container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -38,11 +38,11 @@ public class GuiMixer extends StaticPowerTileEntityGui<ContainerMixer, TileEntit
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(110, 43, 32, 8).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidOutput).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 	}
 
 	@Override

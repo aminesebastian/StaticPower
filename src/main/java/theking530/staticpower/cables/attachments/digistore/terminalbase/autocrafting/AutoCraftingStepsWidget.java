@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
@@ -66,7 +66,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		// If there is no request, do nothing.
 		if (request == null) {
 			return;
@@ -79,7 +79,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Get the screen space position.
 		Vector2D screenSpacePos = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
@@ -92,7 +92,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		}
 
 		// Translate the matrix to the space of this widget.
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
 
 		// Render the widgets.
@@ -112,7 +112,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		}
 
 		// Pop the previous translation.
-		matrix.pop();
+		matrix.popPose();
 
 		// Render the vertical dividers.
 		int divisionDistance = this.getSize().getXi() / columns;

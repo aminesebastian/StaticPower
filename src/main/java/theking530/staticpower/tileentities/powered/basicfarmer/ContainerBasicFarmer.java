@@ -1,13 +1,13 @@
 package theking530.staticpower.tileentities.powered.basicfarmer;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.AxeItem;
-import net.minecraft.item.HoeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -26,11 +26,11 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 		}
 	}
 
-	public ContainerBasicFarmer(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerBasicFarmer(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityBasicFarmer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerBasicFarmer(int windowId, PlayerInventory playerInventory, TileEntityBasicFarmer owner) {
+	public ContainerBasicFarmer(int windowId, Inventory playerInventory, TileEntityBasicFarmer owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -56,7 +56,7 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		if (stack.getItem() instanceof HoeItem && !mergeItemStack(stack, 11)) {
 			return true;
 		}

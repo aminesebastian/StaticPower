@@ -1,7 +1,7 @@
 package theking530.staticpower.items;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerBurnableItem extends StaticPowerItem {
@@ -12,7 +12,7 @@ public class StaticPowerBurnableItem extends StaticPowerItem {
 	}
 
 	public StaticPowerBurnableItem(String name, int burnTime, Item.Properties properties) {
-		super(name, properties.group(StaticPower.CREATIVE_TAB));
+		super(name, properties.tab(StaticPower.CREATIVE_TAB));
 		this.burnTime = burnTime;
 	}
 

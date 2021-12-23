@@ -1,10 +1,10 @@
 package theking530.staticcore.gui.widgets.progressbars;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,7 +26,7 @@ public class FluidProgressBar extends AbstractProgressBar {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 
 		// Get the screen space position.
@@ -46,11 +46,11 @@ public class FluidProgressBar extends AbstractProgressBar {
 				Color fluidColor = GuiDrawUtilities.getFluidColor(displayFluidStack);
 
 				// Calculate the UV difference.
-				float uvDiff = icon.getMaxU() - icon.getMinU();
+				float uvDiff = icon.getU1() - icon.getU0();
 
-				Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-				GuiDrawUtilities.drawTexturedModalRect(PlayerContainer.LOCATION_BLOCKS_TEXTURE, screenSpacePosition.getX(), screenSpacePosition.getY(), visualCurrentProgresPercentage * getSize().getX(), getSize().getY(),
-						icon.getMinU(), icon.getMinV(), icon.getMinU() + (uvDiff * visualCurrentProgresPercentage), icon.getMaxV(), fluidColor);
+				Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
+				GuiDrawUtilities.drawTexturedModalRect(InventoryMenu.BLOCK_ATLAS, screenSpacePosition.getX(), screenSpacePosition.getY(), visualCurrentProgresPercentage * getSize().getX(), getSize().getY(),
+						icon.getU0(), icon.getV0(), icon.getU0() + (uvDiff * visualCurrentProgresPercentage), icon.getV1(), fluidColor);
 			}
 
 			// Draw the leading white line.

@@ -1,16 +1,16 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,12 +30,12 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 	protected static final Vector3D BLOCK_RENDER_SCALE = new Vector3D(0.3f, 0.3f, 0.3f);
 	protected static final Vector3D ITEM_RENDER_SCALE = new Vector3D(0.25f, 0.25f, 0.25f);
 
-	public AbstractCableTileEntityRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public AbstractCableTileEntityRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 		this.shouldPreRotateTowardsFacingDirection = false;
 	}
 
-	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 
 		// Get the travel direction and return early if one does not exist.
@@ -49,7 +49,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		float renderRotation = packet.getRenderRotation(partialTicks);
 
 		// Get the baked model and check if it wants to render the item in 3d or 2d.
-		IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(packet.getContainedItem(), null, null);
+		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(packet.getContainedItem(), null, null);
 		boolean render3D = itemModel.isGui3d();
 
 		// Determine which scale to use when drawing.
@@ -75,7 +75,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		return new Vector3D(0, rotation, 0);
 	}
 
-	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, MatrixStack matrixStack, AbstractCableProviderComponent cableComponent) {
+	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, PoseStack matrixStack, AbstractCableProviderComponent cableComponent) {
 		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 
@@ -91,7 +91,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		}
 	}
 
-	protected void drawFluidCore(TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, MatrixStack matrixStack) {
+	protected void drawFluidCore(TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, PoseStack matrixStack) {
 		float diameter = radius * 2.0f - 0.01f;
 		radius -= 0.005f;
 		float minWidth = 0.22f * filledAmount;
@@ -100,7 +100,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, minWidthOffset - floorOffset, 0.5f - radius), new Vector3f(diameter, minWidth, diameter), fluidColor, matrixStack, sprite);
 	}
 
-	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, MatrixStack matrixStack) {
+	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, PoseStack matrixStack) {
 		float diameter = (radius * 2.0f) - 0.01f;
 		radius -= 0.005f;
 		float yAxisOffset = radius * (1.0f - filledAmount);

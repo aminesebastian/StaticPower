@@ -3,10 +3,10 @@ package theking530.staticpower.tileentities.components.control;
 import java.util.Optional;
 import java.util.function.Function;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeType;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -15,7 +15,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
-public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends MachineProcessingComponent {
+public class RecipeProcessingComponent<T extends Recipe<Container>> extends MachineProcessingComponent {
 	public enum RecipeProcessingLocation {
 		INPUT, INTERNAL
 	}
@@ -30,14 +30,14 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 	private final Function<T, ProcessingCheckState> recipeProcessingCompleted;
 	private final Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters;
 	private final Function<T, ProcessingCheckState> performInputMove;
-	private final IRecipeType<T> recipeType;
+	private final RecipeType<T> recipeType;
 
 	private Function<T, ProcessingCheckState> canContinueProcessingRecipe;
 
 	@UpdateSerialize
 	private int moveTimer;
 
-	public RecipeProcessingComponent(String name, IRecipeType<T> recipeType, int processingTime, Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters,
+	public RecipeProcessingComponent(String name, RecipeType<T> recipeType, int processingTime, Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters,
 			Function<T, ProcessingCheckState> performInputMove, Function<T, ProcessingCheckState> canProcessRecipe, Function<T, ProcessingCheckState> recipeProcessingCompleted) {
 		super(name, processingTime, null, null, null, true);
 
@@ -231,12 +231,12 @@ public class RecipeProcessingComponent<T extends IRecipe<IInventory>> extends Ma
 	@SuppressWarnings("unchecked")
 	public Optional<T> getRecipe(RecipeMatchParameters matchParameters) {
 		// Check for the recipe.
-		if (recipeType == IRecipeType.SMELTING) {
-			return (Optional<T>) getWorld().getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(matchParameters.getItems()[0]), getWorld());
+		if (recipeType == RecipeType.SMELTING) {
+			return (Optional<T>) getWorld().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), getWorld());
 		} else {
-			IRecipeType<AbstractStaticPowerRecipe> spRecipe = (IRecipeType<AbstractStaticPowerRecipe>) recipeType;
+			RecipeType<AbstractStaticPowerRecipe> spRecipe = (RecipeType<AbstractStaticPowerRecipe>) recipeType;
 			if (spRecipe != null) {
-				return (Optional<T>) StaticPowerRecipeRegistry.getRecipe((IRecipeType<AbstractStaticPowerRecipe>) recipeType, matchParameters);
+				return (Optional<T>) StaticPowerRecipeRegistry.getRecipe((RecipeType<AbstractStaticPowerRecipe>) recipeType, matchParameters);
 			}
 		}
 

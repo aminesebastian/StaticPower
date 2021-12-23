@@ -2,15 +2,15 @@ package theking530.staticpower.cables;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class CableUtilities {
 
-	public static CableConnectionState getConnectionState(IBlockReader world, BlockPos pos, Direction side) {
+	public static CableConnectionState getConnectionState(BlockGetter world, BlockPos pos, Direction side) {
 		AbstractCableProviderComponent cableComponent = getCableWrapperComponent(world, pos);
 		if (cableComponent != null) {
 			return cableComponent.getConnectionState(side);
@@ -18,7 +18,7 @@ public class CableUtilities {
 		return CableConnectionState.NONE;
 	}
 
-	public static boolean isSideConnectionDisabled(IBlockReader world, BlockPos pos, Direction side) {
+	public static boolean isSideConnectionDisabled(BlockGetter world, BlockPos pos, Direction side) {
 		AbstractCableProviderComponent cableComponent = getCableWrapperComponent(world, pos);
 		if (cableComponent != null) {
 			return cableComponent.isSideDisabled(side);
@@ -34,9 +34,9 @@ public class CableUtilities {
 	 * @param pos   The location to check.
 	 * @return The cable wrapper component if one is found, null otherwise.
 	 */
-	public static @Nullable AbstractCableProviderComponent getCableWrapperComponent(IBlockReader world, BlockPos pos) {
-		if (world.getTileEntity(pos) instanceof TileEntityBase) {
-			TileEntityBase tileEntityBase = (TileEntityBase) world.getTileEntity(pos);
+	public static @Nullable AbstractCableProviderComponent getCableWrapperComponent(BlockGetter world, BlockPos pos) {
+		if (world.getBlockEntity(pos) instanceof TileEntityBase) {
+			TileEntityBase tileEntityBase = (TileEntityBase) world.getBlockEntity(pos);
 			if (tileEntityBase.hasComponentOfType(AbstractCableProviderComponent.class)) {
 				return tileEntityBase.getComponent(AbstractCableProviderComponent.class);
 			}
@@ -83,7 +83,7 @@ public class CableUtilities {
 		return null;
 	}
 
-	public static boolean isCableStraightConnection(IBlockReader world, BlockPos pos) {
+	public static boolean isCableStraightConnection(BlockGetter world, BlockPos pos) {
 		AbstractCableProviderComponent connectionComponent = getCableWrapperComponent(world, pos);
 		if (connectionComponent != null) {
 			return isCableStraightConnection(connectionComponent.getConnectionStates());

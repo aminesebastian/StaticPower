@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.vulcanizer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -20,11 +20,11 @@ public class ContainerVulcanizer extends StaticPowerTileEntityContainer<TileEnti
 		}
 	}
 
-	public ContainerVulcanizer(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerVulcanizer(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityVulcanizer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerVulcanizer(int windowId, PlayerInventory playerInventory, TileEntityVulcanizer owner) {
+	public ContainerVulcanizer(int windowId, Inventory playerInventory, TileEntityVulcanizer owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

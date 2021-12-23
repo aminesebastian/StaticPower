@@ -1,15 +1,15 @@
 package theking530.staticpower.container;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 
 public abstract class StaticPowerItemContainer<T extends Item> extends StaticPowerContainer {
 	private final ItemStack itemstack;
 
-	protected StaticPowerItemContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, PlayerInventory inv, ItemStack itemStack) {
+	protected StaticPowerItemContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, Inventory inv, ItemStack itemStack) {
 		super(allocator, id, inv);
 		itemstack = itemStack;
 		initializeContainer(); // This has to be called here and not in the super.
@@ -32,7 +32,7 @@ public abstract class StaticPowerItemContainer<T extends Item> extends StaticPow
 	 *             inventory.
 	 * @return The {@link ItemStack} that triggered the opening of this container.
 	 */
-	protected static ItemStack getHeldItemstack(PlayerInventory inv, PacketBuffer data) {
-		return inv.getStackInSlot(data.readInt());
+	protected static ItemStack getHeldItemstack(Inventory inv, FriendlyByteBuf data) {
+		return inv.getItem(data.readInt());
 	}
 }

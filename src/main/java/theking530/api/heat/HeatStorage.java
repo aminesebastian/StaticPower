@@ -3,10 +3,10 @@ package theking530.api.heat;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>, Cloneable {
+public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag>, Cloneable {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 	protected double currentHeat;
 	protected double maximumHeat;
@@ -190,7 +190,7 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		if (currentHeat > maximumHeat) {
 			currentHeat = maximumHeat;
 		}
@@ -203,8 +203,8 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundNBT>,
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
 
 		if (currentHeat < 0) {
 			currentHeat = 0;

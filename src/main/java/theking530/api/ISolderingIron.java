@@ -1,6 +1,6 @@
 package theking530.api;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface ISolderingIron {
 

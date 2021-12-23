@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.severrack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -18,11 +18,11 @@ public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer
 		}
 	}
 
-	public ContainerDigistoreServerRack(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistoreServerRack(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityDigistoreServerRack) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerDigistoreServerRack(int windowId, PlayerInventory playerInventory, TileEntityDigistoreServerRack owner) {
+	public ContainerDigistoreServerRack(int windowId, Inventory playerInventory, TileEntityDigistoreServerRack owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

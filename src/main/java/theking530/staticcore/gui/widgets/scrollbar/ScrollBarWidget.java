@@ -1,6 +1,6 @@
 package theking530.staticcore.gui.widgets.scrollbar;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -10,6 +10,8 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
+
+import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 
 @OnlyIn(Dist.CLIENT)
 public class ScrollBarWidget extends AbstractGuiWidget {
@@ -89,7 +91,7 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		GuiDrawUtilities.drawSlot(null, position.getX(), position.getY(), getSize().getX(), getSize().getY(), 0);
 

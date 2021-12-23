@@ -9,11 +9,11 @@ import javax.annotation.Nonnull;
 
 import org.apache.logging.log4j.util.TriConsumer;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.NonNullList;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
@@ -200,14 +200,14 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
-		ListNBT itemTagList = new ListNBT();
+		ListTag itemTagList = new ListTag();
 		for (int i = 0; i < stacks.size(); i++) {
 			if (!stacks.get(i).isEmpty()) {
-				CompoundNBT itemTag = new CompoundNBT();
+				CompoundTag itemTag = new CompoundTag();
 				itemTag.putInt("Slot", i);
-				stacks.get(i).write(itemTag);
+				stacks.get(i).save(itemTag);
 				itemTagList.add(itemTag);
 			}
 		}
@@ -217,8 +217,8 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		// Put the locked slot filters. Skip null slots.
 		for (int i = 0; i < lockedSlots.size(); i++) {
 			if (lockedSlots.get(i) != null) {
-				CompoundNBT filterItemTag = new CompoundNBT();
-				lockedSlots.get(i).write(filterItemTag);
+				CompoundTag filterItemTag = new CompoundTag();
+				lockedSlots.get(i).save(filterItemTag);
 				nbt.put("filter_slot#" + i, filterItemTag);
 			}
 		}
@@ -226,23 +226,23 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		setSize(nbt.contains("Size", Constants.NBT.TAG_INT) ? nbt.getInt("Size") : stacks.size());
-		ListNBT tagList = nbt.getList("Items", Constants.NBT.TAG_COMPOUND);
+		ListTag tagList = nbt.getList("Items", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < tagList.size(); i++) {
-			CompoundNBT itemTags = tagList.getCompound(i);
+			CompoundTag itemTags = tagList.getCompound(i);
 			int slot = itemTags.getInt("Slot");
 
 			if (slot >= 0 && slot < stacks.size()) {
-				stacks.set(slot, ItemStack.read(itemTags));
+				stacks.set(slot, ItemStack.of(itemTags));
 			}
 		}
 
 		// Deserialize the slot filters.
 		for (int i = 0; i < lockedSlots.size(); i++) {
 			if (nbt.contains("filter_slot#" + i)) {
-				lockedSlots.set(i, ItemStack.read(nbt.getCompound("filter_slot#" + i)));
+				lockedSlots.set(i, ItemStack.of(nbt.getCompound("filter_slot#" + i)));
 			} else {
 				lockedSlots.set(i, null);
 			}
@@ -520,21 +520,21 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.ADDED, stack, slot);
 		}
-		getTileEntity().markDirty();
+		getTileEntity().setChanged();
 	}
 
 	protected void onItemStackRemoved(ItemStack stack, int slot) {
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.REMOVED, stack, slot);
 		}
-		getTileEntity().markDirty();
+		getTileEntity().setChanged();
 	}
 
 	protected void onItemStackModified(ItemStack stack, int slot) {
 		if (changeCallback != null) {
 			changeCallback.accept(InventoryChangeType.MODIFIED, stack, slot);
 		}
-		getTileEntity().markDirty();
+		getTileEntity().setChanged();
 	}
 
 	public class InventoryComponentCapabilityInterface implements IItemHandler {

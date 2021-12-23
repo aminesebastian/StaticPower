@@ -4,20 +4,20 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -32,6 +32,8 @@ import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.utilities.InventoryUtilities;
+
+import theking530.staticpower.cables.attachments.AbstractCableAttachment.AbstractCableAttachmentContainerProvider;
 
 public class RetrieverAttachment extends AbstractCableAttachment {
 	public static final String RETRIEVEAL_TIMER_TAG = "retrieval_timer";
@@ -49,7 +51,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt)
 				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableRetrievalFilterSlots.get()));
 	}
@@ -62,7 +64,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getWorld().isRemote || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
@@ -72,7 +74,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		}
 
 		// Get the tile entity on the inserting side, return if it is null.
-		TileEntity adjacentEntity = cable.getWorld().getTileEntity(cable.getPos().offset(side));
+		BlockEntity adjacentEntity = cable.getWorld().getBlockEntity(cable.getPos().relative(side));
 		if (adjacentEntity == null || adjacentEntity.isRemoved()) {
 			return;
 		}
@@ -97,7 +99,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 				}
 
 				// If we're able to retrieve an item, break.
-				if (network.retrieveItemStack(filterItem, StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get(), cable.getPos().offset(side), side,
+				if (network.retrieveItemStack(filterItem, StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get(), cable.getPos().relative(side), side,
 						StaticPowerConfig.getTier(tierType).cableRetrievedItemInitialSpeed.get())) {
 					break;
 				}
@@ -107,7 +109,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 
 	public boolean incrementRetrievalTimer(ItemStack attachment) {
 		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundNBT());
+			attachment.setTag(new CompoundTag());
 		}
 		if (!attachment.getTag().contains(RETRIEVEAL_TIMER_TAG)) {
 			attachment.getTag().putInt(RETRIEVEAL_TIMER_TAG, 0);
@@ -149,21 +151,21 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.retriever_tooltip"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableRetrievalFilterSlots.get(), tooltip);
 	}
 
 	@Override
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent(""));
-		tooltip.add(new TranslationTextComponent("gui.staticpower.retriever_rate_format", TextFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalRate.get()));
-		tooltip.add(new StringTextComponent("• ").append(
-				new TranslationTextComponent("gui.staticpower.retriever_stack_size", TextFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get())));
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+		tooltip.add(new TextComponent(""));
+		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_rate_format", ChatFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalRate.get()));
+		tooltip.add(new TextComponent("ï¿½ ").append(
+				new TranslatableComponent("gui.staticpower.retriever_stack_size", ChatFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get())));
 
 		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableRetrievedItemInitialSpeed.get();
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.cable_transfer_rate",
-				TextFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslationTextComponent("gui.staticpower.blocks").getString())));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.cable_transfer_rate",
+				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslatableComponent("gui.staticpower.blocks").getString())));
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {
@@ -172,7 +174,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory playerInv, Player player) {
 			return new ContainerRetriever(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}

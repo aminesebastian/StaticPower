@@ -13,18 +13,18 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
-import net.minecraft.resources.IResource;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
 
 public class CustomJsonLoader {
 	public static final Logger LOGGER = LogManager.getLogger(CustomJsonLoader.class);
 	private static final Gson GSON_INSTANCE = new Gson();
 
-	public static <T> T loadResource(IResourceManager manager, ResourceLocation location, Class<T> outputType) {
+	public static <T> T loadResource(ResourceManager manager, ResourceLocation location, Class<T> outputType) {
 		try {
 			// Get the resource.
-			IResource res = manager.getResource(location);
+			Resource res = manager.getResource(location);
 
 			// Attempt to open and parse the resource.
 			try (InputStream inputstream = res.getInputStream(); Reader reader = new BufferedReader(new InputStreamReader(inputstream, StandardCharsets.UTF_8));) {

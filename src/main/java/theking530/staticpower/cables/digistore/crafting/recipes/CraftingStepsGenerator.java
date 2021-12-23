@@ -3,7 +3,7 @@ package theking530.staticpower.cables.digistore.crafting.recipes;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.crafting.AutoCraftingStep;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern.EncodedIngredient;

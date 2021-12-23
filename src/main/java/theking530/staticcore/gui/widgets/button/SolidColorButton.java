@@ -2,7 +2,7 @@ package theking530.staticcore.gui.widgets.button;
 
 import java.util.function.BiConsumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -39,7 +39,7 @@ public class SolidColorButton extends StandardButton {
 	}
 
 	@Override
-	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
 		Vector2D size = getSize();
 		GuiDrawUtilities.drawColoredRectangle(buttonLeft + padding, buttonTop + padding, size.getX() - (padding * 2), size.getY() - (padding * 2), 1.0f, color);
 	}

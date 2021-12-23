@@ -4,19 +4,19 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -43,19 +43,19 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.max_fluid_rate"));
-		tooltip.add(new StringTextComponent("• ").append(
-				new StringTextComponent(TextFormatting.AQUA + GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()).getString())));
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.industrial_cable_warning").mergeStyle(TextFormatting.RED)));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslatableComponent("gui.staticpower.max_fluid_rate"));
+		tooltip.add(new TextComponent("ï¿½ ").append(
+				new TextComponent(ChatFormatting.AQUA + GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()).getString())));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(ChatFormatting.RED)));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
-		IBakedModel extensionModel = null;
-		IBakedModel straightModel = null;
-		IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT);
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
+		BakedModel extensionModel = null;
+		BakedModel straightModel = null;
+		BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT);
 
 		if (tier == StaticPowerTiers.BASIC) {
 			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_BASIC_EXTENSION);
@@ -81,7 +81,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	}
 
 	@Override
-	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+	public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(world, pos);
 		if (cable instanceof FluidCableComponent) {
 			FluidStack fluid = ((FluidCableComponent) cable).getFluidInTank(0);
@@ -90,17 +90,17 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 				return attributes.getLuminosity(fluid);
 			}
 		}
-		return state.getLightValue();
+		return state.getLightEmission();
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getTranslucent();
+		return RenderType.translucent();
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.BASIC) {
 			return TileEntityFluidCable.TYPE_INDUSTRIAL_BASIC.create();
 		} else if (tier == StaticPowerTiers.ADVANCED) {

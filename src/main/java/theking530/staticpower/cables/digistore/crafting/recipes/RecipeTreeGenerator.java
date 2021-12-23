@@ -9,8 +9,8 @@ import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
@@ -25,7 +25,7 @@ public class RecipeTreeGenerator {
 		requests.clear();
 
 		// Get all the patterns for this item.
-		List<EncodedDigistorePattern> patterns = snapshot.getAllPatternsForIngredient(Ingredient.fromStacks(target));
+		List<EncodedDigistorePattern> patterns = snapshot.getAllPatternsForIngredient(Ingredient.of(target));
 
 		// If we have no patterns for this item, return an empty list of trees.
 		if (patterns.size() == 0) {

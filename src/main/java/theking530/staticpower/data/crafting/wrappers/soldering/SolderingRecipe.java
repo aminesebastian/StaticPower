@@ -12,21 +12,21 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class SolderingRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<SolderingRecipe> RECIPE_TYPE = IRecipeType.register("soldering");
+	public static final RecipeType<SolderingRecipe> RECIPE_TYPE = RecipeType.register("soldering");
 
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;
@@ -49,7 +49,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 		this.recipeOutput = recipeOutputIn;
 	}
 
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return SolderingRecipeSerializer.INSTANCE;
 	}
 
@@ -58,7 +58,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	 * book). If your recipe has more than one possible result (e.g. it's dynamic
 	 * and depends on its inputs), then return an empty stack.
 	 */
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return recipeOutput;
 	}
 
@@ -71,7 +71,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 
@@ -94,7 +94,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	/**
 	 * Used to check if a recipe matches current crafting inventory
 	 */
-	public boolean matches(IItemHandler inv, World worldIn) {
+	public boolean matches(IItemHandler inv, Level worldIn) {
 		for (int i = 0; i <= this.recipeWidth; ++i) {
 			for (int j = 0; j <= this.recipeHeight; ++j) {
 				if (this.checkMatch(inv, i, j, true)) {
@@ -139,8 +139,8 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 	/**
 	 * Returns an Item that is the result of this recipe
 	 */
-	public ItemStack getCraftingResult(CraftingInventory inv) {
-		return this.getRecipeOutput().copy();
+	public ItemStack getCraftingResult(CraftingContainer inv) {
+		return this.getResultItem().copy();
 	}
 
 	public static NonNullList<Ingredient> deserializeIngredients(String[] pattern, Map<String, Ingredient> keys, int patternWidth, int patternHeight) {
@@ -230,7 +230,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 			throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
 		} else {
 			for (int i = 0; i < astring.length; ++i) {
-				String s = JSONUtils.getString(jsonArr.get(i), "pattern[" + i + "]");
+				String s = GsonHelper.convertToString(jsonArr.get(i), "pattern[" + i + "]");
 				if (s.length() > MAX_WIDTH) {
 					throw new JsonSyntaxException("Invalid pattern: too many columns, " + MAX_WIDTH + " is maximum");
 				}
@@ -261,7 +261,7 @@ public class SolderingRecipe extends AbstractStaticPowerRecipe {
 				throw new JsonSyntaxException("Invalid key entry: ' ' is a reserved symbol.");
 			}
 
-			map.put(entry.getKey(), Ingredient.deserialize(entry.getValue()));
+			map.put(entry.getKey(), Ingredient.fromJson(entry.getValue()));
 		}
 
 		map.put(" ", Ingredient.EMPTY);

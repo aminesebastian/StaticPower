@@ -5,16 +5,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TextComponent;
 import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -74,7 +74,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	 */
 	private boolean sortDescending;
 
-	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, ItemStack attachment,
+	public AbstractContainerDigistoreTerminal(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, Inventory playerInventory, ItemStack attachment,
 			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(allocator, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 		sortDescending = true;
@@ -94,10 +94,10 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		managerPresentLastState = getCableComponent().isManagerPresent();
 
 		// Armor
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -18, 113, EquipmentSlotType.HEAD));
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -18, 131, EquipmentSlotType.CHEST));
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -18, 149, EquipmentSlotType.LEGS));
-		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -18, 167, EquipmentSlotType.FEET));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, -18, 113, EquipmentSlot.HEAD));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, -18, 131, EquipmentSlot.CHEST));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, -18, 149, EquipmentSlot.LEGS));
+		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -18, 167, EquipmentSlot.FEET));
 
 		// On both the client and the server, add the player slots.
 		addPlayerHotbar(getPlayerInventory(), 8, 246);
@@ -105,23 +105,23 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		// Edge case for wireless terminals, don't let players modify their held item.
-		if (slotId >= 0 && getSlot(slotId) != null && !getSlot(slotId).getStack().isEmpty() && getSlot(slotId).getStack() == player.getHeldItemMainhand()
-				&& (player.getHeldItemMainhand().getItem() instanceof DigistoreWirelessTerminal)) {
+		if (slotId >= 0 && getSlot(slotId) != null && !getSlot(slotId).getItem().isEmpty() && getSlot(slotId).getItem() == player.getMainHandItem()
+				&& (player.getMainHandItem().getItem() instanceof DigistoreWirelessTerminal)) {
 			return ItemStack.EMPTY;
 		}
 
-		return super.slotClick(slotId, dragType, clickTypeIn, player);
+		return super.clicked(slotId, dragType, clickTypeIn, player);
 	}
 
 	/**
 	 * Sends all inventory changes to the client.
 	 */
 	@Override
-	public void detectAndSendChanges() {
+	public void broadcastChanges() {
 		// This probably won't do anything, but keep it for compatability reasons.
-		super.detectAndSendChanges();
+		super.broadcastChanges();
 
 		// Check for the manager state.
 		if (managerPresentLastState != getCableComponent().isManagerPresent()) {
@@ -131,7 +131,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 		// Sync the snapshots. Only do this on the server. This check shouldn't be
 		// required but vanilla has a bug. Only do so if the inventory actually changed.
-		if (!getPlayerInventory().player.getEntityWorld().isRemote()) {
+		if (!getPlayerInventory().player.getCommandSenderWorld().isClientSide()) {
 			getDigistoreNetwork().ifPresent((network) -> {
 				// Hold on to the old inventory and get a new snapshot.
 				DigistoreInventorySnapshot oldSnapshot = clientInventory;
@@ -139,9 +139,9 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 				// Only do the following if the inventory has changed.
 				if (!clientInventory.equals(oldSnapshot)) {
-					for (IContainerListener listener : this.listeners) {
-						if (listener instanceof ServerPlayerEntity) {
-							syncContentsToClient(clientInventory, (ServerPlayerEntity) listener);
+					for (ContainerListener listener : this.containerListeners) {
+						if (listener instanceof ServerPlayer) {
+							syncContentsToClient(clientInventory, (ServerPlayer) listener);
 						}
 					}
 				}
@@ -151,20 +151,20 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		// Because of the way the shift click goes between a slot and a fake slot, we
 		// have to manually do this.
 		// There is a way to optimize this, TO-DO.
-		for (IContainerListener icontainerlistener : this.listeners) {
-			if (icontainerlistener instanceof ServerPlayerEntity) {
-				((ServerPlayerEntity) icontainerlistener).sendContainerToPlayer(this);
+		for (ContainerListener icontainerlistener : this.containerListeners) {
+			if (icontainerlistener instanceof ServerPlayer) {
+				((ServerPlayer) icontainerlistener).refreshContainer(this);
 			}
 		}
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
-		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+	public ItemStack quickMoveStack(Player player, int slotIndex) {
+		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
 			AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				// Get the targeted item.
-				ItemStack targetItem = inventorySlots.get(slotIndex).getStack();
+				ItemStack targetItem = slots.get(slotIndex).getItem();
 
 				// If the slot is empty, do nothing.
 				if (targetItem.isEmpty()) {
@@ -193,17 +193,17 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	}
 
 	public void digistoreFakeSlotClickedOnClient(int slot, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
-		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreFakeSlotClicked(windowId, slot, button, shiftHeld, controlHeld, altHeld));
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreFakeSlotClicked(containerId, slot, button, shiftHeld, controlHeld, altHeld));
 	}
 
 	public void digistoreFakeSlotClickedOnServer(int slot, MouseButton button, boolean shiftHeld, boolean controlHeld, boolean altHeld) {
-		if (!getPlayerInventory().player.getEntityWorld().isRemote()) {
+		if (!getPlayerInventory().player.getCommandSenderWorld().isClientSide()) {
 			getDigistoreNetwork().ifPresent((network) -> {
 				// If the player is holding an item, attempt to insert it.
 				// Otherwise, attempt to extract items/trigger a crafting job.
-				if (!getPlayerInventory().getItemStack().isEmpty()) {
+				if (!getPlayerInventory().getCarried().isEmpty()) {
 					// Get the item to insert. When right clicking, only insert a single item.
-					ItemStack stackToInsert = getPlayerInventory().getItemStack().copy();
+					ItemStack stackToInsert = getPlayerInventory().getCarried().copy();
 					if (button == MouseButton.RIGHT) {
 						stackToInsert.setCount(1);
 					}
@@ -213,8 +213,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 					int inserted = stackToInsert.getCount() - remaining.getCount();
 
 					// Update the player's held item.
-					getPlayerInventory().getItemStack().shrink(inserted);
-					((ServerPlayerEntity) (getPlayerInventory().player)).updateHeldItem();
+					getPlayerInventory().getCarried().shrink(inserted);
+					((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
 				} else {
 					// Get the clicked stack (if it event exists.
 					ItemStack stack = ItemStack.EMPTY;
@@ -243,13 +243,13 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 						// Open prompt for crafting if we can actually craft some.
 						// Create the container opener.
-						ContainerOpener<?> requestUi = new ContainerOpener<>(new StringTextComponent("Crafting Request"), (id, inv, data) -> {
+						ContainerOpener<?> requestUi = new ContainerOpener<>(new TextComponent("Crafting Request"), (id, inv, data) -> {
 							return new ContainerCraftingAmount(id, inv, newBundles, network.getNetwork().getId());
 						}).fromParent(this);
 
 						// Open the UI.
-						requestUi.open((ServerPlayerEntity) getPlayerInventory().player, buff -> {
-							buff.writeString(newBundles.serializeCompressed());
+						requestUi.open((ServerPlayer) getPlayerInventory().player, buff -> {
+							buff.writeUtf(newBundles.serializeCompressed());
 							buff.writeLong(network.getNetwork().getId());
 						});
 					} else {
@@ -268,8 +268,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 							}
 
 							// Then, set the held item after extracting.
-							getPlayerInventory().setItemStack(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
-							((ServerPlayerEntity) (getPlayerInventory().player)).updateHeldItem();
+							getPlayerInventory().setCarried(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
+							((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
 						} else if (button == MouseButton.LEFT && shiftHeld) {
 							// Get the item (up to a full stack). If empty, return.
 							ItemStack simulatedStack = network.extractItem(stack, stack.getMaxStackSize(), true);
@@ -288,7 +288,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 							simulatedStack.setCount(simulatedStack.getCount() - remaining.getCount());
 
 							// Extract from the network into the player's inventory.
-							getPlayerInventory().addItemStackToInventory(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
+							getPlayerInventory().add(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
 						}
 					}
 				}
@@ -305,8 +305,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		DigistoreTerminal.setSearchMode(getAttachment(), mode);
 
 		// If on the client, send an update to the server to update these values too.
-		if (getCableComponent().getWorld().isRemote) {
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(windowId, filter, mode, sortType, sortDescending));
+		if (getCableComponent().getWorld().isClientSide) {
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(containerId, filter, mode, sortType, sortDescending));
 		}
 	}
 
@@ -339,12 +339,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	}
 
 	public void refreshCraftingQueue() {
-		PacketGetCurrentCraftingQueue newCraftingRequest = new PacketGetCurrentCraftingQueue(windowId);
+		PacketGetCurrentCraftingQueue newCraftingRequest = new PacketGetCurrentCraftingQueue(containerId);
 		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, newCraftingRequest);
 	}
 
 	public void cancelCraftingRequest(long id) {
-		PacketCancelDigistoreCraftingRequest cancelRequest = new PacketCancelDigistoreCraftingRequest(windowId, id);
+		PacketCancelDigistoreCraftingRequest cancelRequest = new PacketCancelDigistoreCraftingRequest(containerId, id);
 		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, cancelRequest);
 		refreshCraftingQueue();
 	}
@@ -353,9 +353,9 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		return managerPresentLastState;
 	}
 
-	public void syncContentsToClient(DigistoreInventorySnapshot digistoreInv, ServerPlayerEntity player) {
-		if (!player.getEntityWorld().isRemote()) {
-			StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, player, new PacketSyncDigistoreInventory(windowId, digistoreInv));
+	public void syncContentsToClient(DigistoreInventorySnapshot digistoreInv, ServerPlayer player) {
+		if (!player.getCommandSenderWorld().isClientSide()) {
+			StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, player, new PacketSyncDigistoreInventory(containerId, digistoreInv));
 		}
 	}
 
@@ -379,7 +379,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	 */
 	public Optional<DigistoreNetworkModule> getDigistoreNetwork() {
 		// Make sure we only call this on the server.
-		if (getCableComponent().getWorld().isRemote) {
+		if (getCableComponent().getWorld().isClientSide) {
 			throw new RuntimeException("Attempted to get the Digistore Network from client code.");
 		}
 

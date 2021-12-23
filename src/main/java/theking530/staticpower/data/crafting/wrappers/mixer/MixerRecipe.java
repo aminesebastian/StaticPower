@@ -1,15 +1,15 @@
 package theking530.staticpower.data.crafting.wrappers.mixer;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class MixerRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<MixerRecipe> RECIPE_TYPE = IRecipeType.register("mixer");
+	public static final RecipeType<MixerRecipe> RECIPE_TYPE = RecipeType.register("mixer");
 
 	private final StaticPowerIngredient input1;
 	private final StaticPowerIngredient input2;
@@ -128,12 +128,12 @@ public class MixerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return MixerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

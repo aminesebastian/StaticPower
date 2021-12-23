@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.lumbermill;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -20,11 +20,11 @@ public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEnti
 		}
 	}
 
-	public ContainerLumberMill(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerLumberMill(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityLumberMill) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerLumberMill(int windowId, PlayerInventory playerInventory, TileEntityLumberMill owner) {
+	public ContainerLumberMill(int windowId, Inventory playerInventory, TileEntityLumberMill owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

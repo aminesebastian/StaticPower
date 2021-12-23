@@ -1,18 +1,18 @@
 package theking530.staticpower.data.crafting.wrappers.thermalconductivity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<ThermalConductivityRecipe> RECIPE_TYPE = IRecipeType.register("thermal_conducitity");
+	public static final RecipeType<ThermalConductivityRecipe> RECIPE_TYPE = RecipeType.register("thermal_conducitity");
 
 	private final ResourceLocation[] blocks;
 	private final ResourceLocation[] fluids;
@@ -69,7 +69,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	public boolean hasOverheatedBlock() {
-		return overheatedBlock != Blocks.VOID_AIR.getDefaultState();
+		return overheatedBlock != Blocks.VOID_AIR.defaultBlockState();
 	}
 
 	public ProbabilityItemStackOutput getOverheatedItem() {
@@ -99,7 +99,7 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 			if (matchParams.hasFluids()) {
 				fluid = matchParams.getFluids()[0].getFluid();
 			} else if (matchParams.hasBlocks()) {
-				fluid = matchParams.getBlocks()[0].getFluidState().getFluid();
+				fluid = matchParams.getBlocks()[0].getFluidState().getType();
 			}
 
 			// Check the fluid.
@@ -126,12 +126,12 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return ThermalConductivityRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

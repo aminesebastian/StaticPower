@@ -1,19 +1,19 @@
 package theking530.staticpower.tileentities.nonpowered.tank;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -32,25 +32,25 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 
 public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_IRON = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.IRON),
+	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_IRON = new BlockEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.IRON),
 			ModBlocks.IronTank);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.BASIC),
+	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.BASIC),
 			ModBlocks.BasicTank);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ADVANCED),
+	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ADVANCED),
 			ModBlocks.AdvancedTank);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.STATIC),
+	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.STATIC),
 			ModBlocks.StaticTank);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ENERGIZED),
+	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.ENERGIZED),
 			ModBlocks.EnergizedTank);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.LUMUM),
+	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.LUMUM),
 			ModBlocks.LumumTank);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.CREATIVE),
+	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityTank>((type) -> new TileEntityTank(type, StaticPowerTiers.CREATIVE),
 			ModBlocks.CreativeTank);
 
 	public static final int MACHINE_TANK_CAPACITY_MULTIPLIER = 4;
@@ -72,7 +72,7 @@ public class TileEntityTank extends TileEntityBase {
 	public final FluidTankComponent fluidTankComponent;
 	public final SideConfigurationComponent ioSideConfiguration;
 
-	public TileEntityTank(TileEntityTypeAllocator<TileEntityTank> allocator, ResourceLocation tier) {
+	public TileEntityTank(BlockEntityTypeAllocator<TileEntityTank> allocator, ResourceLocation tier) {
 		super(allocator);
 
 		// Get the tier.
@@ -110,7 +110,7 @@ public class TileEntityTank extends TileEntityBase {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerTank(windowId, inventory, this);
 	}
 
@@ -120,7 +120,7 @@ public class TileEntityTank extends TileEntityBase {
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		return true;
 	}
 }

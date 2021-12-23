@@ -1,11 +1,11 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
 
 public class CraftingRecipeInputSlot extends Slot {
 
-	public CraftingRecipeInputSlot(IInventory inventory, int index, int xPosition, int yPosition) {
+	public CraftingRecipeInputSlot(Container inventory, int index, int xPosition, int yPosition) {
 		super(inventory, index, xPosition, yPosition);
 	}
 }

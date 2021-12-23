@@ -2,7 +2,7 @@ package theking530.api.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import theking530.api.attributes.registration.AttributeModifierRegistration;
 
 @AttributeModifierRegistration("integer")
@@ -25,13 +25,13 @@ public class IntegerAttributeModifier extends AbstractAttributeModifier<Integer>
 	}
 
 	@Override
-	protected void read(CompoundNBT nbt) {
+	protected void read(CompoundTag nbt) {
 		value = nbt.getInt("amount");
 		isAdditive = nbt.getBoolean("isAdditive");
 	}
 
 	@Override
-	protected void write(CompoundNBT nbt) {
+	protected void write(CompoundTag nbt) {
 		nbt.putInt("amount", value);
 		nbt.putBoolean("isAdditive", isAdditive);
 	}

@@ -3,16 +3,16 @@ package theking530.staticpower.tileentities.components.fluids;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 
 public class PacketFluidTankComponent extends NetworkMessage {
-	private CompoundNBT fluidComponentNBT;
+	private CompoundTag fluidComponentNBT;
 	private BlockPos position;
 	private String componentName;
 
@@ -20,22 +20,22 @@ public class PacketFluidTankComponent extends NetworkMessage {
 	}
 
 	public PacketFluidTankComponent(FluidTankComponent fluidTankComponent, BlockPos pos, String componentName) {
-		fluidComponentNBT = new CompoundNBT();
+		fluidComponentNBT = new CompoundTag();
 		fluidTankComponent.serializeUpdateNbt(fluidComponentNBT, true);
 		position = pos;
 		this.componentName = componentName;
 	}
 
 	@Override
-	public void decode(PacketBuffer buf) {
-		fluidComponentNBT = buf.readCompoundTag();
+	public void decode(FriendlyByteBuf buf) {
+		fluidComponentNBT = buf.readNbt();
 		position = buf.readBlockPos();
 		componentName = readStringOnServer(buf);
 	}
 
 	@Override
-	public void encode(PacketBuffer buf) {
-		buf.writeCompoundTag(fluidComponentNBT);
+	public void encode(FriendlyByteBuf buf) {
+		buf.writeNbt(fluidComponentNBT);
 		buf.writeBlockPos(position);
 		writeStringOnServer(componentName, buf);
 	}
@@ -43,9 +43,9 @@ public class PacketFluidTankComponent extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.openContainer == Minecraft.getInstance().player.container) {
-				if (Minecraft.getInstance().player.world.isAreaLoaded(position, 1)) {
-					TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(position);
+			if (Minecraft.getInstance().player.containerMenu == Minecraft.getInstance().player.inventoryMenu) {
+				if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
+					BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
 
 					ComponentUtilities.getComponent(FluidTankComponent.class, componentName, rawTileEntity).ifPresent(comp -> {
 						// Set the mode.

@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors.straight;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.init.ModBlocks;
@@ -13,7 +13,7 @@ import theking530.staticpower.tileentities.components.control.ConveyorMotionComp
 
 public class TileEntityStraightConveyor extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityStraightConveyor> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityStraightConveyor(), ModBlocks.StraightConveyor);
+	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityStraightConveyor(), ModBlocks.StraightConveyor);
 
 	protected final ConveyorMotionComponent conveyor;
 
@@ -23,9 +23,9 @@ public class TileEntityStraightConveyor extends TileEntityBase {
 	}
 
 	@Override
-	protected void postInit(World world, BlockPos pos, BlockState state) {
+	protected void postInit(Level world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
 		conveyor.setShouldAffectEntitiesAbove(false);
-		conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		conveyor.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 	}
 }

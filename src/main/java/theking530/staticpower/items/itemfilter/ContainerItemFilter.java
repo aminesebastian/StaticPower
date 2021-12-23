@@ -3,12 +3,12 @@ package theking530.staticpower.items.itemfilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -33,11 +33,11 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 
 	public ItemStackHandler filterInventory;
 
-	public ContainerItemFilter(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerItemFilter(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getHeldItemstack(inv, data));
 	}
 
-	public ContainerItemFilter(int windowId, PlayerInventory playerInventory, ItemStack owner) {
+	public ContainerItemFilter(int windowId, Inventory playerInventory, ItemStack owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -50,7 +50,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
-			LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
+			LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getHoverName()));
 			return;
 		}
 
@@ -62,12 +62,12 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slot) {
+	public boolean canDragTo(Slot slot) {
 		return false;
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		// Flag to indicate if we already have this item in the filter.
 		boolean alreadyExists = false;
 
@@ -94,15 +94,15 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity player) {
+	public boolean stillValid(Player player) {
 		return true;
 	}
 
 	@Override
-	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn, PlayerEntity player) {
-		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItemMainhand()) {
+	public ItemStack clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
+		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
 			return ItemStack.EMPTY;
 		}
-		return super.slotClick(slot, dragType, clickTypeIn, player);
+		return super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

@@ -5,10 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
@@ -17,7 +17,7 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<SqueezerRecipe> {
+public class SqueezerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SqueezerRecipe> {
 	public static final SqueezerRecipeSerializer INSTANCE = new SqueezerRecipeSerializer();
 	private static final Logger LOGGER = LogManager.getLogger(SqueezerRecipeSerializer.class);
 
@@ -26,9 +26,9 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public SqueezerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public SqueezerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Return null if the input is empty.
@@ -42,25 +42,25 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		int processingTime = StaticPowerConfig.SERVER.squeezerProcessingTime.get();
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+		if (GsonHelper.isValidNode(json, "processing")) {
+			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Get the outputs object.
-		JsonObject outputs = JSONUtils.getJsonObject(json, "outputs");
+		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
 
 		// Get the item output if one is defined.
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.EMPTY;
-		if (JSONUtils.hasField(outputs, "item")) {
-			itemOutput = ProbabilityItemStackOutput.parseFromJSON(JSONUtils.getJsonObject(outputs, "item"));
+		if (GsonHelper.isValidNode(outputs, "item")) {
+			itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(outputs, "item"));
 		}
 
 		// Deserialize the fluid output if it exists.
 		FluidStack fluidOutput = FluidStack.EMPTY;
-		if (JSONUtils.hasField(outputs, "fluid")) {
-			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(JSONUtils.getJsonObject(outputs, "fluid"));
+		if (GsonHelper.isValidNode(outputs, "fluid")) {
+			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(GsonHelper.getAsJsonObject(outputs, "fluid"));
 		}
 
 		// Return null if the output fluid is null.
@@ -80,7 +80,7 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public SqueezerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public SqueezerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		long power = buffer.readLong();
 		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
@@ -91,7 +91,7 @@ public class SqueezerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, SqueezerRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, SqueezerRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInput().write(buffer);

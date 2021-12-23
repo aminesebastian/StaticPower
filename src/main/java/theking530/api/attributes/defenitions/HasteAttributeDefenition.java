@@ -1,10 +1,10 @@
 package theking530.api.attributes.defenitions;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.FloatAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;
@@ -15,7 +15,7 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 	public static final int MAX_VALUE = 300;
 
 	public HasteAttributeDefenition(ResourceLocation id) {
-		super(ID, "attribute.staticpower.haste", TextFormatting.YELLOW, FloatAttributeModifier.class);
+		super(ID, "attribute.staticpower.haste", ChatFormatting.YELLOW, FloatAttributeModifier.class);
 		baseValue = 0;
 	}
 
@@ -35,8 +35,8 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 	}
 
 	@Override
-	public IFormattableTextComponent getAttributeTitle(boolean showAdvanced) {
-		IFormattableTextComponent baseTitle = super.getAttributeTitle(showAdvanced);
+	public MutableComponent getAttributeTitle(boolean showAdvanced) {
+		MutableComponent baseTitle = super.getAttributeTitle(showAdvanced);
 
 		int hasteLevel = getHasteLevel();
 		String hasteTier = "";
@@ -52,9 +52,9 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 		}
 
 		if (showAdvanced) {
-			return baseTitle.appendString(" " + hasteTier).appendString((TextFormatting.GRAY.toString() + " (" + getValue() + "/" + MAX_VALUE + ")"));
+			return baseTitle.append(" " + hasteTier).append((ChatFormatting.GRAY.toString() + " (" + getValue() + "/" + MAX_VALUE + ")"));
 		} else {
-			return baseTitle.appendString(" " + hasteTier);
+			return baseTitle.append(" " + hasteTier);
 		}
 	}
 
@@ -77,12 +77,12 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 	}
 
 	@Override
-	protected void serializeBaseValue(CompoundNBT nbt) {
+	protected void serializeBaseValue(CompoundTag nbt) {
 		nbt.putInt("base_value", baseValue);
 	}
 
 	@Override
-	protected void deserializeBaseValue(CompoundNBT nbt) {
+	protected void deserializeBaseValue(CompoundTag nbt) {
 		baseValue = nbt.getInt("base_value");
 	}
 
@@ -101,7 +101,7 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 	}
 
 	@Override
-	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
+	public MutableComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
 		if (!(other instanceof HasteAttributeDefenition)) {
 			return null;
 		}
@@ -113,7 +113,7 @@ public class HasteAttributeDefenition extends AbstractAttributeDefenition<Intege
 		}
 
 		String sign = difference > 0 ? "+" : difference < 0 ? "-" : "";
-		String color = difference > 0 ? TextFormatting.GREEN.toString() : TextFormatting.RED.toString();
-		return super.getAttributeTitle(false).appendString(" ").append(new StringTextComponent(color + sign + difference));
+		String color = difference > 0 ? ChatFormatting.GREEN.toString() : ChatFormatting.RED.toString();
+		return super.getAttributeTitle(false).append(" ").append(new TextComponent(color + sign + difference));
 	}
 }

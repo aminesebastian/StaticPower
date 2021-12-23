@@ -1,10 +1,10 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -16,12 +16,12 @@ import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFa
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderFarmer extends StaticPowerTileEntitySpecialRenderer<TileEntityBasicFarmer> {
 
-	public TileEntityRenderFarmer(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public TileEntityRenderFarmer(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	public void renderTileEntityBase(TileEntityBasicFarmer tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	public void renderTileEntityBase(TileEntityBasicFarmer tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
 			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
 			float firstSectionFilledPercent = Math.min(filledPercentage * 2.0f, 1.0f);

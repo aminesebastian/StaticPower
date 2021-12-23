@@ -5,12 +5,12 @@ import java.io.ByteArrayOutputStream;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.CompressedStreamTools;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtIo;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -24,7 +24,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
  *
  */
 public class TileEntityBasicSyncPacket extends NetworkMessage {
-	protected CompoundNBT machineUpdateTag;
+	protected CompoundTag machineUpdateTag;
 	protected BlockPos tileEntityPosition;
 	protected boolean shouldReRender;
 
@@ -33,19 +33,19 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 	}
 
 	public TileEntityBasicSyncPacket(TileEntityBase tileEntity, boolean shouldReRender) {
-		tileEntityPosition = tileEntity.getPos();
+		tileEntityPosition = tileEntity.getBlockPos();
 		this.shouldReRender = shouldReRender;
-		machineUpdateTag = new CompoundNBT();
+		machineUpdateTag = new CompoundTag();
 		tileEntity.serializeUpdateNbt(machineUpdateTag, true);
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(tileEntityPosition);
 		buffer.writeBoolean(shouldReRender);
 		try {
 			ByteArrayOutputStream out = new ByteArrayOutputStream();
-			CompressedStreamTools.writeCompressed(machineUpdateTag, out);
+			NbtIo.writeCompressed(machineUpdateTag, out);
 			buffer.writeByteArray(out.toByteArray());
 		} catch (Exception e) {
 			StaticPower.LOGGER.error("An error occured when attempting to serialize a tile entity's data.", e);
@@ -53,13 +53,13 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		tileEntityPosition = buffer.readBlockPos();
 		shouldReRender = buffer.readBoolean();
 		byte[] compressedData = buffer.readByteArray();
 
 		try {
-			machineUpdateTag = CompressedStreamTools.readCompressed(new ByteArrayInputStream(compressedData));
+			machineUpdateTag = NbtIo.readCompressed(new ByteArrayInputStream(compressedData));
 		} catch (Exception e) {
 			StaticPower.LOGGER.error("An error occured when attempting to deserialize a tile entity's data.", e);
 		}
@@ -68,8 +68,8 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.world.isAreaLoaded(tileEntityPosition, 1)) {
-				TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(tileEntityPosition);
+			if (Minecraft.getInstance().player.level.isAreaLoaded(tileEntityPosition, 1)) {
+				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(tileEntityPosition);
 				if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 					TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
 					tileEntity.deserializeUpdateNbt(machineUpdateTag, true);

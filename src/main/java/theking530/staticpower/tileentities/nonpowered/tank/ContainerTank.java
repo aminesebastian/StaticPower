@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.nonpowered.tank;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -19,11 +19,11 @@ public class ContainerTank extends StaticPowerTileEntityContainer<TileEntityTank
 		}
 	}
 
-	public ContainerTank(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerTank(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityTank) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerTank(int windowId, PlayerInventory playerInventory, TileEntityTank owner) {
+	public ContainerTank(int windowId, Inventory playerInventory, TileEntityTank owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

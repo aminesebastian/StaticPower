@@ -3,16 +3,16 @@ package theking530.staticpower.data.crafting;
 import java.util.HashMap;
 import java.util.Optional;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fluids.FluidStack;
 
 public class RecipeMatchParameters {
 	private ItemStack[] items;
 	private FluidStack[] fluids;
 	private BlockState[] blocks;
-	private CompoundNBT customParameters;
+	private CompoundTag customParameters;
 	private boolean verifyBlocks;
 	private boolean verifyItems;
 	private boolean verifyItemCounts;
@@ -23,7 +23,7 @@ public class RecipeMatchParameters {
 	private final HashMap<String, Object> extraProperties;
 
 	public RecipeMatchParameters() {
-		customParameters = new CompoundNBT();
+		customParameters = new CompoundTag();
 		extraProperties = new HashMap<String, Object>();
 		verifyItemCounts = true;
 		verifyFluids = true;
@@ -47,7 +47,7 @@ public class RecipeMatchParameters {
 		this.fluids = fluids;
 	}
 
-	public CompoundNBT getCustomParameterContainer() {
+	public CompoundTag getCustomParameterContainer() {
 		return this.customParameters;
 	}
 

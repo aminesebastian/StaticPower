@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.powered.chargingstation;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
@@ -16,7 +16,7 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 
 public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargingStation, TileEntityChargingStation> {
 
-	public GuiChargingStation(ContainerChargingStation container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiChargingStation(ContainerChargingStation container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -28,17 +28,17 @@ public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargi
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
 
 	@Override
-	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
-		this.itemRenderer.drawItem(Items.IRON_HELMET, guiLeft, guiTop, 152, 8, 0.3f);
-		this.itemRenderer.drawItem(Items.IRON_CHESTPLATE, guiLeft, guiTop, 152, 26, 0.3f);
-		this.itemRenderer.drawItem(Items.IRON_LEGGINGS, guiLeft, guiTop, 152, 44, 0.3f);
-		this.itemRenderer.drawItem(Items.IRON_BOOTS, guiLeft, guiTop, 152, 62, 0.3f);
+		this.itemRenderer.drawItem(Items.IRON_HELMET, leftPos, topPos, 152, 8, 0.3f);
+		this.itemRenderer.drawItem(Items.IRON_CHESTPLATE, leftPos, topPos, 152, 26, 0.3f);
+		this.itemRenderer.drawItem(Items.IRON_LEGGINGS, leftPos, topPos, 152, 44, 0.3f);
+		this.itemRenderer.drawItem(Items.IRON_BOOTS, leftPos, topPos, 152, 62, 0.3f);
 	}
 }

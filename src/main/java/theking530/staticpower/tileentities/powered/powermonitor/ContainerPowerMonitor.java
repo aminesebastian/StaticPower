@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.powermonitor;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -17,11 +17,11 @@ public class ContainerPowerMonitor extends StaticPowerTileEntityContainer<TileEn
 		}
 	}
 
-	public ContainerPowerMonitor(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerPowerMonitor(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityPowerMonitor) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPowerMonitor(int windowId, PlayerInventory playerInventory, TileEntityPowerMonitor owner) {
+	public ContainerPowerMonitor(int windowId, Inventory playerInventory, TileEntityPowerMonitor owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

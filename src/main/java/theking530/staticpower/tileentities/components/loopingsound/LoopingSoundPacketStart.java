@@ -3,19 +3,19 @@ package theking530.staticpower.tileentities.components.loopingsound;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 
 public class LoopingSoundPacketStart extends NetworkMessage {
 	private String componentName;
 	private ResourceLocation soundIdIn;
-	private SoundCategory categoryIn;
+	private SoundSource categoryIn;
 	private float volumeIn;
 	private float pitchIn;
 	private BlockPos position;
@@ -24,7 +24,7 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 	public LoopingSoundPacketStart() {
 	}
 
-	public LoopingSoundPacketStart(LoopingSoundComponent component, ResourceLocation soundIdIn, SoundCategory categoryIn, float volumeIn, float pitchIn, BlockPos pos) {
+	public LoopingSoundPacketStart(LoopingSoundComponent component, ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos) {
 		super();
 		this.componentName = component.getComponentName();
 		this.soundIdIn = soundIdIn;
@@ -36,10 +36,10 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buf) {
+	public void decode(FriendlyByteBuf buf) {
 		componentName = readStringOnServer(buf);
 		soundIdIn = new ResourceLocation(readStringOnServer(buf));
-		categoryIn = SoundCategory.values()[buf.readInt()];
+		categoryIn = SoundSource.values()[buf.readInt()];
 		volumeIn = buf.readFloat();
 		pitchIn = buf.readFloat();
 		position = buf.readBlockPos();
@@ -47,7 +47,7 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buf) {
+	public void encode(FriendlyByteBuf buf) {
 		writeStringOnServer(componentName, buf);
 		writeStringOnServer(soundIdIn.toString(), buf);
 		buf.writeInt(categoryIn.ordinal());
@@ -61,9 +61,9 @@ public class LoopingSoundPacketStart extends NetworkMessage {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			// Make sure the position is loaded.
-			if (Minecraft.getInstance().player.world.isAreaLoaded(position, 1)) {
+			if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
 				// Get the tile entity.
-				TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(position);
+				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
 
 				// If the component is found on the client, play the sound.
 				ComponentUtilities.getComponent(LoopingSoundComponent.class, componentName, rawTileEntity).ifPresent(comp -> {

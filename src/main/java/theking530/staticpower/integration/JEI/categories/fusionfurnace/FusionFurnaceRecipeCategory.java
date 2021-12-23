@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -14,12 +14,12 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.FusionProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
@@ -42,7 +42,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 	private static final int INTPUT_SLOT_5 = 5;
 	private static final int OUTPUT_SLOT = 6;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final FusionProgressBar pBar;
@@ -52,7 +52,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 
 	public FusionFurnaceRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.FusionFurnace.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.FusionFurnace.getDescriptionId());
 		background = guiHelper.createBlankDrawable(160, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.FusionFurnace));
 		pBar = new FusionProgressBar(79, 19);
@@ -87,7 +87,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 	}
 
 	@Override
-	public void draw(FusionFurnaceRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(FusionFurnaceRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 36, 25, 16, 16, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 58, 13, 16, 16, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 80, 2, 16, 16, 0);
@@ -104,18 +104,18 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(FusionFurnaceRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(FusionFurnaceRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
 		}

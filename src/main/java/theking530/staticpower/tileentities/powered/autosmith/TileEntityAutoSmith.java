@@ -3,15 +3,15 @@ package theking530.staticpower.tileentities.powered.autosmith;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.attributes.capability.CapabilityAttributable;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
@@ -40,7 +40,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutoSmith extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityAutoSmith> TYPE = new TileEntityTypeAllocator<TileEntityAutoSmith>((allocator) -> new TileEntityAutoSmith(), ModBlocks.AutoSmith);
+	public static final BlockEntityTypeAllocator<TileEntityAutoSmith> TYPE = new BlockEntityTypeAllocator<TileEntityAutoSmith>((allocator) -> new TileEntityAutoSmith(), ModBlocks.AutoSmith);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -128,7 +128,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(AutoSmithRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
@@ -145,7 +145,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canProcessRecipe(AutoSmithRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -178,8 +178,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		fluidTankComponent.drain(recipe.getModifierFluid().getAmount(), FluidAction.EXECUTE);
 
 		// Play the crafting sound.
-		getWorld().playSound(null, getPos().getX(), getPos().getY() + 0.5, getPos().getZ(), SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 0.1F,
-				((getWorld().getRandom().nextFloat() * .75f) + 1.25f));
+		getLevel().playSound(null, getBlockPos().getX(), getBlockPos().getY() + 0.5, getBlockPos().getZ(), SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.1F,
+				((getLevel().getRandom().nextFloat() * .75f) + 1.25f));
 
 		// Clear the internal inventory.
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
@@ -209,7 +209,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerAutoSmith(windowId, inventory, this);
 	}
 }

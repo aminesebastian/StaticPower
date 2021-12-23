@@ -1,8 +1,8 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -13,11 +13,11 @@ public class DummySlot extends Slot {
 	}
 
 	@Override
-	public void onSlotChange(ItemStack oldStackIn, ItemStack newStackIn) {
+	public void onQuickCraft(ItemStack oldStackIn, ItemStack newStackIn) {
 	}
 
 	@Override
-	protected void onCrafting(ItemStack stack, int amount) {
+	protected void onQuickCraft(ItemStack stack, int amount) {
 	}
 
 	@Override
@@ -25,60 +25,60 @@ public class DummySlot extends Slot {
 	}
 
 	@Override
-	protected void onCrafting(ItemStack stack) {
+	protected void checkTakeAchievements(ItemStack stack) {
 	}
 
 	@Override
-	public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
+	public ItemStack onTake(Player thePlayer, ItemStack stack) {
 		return stack;
 	}
 
 	@Override
-	public boolean isItemValid(ItemStack stack) {
+	public boolean mayPlace(ItemStack stack) {
 		return true;
 	}
 
 	@Override
-	public ItemStack getStack() {
+	public ItemStack getItem() {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean getHasStack() {
-		return !this.getStack().isEmpty();
+	public boolean hasItem() {
+		return !this.getItem().isEmpty();
 	}
 
 	@Override
-	public void putStack(ItemStack stack) {
+	public void set(ItemStack stack) {
 	}
 
 	@Override
-	public void onSlotChanged() {
+	public void setChanged() {
 	}
 
 	@Override
-	public int getSlotStackLimit() {
+	public int getMaxStackSize() {
 		return Integer.MAX_VALUE;
 	}
 
 	@Override
-	public int getItemStackLimit(ItemStack stack) {
-		return this.getSlotStackLimit();
+	public int getMaxStackSize(ItemStack stack) {
+		return this.getMaxStackSize();
 	}
 
 	@Override
-	public ItemStack decrStackSize(int amount) {
+	public ItemStack remove(int amount) {
 		return ItemStack.EMPTY;
 	}
 
 	@Override
-	public boolean canTakeStack(PlayerEntity playerIn) {
+	public boolean mayPickup(Player playerIn) {
 		return true;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public boolean isEnabled() {
+	public boolean isActive() {
 		return true;
 	}
 

@@ -1,6 +1,6 @@
 package theking530.staticpower.cables.heat;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.ICableNetworkModuleFactory;
 

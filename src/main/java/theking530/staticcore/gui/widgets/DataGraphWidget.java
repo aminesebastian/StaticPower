@@ -9,11 +9,12 @@ import java.util.function.Supplier;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
@@ -30,7 +31,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Return early if there is no data.
 		if (dataSets.size() == 0) {
 			return;
@@ -53,7 +54,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 		// Move us down and a little to the left so the origin of the graph is the
 		// bottom right corner.
-		matrix.push();
+		matrix.pushPose();
 		matrix.translate(0.1f + getPosition().getX(), getSize().getY() - 0.5f - ((xAxisDifference * valueScale) / 2) + getPosition().getY(), 0);
 
 		// Draw the 0 line.
@@ -99,7 +100,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 				Color.EIGHT_BIT_DARK_GREY, false);
 		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, "0", 1.5f, -2f, 0.55f, Color.EIGHT_BIT_DARK_GREY, false);
 
-		matrix.pop();
+		matrix.popPose();
 	}
 
 	public void setXAxisLabels(List<String> labels) {
@@ -164,13 +165,13 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		return new Vector2D(minAxis, maxAxis);
 	}
 
-	protected void drawDataSet(MatrixStack matrix, IGraphDataSet data, float valueScale, float segmentLength, float maxDataHeight) {
+	protected void drawDataSet(PoseStack matrix, IGraphDataSet data, float valueScale, float segmentLength, float maxDataHeight) {
 		Color lineColor = data.getLineColor();
 		GL11.glColor4d(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue(), lineColor.getAlpha());
 		GL11.glLineWidth(data.getLineThickness());
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferBuilder = tessellator.getBuffer();
-		bufferBuilder.begin(GL11.GL_LINES, DefaultVertexFormats.POSITION);
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferBuilder = tessellator.getBuilder();
+		bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
 
 		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrix, 0, 0);
 		double[] yAxis = data.getData();
@@ -185,17 +186,17 @@ public class DataGraphWidget extends AbstractGuiWidget {
 				y = -SDMath.clamp(yAxis[i] * valueScale, -maxDataHeight, maxDataHeight);
 				nextY = i < yAxis.length - 1 ? -SDMath.clamp(yAxis[i + 1] * valueScale, -maxDataHeight, maxDataHeight) : y;
 
-				bufferBuilder.pos(origin.getX() + x, origin.getY() + y, 1).endVertex();
-				bufferBuilder.pos(origin.getX() + x + segmentLength, origin.getY() + nextY, 1).endVertex();
+				bufferBuilder.vertex(origin.getX() + x, origin.getY() + y, 1).endVertex();
+				bufferBuilder.vertex(origin.getX() + x + segmentLength, origin.getY() + nextY, 1).endVertex();
 			}
 		} else if (yAxis.length == 1) {
 			y = -SDMath.clamp(yAxis[0] * valueScale, -maxDataHeight, maxDataHeight);
-			bufferBuilder.pos(origin.getX(), origin.getY() + y, 1).endVertex();
-			bufferBuilder.pos(origin.getX() + getSize().getX(), origin.getY() + y, 1).endVertex();
+			bufferBuilder.vertex(origin.getX(), origin.getY() + y, 1).endVertex();
+			bufferBuilder.vertex(origin.getX() + getSize().getX(), origin.getY() + y, 1).endVertex();
 		}
 
 		// Draw all the points.
-		tessellator.draw();
+		tessellator.end();
 
 		// Draw the value label.
 		if (yAxis.length > 0) {

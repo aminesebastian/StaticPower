@@ -1,16 +1,16 @@
 package theking530.staticpower.data.crafting.wrappers.vulcanizer;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class VulcanizerRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<VulcanizerRecipe> RECIPE_TYPE = IRecipeType.register("vulcanizer");
+	public static final RecipeType<VulcanizerRecipe> RECIPE_TYPE = RecipeType.register("vulcanizer");
 
 	private final FluidStack inputFluid;
 	private final ProbabilityItemStackOutput output;
@@ -50,12 +50,12 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return VulcanizerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

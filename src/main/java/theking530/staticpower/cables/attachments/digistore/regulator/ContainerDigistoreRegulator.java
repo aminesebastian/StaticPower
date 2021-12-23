@@ -1,9 +1,9 @@
 package theking530.staticpower.cables.attachments.digistore.regulator;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,11 +29,11 @@ public class ContainerDigistoreRegulator extends AbstractCableAttachmentContaine
 	private ItemStackHandler filterInventory;
 	private ItemStackHandler upgradeInventory;
 
-	public ContainerDigistoreRegulator(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistoreRegulator(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerDigistoreRegulator(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public ContainerDigistoreRegulator(int windowId, Inventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 

@@ -8,25 +8,25 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.BlockFaceUV;
-import net.minecraft.client.renderer.model.BlockPartFace;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -41,19 +41,19 @@ import theking530.staticpower.items.DigistoreMonoCard;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
-public class DigistoreMonoCardItemModel implements IBakedModel {
+public class DigistoreMonoCardItemModel implements BakedModel {
 	private final Int2ObjectMap<DigistoreMonoCardModel> cache = new Int2ObjectArrayMap<>();
-	private final IBakedModel baseModel;
+	private final BakedModel baseModel;
 
-	public DigistoreMonoCardItemModel(IBakedModel baseModel) {
+	public DigistoreMonoCardItemModel(BakedModel baseModel) {
 		this.baseModel = baseModel;
 	}
 
 	@Override
-	public ItemOverrideList getOverrides() {
-		return new ItemOverrideList() {
+	public ItemOverrides getOverrides() {
+		return new ItemOverrides() {
 			@Override
-			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity) {
 				if (!(stack.getItem() instanceof DigistoreMonoCard)) {
 					return originalModel;
 				}
@@ -80,8 +80,8 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isAmbientOcclusion() {
-		return baseModel.isAmbientOcclusion();
+	public boolean useAmbientOcclusion() {
+		return baseModel.useAmbientOcclusion();
 	}
 
 	@Override
@@ -90,25 +90,25 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return baseModel.isSideLit();
+	public boolean usesBlockLight() {
+		return baseModel.usesBlockLight();
 	}
 
 	@Override
-	public boolean isBuiltInRenderer() {
-		return baseModel.isBuiltInRenderer();
+	public boolean isCustomRenderer() {
+		return baseModel.isCustomRenderer();
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return baseModel.getParticleTexture();
+	public TextureAtlasSprite getParticleIcon() {
+		return baseModel.getParticleIcon();
 	}
 
 	private class DigistoreMonoCardModel extends AbstractBakedModel {
 		private final float filledRatio;
 		private List<BakedQuad> quads = null;
 
-		protected DigistoreMonoCardModel(IBakedModel baseModel, float filledRatio) {
+		protected DigistoreMonoCardModel(BakedModel baseModel, float filledRatio) {
 			super(baseModel);
 			this.filledRatio = filledRatio;
 		}
@@ -128,7 +128,7 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 				quads = new ArrayList<BakedQuad>();
 				quads.addAll(BaseModel.getQuads(state, side, rand, data));
 
-				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+				TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 				TextureAtlasSprite sideSprite;
 
 				if (filledRatio < 1.0f) {
@@ -138,7 +138,7 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 				}
 
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-				BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
+				BlockElementFace blockPartFace = new BlockElementFace(null, -1, sideSprite.getName().toString(), blockFaceUV);
 
 				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(3.5f, 4.0f, 0.0f), new Vector3f(3.5f + (filledRatio * 9.0f), 5.4f, 16.0f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY,
 						null, false, new ResourceLocation("dummy_name"));
@@ -148,7 +148,7 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 		}
 
 		@Override
-		public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
 			BaseModel.handlePerspective(cameraTransformType, mat);
 			return this;
 		}
@@ -159,27 +159,27 @@ public class DigistoreMonoCardItemModel implements IBakedModel {
 		}
 
 		@Override
-		public boolean isSideLit() {
-			return BaseModel.isSideLit();
+		public boolean usesBlockLight() {
+			return BaseModel.usesBlockLight();
 		}
 
 		@Override
-		public boolean isBuiltInRenderer() {
+		public boolean isCustomRenderer() {
 			return false;
 		}
 
 		@Override
-		public ItemOverrideList getOverrides() {
-			return ItemOverrideList.EMPTY;
+		public ItemOverrides getOverrides() {
+			return ItemOverrides.EMPTY;
 		}
 
 		@Override
-		public boolean isAmbientOcclusion() {
+		public boolean useAmbientOcclusion() {
 			return false;
 		}
 
 		@Override
-		public TextureAtlasSprite getParticleTexture() {
+		public TextureAtlasSprite getParticleIcon() {
 			return null;
 		}
 

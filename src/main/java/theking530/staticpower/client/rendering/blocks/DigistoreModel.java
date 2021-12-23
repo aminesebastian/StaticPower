@@ -9,15 +9,15 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
@@ -29,13 +29,13 @@ import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntity
 
 @OnlyIn(Dist.CLIENT)
 public class DigistoreModel extends AbstractBakedModel {
-	public DigistoreModel(IBakedModel baseModel) {
+	public DigistoreModel(BakedModel baseModel) {
 		super(baseModel);
 	}
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state,
+	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state,
 			@Nonnull IModelData tileData) {
 		return tileData;
 	}
@@ -49,7 +49,7 @@ public class DigistoreModel extends AbstractBakedModel {
 		}
 
 		// Get the data used in rendering.
-		Direction facing = state.get(StaticPowerTileEntityBlock.FACING);
+		Direction facing = state.getValue(StaticPowerTileEntityBlock.FACING);
 		ItemStack card = data.getData(TileEntityDigistore.RENDERING_STATE).card;
 
 		// Create the output array.
@@ -62,7 +62,7 @@ public class DigistoreModel extends AbstractBakedModel {
 		// Render the card.
 		if (!card.isEmpty()) {
 			// Get the model of the card.
-			IBakedModel model = Minecraft.getInstance().getModelManager()
+			BakedModel model = Minecraft.getInstance().getModelManager()
 					.getModel(((DigistoreCard) card.getItem()).model);
 
 			// Calculate the offset for the current card's model.
@@ -90,7 +90,7 @@ public class DigistoreModel extends AbstractBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return BaseModel.isSideLit();
+	public boolean usesBlockLight() {
+		return BaseModel.usesBlockLight();
 	}
 }

@@ -2,9 +2,9 @@ package theking530.staticpower.network;
 
 import java.util.function.Supplier;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 
 public abstract class NetworkMessage {
 	/**
@@ -19,7 +19,7 @@ public abstract class NetworkMessage {
 	 * 
 	 * @param buffer The buffer to write the data to.
 	 */
-	public abstract void encode(PacketBuffer buffer);
+	public abstract void encode(FriendlyByteBuf buffer);
 
 	/**
 	 * Override this method to decode this packet's data from the
@@ -28,7 +28,7 @@ public abstract class NetworkMessage {
 	 * 
 	 * @param buffer The buffer to read the data from.
 	 */
-	public abstract void decode(PacketBuffer buffer);
+	public abstract void decode(FriendlyByteBuf buffer);
 
 	/**
 	 * Override this method to perform any actions once the data has been decoded.
@@ -37,14 +37,14 @@ public abstract class NetworkMessage {
 	 */
 	public abstract void handle(Supplier<Context> ctx);
 
-	protected void writeStringOnServer(String componentName, PacketBuffer buf) {
-		CompoundNBT tag = new CompoundNBT();
+	protected void writeStringOnServer(String componentName, FriendlyByteBuf buf) {
+		CompoundTag tag = new CompoundTag();
 		tag.putString("te_component_name", componentName);
-		buf.writeCompoundTag(tag);
+		buf.writeNbt(tag);
 	}
 
-	protected String readStringOnServer(PacketBuffer buf) {
-		return buf.readCompoundTag().getString("te_component_name");
+	protected String readStringOnServer(FriendlyByteBuf buf) {
+		return buf.readNbt().getString("te_component_name");
 	}
 
 	/**

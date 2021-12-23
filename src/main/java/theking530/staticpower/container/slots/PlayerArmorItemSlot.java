@@ -1,18 +1,18 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 public class PlayerArmorItemSlot extends Slot {
 
-	public PlayerArmorItemSlot(IInventory inventory, int index, int xPosition, int yPosition, EquipmentSlotType slot) {
+	public PlayerArmorItemSlot(Container inventory, int index, int xPosition, int yPosition, EquipmentSlot slot) {
 		super(inventory, index, xPosition, yPosition);
 	}
 
-	protected static ItemStack getItemStackForSlot(EquipmentSlotType slot) {
+	protected static ItemStack getItemStackForSlot(EquipmentSlot slot) {
 		switch (slot) {
 		case HEAD:
 			return new ItemStack(Items.IRON_HELMET);

@@ -1,7 +1,7 @@
 package theking530.staticcore.gui.widgets.tabs;
 
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
@@ -10,7 +10,7 @@ import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiInfoTab extends AbstractInfoTab {
-	public GuiInfoTab(ITextComponent title, int width) {
+	public GuiInfoTab(Component title, int width) {
 		this(title.getString(), width);
 	}
 

@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.mixer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -19,11 +19,11 @@ public class ContainerMixer extends StaticPowerTileEntityContainer<TileEntityMix
 		}
 	}
 
-	public ContainerMixer(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerMixer(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityMixer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerMixer(int windowId, PlayerInventory playerInventory, TileEntityMixer owner) {
+	public ContainerMixer(int windowId, Inventory playerInventory, TileEntityMixer owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

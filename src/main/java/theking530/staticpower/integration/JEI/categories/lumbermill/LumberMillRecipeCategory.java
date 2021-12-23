@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -16,12 +16,12 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -42,7 +42,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	private static final int PRIMARY_OUTPUT_SLOT = 1;
 	private static final int SECONDARY_OUTPUT_SLOT = 2;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -52,7 +52,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 
 	public LumberMillRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.LumberMill.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.LumberMill.getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.LumberMill));
 		pBar = new ArrowProgressBar(63, 19);
@@ -87,7 +87,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	}
 
 	@Override
-	public void draw(LumberMillRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(LumberMillRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 41, 19, 16, 16, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 89, 17, 20, 20, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 119, 17, 20, 20, 0);
@@ -102,18 +102,18 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(LumberMillRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(LumberMillRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
 		}

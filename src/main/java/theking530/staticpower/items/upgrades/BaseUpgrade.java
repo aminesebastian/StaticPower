@@ -6,18 +6,21 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.IUpgradeItem;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.items.StaticPowerItem;
+
+import net.minecraft.world.item.Item.Properties;
+import theking530.api.IUpgradeItem.UpgradeType;
 
 public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 
@@ -29,7 +32,7 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	}
 
 	public BaseUpgrade(String name, ResourceLocation tier, UpgradeType... upgradeTypes) {
-		this(name, tier, new Properties().maxStackSize(16), upgradeTypes);
+		this(name, tier, new Properties().stacksTo(16), upgradeTypes);
 	}
 
 	public BaseUpgrade(String name, ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
@@ -64,8 +67,8 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		tooltip.add(new StringTextComponent(TextFormatting.WHITE + "Stacks Up To " + stack.getMaxStackSize()));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
+		tooltip.add(new TextComponent(ChatFormatting.WHITE + "Stacks Up To " + stack.getMaxStackSize()));
 	}
 
 	@Override

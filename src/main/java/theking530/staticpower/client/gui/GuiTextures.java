@@ -1,6 +1,6 @@
 package theking530.staticpower.client.gui;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
 
 public class GuiTextures {

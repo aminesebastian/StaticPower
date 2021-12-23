@@ -4,9 +4,9 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.utilities.RectangleBounds;
@@ -31,7 +31,7 @@ public abstract class AbstractGuiWidget {
 	private boolean tooltipsDisabled;
 	private boolean autoHandleTooltipBounds;
 	private RectangleBounds cachedBounds;
-	private MatrixStack lastMatrixStack;
+	private PoseStack lastMatrixStack;
 
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
 		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
@@ -178,7 +178,7 @@ public abstract class AbstractGuiWidget {
 	 * 
 	 * @return
 	 */
-	public MatrixStack getLastRenderMatrix() {
+	public PoseStack getLastRenderMatrix() {
 		return lastMatrixStack;
 	}
 
@@ -220,7 +220,7 @@ public abstract class AbstractGuiWidget {
 	 * @param mouseX        TODO
 	 * @param mouseY        TODO
 	 */
-	public void updateBeforeRender(MatrixStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		this.ownerSize = ownerSize;
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
@@ -228,7 +228,7 @@ public abstract class AbstractGuiWidget {
 		// Make a NEW matrix that translates from local space to screen space. We make a
 		// new matrix so that it's owned by this widget, and not modified by any
 		// external references.
-		lastMatrixStack = new MatrixStack();
+		lastMatrixStack = new PoseStack();
 		lastMatrixStack.translate(screenSpacePosition.getX() - getPosition().getX(), screenSpacePosition.getY() - getPosition().getY(), 0);
 
 		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
@@ -243,7 +243,7 @@ public abstract class AbstractGuiWidget {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 
@@ -256,16 +256,16 @@ public abstract class AbstractGuiWidget {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 
-	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 
 	/* Tooltip */
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 
 	}
 

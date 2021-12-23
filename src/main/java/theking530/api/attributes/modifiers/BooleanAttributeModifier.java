@@ -2,7 +2,7 @@ package theking530.api.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import theking530.api.attributes.registration.AttributeModifierRegistration;
 
 @AttributeModifierRegistration("boolean")
@@ -21,12 +21,12 @@ public class BooleanAttributeModifier extends AbstractAttributeModifier<Boolean>
 	}
 
 	@Override
-	protected void read(CompoundNBT nbt) {
+	protected void read(CompoundTag nbt) {
 		value = nbt.getBoolean("value");
 	}
 
 	@Override
-	protected void write(CompoundNBT nbt) {
+	protected void write(CompoundTag nbt) {
 		nbt.putBoolean("value", value);
 	}
 

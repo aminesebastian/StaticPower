@@ -4,22 +4,22 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPowerConfig;
@@ -27,8 +27,10 @@ import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
+
 public class BlockSolarPanel extends StaticPowerTileEntityBlock {
-	public static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 3.5D, 16.0D);
+	public static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.5D, 16.0D);
 	public final ResourceLocation tierType;
 
 	public BlockSolarPanel(String name, ResourceLocation tierType) {
@@ -37,24 +39,24 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return SHAPE;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString() + "• Generation ")
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "ï¿½ Generation ")
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tierType).solarPanelPowerGeneration.get())));
 	}
 
 	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (tierType == StaticPowerTiers.BASIC) {
 			return TileEntitySolarPanel.TYPE_BASIC.create();
 		} else if (tierType == StaticPowerTiers.ADVANCED) {

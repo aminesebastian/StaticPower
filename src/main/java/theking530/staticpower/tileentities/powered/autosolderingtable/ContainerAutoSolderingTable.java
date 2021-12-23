@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.autosolderingtable;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -20,11 +20,11 @@ public class ContainerAutoSolderingTable extends AbstractContainerSolderingTable
 		}
 	}
 
-	public ContainerAutoSolderingTable(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerAutoSolderingTable(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityAutoSolderingTable) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerAutoSolderingTable(int windowId, PlayerInventory playerInventory, TileEntityAutoSolderingTable owner) {
+	public ContainerAutoSolderingTable(int windowId, Inventory playerInventory, TileEntityAutoSolderingTable owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

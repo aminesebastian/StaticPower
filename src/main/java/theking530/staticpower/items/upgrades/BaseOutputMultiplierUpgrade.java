@@ -4,28 +4,31 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
+import theking530.api.IUpgradeItem.UpgradeType;
 
 public class BaseOutputMultiplierUpgrade extends BaseUpgrade {
 
 	public BaseOutputMultiplierUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, new Properties().maxStackSize(8), UpgradeType.OUTPUT_MULTIPLIER);
+		super(name, tier, new Properties().stacksTo(8), UpgradeType.OUTPUT_MULTIPLIER);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		tooltip.add(new StringTextComponent(
-				TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(getTier().outputMultiplierUpgrade.get() * 100) + "%" + TextFormatting.GREEN + " Output Chance"));
-		tooltip.add(new StringTextComponent(
-				TextFormatting.WHITE + "+" + new java.text.DecimalFormat("#.#").format(getTier().outputMultiplierPowerCostUpgrade.get() * 100) + "%" + TextFormatting.RED + " Power Usage"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
+		tooltip.add(new TextComponent(
+				ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(getTier().outputMultiplierUpgrade.get() * 100) + "%" + ChatFormatting.GREEN + " Output Chance"));
+		tooltip.add(new TextComponent(
+				ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#.#").format(getTier().outputMultiplierPowerCostUpgrade.get() * 100) + "%" + ChatFormatting.RED + " Power Usage"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

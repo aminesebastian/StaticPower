@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.bottler;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -21,11 +21,11 @@ public class ContainerBottler extends StaticPowerTileEntityContainer<TileEntityB
 		}
 	}
 
-	public ContainerBottler(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerBottler(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityBottler) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerBottler(int windowId, PlayerInventory playerInventory, TileEntityBottler owner) {
+	public ContainerBottler(int windowId, Inventory playerInventory, TileEntityBottler owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

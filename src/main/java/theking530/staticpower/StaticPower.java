@@ -3,7 +3,7 @@ package theking530.staticpower;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticcore.initialization.StaticCoreRegistry;
@@ -42,7 +42,7 @@ import theking530.staticpower.world.trees.ModTrees;
 public class StaticPower {
 	public static final Logger LOGGER = LogManager.getLogger("Static Power");
 	public static final String MOD_ID = "staticpower";
-	public static final ItemGroup CREATIVE_TAB = new StaticPowerItemGroup();
+	public static final CreativeModeTab CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {
 		StaticPowerConfig.preInitialize();

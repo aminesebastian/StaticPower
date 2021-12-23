@@ -3,19 +3,16 @@ package theking530.staticpower.integration.WAILA;
 import java.util.List;
 
 import mcp.mobius.waila.api.IComponentProvider;
-import mcp.mobius.waila.api.IDataAccessor;
-import mcp.mobius.waila.api.IPluginConfig;
 import mcp.mobius.waila.api.IRegistrar;
 import mcp.mobius.waila.api.IWailaPlugin;
-import mcp.mobius.waila.api.RenderableTextComponent;
 import mcp.mobius.waila.api.TooltipPosition;
 import mcp.mobius.waila.api.WailaPlugin;
-import net.minecraft.block.Block;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.integration.TOP.BarTooltipRenderer;
@@ -57,7 +54,7 @@ public class WailaPluginImplementation implements IWailaPlugin {
 
 	public static class StaticVoltDecorator implements IComponentProvider {
 		@Override
-		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+		public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 			if (accessor.getServerData().contains(WailaDataProviders.POWER_TAG)) {
 				tooltip.add(new RenderableTextComponent(POWER_BAR_RENDERER, accessor.getServerData().getCompound(WailaDataProviders.POWER_TAG)));
 			}
@@ -66,7 +63,7 @@ public class WailaPluginImplementation implements IWailaPlugin {
 
 	public static class HeatDecorator implements IComponentProvider {
 		@Override
-		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+		public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 			if (accessor.getServerData().contains(WailaDataProviders.HEAT_TAG)) {
 				tooltip.add(new RenderableTextComponent(HEAT_BAR_RENDERER, accessor.getServerData().getCompound(WailaDataProviders.HEAT_TAG)));
 			}
@@ -75,7 +72,7 @@ public class WailaPluginImplementation implements IWailaPlugin {
 
 	public static class ProcessingTimeDecorator implements IComponentProvider {
 		@Override
-		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+		public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 			if (accessor.getServerData().contains(WailaDataProviders.PROCESSING_TAG)) {
 				tooltip.add(new RenderableTextComponent(PROCESSING_BAR_RENDERER, accessor.getServerData().getCompound(WailaDataProviders.PROCESSING_TAG)));
 			}
@@ -84,7 +81,7 @@ public class WailaPluginImplementation implements IWailaPlugin {
 
 	public static class FluidDecorator implements IComponentProvider {
 		@Override
-		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+		public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 			if (accessor.getServerData().contains(WailaDataProviders.FLUID_TAG)) {
 				tooltip.add(new RenderableTextComponent(FLUID_BAR_RENDERER, accessor.getServerData().getCompound(WailaDataProviders.FLUID_TAG)));
 			}
@@ -93,20 +90,20 @@ public class WailaPluginImplementation implements IWailaPlugin {
 
 	public static class DigistoreDecorator implements IComponentProvider {
 		@Override
-		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+		public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 
 		}
 	}
 
 	public static class DigistoreMasterPresenceDecorator implements IComponentProvider {
 		@Override
-		public void appendBody(List<ITextComponent> tooltip, IDataAccessor accessor, IPluginConfig config) {
+		public void appendBody(List<Component> tooltip, IDataAccessor accessor, IPluginConfig config) {
 			if (accessor.getServerData().contains(WailaDataProviders.DIGISTORE_MANAGER_TAG)) {
 				boolean managerPresent = accessor.getServerData().getBoolean(WailaDataProviders.DIGISTORE_MANAGER_TAG);
 				if (managerPresent) {
-					tooltip.add(new StringTextComponent(TextFormatting.GREEN.toString()).append(new TranslationTextComponent("gui.staticpower.manager_present")));
+					tooltip.add(new TextComponent(ChatFormatting.GREEN.toString()).append(new TranslatableComponent("gui.staticpower.manager_present")));
 				} else {
-					tooltip.add(new StringTextComponent(TextFormatting.RED.toString()).append(new TranslationTextComponent("gui.staticpower.manager_missing")));
+					tooltip.add(new TextComponent(ChatFormatting.RED.toString()).append(new TranslatableComponent("gui.staticpower.manager_missing")));
 				}
 			}
 		}

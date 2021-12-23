@@ -3,10 +3,10 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -14,6 +14,8 @@ import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabState;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
+
+import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiTabManager extends AbstractGuiWidget {
@@ -82,7 +84,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void updateBeforeRender(MatrixStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		super.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY);
 		int tabPositionX = (int) (getPosition().getX() + getOwnerSize().getX() - 1 + getPosition().getX());
 		int tabPositionY = (int) (getPosition().getY() + 10 + getPosition().getY());
@@ -119,14 +121,14 @@ public class GuiTabManager extends AbstractGuiWidget {
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
 
 			// Push a matrix for this tab's position.
-			matrixStack.push();
+			matrixStack.pushPose();
 			matrixStack.translate(tabPositionX, adjustedOffset, 0);
 
 			// Update the position.
 			rightTabs.get(i).updateTabPosition(matrixStack, tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, rightTabs.size() - i - 1));
 
 			// Pop the matrix.
-			matrixStack.pop();
+			matrixStack.popPose();
 		}
 
 		// Iterate through the left tabs.
@@ -145,7 +147,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
 
 			// Push a matrix for this tab's position.
-			matrixStack.push();
+			matrixStack.pushPose();
 			matrixStack.translate((int) (tabPositionX - getOwnerSize().getX() - leftTabs.get(i).tabWidth - 21), adjustedOffset, 0);
 
 			// Update the position.
@@ -153,15 +155,15 @@ public class GuiTabManager extends AbstractGuiWidget {
 					Math.max(0, leftTabs.size() - i - 1));
 
 			// Pop the matrix.
-			matrixStack.pop();
+			matrixStack.popPose();
 		}
 	}
 
 	@Override
-	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Render the tab backgrounds.
 		for (BaseGuiTab tab : registeredTabs) {
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(tab.xPosition, tab.yPosition, 0);
 			// Draw the tab panel.
 			tab.drawTabPanel(matrix, partialTicks);
@@ -170,29 +172,29 @@ public class GuiTabManager extends AbstractGuiWidget {
 			if (tab.isOpen()) {
 				tab.renderBackground(matrix, mouseX, mouseY, partialTicks);
 			}
-			matrix.pop();
+			matrix.popPose();
 		}
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
 			if (tab.isOpen()) {
-				matrix.push();
+				matrix.pushPose();
 				matrix.translate(tab.xPosition, tab.yPosition, 0);
 				tab.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-				matrix.pop();
+				matrix.popPose();
 			}
 		}
 	}
 
 	@Override
-	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
-			matrix.push();
+			matrix.pushPose();
 			matrix.translate(tab.xPosition, tab.yPosition, 0);
 			tab.renderForeground(matrix, mouseX, mouseY, partialTicks);
-			matrix.pop();
+			matrix.popPose();
 		}
 	}
 
@@ -214,14 +216,14 @@ public class GuiTabManager extends AbstractGuiWidget {
 		return EInputResult.UNHANDLED;
 	}
 
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		// Iterate through all the tabs.
 		for (BaseGuiTab tab : registeredTabs) {
 			// If this tab is hovered is any way, we only consider this one for tooltips.
 			if (tab.getBounds().isPointInBounds(mousePosition)) {
 				// If we are hovering the tab icon, add the title tooltip.
 				if (tab.getIconBounds().isPointInBounds(mousePosition)) {
-					tooltips.add(new StringTextComponent(tab.getTitle()));
+					tooltips.add(new TextComponent(tab.getTitle()));
 				}
 
 				// Add any other tooltips.

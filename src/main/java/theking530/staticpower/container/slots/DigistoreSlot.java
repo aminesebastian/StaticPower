@@ -15,7 +15,7 @@ public class DigistoreSlot extends StaticPowerContainerSlot {
 
 	public void drawBeforeItem(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 		if (!managerPresent) {
-			GuiDrawUtilities.drawColoredRectangle(guiLeft + this.xPos, guiTop + this.yPos, 16, 16, 1.0f, Color.DARK_GREY);
+			GuiDrawUtilities.drawColoredRectangle(guiLeft + this.x, guiTop + this.y, 16, 16, 1.0f, Color.DARK_GREY);
 		}
 	}
 }

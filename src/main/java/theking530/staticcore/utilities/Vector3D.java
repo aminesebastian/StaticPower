@@ -1,7 +1,7 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 
 public class Vector3D extends Vector2D {
 	public static final Vector3D ZERO = new Vector3D(0, 0, 0);
@@ -17,7 +17,7 @@ public class Vector3D extends Vector2D {
 	}
 
 	public Vector3D(Direction direction) {
-		this(direction.getXOffset(), direction.getYOffset(), direction.getZOffset());
+		this(direction.getStepX(), direction.getStepY(), direction.getStepZ());
 	}
 
 	public float getZ() {

@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.data.crafting.IngredientUtilities;
@@ -39,7 +39,7 @@ public class EncodedDigistorePattern {
 		cacheRequiredItems(inputs);
 	}
 
-	public EncodedDigistorePattern(long id, ItemStack[] inputs, ICraftingRecipe recipe) {
+	public EncodedDigistorePattern(long id, ItemStack[] inputs, CraftingRecipe recipe) {
 		this.id = id;
 		this.requiredItems = new LinkedList<EncodedIngredient>();
 		this.recipeType = RecipeEncodingType.CRAFTING_TABLE;
@@ -53,7 +53,7 @@ public class EncodedDigistorePattern {
 			isValid = true;
 			this.craftingRecipeId = recipe.getId();
 			this.inputs = inputs;
-			this.output = recipe.getRecipeOutput();
+			this.output = recipe.getResultItem();
 			cacheRequiredIngredients(recipe.getIngredients());
 		}
 	}
@@ -99,7 +99,7 @@ public class EncodedDigistorePattern {
 			// Check all required items to see if we already tracked this item. IF we do,
 			// increment the count. Otherwise, add it.
 			for (EncodedIngredient key : requiredItems) {
-				if (key.representsIngrdient(Ingredient.fromStacks(input))) {
+				if (key.representsIngrdient(Ingredient.of(input))) {
 					key.grow(input.getCount());
 					cached = true;
 				}
@@ -141,7 +141,7 @@ public class EncodedDigistorePattern {
 	@Nullable
 	public static EncodedDigistorePattern readFromPatternCard(ItemStack patternCard) {
 		if (DigistorePatternCard.hasPattern(patternCard)) {
-			CompoundNBT patternTag = patternCard.getTag().getCompound(DigistorePatternCard.ENCODED_PATTERN_TAG);
+			CompoundTag patternTag = patternCard.getTag().getCompound(DigistorePatternCard.ENCODED_PATTERN_TAG);
 			if (!patternTag.contains("type") || !patternTag.contains("inputs") || !patternTag.contains("output")) {
 				return null;
 			}
@@ -164,7 +164,7 @@ public class EncodedDigistorePattern {
 		return null;
 	}
 
-	public static EncodedDigistorePattern read(CompoundNBT nbt) {
+	public static EncodedDigistorePattern read(CompoundTag nbt) {
 		// Read the recipe type.
 		RecipeEncodingType recipeType = RecipeEncodingType.values()[nbt.getInt("type")];
 
@@ -179,15 +179,15 @@ public class EncodedDigistorePattern {
 
 		// Read the inputs.
 		ItemStack[] inputStacks = new ItemStack[9];
-		ListNBT inputsNBT = nbt.getList("inputs", Constants.NBT.TAG_COMPOUND);
+		ListTag inputsNBT = nbt.getList("inputs", Constants.NBT.TAG_COMPOUND);
 		for (int i = 0; i < inputsNBT.size(); i++) {
-			CompoundNBT inputTagNbt = (CompoundNBT) inputsNBT.get(i);
-			ItemStack stack = ItemStack.read(inputTagNbt);
+			CompoundTag inputTagNbt = (CompoundTag) inputsNBT.get(i);
+			ItemStack stack = ItemStack.of(inputTagNbt);
 			inputStacks[i] = stack;
 		}
 
 		// Read the output.
-		ItemStack outputStack = ItemStack.read(nbt.getCompound("output"));
+		ItemStack outputStack = ItemStack.of(nbt.getCompound("output"));
 
 		// Create the recipe.
 		if (recipeType == RecipeEncodingType.CRAFTING_TABLE) {
@@ -222,9 +222,9 @@ public class EncodedDigistorePattern {
 		return true;
 	}
 
-	public CompoundNBT serialize() {
+	public CompoundTag serialize() {
 		// Create the pattern tag.
-		CompoundNBT pattern = new CompoundNBT();
+		CompoundTag pattern = new CompoundTag();
 
 		// Store the id.
 		pattern.putLong("id", id);
@@ -238,17 +238,17 @@ public class EncodedDigistorePattern {
 		}
 
 		// Store the inputs.
-		ListNBT inputStacks = new ListNBT();
+		ListTag inputStacks = new ListTag();
 		for (ItemStack stack : inputs) {
-			CompoundNBT inputTag = new CompoundNBT();
-			stack.write(inputTag);
+			CompoundTag inputTag = new CompoundTag();
+			stack.save(inputTag);
 			inputStacks.add(inputTag);
 		}
 		pattern.put("inputs", inputStacks);
 
 		// Store the output.
-		CompoundNBT outputTag = new CompoundNBT();
-		output.write(outputTag);
+		CompoundTag outputTag = new CompoundTag();
+		output.save(outputTag);
 		pattern.put("output", outputTag);
 
 		return pattern;
@@ -264,7 +264,7 @@ public class EncodedDigistorePattern {
 		}
 
 		public EncodedIngredient(ItemStack item, int count) {
-			this.ingredient = Ingredient.fromStacks(item);
+			this.ingredient = Ingredient.of(item);
 			this.count = count;
 		}
 
@@ -290,7 +290,7 @@ public class EncodedDigistorePattern {
 
 		@Override
 		public String toString() {
-			return "EncodedIngredient [stacks=" + Arrays.toString(ingredient.getMatchingStacks()) + "]";
+			return "EncodedIngredient [stacks=" + Arrays.toString(ingredient.getItems()) + "]";
 		}
 
 	}

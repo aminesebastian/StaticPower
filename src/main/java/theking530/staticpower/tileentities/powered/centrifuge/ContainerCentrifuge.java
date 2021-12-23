@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.powered.centrifuge;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -27,11 +27,11 @@ public class ContainerCentrifuge extends StaticPowerTileEntityContainer<TileEnti
 		}
 	}
 
-	public ContainerCentrifuge(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerCentrifuge(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityCentrifuge) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerCentrifuge(int windowId, PlayerInventory playerInventory, TileEntityCentrifuge owner) {
+	public ContainerCentrifuge(int windowId, Inventory playerInventory, TileEntityCentrifuge owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -58,14 +58,14 @@ public class ContainerCentrifuge extends StaticPowerTileEntityContainer<TileEnti
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		if (getTileEntity().processingComponent.getRecipe(new RecipeMatchParameters(stack)).isPresent() && !mergeItemStack(stack, 0)) {
 			return true;
 		}
 		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !mergeItemStack(stack, 1)) {
 			return true;
 		}
-		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 5, 8, false)) {
+		if (stack.getItem() instanceof BaseUpgrade && !moveItemStackTo(stack, 5, 8, false)) {
 			return true;
 		}
 		return false;

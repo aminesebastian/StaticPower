@@ -3,7 +3,7 @@ package theking530.staticcore.gui.widgets.tabs.slottabs;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,7 +37,7 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	@Override
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Allocate the packet.
-		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
+		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.containerId);
 
 		// Add the slots.
 		for (int i = 0; i < upgradesInventory.getSlots(); i++) {
@@ -66,7 +66,7 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	}
 
 	@Override
-	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	protected void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		positionSlots();
 	}
@@ -91,14 +91,14 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	protected void positionSlots() {
 		if (slots.size() == 3) {
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).xPos = this.xPosition + tabWidth + 4;
-				slots.get(i).yPos = this.yPosition + 24 + (i * 18);
+				slots.get(i).x = this.xPosition + tabWidth + 4;
+				slots.get(i).y = this.yPosition + 24 + (i * 18);
 			}
 		} else if (slots.size() == 4) {
 			int xOffset = -18;
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).xPos = this.xPosition + tabWidth + 4 + ((i / 2) * xOffset);
-				slots.get(i).yPos = this.yPosition + 24 + ((i % 2) * 18);
+				slots.get(i).x = this.xPosition + tabWidth + 4 + ((i / 2) * xOffset);
+				slots.get(i).y = this.yPosition + 24 + ((i % 2) * 18);
 			}
 		}
 	}

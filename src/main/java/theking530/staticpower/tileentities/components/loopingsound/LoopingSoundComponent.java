@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.components.loopingsound;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -40,7 +40,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Tick down the start cooldown so we don't spawn with start messages.
 			if (soundStartCooldown > 0) {
 				soundStartCooldown--;
@@ -59,8 +59,8 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 		}
 	}
 
-	public void startPlayingSound(ResourceLocation soundIdIn, SoundCategory categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
-		if (getWorld().isRemote) {
+	public void startPlayingSound(ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
+		if (getWorld().isClientSide) {
 			proxy.startPlayingSound(getWorld(), soundIdIn, categoryIn, volumeIn, pitchIn, pos, blockRadius);
 		} else {
 			if (soundStartCooldown == 0) {
@@ -73,7 +73,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 	}
 
 	public void stopPlayingSound() {
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			proxy.stopPlayingSound(getWorld());
 		} else {
 			if (!shouldBeStopping) {

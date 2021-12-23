@@ -1,14 +1,14 @@
 package theking530.staticpower.data.crafting.wrappers.fluidgenerator;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class FluidGeneratorRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<FluidGeneratorRecipe> RECIPE_TYPE = IRecipeType.register("fluid_generator");
+	public static final RecipeType<FluidGeneratorRecipe> RECIPE_TYPE = RecipeType.register("fluid_generator");
 
 	private final FluidStack fluid;
 	private final int powerGeneration;
@@ -28,12 +28,12 @@ public class FluidGeneratorRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return FluidGeneratorRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 

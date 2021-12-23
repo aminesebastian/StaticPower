@@ -11,34 +11,34 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -122,7 +122,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		if (isSlotPopulated(itemstack, MultiPartSlots.CHAINSAW_BLADE)) {
 			ItemStack blade = getPartInSlot(itemstack, MultiPartSlots.CHAINSAW_BLADE);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
-			efficiency.set(bladeItem.getMiningTier(blade).getEfficiency() * 0.25f);
+			efficiency.set(bladeItem.getMiningTier(blade).getSpeed() * 0.25f);
 			blade.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
 					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
@@ -134,11 +134,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
+	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable Player player, @Nullable BlockState blockState) {
 		if (isSlotPopulated(stack, MultiPartSlots.CHAINSAW_BLADE)) {
 			ItemStack blade = getPartInSlot(stack, MultiPartSlots.CHAINSAW_BLADE);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
-			return bladeItem.getMiningTier(blade).getHarvestLevel();
+			return bladeItem.getMiningTier(blade).getLevel();
 		}
 		return super.getHarvestLevel(stack, tool, player, blockState);
 	}
@@ -147,24 +147,24 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	 * When right clicked, open the UI.
 	 */
 	@Override
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
-		if (!world.isRemote && player.isSneaking()) {
-			NetworkGUI.openGui((ServerPlayerEntity) player, new ChainsawContainerProvider(item), buff -> {
-				buff.writeInt(player.inventory.currentItem);
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+		if (!world.isClientSide && player.isShiftKeyDown()) {
+			NetworkGUI.openGui((ServerPlayer) player, new ChainsawContainerProvider(item), buff -> {
+				buff.writeInt(player.inventory.selected);
 			});
-			return ActionResult.resultSuccess(item);
+			return InteractionResultHolder.success(item);
 		}
-		return ActionResult.resultPass(item);
+		return InteractionResultHolder.pass(item);
 	}
 
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		// If the player is in creative, do nothing.
 		if (isCreative) {
 			return;
 		}
 
 		// Allocate a list of the items that would be dropped.
-		List<ItemStack> droppableItems = Block.getDrops(state, player.getServerWorld(), pos, tileEntity, player, heldItem);
+		List<ItemStack> droppableItems = Block.getDrops(state, player.getLevel(), pos, tileEntity, player, heldItem);
 
 		// Get the drill bit attributes.
 		IAttributable drillBitAttributes = getPartInSlot(heldItem, MultiPartSlots.CHAINSAW_BLADE).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
@@ -181,20 +181,20 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 		// Drop all the droppable stacks.
 		for (ItemStack stack : droppableItems) {
-			WorldUtilities.dropItem(player.getServerWorld(), pos, stack);
+			WorldUtilities.dropItem(player.getLevel(), pos, stack);
 		}
 
 		// Drop the XP.
 		if (experience > 0) {
-			state.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, experience);
+			state.getBlock().popExperience((ServerLevel) player.getCommandSenderWorld(), pos, experience);
 		}
 
 		// Spawn any additional drops.
-		state.spawnAdditionalDrops((ServerWorld) player.getEntityWorld(), pos, heldItem);
+		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem);
 	}
 
 	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
-			ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
@@ -206,12 +206,12 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<FurnaceRecipe> recipe = player.getServerWorld().getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(matchParameters.getItems()[0]),
-						player.getServerWorld());
+				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]),
+						player.getLevel());
 
 				// Replace the spot the droppable list with the smelting output if it exists.
 				if (recipe.isPresent()) {
-					droppableItems.set(i, recipe.get().getRecipeOutput());
+					droppableItems.set(i, recipe.get().getResultItem());
 					wasAnythingSmelted = true;
 				}
 			}
@@ -225,11 +225,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	 * This method is only raised on the server.
 	 */
 	@Override
-	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, Player player) {
 		// Apply damage to the bit.
 		stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-			handler.getStackInSlot(0).damageItem(blocksMined.size(), player, (entity) -> {
-				entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+			handler.getStackInSlot(0).hurtAndBreak(blocksMined.size(), player, (entity) -> {
+				entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
 			});
 		});
 
@@ -241,7 +241,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
@@ -250,14 +250,14 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			ItemStack blade = getPartInSlot(stack, MultiPartSlots.CHAINSAW_BLADE);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
 			bladeItem.getTooltip(blade, worldIn, tooltip, isShowingAdvanced);
-			tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").appendString(String.valueOf(getEfficiency(stack))));
+			tooltip.add(new TranslatableComponent("gui.staticpower.mining_speed").append(" ").append(String.valueOf(getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(blade, tooltip, isShowingAdvanced);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (isSlotPopulated(stack, MultiPartSlots.CHAINSAW_BLADE)) {
 			ItemStack blade = getPartInSlot(stack, MultiPartSlots.CHAINSAW_BLADE);
 			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
@@ -270,7 +270,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
 				.addCapability(new ItemStackStaticVoltCapability("default", stack, getCapacity(), getCapacity(), getCapacity()));
 	}
@@ -335,7 +335,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	}
 
 	@Override
-	public List<BlockPos> getMineableExtraBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+	public List<BlockPos> getMineableExtraBlocks(ItemStack itemstack, BlockPos pos, Player player) {
 		// Capture the list of all the blocks to mine.
 		List<BlockPos> minableBlocks = new ArrayList<BlockPos>();
 
@@ -353,7 +353,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	}
 
 	@SuppressWarnings("deprecation")
-	private void recursiveTreeAnalyzer(ItemStack itemstack, BlockPos pos, PlayerEntity player, List<BlockPos> positions, Set<BlockPos> visited, int currentDepth) {
+	private void recursiveTreeAnalyzer(ItemStack itemstack, BlockPos pos, Player player, List<BlockPos> positions, Set<BlockPos> visited, int currentDepth) {
 		// If we maxed out on depth, stop.
 		if (currentDepth > MAX_RECURSION) {
 			return;
@@ -368,11 +368,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		visited.add(pos);
 
 		// Get the state and block here, and check if they are air.
-		BlockState state = player.getEntityWorld().getBlockState(pos);
+		BlockState state = player.getCommandSenderWorld().getBlockState(pos);
 		Block block = state.getBlock();
-		if (!block.isAir(state, player.getEntityWorld(), pos)) {
+		if (!block.isAir(state, player.getCommandSenderWorld(), pos)) {
 			// Make an itemstack for the block.
-			ItemStack blockStack = new ItemStack(Item.getItemFromBlock(block));
+			ItemStack blockStack = new ItemStack(Item.byBlock(block));
 
 			// If not air, check to see if it is wood. If it is, and its harvestable,
 			// harvest it.
@@ -382,7 +382,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 					// Recurse.
 					for (Direction dir : Direction.values()) {
-						recursiveTreeAnalyzer(itemstack, pos.offset(dir), player, positions, visited, currentDepth + 1);
+						recursiveTreeAnalyzer(itemstack, pos.relative(dir), player, positions, visited, currentDepth + 1);
 					}
 				}
 			}
@@ -391,18 +391,18 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 	private Ingredient getLogTag() {
 		if (woodIngredient == null) {
-			woodIngredient = Ingredient.fromTag(ModTags.LOG);
+			woodIngredient = Ingredient.of(ModTags.LOG);
 		}
 		return woodIngredient;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new ChainsawItemModel(existingModel);
 	}
 
-	public class ChainsawContainerProvider implements INamedContainerProvider {
+	public class ChainsawContainerProvider implements MenuProvider {
 		public ItemStack targetItemStack;
 
 		public ChainsawContainerProvider(ItemStack stack) {
@@ -410,13 +410,13 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 			return new ContainerChainsaw(windowId, inventory, targetItemStack);
 		}
 
 		@Override
-		public ITextComponent getDisplayName() {
-			return targetItemStack.getDisplayName();
+		public Component getDisplayName() {
+			return targetItemStack.getHoverName();
 		}
 	}
 }

@@ -2,17 +2,17 @@ package theking530.staticpower.data.crafting.wrappers.evaporation;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 
-public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EvaporatorRecipe> {
+public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EvaporatorRecipe> {
 	public static final EvaporatorRecipeSerializer INSTANCE = new EvaporatorRecipeSerializer();
 
 	private EvaporatorRecipeSerializer() {
@@ -20,7 +20,7 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public EvaporatorRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public EvaporatorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
 		JsonObject inputFluidObject = json.getAsJsonObject("input_fluid");
 		FluidStack inputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluidObject);
@@ -34,13 +34,13 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		float heatCost = TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
+		if (GsonHelper.isValidNode(json, "processing")) {
 			JsonObject processingElement = json.getAsJsonObject("processing");
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Capture the heat cost.
-		if (JSONUtils.hasField(json, "heat")) {
+		if (GsonHelper.isValidNode(json, "heat")) {
 			heatCost = json.get("heat").getAsFloat();
 		}
 
@@ -49,7 +49,7 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public EvaporatorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public EvaporatorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int time = buffer.readInt();
 		float heat = buffer.readFloat();
 		FluidStack input = buffer.readFluidStack();
@@ -59,7 +59,7 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, EvaporatorRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, EvaporatorRecipe recipe) {
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFloat(recipe.getRequiredHeat());
 		buffer.writeFluidStack(recipe.getInputFluid());

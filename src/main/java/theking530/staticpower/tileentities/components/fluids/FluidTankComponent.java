@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -21,6 +21,8 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
+
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
 	public static final int FLUID_SYNC_MAX_DELTA = 5;
@@ -79,7 +81,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void preProcessUpdate() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Check for upgrades.
 			checkUpgrades();
 		}
@@ -87,7 +89,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Handle sync.
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we
@@ -178,7 +180,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	 * clients within a 64 block radius.
 	 */
 	public void syncToClient() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			PacketFluidTankComponent syncPacket = new PacketFluidTankComponent(this, getPos(), this.getComponentName());
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, syncPacket);
 		} else {

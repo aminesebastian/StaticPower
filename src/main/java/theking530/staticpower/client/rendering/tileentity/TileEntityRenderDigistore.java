@@ -1,10 +1,10 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -20,25 +20,25 @@ import theking530.staticpower.utilities.MetricConverter;
 public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRenderer<TileEntityDigistore> {
 	private static final float ICON_SIZE = 0.09f;
 
-	public TileEntityRenderDigistore(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public TileEntityRenderDigistore(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	public void renderTileEntityBase(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+	public void renderTileEntityBase(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		if (tileEntity.inventory.getUniqueItemCapacity() > 0) {
 			WorldRenderingUtilities.drawFlatItemInWorld(tileEntity, tileEntity.inventory.getDigistoreStack(0).getStoredItem(), new Vector3D(0.5f, 0.57f, 1.01f), new Vector2D(0.4f, 0.4f),
 					partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			MetricConverter metric = new MetricConverter(tileEntity.inventory.getTotalContainedCount());
-			WorldRenderingUtilities.drawTextInWorld(this.renderDispatcher, metric.getValueAsString(true), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),
+			WorldRenderingUtilities.drawTextInWorld(this.renderer, metric.getValueAsString(true), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),
 					new Vector3D(0.5f, 0.323f, 1.0001f), 0.007f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		}
 		drawIndicators(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 	}
 
-	public void drawIndicators(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	public void drawIndicators(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		// Calculate the number of icons that need to be drawn.
 		int icons = 0;
 		if (tileEntity.isLocked()) {
@@ -64,7 +64,7 @@ public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRende
 		}
 	}
 
-	public void drawFillBar(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+	public void drawFillBar(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		float filledRatio = tileEntity.inventory.getFilledRatio();
 		if (filledRatio < 1.0f) {
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.293f, 0.192f, 0.047f),

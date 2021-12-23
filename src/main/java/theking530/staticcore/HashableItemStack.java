@@ -2,7 +2,7 @@ package theking530.staticcore;
 
 import java.util.Objects;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class HashableItemStack {
 	private ItemStack stack;

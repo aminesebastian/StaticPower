@@ -4,17 +4,17 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
-public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<GrinderRecipe> {
+public class GrinderRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GrinderRecipe> {
 	public static final GrinderRecipeSerializer INSTANCE = new GrinderRecipeSerializer();
 
 	private GrinderRecipeSerializer() {
@@ -22,9 +22,9 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 	}
 
 	@Override
-	public GrinderRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public GrinderRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Start with the default processing values.
@@ -32,15 +32,15 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 		int processingTime = StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get();
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+		if (GsonHelper.isValidNode(json, "processing")) {
+			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Check the outputs. If it is an array, get all the outputs and make a new
 		// recipe. Otherwise, just get the single output and make a new recipe.
-		JsonElement outputElement = JSONUtils.isJsonArray(json, "output") ? JSONUtils.getJsonArray(json, "output") : JSONUtils.getJsonObject(json, "output");
+		JsonElement outputElement = GsonHelper.isArrayNode(json, "output") ? GsonHelper.getAsJsonArray(json, "output") : GsonHelper.getAsJsonObject(json, "output");
 		if (outputElement.isJsonArray()) {
 			JsonArray outputArray = outputElement.getAsJsonArray();
 			ProbabilityItemStackOutput[] outputs = new ProbabilityItemStackOutput[outputArray.size()];
@@ -56,7 +56,7 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 	}
 
 	@Override
-	public GrinderRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public GrinderRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		long power = buffer.readLong();
 		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
@@ -69,7 +69,7 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, GrinderRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, GrinderRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInputIngredient().write(buffer);

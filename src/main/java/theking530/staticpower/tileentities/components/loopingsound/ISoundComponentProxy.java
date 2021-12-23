@@ -1,12 +1,12 @@
 package theking530.staticpower.tileentities.components.loopingsound;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface ISoundComponentProxy {
-	void startPlayingSound(World world, ResourceLocation soundIdIn, SoundCategory categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius);
+	void startPlayingSound(Level world, ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius);
 
-	void stopPlayingSound(World world);
+	void stopPlayingSound(Level world);
 }

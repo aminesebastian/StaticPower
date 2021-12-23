@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.digistore.crafting;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import theking530.staticpower.cables.network.ServerCable;
 
 public class CraftingInterfaceWrapper {

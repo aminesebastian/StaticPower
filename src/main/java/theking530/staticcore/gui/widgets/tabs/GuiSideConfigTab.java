@@ -2,16 +2,17 @@ package theking530.staticcore.gui.widgets.tabs;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -66,24 +67,24 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	}
 
 	@Override
-	public void renderBackground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		drawButtonBG(matrix, 0, 0);
 		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
 	}
 
-	public void drawButtonBG(MatrixStack matrix, int xPos, int yPos) {
+	public void drawButtonBG(PoseStack matrix, int xPos, int yPos) {
 		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, xPos, yPos);
 
 		GL11.glEnable(GL11.GL_BLEND);
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.BUTTON_BG);
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(position.getX() + 95, position.getY() + 97, 0).tex(0, 1).endVertex();
-		vertexbuffer.pos(position.getX() + 95, position.getY() + 22, 0).tex(0, 0).endVertex();
-		vertexbuffer.pos(position.getX() + 10, position.getY() + 22, 0).tex(1, 0).endVertex();
-		vertexbuffer.pos(position.getX() + 10, position.getY() + 97, 0).tex(1, 1).endVertex();
-		tessellator.draw();
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder vertexbuffer = tessellator.getBuilder();
+		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.BUTTON_BG);
+		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		vertexbuffer.vertex(position.getX() + 95, position.getY() + 97, 0).uv(0, 1).endVertex();
+		vertexbuffer.vertex(position.getX() + 95, position.getY() + 22, 0).uv(0, 0).endVertex();
+		vertexbuffer.vertex(position.getX() + 10, position.getY() + 22, 0).uv(1, 0).endVertex();
+		vertexbuffer.vertex(position.getX() + 10, position.getY() + 97, 0).uv(1, 1).endVertex();
+		tessellator.end();
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
@@ -110,7 +111,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		updateTooltips();
 
 		// Send a packet to the server with the updated values.
-		NetworkMessage msg = new PacketSideConfigTab(sideComp.getWorldSpaceConfiguration(), tileEntity.getPos());
+		NetworkMessage msg = new PacketSideConfigTab(sideComp.getWorldSpaceConfiguration(), tileEntity.getBlockPos());
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}
 
@@ -151,20 +152,20 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			MachineSideMode currentMode = sideComp.getWorldSpaceDirectionConfiguration(worldSpaceSide);
 
 			// Get the translation components.
-			TranslationTextComponent translatedSideName = side.getName();
-			ITextComponent translatedModeName = currentMode.getName();
+			TranslatableComponent translatedSideName = side.getName();
+			Component translatedModeName = currentMode.getName();
 
 			button.setText(currentMode.getFontColor() + translatedSideName.getString().substring(0, 1));
-			button.setTooltip(translatedSideName.appendString(" (").append(new TranslationTextComponent("gui.staticpower.direction." + worldSpaceSide.toString()))
-					.appendString(TextFormatting.WHITE + ")"), translatedModeName);
+			button.setTooltip(translatedSideName.append(" (").append(new TranslatableComponent("gui.staticpower.direction." + worldSpaceSide.toString()))
+					.append(ChatFormatting.WHITE + ")"), translatedModeName);
 		}
 	}
 
-	public TranslationTextComponent conditionallyGetCardinal(BlockSide side) {
+	public TranslatableComponent conditionallyGetCardinal(BlockSide side) {
 		if (tileEntity instanceof TileEntityBase) {
 			TileEntityBase te = (TileEntityBase) tileEntity;
-			return new TranslationTextComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
+			return new TranslatableComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
 		}
-		return new TranslationTextComponent("ERROR");
+		return new TranslatableComponent("ERROR");
 	}
 }

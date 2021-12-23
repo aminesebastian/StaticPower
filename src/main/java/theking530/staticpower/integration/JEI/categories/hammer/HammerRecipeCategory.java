@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import mezz.jei.api.gui.IRecipeLayout;
@@ -14,12 +14,12 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
@@ -36,14 +36,14 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 	private static final int INPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar arrow;
 
 	public HammerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent("gui.staticpower.hammering");
+		locTitle = new TranslatableComponent("gui.staticpower.hammering");
 		background = guiHelper.createBlankDrawable(110, 50);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModItems.IronMetalHammer));
 		arrow = new ArrowProgressBar(57, 16);
@@ -79,7 +79,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void draw(HammerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(HammerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 4, 16, 16, 16, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 86, 14, 20, 20, 0);
 
@@ -90,7 +90,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		RenderSystem.pushMatrix();
 		RenderSystem.translatef(location.getX(), location.getY(), 0.0F);
 		RenderSystem.scalef(2.5F, 2.5F, 2.5F);
-		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(new ItemStack(ModItems.IronMetalHammer), 0, 0);
+		Minecraft.getInstance().getItemRenderer().renderGuiItem(new ItemStack(ModItems.IronMetalHammer), 0, 0);
 		RenderSystem.popMatrix();
 
 		if (!recipe.isBlockType()) {
@@ -105,13 +105,13 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 		if (recipe.isBlockType()) {
 			// Allocate the inputs block array.
-			ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getAllElements().size()];
+			ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getValues().size()];
 			int index = 0;
-			for (Block block : recipe.getInputTag().getAllElements()) {
+			for (Block block : recipe.getInputTag().getValues()) {
 				inputBlocks[index] = new ItemStack(block);
 				index++;
 			}
-			input.add(Ingredient.fromStacks(inputBlocks));
+			input.add(Ingredient.of(inputBlocks));
 		} else {
 			input.add(recipe.getInputItem().getIngredient());
 		}

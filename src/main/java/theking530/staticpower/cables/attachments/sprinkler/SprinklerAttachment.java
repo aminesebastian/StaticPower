@@ -4,22 +4,22 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FarmlandBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Rarity;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.utilities.SDMath;
@@ -92,26 +92,26 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 		}
 
 		// Use fluid and spawn the experience orb.
-		if (!fluidCable.getWorld().isRemote) {
+		if (!fluidCable.getWorld().isClientSide) {
 			fluidCable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				int drained = network.getFluidStorage().drain(5, FluidAction.EXECUTE).getAmount();
 				Vector3D direction = new Vector3D(side);
 
 				// Create the XP Orb Entity.
-				ExperienceOrbEntity orb = new ExperienceOrbEntity(fluidCable.getWorld(), fluidCable.getPos().getX() + 0.5f + direction.getX(),
+				ExperienceOrb orb = new ExperienceOrb(fluidCable.getWorld(), fluidCable.getPos().getX() + 0.5f + direction.getX(),
 						fluidCable.getPos().getY() + 0.5f + direction.getY(), fluidCable.getPos().getZ() + 0.5f + direction.getZ(), drained);
 
 				// Set a random X and Z velocity.
 				float random = fluidCable.getWorld().getRandom().nextFloat();
-				random *= 2;
-				random -= 1;
-				random *= 0.02;
+				RANDOM *= 2;
+				RANDOM -= 1;
+				RANDOM *= 0.02;
 
 				// Set the motion.
-				orb.setMotion(random, 0.25, random);
+				orb.setDeltaMovement(RANDOM, 0.25, RANDOM);
 
 				// Add the entity orb to the world.
-				fluidCable.getWorld().addEntity(orb);
+				fluidCable.getWorld().addFreshEntity(orb);
 			});
 
 		}
@@ -135,7 +135,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 		}
 
 		// Spawn the particles on the client, fertilize and use the fluid on the server.
-		if (fluidCable.getWorld().isRemote) {
+		if (fluidCable.getWorld().isClientSide) {
 			// Only render particles half of the time.
 			if (SDMath.diceRoll(0.5f)) {
 				// Get a random offset.
@@ -176,7 +176,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 			// Check for the first solid block.
 			for (int i = 1; i < 10; i++) {
-				BlockPos testTarget = fluidCable.getPos().offset(Direction.DOWN, i);
+				BlockPos testTarget = fluidCable.getPos().relative(Direction.DOWN, i);
 				if (!fluidCable.getWorld().getBlockState(testTarget).isAir()) {
 					target = testTarget;
 					break;
@@ -189,28 +189,28 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 			}
 
 			// Check if we should add moisture to the block or the block below.
-			BlockState belowBlock = fluidCable.getWorld().getBlockState(target.offset(Direction.DOWN));
+			BlockState belowBlock = fluidCable.getWorld().getBlockState(target.relative(Direction.DOWN));
 			BlockState cropState = fluidCable.getWorld().getBlockState(target);
 
 			// Perform the moisturization.
-			if (belowBlock.hasProperty(FarmlandBlock.MOISTURE) && belowBlock.get(FarmlandBlock.MOISTURE) < 7) {
-				fluidCable.getWorld().setBlockState(target.offset(Direction.DOWN), belowBlock.with(FarmlandBlock.MOISTURE, 7), 1 | 2);
-			} else if (cropState.hasProperty(FarmlandBlock.MOISTURE) && cropState.get(FarmlandBlock.MOISTURE) < 7) {
-				fluidCable.getWorld().setBlockState(target, cropState.with(FarmlandBlock.MOISTURE, 7), 1 | 2);
+			if (belowBlock.hasProperty(FarmBlock.MOISTURE) && belowBlock.getValue(FarmBlock.MOISTURE) < 7) {
+				fluidCable.getWorld().setBlock(target.relative(Direction.DOWN), belowBlock.setValue(FarmBlock.MOISTURE, 7), 1 | 2);
+			} else if (cropState.hasProperty(FarmBlock.MOISTURE) && cropState.getValue(FarmBlock.MOISTURE) < 7) {
+				fluidCable.getWorld().setBlock(target, cropState.setValue(FarmBlock.MOISTURE, 7), 1 | 2);
 			}
 
 			// If it passes, determine the farm ground level.
 			if (SDMath.diceRoll(growthChange)) {
 				// Check to make sure we can grow this block.
-				if (cropState != null && cropState.getBlock() instanceof IGrowable) {
+				if (cropState != null && cropState.getBlock() instanceof BonemealableBlock) {
 					// Get the growable.
-					IGrowable tempCrop = (IGrowable) cropState.getBlock();
+					BonemealableBlock tempCrop = (BonemealableBlock) cropState.getBlock();
 
 					// If we can grow this, grow it.
-					if (tempCrop.canGrow(fluidCable.getWorld(), target, cropState, false)) {
-						tempCrop.grow((ServerWorld) fluidCable.getWorld(), fluidCable.getWorld().rand, target, cropState);
+					if (tempCrop.isValidBonemealTarget(fluidCable.getWorld(), target, cropState, false)) {
+						tempCrop.performBonemeal((ServerLevel) fluidCable.getWorld(), fluidCable.getWorld().random, target, cropState);
 						// Spawn some fertilziation particles.
-						((ServerWorld) fluidCable.getWorld()).spawnParticle(ParticleTypes.HAPPY_VILLAGER, target.getX() + 0.5D, target.getY() + 1.0D, target.getZ() + 0.5D, 1, 0.0D, 0.0D,
+						((ServerLevel) fluidCable.getWorld()).sendParticles(ParticleTypes.HAPPY_VILLAGER, target.getX() + 0.5D, target.getY() + 1.0D, target.getZ() + 0.5D, 1, 0.0D, 0.0D,
 								0.0D, 0.0D);
 					}
 				}
@@ -236,16 +236,16 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			tooltip.add(new TranslationTextComponent("gui.staticpower.sprinkler_tooltip").mergeStyle(TextFormatting.DARK_AQUA));
+			tooltip.add(new TranslatableComponent("gui.staticpower.sprinkler_tooltip").withStyle(ChatFormatting.DARK_AQUA));
 		}
 	}
 
 	@Override
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.sprinkler_description")).mergeStyle(TextFormatting.BLUE));
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.sprinkler_experience_description")).mergeStyle(TextFormatting.GREEN));
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.redstone_control_enabled")).mergeStyle(TextFormatting.DARK_RED));
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.sprinkler_description")).withStyle(ChatFormatting.BLUE));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.sprinkler_experience_description")).withStyle(ChatFormatting.GREEN));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.redstone_control_enabled")).withStyle(ChatFormatting.DARK_RED));
 	}
 }

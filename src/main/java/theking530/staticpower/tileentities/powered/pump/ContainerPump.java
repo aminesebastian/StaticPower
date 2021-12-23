@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.pump;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -20,11 +20,11 @@ public class ContainerPump extends StaticPowerTileEntityContainer<TileEntityPump
 		}
 	}
 
-	public ContainerPump(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerPump(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityPump) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPump(int windowId, PlayerInventory playerInventory, TileEntityPump owner) {
+	public ContainerPump(int windowId, Inventory playerInventory, TileEntityPump owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

@@ -2,13 +2,13 @@ package theking530.staticcore.gui.widgets;
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.utilities.Vector2D;
@@ -27,10 +27,10 @@ public class TimeOfDayDrawable extends AbstractGuiWidget {
 	private SpriteDrawable snow;
 	private SpriteDrawable clouds;
 	private SpriteDrawable rainClouds;
-	private World world;
+	private Level world;
 	private BlockPos pos;
 
-	public TimeOfDayDrawable(float xPosition, float yPosition, float size, World world, BlockPos pos) {
+	public TimeOfDayDrawable(float xPosition, float yPosition, float size, Level world, BlockPos pos) {
 		super(xPosition, yPosition, size, size);
 		this.world = world;
 		this.pos = pos;
@@ -45,7 +45,7 @@ public class TimeOfDayDrawable extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D adjustedLocation = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		float xPos = adjustedLocation.getX();
 		float yPos = adjustedLocation.getY();
@@ -72,36 +72,36 @@ public class TimeOfDayDrawable extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		// Allocate the tooltip.
-		IFormattableTextComponent output;
+		MutableComponent output;
 
 		// Add the state of the day.
 		EStateOfDay dayState = getDayState();
 		if (dayState == EStateOfDay.DAY) {
-			output = new TranslationTextComponent("gui.staticpower.day");
+			output = new TranslatableComponent("gui.staticpower.day");
 		} else if (dayState == EStateOfDay.SUNSET) {
-			output = new TranslationTextComponent("gui.staticpower.sunset");
+			output = new TranslatableComponent("gui.staticpower.sunset");
 		} else if (dayState == EStateOfDay.SUNRISE) {
-			output = new TranslationTextComponent("gui.staticpower.sunrise");
+			output = new TranslatableComponent("gui.staticpower.sunrise");
 		} else {
-			output = new TranslationTextComponent("gui.staticpower.night");
+			output = new TranslatableComponent("gui.staticpower.night");
 		}
 
 		// Open parenthesis for the weather report.
-		output.appendString(" (");
+		output.append(" (");
 
 		// Add the weather report.
 		if (isRaining()) {
-			output.append(new TranslationTextComponent("gui.staticpower.rainy"));
+			output.append(new TranslatableComponent("gui.staticpower.rainy"));
 		} else if (isSnowing()) {
-			output.append(new TranslationTextComponent("gui.staticpower.snowy"));
+			output.append(new TranslatableComponent("gui.staticpower.snowy"));
 		} else {
-			output.append(new TranslationTextComponent("gui.staticpower.clear"));
+			output.append(new TranslatableComponent("gui.staticpower.clear"));
 		}
 
 		// Close parenthesis for the weather report.
-		output.appendString(")");
+		output.append(")");
 
 		// Add the tooltip.
 		tooltips.add(output);
@@ -109,7 +109,7 @@ public class TimeOfDayDrawable extends AbstractGuiWidget {
 
 	protected boolean isSnowing() {
 		if (world.isRaining()) {
-			if (world.getBiome(pos).doesSnowGenerate(world, pos)) {
+			if (world.getBiome(pos).shouldSnow(world, pos)) {
 				return true;
 			}
 		}
@@ -118,7 +118,7 @@ public class TimeOfDayDrawable extends AbstractGuiWidget {
 
 	protected boolean isRaining() {
 		if (world.isRaining()) {
-			if (!world.getBiome(pos).doesSnowGenerate(world, pos)) {
+			if (!world.getBiome(pos).shouldSnow(world, pos)) {
 				return true;
 			}
 		}

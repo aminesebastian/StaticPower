@@ -1,26 +1,26 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.item.ItemTier;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class ItemTierUtilities {
-	public static IFormattableTextComponent getNameForItemTier(ItemTier tier) {
+	public static MutableComponent getNameForItemTier(Tiers tier) {
 		switch (tier) {
 		case WOOD:
-			return new TranslationTextComponent("gui.staticpower.item_tier.wood").mergeStyle(TextFormatting.GOLD);
+			return new TranslatableComponent("gui.staticpower.item_tier.wood").withStyle(ChatFormatting.GOLD);
 		case STONE:
-			return new TranslationTextComponent("gui.staticpower.item_tier.stone").mergeStyle(TextFormatting.DARK_GRAY);
+			return new TranslatableComponent("gui.staticpower.item_tier.stone").withStyle(ChatFormatting.DARK_GRAY);
 		case IRON:
-			return new TranslationTextComponent("gui.staticpower.item_tier.iron").mergeStyle(TextFormatting.GRAY);
+			return new TranslatableComponent("gui.staticpower.item_tier.iron").withStyle(ChatFormatting.GRAY);
 		case DIAMOND:
-			return new TranslationTextComponent("gui.staticpower.item_tier.diamond").mergeStyle(TextFormatting.AQUA);
+			return new TranslatableComponent("gui.staticpower.item_tier.diamond").withStyle(ChatFormatting.AQUA);
 		case GOLD:
-			return new TranslationTextComponent("gui.staticpower.item_tier.gold").mergeStyle(TextFormatting.YELLOW);
+			return new TranslatableComponent("gui.staticpower.item_tier.gold").withStyle(ChatFormatting.YELLOW);
 		case NETHERITE:
-			return new TranslationTextComponent("gui.staticpower.item_tier.netherite").mergeStyle(TextFormatting.DARK_RED);
+			return new TranslatableComponent("gui.staticpower.item_tier.netherite").withStyle(ChatFormatting.DARK_RED);
 		}
-		return new TranslationTextComponent("**ERROR**");
+		return new TranslatableComponent("**ERROR**");
 	}
 }

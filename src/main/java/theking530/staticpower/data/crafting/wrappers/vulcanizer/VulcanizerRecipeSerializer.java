@@ -2,10 +2,10 @@ package theking530.staticpower.data.crafting.wrappers.vulcanizer;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
@@ -13,7 +13,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<VulcanizerRecipe> {
+public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<VulcanizerRecipe> {
 	public static final VulcanizerRecipeSerializer INSTANCE = new VulcanizerRecipeSerializer();
 
 	private VulcanizerRecipeSerializer() {
@@ -21,31 +21,31 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public VulcanizerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public VulcanizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Start with the default processing values.
 		long powerCost = StaticPowerConfig.SERVER.vulcanizerPowerUsage.get();
 		int processingTime = StaticPowerConfig.SERVER.vulcanizerProcessingTime.get();
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+		if (GsonHelper.isValidNode(json, "processing")) {
+			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Get the input fluid.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		FluidStack input = StaticPowerJsonParsingUtilities.parseFluidStack(inputElement);
 
 		// Check the output and make a new recipe.
-		JsonObject outputElement = JSONUtils.getJsonObject(json, "output");
+		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement.getAsJsonObject());
 		return new VulcanizerRecipe(recipeId, processingTime, powerCost, input, output);
 	}
 
 	@Override
-	public VulcanizerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public VulcanizerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		// Start with the default processing values.
 		long power = buffer.readLong();
 		int processingTime = buffer.readInt();
@@ -55,7 +55,7 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, VulcanizerRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, VulcanizerRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFluidStack(recipe.getInputFluid());

@@ -6,9 +6,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
@@ -73,7 +73,7 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 		}
 
 		// If on the server, get the sides we can output to.
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			// First, increment the output timer.
 			outputTimer++;
 
@@ -95,13 +95,13 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 				// If we can output from that side.
 				if (canOutputFromSide(side)) {
 					// Get the facing direction of that side.
-					Direction facing = getWorld().getBlockState(getPos()).get(StaticPowerTileEntityBlock.FACING);
+					Direction facing = getWorld().getBlockState(getPos()).getValue(StaticPowerTileEntityBlock.FACING);
 					Direction direction = SideConfigurationUtilities.getDirectionFromSide(side, facing);
 
 
 					
 					// Get the tile entity in that direction.
-					TileEntity te = getWorld().getTileEntity(getPos().offset(direction));
+					BlockEntity te = getWorld().getBlockEntity(getPos().relative(direction));
 
 					// If the tile entity exists.
 					if (te != null) {

@@ -5,15 +5,15 @@ import javax.annotation.Nonnull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.ComposterBlock;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -99,7 +99,7 @@ public class StaticPowerModEventRegistry {
 
 		// Register composter recipes.
 		DeferredWorkQueue.runLater(() -> {
-			ComposterBlock.CHANCES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);
+			ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);
 		});
 
 		LOGGER.info("Static Power Common Setup Completed!");
@@ -107,11 +107,11 @@ public class StaticPowerModEventRegistry {
 
 	@SubscribeEvent
 	public static void enqueueIMC(InterModEnqueueEvent event) {
-		// Only register if the one probe is loaded.
-		ModList modList = ModList.get();
-		if (modList.isLoaded(TOP_MODID)) {
-			PluginTOP.sendIMC();
-		}
+//		// Only register if the one probe is loaded.
+//		ModList modList = ModList.get();
+//		if (modList.isLoaded(TOP_MODID)) {
+//			PluginTOP.sendIMC();
+//		}
 		LOGGER.info("Static Power IMC Messages Enqueued!");
 	}
 
@@ -168,12 +168,12 @@ public class StaticPowerModEventRegistry {
 	}
 
 	@SubscribeEvent
-	public static void registerTileEntityTypes(RegistryEvent.Register<TileEntityType<?>> event) {
+	public static void registerTileEntityTypes(RegistryEvent.Register<BlockEntityType<?>> event) {
 		StaticPowerRegistry.onRegisterTileEntityTypes(event);
 	}
 
 	@SubscribeEvent
-	public static void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
+	public static void registerContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
 		StaticPowerRegistry.onRegisterContainerTypes(event);
 	}
 
@@ -183,7 +183,7 @@ public class StaticPowerModEventRegistry {
 	}
 
 	@SubscribeEvent
-	public static void registerRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
+	public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
 		StaticPowerRegistry.onRegisterRecipeSerializers(event);
 		LOGGER.info("Static Power Reipce Serializers registered!");
 	}

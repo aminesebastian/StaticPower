@@ -3,12 +3,12 @@ package theking530.staticpower.tileentities.powered.powermonitor;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -30,7 +30,7 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 	private TextButton outputUp;
 	private TextButton outputDown;
 
-	public GuiPowerMonitor(ContainerPowerMonitor container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiPowerMonitor(ContainerPowerMonitor container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -40,9 +40,9 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 
 		GuiInfoTab infoTab;
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));
-		infoTab.addLine("desc1", new StringTextComponent("A Battery stores power for later usage."));
+		infoTab.addLine("desc1", new TextComponent("A Battery stores power for later usage."));
 		infoTab.addLineBreak();
-		infoTab.addLine("desc2", new StringTextComponent("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
+		infoTab.addLine("desc2", new TextComponent("Holding alt and shift while left/right clicking on the buttons will change the rates the limits are altered."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
@@ -56,40 +56,40 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 	}
 
 	@Override
-	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawForegroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Render the input rate string.
-		font.drawString(stack, "Input", 15, 32, 4210752);
+		font.draw(stack, "Input", 15, 32, 4210752);
 		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getString();
-		font.drawString(stack, inputRateString, 28 - (font.getStringWidth(inputRateString) / 2), 42, 4210752);
+		font.draw(stack, inputRateString, 28 - (font.width(inputRateString) / 2), 42, 4210752);
 
 		// Render the output rate string.
-		font.drawString(stack, "Output", 132, 32, 4210752);
+		font.draw(stack, "Output", 132, 32, 4210752);
 		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit()).getString();
-		font.drawString(stack, outputRateString, 149 - (font.getStringWidth(outputRateString) / 2), 42, 4210752);
+		font.draw(stack, outputRateString, 149 - (font.width(outputRateString) / 2), 42, 4210752);
 
 		// Add tooltip for the actual value of the input.
-		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+		List<Component> tooltips = new ArrayList<Component>();
 
 		// Render the tooltips.
-		this.func_243308_b(stack, tooltips, mouseX, mouseY);
+		this.renderComponentTooltip(stack, tooltips, mouseX, mouseY);
 	}
 
 	@Override
-	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
+	protected void getExtraTooltips(List<Component> tooltips, PoseStack stack, int mouseX, int mouseY) {
 		String inputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getInputLimit()).getString();
 		String outputRateString = GuiTextUtilities.formatEnergyRateToString(getTileEntity().getOutputLimit()).getString();
 
-		if (mouseX > guiLeft + 28 - (font.getStringWidth(inputRateString) / 2) && mouseX < guiLeft + 28 + (font.getStringWidth(inputRateString) / 2) && mouseY > this.guiTop + 41
-				&& mouseY < this.guiTop + 50) {
-			tooltips.add(new StringTextComponent(inputRateString));
+		if (mouseX > leftPos + 28 - (font.width(inputRateString) / 2) && mouseX < leftPos + 28 + (font.width(inputRateString) / 2) && mouseY > this.topPos + 41
+				&& mouseY < this.topPos + 50) {
+			tooltips.add(new TextComponent(inputRateString));
 		}
 
 		// Add tooltip for the actual value of the output.
-		if (mouseX > guiLeft + 149 - (font.getStringWidth(outputRateString) / 2) && mouseX < guiLeft + 149 + (font.getStringWidth(outputRateString) / 2) && mouseY > this.guiTop + 41
-				&& mouseY < this.guiTop + 50) {
-			tooltips.add(new StringTextComponent(outputRateString));
+		if (mouseX > leftPos + 149 - (font.width(outputRateString) / 2) && mouseX < leftPos + 149 + (font.width(outputRateString) / 2) && mouseY > this.topPos + 41
+				&& mouseY < this.topPos + 50) {
+			tooltips.add(new TextComponent(outputRateString));
 		}
 	}
 
@@ -126,7 +126,7 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 		}
 
 		// Create the packet.
-		NetworkMessage msg = new PacketPowerMonitorSync(getTileEntity().getInputLimit(), getTileEntity().getOutputLimit(), getTileEntity().getPos());
+		NetworkMessage msg = new PacketPowerMonitorSync(getTileEntity().getInputLimit(), getTileEntity().getOutputLimit(), getTileEntity().getBlockPos());
 		// Send a packet to the server with the updated values.
 		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 	}

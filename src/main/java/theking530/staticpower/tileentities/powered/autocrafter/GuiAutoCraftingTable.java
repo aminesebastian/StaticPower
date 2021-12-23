@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.powered.autocrafter;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -24,7 +24,7 @@ public class GuiAutoCraftingTable
 	private final GuiDrawItem itemRenderer;
 	private final SpriteDrawable lockedSprite;
 
-	public GuiAutoCraftingTable(ContainerAutoCraftingTable container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiAutoCraftingTable(ContainerAutoCraftingTable container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 185);
 		itemRenderer = new GuiDrawItem();
 
@@ -48,16 +48,16 @@ public class GuiAutoCraftingTable
 						.setTabSide(TabSide.LEFT),
 				true);
 		getTabManager().registerTab(
-				new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+				new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
 
 	@Override
-	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		// Check if we have a recipe currently processing.
-		ICraftingRecipe recipe = getTileEntity().getCurrentProcessingRecipe().orElse(null);
+		CraftingRecipe recipe = getTileEntity().getCurrentProcessingRecipe().orElse(null);
 
 		// If we do not, check to see if we have a potential recipe.
 		if (recipe == null) {
@@ -66,7 +66,7 @@ public class GuiAutoCraftingTable
 
 		// If there is a recipe, draw a phantom output.
 		if (recipe != null) {
-			itemRenderer.drawItem(recipe.getRecipeOutput(), guiLeft, guiTop, 129, 38, 0.3f);
+			itemRenderer.drawItem(recipe.getResultItem(), leftPos, topPos, 129, 38, 0.3f);
 		}
 	}
 }

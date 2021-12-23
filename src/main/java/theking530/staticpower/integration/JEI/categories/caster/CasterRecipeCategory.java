@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -16,12 +16,12 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
@@ -43,7 +43,7 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 	private static final int FLUID_SLOT = 1;
 	private static final int OUTPUT_SLOT = 2;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -53,7 +53,7 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 
 	public CasterRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Caster.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Caster.getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Caster));
 		pBar = new ArrowProgressBar(50, 14);
@@ -88,7 +88,7 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 	}
 
 	@Override
-	public void draw(CastingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(CastingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		// Draw the slots.
 		GuiDrawUtilities.drawSlot(matrixStack, 76, 14, 16, 16, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 118, 30, 20, 20, 0);
@@ -110,18 +110,18 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(CastingRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(CastingRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
 		}

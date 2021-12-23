@@ -4,18 +4,20 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
+
+import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 
 @OnlyIn(Dist.CLIENT)
 public class StandardButton extends AbstractGuiWidget {
@@ -36,7 +38,7 @@ public class StandardButton extends AbstractGuiWidget {
 	private boolean drawBackground;
 	private float clickSoundPitch;
 	private boolean clickSoundEnabled;
-	private List<ITextComponent> tooltip;
+	private List<Component> tooltip;
 
 	public StandardButton(int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClickedEvent) {
 		super(xPos, yPos, width, height);
@@ -73,7 +75,7 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (!isVisible()) {
 			return;
 		}
@@ -133,11 +135,11 @@ public class StandardButton extends AbstractGuiWidget {
 		hovered = false;
 	}
 
-	protected void drawButton(MatrixStack stack, int transformedButtonLeft, int transformedButtonTop) {
+	protected void drawButton(PoseStack stack, int transformedButtonLeft, int transformedButtonTop) {
 		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), transformedButtonLeft, transformedButtonTop, getSize().getX(), getSize().getY(), 0.0f);
 	}
 
-	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
 	}
 
 	@Override
@@ -152,8 +154,8 @@ public class StandardButton extends AbstractGuiWidget {
 	protected void playSound(MouseButton state) {
 		if (clickSoundEnabled) {
 			float pitch = state == MouseButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
-			ClientPlayerEntity player = Minecraft.getInstance().player;
-			player.world.playSound(player, player.getPosition(), SoundEvents.UI_BUTTON_CLICK, SoundCategory.MASTER, 1.0f, pitch);
+			LocalPlayer player = Minecraft.getInstance().player;
+			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 1.0f, pitch);
 		}
 	}
 
@@ -201,7 +203,7 @@ public class StandardButton extends AbstractGuiWidget {
 		return this;
 	}
 
-	public StandardButton setTooltip(ITextComponent... tooltip) {
+	public StandardButton setTooltip(Component... tooltip) {
 		this.tooltip = Arrays.asList(tooltip);
 		return this;
 	}
@@ -216,7 +218,7 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (tooltip != null) {
 			tooltips.addAll(tooltip);
 		}

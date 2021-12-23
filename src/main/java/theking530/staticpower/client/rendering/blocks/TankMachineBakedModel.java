@@ -9,16 +9,16 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList.Builder;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.BlockFaceUV;
-import net.minecraft.client.renderer.model.BlockPartFace;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -39,18 +39,18 @@ public class TankMachineBakedModel extends DefaultMachineBakedModel {
 		TOP_MODE_UV_LAYOUTS.put(MachineSideMode.Disabled, new BlockFaceUV(new float[] { 7.0f, 3.0f, 10.0f, 6.0f }, 0));
 	}
 
-	public TankMachineBakedModel(IBakedModel baseModel, ResourceLocation baseTexture) {
+	public TankMachineBakedModel(BakedModel baseModel, ResourceLocation baseTexture) {
 		super(baseModel);
 		this.baseTexture = baseTexture;
 	}
 
 	@Override
-	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, AtlasTexture blocksStitchedTextures, Direction side) {
+	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, TextureAtlas blocksStitchedTextures, Direction side) {
 		return blocksStitchedTextures.getSprite(baseTexture);
 	}
 
 	@Override
-	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, AtlasTexture blocksTexture, BakedQuad originalQuad,
+	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, TextureAtlas blocksTexture, BakedQuad originalQuad,
 			MachineSideMode sideConfiguration) {
 		// Add the original quads.
 		newQuads.add(originalQuad);
@@ -61,12 +61,12 @@ public class TankMachineBakedModel extends DefaultMachineBakedModel {
 			TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideConfiguration, blocksTexture, side);
 
 			if (side.getAxis() == Direction.Axis.Y) {
-				BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), TOP_MODE_UV_LAYOUTS.get(sideConfiguration));
+				BlockElementFace blockPartFace = new BlockElementFace(null, -1, sideSprite.getName().toString(), TOP_MODE_UV_LAYOUTS.get(sideConfiguration));
 				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(5.0f, -0.01f, 5.0f), new Vector3f(11.0f, 16.01f, 11.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
 						new ResourceLocation("dummy_name"));
 				newQuads.add(newQuad);
 			} else {
-				BlockPartFace blockPartFace = new BlockPartFace(null, -1, sideSprite.getName().toString(), SIDE_MODE_UV_LAYOUTS.get(sideConfiguration));
+				BlockElementFace blockPartFace = new BlockElementFace(null, -1, sideSprite.getName().toString(), SIDE_MODE_UV_LAYOUTS.get(sideConfiguration));
 				if (side.getAxis() == Direction.Axis.X) {
 					BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0, 5.0f, 5.0f), new Vector3f(16.0f, 11.0f, 11.0f), blockPartFace, sideSprite, side, IDENTITY, null, true,
 							new ResourceLocation("dummy_name"));

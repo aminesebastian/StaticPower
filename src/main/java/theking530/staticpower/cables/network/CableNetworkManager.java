@@ -14,14 +14,14 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.StaticPower;
 
@@ -35,7 +35,7 @@ import theking530.staticpower.StaticPower;
  * @author amine
  *
  */
-public class CableNetworkManager extends WorldSavedData {
+public class CableNetworkManager extends SavedData {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetworkManager.class);
 	private static final String PREFIX = StaticPower.MOD_ID + "_cable_network";
 
@@ -44,13 +44,13 @@ public class CableNetworkManager extends WorldSavedData {
 	private static long currentPatternId = 0;
 	private static long currentItemParcelId = 0;
 
-	private final World World;
+	private final Level World;
 	private final HashMap<BlockPos, ServerCable> WorldCables;
 	private final HashMap<Long, CableNetwork> Networks;
 	private long CurrentNetworkId = 0;
 	private boolean firstTick = false;
 
-	public CableNetworkManager(String name, World world) {
+	public CableNetworkManager(String name, Level world) {
 		super(name);
 		World = world;
 		WorldCables = new HashMap<BlockPos, ServerCable>();
@@ -93,7 +93,7 @@ public class CableNetworkManager extends WorldSavedData {
 		WorldCables.put(cable.getPos(), cable);
 		LOGGER.debug(String.format("Cable added at position: %1$s.", cable.getPos()));
 
-		markDirty();
+		setDirty();
 
 		List<ServerCable> adjacents = getAdjacents(cable);
 		if (adjacents.isEmpty()) {
@@ -125,7 +125,7 @@ public class CableNetworkManager extends WorldSavedData {
 			cable.onNetworkLeft();
 		}
 
-		markDirty();
+		setDirty();
 
 		// After the new graph has been updated, loop through the original network
 		// cables and repair their network states as needed.
@@ -160,7 +160,7 @@ public class CableNetworkManager extends WorldSavedData {
 		WorldCables.remove(pos);
 
 		// Mark the manager as dirty.
-		markDirty();
+		setDirty();
 
 		// Debug log the removal.
 		LOGGER.debug(String.format("Cable removed at position: %1$s.", pos));
@@ -195,7 +195,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void incrementCurrentCraftingId() {
 		currentCraftingId++;
-		markDirty();
+		setDirty();
 	}
 
 	public long getCurrentPatternId() {
@@ -210,7 +210,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void incrementCurrentPatternId() {
 		currentPatternId++;
-		markDirty();
+		setDirty();
 	}
 
 	public long getCurrentItemParcelId() {
@@ -221,7 +221,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 	public void incrementCurrentItemParcelId() {
 		currentItemParcelId++;
-		markDirty();
+		setDirty();
 	}
 
 	public CableNetwork getNetworkById(long id) {
@@ -232,7 +232,7 @@ public class CableNetworkManager extends WorldSavedData {
 	}
 
 	@Override
-	public void read(CompoundNBT tag) {
+	public void load(CompoundTag tag) {
 		// Save the current parcel id.
 		if (tag.contains("current_parcel_id")) {
 			currentItemParcelId = tag.getLong("current_parcel_id");
@@ -248,16 +248,16 @@ public class CableNetworkManager extends WorldSavedData {
 			currentPatternId = tag.getLong("pattern_id");
 		}
 
-		ListNBT cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
-		for (INBT cableTag : cables) {
-			CompoundNBT cableTagCompound = (CompoundNBT) cableTag;
+		ListTag cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
+		for (Tag cableTag : cables) {
+			CompoundTag cableTagCompound = (CompoundTag) cableTag;
 			ServerCable cable = new ServerCable(World, cableTagCompound);
 			WorldCables.put(cable.getPos(), cable);
 		}
 
-		ListNBT nets = tag.getList("networks", Constants.NBT.TAG_COMPOUND);
-		for (INBT netTag : nets) {
-			CompoundNBT netTagCompound = (CompoundNBT) netTag;
+		ListTag nets = tag.getList("networks", Constants.NBT.TAG_COMPOUND);
+		for (Tag netTag : nets) {
+			CompoundTag netTagCompound = (CompoundTag) netTag;
 			CableNetwork network = CableNetwork.create(netTagCompound);
 			network.setWorld(World);
 			Networks.put(network.getId(), network);
@@ -271,23 +271,23 @@ public class CableNetworkManager extends WorldSavedData {
 	}
 
 	@Override
-	public CompoundNBT write(CompoundNBT tag) {
+	public CompoundTag save(CompoundTag tag) {
 		// Save the current crafting id.
 		tag.putLong("crafting_id", currentCraftingId);
 		tag.putLong("pattern_id", currentPatternId);
 		tag.putLong("current_parcel_id", currentItemParcelId);
 
-		ListNBT cables = new ListNBT();
+		ListTag cables = new ListTag();
 		WorldCables.values().forEach(cable -> {
-			CompoundNBT cableTag = new CompoundNBT();
+			CompoundTag cableTag = new CompoundTag();
 			cable.writeToNbt(cableTag);
 			cables.add(cableTag);
 		});
 		tag.put("cables", cables);
 
-		ListNBT networks = new ListNBT();
+		ListTag networks = new ListTag();
 		Networks.values().forEach(network -> {
-			CompoundNBT networkTag = new CompoundNBT();
+			CompoundTag networkTag = new CompoundTag();
 			network.writeToNbt(networkTag);
 			networks.add(networkTag);
 		});
@@ -299,24 +299,24 @@ public class CableNetworkManager extends WorldSavedData {
 		return tag;
 	}
 
-	public static CableNetworkManager get(World world) {
-		return get((ServerWorld) world);
+	public static CableNetworkManager get(Level world) {
+		return get((ServerLevel) world);
 	}
 
-	public static CableNetworkManager get(ServerWorld world) {
-		String name = PREFIX + "_" + world.getDimensionKey().getLocation().getNamespace() + "_" + world.getDimensionKey().getLocation().getPath();
+	public static CableNetworkManager get(ServerLevel world) {
+		String name = PREFIX + "_" + world.dimension().location().getNamespace() + "_" + world.dimension().location().getPath();
 
-		return world.getSavedData().getOrCreate(() -> new CableNetworkManager(name, world), name);
+		return world.getDataStorage().computeIfAbsent(() -> new CableNetworkManager(name, world), name);
 	}
 
-	private CableNetwork formNetworkAt(World world, BlockPos pos) {
+	private CableNetwork formNetworkAt(Level world, BlockPos pos) {
 		CableNetwork network = new CableNetwork(pos, CurrentNetworkId++);
 		addNetwork(network);
 		network.updateGraph(world, pos);
 		return network;
 	}
 
-	private void mergeNetworksIntoOne(List<ServerCable> candidates, World world, BlockPos pos) {
+	private void mergeNetworksIntoOne(List<ServerCable> candidates, Level world, BlockPos pos) {
 		if (candidates.isEmpty()) {
 			throw new RuntimeException("Cannot merge networks: no candidates");
 		}
@@ -351,7 +351,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 		mergedNetworks.forEach(n -> n.onJoinedWithOtherNetwork(mainNetwork));
 
-		markDirty();
+		setDirty();
 	}
 
 	private void splitNetworks(ServerCable originCable) {
@@ -403,7 +403,7 @@ public class CableNetworkManager extends WorldSavedData {
 			}
 
 			// Mark this cable network as dirty.
-			markDirty();
+			setDirty();
 		} else {
 			// If the adjacents list is empty, then this was the only cable in this network,
 			// remove the whole network.
@@ -419,7 +419,7 @@ public class CableNetworkManager extends WorldSavedData {
 		network.setWorld(World);
 		Networks.put(network.getId(), network);
 		LOGGER.debug(String.format("Created Network with Id: %1$s.", network.getId()));
-		markDirty();
+		setDirty();
 	}
 
 	private void removeNetwork(long id) {
@@ -429,7 +429,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 		Networks.remove(id);
 		LOGGER.debug(String.format("Removed Network with Id: %1$s.", id));
-		markDirty();
+		setDirty();
 	}
 
 	private List<ServerCable> getAdjacents(ServerCable cable) {
@@ -442,7 +442,7 @@ public class CableNetworkManager extends WorldSavedData {
 
 			// Check if a cable exists on the provided side and it is enabled on that side
 			// and of the same type.
-			ServerCable adjacent = getCable(cable.getPos().offset(dir));
+			ServerCable adjacent = getCable(cable.getPos().relative(dir));
 
 			if (adjacent == null) {
 				continue;

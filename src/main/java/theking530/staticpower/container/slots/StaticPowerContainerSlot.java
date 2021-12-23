@@ -3,10 +3,10 @@ package theking530.staticpower.container.slots;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -94,21 +94,21 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public boolean isEnabled() {
+	public boolean isActive() {
 		return isEnabled;
 	}
 
-	public void drawBeforeItem(MatrixStack matrixStack, GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
+	public void drawBeforeItem(PoseStack matrixStack, GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 		if (!getPreviewItem().isEmpty()) {
-			itemRenderer.drawItem(getPreviewItem(), guiLeft, guiTop, xPos, yPos, getPreviewAlpha());
+			itemRenderer.drawItem(getPreviewItem(), guiLeft, guiTop, x, y, getPreviewAlpha());
 		}
 		if (drawFluidContainerAsFluid) {
-			IFluidHandlerItem fluidItem = getStack().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
+			IFluidHandlerItem fluidItem = getItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
 			if (fluidItem != null) {
 				if (fluidItem.getTanks() > 0) {
 					RenderSystem.enableDepthTest();
 					FluidStack fluid = fluidItem.getFluidInTank(0);
-					GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1, 1, guiLeft + xPos, guiTop + yPos + 16.0f, 500.0f, 16.0f, 16.0f, false);
+					GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1, 1, guiLeft + x, guiTop + y + 16.0f, 500.0f, 16.0f, 16.0f, false);
 					RenderSystem.disableDepthTest();
 				}
 			}

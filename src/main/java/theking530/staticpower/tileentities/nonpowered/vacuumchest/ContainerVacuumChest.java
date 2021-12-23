@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.nonpowered.vacuumchest;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -25,11 +25,11 @@ public class ContainerVacuumChest extends StaticPowerTileEntityContainer<TileEnt
 		}
 	}
 
-	public ContainerVacuumChest(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerVacuumChest(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityVacuumChest) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerVacuumChest(int windowId, PlayerInventory playerInventory, TileEntityVacuumChest owner) {
+	public ContainerVacuumChest(int windowId, Inventory playerInventory, TileEntityVacuumChest owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -51,21 +51,21 @@ public class ContainerVacuumChest extends StaticPowerTileEntityContainer<TileEnt
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		if (stack.getItem() instanceof ItemFilter && !mergeItemStack(stack, 27)) {
 			return true;
 		}
-		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 28, 31, false)) {
+		if (stack.getItem() instanceof BaseUpgrade && !moveItemStackTo(stack, 28, 31, false)) {
 			return true;
 		}
-		if (!mergeItemStack(stack, 0, 27, false)) {
+		if (!moveItemStackTo(stack, 0, 27, false)) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
+	public boolean stillValid(Player playerIn) {
 		return true;
 	}
 }

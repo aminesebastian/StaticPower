@@ -3,14 +3,14 @@ package theking530.staticcore.gui.widgets.button;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.TooltipFlag.Default;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -55,13 +55,13 @@ public class FakeSlotButton extends StandardButton {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if(!itemIcon.isEmpty()) {
-			tooltips.addAll(itemIcon.getTooltip(Minecraft.getInstance().player, showAdvanced ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL));	
+			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, showAdvanced ? Default.ADVANCED : Default.NORMAL));	
 		}
 	}
 
-	protected void drawButton(MatrixStack stack, int transformedButtonLeft, int transformedButtonTop) {
+	protected void drawButton(PoseStack stack, int transformedButtonLeft, int transformedButtonTop) {
 		Vector2D position = this.getPosition();
 		GuiDrawUtilities.drawSlot(stack, position.getX(), position.getY(), 16, 16, 0);
 	}
@@ -70,13 +70,13 @@ public class FakeSlotButton extends StandardButton {
 	 * Draws the button at the location defined at construction time.
 	 */
 	@Override
-	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
 		// If the item is not empty, render it.
 		if (!itemIcon.isEmpty()) {
 			Vector2D size = getSize();
 			int halfSizeX = size.getXi() / 2;
 			int halfSizeY = size.getYi() / 2;
-			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + (halfSizeX - 9), (int) buttonTop + (halfSizeY - 9));
+			customRenderer.renderGuiItem(itemIcon, (int) buttonLeft + (halfSizeX - 9), (int) buttonTop + (halfSizeY - 9));
 		}
 
 		// Render the hover effect.

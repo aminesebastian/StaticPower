@@ -1,43 +1,43 @@
 package theking530.staticpower.tileentities.interfaces;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 
 public interface IBreakSerializeable {
 	public static final String SERIALIZEABLE_NBT = "SerializableNbt";
 
-	public CompoundNBT serializeOnBroken(CompoundNBT nbt);
+	public CompoundTag serializeOnBroken(CompoundTag nbt);
 
-	public void deserializeOnPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack);
+	public void deserializeOnPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack);
 
 	public boolean shouldSerializeWhenBroken();
 
-	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack);
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack);
 
-	public static void deserializeToTileEntity(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public static void deserializeToTileEntity(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		// Wrap in try catch to be safe.
 		try {
 			// Check to make sure there is a tile entity, the stack has a tag, and that tag
 			// contains the serializeable data.
-			if (world.getTileEntity(pos) != null && stack.hasTag() && stack.getTag().contains(SERIALIZEABLE_NBT)) {
+			if (world.getBlockEntity(pos) != null && stack.hasTag() && stack.getTag().contains(SERIALIZEABLE_NBT)) {
 				// Get the tile entity at that location.
-				TileEntity te = world.getTileEntity(pos);
+				BlockEntity te = world.getBlockEntity(pos);
 
 				// If it is break serializeable, get an instance.
 				if (te instanceof IBreakSerializeable) {
 					IBreakSerializeable serializeable = (IBreakSerializeable) te;
 
 					// Get the serialize nbt.
-					CompoundNBT serializeNbt = stack.getTag().getCompound(SERIALIZEABLE_NBT);
+					CompoundTag serializeNbt = stack.getTag().getCompound(SERIALIZEABLE_NBT);
 
 					// Perform the deserialization.
 					serializeable.deserializeOnPlaced(serializeNbt, world, pos, state, placer, stack);
@@ -48,18 +48,18 @@ public interface IBreakSerializeable {
 		}
 	}
 
-	public static ItemStack createItemDrop(Block block, PlayerEntity player, IBlockReader world, BlockPos pos) {
+	public static ItemStack createItemDrop(Block block, Player player, BlockGetter world, BlockPos pos) {
 		// Create a new itemstack to represent this block.
 		ItemStack blockStack = new ItemStack(block.asItem());
 
 		// If there is a tile entity that is serializeable, get it.
-		if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof IBreakSerializeable) {
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof IBreakSerializeable) {
 			// Get a handle to the serializeable tile entity.
-			IBreakSerializeable tempSerializeable = (IBreakSerializeable) world.getTileEntity(pos);
+			IBreakSerializeable tempSerializeable = (IBreakSerializeable) world.getBlockEntity(pos);
 
 			if (tempSerializeable.shouldSerializeWhenBroken()) {
 				// Create a new nbt to hold our serializeable data.
-				CompoundNBT serializeabltNbt = new CompoundNBT();
+				CompoundTag serializeabltNbt = new CompoundTag();
 
 				// Serialize the tile entity and then store it on the serializeabltNbt.
 				tempSerializeable.serializeOnBroken(serializeabltNbt);
@@ -77,7 +77,7 @@ public interface IBreakSerializeable {
 		return stack.hasTag() && stack.getTag().contains(SERIALIZEABLE_NBT);
 	}
 
-	public static CompoundNBT getSerializeDataFromItemStack(ItemStack stack) {
+	public static CompoundTag getSerializeDataFromItemStack(ItemStack stack) {
 		if (doesItemStackHaveSerializeData(stack)) {
 			return stack.getTag().getCompound(SERIALIZEABLE_NBT);
 		}

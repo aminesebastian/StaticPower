@@ -3,15 +3,15 @@ package theking530.staticpower.cables.digistore;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
@@ -52,7 +52,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void tick(World world) {
+	public void tick(Level world) {
 		if (isManagerPresent()) {
 			manager.energyStorage.useBulkPower(getPowerUsage());
 
@@ -78,7 +78,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 		// Cache all the digistores in the network.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// Get the cable's tile entity.
-			TileEntity te = Network.getWorld().getChunkAt(cable.getPos()).getTileEntity(cable.getPos(), Chunk.CreateEntityType.QUEUED);
+			BlockEntity te = Network.getWorld().getChunkAt(cable.getPos()).getBlockEntity(cable.getPos(), LevelChunk.EntityCreationType.QUEUED);
 			// If it's not null.
 			if (te != null) {
 				// Check if it has an inventory. Store it if it does.
@@ -205,7 +205,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<ITextComponent> output) {
+	public void getReaderOutput(List<Component> output) {
 		// Get the total amount of items.
 		int items = 0;
 		for (IDigistoreInventory inv : digistores) {
@@ -214,21 +214,21 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 
 		// Inventories.
 		String digistoreInventories = new MetricConverter(digistores.size()).getValueAsString(true);
-		output.add(new StringTextComponent(String.format("Contains: %1$s digistore inventories.", digistoreInventories)));
+		output.add(new TextComponent(String.format("Contains: %1$s digistore inventories.", digistoreInventories)));
 
 		// ItemCount
 		String itemCount = new MetricConverter(items).getValueAsString(true);
-		output.add(new StringTextComponent(String.format("Contains: %1$s items.", itemCount)));
+		output.add(new TextComponent(String.format("Contains: %1$s items.", itemCount)));
 	}
 
 	@Override
-	public void readFromNbt(CompoundNBT tag) {
+	public void readFromNbt(CompoundTag tag) {
 		craftingManager.readFromNbt(tag);
 		craftingTimer = tag.getInt("crafting_timer");
 	}
 
 	@Override
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		craftingManager.writeToNbt(tag);
 		tag.putInt("crafting_timer", craftingTimer);
 		return tag;

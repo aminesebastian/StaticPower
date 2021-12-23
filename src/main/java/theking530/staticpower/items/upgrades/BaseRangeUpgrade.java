@@ -4,30 +4,33 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+
+import net.minecraft.world.item.Item.Properties;
+import theking530.api.IUpgradeItem.UpgradeType;
 
 public class BaseRangeUpgrade extends BaseUpgrade {
 
 	public BaseRangeUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, new Properties().maxStackSize(1), UpgradeType.RANGE);
+		super(name, tier, new Properties().stacksTo(1), UpgradeType.RANGE);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		double upgradeAmount = getTier().rangeUpgrade.get();
 
 		if (upgradeAmount < 0) {
-			tooltip.add(new StringTextComponent(TextFormatting.RED + "-" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + TextFormatting.WHITE + "Range"));
+			tooltip.add(new TextComponent(ChatFormatting.RED + "-" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + ChatFormatting.WHITE + "Range"));
 		} else {
-			tooltip.add(new StringTextComponent(TextFormatting.GREEN + "+" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + TextFormatting.WHITE + "Range"));
+			tooltip.add(new TextComponent(ChatFormatting.GREEN + "+" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "% " + ChatFormatting.WHITE + "Range"));
 		}
 	}
 }

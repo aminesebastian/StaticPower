@@ -5,8 +5,8 @@ import java.util.HashMap;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 
 public class CableNetworkGraph {
@@ -21,7 +21,7 @@ public class CableNetworkGraph {
 		Network = network;
 	}
 
-	public NetworkMapper scan(World world, BlockPos scanStartPosition) {
+	public NetworkMapper scan(Level world, BlockPos scanStartPosition) {
 		// Map the network.
 		NetworkMapper mapper = new NetworkMapper(Cables.values());
 

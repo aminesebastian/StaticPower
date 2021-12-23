@@ -5,10 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
@@ -16,7 +16,7 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class CauldronRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CauldronRecipe> {
+public class CauldronRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CauldronRecipe> {
 	public static final CauldronRecipeSerializer INSTANCE = new CauldronRecipeSerializer();
 	private static final Logger LOGGER = LogManager.getLogger(CauldronRecipeSerializer.class);
 
@@ -25,9 +25,9 @@ public class CauldronRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public CauldronRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public CauldronRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Return null if the input is empty.
@@ -37,7 +37,7 @@ public class CauldronRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		}
 
 		// Get the item output.
-		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(JSONUtils.getJsonObject(json, "output"));
+		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(json, "output"));
 
 		// Get how long the item needs to be in the cauldron.
 		int cauldronTime = json.get("time").getAsInt();
@@ -52,10 +52,10 @@ public class CauldronRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		FluidStack fluidInput = FluidStack.EMPTY;
 		FluidStack fluidOutput = FluidStack.EMPTY;
 		if (json.has("fluid")) {
-			fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(JSONUtils.getJsonObject(json, "fluid"));
+			fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(GsonHelper.getAsJsonObject(json, "fluid"));
 		}
 		if (json.has("output_fluid")) {
-			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(JSONUtils.getJsonObject(json, "output_fluid"));
+			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(GsonHelper.getAsJsonObject(json, "output_fluid"));
 		}
 
 		// Create the recipe.
@@ -63,7 +63,7 @@ public class CauldronRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public CauldronRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public CauldronRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int time = buffer.readInt();
 		boolean shouldDrainCauldron = buffer.readBoolean();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
@@ -76,7 +76,7 @@ public class CauldronRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, CauldronRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, CauldronRecipe recipe) {
 		buffer.writeInt(recipe.getRequiredTimeInCauldron());
 		buffer.writeBoolean(recipe.shouldDrainCauldron());
 		recipe.getInput().write(buffer);

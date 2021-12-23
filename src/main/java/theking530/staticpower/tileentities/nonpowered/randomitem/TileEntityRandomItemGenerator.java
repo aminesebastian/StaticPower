@@ -2,15 +2,15 @@ package theking530.staticpower.tileentities.nonpowered.randomitem;
 
 import java.util.stream.Collectors;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.init.ModBlocks;
@@ -20,9 +20,9 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class TileEntityRandomItemGenerator extends TileEntityConfigurable implements INamedContainerProvider {
+public class TileEntityRandomItemGenerator extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityRandomItemGenerator> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityRandomItemGenerator(),
+	public static final BlockEntityTypeAllocator<TileEntityRandomItemGenerator> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityRandomItemGenerator(),
 			ModBlocks.RandomItemGenerator);
 	private static final float GENERATION_RATE = 1;
 	public final InventoryComponent inventory;
@@ -37,7 +37,7 @@ public class TileEntityRandomItemGenerator extends TileEntityConfigurable implem
 	@Override
 	public void process() {
 		// Handle the upgrade tick on the server.
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			timer++;
 			if (timer >= GENERATION_RATE) {
 				generateItem();
@@ -64,7 +64,7 @@ public class TileEntityRandomItemGenerator extends TileEntityConfigurable implem
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerRandomItemGenerator(windowId, inventory, this);
 	}
 }

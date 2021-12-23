@@ -4,8 +4,8 @@ import java.util.Optional;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -35,7 +35,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityCompon
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		// Do nothing on the client.
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			return stack;
 		}
 
@@ -68,7 +68,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityCompon
 
 	public Optional<DigistoreNetworkModule> getDigistoreNetworkModule() {
 		// If on the client, always return empty.
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			return Optional.empty();
 		}
 

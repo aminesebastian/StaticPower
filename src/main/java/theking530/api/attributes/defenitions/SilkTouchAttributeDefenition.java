@@ -1,9 +1,9 @@
 package theking530.api.attributes.defenitions;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.ChatFormatting;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.BooleanAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;
@@ -13,7 +13,7 @@ public class SilkTouchAttributeDefenition extends AbstractAttributeDefenition<Bo
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "silk_touch");
 
 	public SilkTouchAttributeDefenition(ResourceLocation id) {
-		super(ID, "attribute.staticpower.silk_touch", TextFormatting.WHITE, BooleanAttributeModifier.class);
+		super(ID, "attribute.staticpower.silk_touch", ChatFormatting.WHITE, BooleanAttributeModifier.class);
 		baseValue = false;
 	}
 
@@ -23,12 +23,12 @@ public class SilkTouchAttributeDefenition extends AbstractAttributeDefenition<Bo
 	}
 
 	@Override
-	protected void serializeBaseValue(CompoundNBT nbt) {
+	protected void serializeBaseValue(CompoundTag nbt) {
 		nbt.putBoolean("base_value", baseValue);
 	}
 
 	@Override
-	protected void deserializeBaseValue(CompoundNBT nbt) {
+	protected void deserializeBaseValue(CompoundTag nbt) {
 		baseValue = nbt.getBoolean("base_value");
 	}
 
@@ -44,7 +44,7 @@ public class SilkTouchAttributeDefenition extends AbstractAttributeDefenition<Bo
 	}
 
 	@Override
-	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
+	public MutableComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
 		if (other.getValue() == this.getValue()) {
 			return null;
 		}

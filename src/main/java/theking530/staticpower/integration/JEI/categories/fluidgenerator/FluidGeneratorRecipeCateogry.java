@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,12 +15,12 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -36,7 +36,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGeneratorRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "fluid_generator");
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -46,7 +46,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 
 	public FluidGeneratorRecipeCateogry(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.FluidGenerator.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.FluidGenerator.getDescriptionId());
 		background = guiHelper.createBlankDrawable(100, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.FluidGenerator));
 		pBar = new ArrowProgressBar(60, 19).setFlipped(true);
@@ -82,7 +82,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	}
 
 	@Override
-	public void draw(FluidGeneratorRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(FluidGeneratorRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 77, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, recipe.getPowerGeneration(), recipe.getPowerGeneration());
@@ -96,17 +96,17 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 		flameBar.setMaxProgress(processingTimer.getMaxValue());
 		flameBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
-		FontRenderer fontRenderer = Minecraft.getInstance().fontRenderer;
+		Font fontRenderer = Minecraft.getInstance().font;
 		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration()).getString();
-		fontRenderer.drawString(matrixStack, powerGeneration, 51 - (fontRenderer.getStringWidth(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
+		fontRenderer.draw(matrixStack, powerGeneration, 51 - (fontRenderer.width(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
 
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(FluidGeneratorRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(FluidGeneratorRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Generates: ").append(GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration())));
+			output.add(new TextComponent("Generates: ").append(GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration())));
 		}
 
 		return output;

@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -16,11 +16,11 @@ public abstract class AbstractContainerSolderingTable<T extends AbstractSolderin
 	protected int craftingGridXOffset;
 
 	@SuppressWarnings("unchecked")
-	public AbstractContainerSolderingTable(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory inv, PacketBuffer data) {
+	public AbstractContainerSolderingTable(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(allocator, windowId, inv, (T) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public AbstractContainerSolderingTable(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory playerInventory, T owner) {
+	public AbstractContainerSolderingTable(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, Inventory playerInventory, T owner) {
 		super(allocator, windowId, playerInventory, owner);
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbstractContainerSolderingTable<T extends AbstractSolderin
 	protected abstract void addOutputSlot();
 
 	@Override
-	public void consumeJEITransferRecipe(PlayerEntity playerIn, ItemStack[][] recipe) {
+	public void consumeJEITransferRecipe(Player playerIn, ItemStack[][] recipe) {
 		if (recipe.length == 9) {
 			for (int i = 0; i < 9; i++) {
 				// Skip holes in the recipe.

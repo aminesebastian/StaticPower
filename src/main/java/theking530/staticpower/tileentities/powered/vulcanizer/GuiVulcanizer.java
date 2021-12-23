@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.vulcanizer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiVulcanizer extends StaticPowerTileEntityGui<ContainerVulcanizer, TileEntityVulcanizer> {
 	private FluidProgressBar progressBar;
 
-	public GuiVulcanizer(ContainerVulcanizer container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiVulcanizer(ContainerVulcanizer container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -33,7 +33,7 @@ public class GuiVulcanizer extends StaticPowerTileEntityGui<ContainerVulcanizer,
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

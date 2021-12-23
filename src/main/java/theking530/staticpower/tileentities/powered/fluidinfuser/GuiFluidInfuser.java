@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.powered.fluidinfuser;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
@@ -23,7 +23,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfuser, TileEntityFluidInfuser> {
 	private FluidProgressBar progressBar;
 
-	public GuiFluidInfuser(ContainerFluidInfuser container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiFluidInfuser(ContainerFluidInfuser container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -38,7 +38,7 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

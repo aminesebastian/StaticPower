@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -16,12 +16,12 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -40,7 +40,7 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -49,7 +49,7 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 
 	public SqueezerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Squeezer.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Squeezer.getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Squeezer));
 	}
@@ -83,7 +83,7 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 	}
 
 	@Override
-	public void draw(SqueezerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SqueezerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 50, 12, 16, 16, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 75, 32, 20, 20, 0);
 
@@ -99,10 +99,10 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(SqueezerRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(SqueezerRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		return output;

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,11 +15,11 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -37,7 +37,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "vulcanizer");
 	private static final int OUTPUT_SLOT = 0;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -46,7 +46,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	public VulcanizerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Vulcanizer.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Vulcanizer.getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Vulcanizer));
 	}
@@ -80,7 +80,7 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 	}
 
 	@Override
-	public void draw(VulcanizerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(VulcanizerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 112, 15, 20, 20, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
@@ -95,10 +95,10 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(VulcanizerRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(VulcanizerRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 		return output;
 	}

@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.packager;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -21,7 +21,7 @@ public class GuiPackager extends StaticPowerTileEntityGui<ContainerPackager, Til
 
 	private SpriteButton recipeSizeButton;
 
-	public GuiPackager(ContainerPackager container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiPackager(ContainerPackager container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -56,10 +56,10 @@ public class GuiPackager extends StaticPowerTileEntityGui<ContainerPackager, Til
 	private void updateButtonSprite(int size) {
 		if (size == 2) {
 			recipeSizeButton.setRegularTexture(StaticPowerSprites.SIZE_TWO_CRAFTING);
-			recipeSizeButton.setTooltip(new StringTextComponent("Recipe Size: 2x2"));
+			recipeSizeButton.setTooltip(new TextComponent("Recipe Size: 2x2"));
 		} else {
 			recipeSizeButton.setRegularTexture(StaticPowerSprites.SIZE_THREE_CRAFTING);
-			recipeSizeButton.setTooltip(new StringTextComponent("Recipe Size: 3x3"));
+			recipeSizeButton.setTooltip(new TextComponent("Recipe Size: 3x3"));
 		}
 	}
 }

@@ -1,25 +1,26 @@
 package theking530.staticpower.items;
 
 import java.util.List;
+import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.ToolType;
@@ -37,6 +38,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * The name of this item.
 	 */
 	public String NAME = "";
+	protected static final Random RANDOM = new Random();
 
 	/**
 	 * Base constructor for a static power item. Uses the default item properties
@@ -45,7 +47,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param name The registry name for this item sans namespace.
 	 */
 	public StaticPowerItem(String name) {
-		this(name, new Item.Properties().group(StaticPower.CREATIVE_TAB));
+		this(name, new Item.Properties().tab(StaticPower.CREATIVE_TAB));
 	}
 
 	/**
@@ -56,19 +58,19 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 *                   this method, no need to set it externally).
 	 */
 	public StaticPowerItem(String name, Item.Properties properties) {
-		super(properties.group(StaticPower.CREATIVE_TAB));
+		super(properties.tab(StaticPower.CREATIVE_TAB));
 		NAME = name;
 		setRegistryName(name);
 	}
 
 	@Override
 	@Nullable
-	public CompoundNBT getShareTag(ItemStack stack) {
+	public CompoundTag getShareTag(ItemStack stack) {
 		// Make the super call.
-		CompoundNBT output = super.getShareTag(stack);
+		CompoundTag output = super.getShareTag(stack);
 
 		// See if we have anything to sync.
-		CompoundNBT syncTag = getStaticPowerSyncTag(stack);
+		CompoundTag syncTag = getStaticPowerSyncTag(stack);
 
 		// If we do, add it.
 		if (syncTag != null) {
@@ -84,29 +86,29 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	}
 
 	@Override
-	public void readShareTag(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public void readShareTag(ItemStack stack, @Nullable CompoundTag nbt) {
 		// Read the input nbt.
 		super.readShareTag(stack, nbt);
 
 		// If there was an input and it contains a sync tag, use it then remove it.
 		if (nbt != null && nbt.contains("sync_tag")) {
-			CompoundNBT syncTag = nbt.getCompound("sync_tag");
+			CompoundTag syncTag = nbt.getCompound("sync_tag");
 			processStaticPowerSyncTag(stack, syncTag);
 		}
 	}
 
-	protected CompoundNBT getStaticPowerSyncTag(ItemStack stack) {
-		return (CompoundNBT) stack.serializeNBT().get("ForgeCaps");
+	protected CompoundTag getStaticPowerSyncTag(ItemStack stack) {
+		return (CompoundTag) stack.serializeNBT().get("ForgeCaps");
 	}
 
-	protected void processStaticPowerSyncTag(ItemStack stack, @Nullable CompoundNBT nbt) {
-		CompoundNBT tag = stack.getTag();
+	protected void processStaticPowerSyncTag(ItemStack stack, @Nullable CompoundTag nbt) {
+		CompoundTag tag = stack.getTag();
 		tag.put("ForgeCaps", nbt);
 		stack.deserializeNBT(tag);
 	}
 
 	@Override
-	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
+	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable Player player, @Nullable BlockState blockState) {
 		return super.getHarvestLevel(stack, tool, player, blockState);
 	}
 
@@ -116,8 +118,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * for easier implementation.
 	 */
 	@Override
-	public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-		return onStaticPowerItemRightClicked(worldIn, playerIn, handIn, playerIn.getHeldItem(handIn));
+	public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+		return onStaticPowerItemRightClicked(worldIn, playerIn, handIn, playerIn.getItemInHand(handIn));
 	}
 
 	/**
@@ -126,14 +128,14 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * for easier implementation.
 	 */
 	@Override
-	public ActionResultType onItemUse(ItemUseContext context) {
-		super.onItemUse(context);
-		return onStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), context.getItem());
+	public InteractionResult useOn(UseOnContext context) {
+		super.useOn(context);
+		return onStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(), context.getClickedFace(), context.getPlayer(), context.getItemInHand());
 	}
 
 	@Override
-	public ActionResultType onItemUseFirst(ItemStack stack, ItemUseContext context) {
-		return onPreStaticPowerItemUsedOnBlock(context, context.getWorld(), context.getPos(), context.getFace(), context.getPlayer(), stack);
+	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
+		return onPreStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(), context.getClickedFace(), context.getPlayer(), stack);
 	}
 
 	/**
@@ -145,17 +147,17 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item   The {@link ItemStack}.
 	 * @return The result of the action.
 	 */
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
-		if (this.isFood()) {
-			ItemStack itemstack = player.getHeldItem(hand);
-			if (player.canEat(this.getFood().canEatWhenFull())) {
-				player.setActiveHand(hand);
-				return ActionResult.resultConsume(itemstack);
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+		if (this.isEdible()) {
+			ItemStack itemstack = player.getItemInHand(hand);
+			if (player.canEat(this.getFoodProperties().canAlwaysEat())) {
+				player.startUsingItem(hand);
+				return InteractionResultHolder.consume(itemstack);
 			} else {
-				return ActionResult.resultFail(itemstack);
+				return InteractionResultHolder.fail(itemstack);
 			}
 		} else {
-			return ActionResult.resultPass(player.getHeldItem(hand));
+			return InteractionResultHolder.pass(player.getItemInHand(hand));
 		}
 	}
 
@@ -170,8 +172,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item    The item stack that was used.
 	 * @return The result of the action (SUCCESS, PASS, FAIL, CONSUME).
 	 */
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
-		return ActionResultType.PASS;
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+		return InteractionResult.PASS;
 	}
 
 	/**
@@ -185,8 +187,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item
 	 * @return
 	 */
-	protected ActionResultType onPreStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
-		return ActionResultType.PASS;
+	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+		return InteractionResult.PASS;
 	}
 
 	/**
@@ -199,24 +201,24 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param isShowingAdvanced True if advanced tooltips are requested.
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 	}
 
 	@SuppressWarnings("deprecation")
 	public boolean removeEnchantment(ItemStack stack, Enchantment enchantment) {
 		stack.getOrCreateTag();
 		if (!stack.getTag().contains("Enchantments", 9)) {
-			stack.getTag().put("Enchantments", new ListNBT());
+			stack.getTag().put("Enchantments", new ListTag());
 		}
 
-		ListNBT listnbt = stack.getTag().getList("Enchantments", 10);
+		ListTag listnbt = stack.getTag().getList("Enchantments", 10);
 		boolean removedFlag = false;
 		for (int i = listnbt.size() - 1; i >= 0; i--) {
-			CompoundNBT enchantmentNbt = (CompoundNBT) listnbt.get(i);
+			CompoundTag enchantmentNbt = (CompoundTag) listnbt.get(i);
 			if (enchantmentNbt.getString("id").equals(Registry.ENCHANTMENT.getKey(enchantment).toString())) {
 				listnbt.remove(i);
 				removedFlag = true;

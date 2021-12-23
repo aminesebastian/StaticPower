@@ -6,10 +6,10 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -21,14 +21,14 @@ public class DestinationWrapper {
 		ITEM, POWER, FORGE_POWER, FLUID, HEAT, REDSTONE_SOURCE
 	}
 
-	private final World world;
-	private final TileEntity tileEntity;
+	private final Level world;
+	private final BlockEntity tileEntity;
 	private final BlockPos pos;
 	private final Map<Direction, HashSet<DestinationType>> supportedTypes;
 	private final Map<BlockPos, Direction> connectedCables;
 	private final BlockPos initialConnectedCable;
 
-	public DestinationWrapper(World world, BlockPos pos, @Nullable TileEntity tileEntity, BlockPos connectedCable, Direction destinationSide) {
+	public DestinationWrapper(Level world, BlockPos pos, @Nullable BlockEntity tileEntity, BlockPos connectedCable, Direction destinationSide) {
 		this.world = world;
 		this.tileEntity = tileEntity;
 		this.pos = pos;
@@ -39,7 +39,7 @@ public class DestinationWrapper {
 		populateDestinationTypes();
 	}
 
-	public TileEntity getTileEntity() {
+	public BlockEntity getTileEntity() {
 		return tileEntity;
 	}
 
@@ -131,7 +131,7 @@ public class DestinationWrapper {
 			}
 
 			// Check for redstone power.
-			if (world.getBlockState(pos).getStrongPower(world, pos, dir) > 0 || world.getBlockState(pos).getStrongPower(world, pos, dir) > 0) {
+			if (world.getBlockState(pos).getDirectSignal(world, pos, dir) > 0 || world.getBlockState(pos).getDirectSignal(world, pos, dir) > 0) {
 				types.add(DestinationType.REDSTONE_SOURCE);
 			}
 

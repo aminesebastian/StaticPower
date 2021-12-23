@@ -1,12 +1,12 @@
 package theking530.api.heat;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -26,7 +26,7 @@ public class HeatStorageUtilities {
 	 * @param currentPos The position of this heat storage.
 	 */
 
-	public static void transferHeatWithSurroundings(IHeatStorage storage, World world, BlockPos currentPos, boolean performOverheating) {
+	public static void transferHeatWithSurroundings(IHeatStorage storage, Level world, BlockPos currentPos, boolean performOverheating) {
 		for (Direction dir : Direction.values()) {
 			HeatStorageUtilities.transferHeatPassivelyWithBlockFromDirection(world, currentPos, dir, storage);
 			HeatStorageUtilities.transferHeatActivelyWithBlockFromDirection(world, currentPos, dir, storage);
@@ -44,12 +44,12 @@ public class HeatStorageUtilities {
 	 *                heat storage).
 	 * @param storage The heat storage.
 	 */
-	public static double transferHeatPassivelyWithBlockFromDirection(World world, BlockPos pos, Direction side, IHeatStorage storage) {
+	public static double transferHeatPassivelyWithBlockFromDirection(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
 		// Capture the total transfered amount.
 		double cooledAmount = 0;
 
 		// Get the offset position.
-		BlockPos offsetPos = pos.offset(side);
+		BlockPos offsetPos = pos.relative(side);
 
 		// Get the block and fluid states at the offset pos.
 		FluidState fluidState = world.getFluidState(offsetPos);
@@ -57,7 +57,7 @@ public class HeatStorageUtilities {
 
 		// If there is a recipe for thermal conductivity for this block
 		ThermalConductivityRecipe recipe = StaticPowerRecipeRegistry
-				.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getFluid(), 1000))).orElse(null);
+				.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, new RecipeMatchParameters(blockstate).setFluids(new FluidStack(fluidState.getType(), 1000))).orElse(null);
 
 		// Perform the transfer.
 		if (recipe != null) {
@@ -68,7 +68,7 @@ public class HeatStorageUtilities {
 					if (SDMath.diceRoll(0.025)) {
 						// Perform the overheating with a block.
 						if (recipe.hasOverheatedBlock() && recipe.getOverheatedBlock() != world.getBlockState(offsetPos)) {
-							world.setBlockState(offsetPos, recipe.getOverheatedBlock());
+							world.setBlockAndUpdate(offsetPos, recipe.getOverheatedBlock());
 						}
 
 						// If an overheated item is established, spawn it.
@@ -107,15 +107,15 @@ public class HeatStorageUtilities {
 	 *                heat storage).
 	 * @param storage The heat storage.
 	 */
-	public static double transferHeatActivelyWithBlockFromDirection(World world, BlockPos pos, Direction side, IHeatStorage storage) {
+	public static double transferHeatActivelyWithBlockFromDirection(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
 		// Capture the total transfered amount.
 		double cooledAmount = 0;
 
 		// Get the offset position.
-		BlockPos offsetPos = pos.offset(side);
+		BlockPos offsetPos = pos.relative(side);
 
 		// Get the tile entity at the position.
-		TileEntity te = world.getTileEntity(offsetPos);
+		BlockEntity te = world.getBlockEntity(offsetPos);
 
 		// If it exists.
 		if (te != null) {

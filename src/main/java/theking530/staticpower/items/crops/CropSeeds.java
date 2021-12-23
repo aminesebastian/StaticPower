@@ -1,15 +1,15 @@
 package theking530.staticpower.items.crops;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.IPlantable;
 import net.minecraftforge.common.PlantType;
 import theking530.staticpower.items.StaticPowerItem;
@@ -42,15 +42,15 @@ public class CropSeeds extends StaticPowerItem implements IPlantable {
 	 * Attempts to plant the item on the block it was used on.
 	 */
 	@Override
-	public ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	public InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		BlockState state = world.getBlockState(pos);
-		if (context.getFace() == Direction.UP && player.canPlayerEdit(pos.offset(face), face, item) && state.getBlock().canSustainPlant(state, world, pos, Direction.UP, this)
-				&& world.isAirBlock(pos.up())) {
-			world.setBlockState(pos.up(), this.CROP_BLOCK.getDefaultState());
+		if (context.getClickedFace() == Direction.UP && player.mayUseItemAt(pos.relative(face), face, item) && state.getBlock().canSustainPlant(state, world, pos, Direction.UP, this)
+				&& world.isEmptyBlock(pos.above())) {
+			world.setBlockAndUpdate(pos.above(), this.CROP_BLOCK.defaultBlockState());
 			item.setCount(item.getCount() - 1);
-			return ActionResultType.SUCCESS;
+			return InteractionResult.SUCCESS;
 		} else {
-			return ActionResultType.PASS;
+			return InteractionResult.PASS;
 		}
 	}
 
@@ -58,7 +58,7 @@ public class CropSeeds extends StaticPowerItem implements IPlantable {
 	 * Gets the type of this plant.
 	 */
 	@Override
-	public PlantType getPlantType(IBlockReader world, BlockPos pos) {
+	public PlantType getPlantType(BlockGetter world, BlockPos pos) {
 		return PlantType.CROP;
 	}
 
@@ -66,7 +66,7 @@ public class CropSeeds extends StaticPowerItem implements IPlantable {
 	 * Returns the block this seed with plant.
 	 */
 	@Override
-	public BlockState getPlant(IBlockReader world, BlockPos pos) {
-		return CROP_BLOCK.getDefaultState();
+	public BlockState getPlant(BlockGetter world, BlockPos pos) {
+		return CROP_BLOCK.defaultBlockState();
 	}
 }

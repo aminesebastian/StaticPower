@@ -3,29 +3,29 @@ package theking530.staticpower.data.crafting.wrappers.hammer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
-public class HammerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<HammerRecipe> {
+public class HammerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HammerRecipe> {
 	public static final HammerRecipeSerializer INSTANCE = new HammerRecipeSerializer();
 	private final JsonElement hammerTag;
 
 	private HammerRecipeSerializer() {
 		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "hammer_recipe"));
-		hammerTag = JSONUtils.fromJson("{ \"tag\":\"staticpower:hammer\" }");
+		hammerTag = GsonHelper.parse("{ \"tag\":\"staticpower:hammer\" }");
 	}
 
 	@Override
-	public HammerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public HammerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Create the hammer ingredient.
-		Ingredient hammer = Ingredient.deserialize(hammerTag);
+		Ingredient hammer = Ingredient.fromJson(hammerTag);
 
 		// Get the item output.
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(json.get("output").getAsJsonObject());
@@ -41,13 +41,13 @@ public class HammerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 	}
 
 	@Override
-	public HammerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public HammerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		boolean isBlockType = buffer.readBoolean();
 		ProbabilityItemStackOutput outputs = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		Ingredient hammer = Ingredient.read(buffer);
+		Ingredient hammer = Ingredient.fromNetwork(buffer);
 
 		if (isBlockType) {
-			ResourceLocation input = new ResourceLocation(buffer.readString());
+			ResourceLocation input = new ResourceLocation(buffer.readUtf());
 			return new HammerRecipe(recipeId, hammer, input, outputs);
 		} else {
 			StaticPowerIngredient inputItem = StaticPowerIngredient.read(buffer);
@@ -56,13 +56,13 @@ public class HammerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, HammerRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, HammerRecipe recipe) {
 		buffer.writeBoolean(recipe.isBlockType());
 		recipe.getOutput().writeToBuffer(buffer);
-		recipe.getHammer().write(buffer);
+		recipe.getHammer().toNetwork(buffer);
 
 		if (recipe.isBlockType()) {
-			buffer.writeString(recipe.getRawInputTag().toString());
+			buffer.writeUtf(recipe.getRawInputTag().toString());
 		} else {
 			recipe.getInputItem().write(buffer);
 		}

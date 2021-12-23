@@ -3,11 +3,11 @@ package theking530.staticcore.gui.widgets;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.utilities.Vector2D;
@@ -31,7 +31,7 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		if (machineProcessingComponent.isProcessingStoppedDueToError()) {
 			errorDrawable.draw(screenSpacePosition.getX(), screenSpacePosition.getY());
@@ -41,22 +41,22 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
 		if (machineProcessingComponent.isProcessingStoppedDueToError()) {
 			String[] splitTooltips = machineProcessingComponent.getProcessingErrorMessage().split("\\$");
 			for (String tip : splitTooltips) {
-				tooltips.add(new StringTextComponent(tip));
+				tooltips.add(new TextComponent(tip));
 			}
 		} else if (machineProcessingComponent.getCurrentProcessingTime() > 0) {
 			String remainingTime = decimalFormat
 					.format((machineProcessingComponent.getMaxProcessingTime() - machineProcessingComponent.getCurrentProcessingTime()) / (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
 			tooltips.add(
-					new TranslationTextComponent("gui.staticpower.remaining").appendString(": ").appendString(remainingTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
+					new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
 		} else {
 			String maxTime = decimalFormat.format(machineProcessingComponent.getMaxProcessingTime() / (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
-			tooltips.add(new TranslationTextComponent("gui.staticpower.max").appendString(": ").appendString(maxTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
+			tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
 		}
 	}
 }

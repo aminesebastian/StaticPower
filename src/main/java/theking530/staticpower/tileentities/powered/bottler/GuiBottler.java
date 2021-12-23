@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.bottler;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiBottler extends StaticPowerTileEntityGui<ContainerBottler, TileEntityBottler> {
 	private FluidProgressBar progressBar;
 
-	public GuiBottler(ContainerBottler container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiBottler(ContainerBottler container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -32,7 +32,7 @@ public class GuiBottler extends StaticPowerTileEntityGui<ContainerBottler, TileE
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, Items.WATER_BUCKET).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, Items.WATER_BUCKET).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

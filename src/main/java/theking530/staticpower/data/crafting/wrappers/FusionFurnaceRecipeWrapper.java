@@ -2,8 +2,8 @@ package theking530.staticpower.data.crafting.wrappers;
 
 import java.util.ArrayList;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class FusionFurnaceRecipeWrapper {
 

@@ -4,11 +4,11 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -62,7 +62,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int getEnergyStored() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getEnergyAutoConverter().getEnergyStored();
@@ -73,7 +73,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int getMaxEnergyStored() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getEnergyAutoConverter().getMaxEnergyStored();
@@ -102,7 +102,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public long getMaxReceive() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getEnergyAutoConverter().getMaxReceive();
@@ -113,7 +113,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public long getMaxDrain() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getEnergyAutoConverter().getMaxDrain();
@@ -124,7 +124,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public long getStoredPower() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getEnergyAutoConverter().getStoredPower();
@@ -135,7 +135,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public long getCapacity() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getEnergyAutoConverter().getCapacity();
@@ -150,7 +150,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	private long recievePower(long power, boolean simulate, boolean forge) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				if (forge) {
@@ -197,7 +197,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (cap == CapabilityEnergy.ENERGY || cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isRemote) {
+				if (getWorld().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					Optional<ServerCable> cable = getCable();
@@ -220,11 +220,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
-		if (!this.getWorld().isRemote) {
+		if (!this.getWorld().isClientSide) {
 			getPowerNetworkModule().ifPresent(module -> {
-				CompoundNBT powerCableNBT = new CompoundNBT();
+				CompoundTag powerCableNBT = new CompoundTag();
 				powerCableNBT.putLong("power", module.getEnergyStorage().getStoredPower());
 				powerCableNBT.putLong("capacity", module.getEnergyStorage().getCapacity());
 				powerCableNBT.putFloat("max_drain", module.getEnergyStorage().getMaxDrain());
@@ -238,10 +238,10 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		if (nbt.contains("power_cable")) {
-			CompoundNBT powerCableNBT = nbt.getCompound("power_cable");
+			CompoundTag powerCableNBT = nbt.getCompound("power_cable");
 			clientCurrentPower = powerCableNBT.getLong("power");
 			clientCapacity = powerCableNBT.getLong("capacity");
 			clientLastTickDraint = powerCableNBT.getFloat("drained");
@@ -252,7 +252,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {

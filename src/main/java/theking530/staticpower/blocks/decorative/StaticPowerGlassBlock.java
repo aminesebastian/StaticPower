@@ -1,15 +1,14 @@
 package theking530.staticpower.blocks.decorative;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 import theking530.staticpower.blocks.StaticPowerBlock;
 
 public class StaticPowerGlassBlock extends StaticPowerBlock {
@@ -20,23 +19,22 @@ public class StaticPowerGlassBlock extends StaticPowerBlock {
 	 * @param name The registry name of the block sans namespace.
 	 */
 	public StaticPowerGlassBlock(String name) {
-		super(name, Block.Properties.from(Blocks.GLASS).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0F)
-				.sound(SoundType.GLASS).notSolid());
+		super(name, Block.Properties.copy(Blocks.GLASS).strength(4.0F).sound(SoundType.GLASS).noOcclusion());
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getTranslucent();
+		return RenderType.translucent();
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public float getAmbientOcclusionLightValue(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	public float getShadeBrightness(BlockState state, BlockGetter worldIn, BlockPos pos) {
 		return 1.0F;
 	}
 
 	@Override
-	public boolean propagatesSkylightDown(BlockState state, IBlockReader reader, BlockPos pos) {
+	public boolean propagatesSkylightDown(BlockState state, BlockGetter reader, BlockPos pos) {
 		return true;
 	}
 }

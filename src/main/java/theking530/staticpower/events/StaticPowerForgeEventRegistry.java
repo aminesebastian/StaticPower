@@ -3,22 +3,22 @@ package theking530.staticpower.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.resources.IReloadableResourceManager;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawHighlightEvent;
@@ -64,7 +64,7 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void worldTickEvent(TickEvent.WorldTickEvent event) {
-		if (!event.world.isRemote) {
+		if (!event.world.isClientSide) {
 			if (event.phase == TickEvent.Phase.END) {
 				CableNetworkManager.get(event.world).tick();
 			}
@@ -73,8 +73,8 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent serverStarted) {
-		IReloadableResourceManager resourceManager = (IReloadableResourceManager) serverStarted.getServer().getDataPackRegistries().getResourceManager();
-		resourceManager.addReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
+		ReloadableResourceManager resourceManager = (ReloadableResourceManager) serverStarted.getServer().getDataPackRegistries().getResourceManager();
+		resourceManager.registerReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
 		StaticPower.LOGGER.info("Server resource reload listener created!");
 	}
@@ -100,7 +100,7 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void onAttachCapabilities(AttachCapabilitiesEvent<Entity> event) {
-		if (event.getObject() instanceof PlayerEntity) {
+		if (event.getObject() instanceof Player) {
 			if (!event.getObject().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).isPresent()) {
 				event.addCapability(STATIC_POWER_PLAYER_DATA, new StaticPowerPlayerCapabilityProvider());
 			}
@@ -111,9 +111,9 @@ public class StaticPowerForgeEventRegistry {
 	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
 		// If on the server, send a sync packet for the static power player data
 		// capability.
-		if (!event.getEntity().getEntityWorld().isRemote()) {
+		if (!event.getEntity().getCommandSenderWorld().isClientSide()) {
 			event.getPlayer().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
-				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayerEntity) event.getPlayer(),
+				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) event.getPlayer(),
 						new PacketSyncStaticPowerPlayerDataCapability(((StaticPowerPlayerData) data).serializeNBT()));
 			});
 		}
@@ -121,7 +121,7 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void onItemCrafted(ItemCraftedEvent event) {
-		if (event.getEntityLiving() instanceof PlayerEntity) {
+		if (event.getEntityLiving() instanceof Player) {
 			event.getEntityLiving().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
 				data.addToCraftingHistory(event.getCrafting(), event.getInventory());
 			});
@@ -134,17 +134,17 @@ public class StaticPowerForgeEventRegistry {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			// Capture the original tooltips.
 			// Allocate the basic tooltips.
-			List<ITextComponent> basicTooltips = new ArrayList<ITextComponent>();
+			List<Component> basicTooltips = new ArrayList<Component>();
 
 			// Get the advanced tooltips.
-			List<ITextComponent> advancedToolTips = new ArrayList<ITextComponent>();
+			List<Component> advancedToolTips = new ArrayList<Component>();
 
 			// If the item is an ITooltipProvider, capture the tooltips.
 			if (event.getItemStack().getItem() instanceof ITooltipProvider) {
 				ITooltipProvider spItem = (ITooltipProvider) event.getItemStack().getItem();
-				if (spItem != null && event.getPlayer() != null && event.getPlayer().getEntityWorld() != null) {
-					spItem.getTooltip(event.getItemStack(), event.getPlayer().getEntityWorld(), basicTooltips, Screen.hasControlDown());
-					spItem.getAdvancedTooltip(event.getItemStack(), event.getPlayer().world, advancedToolTips);
+				if (spItem != null && event.getPlayer() != null && event.getPlayer().getCommandSenderWorld() != null) {
+					spItem.getTooltip(event.getItemStack(), event.getPlayer().getCommandSenderWorld(), basicTooltips, Screen.hasControlDown());
+					spItem.getAdvancedTooltip(event.getItemStack(), event.getPlayer().level, advancedToolTips);
 				}
 			}
 
@@ -170,7 +170,7 @@ public class StaticPowerForgeEventRegistry {
 
 				// Add the blocks.
 				if (event.getItemStack().getItem() instanceof BlockItem) {
-					BlockState blockState = ((BlockItem) event.getItemStack().getItem()).getBlock().getDefaultState();
+					BlockState blockState = ((BlockItem) event.getItemStack().getItem()).getBlock().defaultBlockState();
 					matchParameters.setBlocks(blockState);
 				}
 
@@ -203,8 +203,8 @@ public class StaticPowerForgeEventRegistry {
 
 				// Add the "Hold Control" indentifier.
 				if (advancedToolTips.size() > 0) {
-					event.getToolTip().add(new StringTextComponent(" "));
-					event.getToolTip().add(new TranslationTextComponent("gui.staticpower.hold_control").mergeStyle(TextFormatting.ITALIC).mergeStyle(TextFormatting.GRAY));
+					event.getToolTip().add(new TextComponent(" "));
+					event.getToolTip().add(new TranslatableComponent("gui.staticpower.hold_control").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
 				}
 			}
 		}
@@ -220,16 +220,16 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void onPlayerInteract(RightClickBlock event) {
-		if (event.getPlayer().getHeldItemMainhand().getItem() == Items.MILK_BUCKET) {
+		if (event.getPlayer().getMainHandItem().getItem() == Items.MILK_BUCKET) {
 			// Create a proxy item to handle all the fluid placement logic for the milk.
 			BucketItem milkeBucketProxy = new BucketItem(() -> ModFluids.Milk.Fluid, new Item.Properties());
 
 			// Call the on item rightclick logic.
-			milkeBucketProxy.onItemRightClick(event.getWorld(), event.getPlayer(), event.getHand());
+			milkeBucketProxy.use(event.getWorld(), event.getPlayer(), event.getHand());
 
 			// If not creative, set the held item to the proxy bucket.
 			if (!event.getPlayer().isCreative()) {
-				event.getPlayer().setHeldItem(event.getHand(), new ItemStack(milkeBucketProxy));
+				event.getPlayer().setItemInHand(event.getHand(), new ItemStack(milkeBucketProxy));
 			}
 
 			// Cancel the event so no further events occur.
@@ -239,9 +239,9 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void onPlayerLeftClick(LeftClickBlock event) {
-		if (event.getPlayer().getHeldItemMainhand().getItem() instanceof Hammer) {
-			Hammer hammer = (Hammer) event.getPlayer().getHeldItemMainhand().getItem();
-			if (!event.getPlayer().getCooldownTracker().hasCooldown(hammer)) {
+		if (event.getPlayer().getMainHandItem().getItem() instanceof Hammer) {
+			Hammer hammer = (Hammer) event.getPlayer().getMainHandItem().getItem();
+			if (!event.getPlayer().getCooldowns().isOnCooldown(hammer)) {
 				if (hammer.onHitBlockLeftClick(event.getItemStack(), event.getPlayer(), event.getPos(), event.getFace())) {
 					event.setCanceled(true);
 				}

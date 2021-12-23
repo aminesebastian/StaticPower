@@ -2,9 +2,9 @@ package theking530.staticpower.tileentities.powered.caster;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
@@ -25,7 +25,7 @@ public class GuiCaster extends StaticPowerTileEntityGui<ContainerCaster, TileEnt
 	private GuiInfoTab infoTab;
 	private FluidProgressBar progressBar;
 
-	public GuiCaster(ContainerCaster container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiCaster(ContainerCaster container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -38,7 +38,7 @@ public class GuiCaster extends StaticPowerTileEntityGui<ContainerCaster, TileEnt
 				progressBar = (FluidProgressBar) new FluidProgressBar(108, 40, 36, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent).setAnimationStartAfter(0.5f));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc1", new StringTextComponent("The former transforms items into other items=by shaping them against molds."));
+		infoTab.addLine("desc1", new TextComponent("The former transforms items into other items=by shaping them against molds."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));

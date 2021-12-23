@@ -2,17 +2,17 @@ package theking530.staticpower.data.crafting.wrappers.fermenter;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class FermenterRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FermenterRecipe> {
+public class FermenterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FermenterRecipe> {
 	public static final FermenterRecipeSerializer INSTANCE = new FermenterRecipeSerializer();
 
 	private FermenterRecipeSerializer() {
@@ -20,13 +20,13 @@ public class FermenterRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 	}
 
 	@Override
-	public FermenterRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public FermenterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Get the fluid output.
-		JsonObject outputElement = JSONUtils.getJsonObject(json, "output");
+		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 		FluidStack fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(outputElement);
 
 		// Create the recipe.
@@ -34,7 +34,7 @@ public class FermenterRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 	}
 
 	@Override
-	public FermenterRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public FermenterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		FluidStack output = buffer.readFluidStack();
 
@@ -43,7 +43,7 @@ public class FermenterRecipeSerializer extends ForgeRegistryEntry<IRecipeSeriali
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, FermenterRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, FermenterRecipe recipe) {
 		recipe.getInputIngredient().write(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluidStack());
 	}

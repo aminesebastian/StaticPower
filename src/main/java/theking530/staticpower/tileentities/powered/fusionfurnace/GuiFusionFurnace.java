@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.fusionfurnace;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import theking530.staticcore.gui.widgets.progressbars.FusionProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -16,7 +16,7 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 public class GuiFusionFurnace extends StaticPowerTileEntityGui<ContainerFusionFurnace, TileEntityFusionFurnace> {
 	private GuiInfoTab infoTab;
 
-	public GuiFusionFurnace(ContainerFusionFurnace container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiFusionFurnace(ContainerFusionFurnace container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -26,7 +26,7 @@ public class GuiFusionFurnace extends StaticPowerTileEntityGui<ContainerFusionFu
 		registerWidget(new FusionProgressBar(79, 36).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc1", new StringTextComponent("Combines basic items into their more complex constructions."));
+		infoTab.addLine("desc1", new TextComponent("Combines basic items into their more complex constructions."));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));

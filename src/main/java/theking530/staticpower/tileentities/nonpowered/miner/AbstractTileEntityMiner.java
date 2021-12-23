@@ -3,19 +3,19 @@ package theking530.staticpower.tileentities.nonpowered.miner;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.common.util.Constants;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
@@ -51,7 +51,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
 
-	public AbstractTileEntityMiner(TileEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator) {
+	public AbstractTileEntityMiner(BlockEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator) {
 		super(allocator);
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
@@ -91,7 +91,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			refreshBlocksInRange(getRadius());
 		}
 
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			// If the internal inventory is not empty, try to put the items sequentially
 			// into the output slot.
 			if (!InventoryUtilities.isInventoryEmpty(internalInventory)) {
@@ -111,7 +111,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
-				miningSoundComponent.startPlayingSound(SoundEvents.ENTITY_MINECART_RIDING.getRegistryName(), SoundCategory.BLOCKS, 0.2f, 0.5f, getPos(), 64);
+				miningSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.2f, 0.5f, getBlockPos(), 64);
 			} else {
 				miningSoundComponent.stopPlayingSound();
 			}
@@ -119,7 +119,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			if (processingComponent.isPerformingWork()) {
 				if (SDMath.diceRoll(0.5)) {
 					BlockPos minedPos = getCurrentlyTargetedBlockPos();
-					getWorld().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f, minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
+					getLevel().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f, minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
 				}
 			}
 		}
@@ -172,7 +172,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		if (!hasDrillBit()) {
 			return ProcessingCheckState.error("Missing drill bit.");
 		}
-		if (getDrillBit().getDamage() >= getDrillBit().getMaxDamage()) {
+		if (getDrillBit().getDamageValue() >= getDrillBit().getMaxDamage()) {
 			return ProcessingCheckState.error("Drill bit needs repair!");
 		}
 		if (!heatStorage.getStorage().canFullyAbsorbHeat(getHeatGeneration())) {
@@ -212,7 +212,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 			// Get the block to mine.
 			BlockPos minedPos = blocks.get(currentBlockIndex);
-			BlockState minedBlockState = world.getBlockState(minedPos);
+			BlockState minedBlockState = level.getBlockState(minedPos);
 
 			// Increment the current block index.
 			currentBlockIndex++;
@@ -228,12 +228,12 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// Play the sound.
-			world.playSound(null, getPos(), minedBlockState.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 0.2f, 0.75f);
-			world.playSound(null, getCurrentlyTargetedBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundCategory.BLOCKS, 0.2f, 0.75f);
+			level.playSound(null, getBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.2f, 0.75f);
+			level.playSound(null, getCurrentlyTargetedBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.2f, 0.75f);
 
 			// Damage the drill bit.
-			if (getDrillBit().attemptDamageItem(1, world.rand, null)) {
-				world.playSound(null, getPos(), SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0f, 1.0f);
+			if (getDrillBit().hurt(1, level.random, null)) {
+				level.playSound(null, getBlockPos(), SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0f, 1.0f);
 			}
 
 			// Check if this is a mineable block. If not, just return true.
@@ -248,7 +248,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// Set the mined block to cobblestone.
-			world.setBlockState(minedPos, Blocks.AIR.getDefaultState(), 1 | 2 | 4);
+			level.setBlock(minedPos, Blocks.AIR.defaultBlockState(), 1 | 2 | 4);
 
 			// Raise the on mined event.
 			onBlockMined(minedPos, minedBlockState);
@@ -278,9 +278,9 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			int radius = getRadius();
 
 			// Set the scale equal to the range * 2 plus 1.
-			Vector3f scale = new Vector3f((radius * 2) + 1, getPos().getY() - 0.98f, (radius * 2) + 1);
+			Vector3f scale = new Vector3f((radius * 2) + 1, getBlockPos().getY() - 0.98f, (radius * 2) + 1);
 			// Shift over so we center the range around the farmer.
-			Vector3f position = new Vector3f(getTileEntity().getPos().getX(), 1.0f, getTileEntity().getPos().getZ());
+			Vector3f position = new Vector3f(getTileEntity().getBlockPos().getX(), 1.0f, getTileEntity().getBlockPos().getZ());
 			position.add(new Vector3f(-radius, 0.0f, -radius));
 
 			// Add the entry.
@@ -295,7 +295,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	protected List<ItemStack> attemptMineBlock(BlockPos pos) {
-		List<ItemStack> output = WorldUtilities.getBlockDrops(getWorld(), pos);
+		List<ItemStack> output = WorldUtilities.getBlockDrops(getLevel(), pos);
 		return output;
 	}
 
@@ -303,19 +303,19 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		blocks.clear();
 		currentBlockIndex = 0;
 
-		for (int i = getPos().getY() - 1; i >= 2; i--) {
+		for (int i = getBlockPos().getY() - 1; i >= 2; i--) {
 			List<BlockPos> tempList = new ArrayList<BlockPos>();
-			BlockPos startingPos = new BlockPos(getPos().getX(), i, getPos().getZ());
-			for (BlockPos pos : BlockPos.getAllInBoxMutable(startingPos.add(range, 0, range), startingPos.add(-range, 0, -range))) {
+			BlockPos startingPos = new BlockPos(getBlockPos().getX(), i, getBlockPos().getZ());
+			for (BlockPos pos : BlockPos.betweenClosed(startingPos.offset(range, 0, range), startingPos.offset(-range, 0, -range))) {
 				// If the position is on the y level under the miner, and it exists on the same
 				// X or Y plane, skip it.
-				if (pos.getY() == this.getPos().getY() - 1 && (pos.getX() == getPos().getX() || pos.getZ() == getPos().getZ())) {
+				if (pos.getY() == this.getBlockPos().getY() - 1 && (pos.getX() == getBlockPos().getX() || pos.getZ() == getBlockPos().getZ())) {
 					continue;
 				}
 
 				// If the position is NOT the mining position (just in case), add it.
-				if (pos != getPos()) {
-					tempList.add(pos.toImmutable());
+				if (pos != getBlockPos()) {
+					tempList.add(pos.immutable());
 				}
 			}
 			blocks.addAll(tempList);
@@ -324,7 +324,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		// Forward to the first actual block.
 		boolean minableBlockFound = false;
 		for (int i = 0; i < blocks.size(); i++) {
-			BlockState test = world.getBlockState(blocks.get(i));
+			BlockState test = level.getBlockState(blocks.get(i));
 			if (canMineBlock(test, blocks.get(i))) {
 				currentBlockIndex = i;
 				minableBlockFound = true;
@@ -349,7 +349,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	protected boolean canMineBlock(BlockState block, BlockPos pos) {
-		if (block.getBlock().isAir(block, getWorld(), pos)) {
+		if (block.getBlock().isAir(block, getLevel(), pos)) {
 			return false;
 		}
 		if (block.hasTileEntity()) {
@@ -358,7 +358,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		if (!block.getFluidState().isEmpty()) {
 			return false;
 		}
-		return block.getBlockHardness(getWorld(), pos) >= 0;
+		return block.getDestroySpeed(getLevel(), pos) >= 0;
 	}
 
 	public BlockPos getCurrentlyTargetedBlockPos() {
@@ -371,13 +371,13 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		currentBlockIndex = nbt.getInt("current_index");
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("current_index", currentBlockIndex);
 
@@ -385,27 +385,27 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	@Override
-	public void deserializeSaveNbt(CompoundNBT nbt) {
+	public void deserializeSaveNbt(CompoundTag nbt) {
 		super.deserializeSaveNbt(nbt);
 
 		// Load the blocks for mining.
 		blocks.clear();
-		ListNBT savedBlocks = nbt.getList("blocks", Constants.NBT.TAG_COMPOUND);
-		for (INBT blockTag : savedBlocks) {
-			CompoundNBT blockTagCompound = (CompoundNBT) blockTag;
-			blocks.add(BlockPos.fromLong(blockTagCompound.getLong("pos")));
+		ListTag savedBlocks = nbt.getList("blocks", Constants.NBT.TAG_COMPOUND);
+		for (Tag blockTag : savedBlocks) {
+			CompoundTag blockTagCompound = (CompoundTag) blockTag;
+			blocks.add(BlockPos.of(blockTagCompound.getLong("pos")));
 		}
 	}
 
 	@Override
-	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
+	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
 		super.serializeSaveNbt(nbt);
 
 		// Save the blocks marked for mining.
-		ListNBT savedBlocks = new ListNBT();
+		ListTag savedBlocks = new ListTag();
 		blocks.forEach(block -> {
-			CompoundNBT blockTag = new CompoundNBT();
-			blockTag.putLong("pos", block.toLong());
+			CompoundTag blockTag = new CompoundTag();
+			blockTag.putLong("pos", block.asLong());
 			savedBlocks.add(blockTag);
 		});
 		nbt.put("blocks", savedBlocks);

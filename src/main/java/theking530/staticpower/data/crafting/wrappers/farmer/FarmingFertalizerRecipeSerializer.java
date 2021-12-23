@@ -5,15 +5,15 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class FarmingFertalizerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FarmingFertalizerRecipe> {
+public class FarmingFertalizerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FarmingFertalizerRecipe> {
 	public static final FarmingFertalizerRecipeSerializer INSTANCE = new FarmingFertalizerRecipeSerializer();
 	private static final Logger LOGGER = LogManager.getLogger(FarmingFertalizerRecipeSerializer.class);
 
@@ -22,7 +22,7 @@ public class FarmingFertalizerRecipeSerializer extends ForgeRegistryEntry<IRecip
 	}
 
 	@Override
-	public FarmingFertalizerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public FarmingFertalizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Deserialize the fluid input.
 		FluidStack fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("fertilizer"));
 
@@ -40,7 +40,7 @@ public class FarmingFertalizerRecipeSerializer extends ForgeRegistryEntry<IRecip
 	}
 
 	@Override
-	public FarmingFertalizerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public FarmingFertalizerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		FluidStack fluid = buffer.readFluidStack();
 		float fertilizer = buffer.readFloat();
 		// Create the recipe.
@@ -48,7 +48,7 @@ public class FarmingFertalizerRecipeSerializer extends ForgeRegistryEntry<IRecip
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, FarmingFertalizerRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, FarmingFertalizerRecipe recipe) {
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		buffer.writeFloat(recipe.getFertalizationAmount());
 	}

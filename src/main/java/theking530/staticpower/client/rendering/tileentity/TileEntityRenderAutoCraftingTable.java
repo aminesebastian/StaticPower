@@ -1,16 +1,16 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -21,15 +21,15 @@ import theking530.staticpower.tileentities.powered.autocrafter.TileEntityAutoCra
 public class TileEntityRenderAutoCraftingTable
 		extends StaticPowerTileEntitySpecialRenderer<TileEntityAutoCraftingTable> {
 
-	public TileEntityRenderAutoCraftingTable(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public TileEntityRenderAutoCraftingTable(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
 	public void renderTileEntityBase(TileEntityAutoCraftingTable tileEntity, BlockPos pos, float partialTicks,
-			MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		matrixStack.push();
-		matrixStack.rotate(new Quaternion(new Vector3f(0.0f, 0.0f, 0.0f), -90, true));
+			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		matrixStack.pushPose();
+		matrixStack.mulPose(new Quaternion(new Vector3f(0.0f, 0.0f, 0.0f), -90, true));
 		int forwardBlockLightLevel = WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity);
 		// Render any pattern items.
 		for (int i = 0; i < 9; i++) {
@@ -38,7 +38,7 @@ public class TileEntityRenderAutoCraftingTable
 			float yOffsetFactor = (i / 3) * 0.19f;
 			if (!stack.isEmpty()) {
 				// Get the baked model and check if it wants to render the item in 3d or 2d.
-				IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(stack, null,
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(stack, null,
 						null);
 				boolean render3D = itemModel.isGui3d();
 
@@ -55,6 +55,6 @@ public class TileEntityRenderAutoCraftingTable
 				}
 			}
 		}
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 }

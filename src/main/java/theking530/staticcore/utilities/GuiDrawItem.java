@@ -1,16 +1,7 @@
 package theking530.staticcore.utilities;
 
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.platform.GlStateManager;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 public class GuiDrawItem {
 	protected Color tint;
@@ -38,26 +29,27 @@ public class GuiDrawItem {
 
 	@SuppressWarnings("deprecation")
 	protected void renderItemModelIntoGUI(ItemStack stack, int x, int y, float alpha) {
-		ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-
-		GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f - alpha);
-		renderer.renderItemAndEffectIntoGUI(stack, x, y);
-		GL11.glEnable(GL11.GL_BLEND);
-		// Render overlay to fake transparency
-		GlStateManager.color4f(0.5429f, 0.5429f, 0.5429f, 1.0f - alpha);
-		GlStateManager.disableTexture();
-		GlStateManager.disableDepthTest();
-		GlStateManager.enableBlend();
-
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder tes = tessellator.getBuffer();
-		tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		tes.pos(x, y + 16, renderer.zLevel).endVertex();
-		tes.pos(x + 16, y + 16, renderer.zLevel).endVertex();
-		tes.pos(x + 16, y, renderer.zLevel).endVertex();
-		tes.pos(x, y, renderer.zLevel).endVertex();
-		tessellator.draw();
-		GlStateManager.enableTexture();
-		GlStateManager.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+		// TO-DO: Fix this later!
+//		ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
+//
+//		GlStateManager._color4f(1.0f, 1.0f, 1.0f, 1.0f - alpha);
+//		renderer.renderAndDecorateItem(stack, x, y);
+//		GL11.glEnable(GL11.GL_BLEND);
+//		// Render overlay to fake transparency
+//		GlStateManager._color4f(0.5429f, 0.5429f, 0.5429f, 1.0f - alpha);
+//		GlStateManager._disableTexture();
+//		GlStateManager._disableDepthTest();
+//		GlStateManager._enableBlend();
+//
+//		Tesselator tessellator = Tesselator.getInstance();
+//		BufferBuilder tes = tessellator.getBuilder();
+//		tes.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION);
+//		tes.vertex(x, y + 16, renderer.blitOffset).endVertex();
+//		tes.vertex(x + 16, y + 16, renderer.blitOffset).endVertex();
+//		tes.vertex(x + 16, y, renderer.blitOffset).endVertex();
+//		tes.vertex(x, y, renderer.blitOffset).endVertex();
+//		tessellator.end();
+//		GlStateManager._enableTexture();
+//		GlStateManager._color4f(1.0f, 1.0f, 1.0f, 1.0f);
 	}
 }

@@ -2,14 +2,14 @@ package theking530.staticpower.entities.player.datacapability;
 
 import java.util.List;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminalHistory;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminalHistory.DigistoreCraftingTerminalHistoryEntry;
 
-public class StaticPowerPlayerData implements IStaticPowerPlayerData, INBTSerializable<CompoundNBT> {
+public class StaticPowerPlayerData implements IStaticPowerPlayerData, INBTSerializable<CompoundTag> {
 	private DigistoreCraftingTerminalHistory craftingHistory;
 
 	public StaticPowerPlayerData() {
@@ -17,11 +17,11 @@ public class StaticPowerPlayerData implements IStaticPowerPlayerData, INBTSerial
 	}
 
 	@Override
-	public void addToCraftingHistory(ItemStack crafting, IInventory craftMatrix) {
+	public void addToCraftingHistory(ItemStack crafting, Container craftMatrix) {
 		if (craftMatrix != null) {
-			ItemStack[] recipe = new ItemStack[craftMatrix.getSizeInventory()];
+			ItemStack[] recipe = new ItemStack[craftMatrix.getContainerSize()];
 			for (int i = 0; i < recipe.length; i++) {
-				recipe[i] = craftMatrix.getStackInSlot(i).copy();
+				recipe[i] = craftMatrix.getItem(i).copy();
 			}
 			craftingHistory.addCraft(recipe, crafting.copy());
 		}
@@ -32,14 +32,14 @@ public class StaticPowerPlayerData implements IStaticPowerPlayerData, INBTSerial
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
 		output.put("crafting_history", craftingHistory.serializeNBT());
 		return output;
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		craftingHistory.deserializeNBT(nbt.getCompound("crafting_history"));
 	}
 }

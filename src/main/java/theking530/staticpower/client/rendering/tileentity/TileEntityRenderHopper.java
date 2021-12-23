@@ -1,12 +1,12 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,12 +20,12 @@ import theking530.staticpower.tileentities.nonpowered.experiencehopper.TileEntit
 public class TileEntityRenderHopper extends StaticPowerTileEntitySpecialRenderer<TileEntityExperienceHopper> {
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
 
-	public TileEntityRenderHopper(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public TileEntityRenderHopper(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	protected void renderTileEntityBase(TileEntityExperienceHopper tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+	protected void renderTileEntityBase(TileEntityExperienceHopper tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		// Render the contained fluid if it exists.
 		if (tileEntity.internalTank.getVisualFillLevel() > 0) {

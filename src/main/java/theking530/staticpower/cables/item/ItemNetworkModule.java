@@ -13,15 +13,15 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -54,7 +54,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * Ticks all the active packets.
 	 */
 	@Override
-	public void tick(World world) {
+	public void tick(Level world) {
 		List<BlockPos> destinationsToRemove = new ArrayList<BlockPos>();
 
 		// For each destination.
@@ -149,11 +149,11 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	protected ItemStack transferItemStack(ItemStack stack, BlockPos cablePosition, @Nullable Direction pulledFromDirection, boolean simulate, boolean startHalfWay, double blocksPerSecond) {
 		// Mark the network manager as dirty.
-		CableNetworkManager.get(Network.getWorld()).markDirty();
+		CableNetworkManager.get(Network.getWorld()).setDirty();
 
 		// The source position can be null. This value is only used to not bounce items
 		// back to the inventory it came from IF it comes from one.
-		BlockPos sourcePosition = pulledFromDirection != null ? cablePosition.offset(pulledFromDirection) : null;
+		BlockPos sourcePosition = pulledFromDirection != null ? cablePosition.relative(pulledFromDirection) : null;
 
 		// Calculate the path and see if its not null.
 		Path path = getPathForItem(stack, cablePosition, sourcePosition, pulledFromDirection, false);
@@ -179,7 +179,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	protected ItemStack transferItemStack(ItemStack stack, Path path, @Nullable Direction pulledFromDirection, boolean simulate, boolean startHalfWay, double blocksPerSecond) {
 		// Mark the network manager as dirty.
-		CableNetworkManager.get(Network.getWorld()).markDirty();
+		CableNetworkManager.get(Network.getWorld()).setDirty();
 
 		// Route the item.
 		return routeItem(stack, path, pulledFromDirection, path.getSourceCableLocation(), simulate, startHalfWay, blocksPerSecond);
@@ -277,13 +277,13 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 	protected ItemStack routeItem(ItemStack stack, Path path, Direction pulledFromDirection, BlockPos sourceCablePosition, boolean simulate, boolean startHalfWay, double blocksPerSecond) {
 		// Get the destination inventory.
-		TileEntity destinationTe = Network.getWorld().getTileEntity(path.getDestinationLocation());
+		BlockEntity destinationTe = Network.getWorld().getBlockEntity(path.getDestinationLocation());
 		IItemHandler destInventory = destinationTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).orElse(null);
 
 		// Ensure the destination inventory is valid.
 		if (destInventory != null) {
 			// Simulate an insert.
-			ItemStack simulatedStack = simulateInsertWithPrediction(stack, destInventory, destinationTe.getPos());
+			ItemStack simulatedStack = simulateInsertWithPrediction(stack, destInventory, destinationTe.getBlockPos());
 
 			// If simulating, just return the simulated insert result.
 			if (simulate) {
@@ -353,7 +353,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			return true;
 		} else if (packet.isAtFinalCable()) {
 			// If we're at the final cable, attempt to insert the parcel.
-			TileEntity te = Network.getWorld().getTileEntity(nextPosition);
+			BlockEntity te = Network.getWorld().getBlockEntity(nextPosition);
 
 			// If the tile entity is there, attempt the insert, if not, reroute it.
 			if (te != null && !te.isRemoved()) {
@@ -417,7 +417,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	protected boolean isParcelPathValid(ItemRoutingParcel parcel) {
 		// If the current position's tile entity is null, return false.
-		if (Network.getWorld().getTileEntity(parcel.getCurrentEntry().getPosition()) == null) {
+		if (Network.getWorld().getBlockEntity(parcel.getCurrentEntry().getPosition()) == null) {
 			return false;
 		}
 
@@ -425,7 +425,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		BlockPos nextPosition = parcel.getNextEntry().getPosition();
 
 		// If the next position's tile entity is null, return false.
-		if (Network.getWorld().getTileEntity(nextPosition) == null) {
+		if (Network.getWorld().getBlockEntity(nextPosition) == null) {
 			return false;
 		}
 
@@ -631,8 +631,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @return
 	 */
 	protected ItemCableComponent getItemCableComponentAtPosition(BlockPos position) {
-		if (Network.getWorld().getTileEntity(position) instanceof TileEntityBase) {
-			return ((TileEntityBase) Network.getWorld().getTileEntity(position)).getComponent(ItemCableComponent.class);
+		if (Network.getWorld().getBlockEntity(position) instanceof TileEntityBase) {
+			return ((TileEntityBase) Network.getWorld().getBlockEntity(position)).getComponent(ItemCableComponent.class);
 		}
 		return null;
 	}
@@ -719,7 +719,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// If we're able to insert into that inventory, set the atomic boolean.
-			Network.getWorld().getTileEntity(destination).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).ifPresent(inv -> {
+			Network.getWorld().getBlockEntity(destination).getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, path.getDestinationDirection().getOpposite()).ifPresent(inv -> {
 				isValid.set(InventoryUtilities.canPartiallyInsertItemIntoInventory(inv, stack));
 			});
 
@@ -848,7 +848,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<ITextComponent> output) {
+	public void getReaderOutput(List<Component> output) {
 		// Calculate the number of active parcels.
 		int activeParcels = 0;
 		for (LinkedList<ItemRoutingParcel> parcels : ActiveParcels.values()) {
@@ -856,16 +856,16 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		}
 
 		String itemsInTransit = new MetricConverter(activeParcels).getValueAsString(true);
-		output.add(new StringTextComponent(String.format("Contains: %1$s items in transit.", itemsInTransit)));
+		output.add(new TextComponent(String.format("Contains: %1$s items in transit.", itemsInTransit)));
 	}
 
 	@Override
-	public void readFromNbt(CompoundNBT tag) {
+	public void readFromNbt(CompoundTag tag) {
 		ActiveParcels = new HashMap<BlockPos, LinkedList<ItemRoutingParcel>>();
 		// Get the parcel NBT list and add the parcels.
-		ListNBT parcelNBTList = tag.getList("parcels", Constants.NBT.TAG_COMPOUND);
+		ListTag parcelNBTList = tag.getList("parcels", Constants.NBT.TAG_COMPOUND);
 		parcelNBTList.forEach(parcelTag -> {
-			CompoundNBT parcelTagCompound = (CompoundNBT) parcelTag;
+			CompoundTag parcelTagCompound = (CompoundTag) parcelTag;
 			ItemRoutingParcel parcel = new ItemRoutingParcel(parcelTagCompound);
 
 			if (!ActiveParcels.containsKey(parcel.getPath().getDestinationLocation())) {
@@ -878,7 +878,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		// Get all the active parcels.
 		List<ItemRoutingParcel> activeParcels = new ArrayList<ItemRoutingParcel>();
 		for (Entry<BlockPos, LinkedList<ItemRoutingParcel>> entry : ActiveParcels.entrySet()) {
@@ -889,9 +889,9 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		}
 
 		// Serialize the parcels to the list.
-		ListNBT parcelNBTList = new ListNBT();
+		ListTag parcelNBTList = new ListTag();
 		activeParcels.forEach(parcel -> {
-			CompoundNBT parcelTag = new CompoundNBT();
+			CompoundTag parcelTag = new CompoundTag();
 			parcel.writeToNbt(parcelTag);
 			parcelNBTList.add(parcelTag);
 		});

@@ -2,14 +2,14 @@ package theking530.staticpower.tileentities.digistorenetwork.severrack;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityUpdateRequest;
@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreI
 
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new TileEntityTypeAllocator<TileEntityDigistoreServerRack>(
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreServerRack>(
 			(type) -> new TileEntityDigistoreServerRack(), ModBlocks.DigistoreServerRack);
 
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
@@ -31,7 +31,7 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8).setShiftClickEnabled(true));
 		inventory.setModifiedCallback((type, stack, comp) -> {
 			if (type != InventoryChangeType.MODIFIED) {
-				if (!getWorld().isRemote()) {
+				if (!getLevel().isClientSide()) {
 					addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), true);
 				}
 			}
@@ -54,7 +54,7 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerDigistoreServerRack(windowId, inventory, this);
 	}
 }

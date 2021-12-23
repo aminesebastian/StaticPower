@@ -3,7 +3,7 @@ package theking530.api.attributes.registration;
 import java.util.HashMap;
 import java.util.function.Function;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 
 public class AttributeRegistry {

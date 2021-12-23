@@ -1,9 +1,9 @@
 package theking530.staticpower.cables.item;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderItemCable;
@@ -14,22 +14,22 @@ import theking530.staticpower.tileentities.TileEntityBase;
 
 public class TileEntityItemCable extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityItemCable> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityItemCable>(
+	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator) -> new TileEntityItemCable(allocator, StaticPowerTiers.BASIC), ModBlocks.ItemCableBasic);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityItemCable> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityItemCable>(
+	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator) -> new TileEntityItemCable(allocator, StaticPowerTiers.ADVANCED), ModBlocks.ItemCableAdvanced);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityItemCable> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityItemCable>(
+	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator) -> new TileEntityItemCable(allocator, StaticPowerTiers.STATIC), ModBlocks.ItemCableStatic);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityItemCable> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityItemCable>(
+	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator) -> new TileEntityItemCable(allocator, StaticPowerTiers.ENERGIZED), ModBlocks.ItemCableEnergized);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityItemCable> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityItemCable>(
+	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator) -> new TileEntityItemCable(allocator, StaticPowerTiers.LUMUM), ModBlocks.ItemCableLumum);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityItemCable> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityItemCable>(
+	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator) -> new TileEntityItemCable(allocator, StaticPowerTiers.CREATIVE), ModBlocks.ItemCableCreative);
 
 	static {
@@ -45,7 +45,7 @@ public class TileEntityItemCable extends TileEntityBase {
 
 	public final ItemCableComponent cableComponent;
 
-	public TileEntityItemCable(TileEntityTypeAllocator<TileEntityItemCable> allocator, ResourceLocation tier) {
+	public TileEntityItemCable(BlockEntityTypeAllocator<TileEntityItemCable> allocator, ResourceLocation tier) {
 		super(allocator);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", tier, tierObject.itemCableMaxSpeed.get(), tierObject.itemCableFriction.get(),

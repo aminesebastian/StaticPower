@@ -6,26 +6,26 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.common.ToolType;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
@@ -37,6 +37,8 @@ import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
+
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
 
 public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
@@ -51,25 +53,25 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	 *                             this cable passes through a cover.
 	 */
 	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator, float coverHoleSize) {
-		super(name, Block.Properties.create(Material.IRON).hardnessAndResistance(1.5f).notSolid().harvestTool(ToolType.PICKAXE).setRequiresTool());
+		super(name, Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().harvestTool(ToolType.PICKAXE).requiresCorrectToolForDrops());
 		cableBoundsCache = cableBoundsGenerator;
 		this.coverHoleSize = coverHoleSize;
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
 	}
 
 	@Deprecated
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return cableBoundsCache.getShape(state, worldIn, pos, context, false);
 	}
 
 	@Deprecated
 	@Override
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return cableBoundsCache.getShape(state, worldIn, pos, context, true);
 	}
 
@@ -89,12 +91,12 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	}
 
 	@Override
-	public ActionResultType onStaticPowerBlockActivated(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
 			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the Attachment Gui.", pos));
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		}
 
 		// Get the attachment side that is hovered (if any).
@@ -111,13 +113,13 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
-					if (!world.isRemote) {
-						NetworkGUI.openGui((ServerPlayerEntity) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
+					if (!world.isClientSide) {
+						NetworkGUI.openGui((ServerPlayer) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
 							buff.writeInt(hoveredDirection.ordinal());
 							buff.writeBlockPos(pos);
 						});
 					}
-					return ActionResultType.CONSUME;
+					return InteractionResult.CONSUME;
 				}
 			}
 		}
@@ -128,32 +130,32 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	}
 
 	@Override
-	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		// Drop the block.
-		if (returnDrops && !world.isRemote) {
+		if (returnDrops && !world.isClientSide) {
 			BlockState state = world.getBlockState(pos);
-			List<ItemStack> stacks = Block.getDrops(state, (ServerWorld) world, pos, world.getTileEntity(pos));
+			List<ItemStack> stacks = Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos));
 			for (ItemStack stack : stacks) {
 				WorldUtilities.dropItem(world, pos, stack);
 			}
-			this.spawnAdditionalDrops(state, (ServerWorld) world, pos, wrench);
+			this.spawnAfterBreak(state, (ServerLevel) world, pos, wrench);
 		}
 
 		// Perform this on both the client and the server so the client updates any
 		// render changes (any conected cables).
-		world.setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
+		world.setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
 		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2, 512);
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 		// Get the cable component and make sure its valid.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
-			return ActionResultType.FAIL;
+			return InteractionResult.FAIL;
 		}
 
 		// Check for the hover result.
@@ -168,14 +170,14 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 				ItemStack output = component.removeAttachment(hoveredDirection);
 				if (!output.isEmpty()) {
 					WorldUtilities.dropItem(world, pos, output, 1);
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			} else if (hoverResult.type == CableBoundsHoverType.ATTACHED_COVER) {
 				// Now also remove the cover if there is one.
 				ItemStack output = component.removeCover(hoveredDirection);
 				if (!output.isEmpty()) {
 					WorldUtilities.dropItem(world, pos, output, 1);
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
@@ -187,21 +189,21 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 
 		// Update the cable opposite from the side we just toggled if a cable exists
 		// there.
-		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.offset(hitSide));
+		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.relative(hitSide));
 		if (oppositeComponent != null) {
 			oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
 		}
 
 		// Refresh the cable on the server.
-		if (!world.isRemote) {
+		if (!world.isClientSide) {
 			CableNetworkManager.get(world).refreshCable(CableNetworkManager.get(world).getCable(pos));
 		}
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		// Get the attachment side we're hovering.
 		CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 
@@ -235,9 +237,9 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 
 	@Deprecated
 	@Override
-	public void spawnAdditionalDrops(BlockState state, ServerWorld worldIn, BlockPos pos, ItemStack stack) {
+	public void spawnAfterBreak(BlockState state, ServerLevel worldIn, BlockPos pos, ItemStack stack) {
 		// Get the cable provider if present.
-		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, worldIn.getTileEntity(pos)).ifPresent(component -> {
+		ComponentUtilities.getComponent(AbstractCableProviderComponent.class, worldIn.getBlockEntity(pos)).ifPresent(component -> {
 			// Allocate a container for the additional drops.
 			List<ItemStack> additionalDrops = new ArrayList<ItemStack>();
 
@@ -258,7 +260,7 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 		});
 	}
 
-	protected boolean isDisabledOnSide(IWorld world, BlockPos pos, Direction direction) {
+	protected boolean isDisabledOnSide(LevelAccessor world, BlockPos pos, Direction direction) {
 		AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(world, pos);
 		if (cableComponent != null) {
 			return cableComponent.isSideDisabled(direction);

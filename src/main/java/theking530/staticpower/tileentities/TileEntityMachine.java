@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities;
 
-import net.minecraft.util.ResourceLocation;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.resources.ResourceLocation;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -17,11 +17,11 @@ public abstract class TileEntityMachine extends TileEntityConfigurable {
 
 	public boolean isUpdateQueued = true;
 
-	public TileEntityMachine(TileEntityTypeAllocator<? extends TileEntityMachine> allocator) {
+	public TileEntityMachine(BlockEntityTypeAllocator<? extends TileEntityMachine> allocator) {
 		this(allocator, StaticPowerTiers.BASIC);
 	}
 
-	public TileEntityMachine(TileEntityTypeAllocator<? extends TileEntityMachine> allocator, ResourceLocation tier) {
+	public TileEntityMachine(BlockEntityTypeAllocator<? extends TileEntityMachine> allocator, ResourceLocation tier) {
 		super(allocator);
 		this.tier = tier;
 		disableFaceInteraction();

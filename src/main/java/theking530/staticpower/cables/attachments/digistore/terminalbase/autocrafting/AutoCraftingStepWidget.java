@@ -2,12 +2,12 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.autocra
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.item.TooltipFlag.Default;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -54,7 +54,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (material == null) {
 			return;
 		}
@@ -63,14 +63,14 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		Ingredient ing = material.getItem();
 		// If it has items, draw the item (rotate through all the itemstacks in the
 		// ingredient).
-		if (!ing.hasNoMatchingItems()) {
+		if (!ing.isEmpty()) {
 			// Get the screen space position.
 			Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(getLastRenderMatrix(), getPosition());
 
 			// Get all the tooltips and add them to the tooltips list.
 			if (mousePosition.getX() >= screenSpacePosition.getXi() && mousePosition.getX() <= screenSpacePosition.getXi() + 18 && mousePosition.getY() >= screenSpacePosition.getYi()
 					&& mousePosition.getY() <= screenSpacePosition.getYi() + 18) {
-				tooltips.addAll(getCurrentIndexItemStack().getTooltip(null, TooltipFlags.NORMAL));
+				tooltips.addAll(getCurrentIndexItemStack().getTooltipLines(null, Default.NORMAL));
 			} else if (this.isPointInsideBounds(mousePosition)) {
 				// If this is a blocking step, add the blocker as a tooltip.
 				if (isBlockingStep()) {
@@ -81,7 +81,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (material == null) {
 			return;
 		}
@@ -95,7 +95,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 
 		// If it has items, draw the item (rotate through all the itemstacks in the
 		// ingredient).
-		if (!ing.hasNoMatchingItems()) {
+		if (!ing.isEmpty()) {
 			ITEM_RENDERER.drawItem(getCurrentIndexItemStack(), 0, 0, screenSpacePosition.getXi() + 2, screenSpacePosition.getYi() + 3, 1.0f);
 		}
 
@@ -135,10 +135,10 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 	}
 
 	protected ItemStack getCurrentIndexItemStack() {
-		return material.getItem().getMatchingStacks()[getCurrentIngredientIndex()];
+		return material.getItem().getItems()[getCurrentIngredientIndex()];
 	}
 
 	protected int getCurrentIngredientIndex() {
-		return ingredientRenderIndex % material.getItem().getMatchingStacks().length;
+		return ingredientRenderIndex % material.getItem().getItems().length;
 	}
 }

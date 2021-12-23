@@ -11,14 +11,14 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -32,12 +32,12 @@ import theking530.staticpower.client.rendering.CoverBuilder;
 @OnlyIn(Dist.CLIENT)
 public class CableBakedModel extends AbstractBakedModel {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
-	private final IBakedModel Extension;
-	private final IBakedModel Straight;
-	private final IBakedModel Attachment;
+	private final BakedModel Extension;
+	private final BakedModel Straight;
+	private final BakedModel Attachment;
 	private final CoverBuilder coverBuilder;
 
-	public CableBakedModel(IBakedModel coreModel, IBakedModel extensionModel, IBakedModel straightModel, IBakedModel attachmentModel) {
+	public CableBakedModel(BakedModel coreModel, BakedModel extensionModel, BakedModel straightModel, BakedModel attachmentModel) {
 		super(coreModel);
 		Extension = extensionModel;
 		Straight = straightModel;
@@ -47,7 +47,7 @@ public class CableBakedModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
 		// If we're missing a property, just return the default core model.
 		if (tileData.hasProperty(AbstractCableProviderComponent.CABLE_RENDERING_STATE)) {
 			// Get the model properties and set the rendering world.
@@ -94,7 +94,7 @@ public class CableBakedModel extends AbstractBakedModel {
 			newQuads.addAll(rotateQuadsToFaceDirection(Straight, CableUtilities.getStraightConnectionSide(renderingState.connectionStates), side, state, rand));
 			for (Direction dir : Direction.values()) {
 				if (renderingState.attachments[dir.ordinal()] != null) {
-					IBakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
+					BakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
 					newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 				}
@@ -123,7 +123,7 @@ public class CableBakedModel extends AbstractBakedModel {
 					// If there is an actual attachment, render that. Otherwise, just render the
 					// default attachment for this cable.
 					if (renderingState.attachments[dir.ordinal()] != null) {
-						IBakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
+						BakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
 						newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
 					} else {
 						newQuads.addAll(rotateQuadsToFaceDirection(Attachment, dir, side, state, rand));
@@ -136,7 +136,7 @@ public class CableBakedModel extends AbstractBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return this.BaseModel.isSideLit();
+	public boolean usesBlockLight() {
+		return this.BaseModel.usesBlockLight();
 	}
 }

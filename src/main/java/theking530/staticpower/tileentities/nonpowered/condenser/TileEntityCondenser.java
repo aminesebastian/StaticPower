@@ -2,12 +2,12 @@ package theking530.staticpower.tileentities.nonpowered.condenser;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
@@ -28,7 +28,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityCondenser extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityCondenser> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCondenser(), ModBlocks.Condenser);
+	public static final BlockEntityTypeAllocator<TileEntityCondenser> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityCondenser(), ModBlocks.Condenser);
 
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final float DEFAULT_HEAT_GENERATION = 50.0f;
@@ -154,7 +154,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerCondenser(windowId, inventory, this);
 	}
 }

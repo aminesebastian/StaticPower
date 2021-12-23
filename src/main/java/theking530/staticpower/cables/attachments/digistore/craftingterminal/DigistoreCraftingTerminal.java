@@ -4,17 +4,19 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
+
+import theking530.staticpower.cables.attachments.AbstractCableAttachment.AbstractCableAttachmentContainerProvider;
 
 public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachment {
 
@@ -33,7 +35,7 @@ public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachme
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory playerInv, Player player) {
 			return new ContainerDigistoreCraftingTerminal(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}
@@ -44,7 +46,7 @@ public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachme
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.digistore_crafting_terminal_tooltip"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslatableComponent("gui.staticpower.digistore_crafting_terminal_tooltip"));
 	}
 }

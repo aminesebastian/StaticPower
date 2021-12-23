@@ -2,14 +2,14 @@ package theking530.staticpower.tileentities.powered.autosolderingtable;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoSolderingTable;
@@ -28,7 +28,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityAutoSolderingTable> TYPE = new TileEntityTypeAllocator<TileEntityAutoSolderingTable>((type) -> new TileEntityAutoSolderingTable(),
+	public static final BlockEntityTypeAllocator<TileEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoSolderingTable>((type) -> new TileEntityAutoSolderingTable(),
 			ModBlocks.AutoSolderingTable);
 
 	static {
@@ -145,9 +145,9 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 
 		// If we can insert the soldered item into the output slot, do it. Otherwise,
 		// return false and keep spinning.
-		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
 			// Insert the soldered item into the output.
-			outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
+			outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
 			// Clear the internal inventory.
 			for (int i = 0; i < internalInventory.getSlots(); i++) {
 				internalInventory.setStackInSlot(i, ItemStack.EMPTY);
@@ -172,7 +172,7 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerAutoSolderingTable(windowId, inventory, this);
 	}
 }

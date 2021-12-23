@@ -1,9 +1,9 @@
 package theking530.staticpower.cables.attachments.extractor;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -26,11 +26,11 @@ public class ContainerExtractor extends AbstractCableAttachmentContainer<Extract
 
 	private ItemStackHandler filterInventory;
 
-	public ContainerExtractor(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerExtractor(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerExtractor(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public ContainerExtractor(int windowId, Inventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 

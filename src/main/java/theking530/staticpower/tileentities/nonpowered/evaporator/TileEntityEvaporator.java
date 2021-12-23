@@ -2,14 +2,14 @@ package theking530.staticpower.tileentities.nonpowered.evaporator;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderEvaporator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -28,7 +28,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityEvaporator extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityEvaporator> TYPE = new TileEntityTypeAllocator<TileEntityEvaporator>((type) -> new TileEntityEvaporator(), ModBlocks.Evaporator);
+	public static final BlockEntityTypeAllocator<TileEntityEvaporator> TYPE = new BlockEntityTypeAllocator<TileEntityEvaporator>((type) -> new TileEntityEvaporator(), ModBlocks.Evaporator);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -157,7 +157,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerEvaporator(windowId, inventory, this);
 	}
 }

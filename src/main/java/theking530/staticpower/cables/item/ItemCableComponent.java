@@ -7,18 +7,18 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.StaticPowerConfig;
@@ -74,7 +74,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		// Only do this on the client.
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			for (ItemRoutingParcelClient packet : containedPackets.values()) {
 				packet.incrementMoveTimer();
 			}
@@ -84,7 +84,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	@Override
 	public void onOwningTileEntityRemoved() {
 		// Only perform the following on the server.
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Get the network.
 			CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
 			if (network == null) {
@@ -108,18 +108,18 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 	public void addTransferingItem(ItemRoutingParcelClient routingPacket) {
 		containedPackets.put(routingPacket.getId(), routingPacket);
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableAddedPacket(this, routingPacket));
 		}
-		getTileEntity().markDirty();
+		getTileEntity().setChanged();
 	}
 
 	public void removeTransferingItem(long parcelId) {
 		containedPackets.remove(parcelId);
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableRemovedPacket(this, parcelId));
 		}
-		getTileEntity().markDirty();
+		getTileEntity().setChanged();
 	}
 
 	public Collection<ItemRoutingParcelClient> getContainedItems() {
@@ -153,7 +153,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	 * USED ONLY to render client blocks.
 	 */
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		// Check to see if there is a cable on this side that can connect to this one.
 		// If true, connect. If not, check if there is a TE that we can connect to. If
 		// not, return non.
@@ -176,7 +176,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != null) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isRemote) {
+				if (getWorld().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
@@ -194,14 +194,14 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		if (fromUpdate) {
 			// Serialize the contained item packets.
-			ListNBT itemPackets = new ListNBT();
+			ListTag itemPackets = new ListTag();
 			containedPackets.values().forEach(parcel -> {
-				CompoundNBT packetTag = new CompoundNBT();
+				CompoundTag packetTag = new CompoundTag();
 				parcel.writeToNbt(packetTag);
 				itemPackets.add(packetTag);
 			});
@@ -212,7 +212,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		if (fromUpdate) {
@@ -220,9 +220,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 			containedPackets.clear();
 
 			// Deserialize the packets.
-			ListNBT packets = nbt.getList("item_packets", Constants.NBT.TAG_COMPOUND);
-			for (INBT packetTag : packets) {
-				CompoundNBT packetTagCompound = (CompoundNBT) packetTag;
+			ListTag packets = nbt.getList("item_packets", Constants.NBT.TAG_COMPOUND);
+			for (Tag packetTag : packets) {
+				CompoundTag packetTagCompound = (CompoundTag) packetTag;
 				ItemRoutingParcelClient newPacket = ItemRoutingParcelClient.create(packetTagCompound);
 				if (!containedPackets.containsKey(newPacket.getId())) {
 					containedPackets.put(newPacket.getId(), newPacket);
@@ -263,7 +263,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false,
 							StaticPowerConfig.getTier(tier).cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < insertStack.getCount()) {
-						getTileEntity().markDirty();
+						getTileEntity().setChanged();
 						stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());
 					}
 				});

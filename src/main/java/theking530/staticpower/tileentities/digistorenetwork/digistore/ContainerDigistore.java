@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -22,11 +22,11 @@ public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntit
 		}
 	}
 
-	public ContainerDigistore(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistore(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityDigistore) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerDigistore(int windowId, PlayerInventory playerInventory, TileEntityDigistore owner) {
+	public ContainerDigistore(int windowId, Inventory playerInventory, TileEntityDigistore owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -39,7 +39,7 @@ public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntit
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		// Try to insert into inventory.
 		ItemStack remaining = getTileEntity().insertItem(0, stack.copy(), false);
 

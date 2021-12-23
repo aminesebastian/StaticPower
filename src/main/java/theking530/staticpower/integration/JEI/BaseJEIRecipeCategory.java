@@ -2,35 +2,35 @@ package theking530.staticpower.integration.JEI;
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.gui.ingredient.ITooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.math.vector.Vector4f;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import com.mojang.math.Vector4f;
+import net.minecraft.network.chat.Component;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 
-public abstract class BaseJEIRecipeCategory<T extends IRecipe<IInventory>> implements IRecipeCategory<T> {
+public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> implements IRecipeCategory<T> {
 	protected IGuiHelper guiHelper;
 
 	public BaseJEIRecipeCategory(IGuiHelper guiHelper) {
 		this.guiHelper = guiHelper;
 	}
 
-	public Vector2D getGuiOrigin(MatrixStack matrixStack) {
+	public Vector2D getGuiOrigin(PoseStack matrixStack) {
 		Vector4f vector4f = new Vector4f(0, 0, 0, 1);
-		vector4f.transform(matrixStack.getLast().getMatrix());
-		return new Vector2D(vector4f.getX(), vector4f.getY());
+		vector4f.transform(matrixStack.last().pose());
+		return new Vector2D(vector4f.x(), vector4f.y());
 	}
 
 	public int getFluidTankDisplaySize(FluidStack stack) {
@@ -82,11 +82,11 @@ public abstract class BaseJEIRecipeCategory<T extends IRecipe<IInventory>> imple
 		// Add the output percentage to the tooltip for the ingredient.
 		guiItemStacks.addTooltipCallback(new ITooltipCallback<ItemStack>() {
 			@Override
-			public void onTooltip(int slotIndex, boolean input, ItemStack ingredient, List<ITextComponent> tooltip) {
+			public void onTooltip(int slotIndex, boolean input, ItemStack ingredient, List<Component> tooltip) {
 				// Only perform for inputs.
 				if (!input) {
 					// Capture and remove the last line.
-					ITextComponent lastLine = tooltip.get(tooltip.size() - 1);
+					Component lastLine = tooltip.get(tooltip.size() - 1);
 					tooltip.remove(tooltip.size() - 1);
 
 					// Transform into the output index space.
@@ -97,16 +97,16 @@ public abstract class BaseJEIRecipeCategory<T extends IRecipe<IInventory>> imple
 
 					// Formulate the output percentage tooltip and then add it.
 					if (outputWrapper.getOutputChance() != 1.0f) {
-						ITextComponent outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance").appendString(": ")
-								.appendString(TextFormatting.GREEN.toString() + String.valueOf((int) (outputWrapper.getOutputChance() * 100)) + "%");
+						Component outputPercentage = new TranslatableComponent("gui.staticpower.output_chance").append(": ")
+								.append(ChatFormatting.GREEN.toString() + String.valueOf((int) (outputWrapper.getOutputChance() * 100)) + "%");
 						tooltip.add(outputPercentage);
 					}
 
 					// Add the tooltip for the bonus output.
 					if (outputWrapper.getAdditionalBonus() > 0) {
-						ITextComponent bonus = new TranslationTextComponent("gui.staticpower.bonus_output").mergeStyle(TextFormatting.GREEN).appendString(": ")
-								.appendString(TextFormatting.GOLD.toString() + String.valueOf(outputWrapper.getAdditionalBonus()) + TextFormatting.GRAY.toString()
-										+ TextFormatting.ITALIC.toString() + " (" + String.valueOf((int) (outputWrapper.getBonusChance() * 100)) + "%)");
+						Component bonus = new TranslatableComponent("gui.staticpower.bonus_output").withStyle(ChatFormatting.GREEN).append(": ")
+								.append(ChatFormatting.GOLD.toString() + String.valueOf(outputWrapper.getAdditionalBonus()) + ChatFormatting.GRAY.toString()
+										+ ChatFormatting.ITALIC.toString() + " (" + String.valueOf((int) (outputWrapper.getBonusChance() * 100)) + "%)");
 						tooltip.add(bonus);
 					}
 

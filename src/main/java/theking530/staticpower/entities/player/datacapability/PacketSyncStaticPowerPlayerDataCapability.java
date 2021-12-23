@@ -3,30 +3,30 @@ package theking530.staticpower.entities.player.datacapability;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketSyncStaticPowerPlayerDataCapability extends NetworkMessage {
-	protected CompoundNBT playerCapabilityData;
+	protected CompoundTag playerCapabilityData;
 
 	public PacketSyncStaticPowerPlayerDataCapability() {
 
 	}
 
-	public PacketSyncStaticPowerPlayerDataCapability(CompoundNBT playerCapabilityData) {
+	public PacketSyncStaticPowerPlayerDataCapability(CompoundTag playerCapabilityData) {
 		this.playerCapabilityData = playerCapabilityData;
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
-		buffer.writeCompoundTag(playerCapabilityData);
+	public void encode(FriendlyByteBuf buffer) {
+		buffer.writeNbt(playerCapabilityData);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
-		playerCapabilityData = buffer.readCompoundTag();
+	public void decode(FriendlyByteBuf buffer) {
+		playerCapabilityData = buffer.readNbt();
 	}
 
 	@Override

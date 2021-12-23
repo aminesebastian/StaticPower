@@ -1,8 +1,8 @@
 package theking530.staticcore.gui.widgets.tabs;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
@@ -24,7 +24,7 @@ public class GuiMachineFluidTab extends AbstractInfoTab {
 	public void updateData() {
 		super.updateData();
 		clear();
-		addKeyValueTwoLiner("Filled", new StringTextComponent("Filled"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getFilledPerTick()), TextFormatting.AQUA);
-		addKeyValueTwoLiner("Drained", new StringTextComponent("Drained"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getDrainedPerTick()), TextFormatting.GRAY);
+		addKeyValueTwoLiner("Filled", new TextComponent("Filled"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getFilledPerTick()), ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Drained", new TextComponent("Drained"), GuiTextUtilities.formatFluidRateToString(fluidTank.getStorage().getDrainedPerTick()), ChatFormatting.GRAY);
 	}
 }

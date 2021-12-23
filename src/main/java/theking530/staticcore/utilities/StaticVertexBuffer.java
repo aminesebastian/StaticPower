@@ -1,18 +1,18 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
 
 public class StaticVertexBuffer {
 
-	public static final Tessellator tessellator = Tessellator.getInstance();
-	public static final BufferBuilder vertexbuffer = tessellator.getBuffer();
+	public static final Tesselator tessellator = Tesselator.getInstance();
+	public static final BufferBuilder vertexbuffer = tessellator.getBuilder();
 
 	public static void pos(float x, float y, float z, float u, float v) {
-		vertexbuffer.pos(x, y, z).tex(u, v).endVertex();
+		vertexbuffer.vertex(x, y, z).uv(u, v).endVertex();
 	}
 
 	public static void pos(double x, double y, double z, double u, double v) {
-		vertexbuffer.pos(x, y, z).tex((float) u, (float) v).endVertex();
+		vertexbuffer.vertex(x, y, z).uv((float) u, (float) v).endVertex();
 	}
 }

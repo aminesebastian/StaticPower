@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -240,13 +240,13 @@ public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreI
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
 		output.putInt("MaximumStorage", maximumStorage);
 		output.putBoolean("void_excess", voidExcess);
-		ListNBT digistoreSlots = new ListNBT();
+		ListTag digistoreSlots = new ListTag();
 		slots.forEach(network -> {
-			CompoundNBT networkTag = new CompoundNBT();
+			CompoundTag networkTag = new CompoundTag();
 			network.writeToNbt(networkTag);
 			digistoreSlots.add(networkTag);
 		});
@@ -256,7 +256,7 @@ public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreI
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		if (nbt.contains("maximum_storage")) {
 			maximumStorage = nbt.getInt("maximum_storage");
 		}
@@ -265,10 +265,10 @@ public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreI
 		}
 
 		if (nbt.contains("slots")) {
-			ListNBT digistoreSlots = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
+			ListTag digistoreSlots = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
 			slots.clear();
 			for (int i = 0; i < digistoreSlots.size(); i++) {
-				CompoundNBT slotTagComponent = (CompoundNBT) digistoreSlots.get(i);
+				CompoundTag slotTagComponent = (CompoundTag) digistoreSlots.get(i);
 				DigistoreStack newTracker = new DigistoreStack();
 				newTracker.readFromNbt(slotTagComponent);
 				slots.add(newTracker);

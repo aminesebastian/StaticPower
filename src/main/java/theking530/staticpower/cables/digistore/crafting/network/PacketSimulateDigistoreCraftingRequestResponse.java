@@ -3,9 +3,9 @@ package theking530.staticpower.cables.digistore.crafting.network;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
 import theking530.staticpower.network.NetworkMessage;
@@ -24,22 +24,22 @@ public class PacketSimulateDigistoreCraftingRequestResponse extends NetworkMessa
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(windowId);
-		buffer.writeCompoundTag(bundles.serialize());
+		buffer.writeNbt(bundles.serialize());
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		windowId = buffer.readInt();
-		bundles = CraftingStepsBundleContainer.read(buffer.readCompoundTag());
+		bundles = CraftingStepsBundleContainer.read(buffer.readNbt());
 	}
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			Container container = Minecraft.getInstance().player.openContainer;
-			if (container instanceof ContainerCraftingAmount && container.windowId == windowId) {
+			AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
+			if (container instanceof ContainerCraftingAmount && container.containerId == windowId) {
 				ContainerCraftingAmount craftingContainer = (ContainerCraftingAmount) container;
 				craftingContainer.onCraftingResponseUpdated(bundles);
 			}

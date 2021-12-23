@@ -3,17 +3,17 @@ package theking530.staticpower.client.rendering.tileentity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -21,13 +21,13 @@ import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 
 @OnlyIn(Dist.CLIENT)
-public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityBase> extends TileEntityRenderer<T> {
+public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityBase> implements BlockEntityRenderer<T> {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntitySpecialRenderer.class);
 	protected static final float TEXEL = (1.0f / 16.0f);
 	protected ItemRenderer ItemRenderer;
 	protected boolean shouldPreRotateTowardsFacingDirection;
 
-	public StaticPowerTileEntitySpecialRenderer(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public StaticPowerTileEntitySpecialRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 		shouldPreRotateTowardsFacingDirection = true;
 	}
@@ -37,11 +37,11 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 * underlying block.
 	 */
 	@Override
-	public void render(T tileEntity, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		BlockPos tileEntityPos = tileEntity.getPos();
+	public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		BlockPos tileEntityPos = tileEntity.getBlockPos();
 		ItemRenderer = Minecraft.getInstance().getItemRenderer();
 
-		matrixStack.push();
+		matrixStack.pushPose();
 
 		// Rotate to face the side this tile is facing.
 		if (shouldPreRotateTowardsFacingDirection) {
@@ -62,10 +62,10 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 			LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s.", tileEntity), e);
 		}
 
-		matrixStack.pop();
-		matrixStack.pop();
-		RenderHelper.setupLevelDiffuseLighting(matrixStack.getLast().getMatrix());
-		matrixStack.push();
+		matrixStack.popPose();
+		matrixStack.popPose();
+		Lighting.setupLevel(matrixStack.last().pose());
+		matrixStack.pushPose();
 	}
 
 	protected Direction getFacingDirection(T tileEntity) {
@@ -84,5 +84,5 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected abstract void renderTileEntityBase(T tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay);
+	protected abstract void renderTileEntityBase(T tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay);
 }

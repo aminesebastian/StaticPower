@@ -4,12 +4,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -37,7 +38,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	 * @param capacity The amount of energy that can be stored by this item.
 	 */
 	public StaticPowerEnergyStoringItem(String name, int capacity) {
-		super(name, new Item.Properties().maxStackSize(1).setNoRepair());
+		super(name, new Item.Properties().stacksTo(1).setNoRepair());
 		this.capacity = capacity;
 	}
 
@@ -46,9 +47,10 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		long capacity = getCapacity();
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticVoltCapability("default", stack, capacity, capacity, capacity));
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackStaticVoltCapability("default", stack, capacity, capacity, capacity));
 	}
 
 	public ItemStack getFilledVariant() {
@@ -85,16 +87,17 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
 	}
 
-	public static class EnergyItemJEIInterpreter implements ISubtypeInterpreter {
+	public static class EnergyItemJEIInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
 		@Override
-		public String apply(ItemStack itemStack) {
-			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
+		public String apply(ItemStack itemStack, UidContext context) {
+			return itemStack.getItem().getRegistryName().toString()
+					+ EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
 					+ EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
 		}
 	}

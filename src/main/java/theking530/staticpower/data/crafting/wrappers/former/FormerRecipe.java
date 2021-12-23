@@ -1,17 +1,17 @@
 package theking530.staticpower.data.crafting.wrappers.former;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class FormerRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<FormerRecipe> RECIPE_TYPE = IRecipeType.register("former");
+	public static final RecipeType<FormerRecipe> RECIPE_TYPE = RecipeType.register("former");
 
 	private StaticPowerIngredient inputIngredient;
 	private Ingredient requiredMold;
@@ -59,12 +59,12 @@ public class FormerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return FormerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

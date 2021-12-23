@@ -6,17 +6,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -36,6 +36,8 @@ import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
+import theking530.staticpower.cables.attachments.AbstractCableAttachment.AbstractCableAttachmentContainerProvider;
+
 public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
@@ -48,7 +50,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt)
 				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreIOBusSlots.get() * 2), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
@@ -62,12 +64,12 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getWorld().isRemote || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
 		// Get the tile entity on the pulling side, return if it is null.
-		TileEntity te = cable.getWorld().getTileEntity(cable.getPos().offset(side));
+		BlockEntity te = cable.getWorld().getBlockEntity(cable.getPos().relative(side));
 		if (te == null || te.isRemoved()) {
 			return;
 		}
@@ -82,7 +84,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 
 	public boolean increaseSupplierTimer(ItemStack attachment) {
 		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundNBT());
+			attachment.setTag(new CompoundTag());
 		}
 		if (!attachment.getTag().contains(REGULATOR_TIMER_TAG)) {
 			attachment.getTag().putInt(REGULATOR_TIMER_TAG, 0);
@@ -147,7 +149,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false);
 	}
 
-	protected boolean importFromAttached(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
+	protected boolean importFromAttached(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		AtomicBoolean output = new AtomicBoolean(false);
 		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
@@ -176,7 +178,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 					ItemStack remainingAmount = module.insertItem(extractedItem.copy(), false);
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						target.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
-						cable.getTileEntity().markDirty();
+						cable.getTileEntity().setChanged();
 						break;
 					}
 				}
@@ -185,7 +187,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 		return output.get();
 	}
 
-	protected boolean exportFromNetwork(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
+	protected boolean exportFromNetwork(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		AtomicBoolean output = new AtomicBoolean(false);
 		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
@@ -221,7 +223,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 							// If we actually extracted something, now we perform the real extract.
 							if (remainingAmount.getCount() < extractedItem.getCount()) {
 								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
-								cable.getTileEntity().markDirty();
+								cable.getTileEntity().setChanged();
 								output.set(true);
 								break;
 							}
@@ -266,8 +268,8 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.io_bus_tooltip"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslatableComponent("gui.staticpower.io_bus_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.import_slots", StaticPowerConfig.SERVER.digistoreIOBusSlots.get(), tooltip);
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.export_slots", StaticPowerConfig.SERVER.digistoreIOBusSlots.get(), tooltip);
 	}
@@ -278,7 +280,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory playerInv, Player player) {
 			return new ContainerDigistoreIOBus(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}

@@ -3,11 +3,11 @@ package theking530.api.power;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticcore.utilities.SDMath;
 
-public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<CompoundNBT> {
+public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
 
 	protected long storedPower;
@@ -266,8 +266,8 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
 		output.putLong("current_power", storedPower);
 		output.putLong("capacity", capacity);
 		output.putLong("max_receive", maxReceive);
@@ -280,7 +280,7 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		storedPower = nbt.getLong("current_power");
 		capacity = nbt.getLong("capacity");
 		maxReceive = nbt.getLong("max_receive");

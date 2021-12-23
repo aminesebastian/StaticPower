@@ -4,10 +4,10 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.attributes.capability.AttributeableHandler;
 import theking530.api.attributes.capability.CapabilityAttributable;
@@ -18,6 +18,8 @@ import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerItem;
+
+import net.minecraft.world.item.Item.Properties;
 
 public abstract class AbstractToolPart extends StaticPowerItem implements ICustomModelSupplier {
 	protected final ResourceLocation tier;
@@ -40,7 +42,7 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		AttributeableHandler handler = new AttributeableHandler("attributes");
 		initializeAttributes(handler);
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(handler);
@@ -86,7 +88,7 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 	}
 
 	@Override
-	public boolean hasEffect(ItemStack stack) {
+	public boolean isFoil(ItemStack stack) {
 		return this.tier == StaticPowerTiers.CREATIVE;
 	}
 

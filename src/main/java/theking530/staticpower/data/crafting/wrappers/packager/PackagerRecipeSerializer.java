@@ -2,17 +2,17 @@ package theking530.staticpower.data.crafting.wrappers.packager;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
-public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PackagerRecipe> {
+public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<PackagerRecipe> {
 	public static final PackagerRecipeSerializer INSTANCE = new PackagerRecipeSerializer();
 
 	private PackagerRecipeSerializer() {
@@ -20,9 +20,9 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public PackagerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public PackagerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Start with the default processing values.
@@ -40,7 +40,7 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public PackagerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public PackagerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		long power = buffer.readLong();
 		int time = buffer.readInt();
 		int size = buffer.readInt();
@@ -52,7 +52,7 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, PackagerRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, PackagerRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getSize());

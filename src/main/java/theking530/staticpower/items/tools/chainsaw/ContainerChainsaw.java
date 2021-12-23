@@ -1,12 +1,12 @@
 package theking530.staticpower.items.tools.chainsaw;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,11 +29,11 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 
 	public ItemStackHandler inventory;
 
-	public ContainerChainsaw(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerChainsaw(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getHeldItemstack(inv, data));
 	}
 
-	public ContainerChainsaw(int windowId, PlayerInventory playerInventory, ItemStack owner) {
+	public ContainerChainsaw(int windowId, Inventory playerInventory, ItemStack owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -47,21 +47,21 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 		// Drill Bit
 		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronChainsawBlade), 0.3f, inventory, 0, 80, 24) {
 			@Override
-			public void onSlotChanged() {
-				super.onSlotChanged();
+			public void setChanged() {
+				super.setChanged();
 
 				// Update the blade.
-				int bladeSlot = getPlayerInventory().player.inventory.currentItem;
+				int bladeSlot = getPlayerInventory().player.inventory.selected;
 				if (bladeSlot >= 0) {
-					if (!getPlayerInventory().player.world.isRemote) {
-						ServerPlayerEntity serverPlayer = (ServerPlayerEntity) getPlayerInventory().player;
-						serverPlayer.sendSlotContents(ContainerChainsaw.this, playerHotbarStart + bladeSlot, getItemStack());
+					if (!getPlayerInventory().player.level.isClientSide) {
+						ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
+						serverPlayer.slotChanged(ContainerChainsaw.this, playerHotbarStart + bladeSlot, getItemStack());
 					}
 				}
 			}
 
 			@Override
-			public boolean isItemValid(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() instanceof ChainsawBlade;
 			}
 		});
@@ -76,12 +76,12 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slot) {
+	public boolean canDragTo(Slot slot) {
 		return false;
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		boolean alreadyExists = false;
 		int firstEmptySlot = -1;
 
@@ -93,17 +93,17 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 				alreadyExists = true;
 			}
 		}
-		if (!alreadyExists && !mergeItemStack(stack, firstEmptySlot, firstEmptySlot + 1, false)) {
+		if (!alreadyExists && !moveItemStackTo(stack, firstEmptySlot, firstEmptySlot + 1, false)) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn, PlayerEntity player) {
-		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItemMainhand()) {
+	public ItemStack clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
+		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
 			return ItemStack.EMPTY;
 		}
-		return super.slotClick(slot, dragType, clickTypeIn, player);
+		return super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.digistorenetwork.manager;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
@@ -13,7 +13,7 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
 
 	public static final int ENERGY_STORAGE = 1000000;
 
@@ -29,7 +29,7 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerDigistoreManager(windowId, inventory, this);
 	}
 }

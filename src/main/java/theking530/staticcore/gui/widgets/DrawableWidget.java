@@ -2,16 +2,16 @@ package theking530.staticcore.gui.widgets;
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.utilities.Vector2D;
 
 public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 	private T drawable;
-	private ITextComponent tooltip;
+	private Component tooltip;
 	private float zLevel;
 
 	public DrawableWidget(float xPosition, float yPosition, float width, float height, T drawable) {
@@ -36,7 +36,7 @@ public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 		return this;
 	}
 
-	public DrawableWidget<T> setTooltip(ITextComponent tooltip) {
+	public DrawableWidget<T> setTooltip(Component tooltip) {
 		this.tooltip = tooltip;
 		return this;
 	}
@@ -55,7 +55,7 @@ public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Get the screen space position and offset it by the scale to center the
 		// entity.
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
@@ -65,7 +65,7 @@ public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getTooltips(mousePosition, tooltips, showAdvanced);
 		if (tooltip != null) {
 			tooltips.add(tooltip);

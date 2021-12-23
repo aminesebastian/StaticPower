@@ -1,12 +1,12 @@
 package theking530.staticpower.cables.power;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
@@ -34,11 +34,11 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 	private PowerTransferMetrics metrics;
 	private long nextUpdateTime;
 
-	public ContainerPowerCable(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerPowerCable(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityPowerCable) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPowerCable(int windowId, PlayerInventory playerInventory, TileEntityPowerCable owner) {
+	public ContainerPowerCable(int windowId, Inventory playerInventory, TileEntityPowerCable owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -61,23 +61,23 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 	 * client, and if required to, send over the data.
 	 */
 	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
+	public void broadcastChanges() {
+		super.broadcastChanges();
 
 		// Update the metrics.
-		if (getTileEntity().getWorld().getGameTime() >= nextUpdateTime) {
+		if (getTileEntity().getLevel().getGameTime() >= nextUpdateTime) {
 			sendMetricsToClient();
-			nextUpdateTime = getTileEntity().getWorld().getGameTime() + METRIC_UPDATE_INTERVAL;
+			nextUpdateTime = getTileEntity().getLevel().getGameTime() + METRIC_UPDATE_INTERVAL;
 		}
 	}
 
 	public void sendMetricsToClient() {
 		// Send a packet to all listening players.
 		getTileEntity().powerCableComponent.getPowerNetworkModule().ifPresent(module -> {
-			for (IContainerListener listener : this.listeners) {
-				if (listener instanceof ServerPlayerEntity) {
-					NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.windowId, module.getMetrics());
-					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) listener), msg);
+			for (ContainerListener listener : this.containerListeners) {
+				if (listener instanceof ServerPlayer) {
+					NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.containerId, module.getMetrics());
+					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) listener), msg);
 				}
 			}
 		});

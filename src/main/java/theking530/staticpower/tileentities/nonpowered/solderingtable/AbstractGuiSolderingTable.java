@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.button.FakeSlotButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -19,7 +19,7 @@ public class AbstractGuiSolderingTable<T extends AbstractSolderingTable, K exten
 	protected GuiInfoTab infoTab;
 	private List<FakeSlotButton> recipeFakeSlots;
 
-	public AbstractGuiSolderingTable(K container, PlayerInventory invPlayer, ITextComponent name, int width, int height) {
+	public AbstractGuiSolderingTable(K container, Inventory invPlayer, Component name, int width, int height) {
 		super(container, invPlayer, name, width, height);
 	}
 
@@ -57,16 +57,16 @@ public class AbstractGuiSolderingTable<T extends AbstractSolderingTable, K exten
 
 	protected void recipeButtonPressed(StandardButton button, MouseButton mouse, int x, int y) {
 		// Update the slot.
-		recipeFakeSlots.get(x + (y * 3)).setItemStack(playerInventory.getItemStack());
-		getContainer().getTileEntity().patternInventory.setStackInSlot(x + (y * 3), playerInventory.getItemStack());
+		recipeFakeSlots.get(x + (y * 3)).setItemStack(inventory.getCarried());
+		getMenu().getTileEntity().patternInventory.setStackInSlot(x + (y * 3), inventory.getCarried());
 
 		// Get all the recipe items.
 		ItemStack[] recipeItems = new ItemStack[9];
 		for (int i = 0; i < 9; i++) {
-			recipeItems[i] = getContainer().getTileEntity().patternInventory.getStackInSlot(i);
+			recipeItems[i] = getMenu().getTileEntity().patternInventory.getStackInSlot(i);
 		}
 
 		// Send the packet to the server.
-		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketSyncSolderingFakeSlotRecipe(getContainer().windowId, recipeItems));
+		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketSyncSolderingFakeSlotRecipe(getMenu().containerId, recipeItems));
 	}
 }

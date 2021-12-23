@@ -5,9 +5,9 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import net.minecraftforge.items.ItemStackHandler;
@@ -15,32 +15,32 @@ import theking530.staticcore.utilities.SDMath;
 
 public class InventoryUtilities {
 
-	public static boolean canFullyInsertItemIntoPlayerInventory(ItemStack stack, PlayerInventory inventory) {
+	public static boolean canFullyInsertItemIntoPlayerInventory(ItemStack stack, Inventory inventory) {
 		// Create and populate an inventory identical to the player's.
-		ItemStackHandler testHandler = new ItemStackHandler(inventory.mainInventory.size());
-		for (int i = 0; i < inventory.mainInventory.size(); i++) {
-			testHandler.setStackInSlot(i, inventory.mainInventory.get(i).copy());
+		ItemStackHandler testHandler = new ItemStackHandler(inventory.items.size());
+		for (int i = 0; i < inventory.items.size(); i++) {
+			testHandler.setStackInSlot(i, inventory.items.get(i).copy());
 		}
 
 		return canFullyInsertItemIntoInventory(testHandler, stack);
 	}
 
-	public static boolean canPartiallyInsertItemIntoPlayerInventory(ItemStack stack, PlayerInventory inventory) {
+	public static boolean canPartiallyInsertItemIntoPlayerInventory(ItemStack stack, Inventory inventory) {
 		// Create and populate an inventory identical to the player's.
-		ItemStackHandler testHandler = new ItemStackHandler(inventory.mainInventory.size());
-		for (int i = 0; i < inventory.mainInventory.size(); i++) {
-			testHandler.setStackInSlot(i, inventory.mainInventory.get(i).copy());
+		ItemStackHandler testHandler = new ItemStackHandler(inventory.items.size());
+		for (int i = 0; i < inventory.items.size(); i++) {
+			testHandler.setStackInSlot(i, inventory.items.get(i).copy());
 		}
 
 		return canPartiallyInsertItemIntoInventory(testHandler, stack);
 	}
 
-	public static ItemStack simulatePlayerInventoryInsert(ItemStack stack, PlayerInventory inventory) {
+	public static ItemStack simulatePlayerInventoryInsert(ItemStack stack, Inventory inventory) {
 		// Create and populate an inventory identical to the player's, but do NOT copy
 		// the items.
-		ItemStackHandler testHandler = new ItemStackHandler(inventory.mainInventory.size());
-		for (int i = 0; i < inventory.mainInventory.size(); i++) {
-			testHandler.setStackInSlot(i, inventory.mainInventory.get(i).copy());
+		ItemStackHandler testHandler = new ItemStackHandler(inventory.items.size());
+		for (int i = 0; i < inventory.items.size(); i++) {
+			testHandler.setStackInSlot(i, inventory.items.get(i).copy());
 		}
 
 		// Perform the insert. Do NOT mark simulate here.

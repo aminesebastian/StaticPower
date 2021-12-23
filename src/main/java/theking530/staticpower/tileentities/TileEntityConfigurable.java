@@ -5,14 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
@@ -44,7 +44,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	@SaveSerialize
 	private boolean disableFaceInteraction;
 
-	public TileEntityConfigurable(TileEntityTypeAllocator<? extends TileEntityConfigurable> allocator) {
+	public TileEntityConfigurable(BlockEntityTypeAllocator<? extends TileEntityConfigurable> allocator) {
 		super(allocator);
 		disableFaceInteraction();
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration, getDefaultSideConfiguration()));
@@ -52,7 +52,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	}
 
 	@Override
-	protected void postInit(World world, BlockPos pos, BlockState state) {
+	protected void postInit(Level world, BlockPos pos, BlockState state) {
 		// Get all inventories for this tile entitiy.
 		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
 
@@ -153,7 +153,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		return true;
 	}
 

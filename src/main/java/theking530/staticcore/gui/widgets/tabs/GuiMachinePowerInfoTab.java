@@ -1,7 +1,7 @@
 package theking530.staticcore.gui.widgets.tabs;
 
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
@@ -24,10 +24,10 @@ public class GuiMachinePowerInfoTab extends AbstractInfoTab {
 	public void updateData() {
 		super.updateData();
 		clear();
-		addKeyValueTwoLiner("Input", new StringTextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getReceivedPerTick()),
-				TextFormatting.GREEN);
-		addKeyValueTwoLiner("Usage", new StringTextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getExtractedPerTick()),
-				TextFormatting.RED);
-		addKeyValueTwoLiner("I/O", new StringTextComponent("Max I/O"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getMaxDrain()), TextFormatting.AQUA);
+		addKeyValueTwoLiner("Input", new TextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getReceivedPerTick()),
+				ChatFormatting.GREEN);
+		addKeyValueTwoLiner("Usage", new TextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getExtractedPerTick()),
+				ChatFormatting.RED);
+		addKeyValueTwoLiner("I/O", new TextComponent("Max I/O"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getMaxDrain()), ChatFormatting.AQUA);
 	}
 }

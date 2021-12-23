@@ -6,11 +6,11 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.IDrawable;
@@ -105,7 +105,7 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Capture the max progress.
 		if (machineProcessingComponent != null) {
 			maxProgress = machineProcessingComponent.getMaxProcessingTime();
@@ -151,23 +151,23 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
 		if (isProcessingErrored) {
 			String[] splitTooltips = processingErrorMessage.split("\\$");
 			for (String tip : splitTooltips) {
-				tooltips.add(new StringTextComponent(tip));
+				tooltips.add(new TextComponent(tip));
 			}
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
 				String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
-				tooltips.add(new TranslationTextComponent("gui.staticpower.remaining").appendString(": ").appendString(remainingTime)
-						.append(new TranslationTextComponent("gui.staticpower.seconds.short")));
+				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime)
+						.append(new TranslatableComponent("gui.staticpower.seconds.short")));
 			} else {
 				String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
 				tooltips.add(
-						new TranslationTextComponent("gui.staticpower.max").appendString(": ").appendString(maxTime).append(new TranslationTextComponent("gui.staticpower.seconds.short")));
+						new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
 			}
 		}
 	}

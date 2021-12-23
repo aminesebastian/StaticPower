@@ -1,14 +1,14 @@
 package theking530.staticpower.tileentities.powered.chargingstation;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -26,7 +26,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityChargingStation extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityChargingStation> TYPE = new TileEntityTypeAllocator<TileEntityChargingStation>((type) -> new TileEntityChargingStation(),
+	public static final BlockEntityTypeAllocator<TileEntityChargingStation> TYPE = new BlockEntityTypeAllocator<TileEntityChargingStation>((type) -> new TileEntityChargingStation(),
 			ModBlocks.ChargingStation);
 
 	static {
@@ -65,7 +65,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (!getWorld().isRemote) {
+		if (!getLevel().isClientSide) {
 			// Charge up to four items simultaneously.
 			if (energyStorage.getStorage().getStoredPower() > 0) {
 				// Capture the count of chargeable items.
@@ -132,12 +132,12 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerChargingStation(windowId, inventory, this);
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
-		return new TranslationTextComponent(ModBlocks.ChargingStation.getTranslationKey());
+	public Component getDisplayName() {
+		return new TranslatableComponent(ModBlocks.ChargingStation.getDescriptionId());
 	}
 }

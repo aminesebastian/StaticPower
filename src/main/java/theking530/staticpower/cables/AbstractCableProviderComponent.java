@@ -7,15 +7,15 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.StaticPower;
@@ -77,7 +77,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	@Override
 	public void preProcessUpdate() {
-		if (getWorld().isRemote || (!getWorld().isRemote && getNetwork() != null)) {
+		if (getWorld().isClientSide || (!getWorld().isClientSide && getNetwork() != null)) {
 			for (Direction dir : Direction.values()) {
 				if (!attachments[dir.ordinal()].isEmpty()) {
 					ItemStack attachment = attachments[dir.ordinal()];
@@ -88,20 +88,20 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public void onInitializedInWorld(World world, BlockPos pos, boolean firstTimePlaced) {
+	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
 		super.onInitializedInWorld(world, pos, firstTimePlaced);
 		if (!initialDisabledStateApplied) {
 			// Handle the initial states of the disabled sides for the new cable.
 			for (Direction side : Direction.values()) {
 				disabledSides[side.ordinal()] = getInitialSideDisabledState(side);
-				if (!getWorld().isRemote) {
+				if (!getWorld().isClientSide) {
 					CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, getInitialSideDisabledState(side));
 				}
 			}
 			initialDisabledStateApplied = true;
 
 			// Update the rendering state on all connected blocks.
-			if (getWorld().isRemote()) {
+			if (getWorld().isClientSide()) {
 				updateRenderingStateOnAllAdjacent();
 			}
 		}
@@ -112,10 +112,10 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super.onNeighborChanged(currentState, neighborPos, isMoving);
 
 		// Update the network graph.
-		if (!getWorld().isRemote()) {
-			ServerCable cable = CableNetworkManager.get((ServerWorld) getWorld()).getCable(getPos());
+		if (!getWorld().isClientSide()) {
+			ServerCable cable = CableNetworkManager.get((ServerLevel) getWorld()).getCable(getPos());
 			if (cable != null && cable.getNetwork() != null) {
-				cable.getNetwork().updateGraph((ServerWorld) getWorld(), getPos());
+				cable.getNetwork().updateGraph((ServerLevel) getWorld(), getPos());
 			}
 		}
 	}
@@ -164,7 +164,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			disabledSides[side.ordinal()] = disabledState;
 			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			getTileEntity().requestModelDataUpdate();
-			if (!getWorld().isRemote) {
+			if (!getWorld().isClientSide) {
 				CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
 			}
 		}
@@ -177,7 +177,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public CableConnectionState getConnectionState(Direction side) {
-		return getUncachedConnectionState(side, getWorld().getTileEntity(getPos().offset(side)), getPos().offset(side), false);
+		return getUncachedConnectionState(side, getWorld().getBlockEntity(getPos().relative(side)), getPos().relative(side), false);
 	}
 
 	/**
@@ -221,7 +221,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		// If we're on the server, check to see if the cable network manager for this
 		// world is tracking a cable at this position. If it is not, add this cable for
 		// tracking.
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			// Get the network manager.
 			CableNetworkManager manager = CableNetworkManager.get(getWorld());
 
@@ -253,13 +253,13 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super.onOwningTileEntityRemoved();
 		// If we're on the server, get the cable manager and remove the cable at the
 		// current position.
-		if (!getWorld().isRemote) {
-			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
-			manager.removeCable(getTileEntity().getPos());
+		if (!getWorld().isClientSide) {
+			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getLevel());
+			manager.removeCable(getTileEntity().getBlockPos());
 		}
 
 		// Update the rendering state on all connected blocks.
-		if (getWorld().isRemote()) {
+		if (getWorld().isClientSide()) {
 			updateRenderingStateOnAllAdjacent();
 		}
 	}
@@ -270,11 +270,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 */
 	public void updateRenderingStateOnAllAdjacent() {
 		// Only execute on the client.
-		if (getWorld().isRemote()) {
+		if (getWorld().isClientSide()) {
 			getTileEntity().requestModelDataUpdate();
 			// Update the rendering state on all connected blocks.
 			for (Direction dir : Direction.values()) {
-				AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), getPos().offset(dir));
+				AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), getPos().relative(dir));
 				if (otherProvider != null) {
 					otherProvider.getTileEntity().addRenderingUpdateRequest();
 				}
@@ -287,7 +287,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	public void updateRenderingStateForCable() {
 		// Only execute on the client.
-		if (getWorld().isRemote()) {
+		if (getWorld().isClientSide()) {
 			getTileEntity().addRenderingUpdateRequest();
 			StaticPower.LOGGER.debug(String.format("Performing cable rendering state update at position: %1$s.", getPos().toString()));
 		} else {
@@ -328,7 +328,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			attachmentItem.onAddedToCable(attachments[side.ordinal()], side, this);
 
 			// Initialize the data container on the server.
-			if (!getWorld().isRemote) {
+			if (!getWorld().isClientSide) {
 				ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
 				cable.reinitializeAttachmentDataForSide(side, attachmentItem.getRegistryName());
 				attachmentItem.initializeServerDataContainer(attachments[side.ordinal()], side, this, cable.getAttachmentDataContainerForSide(side));
@@ -362,12 +362,12 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			// Remove the attachment and return it.
 			attachments[side.ordinal()] = ItemStack.EMPTY;
 			// Clear the attachment data from the server.
-			if (!getWorld().isRemote) {
+			if (!getWorld().isClientSide) {
 				CableNetworkManager.get(getWorld()).getCable(getPos()).clearAttachmentDataForSide(side);
 			}
 
 			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
-			getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
+			getWorld().getChunkSource().getLightEngine().checkBlock(getPos());
 			return output;
 		}
 		return ItemStack.EMPTY;
@@ -533,7 +533,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			Optional<ServerCable> cable = getCable();
 			if (cable.isPresent()) {
 				if (cable.get().getNetwork().hasModule(moduleType)) {
@@ -555,9 +555,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public Optional<ServerCable> getCable() {
-		if (!getWorld().isRemote) {
-			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getWorld());
-			ServerCable cable = manager.getCable(getTileEntity().getPos());
+		if (!getWorld().isClientSide) {
+			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getLevel());
+			ServerCable cable = manager.getCable(getTileEntity().getBlockPos());
 			if (cable != null && cable.getNetwork() != null) {
 				return Optional.of(cable);
 			}
@@ -578,7 +578,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		// Serialize the disabled states.
@@ -588,15 +588,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 		// Serialize the attachments.
 		for (int i = 0; i < attachments.length; i++) {
-			CompoundNBT itemNbt = new CompoundNBT();
-			attachments[i].write(itemNbt);
+			CompoundTag itemNbt = new CompoundTag();
+			attachments[i].save(itemNbt);
 			nbt.put("attachment" + i, itemNbt);
 		}
 
 		// Serialize the covers.
 		for (int i = 0; i < covers.length; i++) {
-			CompoundNBT itemNbt = new CompoundNBT();
-			covers[i].write(itemNbt);
+			CompoundTag itemNbt = new CompoundTag();
+			covers[i].save(itemNbt);
 			nbt.put("cover" + i, itemNbt);
 		}
 
@@ -607,7 +607,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		// Deserialize the disabled states.
@@ -617,25 +617,25 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 		// Deserialize the attachments.
 		for (int i = 0; i < attachments.length; i++) {
-			CompoundNBT itemNbt = nbt.getCompound("attachment" + i);
-			ItemStack incomingAttachment = ItemStack.read(itemNbt);
+			CompoundTag itemNbt = nbt.getCompound("attachment" + i);
+			ItemStack incomingAttachment = ItemStack.of(itemNbt);
 
 			// If the attachments have changed on the server, just check for the lights to
 			// be safe (digistore lights for example). TO-DO Watch the performance of this.
 			if (!ItemUtilities.areItemStacksStackable(incomingAttachment, attachments[i])) {
 				if (getWorld() != null) {
-					getWorld().getChunkProvider().getLightManager().checkBlock(getPos());
+					getWorld().getChunkSource().getLightEngine().checkBlock(getPos());
 				}
 			}
 
 			// Update the local attachment.
-			attachments[i] = ItemStack.read(itemNbt);
+			attachments[i] = ItemStack.of(itemNbt);
 		}
 
 		// Deserialize the covers.
 		for (int i = 0; i < covers.length; i++) {
-			CompoundNBT itemNbt = nbt.getCompound("cover" + i);
-			covers[i] = ItemStack.read(itemNbt);
+			CompoundTag itemNbt = nbt.getCompound("cover" + i);
+			covers[i] = ItemStack.of(itemNbt);
 		}
 
 		// Deserialize the initial disabled state.
@@ -685,5 +685,5 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		return false;
 	}
 
-	protected abstract CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded);
+	protected abstract CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded);
 }

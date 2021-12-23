@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -46,11 +46,11 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	private List<PhantomSlot> inputSlots;
 	private PhantomSlot outputSlot;
 
-	public ContainerDigistorePatternEncoder(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistorePatternEncoder(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerDigistorePatternEncoder(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public ContainerDigistorePatternEncoder(int windowId, Inventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
@@ -71,13 +71,13 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			for (int x = 0; x < 3; x++) {
 				Slot slot = addSlot(new PhantomSlot(encoderInventory, DigistorePatternEncoder.RECIPE_START_SLOT + x + (y * 3), 8 + x * 18, 118 + y * 18, true) {
 					@Override
-					public void onSlotChanged() {
-						super.onSlotChanged();
+					public void setChanged() {
+						super.setChanged();
 						updateOutputSlot();
 					}
 
 					@Override
-					public boolean isEnabled() {
+					public boolean isActive() {
 						return getViewType() == TerminalViewType.ITEMS;
 					}
 				});
@@ -88,13 +88,13 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		// Add the pattern slots.
 		addSlot(new EncodedPatternSlot(encoderInventory, new ItemStack(ModItems.PatternCard), DigistorePatternEncoder.PATTERN_INPUT_SLOT, 152, 118) {
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return getViewType() == TerminalViewType.ITEMS;
 			}
 		});
 		addSlot(new OutputSlot(encoderInventory, ModItems.PatternCard.getBlankEncodedCardForPreview(), DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, 152, 154) {
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return getViewType() == TerminalViewType.ITEMS;
 			}
 		});
@@ -110,9 +110,9 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	}
 
 	@Override
-	public void consumeJEITransferRecipe(PlayerEntity player, ItemStack[][] recipe) {
+	public void consumeJEITransferRecipe(Player player, ItemStack[][] recipe) {
 		clearRecipe();
-		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
 			for (int i = 0; i < recipe.length; i++) {
 				// Get the options.
 				ItemStack[] options = recipe[i];
@@ -144,7 +144,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	 */
 	protected void updateOutputSlot() {
 		// This can only happen on the server.
-		if (getCableComponent().getWorld().isRemote) {
+		if (getCableComponent().getWorld().isClientSide) {
 			return;
 		}
 
@@ -156,16 +156,16 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		// Created a simulated crafting inventory.
 		FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
 		for (int i = 0; i < 9; i++) {
-			craftingInv.setInventorySlotContents(i, encoderInventory.getStackInSlot(DigistorePatternEncoder.RECIPE_START_SLOT + i));
+			craftingInv.setItem(i, encoderInventory.getStackInSlot(DigistorePatternEncoder.RECIPE_START_SLOT + i));
 		}
 
 		// Check for a recipe.
-		Optional<ICraftingRecipe> optional = getCableComponent().getWorld().getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInv, getCableComponent().getWorld());
+		Optional<CraftingRecipe> optional = getCableComponent().getWorld().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getCableComponent().getWorld());
 
 		// If the recipe exists, update the output slots.
 		if (optional.isPresent()) {
-			ICraftingRecipe icraftingrecipe = optional.get();
-			encoderInventory.setStackInSlot(DigistorePatternEncoder.RECIPE_SINGLE_SLOT, icraftingrecipe.getRecipeOutput());
+			CraftingRecipe icraftingrecipe = optional.get();
+			encoderInventory.setStackInSlot(DigistorePatternEncoder.RECIPE_SINGLE_SLOT, icraftingrecipe.getResultItem());
 		} else {
 			encoderInventory.setStackInSlot(DigistorePatternEncoder.RECIPE_SINGLE_SLOT, ItemStack.EMPTY);
 		}
@@ -197,7 +197,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			}
 
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return getViewType() == TerminalViewType.ITEMS;
 			}
 		});
@@ -231,7 +231,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 
 	public void attemptEncode() {
 		// Do nothing on the client!
-		if (getCableComponent().getWorld().isRemote) {
+		if (getCableComponent().getWorld().isClientSide) {
 			return;
 		}
 
@@ -271,11 +271,11 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			// Created a simulated crafting inventory.
 			FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
 			for (int i = 0; i < 9; i++) {
-				craftingInv.setInventorySlotContents(i, encoderInventory.getStackInSlot(DigistorePatternEncoder.RECIPE_START_SLOT + i));
+				craftingInv.setItem(i, encoderInventory.getStackInSlot(DigistorePatternEncoder.RECIPE_START_SLOT + i));
 			}
 
 			// Check for a recipe.
-			ICraftingRecipe recipe = getCableComponent().getWorld().getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInv, getCableComponent().getWorld()).orElse(null);
+			CraftingRecipe recipe = getCableComponent().getWorld().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getCableComponent().getWorld()).orElse(null);
 			if (recipe != null) {
 				encodedRecipe = ModItems.PatternCard.getPatternForRecipe(new EncodedDigistorePattern(id, inputs, recipe));
 				CableNetworkManager.get(getCableComponent().getWorld()).incrementCurrentPatternId();
@@ -305,8 +305,8 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	/**
 	 * Called when the container is closed.
 	 */
-	public void onContainerClosed(PlayerEntity playerIn) {
-		super.onContainerClosed(playerIn);
+	public void removed(Player playerIn) {
+		super.removed(playerIn);
 		clearRecipe();
 	}
 

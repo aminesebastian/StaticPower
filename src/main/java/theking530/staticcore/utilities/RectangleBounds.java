@@ -1,6 +1,6 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.client.renderer.Rectangle2d;
+import net.minecraft.client.renderer.Rect2i;
 
 public class RectangleBounds extends AbstractVector {
 	public RectangleBounds(int x, int y, int width, int height) {
@@ -54,8 +54,8 @@ public class RectangleBounds extends AbstractVector {
 		this.values.set(3, height);
 	}
 
-	public Rectangle2d toRectange2d() {
-		return new Rectangle2d((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
+	public Rect2i toRectange2d() {
+		return new Rect2i((int) getX(), (int) getY(), (int) getWidth(), (int) getHeight());
 	}
 
 	public boolean isPointInBounds(Vector2D point) {

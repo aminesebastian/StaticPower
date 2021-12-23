@@ -1,11 +1,11 @@
 package theking530.staticpower.tileentities.powered.crucible;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCrucible extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityCrucible> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
+	public static final BlockEntityTypeAllocator<TileEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityCrucible(), ModBlocks.Crucible);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -100,7 +100,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 	@Override
 	public void process() {
 		super.process();
-		if (!world.isRemote && redstoneControlComponent.passesRedstoneCheck()) {
+		if (!level.isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
 			if (energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get())
 					&& heatStorage.getStorage().canFullyAbsorbHeat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
 				heatStorage.getStorage().heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(), false);
@@ -185,7 +185,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerCrucible(windowId, inventory, this);
 	}
 }

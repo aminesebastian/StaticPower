@@ -1,10 +1,10 @@
 package theking530.staticpower.cables.attachments.digistore.patternencoder;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
@@ -21,7 +21,7 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 	public SpriteButton clearRecipeButton;
 	public SpriteButton encodeButton;
 
-	public GuiDigistorePatternEncoder(ContainerDigistorePatternEncoder container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiDigistorePatternEncoder(ContainerDigistorePatternEncoder container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 270);
 
 		// Limit the view to only show 5 rows to make room for the crafting GUI.
@@ -37,15 +37,15 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 
 		// Add recipe type button.
 		registerWidget(recipeTypeButton = new SpriteButton(67, 154, 16, 16, StaticPowerSprites.CRAFTING_TABLE_ICON, null, this::onRecipeTypeButtonPressed));
-		recipeTypeButton.setTooltip(new StringTextComponent("Crafting Table Recipe"));
+		recipeTypeButton.setTooltip(new TextComponent("Crafting Table Recipe"));
 
 		// Add clear recipe button.
 		registerWidget(clearRecipeButton = new SpriteButton(65, 117, 8, 8, StaticPowerSprites.CLOSE, null, this::onClearRecipePressed));
-		clearRecipeButton.setTooltip(new StringTextComponent("Clear Recipe"));
+		clearRecipeButton.setTooltip(new TextComponent("Clear Recipe"));
 
 		// Add encode button.
 		registerWidget(encodeButton = new SpriteButton(152, 136, 16, 16, StaticPowerSprites.ARROW_DOWN, null, this::onEncodePressed));
-		encodeButton.setTooltip(new StringTextComponent("Encode Recipe"));
+		encodeButton.setTooltip(new TextComponent("Encode Recipe"));
 	}
 
 	@Override
@@ -99,32 +99,32 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 
 	protected void onEncodePressed(StandardButton button, MouseButton mouseButton) {
 		// Send sync packet to the server.
-		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketPatternEncoderEncode(getContainer().windowId, getContainer().getCurrentRecipeType()));
+		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketPatternEncoderEncode(getMenu().containerId, getMenu().getCurrentRecipeType()));
 	}
 
 	protected void onClearRecipePressed(StandardButton button, MouseButton mouseButton) {
-		getContainer().clearRecipe();
+		getMenu().clearRecipe();
 		// Send sync packet to the server.
-		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketPatternEncoderClearRecipe(getContainer().windowId));
+		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketPatternEncoderClearRecipe(getMenu().containerId));
 	}
 
 	protected void onRecipeTypeButtonPressed(StandardButton button, MouseButton mouseButton) {
-		if (getContainer().getCurrentRecipeType() == RecipeEncodingType.CRAFTING_TABLE) {
-			getContainer().setCurrentRecipeType(RecipeEncodingType.MACHINE);
+		if (getMenu().getCurrentRecipeType() == RecipeEncodingType.CRAFTING_TABLE) {
+			getMenu().setCurrentRecipeType(RecipeEncodingType.MACHINE);
 			recipeTypeButton.setRegularTexture(StaticPowerSprites.FURNACE_ICON);
-			recipeTypeButton.setTooltip(new StringTextComponent("Free-form Recipe"));
+			recipeTypeButton.setTooltip(new TextComponent("Free-form Recipe"));
 		} else {
-			getContainer().setCurrentRecipeType(RecipeEncodingType.CRAFTING_TABLE);
+			getMenu().setCurrentRecipeType(RecipeEncodingType.CRAFTING_TABLE);
 			recipeTypeButton.setRegularTexture(StaticPowerSprites.CRAFTING_TABLE_ICON);
-			recipeTypeButton.setTooltip(new StringTextComponent("Crafting Table Recipe"));
+			recipeTypeButton.setTooltip(new TextComponent("Crafting Table Recipe"));
 		}
 
 		// Send sync packet to the server.
-		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketPatternEncoderRecipeTypeChange(getContainer().windowId, getContainer().getCurrentRecipeType()));
+		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketPatternEncoderRecipeTypeChange(getMenu().containerId, getMenu().getCurrentRecipeType()));
 	}
 
 	@Override
-	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 	}

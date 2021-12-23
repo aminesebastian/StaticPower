@@ -1,13 +1,13 @@
 package theking530.staticpower.tileentities.powered.squeezer;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSqueezer;
@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntitySqueezer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntitySqueezer> TYPE = new TileEntityTypeAllocator<TileEntitySqueezer>((type) -> new TileEntitySqueezer(), ModBlocks.Squeezer);
+	public static final BlockEntityTypeAllocator<TileEntitySqueezer> TYPE = new BlockEntityTypeAllocator<TileEntitySqueezer>((type) -> new TileEntitySqueezer(), ModBlocks.Squeezer);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -169,7 +169,7 @@ public class TileEntitySqueezer extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerSqueezer(windowId, inventory, this);
 	}
 }

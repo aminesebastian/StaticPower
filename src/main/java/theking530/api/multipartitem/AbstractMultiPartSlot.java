@@ -1,6 +1,6 @@
 package theking530.api.multipartitem;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class AbstractMultiPartSlot {
 	private final String name;

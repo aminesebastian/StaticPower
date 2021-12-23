@@ -1,6 +1,6 @@
 package theking530.staticpower.data.crafting;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	protected final int processingTime;

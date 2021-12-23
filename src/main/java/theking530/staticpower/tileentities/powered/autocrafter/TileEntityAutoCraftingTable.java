@@ -2,19 +2,19 @@ package theking530.staticpower.tileentities.powered.autocrafter;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new TileEntityTypeAllocator<TileEntityAutoCraftingTable>((type) -> new TileEntityAutoCraftingTable(),
+	public static final BlockEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoCraftingTable>((type) -> new TileEntityAutoCraftingTable(),
 			ModBlocks.AutoCraftingTable);
 
 	static {
@@ -91,7 +91,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		}
 		// Check if there is a valid recipe.
 		if (!processingComponent.isProcessing() && InventoryUtilities.isInventoryEmpty(internalInventory)
-				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getCurrentRecipe().get().getRecipeOutput())) {
+				&& InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getCurrentRecipe().get().getResultItem())) {
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.skip();
@@ -102,7 +102,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		// into the internal inventory.
 		if (getCurrentRecipe().isPresent() && hasRequiredItems()) {
 			// Get the recipe.
-			ICraftingRecipe recipe = getCurrentRecipe().orElse(null);
+			CraftingRecipe recipe = getCurrentRecipe().orElse(null);
 
 			// If this recipe is shaped, make sure we place the same shaped recipe's items
 			// into the internal inventory. If shapeless, just put the items into the
@@ -162,13 +162,13 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 
 	public ProcessingCheckState canProcess() {
 		// Get the current recipe.
-		ICraftingRecipe recipe = getCurrentProcessingRecipe().orElse(null);
+		CraftingRecipe recipe = getCurrentProcessingRecipe().orElse(null);
 		if (recipe == null) {
 			InventoryUtilities.clearInventory(internalInventory);
 			processingComponent.cancelProcessing();
 			return ProcessingCheckState.cancel();
 		}
-		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.outputsCannotTakeRecipe();
@@ -178,16 +178,16 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		// Get the recipe from the internal inventory. If this is null, then we reloaded
 		// in the middle of processing and removed the recipe. Return true and do
 		// nothing.
-		ICraftingRecipe recipe = getCurrentProcessingRecipe().orElse(null);
+		CraftingRecipe recipe = getCurrentProcessingRecipe().orElse(null);
 		if (recipe == null) {
 			return ProcessingCheckState.ok();
 		}
 
 		// If we can insert the soldered item into the output slot, do it. Otherwise,
 		// return false and keep spinning.
-		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+		if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
 			// Insert the soldered item into the output.
-			outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
+			outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
 			// Clear the internal inventory.
 			for (int i = 0; i < internalInventory.getSlots(); i++) {
 				internalInventory.setStackInSlot(i, ItemStack.EMPTY);
@@ -197,7 +197,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		return ProcessingCheckState.outputsCannotTakeRecipe();
 	}
 
-	public Optional<ICraftingRecipe> getCurrentRecipe() {
+	public Optional<CraftingRecipe> getCurrentRecipe() {
 		// Get the inventory in the form of an itemstack array.
 		ItemStack[] pattern = new ItemStack[9];
 		for (int i = 0; i < patternInventory.getSlots(); i++) {
@@ -206,7 +206,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		return getRecipeForItems(pattern);
 	}
 
-	public Optional<ICraftingRecipe> getCurrentProcessingRecipe() {
+	public Optional<CraftingRecipe> getCurrentProcessingRecipe() {
 		// Get the inventory in the form of an itemstack array.
 		ItemStack[] pattern = new ItemStack[9];
 		for (int i = 0; i < internalInventory.getSlots(); i++) {
@@ -215,19 +215,19 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		return getRecipeForItems(pattern);
 	}
 
-	public Optional<ICraftingRecipe> getRecipeForItems(ItemStack... inputs) {
+	public Optional<CraftingRecipe> getRecipeForItems(ItemStack... inputs) {
 		// Created a simulated crafting inventory.
 		FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
 
 		for (int i = 0; i < inputs.length; i++) {
-			craftingInv.setInventorySlotContents(i, inputs[i]);
+			craftingInv.setItem(i, inputs[i]);
 		}
-		return world.getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInv, world);
+		return level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, level);
 	}
 
 	public boolean hasRequiredItems() {
 		// Check if we have a recipe.
-		Optional<ICraftingRecipe> recipe = getCurrentRecipe();
+		Optional<CraftingRecipe> recipe = getCurrentRecipe();
 
 		// If there is no recipe, return false.
 		if (!recipe.isPresent()) {
@@ -277,33 +277,33 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerAutoCraftingTable(windowId, inventory, this);
 	}
 
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		// Serialize the filter inventory.
 		for (int i = 0; i < filterInventory.length; i++) {
-			CompoundNBT filterItemTag = new CompoundNBT();
+			CompoundTag filterItemTag = new CompoundTag();
 
 			// If the filter slot is not null, write the filter item to the nbt. Otherwise,
 			// add nothing.
 			if (filterInventory[i] != null) {
-				filterInventory[i].write(filterItemTag);
+				filterInventory[i].save(filterItemTag);
 				nbt.put("filter#" + i, filterItemTag);
 			}
 		}
 		return nbt;
 	}
 
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		for (int i = 0; i < filterInventory.length; i++) {
 			if (nbt.contains("filter#" + i)) {
-				filterInventory[i] = ItemStack.read(nbt.getCompound("filter#" + i));
+				filterInventory[i] = ItemStack.of(nbt.getCompound("filter#" + i));
 			} else {
 				filterInventory[i] = null;
 			}

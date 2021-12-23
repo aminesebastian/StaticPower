@@ -1,11 +1,11 @@
 package theking530.staticpower.init;
 
-import net.minecraft.block.AbstractBlock.Properties;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.common.ToolType;
 import theking530.staticcore.utilities.HarvestLevel;
 import theking530.staticpower.StaticPowerConfig;
@@ -337,7 +337,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(EnergizedLamp = new Lamp("lamp_energized"));
 		StaticPowerRegistry.preRegisterBlock(LumumLamp = new Lamp("lamp_lumum"));
 		StaticPowerRegistry.preRegisterBlock(ObsidianGlass = new StaticPowerGlassBlock("glass_obsidian"));
-		StaticPowerRegistry.preRegisterBlock(SmeepWool = new StaticPowerBlock("smeep_wool", Properties.from(Blocks.LIME_WOOL)));
+		StaticPowerRegistry.preRegisterBlock(SmeepWool = new StaticPowerBlock("smeep_wool", Properties.copy(Blocks.LIME_WOOL)));
 
 		StaticPowerRegistry.preRegisterBlock(StaticFarmland = new StaticPowerFarmland("farmland_static"));
 		StaticPowerRegistry.preRegisterBlock(EnergizedFarmland = new StaticPowerFarmland("farmland_energized"));
@@ -352,85 +352,85 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum", () -> ModItems.LumumSeeds));
 
 		// Wood
-		StaticPowerRegistry.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.from(Blocks.OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized", Block.Properties.from(Blocks.OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.from(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.copy(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized", Block.Properties.copy(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.copy(Blocks.OAK_LOG)));
 
 		// Planks
-		StaticPowerRegistry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.from(Blocks.OAK_PLANKS)));
-		StaticPowerRegistry.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.from(Blocks.OAK_PLANKS)));
-		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.from(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.copy(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.copy(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.copy(Blocks.OAK_PLANKS)));
 
 		// Ore
-		StaticPowerRegistry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper", Block.Properties.from(Blocks.IRON_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin", Block.Properties.from(Blocks.IRON_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc", Block.Properties.from(Blocks.IRON_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreAluminium = new StaticPowerOre("ore_aluminium", Block.Properties.from(Blocks.IRON_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium", Block.Properties.from(Blocks.IRON_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", Block.Properties.from(Blocks.GOLD_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", Block.Properties.from(Blocks.GOLD_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", Block.Properties.from(Blocks.GOLD_ORE).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", Block.Properties.from(Blocks.DIAMOND_ORE).setRequiresTool(), 2, 5));
-		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", Block.Properties.from(Blocks.DIAMOND_ORE).setRequiresTool(), 2, 5));
-		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", Block.Properties.from(Blocks.ANCIENT_DEBRIS).setRequiresTool()));
-		StaticPowerRegistry.preRegisterBlock(OreRustyIron = new StaticPowerOre("ore_rusty_iron", Block.Properties.from(Blocks.COAL_ORE).setRequiresTool(), 1, 3));
+		StaticPowerRegistry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper", Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin", Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc", Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreAluminium = new StaticPowerOre("ore_aluminium", Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium", Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", Block.Properties.copy(Blocks.GOLD_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", Block.Properties.copy(Blocks.GOLD_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", Block.Properties.copy(Blocks.GOLD_ORE).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", Block.Properties.copy(Blocks.DIAMOND_ORE).requiresCorrectToolForDrops(), 2, 5));
+		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", Block.Properties.copy(Blocks.DIAMOND_ORE).requiresCorrectToolForDrops(), 2, 5));
+		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", Block.Properties.copy(Blocks.ANCIENT_DEBRIS).requiresCorrectToolForDrops()));
+		StaticPowerRegistry.preRegisterBlock(OreRustyIron = new StaticPowerOre("ore_rusty_iron", Block.Properties.copy(Blocks.COAL_ORE).requiresCorrectToolForDrops(), 1, 3));
 
 		// Metal Blocks
 		StaticPowerRegistry.preRegisterBlock(BlockCopper = new StaticPowerBlock("block_copper",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.9f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.9f)));
 		StaticPowerRegistry.preRegisterBlock(BlockTin = new StaticPowerBlock("block_tin",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.7f)));
 		StaticPowerRegistry.preRegisterBlock(BlockZinc = new StaticPowerBlock("block_zinc",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockAluminium = new StaticPowerBlock("block_aluminium",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockMagnesium = new StaticPowerBlock("block_magnesium",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(2.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(2.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockSilver = new StaticPowerBlock("block_silver",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.5f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.5f)));
 		StaticPowerRegistry.preRegisterBlock(BlockLead = new StaticPowerBlock("block_lead",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.5f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.5f)));
 		StaticPowerRegistry.preRegisterBlock(BlockPlatinum = new StaticPowerBlock("block_platinum",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(2.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(2.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockRuby = new StaticPowerBlock("block_ruby",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(3.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockSapphire = new StaticPowerBlock("block_sapphire",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(3.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockTungsten = new StaticPowerBlock("block_tungsten",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(4.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockBrass = new StaticPowerBlock("block_brass",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.7f)));
 		StaticPowerRegistry.preRegisterBlock(BlockBronze = new StaticPowerBlock("block_bronze",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.7f)));
 
 		StaticPowerRegistry.preRegisterBlock(BlockRedstoneAlloy = new StaticPowerBlock("block_redstone_alloy",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.7f)));
 		StaticPowerRegistry.preRegisterBlock(BlockInertInfusion = new StaticPowerBlock("block_inert_infusion",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(1.7f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.STONE_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(1.7f)));
 
 		StaticPowerRegistry.preRegisterBlock(BlockStaticMetal = new StaticPowerBlock("block_static_metal",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(2.5f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(2.5f)));
 		StaticPowerRegistry.preRegisterBlock(BlockEnergizedMetal = new StaticPowerBlock("block_energized_metal",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(3.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockLumumMetal = new StaticPowerBlock("block_lumum_metal",
-				Block.Properties.create(Material.IRON).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).hardnessAndResistance(4.0f)));
+				Block.Properties.of(Material.METAL).harvestLevel(HarvestLevel.DIAMOND_TOOL.ordinal()).harvestTool(ToolType.PICKAXE).strength(4.0f)));
 
-		StaticPowerRegistry.preRegisterBlock(BlockLatex = new StaticPowerSlimeBlock("block_latex", Block.Properties.from(Blocks.SLIME_BLOCK)));
-		StaticPowerRegistry.preRegisterBlock(BlockRubber = new StaticPowerSlimeBlock("block_rubber", Block.Properties.from(Blocks.SLIME_BLOCK)));
+		StaticPowerRegistry.preRegisterBlock(BlockLatex = new StaticPowerSlimeBlock("block_latex", Block.Properties.copy(Blocks.SLIME_BLOCK)));
+		StaticPowerRegistry.preRegisterBlock(BlockRubber = new StaticPowerSlimeBlock("block_rubber", Block.Properties.copy(Blocks.SLIME_BLOCK)));
 
 		// Machine Blocks
 		StaticPowerRegistry.preRegisterBlock(
-				MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+				MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(
-				MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+				MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(
-				MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+				MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(
-				MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+				MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(
-				MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+				MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized", Block.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(
-				MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
+				MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL)));
 
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
@@ -591,14 +591,14 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(PowerMonitor = new BlockPowerMonitor("power_monitor"));
 
 		StaticPowerRegistry
-				.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_WOOD)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedLog = new StaticPowerTreeLog("rubber_tree_stripped_log", MaterialColor.WOOD, Block.Properties.from(Blocks.STRIPPED_OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", RubberTreeStrippedWood, Block.Properties.from(Blocks.OAK_LOG),
+				.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.copy(Blocks.STRIPPED_OAK_WOOD)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedLog = new StaticPowerTreeLog("rubber_tree_stripped_log", MaterialColor.WOOD, Block.Properties.copy(Blocks.STRIPPED_OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", RubberTreeStrippedWood, Block.Properties.copy(Blocks.OAK_LOG),
 				() -> StaticPowerConfig.SERVER.minRubberWoodBarkPerStrip.get(), () -> StaticPowerConfig.SERVER.maxRubberWoodBarkPerStrip.get(), () -> ModItems.RubberWoodBark));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", RubberTreeStrippedLog, Block.Properties.from(Blocks.OAK_LOG),
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", RubberTreeStrippedLog, Block.Properties.copy(Blocks.OAK_LOG),
 				() -> StaticPowerConfig.SERVER.minRubberWoodBarkPerStrip.get(), () -> StaticPowerConfig.SERVER.maxRubberWoodBarkPerStrip.get(), () -> ModItems.RubberWoodBark));
-		StaticPowerRegistry.preRegisterBlock(RubberTreePlanks = new StaticPowerBlock("rubber_tree_planks", Block.Properties.from(Blocks.OAK_PLANKS)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeLeaves = new StaticPowerTreeLeaves("rubber_tree_leaves", Block.Properties.from(Blocks.OAK_LEAVES)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeSapling = new StaticPowerSapling("rubber_tree_sapling", () -> new RubberTree(), Block.Properties.from(Blocks.OAK_SAPLING)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreePlanks = new StaticPowerBlock("rubber_tree_planks", Block.Properties.copy(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLeaves = new StaticPowerTreeLeaves("rubber_tree_leaves", Block.Properties.copy(Blocks.OAK_LEAVES)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeSapling = new StaticPowerSapling("rubber_tree_sapling", () -> new RubberTree(), Block.Properties.copy(Blocks.OAK_SAPLING)));
 	}
 }

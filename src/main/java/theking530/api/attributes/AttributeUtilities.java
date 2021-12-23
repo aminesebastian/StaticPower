@@ -3,20 +3,20 @@ package theking530.api.attributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 
 public class AttributeUtilities {
-	public static void addTooltipsForAttribute(ItemStack stack, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public static void addTooltipsForAttribute(ItemStack stack, List<Component> tooltip, boolean showAdvanced) {
 		// Add the tooltips for all attributes.
 		stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 			// Allocate the tooltip container.
-			List<ITextComponent> attributeTooltips = new ArrayList<ITextComponent>();
+			List<Component> attributeTooltips = new ArrayList<Component>();
 
 			// Add all the attribute tooltips.
 			for (ResourceLocation id : attributable.getAllAttributes()) {
@@ -30,13 +30,13 @@ public class AttributeUtilities {
 
 			// Add the header and footer.
 			if (attributeTooltips.size() > 0) {
-				tooltip.add(new StringTextComponent(""));
+				tooltip.add(new TextComponent(""));
 				tooltip.addAll(attributeTooltips);
 			}
 		});
 	}
 
-	public static void addTooltipsForAttribute(AbstractAttributeDefenition<?, ?> attribute, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public static void addTooltipsForAttribute(AbstractAttributeDefenition<?, ?> attribute, List<Component> tooltip, boolean showAdvanced) {
 		// Only add the tooltip if the attribute requests it.
 		if (attribute.isActive()) {
 			tooltip.add(attribute.getAttributeTitle(showAdvanced));

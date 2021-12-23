@@ -8,17 +8,17 @@ import java.util.Map.Entry;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
@@ -35,7 +35,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 		// Get all the registered items and add any recipes that can be created from
 		// them.
-		for (Entry<RegistryKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
+		for (Entry<ResourceKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
 			RECIPES.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
 		}
 
@@ -76,7 +76,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 		// Get all the registered items and add any recipes that can be created from
 		// them.
-		for (Entry<RegistryKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
+		for (Entry<ResourceKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
 			RECIPES.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
 		}
 
@@ -161,8 +161,8 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		return false;
 	}
 
-	public static class AutoSmithRecipeJEIWrapper implements IRecipe<IInventory> {
-		public static final IRecipeType<AutoSmithRecipeJEIWrapper> RECIPE_TYPE = IRecipeType.register("auto_smith_jei");
+	public static class AutoSmithRecipeJEIWrapper implements Recipe<Container> {
+		public static final RecipeType<AutoSmithRecipeJEIWrapper> RECIPE_TYPE = RecipeType.register("auto_smith_jei");
 		public final ResourceLocation id;
 		public final AutoSmithRecipe recipe;
 		public final Ingredient inputIng;
@@ -173,7 +173,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 			super();
 			this.recipe = recipe;
 			this.input = input;
-			this.inputIng = Ingredient.fromStacks(input);
+			this.inputIng = Ingredient.of(input);
 			this.output = output;
 			this.id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + output.getItem().getRegistryName().getPath().replace(":", "/"));
 		}
@@ -183,22 +183,22 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		}
 
 		@Override
-		public boolean matches(IInventory inv, World worldIn) {
+		public boolean matches(Container inv, Level worldIn) {
 			return false;
 		}
 
 		@Override
-		public ItemStack getCraftingResult(IInventory inv) {
+		public ItemStack assemble(Container inv) {
 			return output;
 		}
 
 		@Override
-		public boolean canFit(int width, int height) {
+		public boolean canCraftInDimensions(int width, int height) {
 			return false;
 		}
 
 		@Override
-		public ItemStack getRecipeOutput() {
+		public ItemStack getResultItem() {
 			return output;
 		}
 
@@ -216,12 +216,12 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		}
 
 		@Override
-		public IRecipeSerializer<?> getSerializer() {
+		public RecipeSerializer<?> getSerializer() {
 			return null;
 		}
 
 		@Override
-		public IRecipeType<?> getType() {
+		public RecipeType<?> getType() {
 			return RECIPE_TYPE;
 		}
 	}

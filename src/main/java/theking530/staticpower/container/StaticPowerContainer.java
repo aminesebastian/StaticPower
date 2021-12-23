@@ -7,17 +7,17 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -31,7 +31,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 
-public abstract class StaticPowerContainer extends Container {
+public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerContainer.class);
 	public static final int INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON = 69;
 
@@ -41,11 +41,11 @@ public abstract class StaticPowerContainer extends Container {
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
 	protected int playerHotbarEnd;
-	private final PlayerInventory playerInventory;
+	private final Inventory playerInventory;
 	private ContainerOpener<?> opener;
-	private ITextComponent name;
+	private Component name;
 
-	protected StaticPowerContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, PlayerInventory inv) {
+	protected StaticPowerContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, Inventory inv) {
 		super(allocator.getType(), id);
 		this.allocator = allocator;
 		playerInventory = inv;
@@ -57,7 +57,7 @@ public abstract class StaticPowerContainer extends Container {
 	 * 
 	 * @return The inventory of the player using this container.
 	 */
-	public PlayerInventory getPlayerInventory() {
+	public Inventory getPlayerInventory() {
 		return playerInventory;
 	}
 
@@ -66,13 +66,13 @@ public abstract class StaticPowerContainer extends Container {
 		return (T) super.addSlot(slotIn);
 	}
 
-	public PacketBuffer getRevertDataPacket() {
+	public FriendlyByteBuf getRevertDataPacket() {
 		return null;
 	}
 
-	public StaticPowerContainer duplicateForRevert(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public StaticPowerContainer duplicateForRevert(int windowId, Inventory inv, FriendlyByteBuf data) {
 		try {
-			Constructor<? extends StaticPowerContainer> constructor = getClass().getConstructor(new Class[] { int.class, PlayerInventory.class, PacketBuffer.class });
+			Constructor<? extends StaticPowerContainer> constructor = getClass().getConstructor(new Class[] { int.class, Inventory.class, FriendlyByteBuf.class });
 			return constructor.newInstance(windowId, inv, data);
 		} catch (Exception e) {
 			LOGGER.error(
@@ -98,8 +98,8 @@ public abstract class StaticPowerContainer extends Container {
 				(x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
 
 		// Open the UI.
-		NetworkGUI.openGui((ServerPlayerEntity) getPlayerInventory().player, requestUi, buff -> {
-			PacketBuffer parent = opener.getParent().getRevertDataPacket();
+		NetworkGUI.openGui((ServerPlayer) getPlayerInventory().player, requestUi, buff -> {
+			FriendlyByteBuf parent = opener.getParent().getRevertDataPacket();
 			if (parent != null) {
 				parent.resetReaderIndex();
 				buff.writeBytes(parent);
@@ -107,30 +107,30 @@ public abstract class StaticPowerContainer extends Container {
 		});
 	}
 
-	public void setName(ITextComponent name) {
+	public void setName(Component name) {
 		this.name = name;
 	}
 
-	public ITextComponent getName() {
+	public Component getName() {
 		return this.name;
 	}
 
-	protected void addPlayerInventory(PlayerInventory invPlayer, int xPosition, int yPosition) {
-		playerInventoryStart = this.inventorySlots.size();
+	protected void addPlayerInventory(Inventory invPlayer, int xPosition, int yPosition) {
+		playerInventoryStart = this.slots.size();
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
 				addSlot(new Slot(invPlayer, j + i * 9 + 9, xPosition + j * 18, yPosition + i * 18));
 			}
 		}
-		playerInventoryEnd = this.inventorySlots.size() - 1;
+		playerInventoryEnd = this.slots.size() - 1;
 	}
 
-	protected void addPlayerHotbar(PlayerInventory invPlayer, int xPosition, int yPosition) {
-		playerHotbarStart = this.inventorySlots.size();
+	protected void addPlayerHotbar(Inventory invPlayer, int xPosition, int yPosition) {
+		playerHotbarStart = this.slots.size();
 		for (int i = 0; i < 9; i++) {
 			addSlot(new Slot(invPlayer, i, xPosition + i * 18, yPosition));
 		}
-		playerHotbarEnd = this.inventorySlots.size() - 1;
+		playerHotbarEnd = this.slots.size() - 1;
 	}
 
 	/**
@@ -154,20 +154,20 @@ public abstract class StaticPowerContainer extends Container {
 	 * Returns false if no conditions were met, otherwise returns true. If false,
 	 * container handles moving the item between the inventory and the hotbar.
 	 */
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		return false;
 	}
 
-	protected boolean containerSlotShiftClicked(ItemStack stack, PlayerEntity player, StaticPowerContainerSlot slot, int slotIndex) {
-		if (mergeItemStack(stack, playerHotbarStart, playerHotbarEnd + 1, false)) {
+	protected boolean containerSlotShiftClicked(ItemStack stack, Player player, StaticPowerContainerSlot slot, int slotIndex) {
+		if (moveItemStackTo(stack, playerHotbarStart, playerHotbarEnd + 1, false)) {
 			return true;
-		} else if (!mergeItemStack(stack, playerInventoryStart, playerInventoryEnd + 1, false)) {
+		} else if (!moveItemStackTo(stack, playerInventoryStart, playerInventoryEnd + 1, false)) {
 			return true;
 		}
 		return false;
 	}
 
-	protected List<Slot> addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		return addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
@@ -194,12 +194,12 @@ public abstract class StaticPowerContainer extends Container {
 		return outputs;
 	}
 
-	protected List<Slot> addSlotsInGrid(IInventory inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		List<Slot> outputs = new ArrayList<Slot>();
-		maxPerRow = Math.min(inventory.getSizeInventory(), maxPerRow);
+		maxPerRow = Math.min(inventory.getContainerSize(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
-		for (int i = 0; i < inventory.getSizeInventory(); i++) {
+		for (int i = 0; i < inventory.getContainerSize(); i++) {
 			int row = i / maxPerRow;
 			Slot output = slotFactory.apply(startingIndex + i, xPos + ((i % maxPerRow) * adjustedSlotSize) - offset, yPos + (row * adjustedSlotSize));
 			outputs.add(addSlot(output));
@@ -236,33 +236,33 @@ public abstract class StaticPowerContainer extends Container {
 	}
 
 	protected boolean mergeItemStack(ItemStack stack, int index) {
-		return mergeItemStack(stack, index, index + 1, false);
+		return moveItemStackTo(stack, index, index + 1, false);
 	}
 
-	public ItemStack transferStackInSlot(PlayerEntity player, int invSlot) {
+	public ItemStack quickMoveStack(Player player, int invSlot) {
 		ItemStack itemstack = ItemStack.EMPTY;
-		Slot slot = (Slot) this.inventorySlots.get(invSlot);
+		Slot slot = (Slot) this.slots.get(invSlot);
 
-		if (slot != null && slot.getHasStack()) {
-			ItemStack itemstack1 = slot.getStack();
+		if (slot != null && slot.hasItem()) {
+			ItemStack itemstack1 = slot.getItem();
 			itemstack = itemstack1.copy();
 			if (slot instanceof StaticPowerContainerSlot) {
-				containerSlotShiftClicked(itemstack1, player, (StaticPowerContainerSlot) this.inventorySlots.get(invSlot), invSlot);
-				slot.onSlotChange(itemstack1, itemstack);
+				containerSlotShiftClicked(itemstack1, player, (StaticPowerContainerSlot) this.slots.get(invSlot), invSlot);
+				slot.onQuickCraft(itemstack1, itemstack);
 			} else {
 				if (!playerItemShiftClicked(itemstack1, player, slot, invSlot)) {
-					if (isInventorySlot(invSlot) && !mergeItemStack(itemstack1, playerHotbarStart, playerHotbarEnd + 1, false)) {
+					if (isInventorySlot(invSlot) && !moveItemStackTo(itemstack1, playerHotbarStart, playerHotbarEnd + 1, false)) {
 						return ItemStack.EMPTY;
-					} else if (isHotbarSlot(invSlot) && !mergeItemStack(itemstack1, playerInventoryStart, playerInventoryEnd + 1, false)) {
+					} else if (isHotbarSlot(invSlot) && !moveItemStackTo(itemstack1, playerInventoryStart, playerInventoryEnd + 1, false)) {
 						return ItemStack.EMPTY;
 					}
 				}
-				slot.onSlotChange(itemstack1, itemstack);
+				slot.onQuickCraft(itemstack1, itemstack);
 			}
 			if (itemstack1.getCount() == 0) {
-				slot.putStack(ItemStack.EMPTY);
+				slot.set(ItemStack.EMPTY);
 			} else {
-				slot.onSlotChanged();
+				slot.setChanged();
 			}
 			if (itemstack1.getCount() == itemstack.getCount()) {
 				return ItemStack.EMPTY;
@@ -273,13 +273,13 @@ public abstract class StaticPowerContainer extends Container {
 	}
 
 	@Override
-	public ItemStack slotClick(int slotId, int dragType, ClickType clickTypeIn, PlayerEntity player) {
+	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		// If the mouse button was INVENTORY_COMPONENT_FILTER_MOUSE_BUTTON, then this is
 		// an attempt to lock a slot.
 		if (dragType == INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON && slotId >= 0) {
-			Slot slot = inventorySlots.get(slotId);
+			Slot slot = slots.get(slotId);
 			if (slot instanceof StaticPowerContainerSlot && ((StaticPowerContainerSlot) slot).getItemHandler() instanceof InventoryComponent) {
-				if (player.getEntityWorld().isRemote) {
+				if (player.getCommandSenderWorld().isClientSide) {
 					// Get the inventory component.
 					InventoryComponent invComponent = ((InventoryComponent) ((StaticPowerContainerSlot) slot).getItemHandler());
 
@@ -300,15 +300,15 @@ public abstract class StaticPowerContainer extends Container {
 				}
 			}
 			// Return as we don't want them to modify the container in this case.
-			return inventorySlots.get(slotId).getStack();
-		} else if (slotId >= 0 && inventorySlots.get(slotId) instanceof PhantomSlot) {
+			return slots.get(slotId).getItem();
+		} else if (slotId >= 0 && slots.get(slotId) instanceof PhantomSlot) {
 			// Get the phantom slot.
-			PhantomSlot phantSlot = (PhantomSlot) inventorySlots.get(slotId);
+			PhantomSlot phantSlot = (PhantomSlot) slots.get(slotId);
 
 			// If the mouse item is empty, if shift is held, clear the slot. If regular
 			// click, decrease the stack size. Otherwise, attempt to insert the
 			// phantom item.
-			if (player.inventory.getItemStack().isEmpty()) {
+			if (player.inventory.getCarried().isEmpty()) {
 				if (clickTypeIn == ClickType.QUICK_MOVE) {
 					phantSlot.clearPhantom();
 				} else {
@@ -316,22 +316,22 @@ public abstract class StaticPowerContainer extends Container {
 				}
 			} else {
 				if (clickTypeIn == ClickType.QUICK_MOVE) {
-					phantSlot.insertPhantomItem(player.inventory.getItemStack(), 64);
+					phantSlot.insertPhantomItem(player.inventory.getCarried(), 64);
 				} else {
-					phantSlot.insertPhantomItem(player.inventory.getItemStack(), 1);
+					phantSlot.insertPhantomItem(player.inventory.getCarried(), 1);
 				}
 			}
-			inventorySlots.get(slotId).onSlotChanged();
+			slots.get(slotId).setChanged();
 
 			// Return as we don't want them to modify the container in this case.
-			return inventorySlots.get(slotId).getStack();
+			return slots.get(slotId).getItem();
 		} else {
-			return super.slotClick(slotId, dragType, clickTypeIn, player);
+			return super.clicked(slotId, dragType, clickTypeIn, player);
 		}
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
+	public boolean stillValid(Player playerIn) {
 		return true;
 	}
 }

@@ -2,7 +2,7 @@ package theking530.api.attributes.capability;
 
 import java.util.Set;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 
 public interface IAttributable {

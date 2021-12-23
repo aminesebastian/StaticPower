@@ -2,10 +2,10 @@ package theking530.staticpower.data.crafting.wrappers.mixer;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
@@ -13,7 +13,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MixerRecipe> {
+public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixerRecipe> {
 	public static final MixerRecipeSerializer INSTANCE = new MixerRecipeSerializer();
 
 	private MixerRecipeSerializer() {
@@ -21,7 +21,7 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 	}
 
 	@Override
-	public MixerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public MixerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		StaticPowerIngredient input1 = StaticPowerIngredient.EMPTY;
 		StaticPowerIngredient input2 = StaticPowerIngredient.EMPTY;
 		FluidStack fluidInput1 = FluidStack.EMPTY;
@@ -48,8 +48,8 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 		int processingTime = StaticPowerConfig.SERVER.mixerProcessingTime.get();
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+		if (GsonHelper.isValidNode(json, "processing")) {
+			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
@@ -62,7 +62,7 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 	}
 
 	@Override
-	public MixerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public MixerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		long power = buffer.readLong();
 		int time = buffer.readInt();
 
@@ -77,7 +77,7 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, MixerRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, MixerRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getPrimaryItemInput().write(buffer);

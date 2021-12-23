@@ -4,6 +4,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+
 /**
  * Basic class for a decorative cut-out block.
  * 
@@ -18,6 +20,6 @@ public class StaticPowerCutoutBlock extends StaticPowerBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getCutout();
+		return RenderType.cutout();
 	}
 }

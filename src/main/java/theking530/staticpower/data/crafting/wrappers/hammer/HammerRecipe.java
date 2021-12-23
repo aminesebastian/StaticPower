@@ -1,11 +1,11 @@
 package theking530.staticpower.data.crafting.wrappers.hammer;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.Tags.IOptionalNamedTag;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -13,7 +13,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class HammerRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<HammerRecipe> RECIPE_TYPE = IRecipeType.register("hammer");
+	public static final RecipeType<HammerRecipe> RECIPE_TYPE = RecipeType.register("hammer");
 
 	private final Ingredient hammer;
 	private final StaticPowerIngredient inputItem;
@@ -83,12 +83,12 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return HammerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

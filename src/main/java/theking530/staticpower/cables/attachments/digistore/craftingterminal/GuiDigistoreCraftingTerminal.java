@@ -3,11 +3,11 @@ package theking530.staticpower.cables.attachments.digistore.craftingterminal;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.EntityRenderWidget;
 import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.button.FakeSlotButton;
@@ -27,7 +27,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	private TextButton clearCurrentRecipe;
 	private List<FakeSlotButton> previousRecipes;
 
-	public GuiDigistoreCraftingTerminal(ContainerDigistoreCraftingTerminal container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiDigistoreCraftingTerminal(ContainerDigistoreCraftingTerminal container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 270);
 
 		// Limit the view to only show 5 rows to make room for the crafting GUI.
@@ -55,7 +55,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 
 		// Add clear button.
 		registerWidget(clearCurrentRecipe = new TextButton(118, 119, 8, 8, "x", (button, mouseButton) -> {
-			this.getContainer().clearCraftingSlots(playerInventory.player);
+			this.getMenu().clearCraftingSlots(inventory.player);
 		}));
 	}
 
@@ -63,7 +63,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		DigistoreCraftingTerminalHistoryEntry entry = button.<DigistoreCraftingTerminalHistoryEntry>getData();
 		if (entry != null) {
 			// Send the packet to the server to update the crafting grid.
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketRestorePreviousCraftingRecipe(container.windowId, entry.recipe));
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketRestorePreviousCraftingRecipe(menu.containerId, entry.recipe));
 		}
 	}
 
@@ -114,7 +114,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		}
 
 		// Keep the last crafting recipes updated.
-		playerInventory.player.getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
+		inventory.player.getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
 			List<DigistoreCraftingTerminalHistoryEntry> history = data.getCraftingHistory();
 			for (int i = 0; i < previousRecipes.size(); i++) {
 				FakeSlotButton fakeSlot = previousRecipes.get(i);
@@ -132,7 +132,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 	}
 
 	@Override
-	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 	}

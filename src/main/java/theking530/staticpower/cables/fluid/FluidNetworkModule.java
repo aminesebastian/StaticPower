@@ -4,13 +4,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -37,7 +37,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void tick(World world) {
+	public void tick(Level world) {
 		// If we have no fluid, do nothing.
 		if (networkTank.getFluid().isEmpty()) {
 			return;
@@ -81,7 +81,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				}
 
 				// Get the destination tile and skip if it is null.
-				TileEntity tile = destination.getTileEntity();
+				BlockEntity tile = destination.getTileEntity();
 				if (tile == null) {
 					continue;
 				}
@@ -206,20 +206,20 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<ITextComponent> output) {
+	public void getReaderOutput(List<Component> output) {
 		String storedFluid = new MetricConverter(networkTank.getFluidAmount()).getValueAsString(true);
 		String maximumFluid = new MetricConverter(networkTank.getCapacity()).getValueAsString(true);
-		output.add(new StringTextComponent(
+		output.add(new TextComponent(
 				String.format("Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, networkTank.getFluid().getDisplayName().getString(), maximumFluid)));
 	}
 
 	@Override
-	public void readFromNbt(CompoundNBT tag) {
+	public void readFromNbt(CompoundTag tag) {
 		networkTank.readFromNBT(tag);
 	}
 
 	@Override
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		networkTank.writeToNBT(tag);
 		return tag;
 	}

@@ -1,6 +1,6 @@
 package theking530.staticpower.data.tiers;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.StaticPowerTier;

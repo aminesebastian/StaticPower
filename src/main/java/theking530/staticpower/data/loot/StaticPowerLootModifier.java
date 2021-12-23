@@ -6,12 +6,12 @@ import javax.annotation.Nonnull;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.loot.ConditionArraySerializer;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.conditions.ILootCondition;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.advancements.critereon.SerializationContext;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.common.loot.LootModifier;
 import theking530.staticcore.utilities.SDMath;
@@ -26,7 +26,7 @@ public class StaticPowerLootModifier extends LootModifier {
 	public final float chance;
 	public final ItemStack output;
 
-	public StaticPowerLootModifier(ItemStack output, int minCount, int maxCount, float chance, ILootCondition[] conditionsIn) {
+	public StaticPowerLootModifier(ItemStack output, int minCount, int maxCount, float chance, LootItemCondition[] conditionsIn) {
 		super(conditionsIn);
 		this.output = output;
 		this.minCount = minCount;
@@ -56,18 +56,18 @@ public class StaticPowerLootModifier extends LootModifier {
 
 	public static class Serializer extends GlobalLootModifierSerializer<StaticPowerLootModifier> {
 		@Override
-		public StaticPowerLootModifier read(ResourceLocation name, JsonObject json, ILootCondition[] conditionsIn) {
+		public StaticPowerLootModifier read(ResourceLocation name, JsonObject json, LootItemCondition[] conditionsIn) {
 			int minCount = json.getAsJsonPrimitive("minCount").getAsInt();
 			int maxCount = json.getAsJsonPrimitive("maxCount").getAsInt();
 			float chance = json.getAsJsonPrimitive("chance").getAsFloat();
-			ItemStack output = ShapedRecipe.deserializeItem(json);
+			ItemStack output = ShapedRecipe.itemFromJson(json);
 			return new StaticPowerLootModifier(output, minCount, maxCount, chance, conditionsIn);
 		}
 
 		@Override
 		public JsonObject write(StaticPowerLootModifier instance) {
 			JsonObject json = new JsonObject();
-			json.add("conditions", ConditionArraySerializer.field_235679_a_.func_235681_a_(instance.conditions));
+			json.add("conditions", SerializationContext.INSTANCE.serializeConditions(instance.conditions));
 			json.addProperty("minCount", instance.minCount);
 			json.addProperty("maxCount", instance.maxCount);
 			json.addProperty("chance", instance.chance);

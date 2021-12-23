@@ -3,21 +3,22 @@ package theking530.staticcore.gui.widgets.valuebars;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.text.ITextComponent;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class GuiHeatBarUtilities {
-	public static List<ITextComponent> getTooltip(double currentHeat, double maxHeat, double heatPerTick) {
-		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
+	public static List<Component> getTooltip(double currentHeat, double maxHeat, double heatPerTick) {
+		List<Component> tooltip = new ArrayList<Component>();
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(GuiTextUtilities.formatHeatToString(currentHeat, maxHeat));
@@ -25,7 +26,7 @@ public class GuiHeatBarUtilities {
 		return tooltip;
 	}
 
-	public static void drawHeatBar(MatrixStack stack, float xpos, float ypos, float width, float height, float zLevel, double currentHeat, double maxHeat) {
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, double currentHeat, double maxHeat) {
 		float u1 = (float) (currentHeat / maxHeat);
 		float k1 = u1 * height;
 
@@ -34,28 +35,28 @@ public class GuiHeatBarUtilities {
 		// Get the origin.
 		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(stack, xpos, ypos);
 
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuffer();
-		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.HEAT_BAR_BG);
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(origin.getX() + width, origin.getY(), zLevel).tex(1, 0).endVertex();
-		vertexbuffer.pos(origin.getX() + width, origin.getY() - height, zLevel).tex(1.0f, 1.0f).endVertex();
-		vertexbuffer.pos(origin.getX(), origin.getY() - height, zLevel).tex(0.0f, 1.0f).endVertex();
-		vertexbuffer.pos(origin.getX(), origin.getY(), zLevel).tex(0, 0).endVertex();
-		tessellator.draw();
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder vertexbuffer = tessellator.getBuilder();
+		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.HEAT_BAR_BG);
+		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		vertexbuffer.vertex(origin.getX() + width, origin.getY(), zLevel).uv(1, 0).endVertex();
+		vertexbuffer.vertex(origin.getX() + width, origin.getY() - height, zLevel).uv(1.0f, 1.0f).endVertex();
+		vertexbuffer.vertex(origin.getX(), origin.getY() - height, zLevel).uv(0.0f, 1.0f).endVertex();
+		vertexbuffer.vertex(origin.getX(), origin.getY(), zLevel).uv(0, 0).endVertex();
+		tessellator.end();
 
-		float glowState = (float) (Math.sin((float) Minecraft.getInstance().world.getGameTime() / 10.0f));
+		float glowState = (float) (Math.sin((float) Minecraft.getInstance().level.getGameTime() / 10.0f));
 		glowState = Math.abs(glowState);
 		glowState *= 2.0f;
 		glowState += 8.0f;
 		glowState /= 2.0f;
 		
-		Minecraft.getInstance().getTextureManager().bindTexture(GuiTextures.HEAT_BAR_FG);
-		vertexbuffer.begin(7, DefaultVertexFormats.POSITION_TEX);
-		vertexbuffer.pos(origin.getX() + width, origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).tex(1, 0).endVertex();
-		vertexbuffer.pos(origin.getX() + width, origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).tex(1, u1).endVertex();
-		vertexbuffer.pos(origin.getX(), origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).tex(0, u1).endVertex();
-		vertexbuffer.pos(origin.getX(), origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).tex(0, 0).endVertex();
-		tessellator.draw();
+		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.HEAT_BAR_FG);
+		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+		vertexbuffer.vertex(origin.getX() + width, origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, 0).endVertex();
+		vertexbuffer.vertex(origin.getX() + width, origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, u1).endVertex();
+		vertexbuffer.vertex(origin.getX(), origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).uv(0, u1).endVertex();
+		vertexbuffer.vertex(origin.getX(), origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).uv(0, 0).endVertex();
+		tessellator.end();
 	}
 }

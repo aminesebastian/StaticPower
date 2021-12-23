@@ -1,8 +1,8 @@
 package theking530.staticpower.data.crafting.wrappers.cauldron;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -10,7 +10,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class CauldronRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<CauldronRecipe> RECIPE_TYPE = IRecipeType.register("cauldron");
+	public static final RecipeType<CauldronRecipe> RECIPE_TYPE = RecipeType.register("cauldron");
 
 	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output;
@@ -83,12 +83,12 @@ public class CauldronRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return CauldronRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

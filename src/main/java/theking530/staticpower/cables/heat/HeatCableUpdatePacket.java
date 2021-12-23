@@ -3,10 +3,10 @@ package theking530.staticpower.cables.heat;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 
@@ -26,14 +26,14 @@ public class HeatCableUpdatePacket extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(position);
 		buffer.writeFloat(currentHeat);
 		buffer.writeFloat(capacity);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		position = buffer.readBlockPos();
 		currentHeat = buffer.readFloat();
 		capacity = buffer.readFloat();
@@ -42,8 +42,8 @@ public class HeatCableUpdatePacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.world.isAreaLoaded(position, 1)) {
-				TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(position);
+			if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
+				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
 				ComponentUtilities.getComponent(HeatCableComponent.class, rawTileEntity).ifPresent(comp -> {
 					comp.updateFromNetworkUpdatePacket(currentHeat, capacity);
 				});

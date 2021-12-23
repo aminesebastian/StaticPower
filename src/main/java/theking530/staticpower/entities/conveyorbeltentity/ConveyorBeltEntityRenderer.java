@@ -2,23 +2,23 @@ package theking530.staticpower.entities.conveyorbeltentity;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import com.mojang.math.Quaternion;
+import net.minecraft.world.phys.Vec3;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -32,22 +32,22 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  */
 @OnlyIn(Dist.CLIENT)
 public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
-	private final net.minecraft.client.renderer.ItemRenderer itemRenderer;
+	private final net.minecraft.client.renderer.entity.ItemRenderer itemRenderer;
 	private final Random random = new Random();
 
-	public ConveyorBeltEntityRenderer(EntityRendererManager renderManagerIn, net.minecraft.client.renderer.ItemRenderer itemRendererIn) {
+	public ConveyorBeltEntityRenderer(EntityRenderDispatcher renderManagerIn, net.minecraft.client.renderer.entity.ItemRenderer itemRendererIn) {
 		super(renderManagerIn);
 		this.itemRenderer = itemRendererIn;
-		this.shadowSize = 0.15F;
-		this.shadowOpaque = 0.75F;
+		this.shadowRadius = 0.15F;
+		this.shadowStrength = 0.75F;
 	}
 
-	public void render(ItemEntity entityIn, float entityYaw, float partialTicks, MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn) {
-		matrixStackIn.push();
+	public void render(ItemEntity entityIn, float entityYaw, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int packedLightIn) {
+		matrixStackIn.pushPose();
 		ItemStack itemstack = entityIn.getItem();
-		int i = itemstack.isEmpty() ? 187 : Item.getIdFromItem(itemstack.getItem()) + itemstack.getDamage();
+		int i = itemstack.isEmpty() ? 187 : Item.getId(itemstack.getItem()) + itemstack.getDamageValue();
 		this.random.setSeed((long) i);
-		IBakedModel ibakedmodel = this.itemRenderer.getItemModelWithOverrides(itemstack, entityIn.world, (LivingEntity) null);
+		BakedModel ibakedmodel = this.itemRenderer.getModel(itemstack, entityIn.level, (LivingEntity) null);
 		boolean flag = ibakedmodel.isGui3d();
 		int j = this.getModelCount(itemstack);
 
@@ -57,22 +57,22 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		}
 
 		// Normalize the motion vector.
-		Vector3d normalizedDirection = entityIn.getMotion().normalize();
+		Vec3 normalizedDirection = entityIn.getDeltaMovement().normalize();
 
 		// Calculate the rotation angle (and bias it a bit). Also, capture the sign of
 		// the angle.
-		double velocityFacingRotation = Math.toDegrees(Math.asin(normalizedDirection.getY()));
+		double velocityFacingRotation = Math.toDegrees(Math.asin(normalizedDirection.y()));
 		double angleSign = Math.signum(velocityFacingRotation);
 		if (velocityFacingRotation != 0) {
 			velocityFacingRotation += angleSign * 20;
 		}
 
 		// Rotate to face the y velocity and bias a bit down.
-		matrixStackIn.rotate(new Quaternion((float) (velocityFacingRotation * -normalizedDirection.getZ()), (float) 0, (float) (velocityFacingRotation * normalizedDirection.getX()), true));
+		matrixStackIn.mulPose(new Quaternion((float) (velocityFacingRotation * -normalizedDirection.z()), (float) 0, (float) (velocityFacingRotation * normalizedDirection.x()), true));
 		if (angleSign < 0) {
-			matrixStackIn.translate(0.0, normalizedDirection.getY() * 0.2f, 0.0);
+			matrixStackIn.translate(0.0, normalizedDirection.y() * 0.2f, 0.0);
 		} else {
-			matrixStackIn.translate(0.0, normalizedDirection.getY() * -0.1f * angleSign, 0.0);
+			matrixStackIn.translate(0.0, normalizedDirection.y() * -0.1f * angleSign, 0.0);
 		}
 
 		// Trasnform blocks differently than items.
@@ -82,11 +82,11 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		} else {
 			matrixStackIn.translate(0.0, ((5 - j) * 0.02) - 0.06, -0.1);
 			matrixStackIn.scale(1f, 1.1f, 1f);
-			matrixStackIn.rotate(new Quaternion(90, 0, 0, true));
+			matrixStackIn.mulPose(new Quaternion(90, 0, 0, true));
 		}
 
-		float f3 = entityIn.getItemHover(partialTicks);
-		matrixStackIn.rotate(Vector3f.YP.rotation(f3));
+		float f3 = entityIn.getSpin(partialTicks);
+		matrixStackIn.mulPose(Vector3f.YP.rotation(f3));
 		if (!flag) {
 			float f7 = -0.0F * (float) (j - 1) * 0.5F;
 			float f8 = -0.0F * (float) (j - 1) * 0.5F;
@@ -95,7 +95,7 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 		}
 
 		for (int k = 0; k < j; ++k) {
-			matrixStackIn.push();
+			matrixStackIn.pushPose();
 			if (k > 0) {
 				if (flag) {
 					float f11 = (this.random.nextFloat() * 2.0F - 1.0F) * 0.15F;
@@ -109,14 +109,14 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 				}
 			}
 
-			this.itemRenderer.renderItem(itemstack, ItemCameraTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ibakedmodel);
-			matrixStackIn.pop();
+			this.itemRenderer.render(itemstack, ItemTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ibakedmodel);
+			matrixStackIn.popPose();
 			if (!flag) {
 				matrixStackIn.translate(0.0, 0.0, 0.03F);
 			}
 		}
 
-		matrixStackIn.pop();
+		matrixStackIn.popPose();
 		super.render(entityIn, entityYaw, partialTicks, matrixStackIn, bufferIn, packedLightIn);
 	}
 
@@ -139,8 +139,8 @@ public class ConveyorBeltEntityRenderer extends EntityRenderer<ItemEntity> {
 	 * Returns the location of an entity's texture.
 	 */
 	@SuppressWarnings("deprecation")
-	public ResourceLocation getEntityTexture(ItemEntity entity) {
-		return AtlasTexture.LOCATION_BLOCKS_TEXTURE;
+	public ResourceLocation getTextureLocation(ItemEntity entity) {
+		return TextureAtlas.LOCATION_BLOCKS;
 	}
 
 	/**

@@ -2,14 +2,14 @@ package theking530.staticpower.tileentities.nonpowered.conveyors.supplier;
 
 import java.util.List;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
@@ -25,11 +25,11 @@ import theking530.staticpower.tileentities.components.items.OutputServoComponent
 
 public class TileEntityConveyorSupplier extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityConveyorSupplier> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityConveyorSupplier(), ModBlocks.ConveyorSupplier);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityConveyorSupplier(), ModBlocks.ConveyorSupplier);
 
 	public final InventoryComponent internalInventory;
 	protected final ConveyorMotionComponent conveyor;
-	protected AxisAlignedBB importBox;
+	protected AABB importBox;
 
 	public TileEntityConveyorSupplier() {
 		super(TYPE);
@@ -46,12 +46,12 @@ public class TileEntityConveyorSupplier extends TileEntityConfigurable {
 	@Override
 	public void process() {
 		// Do nothing on the client.
-		if (world.isRemote) {
+		if (level.isClientSide) {
 			return;
 		}
 
 		// Get all entities in the import space.
-		List<Entity> entities = getWorld().getEntitiesWithinAABB(Entity.class, importBox);
+		List<Entity> entities = getLevel().getEntitiesOfClass(Entity.class, importBox);
 		for (Entity entity : entities) {
 			if (entity instanceof ConveyorBeltEntity) {
 				// Get the item entity.
@@ -72,24 +72,24 @@ public class TileEntityConveyorSupplier extends TileEntityConfigurable {
 	}
 
 	@Override
-	protected void postInit(World world, BlockPos pos, BlockState state) {
+	protected void postInit(Level world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
 		float conveyorLength = 0.9f;
 		float inverseConveyorLength = 1.0f - conveyorLength;
 
 		Direction facing = getFacingDirection();
 		if (facing == Direction.EAST) {
-			importBox = new AxisAlignedBB(pos.getX() + conveyorLength, pos.getY() + 0.5, pos.getZ(), pos.getX() + 1.0, pos.getY() + 0.9, pos.getZ() + 1);
-			conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + conveyorLength, pos.getY() + 0.9, pos.getZ() + 1));
+			importBox = new AABB(pos.getX() + conveyorLength, pos.getY() + 0.5, pos.getZ(), pos.getX() + 1.0, pos.getY() + 0.9, pos.getZ() + 1);
+			conveyor.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + conveyorLength, pos.getY() + 0.9, pos.getZ() + 1));
 		} else if (facing == Direction.NORTH) {
-			importBox = new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + inverseConveyorLength);
-			conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ() + inverseConveyorLength, pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + 1));
+			importBox = new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + inverseConveyorLength);
+			conveyor.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ() + inverseConveyorLength, pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + 1));
 		} else if (facing == Direction.SOUTH) {
-			importBox = new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ() + conveyorLength, pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + 1);
-			conveyor.updateBounds(new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + conveyorLength));
+			importBox = new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ() + conveyorLength, pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + 1);
+			conveyor.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + conveyorLength));
 		} else if (facing == Direction.WEST) {
-			importBox = new AxisAlignedBB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + inverseConveyorLength, pos.getY() + 0.9, pos.getZ() + 1);
-			conveyor.updateBounds(new AxisAlignedBB(pos.getX() + inverseConveyorLength, pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + 1));
+			importBox = new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + inverseConveyorLength, pos.getY() + 0.9, pos.getZ() + 1);
+			conveyor.updateBounds(new AABB(pos.getX() + inverseConveyorLength, pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.9, pos.getZ() + 1));
 		}
 
 		// Make sure the front is output only.

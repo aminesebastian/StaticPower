@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentities.components.items;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface ItemStackHandlerFilter {
 

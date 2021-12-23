@@ -1,14 +1,14 @@
 package theking530.staticpower.client.rendering.items.dynamic;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -23,13 +23,13 @@ public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRendere
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
 
 	@Override
-	public void render(ItemStack stack, IBakedModel defaultModel, ItemCameraTransforms.TransformType transformType, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+	public void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		// Check to see if the stack has the serialized nbt.
 		if (stack.hasTag() && stack.getTag().contains("SerializableNbt")) {
 			// If it does, get the tank tag and then the subsequent fluid tag.
-			CompoundNBT tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
-			CompoundNBT fluidTank = tankTag.getCompound("fluidStorage");
+			CompoundTag tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
+			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 
 			// Get the fluid.
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));

@@ -4,23 +4,24 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import mezz.jei.api.ingredients.subtypes.IIngredientSubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -41,15 +42,15 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	public final ResourceLocation tier;
 
 	public FluidCapsule(String name, ResourceLocation tier) {
-		super(name, new Properties().maxStackSize(1).setNoRepair());
+		super(name, new Properties().stacksTo(1).setNoRepair());
 		this.tier = tier;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		FluidUtil.getFluidHandler(stack).ifPresent(fluidHandler -> {
-			tooltip.add(new StringTextComponent(TextFormatting.WHITE.toString()).append(GuiTextUtilities
+			tooltip.add(new TextComponent(ChatFormatting.WHITE.toString()).append(GuiTextUtilities
 					.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));
 		});
 	}
@@ -69,23 +70,23 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	}
 
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable net.minecraft.nbt.CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable net.minecraft.nbt.CompoundTag nbt) {
 		return new FluidCapsuleCapability(stack, tier, tier == StaticPowerTiers.CREATIVE);
 	}
 
 	@Override
-	public boolean hasEffect(ItemStack stack) {
+	public boolean isFoil(ItemStack stack) {
 		return tier == StaticPowerTiers.CREATIVE;
 	}
 
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		IFluidHandlerItem containerHandler = FluidUtil.getFluidHandler(stack).orElse(null);
 		if (containerHandler == null || containerHandler.getFluidInTank(0).isEmpty()) {
-			return new TranslationTextComponent(this.getTranslationKey(stack));
+			return new TranslatableComponent(this.getDescriptionId(stack));
 		}
-		return new TranslationTextComponent(this.getTranslationKey(stack)).appendString(" (")
-				.append(containerHandler.getFluidInTank(0).getDisplayName()).appendString(")");
+		return new TranslatableComponent(this.getDescriptionId(stack)).append(" (")
+				.append(containerHandler.getFluidInTank(0).getDisplayName()).append(")");
 	}
 
 	@Override
@@ -94,11 +95,11 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	}
 
 	@Override
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos,
-			Direction face, PlayerEntity player, ItemStack item) {
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
+			Direction face, Player player, ItemStack item) {
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(item).orElse(null);
 		if (fluidHandler != null) {
-			BlockPos fluidTargetPos = pos.offset(face);
+			BlockPos fluidTargetPos = pos.relative(face);
 			FluidState usedFluidState = world.getFluidState(fluidTargetPos);
 			if (usedFluidState.isEmpty()) {
 				WorldUtilities.tryPlaceFluid(player, world, context.getHand(), fluidTargetPos, fluidHandler,
@@ -107,12 +108,12 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 				WorldUtilities.tryPickUpFluid(item, player, world, fluidTargetPos, face);
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new FluidCapsuleItemModel(existingModel);
 	}
 
@@ -125,9 +126,9 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 		return output;
 	}
 
-	public static class FluidCapsuleItemJEIInterpreter implements ISubtypeInterpreter {
+	public static class FluidCapsuleItemJEIInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
 		@Override
-		public String apply(ItemStack itemStack) {
+		public String apply(ItemStack itemStack, UidContext context) {
 			IFluidHandlerItem containerHandler = FluidUtil.getFluidHandler(itemStack).orElse(null);
 			ResourceLocation tier = ((FluidCapsule) itemStack.getItem()).tier;
 			if (containerHandler == null || containerHandler.getFluidInTank(0).isEmpty()) {

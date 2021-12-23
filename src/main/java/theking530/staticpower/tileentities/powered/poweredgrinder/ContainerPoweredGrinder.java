@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.poweredgrinder;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -21,11 +21,11 @@ public class ContainerPoweredGrinder extends StaticPowerTileEntityContainer<Tile
 		}
 	}
 
-	public ContainerPoweredGrinder(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerPoweredGrinder(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityPoweredGrinder) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPoweredGrinder(int windowId, PlayerInventory playerInventory, TileEntityPoweredGrinder owner) {
+	public ContainerPoweredGrinder(int windowId, Inventory playerInventory, TileEntityPoweredGrinder owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

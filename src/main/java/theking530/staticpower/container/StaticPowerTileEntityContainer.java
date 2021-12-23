@@ -5,15 +5,15 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.IContainerListener;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraftforge.fml.network.PacketDistributor;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.ContainerListener;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -30,7 +30,7 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	private int syncTime;
 	private int syncTimer;
 
-	public StaticPowerTileEntityContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, PlayerInventory inv, T owner) {
+	public StaticPowerTileEntityContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int windowId, Inventory inv, T owner) {
 		super(allocator, windowId, inv);
 		owningTileEntity = owner;
 		// This has to be called here and not in the super as the super initializes
@@ -53,8 +53,8 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	 * a set interval as defined by {@link #syncTime}.
 	 */
 	@Override
-	public void detectAndSendChanges() {
-		super.detectAndSendChanges();
+	public void broadcastChanges() {
+		super.broadcastChanges();
 
 		// If the sync timer is less than the sync time, increment.
 		if (syncTimer < syncTime) {
@@ -67,10 +67,10 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 			syncTimer = 0;
 
 			// Send a packet to all listening players.
-			for (IContainerListener listener : this.listeners) {
-				if (listener instanceof ServerPlayerEntity) {
+			for (ContainerListener listener : this.containerListeners) {
+				if (listener instanceof ServerPlayer) {
 					NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity(), false);
-					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity) listener), msg);
+					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) listener), msg);
 				}
 			}
 		}
@@ -102,8 +102,8 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	 * @return The {@link TileEntityBase} for this container or null if none was
 	 *         encountered.
 	 */
-	protected static TileEntityBase resolveTileEntityFromDataPacket(final PlayerInventory playerInventory, final PacketBuffer data) {
-		final TileEntity tileAtPos = playerInventory.player.world.getTileEntity(data.readBlockPos());
+	protected static TileEntityBase resolveTileEntityFromDataPacket(final Inventory playerInventory, final FriendlyByteBuf data) {
+		final BlockEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
 		if (tileAtPos instanceof TileEntityBase) {
 			return (TileEntityBase) tileAtPos;
 		} else {
@@ -113,7 +113,7 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		// Get the priority ordered inventories.
 		List<InventoryComponent> inventories = getTileEntity().getPriorityOrderedInventories();
 

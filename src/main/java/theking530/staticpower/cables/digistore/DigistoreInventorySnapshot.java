@@ -8,12 +8,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.IDigistoreInventory;
@@ -239,7 +239,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 						if (!found) {
 							stacks.remove(i);
 						}
-					} else if (!stack.getDisplayName().getString().toLowerCase().contains(this.filterString)) {
+					} else if (!stack.getHoverName().getString().toLowerCase().contains(this.filterString)) {
 						stacks.remove(i);
 					}
 				}
@@ -252,7 +252,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 					@Override
 					public int compare(ItemStack o1, ItemStack o2) {
 						int comparison = (o2.getCount() - o1.getCount()) * sortModifier;
-						return comparison != 0 ? comparison : (o1.getDisplayName().getString().compareToIgnoreCase(o2.getDisplayName().getString())) * sortModifier;
+						return comparison != 0 ? comparison : (o1.getHoverName().getString().compareToIgnoreCase(o2.getHoverName().getString())) * sortModifier;
 					}
 				});
 			} else {
@@ -260,7 +260,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				stacks.sort(new Comparator<ItemStack>() {
 					@Override
 					public int compare(ItemStack o1, ItemStack o2) {
-						return (o1.getDisplayName().getString().compareToIgnoreCase(o2.getDisplayName().getString())) * sortModifier;
+						return (o1.getHoverName().getString().compareToIgnoreCase(o2.getHoverName().getString())) * sortModifier;
 					}
 				});
 			}
@@ -451,7 +451,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		// If we made it this far, we never found the item. Add it and mark it as
 		// craftable. If it does not have a tag, add one to store the craftable state.
 		if (!stackToCache.hasTag()) {
-			stackToCache.setTag(new CompoundNBT());
+			stackToCache.setTag(new CompoundTag());
 		}
 		// Mark the craftable state and add it to the list.
 		addCraftableMetadata(stackToCache, DigistoreItemCraftableState.ONLY_CRAFTABLE);
@@ -472,19 +472,19 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	protected static void addCraftableMetadata(ItemStack stack, DigistoreItemCraftableState craftableState) {
 		// If the stack does not have a tag, add it.
 		if (!stack.hasTag()) {
-			stack.setTag(new CompoundNBT());
+			stack.setTag(new CompoundTag());
 		}
 
 		// If the stack does not have a metadata tag, add it.
 		if (!stack.getTag().contains(METADATA_TAG)) {
-			stack.getTag().put(METADATA_TAG, new CompoundNBT());
+			stack.getTag().put(METADATA_TAG, new CompoundTag());
 		}
 
 		// Put the craftable state.
 		stack.getTag().getCompound(METADATA_TAG).putInt(CRAFTABLE_TAG, craftableState.ordinal());
 	}
 
-	protected static @Nullable CompoundNBT getMetadataTag(ItemStack stack) {
+	protected static @Nullable CompoundTag getMetadataTag(ItemStack stack) {
 		// If the stack does not have a tag, return null.
 		if (!stack.hasTag()) {
 			return null;
@@ -502,7 +502,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 	public static ItemStack stripMetadataTags(ItemStack stack) {
 		if (stack.hasTag()) {
 			stack.getTag().remove(METADATA_TAG);
-			if (stack.getTag().keySet().size() == 0) {
+			if (stack.getTag().getAllKeys().size() == 0) {
 				stack.setTag(null);
 			}
 		}
@@ -511,7 +511,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	public static DigistoreItemCraftableState getCraftableStateOfItem(ItemStack stack) {
 		// Get the metadata.
-		CompoundNBT metadata = getMetadataTag(stack);
+		CompoundTag metadata = getMetadataTag(stack);
 
 		// If metadata does not exist, then this must not be craftable.
 		if (metadata == null) {
@@ -522,8 +522,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		return DigistoreItemCraftableState.values()[metadata.getInt(CRAFTABLE_TAG)];
 	}
 
-	public CompoundNBT serialize() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serialize() {
+		CompoundTag output = new CompoundTag();
 
 		// Handle the metrics.
 		output.putInt("used_capacity", usedCapacity);
@@ -532,7 +532,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		output.putInt("max_types", maxTypes);
 
 		// Handle the item stacks.
-		ListNBT itemList = new ListNBT();
+		ListTag itemList = new ListTag();
 		stacks.forEach(stack -> {
 			itemList.add(ItemUtilities.writeLargeStackItemToNBT(stack));
 		});
@@ -541,7 +541,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		return output;
 	}
 
-	public static DigistoreInventorySnapshot deserialize(CompoundNBT nbt) {
+	public static DigistoreInventorySnapshot deserialize(CompoundTag nbt) {
 		DigistoreInventorySnapshot output = new DigistoreInventorySnapshot();
 
 		// Handle the metrics.
@@ -551,9 +551,9 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		output.maxTypes = nbt.getInt("max_types");
 
 		// Handle the item stacks.
-		ListNBT itemList = nbt.getList("item_list", Constants.NBT.TAG_COMPOUND);
-		for (INBT itemRawTag : itemList) {
-			CompoundNBT itemTag = (CompoundNBT) itemRawTag;
+		ListTag itemList = nbt.getList("item_list", Constants.NBT.TAG_COMPOUND);
+		for (Tag itemRawTag : itemList) {
+			CompoundTag itemTag = (CompoundTag) itemRawTag;
 			output.stacks.add(ItemUtilities.readLargeStackItemFromNBT(itemTag));
 		}
 

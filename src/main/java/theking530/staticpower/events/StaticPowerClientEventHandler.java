@@ -6,36 +6,36 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
-import com.mojang.blaze3d.vertex.MatrixApplyingVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.PlayerController;
-import net.minecraft.client.renderer.ActiveRenderInfo;
-import net.minecraft.client.renderer.BlockModelShapes;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ModelBakery;
-import net.minecraft.client.renderer.model.ModelResourceLocation;
-import net.minecraft.client.renderer.texture.AtlasTexture;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -78,8 +78,8 @@ public class StaticPowerClientEventHandler {
 			// Check and update the render type as needed.
 			if (block instanceof IRenderLayerProvider) {
 				IRenderLayerProvider renderLayerProvider = (IRenderLayerProvider) block;
-				if (renderLayerProvider.getRenderType() != RenderType.getSolid()) {
-					RenderTypeLookup.setRenderLayer(block, renderLayerProvider.getRenderType());
+				if (renderLayerProvider.getRenderType() != RenderType.solid()) {
+					ItemBlockRenderTypes.setRenderLayer(block, renderLayerProvider.getRenderType());
 				}
 			}
 		}
@@ -89,8 +89,8 @@ public class StaticPowerClientEventHandler {
 			// Check and update the render type as needed.
 			if (fluid instanceof IRenderLayerProvider) {
 				IRenderLayerProvider renderLayerProvider = (IRenderLayerProvider) fluid;
-				if (renderLayerProvider.getRenderType() != RenderType.getSolid()) {
-					RenderTypeLookup.setRenderLayer(fluid, renderLayerProvider.getRenderType());
+				if (renderLayerProvider.getRenderType() != RenderType.solid()) {
+					ItemBlockRenderTypes.setRenderLayer(fluid, renderLayerProvider.getRenderType());
 				}
 			}
 		}
@@ -123,16 +123,16 @@ public class StaticPowerClientEventHandler {
 
 				// Loop through all the blockstates and override their models if they have an
 				// override.
-				for (BlockState blockState : block.getStateContainer().getValidStates()) {
+				for (BlockState blockState : block.getStateDefinition().getPossibleStates()) {
 					if (supplier.hasModelOverride(blockState)) {
 						// Get the existing model.
-						ModelResourceLocation variantMRL = BlockModelShapes.getModelLocation(blockState);
-						IBakedModel existingModel = event.getModelRegistry().get(variantMRL);
-						IBakedModel override = supplier.getModelOverride(blockState, existingModel, event);
+						ModelResourceLocation variantMRL = BlockModelShaper.stateToModelLocation(blockState);
+						BakedModel existingModel = event.getModelRegistry().get(variantMRL);
+						BakedModel override = supplier.getModelOverride(blockState, existingModel, event);
 						if (override != null) {
 							event.getModelRegistry().put(variantMRL, override);
 						} else {
-							LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getTranslatedName().getString()));
+							LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getName().getString()));
 						}
 					}
 				}
@@ -147,10 +147,10 @@ public class StaticPowerClientEventHandler {
 				if (supplier.hasModelOverride(null)) {
 					// Get the existing model.
 					ModelResourceLocation modelLocation = new ModelResourceLocation(item.getRegistryName(), "inventory");
-					IBakedModel existingModel = event.getModelManager().getModel(modelLocation);
+					BakedModel existingModel = event.getModelManager().getModel(modelLocation);
 
 					if (existingModel != null) {
-						IBakedModel override = supplier.getModelOverride(null, existingModel, event);
+						BakedModel override = supplier.getModelOverride(null, existingModel, event);
 						event.getModelRegistry().put(modelLocation, override);
 					}
 				}
@@ -169,7 +169,7 @@ public class StaticPowerClientEventHandler {
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-		if (event.getMap().getTextureLocation() == AtlasTexture.LOCATION_BLOCKS_TEXTURE) {
+		if (event.getMap().location() == TextureAtlas.LOCATION_BLOCKS) {
 			int spriteCount = 0;
 			for (ResourceLocation sprite : StaticPowerSprites.SPRITES) {
 				try {
@@ -201,75 +201,75 @@ public class StaticPowerClientEventHandler {
 		}
 
 		// Get the held item.
-		ItemStack tool = Minecraft.getInstance().player.getHeldItemMainhand();
+		ItemStack tool = Minecraft.getInstance().player.getMainHandItem();
 
 		// Check to see if the tool is not empty and is an instance of the multi harvest
 		// tool.
 		if (!tool.isEmpty() && tool.getItem() instanceof AbstractMultiHarvestTool) {
 			// If so, get the current rendering info.
-			ActiveRenderInfo renderInfo = Minecraft.getInstance().gameRenderer.getActiveRenderInfo();
+			Camera renderInfo = Minecraft.getInstance().gameRenderer.getMainCamera();
 
 			// Get the tool's item and get the blocks that are currently being targeted for
 			// harvesting.
 			AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
-			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getPos(), Minecraft.getInstance().player);
+			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getBlockPos(), Minecraft.getInstance().player);
 
 			// Get the world renderer state.
-			WorldRenderer worldRender = event.getContext();
-			MatrixStack matrix = event.getMatrix();
-			IVertexBuilder vertexBuilder = worldRender.renderTypeTextures.getBufferSource().getBuffer(RenderType.getLines());
-			Entity viewEntity = renderInfo.getRenderViewEntity();
+			LevelRenderer worldRender = event.getContext();
+			PoseStack matrix = event.getMatrix();
+			VertexConsumer vertexBuilder = worldRender.renderBuffers.bufferSource().getBuffer(RenderType.lines());
+			Entity viewEntity = renderInfo.getEntity();
 
 			// Get the current projected view.
-			Vector3d vector3d = renderInfo.getProjectedView();
+			Vec3 vector3d = renderInfo.getPosition();
 
 			// Push a new transform matrix.
-			matrix.push();
+			matrix.pushPose();
 
 			// For all of the harvestable blocks, render the bounding box.
 			for (BlockPos pos : extraBlocks) {
-				if (Minecraft.getInstance().player.getEntityWorld().getWorldBorder().contains(pos)) {
-					worldRender.drawSelectionBox(matrix, vertexBuilder, viewEntity, vector3d.getX(), vector3d.getY(), vector3d.getZ(), pos,
-							Minecraft.getInstance().player.getEntityWorld().getBlockState(pos));
+				if (Minecraft.getInstance().player.getCommandSenderWorld().getWorldBorder().isWithinBounds(pos)) {
+					worldRender.renderHitOutline(matrix, vertexBuilder, viewEntity, vector3d.x(), vector3d.y(), vector3d.z(), pos,
+							Minecraft.getInstance().player.getCommandSenderWorld().getBlockState(pos));
 				}
 			}
 
 			// Pop the added transform matrix.
-			matrix.pop();
+			matrix.popPose();
 		}
 	}
 
 	private static void renderMultiHarvesteBlockBreakEffect(RenderWorldLastEvent event) {
 		// Get the controller. If it is null, return early.
-		PlayerController controller = Minecraft.getInstance().playerController;
+		MultiPlayerGameMode controller = Minecraft.getInstance().gameMode;
 		if (controller == null) {
 			return;
 		}
 
 		// Get the local player. If null, return early.
-		PlayerEntity player = Minecraft.getInstance().player;
+		Player player = Minecraft.getInstance().player;
 		if (player == null) {
 			return;
 		}
 
 		// Get the player's held item.
-		ItemStack heldItem = player.getHeldItemMainhand();
+		ItemStack heldItem = player.getMainHandItem();
 
 		// If we're holding a multi harvest tool, render the extra block damage.
 		if (!heldItem.isEmpty() && heldItem.getItem() instanceof AbstractMultiHarvestTool) {
 			// Raytrace from the player's perspective to see which block they are looking
 			// at.
-			BlockRayTraceResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getEntityWorld(), player, RayTraceContext.FluidMode.ANY);
-			if (raytraceResult.getType() != RayTraceResult.Type.BLOCK) {
+			BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
+			if (raytraceResult.getType() != HitResult.Type.BLOCK) {
 				return;
 			}
 
 			// Get all the extra blocks that we can mine based on where we are looking.
-			List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getPos(), player);
+			List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
 
 			// If we're currently mining, draw the block damage texture.
-			if (controller.getIsHittingBlock()) {
-				drawBlockDamageTexture(event.getContext(), event.getMatrixStack(), Minecraft.getInstance().gameRenderer.getActiveRenderInfo(), player.getEntityWorld(), extraBlocks);
+			if (controller.isDestroying()) {
+				drawBlockDamageTexture(event.getContext(), event.getMatrixStack(), Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(), extraBlocks);
 			}
 		}
 	}
@@ -284,7 +284,7 @@ public class StaticPowerClientEventHandler {
 	 * @param extraBlocks   the list of blocks
 	 */
 	@OnlyIn(Dist.CLIENT)
-	private static void drawBlockDamageTexture(WorldRenderer worldRender, MatrixStack matrixStackIn, ActiveRenderInfo renderInfo, World world, Iterable<BlockPos> extraBlocks) {
+	private static void drawBlockDamageTexture(LevelRenderer worldRender, PoseStack matrixStackIn, Camera renderInfo, Level world, Iterable<BlockPos> extraBlocks) {
 		// Get the current break progress.
 		int progress = (int) (getCurrentFocusedBlockDamage() * 10.0F) - 1;
 
@@ -297,20 +297,20 @@ public class StaticPowerClientEventHandler {
 		progress = Math.min(progress, 10);
 
 		// Get the block render dispatcher and use it to render the damage effect.
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-		IVertexBuilder vertexBuilder = worldRender.renderTypeTextures.getCrumblingBufferSource().getBuffer(ModelBakery.DESTROY_RENDER_TYPES.get(progress));
+		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
+		VertexConsumer vertexBuilder = worldRender.renderBuffers.crumblingBufferSource().getBuffer(ModelBakery.DESTROY_TYPES.get(progress));
 
 		// Render the effect for each of the blocks.
 		for (BlockPos pos : extraBlocks) {
-			matrixStackIn.push();
+			matrixStackIn.pushPose();
 			// Make sure we transform into projection space.
-			matrixStackIn.translate((double) pos.getX() - renderInfo.getProjectedView().x, (double) pos.getY() - renderInfo.getProjectedView().y,
-					(double) pos.getZ() - renderInfo.getProjectedView().z);
-			IVertexBuilder matrixBuilder = new MatrixApplyingVertexBuilder(vertexBuilder, matrixStackIn.getLast().getMatrix(), matrixStackIn.getLast().getNormal());
+			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x, (double) pos.getY() - renderInfo.getPosition().y,
+					(double) pos.getZ() - renderInfo.getPosition().z);
+			VertexConsumer matrixBuilder = new SheetedDecalTextureGenerator(vertexBuilder, matrixStackIn.last().pose(), matrixStackIn.last().normal());
 
 			// Render the damage.
-			dispatcher.renderBlockDamage(world.getBlockState(pos), pos, world, matrixStackIn, matrixBuilder);
-			matrixStackIn.pop();
+			dispatcher.renderBreakingTexture(world.getBlockState(pos), pos, world, matrixStackIn, matrixBuilder);
+			matrixStackIn.popPose();
 		}
 	}
 
@@ -321,9 +321,9 @@ public class StaticPowerClientEventHandler {
 			// here...but this is client side only so, would rather lose a few frames vs
 			// introducing incomparability).
 			if (currentBlockDamageMP == null) {
-				currentBlockDamageMP = ObfuscationReflectionHelper.findField(PlayerController.class, "field_78770_f");
+				currentBlockDamageMP = ObfuscationReflectionHelper.findField(MultiPlayerGameMode.class, "destroyProgress");
 			}
-			return currentBlockDamageMP.getFloat(Minecraft.getInstance().playerController);
+			return currentBlockDamageMP.getFloat(Minecraft.getInstance().gameMode);
 		} catch (Exception e) {
 			LOGGER.error("An error occured when attempting to the break progress for the targeted block!", e);
 		}

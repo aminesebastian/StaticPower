@@ -15,31 +15,31 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.FaceBakery;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.FaceBakery;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.TransformationMatrix;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Transformation;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.pipeline.BakedQuadBuilder;
 import net.minecraftforge.client.model.pipeline.TRSRTransformer;
 import net.minecraftforge.common.model.TransformationHelper;
 
-public abstract class AbstractBakedModel implements IBakedModel {
+public abstract class AbstractBakedModel implements BakedModel {
 	protected static final float UNIT = 1.0f / 16.0f;
 	protected static final Logger LOGGER = LogManager.getLogger(AbstractBakedModel.class);
 	protected static final Map<Direction, Quaternion> FACING_ROTATIONS = new EnumMap<Direction, Quaternion>(Direction.class);
-	protected static final Map<Direction, TransformationMatrix> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
+	protected static final Map<Direction, Transformation> SIDE_TRANSFORMS = new EnumMap<>(Direction.class);
 
 	protected final HashSet<String> LoggedErrors = new HashSet<String>();
 	protected final FaceBakery FaceBaker = new FaceBakery();
-	protected final IBakedModel BaseModel;
+	protected final BakedModel BaseModel;
 
 	static {
 		for (Direction dir : Direction.values()) {
@@ -49,15 +49,15 @@ public abstract class AbstractBakedModel implements IBakedModel {
 			} else if (dir == Direction.DOWN) {
 				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(270, 0, 0), true);
 			} else {
-				double r = Math.PI * (360 - dir.getOpposite().getHorizontalIndex() * 90) / 180d;
+				double r = Math.PI * (360 - dir.getOpposite().get2DDataValue() * 90) / 180d;
 				quaternion = TransformationHelper.quatFromXYZ(new Vector3f(0, (float) r, 0), false);
 			}
 			FACING_ROTATIONS.put(dir, quaternion);
-			SIDE_TRANSFORMS.put(dir, new TransformationMatrix(null, quaternion, null, null).blockCenterToCorner());
+			SIDE_TRANSFORMS.put(dir, new Transformation(null, quaternion, null, null).blockCenterToCorner());
 		}
 	}
 
-	public AbstractBakedModel(IBakedModel baseModel) {
+	public AbstractBakedModel(BakedModel baseModel) {
 		BaseModel = baseModel;
 	}
 
@@ -74,13 +74,13 @@ public abstract class AbstractBakedModel implements IBakedModel {
 		return Collections.emptyList();
 	}
 
-	protected List<BakedQuad> rotateQuadsToFaceDirection(IBakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, Random rand) {
-		TransformationMatrix transformation = SIDE_TRANSFORMS.get(desiredRotation);
+	protected List<BakedQuad> rotateQuadsToFaceDirection(BakedModel model, Direction desiredRotation, Direction drawingSide, BlockState state, Random rand) {
+		Transformation transformation = SIDE_TRANSFORMS.get(desiredRotation);
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
-		if (drawingSide != null && drawingSide.getHorizontalIndex() > -1) {
-			int faceOffset = 4 + Direction.NORTH.getHorizontalIndex() - desiredRotation.getHorizontalIndex();
-			drawingSide = Direction.byHorizontalIndex((drawingSide.getHorizontalIndex() + faceOffset) % 4);
+		if (drawingSide != null && drawingSide.get2DDataValue() > -1) {
+			int faceOffset = 4 + Direction.NORTH.get2DDataValue() - desiredRotation.get2DDataValue();
+			drawingSide = Direction.from2DDataValue((drawingSide.get2DDataValue() + faceOffset) % 4);
 		}
 
 		// Build the output.
@@ -98,7 +98,7 @@ public abstract class AbstractBakedModel implements IBakedModel {
 		return quads.build();
 	}
 
-	protected List<BakedQuad> transformQuads(IBakedModel model, Vector3f translation, Vector3f scale, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
+	protected List<BakedQuad> transformQuads(BakedModel model, Vector3f translation, Vector3f scale, Quaternion rotation, Direction drawingSide, BlockState state, Random rand) {
 		// Build the output.
 		if (model != null) {
 			return transformQuads(model.getQuads(state, drawingSide, rand, EmptyModelData.INSTANCE), translation, scale, rotation);
@@ -110,7 +110,7 @@ public abstract class AbstractBakedModel implements IBakedModel {
 	protected List<BakedQuad> transformQuads(List<BakedQuad> inQuads, Vector3f translation, Vector3f scale, Quaternion rotation) {
 		ImmutableList.Builder<BakedQuad> quads = ImmutableList.builder();
 
-		TransformationMatrix transformation = new TransformationMatrix(translation, rotation, scale, null).blockCenterToCorner();
+		Transformation transformation = new Transformation(translation, rotation, scale, null).blockCenterToCorner();
 
 		// Build the output.
 		if (inQuads != null && inQuads.size() > 0) {
@@ -130,8 +130,8 @@ public abstract class AbstractBakedModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isAmbientOcclusion() {
-		return BaseModel.isAmbientOcclusion();
+	public boolean useAmbientOcclusion() {
+		return BaseModel.useAmbientOcclusion();
 	}
 
 	@Override
@@ -140,18 +140,18 @@ public abstract class AbstractBakedModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isBuiltInRenderer() {
-		return BaseModel.isBuiltInRenderer();
+	public boolean isCustomRenderer() {
+		return BaseModel.isCustomRenderer();
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return BaseModel.getParticleTexture();
+	public TextureAtlasSprite getParticleIcon() {
+		return BaseModel.getParticleIcon();
 	}
 
 	@Override
-	public ItemOverrideList getOverrides() {
+	public ItemOverrides getOverrides() {
 		return BaseModel.getOverrides();
 	}
 

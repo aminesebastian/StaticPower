@@ -6,17 +6,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -34,6 +34,8 @@ import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.ItemUtilities;
 
+import theking530.staticpower.cables.attachments.AbstractCableAttachment.AbstractCableAttachmentContainerProvider;
+
 public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachment {
 	public static final String IMPORT_TIMER_TAG = "import_timer";
 
@@ -46,7 +48,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt)
 				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.SERVER.digistoreImporterSlots.get()), (Direction) null)
 				.addCapability(new ItemStackCapabilityInventory("upgrades", stack, 3));
@@ -60,12 +62,12 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getWorld().isRemote || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
 		// Get the tile entity on the pulling side, return if it is null.
-		TileEntity te = cable.getWorld().getTileEntity(cable.getPos().offset(side));
+		BlockEntity te = cable.getWorld().getBlockEntity(cable.getPos().relative(side));
 		if (te == null || te.isRemoved()) {
 			return;
 		}
@@ -85,7 +87,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	public boolean increaseSupplierTimer(ItemStack attachment) {
 
 		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundNBT());
+			attachment.setTag(new CompoundTag());
 		}
 		if (!attachment.getTag().contains(IMPORT_TIMER_TAG)) {
 			attachment.getTag().putInt(IMPORT_TIMER_TAG, 0);
@@ -146,7 +148,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 		return ItemUtilities.filterItems(filterItemList, itemToTest, true, false, false, false);
 	}
 
-	protected boolean importFromAttached(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, TileEntity targetTe) {
+	protected boolean importFromAttached(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		AtomicBoolean output = new AtomicBoolean(false);
 		targetTe.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).ifPresent(target -> {
 			cable.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
@@ -175,7 +177,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 					ItemStack remainingAmount = module.insertItem(extractedItem.copy(), false);
 					if (remainingAmount.getCount() < extractedItem.getCount()) {
 						target.extractItem(i, extractedItem.getCount() - remainingAmount.getCount(), false);
-						cable.getTileEntity().markDirty();
+						cable.getTileEntity().setChanged();
 						break;
 					}
 				}
@@ -196,8 +198,8 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslationTextComponent("gui.staticpower.importer_tooltip"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		tooltip.add(new TranslatableComponent("gui.staticpower.importer_tooltip"));
 		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.SERVER.digistoreImporterSlots.get(), tooltip);
 	}
 
@@ -207,7 +209,7 @@ public class DigistoreImporterAttachment extends AbstractDigistoreCableAttachmen
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory playerInv, Player player) {
 			return new ContainerDigistoreImporter(windowId, playerInv, targetItemStack, attachmentSide, cable);
 		}
 	}

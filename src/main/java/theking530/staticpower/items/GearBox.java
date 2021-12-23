@@ -1,8 +1,8 @@
 package theking530.staticpower.items;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -30,7 +30,7 @@ public class GearBox extends StaticPowerItem implements ICustomModelSupplier {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new GearBoxModel(baseGearItem);
 	}
 }

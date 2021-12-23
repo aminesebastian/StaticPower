@@ -1,9 +1,9 @@
 package theking530.api.attributes.defenitions;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.ChatFormatting;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.BooleanAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;
@@ -13,7 +13,7 @@ public class GrindingAttributeDefenition extends AbstractAttributeDefenition<Boo
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "grinding");
 
 	public GrindingAttributeDefenition(ResourceLocation id) {
-		super(ID, "attribute.staticpower.grinding", TextFormatting.GRAY, BooleanAttributeModifier.class);
+		super(ID, "attribute.staticpower.grinding", ChatFormatting.GRAY, BooleanAttributeModifier.class);
 		baseValue = false;
 	}
 
@@ -23,12 +23,12 @@ public class GrindingAttributeDefenition extends AbstractAttributeDefenition<Boo
 	}
 
 	@Override
-	protected void serializeBaseValue(CompoundNBT nbt) {
+	protected void serializeBaseValue(CompoundTag nbt) {
 		nbt.putBoolean("base_value", baseValue);
 	}
 
 	@Override
-	protected void deserializeBaseValue(CompoundNBT nbt) {
+	protected void deserializeBaseValue(CompoundTag nbt) {
 		baseValue = nbt.getBoolean("base_value");
 	}
 
@@ -44,7 +44,7 @@ public class GrindingAttributeDefenition extends AbstractAttributeDefenition<Boo
 	}
 
 	@Override
-	public IFormattableTextComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
+	public MutableComponent getDifferenceLabel(AbstractAttributeDefenition<?, ?> other) {
 		if (other.getValue() == this.getValue()) {
 			return null;
 		}

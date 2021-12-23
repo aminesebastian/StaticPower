@@ -3,11 +3,11 @@ package theking530.staticpower.cables.network;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 
 public abstract class AbstractCableNetworkModule {
 	protected CableNetwork Network;
@@ -49,14 +49,14 @@ public abstract class AbstractCableNetworkModule {
 
 	}
 
-	public abstract void getReaderOutput(List<ITextComponent> components);
+	public abstract void getReaderOutput(List<Component> components);
 
-	public abstract void tick(World world);
+	public abstract void tick(Level world);
 
-	public void readFromNbt(CompoundNBT tag) {
+	public void readFromNbt(CompoundTag tag) {
 	}
 
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		return tag;
 	}
 

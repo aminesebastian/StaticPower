@@ -1,17 +1,17 @@
 package theking530.staticpower.tileentities.nonpowered.miner;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.api.IUpgradeItem.UpgradeType;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -26,7 +26,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityMiner> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityMiner(), ModBlocks.Miner);
+	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityMiner(), ModBlocks.Miner);
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;
@@ -56,14 +56,14 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
 			if (SDMath.diceRoll(0.25f)) {
-				float randomOffset = (2 * getWorld().rand.nextFloat()) - 1.0f;
+				float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 				randomOffset /= 3.5f;
 
 				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
 				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getWorld().addParticle(ParticleTypes.SMOKE, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f,
+				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f,
 						0.01f, 0.0f);
-				getWorld().addParticle(ParticleTypes.FLAME, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f,
+				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f,
 						0.01f, 0.0f);
 			}
 		}
@@ -171,7 +171,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerMiner(windowId, inventory, this);
 	}
 }

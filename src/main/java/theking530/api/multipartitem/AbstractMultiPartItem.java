@@ -2,13 +2,13 @@ package theking530.api.multipartitem;
 
 import java.util.List;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.items.StaticPowerItem;
 
 public abstract class AbstractMultiPartItem extends StaticPowerItem {
 	public AbstractMultiPartItem(String name, Item.Properties properties) {
-		super(name, properties.maxStackSize(1));
+		super(name, properties.stacksTo(1));
 	}
 
 	public abstract List<AbstractMultiPartSlot> getSlots(ItemStack stack);
@@ -36,7 +36,7 @@ public abstract class AbstractMultiPartItem extends StaticPowerItem {
 		int durability = 0;
 		for (AbstractMultiPartSlot slot : getSlots(stack)) {
 			ItemStack slotStack = getPartInSlot(stack, slot);
-			durability += slotStack.getDamage();
+			durability += slotStack.getDamageValue();
 		}
 		return durability;
 	}

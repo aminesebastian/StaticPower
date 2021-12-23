@@ -7,11 +7,11 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -49,12 +49,12 @@ public class WidgetContainer {
 		}
 	}
 
-	public void update(MatrixStack matrixStack, Vector2D ownerPosition, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+	public void update(PoseStack matrixStack, Vector2D ownerPosition, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		// Update the owner position.
 		this.ownerPosition = ownerPosition;
 
 		// Translate so we draw relative to the owner now.
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
 
 		// Render the foreground of all the widgets.
@@ -65,12 +65,12 @@ public class WidgetContainer {
 		}
 
 		// Pop the matrix when we're done.
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
-	public void renderBackground(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		// Translate so we draw relative to the owner now.
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
 
 		// Render the foreground of all the widgets.
@@ -81,12 +81,12 @@ public class WidgetContainer {
 		}
 
 		// Pop the matrix when we're done.
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
-	public void renderBehindItems(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		// Translate so we draw relative to the owner now.
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
 
 		// Render the foreground of all the widgets.
@@ -97,12 +97,12 @@ public class WidgetContainer {
 		}
 
 		// Pop the matrix when we're done.
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
-	public void renderForegound(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderForegound(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
 		// Translate so we draw relative to the owner now.
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
 
 		// Render the foreground of all the widgets.
@@ -113,31 +113,31 @@ public class WidgetContainer {
 		}
 
 		// Pop the matrix when we're done.
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 
-	public void renderTooltips(MatrixStack matrixStack, int mouseX, int mouseY) {
+	public void renderTooltips(PoseStack matrixStack, int mouseX, int mouseY) {
 		// Translate so we draw relative to the owner now.
-		matrixStack.push();
+		matrixStack.pushPose();
 		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
 
 		// Capture all the tooltips for all the widgets. Skip any invisible widgets or
 		// widgets that are not hovered.
 		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
-		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+		List<Component> tooltips = new ArrayList<Component>();
 		getTooltips(mousePosition, tooltips, Screen.hasShiftDown());
 		
 		// Pop the matrix when we're done.
-		matrixStack.pop();
+		matrixStack.popPose();
 
 		// If there are any tooltips to render, render them.
 		if (tooltips.size() > 0) {
 			// Format them and then draw them.
-			Minecraft.getInstance().currentScreen.func_243308_b(matrixStack, tooltips, mouseX, mouseY);
+			Minecraft.getInstance().screen.renderComponentTooltip(matrixStack, tooltips, mouseX, mouseY);
 		}
 	}
 
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
 				widget.getTooltips(mousePosition, tooltips, false);

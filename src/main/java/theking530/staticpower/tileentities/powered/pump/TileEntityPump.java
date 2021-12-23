@@ -5,28 +5,28 @@ import java.util.Queue;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderPump;
@@ -48,25 +48,25 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 
 public class TileEntityPump extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_IRON = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.IRON),
+	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_IRON = new BlockEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.IRON),
 			ModBlocks.IronPump);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_BASIC = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.BASIC),
+	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.BASIC),
 			ModBlocks.BasicPump);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_ADVANCED = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.ADVANCED),
+	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.ADVANCED),
 			ModBlocks.AdvancedPump);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_STATIC = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.STATIC),
+	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.STATIC),
 			ModBlocks.StaticPump);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_ENERGIZED = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.ENERGIZED),
+	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.ENERGIZED),
 			ModBlocks.EnergizedPump);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_LUMUM = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.LUMUM),
+	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.LUMUM),
 			ModBlocks.LumumPump);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPump> TYPE_CREATIVE = new TileEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.CREATIVE),
+	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityPump>((type) -> new TileEntityPump(type, StaticPowerTiers.CREATIVE),
 			ModBlocks.CreativePump);
 
 	static {
@@ -90,7 +90,7 @@ public class TileEntityPump extends TileEntityMachine {
 	@UpdateSerialize
 	public int pumpRate;
 
-	public TileEntityPump(TileEntityTypeAllocator<TileEntityPump> allocator, ResourceLocation tier) {
+	public TileEntityPump(BlockEntityTypeAllocator<TileEntityPump> allocator, ResourceLocation tier) {
 		super(allocator, tier);
 
 		// Get the tier.
@@ -177,36 +177,36 @@ public class TileEntityPump extends TileEntityMachine {
 		if (positionsToPump.size() > 0) {
 			// Get the fluid state at the position to pump.
 			BlockPos position = positionsToPump.poll();
-			FluidState fluidState = getWorld().getFluidState(position);
+			FluidState fluidState = getLevel().getFluidState(position);
 
 			while (!fluidState.isSource() && !positionsToPump.isEmpty()) {
 				position = positionsToPump.poll();
-				fluidState = getWorld().getFluidState(position);
+				fluidState = getLevel().getFluidState(position);
 			}
 
 			if (position != null) {
 				// If the fluid is pumpable, pump it. If not, something has changed drastically,
 				// rebuild the queue.
-				if (fluidState.getFluid().isSource(fluidState)) {
+				if (fluidState.getType().isSource(fluidState)) {
 					// Check to make sure the fluid can go into the tank if we already have a fluid.
-					if (!fluidTankComponent.isEmpty() && !fluidState.getFluid().equals(fluidTankComponent.getFluid().getFluid())) {
+					if (!fluidTankComponent.isEmpty() && !fluidState.getType().equals(fluidTankComponent.getFluid().getFluid())) {
 						return ProcessingCheckState.error("Encountered fluid that cannot be placed into the output tank!");
 					}
 
 					// Play the sound.
-					getWorld().playSound(null, getPos(), fluidState.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 1.0f,
+					getLevel().playSound(null, getBlockPos(), fluidState.getType() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0f,
 							1.0f);
 
 					// Use the power.
 					energyStorage.useBulkPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
 
 					// Pump the fluid.
-					FluidStack pumpedStack = new FluidStack(fluidState.getFluid(), FluidAttributes.BUCKET_VOLUME);
+					FluidStack pumpedStack = new FluidStack(fluidState.getType(), FluidAttributes.BUCKET_VOLUME);
 					fluidTankComponent.fill(pumpedStack, FluidAction.EXECUTE);
 
 					// Do not suck away the source block if this is a creative pump.
 					if (getTier() != StaticPowerTiers.CREATIVE) {
-						getWorld().setBlockState(position, Blocks.AIR.getDefaultState());
+						getLevel().setBlockAndUpdate(position, Blocks.AIR.defaultBlockState());
 					}
 
 					// If this is water, we just stop. No recursion as water is infinite anyway.
@@ -220,7 +220,7 @@ public class TileEntityPump extends TileEntityMachine {
 				searchAroundPumpedBlock(position);
 				// Log the pump queue creation.
 				LOGGER.debug(
-						String.format("Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.", positionsToPump.size(), getPos(), getWorld().getDimensionType()));
+						String.format("Rebuilt Pump Queue to size: %1$d for Pump at position: %2$s in Dimension: %3$s.", positionsToPump.size(), getBlockPos(), getLevel().dimensionType()));
 			}
 		} else {
 			return ProcessingCheckState.error("No sources found to pump!");
@@ -236,8 +236,8 @@ public class TileEntityPump extends TileEntityMachine {
 		}
 		// Search on all six sides.
 		for (Direction dir : Direction.values()) {
-			BlockPos testPos = position.offset(dir);
-			FluidState fluidState = getWorld().getFluidState(testPos);
+			BlockPos testPos = position.relative(dir);
+			FluidState fluidState = getLevel().getFluidState(testPos);
 			if (!fluidState.isEmpty() && !positionsToPump.contains(testPos)) {
 				positionsToPump.add(testPos);
 			}
@@ -248,20 +248,20 @@ public class TileEntityPump extends TileEntityMachine {
 		// Check from the block below the pump by two blocks.
 		for (int i = 1; i < 3; i++) {
 			// Skip checking lower than 0.
-			if (getPos().getY() - 1 <= 0) {
+			if (getBlockPos().getY() - 1 <= 0) {
 				continue;
 			}
 
 			// Get the block pos.
-			BlockPos samplePos = new BlockPos(getPos().getX(), getPos().getY() - i, getPos().getZ());
+			BlockPos samplePos = new BlockPos(getBlockPos().getX(), getBlockPos().getY() - i, getBlockPos().getZ());
 
 			// If we hit a non fluid block that is not just AIR, stop.
-			if (!(getWorld().getBlockState(samplePos).getBlock() instanceof FlowingFluidBlock) && getWorld().getBlockState(samplePos).getBlock() != Blocks.AIR) {
+			if (!(getLevel().getBlockState(samplePos).getBlock() instanceof LiquidBlock) && getLevel().getBlockState(samplePos).getBlock() != Blocks.AIR) {
 				return null;
 			}
 
 			// Search for a fluid block that is not empty.
-			FluidState fluidState = getWorld().getFluidState(samplePos);
+			FluidState fluidState = getLevel().getFluidState(samplePos);
 			if (!fluidState.isEmpty()) {
 				return samplePos;
 			}
@@ -269,14 +269,14 @@ public class TileEntityPump extends TileEntityMachine {
 		return null;
 	}
 
-	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
+	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
 		super.serializeSaveNbt(nbt);
 
 		// Serialize the queued positions.
-		ListNBT queuedPositions = new ListNBT();
+		ListTag queuedPositions = new ListTag();
 		positionsToPump.forEach(pos -> {
-			CompoundNBT posTag = new CompoundNBT();
-			posTag.putLong("pos", pos.toLong());
+			CompoundTag posTag = new CompoundTag();
+			posTag.putLong("pos", pos.asLong());
 			queuedPositions.add(posTag);
 		});
 		nbt.put("queued_positions", queuedPositions);
@@ -284,24 +284,24 @@ public class TileEntityPump extends TileEntityMachine {
 		return nbt;
 	}
 
-	public void deserializeSaveNbt(CompoundNBT nbt) {
+	public void deserializeSaveNbt(CompoundTag nbt) {
 		super.deserializeSaveNbt(nbt);
 
 		// Clear the queue just in case.
 		positionsToPump.clear();
 
 		// Deserialize the queued positions.
-		ListNBT queuedPositions = nbt.getList("queued_positions", Constants.NBT.TAG_COMPOUND);
-		for (INBT posTag : queuedPositions) {
-			CompoundNBT posTagCompound = (CompoundNBT) posTag;
-			positionsToPump.add(BlockPos.fromLong(posTagCompound.getLong("pos")));
+		ListTag queuedPositions = nbt.getList("queued_positions", Constants.NBT.TAG_COMPOUND);
+		for (Tag posTag : queuedPositions) {
+			CompoundTag posTagCompound = (CompoundTag) posTag;
+			positionsToPump.add(BlockPos.of(posTagCompound.getLong("pos")));
 		}
 
-		LOGGER.info(String.format("Deserialized Pump at position: %1$s with: %2$d queued positions.", getPos(), positionsToPump.size()));
+		LOGGER.info(String.format("Deserialized Pump at position: %1$s with: %2$d queued positions.", getBlockPos(), positionsToPump.size()));
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerPump(windowId, inventory, this);
 	}
 }

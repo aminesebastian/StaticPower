@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.electricminer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -22,11 +22,11 @@ public class ContainerElectricMiner extends StaticPowerTileEntityContainer<TileE
 		}
 	}
 
-	public ContainerElectricMiner(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerElectricMiner(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityElectricMiner) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerElectricMiner(int windowId, PlayerInventory playerInventory, TileEntityElectricMiner owner) {
+	public ContainerElectricMiner(int windowId, Inventory playerInventory, TileEntityElectricMiner owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

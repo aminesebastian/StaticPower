@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
@@ -14,12 +14,12 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.GrinderProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
@@ -39,7 +39,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	private static final int SECONDARY_OUTPUT_SLOT = 2;
 	private static final int TERTIARY_OUTPUT_SLOT = 3;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final GrinderProgressBar pBar;
@@ -49,7 +49,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 
 	public PoweredGrinderRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.PoweredGrinder.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.PoweredGrinder.getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
 		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.PoweredGrinder));
 		pBar = new GrinderProgressBar(79, 26);
@@ -84,7 +84,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	}
 
 	@Override
-	public void draw(GrinderRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(GrinderRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 80, 6, 16, 16, 0);
 
 		GuiDrawUtilities.drawSlot(matrixStack, 78, 46, 20, 20, 0);
@@ -99,18 +99,18 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(GrinderRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(GrinderRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
 		}

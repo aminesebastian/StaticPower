@@ -4,33 +4,33 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.block.AttachedStemBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.CactusBlock;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.block.FarmlandBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.block.MelonBlock;
-import net.minecraft.block.NetherWartBlock;
-import net.minecraft.block.PumpkinBlock;
-import net.minecraft.block.SugarCaneBlock;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.level.block.AttachedStemBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CactusBlock;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.MelonBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.PumpkinBlock;
+import net.minecraft.world.level.block.SugarCaneBlock;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Vector3f;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
@@ -62,7 +62,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityBasicFarmer> TYPE = new TileEntityTypeAllocator<TileEntityBasicFarmer>((allocator) -> new TileEntityBasicFarmer(),
+	public static final BlockEntityTypeAllocator<TileEntityBasicFarmer> TYPE = new BlockEntityTypeAllocator<TileEntityBasicFarmer>((allocator) -> new TileEntityBasicFarmer(),
 			ModBlocks.BasicFarmer);
 
 	static {
@@ -127,7 +127,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		// Capture all the harvestable blocks.
 		validHarvestacbleClasses = new HashSet<Class<? extends Block>>();
-		validHarvestacbleClasses.add(CropsBlock.class);
+		validHarvestacbleClasses.add(CropBlock.class);
 		validHarvestacbleClasses.add(SugarCaneBlock.class);
 		validHarvestacbleClasses.add(CactusBlock.class);
 		validHarvestacbleClasses.add(NetherWartBlock.class);
@@ -143,13 +143,13 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
-			if (!getWorld().isRemote) {
+			if (!getLevel().isClientSide) {
 				fluidTankComponent.drain(StaticPowerConfig.SERVER.basicFarmerFluidUsage.get(), FluidAction.EXECUTE);
 
 				for (BlockPos blockpos : blocks) {
-					BlockPos farmlandPos = blockpos.offset(Direction.DOWN);
-					if (getWorld().getBlockState(farmlandPos).getBlock() == Blocks.FARMLAND) {
-						getWorld().setBlockState(farmlandPos, getWorld().getBlockState(farmlandPos).with(FarmlandBlock.MOISTURE, Integer.valueOf(7)), 2 | 16);
+					BlockPos farmlandPos = blockpos.relative(Direction.DOWN);
+					if (getLevel().getBlockState(farmlandPos).getBlock() == Blocks.FARMLAND) {
+						getLevel().setBlock(farmlandPos, getLevel().getBlockState(farmlandPos).setValue(FarmBlock.MOISTURE, Integer.valueOf(7)), 2 | 16);
 					}
 				}
 			}
@@ -195,14 +195,14 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		currentBlockIndex = nbt.getInt("current_index");
 		range = nbt.getInt("range");
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		nbt.putInt("current_index", currentBlockIndex);
 		nbt.putInt("range", range);
@@ -229,19 +229,19 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (shouldDraw) {
 			// If we were already drawing, remove and re-do it.
 			if (shouldDrawRadiusPreview) {
-				CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
+				CustomRenderer.removeCubeRenderer(this, "range");
 			}
 			// Set the scale equal to the range * 2 plus 1.
 			Vector3f scale = new Vector3f((range * 2) + 1, 1.0f, (range * 2) + 1);
 			// Shift over so we center the range around the farmer.
-			Vector3f position = new Vector3f(getTileEntity().getPos().getX(), getTileEntity().getPos().getY(), getTileEntity().getPos().getZ());
+			Vector3f position = new Vector3f(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ());
 			position.add(new Vector3f(-range, 0.0f, -range));
 
 			// Add the entry.
-			CustomRenderer.addCubeRenderer(getTileEntity(), "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
+			CustomRenderer.addCubeRenderer(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
-			CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
+			CustomRenderer.removeCubeRenderer(this, "range");
 		}
 
 		// Update the drawing value.
@@ -250,12 +250,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	private void refreshBlocksInRange(int range) {
 		blocks.clear();
-		for (BlockPos pos : BlockPos.getAllInBoxMutable(getPos().add(-range, 0, -range), getPos().add(range, 0, range))) {
-			if (pos != getPos()) {
-				blocks.add(pos.toImmutable());
+		for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(-range, 0, -range), getBlockPos().offset(range, 0, range))) {
+			if (pos != getBlockPos()) {
+				blocks.add(pos.immutable());
 			}
 		}
-		blocks.add(getPos().add(range, 0, range));
+		blocks.add(getBlockPos().offset(range, 0, range));
 
 		if (currentBlockIndex > blocks.size() - 1) {
 			currentBlockIndex = 0;
@@ -263,7 +263,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	private void incrementPosition() {
-		if (!getWorld().isRemote) {
+		if (!getLevel().isClientSide) {
 			currentBlockIndex = Math.floorMod(currentBlockIndex + 1, blocks.size() - 1);
 		}
 	}
@@ -295,32 +295,32 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public void useHoe() {
 		// If we have an hoe, and we're on the server, use it.
-		if (hasHoe() && !getWorld().isRemote) {
-			if (inputInventory.getStackInSlot(0).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getWorld().rand, null)) {
+		if (hasHoe() && !getLevel().isClientSide) {
+			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getLevel().random, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
-				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				getLevel().playSound(null, worldPosition, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 			}
 		}
 	}
 
 	public void useAxe() {
 		// If we have an axe, and we're on the server, use it.
-		if (hasAxe() && !getWorld().isRemote) {
-			if (inputInventory.getStackInSlot(1).attemptDamageItem(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getWorld().rand, null)) {
+		if (hasAxe() && !getLevel().isClientSide) {
+			if (inputInventory.getStackInSlot(1).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getLevel().random, null)) {
 				inputInventory.getStackInSlot(1).shrink(1);
-				getWorld().playSound(null, pos, SoundEvents.ENTITY_ITEM_BREAK, SoundCategory.BLOCKS, 1.0F, 1.0F);
+				getLevel().playSound(null, worldPosition, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 			}
 		}
 	}
 
 	public boolean attemptHarvestPosition(BlockPos pos) {
-		if (getWorld().isRemote) {
+		if (getLevel().isClientSide) {
 			return false;
 		}
 
-		if (getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.DIRT || getWorld().getBlockState(pos.offset(Direction.DOWN)).getBlock() == Blocks.GRASS_BLOCK) {
-			getWorld().setBlockState(pos.offset(Direction.DOWN), Blocks.FARMLAND.getDefaultState(), 1 | 2);
-			getWorld().playSound(null, pos, SoundEvents.ITEM_HOE_TILL, SoundCategory.BLOCKS, 1.0F, 1.0F);
+		if (getLevel().getBlockState(pos.relative(Direction.DOWN)).getBlock() == Blocks.DIRT || getLevel().getBlockState(pos.relative(Direction.DOWN)).getBlock() == Blocks.GRASS_BLOCK) {
+			getLevel().setBlock(pos.relative(Direction.DOWN), Blocks.FARMLAND.defaultBlockState(), 1 | 2);
+			getLevel().playSound(null, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
 
 		}
 
@@ -345,11 +345,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean isFarmableBlock(BlockPos pos) {
-		if (getWorld().getBlockState(pos) == null) {
+		if (getLevel().getBlockState(pos) == null) {
 			return false;
 		}
 		for (Class<? extends Block> harvestableClass : validHarvestacbleClasses) {
-			if (harvestableClass.isInstance(getWorld().getBlockState(pos).getBlock())) {
+			if (harvestableClass.isInstance(getLevel().getBlockState(pos).getBlock())) {
 				return true;
 			}
 		}
@@ -357,25 +357,25 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	protected void captureHarvestItems(BlockPos pos) {
-		for (ItemStack drop : WorldUtilities.getBlockDrops(getWorld(), pos)) {
+		for (ItemStack drop : WorldUtilities.getBlockDrops(getLevel(), pos)) {
 			InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
 		}
-		getWorld().playSound(null, pos, getWorld().getBlockState(pos).getBlock().getSoundType(getWorld().getBlockState(pos), world, pos, null).getBreakSound(), SoundCategory.BLOCKS, 1.0F,
+		getLevel().playSound(null, pos, getLevel().getBlockState(pos).getBlock().getSoundType(getLevel().getBlockState(pos), level, pos, null).getBreakSound(), SoundSource.BLOCKS, 1.0F,
 				1.0F);
-		((ServerWorld) getWorld()).spawnParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+		((ServerLevel) getLevel()).sendParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 	}
 
 	public boolean harvestGenericCrop(BlockPos pos) {
 		// If the current position is an instance of a CropsBlock.
-		if (getWorld().getBlockState(pos).getBlock() instanceof CropsBlock) {
+		if (getLevel().getBlockState(pos).getBlock() instanceof CropBlock) {
 			// Get the block and check if it is of max age.
-			CropsBlock tempCrop = (CropsBlock) getWorld().getBlockState(pos).getBlock();
+			CropBlock tempCrop = (CropBlock) getLevel().getBlockState(pos).getBlock();
 			// If the crop is fully grown, harvest it.
-			if (tempCrop.isMaxAge(getWorld().getBlockState(pos))) {
+			if (tempCrop.isMaxAge(getLevel().getBlockState(pos))) {
 				// Harvest the provided position, set the age of the crop back to 0, and use the
 				// hoe.
 				captureHarvestItems(pos);
-				getWorld().setBlockState(pos, tempCrop.withAge(0), 1 | 2);
+				getLevel().setBlock(pos, tempCrop.getStateForAge(0), 1 | 2);
 				useHoe();
 				return true;
 			}
@@ -386,9 +386,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public boolean harvestSugarCane(BlockPos pos) {
 		boolean harvested = false;
 		for (int i = 1; i < 255; i++) {
-			if (getWorld().getBlockState(pos.add(0, i, 0)).getBlock() instanceof SugarCaneBlock) {
-				captureHarvestItems(pos.add(0, i, 0));
-				getWorld().setBlockState(pos.add(0, i, 0), Blocks.AIR.getDefaultState(), 1 | 2);
+			if (getLevel().getBlockState(pos.offset(0, i, 0)).getBlock() instanceof SugarCaneBlock) {
+				captureHarvestItems(pos.offset(0, i, 0));
+				getLevel().setBlock(pos.offset(0, i, 0), Blocks.AIR.defaultBlockState(), 1 | 2);
 				useAxe();
 				harvested = true;
 			} else {
@@ -402,9 +402,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public boolean harvestCactus(BlockPos pos) {
 		boolean harvested = false;
 		for (int i = 1; i < 255; i++) {
-			if (getWorld().getBlockState(pos.add(0, i, 0)).getBlock() instanceof CactusBlock) {
-				captureHarvestItems(pos.add(0, i, 0));
-				getWorld().setBlockState(pos.add(0, i, 0), Blocks.AIR.getDefaultState(), 1 | 2);
+			if (getLevel().getBlockState(pos.offset(0, i, 0)).getBlock() instanceof CactusBlock) {
+				captureHarvestItems(pos.offset(0, i, 0));
+				getLevel().setBlock(pos.offset(0, i, 0), Blocks.AIR.defaultBlockState(), 1 | 2);
 				useAxe();
 				harvested = true;
 			} else {
@@ -416,14 +416,14 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean harvestStem(BlockPos pos) {
-		Block block = getWorld().getBlockState(pos).getBlock();
+		Block block = getLevel().getBlockState(pos).getBlock();
 		if (block instanceof AttachedStemBlock) {
 			// Check for the melon or pumpkin around the stem.
 			for (Direction dir : Direction.values()) {
 				if (dir.getAxis() == Direction.Axis.Y) {
 					continue;
 				}
-				if (harvestMelonOrPumpkin(pos.offset(dir))) {
+				if (harvestMelonOrPumpkin(pos.relative(dir))) {
 					return true;
 				}
 
@@ -433,10 +433,10 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean harvestMelonOrPumpkin(BlockPos pos) {
-		Block block = getWorld().getBlockState(pos).getBlock();
+		Block block = getLevel().getBlockState(pos).getBlock();
 		if (block instanceof MelonBlock || block instanceof PumpkinBlock) {
 			captureHarvestItems(pos);
-			getWorld().setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
+			getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
 			useAxe();
 			return true;
 		}
@@ -444,11 +444,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public boolean harvestNetherWart(BlockPos pos) {
-		if (getWorld().getBlockState(pos).getBlock() instanceof NetherWartBlock) {
-			NetherWartBlock tempNetherwart = (NetherWartBlock) getWorld().getBlockState(pos).getBlock();
-			if (tempNetherwart.getPlant(getWorld(), pos).get(NetherWartBlock.AGE) >= 3) {
+		if (getLevel().getBlockState(pos).getBlock() instanceof NetherWartBlock) {
+			NetherWartBlock tempNetherwart = (NetherWartBlock) getLevel().getBlockState(pos).getBlock();
+			if (tempNetherwart.getPlant(getLevel(), pos).getValue(NetherWartBlock.AGE) >= 3) {
 				captureHarvestItems(pos);
-				getWorld().setBlockState(pos, Blocks.NETHER_WART.getDefaultState(), 1 | 2);
+				getLevel().setBlock(pos, Blocks.NETHER_WART.defaultBlockState(), 1 | 2);
 				useHoe();
 			}
 			return true;
@@ -458,12 +458,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public boolean growCrop(BlockPos pos) {
 		for (int i = 0; i < getGrowthBonus() / 100; i++) {
-			if (getWorld().rand.nextInt(100) < getGrowthBonus()) {
-				if (getWorld().getBlockState(pos) != null && getWorld().getBlockState(pos).getBlock() instanceof IGrowable) {
-					IGrowable tempCrop = (IGrowable) getWorld().getBlockState(pos).getBlock();
-					if (tempCrop.canGrow(getWorld(), pos, getWorld().getBlockState(pos), false)) {
-						tempCrop.grow((ServerWorld) getWorld(), getWorld().rand, pos, getWorld().getBlockState(pos));
-						((ServerWorld) getWorld()).spawnParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+			if (getLevel().random.nextInt(100) < getGrowthBonus()) {
+				if (getLevel().getBlockState(pos) != null && getLevel().getBlockState(pos).getBlock() instanceof BonemealableBlock) {
+					BonemealableBlock tempCrop = (BonemealableBlock) getLevel().getBlockState(pos).getBlock();
+					if (tempCrop.isValidBonemealTarget(getLevel(), pos, getLevel().getBlockState(pos), false)) {
+						tempCrop.performBonemeal((ServerLevel) getLevel(), getLevel().random, pos, getLevel().getBlockState(pos));
+						((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 					}
 				}
 			}
@@ -488,7 +488,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerBasicFarmer(windowId, inventory, this);
 	}
 }

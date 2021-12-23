@@ -4,24 +4,23 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -39,6 +38,8 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 import theking530.staticpower.tileentities.TileEntityBase;
 
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
+
 public class BlockRedstoneCable extends AbstractCableBlock {
 	private static boolean canProvidePower;
 	private final String color;
@@ -54,32 +55,32 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
 		if (color.equals("naked")) {
-			IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
-			IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
-			IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
+			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
+			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		} else {
-			IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
-			IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
-			IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
+			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
+			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		}
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
+	public boolean isSignalSource(BlockState state) {
 		return canProvidePower;
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		// If not null, and if we are hovering the default attachment, check to see if
@@ -114,12 +115,12 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	 * @return
 	 */
 	@Override
-	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (!world.isRemote) {
+	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!world.isClientSide) {
 			if (hit.hitInfo instanceof CableBoundsHoverResult) {
 				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
-				RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getFace());
-				NetworkGUI.openGui((ServerPlayerEntity) player, provider, buf -> {
+				RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
+				NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
 					buf.writeBlockPos(pos);
 					buf.writeInt(hoverResult.direction.ordinal());
 				});
@@ -128,7 +129,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		switch (color) {
 		case "black":
 			return TileEntityRedstoneCable.TYPE_BASIC_BLACK.create();
@@ -167,7 +168,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 		}
 	}
 
-	public class RedstoneCableContainerProvider implements INamedContainerProvider {
+	public class RedstoneCableContainerProvider implements MenuProvider {
 		public final Direction side;
 		public final Block owningBlock;
 		public final TileEntityRedstoneCable cable;
@@ -179,13 +180,13 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 			return new ContainerBasicRedstoneIO(windowId, inventory, cable, side);
 		}
 
 		@Override
-		public ITextComponent getDisplayName() {
-			return new TranslationTextComponent(owningBlock.getTranslationKey());
+		public Component getDisplayName() {
+			return new TranslatableComponent(owningBlock.getDescriptionId());
 		}
 
 	}

@@ -3,8 +3,8 @@ package theking530.staticcore.gui.drawables;
 import javax.annotation.Nonnull;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.IItemProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Vector2D;
@@ -14,7 +14,7 @@ public class ItemDrawable implements IDrawable {
 	private final ItemStack itemStack;
 	private final Vector2D size;
 
-	public ItemDrawable(@Nonnull IItemProvider item) {
+	public ItemDrawable(@Nonnull ItemLike item) {
 		itemStack = new ItemStack(item);
 		size = new Vector2D(16, 16);
 	}
@@ -27,12 +27,12 @@ public class ItemDrawable implements IDrawable {
 	@Override
 	public void draw(float x, float y, float z) {
 		if (itemStack != null) {
-			float initialValue = Minecraft.getInstance().getItemRenderer().zLevel;
-			Minecraft.getInstance().getItemRenderer().zLevel = z - 50.0f;
+			float initialValue = Minecraft.getInstance().getItemRenderer().blitOffset;
+			Minecraft.getInstance().getItemRenderer().blitOffset = z - 50.0f;
 
-			Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(itemStack, (int) x, (int) y);
+			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(itemStack, (int) x, (int) y);
 
-			Minecraft.getInstance().getItemRenderer().zLevel = initialValue;
+			Minecraft.getInstance().getItemRenderer().blitOffset = initialValue;
 		}
 	}
 

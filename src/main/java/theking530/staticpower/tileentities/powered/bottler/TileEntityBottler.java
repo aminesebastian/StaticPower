@@ -1,15 +1,15 @@
 package theking530.staticpower.tileentities.powered.bottler;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBottler extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityBottler> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityBottler(), ModBlocks.Bottler);
+	public static final BlockEntityTypeAllocator<TileEntityBottler> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityBottler(), ModBlocks.Bottler);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -247,7 +247,7 @@ public class TileEntityBottler extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerBottler(windowId, inventory, this);
 	}
 }

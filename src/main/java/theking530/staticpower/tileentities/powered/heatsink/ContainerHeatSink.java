@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.heatsink;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -17,11 +17,11 @@ public class ContainerHeatSink extends StaticPowerTileEntityContainer<TileEntity
 		}
 	}
 
-	public ContainerHeatSink(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerHeatSink(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityHeatSink) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerHeatSink(int windowId, PlayerInventory playerInventory, TileEntityHeatSink owner) {
+	public ContainerHeatSink(int windowId, Inventory playerInventory, TileEntityHeatSink owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

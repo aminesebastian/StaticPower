@@ -14,15 +14,15 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.network.pathfinding.PathCache;
 
@@ -37,7 +37,7 @@ public class CableNetwork {
 	private final long NetworkId;
 	private BlockPos Origin;
 	private boolean InitialScanComplete;
-	private World World;
+	private Level World;
 	private HashMap<ResourceLocation, AbstractCableNetworkModule> Modules;
 	private boolean networkUpdatesDisabled;
 
@@ -107,7 +107,7 @@ public class CableNetwork {
 		return Modules.values().stream().collect(Collectors.toList());
 	}
 
-	public @Nullable NetworkMapper updateGraph(World world, BlockPos startingPosition) {
+	public @Nullable NetworkMapper updateGraph(Level world, BlockPos startingPosition) {
 		if (networkUpdatesDisabled) {
 			return null;
 		}
@@ -166,11 +166,11 @@ public class CableNetwork {
 		}
 	}
 
-	public List<ITextComponent> getReaderOutput() {
+	public List<Component> getReaderOutput() {
 		// Allocate the output list.
-		List<ITextComponent> output = new LinkedList<ITextComponent>();
-		output.add(new StringTextComponent(""));
-		output.add(new StringTextComponent("NetworkID: ").appendString(String.format("%1$s%2$d with %3$d cables", TextFormatting.GRAY.toString(), NetworkId, Graph.getCables().size())));
+		List<Component> output = new LinkedList<Component>();
+		output.add(new TextComponent(""));
+		output.add(new TextComponent("NetworkID: ").append(String.format("%1$s%2$d with %3$d cables", ChatFormatting.GRAY.toString(), NetworkId, Graph.getCables().size())));
 
 		// Capture the output contents of the modules.
 		for (AbstractCableNetworkModule module : Modules.values()) {
@@ -196,7 +196,7 @@ public class CableNetwork {
 		return PathCache;
 	}
 
-	public World getWorld() {
+	public Level getWorld() {
 		return World;
 	}
 
@@ -214,19 +214,19 @@ public class CableNetwork {
 		return Graph.getCables().isEmpty();
 	}
 
-	public void setWorld(World world) {
+	public void setWorld(Level world) {
 		World = world;
 	}
 
-	public static CableNetwork create(CompoundNBT tag) {
+	public static CableNetwork create(CompoundTag tag) {
 		// Create the network.
-		CableNetwork network = new CableNetwork(BlockPos.fromLong(tag.getLong("origin")), tag.getLong("network_id"));
+		CableNetwork network = new CableNetwork(BlockPos.of(tag.getLong("origin")), tag.getLong("network_id"));
 
 		// Deserialize the modules.
-		ListNBT modules = tag.getList("modules", Constants.NBT.TAG_COMPOUND);
-		for (INBT moduleTag : modules) {
+		ListTag modules = tag.getList("modules", Constants.NBT.TAG_COMPOUND);
+		for (Tag moduleTag : modules) {
 			// Get the module compound.
-			CompoundNBT moduleTagCompound = (CompoundNBT) moduleTag;
+			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
 
 			// Get the module type.
 			ResourceLocation moduleType = new ResourceLocation(moduleTagCompound.getString("type"));
@@ -242,15 +242,15 @@ public class CableNetwork {
 		return network;
 	}
 
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		// Put the network ID and the origin.
 		tag.putLong("network_id", NetworkId);
-		tag.putLong("origin", Origin.toLong());
+		tag.putLong("origin", Origin.asLong());
 
 		// Serialize the attachments.
-		ListNBT modules = new ListNBT();
+		ListTag modules = new ListTag();
 		Modules.values().forEach(module -> {
-			CompoundNBT moduleTag = new CompoundNBT();
+			CompoundTag moduleTag = new CompoundTag();
 			moduleTag.putString("type", module.getType().toString());
 			module.writeToNbt(moduleTag);
 			modules.add(moduleTag);

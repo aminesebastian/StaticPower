@@ -3,12 +3,12 @@ package theking530.staticpower.cables.power;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.DataGraphWidget;
 import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
@@ -28,7 +28,7 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 	private MetricCategory displayType;
 	private TextButton metricTypeButton;
 
-	public GuiPowerCable(ContainerPowerCable container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiPowerCable(ContainerPowerCable container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 190, 125);
 		displayType = MetricCategory.SECONDS;
 	}
@@ -39,7 +39,7 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 		this.registerWidget(graphWidget = new DataGraphWidget(10, 20, 146, 78));
 
 		registerWidget(metricTypeButton = new TextButton(164, 102, 16, 16, "S", this::buttonPressed));
-		metricTypeButton.setTooltip(new StringTextComponent("Seconds"));
+		metricTypeButton.setTooltip(new TextComponent("Seconds"));
 	}
 
 	@Override
@@ -70,31 +70,31 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 	}
 
 	protected PowerTransferMetricWrapper getMetrics() {
-		return getContainer().getMetrics().getData(displayType);
+		return getMenu().getMetrics().getData(displayType);
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
 		if (displayType == MetricCategory.TICKS) {
 			displayType = MetricCategory.SECONDS;
-			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_minutes"));
+			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_minutes"));
 			metricTypeButton.setText("S");
 		} else if (displayType == MetricCategory.SECONDS) {
 			displayType = MetricCategory.MINUTES;
-			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_minutes"));
+			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_minutes"));
 			metricTypeButton.setText("M");
 		} else if (displayType == MetricCategory.MINUTES) {
 			displayType = MetricCategory.HOURS;
-			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_hours"));
+			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_hours"));
 			metricTypeButton.setText("H");
 		} else if (displayType == MetricCategory.HOURS) {
 			displayType = MetricCategory.TICKS;
-			metricTypeButton.setTooltip(new TranslationTextComponent("gui.staticpower.metric_ticks"));
+			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_ticks"));
 			metricTypeButton.setText("T");
 		}
 	}
 
 	@Override
-	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawForegroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		float textScale = 0.70f;
 		float xPos = 10;
 		float yPos = 104;
@@ -112,17 +112,17 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 
 		float recieve = this.getTileEntity().powerCableComponent.getClientLastEnergyReceieve();
 		String recivePerTick = GuiTextUtilities.formatEnergyRateToString(recieve).getString();
-		int recieveWidth = (int) (this.font.getStringWidth(recivePerTick) * textScale);
+		int recieveWidth = (int) (this.font.width(recivePerTick) * textScale);
 		GuiDrawUtilities.drawStringWithSize(stack, recivePerTick, inPosition + 14 + (recieveWidth / 2), yPos + 9, textScale, new Color(0.0f, 255.0f, 50.0f), true);
 
 		float extract = -this.getTileEntity().powerCableComponent.getClientLastEnergyReceieve();
 		String extractPerTick = GuiTextUtilities.formatEnergyRateToString(extract).getString();
-		int extractWidth = (int) (this.font.getStringWidth(extractPerTick) * textScale);
+		int extractWidth = (int) (this.font.width(extractPerTick) * textScale);
 		GuiDrawUtilities.drawStringWithSize(stack, extractPerTick, outPosition + 14 + (extractWidth / 2), yPos + 9, textScale, new Color(255.0f, 0.0f, 30.0f), true);
 
 		float net = recieve + extract;
 		String netPerTick = GuiTextUtilities.formatEnergyRateToString(net).getString();
-		int netWidth = (int) (this.font.getStringWidth(netPerTick) * textScale);
+		int netWidth = (int) (this.font.width(netPerTick) * textScale);
 		GuiDrawUtilities.drawStringWithSize(stack, netPerTick, netPosition + 14 + (netWidth / 2), yPos + 9, textScale, new Color(0.0f, 100.0f, 255.0f), true);
 	}
 }

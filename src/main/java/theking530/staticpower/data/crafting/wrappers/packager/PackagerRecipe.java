@@ -1,15 +1,15 @@
 package theking530.staticpower.data.crafting.wrappers.packager;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class PackagerRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<PackagerRecipe> RECIPE_TYPE = IRecipeType.register("packager");
+	public static final RecipeType<PackagerRecipe> RECIPE_TYPE = RecipeType.register("packager");
 
 	private final StaticPowerIngredient inputItem;
 	private final ProbabilityItemStackOutput outputItem;
@@ -57,12 +57,12 @@ public class PackagerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return PackagerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

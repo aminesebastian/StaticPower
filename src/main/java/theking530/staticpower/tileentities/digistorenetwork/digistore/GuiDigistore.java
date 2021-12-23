@@ -2,15 +2,15 @@ package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import com.mojang.blaze3d.platform.Lighting;
+import net.minecraft.world.item.TooltipFlag.Default;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -31,7 +31,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	private final GuiDrawItem itemRenderer;
 	private final IDigistoreInventory inventory;
 
-	public GuiDigistore(ContainerDigistore container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiDigistore(ContainerDigistore container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 150);
 		itemRenderer = new GuiDrawItem();
 		inventory = getTileEntity().inventory;
@@ -53,7 +53,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			button.setToggled(getTileEntity().isLocked());
 			lockedButton.setText(getTileEntity().isLocked() ? "Locked" : "Unlocked");
 
-			NetworkMessage msg = new PacketLockDigistore(getTileEntity().isLocked(), getTileEntity().getPos());
+			NetworkMessage msg = new PacketLockDigistore(getTileEntity().isLocked(), getTileEntity().getBlockPos());
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 		}
 	}
@@ -62,37 +62,37 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	public void updateData() {
 		// Update the info tab.
 		infoTab.clear();
-		infoTab.addLine("desc", new StringTextComponent("Stores a large amount of a single item."));
+		infoTab.addLine("desc", new TextComponent("Stores a large amount of a single item."));
 		infoTab.addLineBreak();
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(inventory.getItemCapacity());
-		infoTab.addKeyValueLine("max", new StringTextComponent("Max Items"),
-				new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))), TextFormatting.RED);
+		infoTab.addKeyValueLine("max", new TextComponent("Max Items"),
+				new TextComponent(ChatFormatting.WHITE.toString()).append(new TextComponent(count.getValueAsString(true))), ChatFormatting.RED);
 	}
 
 	@Override
-	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawForegroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
-			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
+			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
 				GuiDrawUtilities.drawColoredRectangle(stack, 79, 19, 18, 18, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
 			}
 		}
 	}
 
 	@Override
-	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
+	protected void getExtraTooltips(List<Component> tooltips, PoseStack stack, int mouseX, int mouseY) {
 		super.getExtraTooltips(tooltips, stack, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
-			if (mouseX >= guiLeft + 76 && mouseX <= guiLeft + 100 && mouseY >= guiTop + 21 && mouseY <= guiTop + 45) {
-				tooltips.addAll(inventory.getDigistoreStack(0).getStoredItem().getTooltip(Minecraft.getInstance().player, TooltipFlags.NORMAL));
+			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
+				tooltips.addAll(inventory.getDigistoreStack(0).getStoredItem().getTooltipLines(Minecraft.getInstance().player, Default.NORMAL));
 			}
 		}
 	}
 
 	@Override
-	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Draw the massive digistore slot.
@@ -100,9 +100,9 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 
 		// Draw the item.
 		if (inventory.getCurrentUniqueItemTypeCount() > 0) {
-			RenderHelper.enableStandardItemLighting();
-			itemRenderer.drawItem(inventory.getDigistoreStack(0).getStoredItem(), guiLeft, guiTop, 80, 21, 1.0f);
-			RenderHelper.disableStandardItemLighting();
+			Lighting.turnBackOn();
+			itemRenderer.drawItem(inventory.getDigistoreStack(0).getStoredItem(), leftPos, topPos, 80, 21, 1.0f);
+			Lighting.turnOff();
 
 			// Pass the itemstack count through the metric converter.
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());

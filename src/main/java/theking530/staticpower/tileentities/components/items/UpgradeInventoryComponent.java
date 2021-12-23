@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentities.components.items;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import theking530.api.IUpgradeItem;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticpower.data.StaticPowerTier;

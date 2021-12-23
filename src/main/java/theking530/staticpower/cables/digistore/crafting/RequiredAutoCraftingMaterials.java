@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 import theking530.staticpower.data.crafting.IngredientUtilities;
 
@@ -127,7 +127,7 @@ public class RequiredAutoCraftingMaterials {
 		private int amountStored;
 
 		public RequiredAutoCraftingMaterial(ItemStack item, int amountRequired, int amountToCraft, int amountStored) {
-			this.item = Ingredient.fromStacks(item);
+			this.item = Ingredient.of(item);
 			this.amountRequired = amountRequired;
 			this.amountToCraft = amountToCraft;
 			this.amountStored = amountStored;
@@ -174,7 +174,7 @@ public class RequiredAutoCraftingMaterials {
 
 		@Override
 		public String toString() {
-			return "RequiredAutoCraftingMaterial [item=" + (item.hasNoMatchingItems() ? item : item.getMatchingStacks()[0]) + ", amountRequired=" + amountRequired + ", amountToCraft="
+			return "RequiredAutoCraftingMaterial [item=" + (item.isEmpty() ? item : item.getItems()[0]) + ", amountRequired=" + amountRequired + ", amountToCraft="
 					+ amountToCraft + ", amountStored=" + amountStored + "]";
 		}
 	}

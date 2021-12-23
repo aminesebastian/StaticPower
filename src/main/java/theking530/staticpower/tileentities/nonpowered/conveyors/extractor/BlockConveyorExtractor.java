@@ -4,20 +4,20 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorBlock;
 
 public class BlockConveyorExtractor extends AbstractConveyorBlock {
@@ -28,49 +28,49 @@ public class BlockConveyorExtractor extends AbstractConveyorBlock {
 
 	@Override
 	public void cacheVoxelShapes() {
-		VoxelShape east = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(8, 14, 0, 16, 16, 16), IBooleanFunction.OR);
-		east = VoxelShapes.combine(east, Block.makeCuboidShape(15, 0, 0, 16, 16, 16), IBooleanFunction.OR);
-		east = VoxelShapes.combine(east, Block.makeCuboidShape(8, 0, 14, 16, 16, 16), IBooleanFunction.OR);
-		east = VoxelShapes.combine(east, Block.makeCuboidShape(8, 0, 0, 16, 16, 2), IBooleanFunction.OR);
+		VoxelShape east = Shapes.joinUnoptimized(Block.box(0, 0, 0, 16, 8, 16), Block.box(8, 14, 0, 16, 16, 16), BooleanOp.OR);
+		east = Shapes.joinUnoptimized(east, Block.box(15, 0, 0, 16, 16, 16), BooleanOp.OR);
+		east = Shapes.joinUnoptimized(east, Block.box(8, 0, 14, 16, 16, 16), BooleanOp.OR);
+		east = Shapes.joinUnoptimized(east, Block.box(8, 0, 0, 16, 16, 2), BooleanOp.OR);
 		ENTITY_SHAPES.put(Direction.EAST, east);
 		INTERACTION_SHAPES.put(Direction.EAST, east);
 
-		VoxelShape west = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 14, 0, 8, 16, 16), IBooleanFunction.OR);
-		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 0, 1, 16, 16), IBooleanFunction.OR);
-		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 14, 8, 16, 16), IBooleanFunction.OR);
-		west = VoxelShapes.combine(west, Block.makeCuboidShape(0, 0, 0, 8, 16, 2), IBooleanFunction.OR);
+		VoxelShape west = Shapes.joinUnoptimized(Block.box(0, 0, 0, 16, 8, 16), Block.box(0, 14, 0, 8, 16, 16), BooleanOp.OR);
+		west = Shapes.joinUnoptimized(west, Block.box(0, 0, 0, 1, 16, 16), BooleanOp.OR);
+		west = Shapes.joinUnoptimized(west, Block.box(0, 0, 14, 8, 16, 16), BooleanOp.OR);
+		west = Shapes.joinUnoptimized(west, Block.box(0, 0, 0, 8, 16, 2), BooleanOp.OR);
 		ENTITY_SHAPES.put(Direction.WEST, west);
 		INTERACTION_SHAPES.put(Direction.WEST, west);
 
-		VoxelShape south = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 14, 8, 16, 16, 16), IBooleanFunction.OR);
-		south = VoxelShapes.combine(south, Block.makeCuboidShape(0, 0, 15, 16, 16, 16), IBooleanFunction.OR);
-		south = VoxelShapes.combine(south, Block.makeCuboidShape(14, 0, 8, 16, 16, 16), IBooleanFunction.OR);
-		south = VoxelShapes.combine(south, Block.makeCuboidShape(0, 0, 8, 2, 16, 16), IBooleanFunction.OR);
+		VoxelShape south = Shapes.joinUnoptimized(Block.box(0, 0, 0, 16, 8, 16), Block.box(0, 14, 8, 16, 16, 16), BooleanOp.OR);
+		south = Shapes.joinUnoptimized(south, Block.box(0, 0, 15, 16, 16, 16), BooleanOp.OR);
+		south = Shapes.joinUnoptimized(south, Block.box(14, 0, 8, 16, 16, 16), BooleanOp.OR);
+		south = Shapes.joinUnoptimized(south, Block.box(0, 0, 8, 2, 16, 16), BooleanOp.OR);
 		ENTITY_SHAPES.put(Direction.SOUTH, south);
 		INTERACTION_SHAPES.put(Direction.SOUTH, south);
 
-		VoxelShape north = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 16, 8, 16), Block.makeCuboidShape(0, 14, 0, 16, 16, 8), IBooleanFunction.OR);
-		north = VoxelShapes.combine(north, Block.makeCuboidShape(0, 0, 0, 16, 16, 1), IBooleanFunction.OR);
-		north = VoxelShapes.combine(north, Block.makeCuboidShape(14, 0, 0, 16, 16, 8), IBooleanFunction.OR);
-		north = VoxelShapes.combine(north, Block.makeCuboidShape(0, 0, 0, 2, 16, 8), IBooleanFunction.OR);
+		VoxelShape north = Shapes.joinUnoptimized(Block.box(0, 0, 0, 16, 8, 16), Block.box(0, 14, 0, 16, 16, 8), BooleanOp.OR);
+		north = Shapes.joinUnoptimized(north, Block.box(0, 0, 0, 16, 16, 1), BooleanOp.OR);
+		north = Shapes.joinUnoptimized(north, Block.box(14, 0, 0, 16, 16, 8), BooleanOp.OR);
+		north = Shapes.joinUnoptimized(north, Block.box(0, 0, 0, 2, 16, 8), BooleanOp.OR);
 		ENTITY_SHAPES.put(Direction.NORTH, north);
 		INTERACTION_SHAPES.put(Direction.NORTH, north);
 	}
 
 	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		return TileEntityConveyorExtractor.TYPE.create();
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			tooltip.add(new TranslationTextComponent("gui.staticpower.experience_hopper_tooltip").mergeStyle(TextFormatting.GREEN));
+			tooltip.add(new TranslatableComponent("gui.staticpower.experience_hopper_tooltip").withStyle(ChatFormatting.GREEN));
 		}
 	}
 
 	@Override
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.experience_hopper_description")).mergeStyle(TextFormatting.BLUE));
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.experience_hopper_description")).withStyle(ChatFormatting.BLUE));
 	}
 }

@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -258,7 +258,7 @@ public class StaticPowerAdditionalModels {
 	static {
 		CABLE_REDSTONE_BASIC = new HashMap<>();
 		for (int i = 0; i < 16; i++) {
-			TextFormatting formatting = TextFormatting.values()[i];
+			ChatFormatting formatting = ChatFormatting.values()[i];
 			String name = formatting.name().toLowerCase();
 			CABLE_REDSTONE_BASIC.put(name,
 					new ResourceLocation[] { registerModel("block/cables/redstone/basic/" + name + "/straight"), registerModel("block/cables/redstone/basic/" + name + "/extension") });

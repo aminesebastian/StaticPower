@@ -5,17 +5,17 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
@@ -23,20 +23,20 @@ import theking530.staticpower.items.DigistorePatternCard;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
-public class PatternCardItemModel implements IBakedModel {
-	private final IBakedModel blankModel;
-	private final IBakedModel encodedModel;
+public class PatternCardItemModel implements BakedModel {
+	private final BakedModel blankModel;
+	private final BakedModel encodedModel;
 
-	public PatternCardItemModel(IBakedModel blankModel, IBakedModel encodedModel) {
+	public PatternCardItemModel(BakedModel blankModel, BakedModel encodedModel) {
 		this.blankModel = blankModel;
 		this.encodedModel = encodedModel;
 	}
 
 	@Override
-	public ItemOverrideList getOverrides() {
-		return new ItemOverrideList() {
+	public ItemOverrides getOverrides() {
+		return new ItemOverrides() {
 			@Override
-			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world,
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
 					@Nullable LivingEntity livingEntity) {
 				// Make sure we have a valid portable battery.
 				if (!(stack.getItem() instanceof DigistorePatternCard)) {
@@ -49,7 +49,7 @@ public class PatternCardItemModel implements IBakedModel {
 						EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
 						if (pattern != null && !pattern.getOutput().isEmpty()) {
 							// Get the baked model for the recipe output.
-							return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(pattern.getOutput(), world, livingEntity);
+							return Minecraft.getInstance().getItemRenderer().getModel(pattern.getOutput(), world, livingEntity);
 						}
 					}
 					return encodedModel;
@@ -65,8 +65,8 @@ public class PatternCardItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isAmbientOcclusion() {
-		return blankModel.isAmbientOcclusion();
+	public boolean useAmbientOcclusion() {
+		return blankModel.useAmbientOcclusion();
 	}
 
 	@Override
@@ -75,17 +75,17 @@ public class PatternCardItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return blankModel.isSideLit();
+	public boolean usesBlockLight() {
+		return blankModel.usesBlockLight();
 	}
 
 	@Override
-	public boolean isBuiltInRenderer() {
-		return blankModel.isBuiltInRenderer();
+	public boolean isCustomRenderer() {
+		return blankModel.isCustomRenderer();
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return blankModel.getParticleTexture();
+	public TextureAtlasSprite getParticleIcon() {
+		return blankModel.getParticleIcon();
 	}
 }

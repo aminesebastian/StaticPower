@@ -7,15 +7,15 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -27,18 +27,18 @@ public class ServerCable {
 
 	public static final String DATA_TAG_KEY = "data";
 	protected CableNetwork Network;
-	protected final World World;
+	protected final Level World;
 	protected final HashSet<ResourceLocation> supportedNetworkModules;
 	private final BlockPos Position;
 	private final boolean[] disabledSides;
 	/** This tag should be used to store any data about this server cable. */
-	private final CompoundNBT dataTag;
+	private final CompoundTag dataTag;
 	private final Map<Direction, ServerAttachmentDataContainer> attachmentData;
 
-	public ServerCable(World world, BlockPos position, HashSet<ResourceLocation> supportedModules) {
+	public ServerCable(Level world, BlockPos position, HashSet<ResourceLocation> supportedModules) {
 		Position = position;
 		World = world;
-		dataTag = new CompoundNBT();
+		dataTag = new CompoundTag();
 		attachmentData = new HashMap<Direction, ServerAttachmentDataContainer>();
 		for (Direction dir : Direction.values()) {
 			attachmentData.put(dir, new ServerAttachmentDataContainer(dir));
@@ -47,24 +47,24 @@ public class ServerCable {
 		disabledSides = new boolean[] { false, false, false, false, false, false };
 	}
 
-	public ServerCable(World world, BlockPos position, HashSet<ResourceLocation> supportedModules, Consumer<ServerCable> propertiesHandle) {
+	public ServerCable(Level world, BlockPos position, HashSet<ResourceLocation> supportedModules, Consumer<ServerCable> propertiesHandle) {
 		this(world, position, supportedModules);
 		propertiesHandle.accept(this);
 	}
 
-	public ServerCable(World world, CompoundNBT tag) {
+	public ServerCable(Level world, CompoundTag tag) {
 		// Set the world.
 		World = world;
 
 		// Get the position.
-		Position = BlockPos.fromLong(tag.getLong("position"));
+		Position = BlockPos.of(tag.getLong("position"));
 
 		// Create the disabled sides.
 		disabledSides = new boolean[] { false, false, false, false, false, false };
 
 		// Deserialize the attachments.
 		attachmentData = new HashMap<Direction, ServerAttachmentDataContainer>();
-		CompoundNBT attachmentNBT = tag.getCompound("attachments");
+		CompoundTag attachmentNBT = tag.getCompound("attachments");
 		for (Direction dir : Direction.values()) {
 			String key = String.valueOf(dir.ordinal());
 			if (attachmentNBT.contains(key)) {
@@ -76,9 +76,9 @@ public class ServerCable {
 
 		// Get the supported network types.
 		supportedNetworkModules = new HashSet<ResourceLocation>();
-		ListNBT modules = tag.getList("supported_modules", Constants.NBT.TAG_COMPOUND);
-		for (INBT moduleTag : modules) {
-			CompoundNBT moduleTagCompound = (CompoundNBT) moduleTag;
+		ListTag modules = tag.getList("supported_modules", Constants.NBT.TAG_COMPOUND);
+		for (Tag moduleTag : modules) {
+			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
 			supportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
 		}
 
@@ -122,7 +122,7 @@ public class ServerCable {
 		return dataTag.getString(key);
 	}
 
-	public CompoundNBT getTagProperty(String key) {
+	public CompoundTag getTagProperty(String key) {
 		return dataTag.getCompound(key);
 	}
 
@@ -150,11 +150,11 @@ public class ServerCable {
 		dataTag.putString(key, value);
 	}
 
-	public void setProperty(String key, CompoundNBT value) {
+	public void setProperty(String key, CompoundTag value) {
 		dataTag.put(key, value);
 	}
 
-	public CompoundNBT getCompleteDataTag() {
+	public CompoundTag getCompleteDataTag() {
 		return dataTag;
 	}
 
@@ -178,7 +178,7 @@ public class ServerCable {
 		return Network;
 	}
 
-	public World getWorld() {
+	public Level getWorld() {
 		return World;
 	}
 
@@ -233,7 +233,7 @@ public class ServerCable {
 	 */
 	public void updateCableBlock() {
 		BlockState state = World.getBlockState(Position);
-		World.notifyBlockUpdate(Position, state, state, 1 | 2);
+		World.sendBlockUpdated(Position, state, state, 1 | 2);
 	}
 
 	public boolean isDisabledOnSide(Direction side) {
@@ -244,14 +244,14 @@ public class ServerCable {
 		disabledSides[side.ordinal()] = disabledState;
 	}
 
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		// Serialize the position.
-		tag.putLong("position", Position.toLong());
+		tag.putLong("position", Position.asLong());
 
 		// Serialize the supported module types.
-		ListNBT supportedModules = new ListNBT();
+		ListTag supportedModules = new ListTag();
 		supportedNetworkModules.forEach(moduleType -> {
-			CompoundNBT moduleTag = new CompoundNBT();
+			CompoundTag moduleTag = new CompoundTag();
 			moduleTag.putString("module_type", moduleType.toString());
 			supportedModules.add(moduleTag);
 		});
@@ -263,7 +263,7 @@ public class ServerCable {
 		}
 
 		// Serailize the attachments.
-		CompoundNBT attachmentTags = new CompoundNBT();
+		CompoundTag attachmentTags = new CompoundTag();
 		for (Direction dir : Direction.values()) {
 			attachmentTags.put(String.valueOf(dir.ordinal()), attachmentData.get(dir).serialize());
 		}
@@ -284,7 +284,7 @@ public class ServerCable {
 	 * @return
 	 */
 	public List<AbstractCableProviderComponent> getCableProviderComponents() {
-		TileEntityBase baseTe = (TileEntityBase) World.getChunkAt(getPos()).getTileEntity(getPos(), Chunk.CreateEntityType.QUEUED);
+		TileEntityBase baseTe = (TileEntityBase) World.getChunkAt(getPos()).getBlockEntity(getPos(), LevelChunk.EntityCreationType.QUEUED);
 		if (baseTe == null) {
 			throw new RuntimeException(String.format("A cable wrapper exists without a cooresponding AbstractCableProviderComponent at BlockPos: %1$s.", Position));
 		}

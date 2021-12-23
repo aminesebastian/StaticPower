@@ -3,12 +3,12 @@ package theking530.staticpower.items.itemfilter;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
@@ -31,7 +31,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 	private SpriteButton tagButton;
 	private SpriteButton modButton;
 
-	public GuiItemFilter(ContainerItemFilter container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiItemFilter(ContainerItemFilter container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 151);
 	}
 
@@ -44,16 +44,16 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 
 		// If the item filter is null, then return early and log the error.
 		if (filterInventory == null) {
-			LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getDisplayName()));
+			LOGGER.error(String.format("Received capability for ItemFilter: %1$s that did not inherit from InventoryItemFilter.", getItemStack().getHoverName()));
 			return;
 		}
 
-		guiLeft = (this.width - this.xSize) / 2;
-		guiTop = (this.height - this.ySize) / 2;
+		leftPos = (this.width - this.imageWidth) / 2;
+		topPos = (this.height - this.imageHeight) / 2;
 
 		// Update the info tab label.
 		getTabManager().registerTab(infoTab = new GuiInfoTab(110));
-		infoTab.addLine("desc", new StringTextComponent("Filter items going into an inventory."));
+		infoTab.addLine("desc", new TextComponent("Filter items going into an inventory."));
 
 		registerWidget(whitelistButton = new SpriteButton(45, 40, 20, 20, StaticPowerSprites.FILTER_WHITELIST, null, this::buttonPressed));
 		registerWidget(nbtButton = new SpriteButton(67, 40, 20, 20, StaticPowerSprites.FILTER_NBT, null, this::buttonPressed));
@@ -61,15 +61,15 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		registerWidget(modButton = new SpriteButton(111, 40, 20, 20, StaticPowerSprites.FILTER_MOD, null, this::buttonPressed));
 
 		whitelistButton.setRegularTexture(getItemFilter().isWhiteListMode(getItemStack()) ? StaticPowerSprites.FILTER_WHITELIST : StaticPowerSprites.FILTER_BLACKLIST);
-		whitelistButton.setTooltip(new TranslationTextComponent(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
+		whitelistButton.setTooltip(new TranslatableComponent(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
 
-		nbtButton.setToggleable(true).setToggled(getItemFilter().filterForNBT(getItemStack())).setTooltip(new TranslationTextComponent("Enable NBT Match"));
-		tagButton.setToggleable(true).setToggled(getItemFilter().filterForTag(getItemStack())).setTooltip(new TranslationTextComponent("Enable Ore Dictionary Match"));
-		modButton.setToggleable(true).setToggled(getItemFilter().filterForMod(getItemStack())).setTooltip(new TranslationTextComponent("Enable Mod Match"));
+		nbtButton.setToggleable(true).setToggled(getItemFilter().filterForNBT(getItemStack())).setTooltip(new TranslatableComponent("Enable NBT Match"));
+		tagButton.setToggleable(true).setToggled(getItemFilter().filterForTag(getItemStack())).setTooltip(new TranslatableComponent("Enable Ore Dictionary Match"));
+		modButton.setToggleable(true).setToggled(getItemFilter().filterForMod(getItemStack())).setTooltip(new TranslatableComponent("Enable Mod Match"));
 
-		if (this.getContainer().filterInventory.getSlots() > 9) {
+		if (this.getMenu().filterInventory.getSlots() > 9) {
 			int additionalHeight = 16;
-			this.setDesieredGuiSize(xSize, ySize + additionalHeight - 4);
+			this.setDesieredGuiSize(imageWidth, imageHeight + additionalHeight - 4);
 			whitelistButton.setPosition(whitelistButton.getPosition().getX(), whitelistButton.getPosition().getY() + additionalHeight);
 			nbtButton.setPosition(nbtButton.getPosition().getX(), nbtButton.getPosition().getY() + additionalHeight);
 			tagButton.setPosition(tagButton.getPosition().getX(), tagButton.getPosition().getY() + additionalHeight);
@@ -81,7 +81,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 		if (button == whitelistButton) {
 			getItemFilter().setWhitelistMode(getItemStack(), !getItemFilter().isWhiteListMode(getItemStack()));
 			whitelistButton.setRegularTexture(getItemFilter().isWhiteListMode(getItemStack()) ? StaticPowerSprites.FILTER_WHITELIST : StaticPowerSprites.FILTER_BLACKLIST);
-			whitelistButton.setTooltip(new TranslationTextComponent(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
+			whitelistButton.setTooltip(new TranslatableComponent(getItemFilter().isWhiteListMode(getItemStack()) ? "Whitelist" : "Blacklist"));
 		}
 		if (button == nbtButton) {
 			getItemFilter().setFilterForNBT(getItemStack(), !getItemFilter().filterForNBT(getItemStack()));
@@ -100,7 +100,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 	}
 
 	@Override
-	protected void drawBackgroundExtras(MatrixStack stack, float f, int i, int j) {
+	protected void drawBackgroundExtras(PoseStack stack, float f, int i, int j) {
 
 	}
 

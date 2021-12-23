@@ -1,13 +1,13 @@
 package theking530.staticpower.cables.attachments.digistore.terminal;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal;
 
 public class GuiDigistoreTerminal extends AbstractGuiDigistoreTerminal<ContainerDigistoreTerminal, DigistoreTerminal> {
 
-	public GuiDigistoreTerminal(ContainerDigistoreTerminal container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiDigistoreTerminal(ContainerDigistoreTerminal container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 270);
 	}
 	@Override

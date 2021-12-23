@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.powered.autosolderingtable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
@@ -20,8 +20,8 @@ public class GuiAutoSolderingTable
 		extends AbstractGuiSolderingTable<TileEntityAutoSolderingTable, ContainerAutoSolderingTable> {
 	private final GuiDrawItem itemRenderer;
 
-	public GuiAutoSolderingTable(ContainerAutoSolderingTable container, PlayerInventory invPlayer,
-			ITextComponent name) {
+	public GuiAutoSolderingTable(ContainerAutoSolderingTable container, Inventory invPlayer,
+			Component name) {
 		super(container, invPlayer, name, 176, 185);
 		itemRenderer = new GuiDrawItem();
 	}
@@ -42,13 +42,13 @@ public class GuiAutoSolderingTable
 						.setTabSide(TabSide.LEFT),
 				true);
 		getTabManager().registerTab(
-				new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+				new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}
 
 	@Override
-	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		// Check if we have a recipe currently processing.
 		SolderingRecipe recipe = getTileEntity().getCurrentProcessingRecipe().orElse(null);
@@ -60,7 +60,7 @@ public class GuiAutoSolderingTable
 
 		// If there is a recipe, draw a phantom output.
 		if (recipe != null) {
-			itemRenderer.drawItem(recipe.getRecipeOutput(), guiLeft, guiTop, 129, 38, 0.3f);
+			itemRenderer.drawItem(recipe.getResultItem(), leftPos, topPos, 129, 38, 0.3f);
 		}
 	}
 

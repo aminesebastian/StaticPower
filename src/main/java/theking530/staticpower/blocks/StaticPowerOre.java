@@ -2,14 +2,12 @@ package theking530.staticpower.blocks;
 
 import java.util.Random;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.IItemTier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 
 /**
  * Base class for any static power ores.
@@ -26,13 +24,11 @@ public class StaticPowerOre extends StaticPowerBlock {
 	/**
 	 * Creates a static power ore.
 	 * 
-	 * @param name         The registry name of the ore sans namespace.
-	 * @param tool         The tool that must be used to harvest this ore.
-	 * @param harvestLevel The harvest level of this ore.
-	 * @param hardness     The hardness of this ore.
+	 * @param name     The registry name of the ore sans namespace.
+	 * @param hardness The hardness of this ore.
 	 */
-	public StaticPowerOre(String name, ToolType tool, IItemTier harvestLevel, float hardness) {
-		this(name, tool, harvestLevel, hardness, 0, 0);
+	public StaticPowerOre(String name, float hardness) {
+		this(name, hardness, 0, 0);
 	}
 
 	/**
@@ -45,15 +41,15 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * @param minimumXP    The minimum amount of XP to spawn when this ore is mined.
 	 * @param maximumXP    The maximum amount of XP to spawn when this ore is mined.
 	 */
-	public StaticPowerOre(String name, ToolType tool, IItemTier harvestLevel, float hardness, int minimumXP, int maximumXP) {
-		this(name, Block.Properties.create(Material.ROCK).harvestTool(tool).harvestLevel(harvestLevel.getHarvestLevel()).hardnessAndResistance(hardness).sound(SoundType.STONE), 0, 0);
+	public StaticPowerOre(String name, float hardness, int minimumXP, int maximumXP) {
+		this(name, Block.Properties.of(Material.STONE).strength(hardness).sound(SoundType.STONE), 0, 0);
 
 	}
 
 	public StaticPowerOre(String name, Block.Properties properties) {
 		this(name, properties, 0, 0);
 
-	}	
+	}
 
 	public StaticPowerOre(String name, Block.Properties properties, int minimumXP, int maximumXP) {
 		super(name, properties);
@@ -65,7 +61,8 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 * Gets the amount of XP spawned when this ore is mined.
 	 */
 	@Override
-	public int getExpDrop(BlockState state, net.minecraft.world.IWorldReader reader, BlockPos pos, int fortune, int silktouch) {
+	public int getExpDrop(BlockState state, net.minecraft.world.level.LevelReader reader, BlockPos pos, int fortune,
+			int silktouch) {
 		return silktouch == 0 ? this.getExperience(RANDOM) : 0;
 	}
 
@@ -77,7 +74,7 @@ public class StaticPowerOre extends StaticPowerBlock {
 	 */
 	protected int getExperience(Random rand) {
 		if (maximumXP > 0) {
-			return MathHelper.nextInt(rand, minimumXP, maximumXP);
+			return Mth.nextInt(rand, minimumXP, maximumXP);
 		}
 		return 0;
 	}

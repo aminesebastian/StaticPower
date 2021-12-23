@@ -4,37 +4,39 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorBlock;
 
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
+
 public class BlockConveyorHopper extends AbstractConveyorBlock {
 	protected static VoxelShape PASSED_FILTER_SHAPE;
-	protected static final VoxelShape NOT_PASSED_FILTER_SHAPE = Block.makeCuboidShape(0, 0, 0, 16, 8, 16);
+	protected static final VoxelShape NOT_PASSED_FILTER_SHAPE = Block.box(0, 0, 0, 16, 8, 16);
 	protected final boolean filtered;
 
 	static {
-		PASSED_FILTER_SHAPE = VoxelShapes.combine(Block.makeCuboidShape(0, 0, 0, 4, 8, 16), Block.makeCuboidShape(12, 0, 0, 16, 8, 16), IBooleanFunction.OR);
-		PASSED_FILTER_SHAPE = VoxelShapes.combine(PASSED_FILTER_SHAPE, Block.makeCuboidShape(0, 0, 0, 16, 8, 4), IBooleanFunction.OR);
-		PASSED_FILTER_SHAPE = VoxelShapes.combine(PASSED_FILTER_SHAPE, Block.makeCuboidShape(0, 0, 12, 16, 8, 16), IBooleanFunction.OR);
+		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(Block.box(0, 0, 0, 4, 8, 16), Block.box(12, 0, 0, 16, 8, 16), BooleanOp.OR);
+		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(PASSED_FILTER_SHAPE, Block.box(0, 0, 0, 16, 8, 4), BooleanOp.OR);
+		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(PASSED_FILTER_SHAPE, Block.box(0, 0, 12, 16, 8, 16), BooleanOp.OR);
 	}
 
 	public BlockConveyorHopper(String name, boolean filtered) {
@@ -43,7 +45,7 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return filtered ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 	}
 
@@ -57,20 +59,20 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		// If not filtered, just return the super call.
 		return super.getShape(state, worldIn, pos, context);
 	}
 
 	@Deprecated
-	public VoxelShape getCollisionShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		// If we're a filtering hopper and the entity is an item.
 		if (filtered && context.getEntity() instanceof ConveyorBeltEntity) {
 			// If the context is null (then an item entity), and the hopper tile entity is
 			// still there.
-			if (worldIn.getTileEntity(pos) != null) {
+			if (worldIn.getBlockEntity(pos) != null) {
 				// Get the hopper and the item entity.
-				TileEntityConveyorHopper conveyor = (TileEntityConveyorHopper) worldIn.getTileEntity(pos);
+				TileEntityConveyorHopper conveyor = (TileEntityConveyorHopper) worldIn.getBlockEntity(pos);
 
 				// Get the item over the hole.
 				ConveyorBeltEntity entity = (ConveyorBeltEntity) context.getEntity();
@@ -85,19 +87,19 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		return filtered ? TileEntityConveyorHopper.FILTERED_TYPE.create() : TileEntityConveyorHopper.TYPE.create();
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			tooltip.add(new TranslationTextComponent("gui.staticpower.experience_hopper_tooltip").mergeStyle(TextFormatting.GREEN));
+			tooltip.add(new TranslatableComponent("gui.staticpower.experience_hopper_tooltip").withStyle(ChatFormatting.GREEN));
 		}
 	}
 
 	@Override
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("• ").append(new TranslationTextComponent("gui.staticpower.experience_hopper_description")).mergeStyle(TextFormatting.BLUE));
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.experience_hopper_description")).withStyle(ChatFormatting.BLUE));
 	}
 }

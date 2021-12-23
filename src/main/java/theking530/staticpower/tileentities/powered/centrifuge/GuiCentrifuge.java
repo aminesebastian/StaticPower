@@ -1,13 +1,13 @@
 package theking530.staticpower.tileentities.powered.centrifuge;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -23,7 +23,7 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge, TileEntityCentrifuge> {
 	private GuiInfoTab infoTab;
 
-	public GuiCentrifuge(ContainerCentrifuge container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiCentrifuge(ContainerCentrifuge container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -43,20 +43,20 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 	@Override
 	public void updateData() {
 		infoTab.clear();
-		infoTab.addLine("desc1", new StringTextComponent("Separates items into their base components."));
-		infoTab.addKeyValueTwoLiner("c_speed", new StringTextComponent("Current Speed"),
-				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).append(new TranslationTextComponent("gui.staticpower.rpm")), TextFormatting.YELLOW);
-		infoTab.addKeyValueTwoLiner("max_speed", new StringTextComponent("Max Speed"),
-				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).append(new TranslationTextComponent("gui.staticpower.rpm")), TextFormatting.RED);
+		infoTab.addLine("desc1", new TextComponent("Separates items into their base components."));
+		infoTab.addKeyValueTwoLiner("c_speed", new TextComponent("Current Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getCurrentSpeed()).append(new TranslatableComponent("gui.staticpower.rpm")), ChatFormatting.YELLOW);
+		infoTab.addKeyValueTwoLiner("max_speed", new TextComponent("Max Speed"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getMaxSpeed()).append(new TranslatableComponent("gui.staticpower.rpm")), ChatFormatting.RED);
 	}
 
 	@Override
-	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		String rpmText = getTileEntity().getCurrentSpeed() + " RPM";
-		drawEmptySlot(stack, 123 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), 40, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(stack, rpmText, 125 - (Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) / 2), 42,
+		drawEmptySlot(stack, 123 - (Minecraft.getInstance().font.width(rpmText) / 2), 40, Minecraft.getInstance().font.width(rpmText) + 4, 11);
+		Minecraft.getInstance().font.drawShadow(stack, rpmText, 125 - (Minecraft.getInstance().font.width(rpmText) / 2), 42,
 				Color.EIGHT_BIT_WHITE.encodeInInteger());
 	}
 }

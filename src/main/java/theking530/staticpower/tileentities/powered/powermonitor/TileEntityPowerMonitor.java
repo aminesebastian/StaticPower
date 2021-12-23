@@ -1,14 +1,14 @@
 package theking530.staticpower.tileentities.powered.powermonitor;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerConfig;
@@ -34,7 +34,7 @@ import theking530.staticpower.tileentities.components.serialization.SaveSerializ
 
 public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerMetricsSyncConsumer {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPowerMonitor> TYPE = new TileEntityTypeAllocator<TileEntityPowerMonitor>((allocator) -> new TileEntityPowerMonitor(allocator),
+	public static final BlockEntityTypeAllocator<TileEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<TileEntityPowerMonitor>((allocator) -> new TileEntityPowerMonitor(allocator),
 			ModBlocks.PowerMonitor);
 
 	static {
@@ -61,7 +61,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 
 	protected PowerDistributionComponent powerDistributor;
 
-	public TileEntityPowerMonitor(TileEntityTypeAllocator<TileEntityPowerMonitor> allocator) {
+	public TileEntityPowerMonitor(BlockEntityTypeAllocator<TileEntityPowerMonitor> allocator) {
 		super(allocator);
 
 		// Add the power distributor.
@@ -110,7 +110,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 
 	@Override
 	public void process() {
-		if (!getWorld().isRemote) {
+		if (!getLevel().isClientSide) {
 			// If this is a creative battery, always keep the power at max.
 			if (getTier() == StaticPowerTiers.CREATIVE) {
 				this.energyStorage.getStorage().addPowerIgnoreTransferRate(Long.MAX_VALUE);
@@ -132,9 +132,9 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 			// Capture metrics.
 			metrics.addMetric(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
 
-			if (!getWorld().isRemote() && getWorld().getGameTime() % 20 == 0) {
-				TileEntityPowerMetricsSyncPacket msg = new TileEntityPowerMetricsSyncPacket(getPos(), metrics);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 20, msg);
+			if (!getLevel().isClientSide() && getLevel().getGameTime() % 20 == 0) {
+				TileEntityPowerMetricsSyncPacket msg = new TileEntityPowerMetricsSyncPacket(getBlockPos(), metrics);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 20, msg);
 			}
 		}
 	}
@@ -188,7 +188,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerPowerMonitor(windowId, inventory, this);
 	}
 
@@ -198,7 +198,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		minPowerThreshold = nbt.getLong("min_power_threshold");
@@ -209,7 +209,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		nbt.putLong("min_power_threshold", minPowerThreshold);

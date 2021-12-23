@@ -3,8 +3,8 @@ package theking530.staticcore.utilities;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 
 public class SDMath {
 	private static final Random RANDOM = new Random();
@@ -97,22 +97,22 @@ public class SDMath {
 		Vector3f offset = null;
 		switch (dir) {
 		case DOWN:
-			offset = new Vector3f(vector.getY(), -vector.getZ(), vector.getY());
+			offset = new Vector3f(vector.y(), -vector.z(), vector.y());
 			break;
 		case UP:
-			offset = new Vector3f(vector.getY(), vector.getZ(), vector.getY());
+			offset = new Vector3f(vector.y(), vector.z(), vector.y());
 			break;
 		case EAST:
-			offset = new Vector3f(-vector.getZ(), vector.getY(), -vector.getX());
+			offset = new Vector3f(-vector.z(), vector.y(), -vector.x());
 			break;
 		case WEST:
-			offset = new Vector3f(vector.getZ(), vector.getY(), vector.getX());
+			offset = new Vector3f(vector.z(), vector.y(), vector.x());
 			break;
 		case NORTH:
-			offset = new Vector3f(-vector.getX(), vector.getY(), vector.getZ());
+			offset = new Vector3f(-vector.x(), vector.y(), vector.z());
 			break;
 		case SOUTH:
-			offset = new Vector3f(vector.getX(), vector.getY(), -vector.getZ());
+			offset = new Vector3f(vector.x(), vector.y(), -vector.z());
 			break;
 		}
 		return offset;

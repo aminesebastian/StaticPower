@@ -1,11 +1,11 @@
 package theking530.staticpower.tileentities.powered.lathe;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
@@ -32,7 +32,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLathe extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityLathe> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityLathe(), ModBlocks.Lathe);
+	public static final BlockEntityTypeAllocator<TileEntityLathe> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityLathe(), ModBlocks.Lathe);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;
@@ -168,7 +168,7 @@ public class TileEntityLathe extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerLathe(windowId, inventory, this);
 	}
 }

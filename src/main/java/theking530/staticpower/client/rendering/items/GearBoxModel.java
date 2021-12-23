@@ -7,22 +7,22 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -31,7 +31,7 @@ import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("deprecation")
-public class GearBoxModel implements IBakedModel {
+public class GearBoxModel implements BakedModel {
 	private final ItemStack baseGearItem;
 	private GeneratedGearBoxModel generatedModel;
 
@@ -39,15 +39,15 @@ public class GearBoxModel implements IBakedModel {
 		this.baseGearItem = new ItemStack(baseGearItem);
 	}
 
-	private IBakedModel getBaseModel() {
-		return Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(baseGearItem, Minecraft.getInstance().world, null);
+	private BakedModel getBaseModel() {
+		return Minecraft.getInstance().getItemRenderer().getModel(baseGearItem, Minecraft.getInstance().level, null);
 	}
 
 	@Override
-	public ItemOverrideList getOverrides() {
-		return new ItemOverrideList() {
+	public ItemOverrides getOverrides() {
+		return new ItemOverrides() {
 			@Override
-			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity) {
 				if (generatedModel == null) {
 					generatedModel = new GeneratedGearBoxModel(originalModel);
 				}
@@ -62,8 +62,8 @@ public class GearBoxModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isAmbientOcclusion() {
-		return getBaseModel().isAmbientOcclusion();
+	public boolean useAmbientOcclusion() {
+		return getBaseModel().useAmbientOcclusion();
 	}
 
 	@Override
@@ -72,23 +72,23 @@ public class GearBoxModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return getBaseModel().isSideLit();
+	public boolean usesBlockLight() {
+		return getBaseModel().usesBlockLight();
 	}
 
 	@Override
-	public boolean isBuiltInRenderer() {
-		return getBaseModel().isBuiltInRenderer();
+	public boolean isCustomRenderer() {
+		return getBaseModel().isCustomRenderer();
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return getBaseModel().getParticleTexture();
+	public TextureAtlasSprite getParticleIcon() {
+		return getBaseModel().getParticleIcon();
 	}
 
 	protected class GeneratedGearBoxModel extends AbstractBakedModel {
 
-		public GeneratedGearBoxModel(IBakedModel baseGearModel) {
+		public GeneratedGearBoxModel(BakedModel baseGearModel) {
 			super(baseGearModel);
 		}
 
@@ -105,7 +105,7 @@ public class GearBoxModel implements IBakedModel {
 
 			List<BakedQuad> output = new ArrayList<BakedQuad>();
 
-			IBakedModel itemModel = getBaseModel();
+			BakedModel itemModel = getBaseModel();
 			List<BakedQuad> chainsawBladeQuads = itemModel.getQuads(state, side, rand, data);
 			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(-0.21f, -0.22f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
 			output.addAll(transformQuads(chainsawBladeQuads, new Vector3f(0.21f, -0.02f, 0f), new Vector3f(0.58f, 0.58f, 1.0f), new Quaternion(0, 0, 0, true)));
@@ -115,7 +115,7 @@ public class GearBoxModel implements IBakedModel {
 		}
 
 		@Override
-		public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
 			BaseModel.handlePerspective(cameraTransformType, mat);
 			return this;
 		}
@@ -126,28 +126,28 @@ public class GearBoxModel implements IBakedModel {
 		}
 
 		@Override
-		public boolean isSideLit() {
-			return BaseModel.isSideLit();
+		public boolean usesBlockLight() {
+			return BaseModel.usesBlockLight();
 		}
 
 		@Override
-		public boolean isBuiltInRenderer() {
+		public boolean isCustomRenderer() {
 			return false;
 		}
 
 		@Override
-		public ItemOverrideList getOverrides() {
-			return ItemOverrideList.EMPTY;
+		public ItemOverrides getOverrides() {
+			return ItemOverrides.EMPTY;
 		}
 
 		@Override
-		public boolean isAmbientOcclusion() {
+		public boolean useAmbientOcclusion() {
 			return false;
 		}
 
 		@Override
-		public TextureAtlasSprite getParticleTexture() {
-			return BaseModel.getParticleTexture();
+		public TextureAtlasSprite getParticleIcon() {
+			return BaseModel.getParticleIcon();
 		}
 	}
 }

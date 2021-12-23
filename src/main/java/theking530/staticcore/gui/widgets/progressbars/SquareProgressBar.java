@@ -1,11 +1,12 @@
 package theking530.staticcore.gui.widgets.progressbars;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -23,7 +24,7 @@ public class SquareProgressBar extends AbstractProgressBar {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
@@ -55,17 +56,17 @@ public class SquareProgressBar extends AbstractProgressBar {
 			bottom = j;
 		}
 
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuffer();
-		GlStateManager.enableBlend();
-		GlStateManager.disableTexture();
-		bufferbuilder.begin(7, DefaultVertexFormats.POSITION);
-		bufferbuilder.pos((double) left, (double) bottom, 0.0D).endVertex();
-		bufferbuilder.pos((double) right, (double) bottom, 0.0D).endVertex();
-		bufferbuilder.pos((double) right, (double) top, 0.0D).endVertex();
-		bufferbuilder.pos((double) left, (double) top, 0.0D).endVertex();
-		tessellator.draw();
-		GlStateManager.enableTexture();
-		GlStateManager.disableBlend();
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuilder();
+		GlStateManager._enableBlend();
+		GlStateManager._disableTexture();
+		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+		bufferbuilder.vertex((double) left, (double) bottom, 0.0D).endVertex();
+		bufferbuilder.vertex((double) right, (double) bottom, 0.0D).endVertex();
+		bufferbuilder.vertex((double) right, (double) top, 0.0D).endVertex();
+		bufferbuilder.vertex((double) left, (double) top, 0.0D).endVertex();
+		tessellator.end();
+		GlStateManager._enableTexture();
+		GlStateManager._disableBlend();
 	}
 }

@@ -4,20 +4,20 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -29,6 +29,8 @@ import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.ItemUtilities;
+
+import net.minecraft.world.item.Item.Properties;
 
 public class ItemFilter extends StaticPowerItem {
 	/** Indicates if we are in whitelist or blacklist modes. */
@@ -43,7 +45,7 @@ public class ItemFilter extends StaticPowerItem {
 	public ResourceLocation filterTier;
 
 	public ItemFilter(String name, ResourceLocation tier) {
-		super(name, new Properties().maxStackSize(1));
+		super(name, new Properties().stacksTo(1));
 		filterTier = tier;
 	}
 
@@ -52,10 +54,10 @@ public class ItemFilter extends StaticPowerItem {
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		// Initialize the tag.
 		if (!stack.hasTag()) {
-			stack.setTag(new CompoundNBT());
+			stack.setTag(new CompoundTag());
 			stack.getTag().putBoolean(WHITE_LIST_MOD_KEY, false);
 			stack.getTag().putBoolean(MATCH_NBT_KEY, false);
 			stack.getTag().putBoolean(MATCH_TAGS_DICT_KEY, false);
@@ -71,14 +73,14 @@ public class ItemFilter extends StaticPowerItem {
 	 * When right clicked, open the filter UI.
 	 */
 	@Override
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
-		if (!world.isRemote && !player.isSneaking()) {
-			NetworkGUI.openGui((ServerPlayerEntity) player, new ItemFilterContainerProvider(item), buff -> {
-				buff.writeInt(player.inventory.currentItem);
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+		if (!world.isClientSide && !player.isShiftKeyDown()) {
+			NetworkGUI.openGui((ServerPlayer) player, new ItemFilterContainerProvider(item), buff -> {
+				buff.writeInt(player.inventory.selected);
 			});
-			return ActionResult.resultSuccess(item);
+			return InteractionResultHolder.success(item);
 		}
-		return ActionResult.resultPass(item);
+		return InteractionResultHolder.pass(item);
 	}
 
 	public boolean isWhiteListMode(ItemStack filter) {
@@ -151,25 +153,25 @@ public class ItemFilter extends StaticPowerItem {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
 			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
 			if (inv != null) {
 				boolean empty = true;
 				for (int i = 0; i < inv.getSlots(); i++) {
 					if (!inv.getStackInSlot(i).isEmpty()) {
-						tooltip.add(new StringTextComponent("Slot " + (i + 1) + ": ").append(inv.getStackInSlot(i).getDisplayName()));
+						tooltip.add(new TextComponent("Slot " + (i + 1) + ": ").append(inv.getStackInSlot(i).getHoverName()));
 						empty = false;
 					}
 				}
 				if (empty) {
-					tooltip.add(new StringTextComponent(TextFormatting.ITALIC + "Empty"));
+					tooltip.add(new TextComponent(ChatFormatting.ITALIC + "Empty"));
 				}
 			}
 		}
 	}
 
-	public class ItemFilterContainerProvider implements INamedContainerProvider {
+	public class ItemFilterContainerProvider implements MenuProvider {
 		public ItemStack targetItemStack;
 
 		public ItemFilterContainerProvider(ItemStack stack) {
@@ -177,13 +179,13 @@ public class ItemFilter extends StaticPowerItem {
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 			return new ContainerItemFilter(windowId, inventory, targetItemStack);
 		}
 
 		@Override
-		public ITextComponent getDisplayName() {
-			return targetItemStack.getDisplayName();
+		public Component getDisplayName() {
+			return targetItemStack.getHoverName();
 		}
 	}
 }

@@ -2,10 +2,10 @@ package theking530.staticpower.tileentities.powered.packager;
 
 import java.util.function.Supplier;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketPackagerSizeChange extends NetworkMessage {
@@ -16,18 +16,18 @@ public class PacketPackagerSizeChange extends NetworkMessage {
 	}
 
 	public PacketPackagerSizeChange(TileEntityPackager packager, int size) {
-		this.position = packager.getPos();
+		this.position = packager.getBlockPos();
 		this.size = size;
 	}
 
 	@Override
-	public void decode(PacketBuffer buf) {
+	public void decode(FriendlyByteBuf buf) {
 		position = buf.readBlockPos();
 		size = buf.readInt();
 	}
 
 	@Override
-	public void encode(PacketBuffer buf) {
+	public void encode(FriendlyByteBuf buf) {
 		buf.writeBlockPos(position);
 		buf.writeInt(size);
 	}
@@ -35,8 +35,8 @@ public class PacketPackagerSizeChange extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			if (context.get().getSender().getEntityWorld().isAreaLoaded(position, 1)) {
-				TileEntity rawTileEntity = context.get().getSender().getEntityWorld().getTileEntity(position);
+			if (context.get().getSender().getCommandSenderWorld().isAreaLoaded(position, 1)) {
+				BlockEntity rawTileEntity = context.get().getSender().getCommandSenderWorld().getBlockEntity(position);
 				if (rawTileEntity instanceof TileEntityPackager) {
 					TileEntityPackager packager = (TileEntityPackager) rawTileEntity;
 					packager.setRecipeSize(size);

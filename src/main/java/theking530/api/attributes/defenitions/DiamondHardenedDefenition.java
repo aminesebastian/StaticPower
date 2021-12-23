@@ -1,7 +1,7 @@
 package theking530.api.attributes.defenitions;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.ChatFormatting;
 import theking530.api.attributes.registration.AttributeRegistration;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -11,7 +11,7 @@ public class DiamondHardenedDefenition extends AbstractHardenedDefenition {
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "hardened_diamond");
 
 	public DiamondHardenedDefenition(ResourceLocation id) {
-		super(ID, "attribute.staticpower.hardened_diamond", TextFormatting.AQUA);
+		super(ID, "attribute.staticpower.hardened_diamond", ChatFormatting.AQUA);
 	}
 
 	@Override

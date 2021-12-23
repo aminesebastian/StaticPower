@@ -5,39 +5,39 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemOverrideList;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
-public class ItemCustomRendererPassthroughModel implements IBakedModel {
-	private final IBakedModel baseModel;
+public class ItemCustomRendererPassthroughModel implements BakedModel {
+	private final BakedModel baseModel;
 
-	public ItemCustomRendererPassthroughModel(IBakedModel baseModel) {
+	public ItemCustomRendererPassthroughModel(BakedModel baseModel) {
 		this.baseModel = baseModel;
 	}
 
 	@Override
-	public ItemOverrideList getOverrides() {
+	public ItemOverrides getOverrides() {
 		ItemCustomRendererPassthroughModel original = this;
-		return new ItemOverrideList() {
+		return new ItemOverrides() {
 			@Override
-			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity) {
 				return original;
 			}
 		};
 	}
 
-	public IBakedModel getBaseModel() {
+	public BakedModel getBaseModel() {
 		return baseModel;
 	}
 
@@ -47,8 +47,8 @@ public class ItemCustomRendererPassthroughModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isAmbientOcclusion() {
-		return baseModel.isAmbientOcclusion();
+	public boolean useAmbientOcclusion() {
+		return baseModel.useAmbientOcclusion();
 	}
 
 	@Override
@@ -57,17 +57,17 @@ public class ItemCustomRendererPassthroughModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return baseModel.isSideLit();
+	public boolean usesBlockLight() {
+		return baseModel.usesBlockLight();
 	}
 
 	@Override
-	public boolean isBuiltInRenderer() {
+	public boolean isCustomRenderer() {
 		return true;
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return baseModel.getParticleTexture();
+	public TextureAtlasSprite getParticleIcon() {
+		return baseModel.getParticleIcon();
 	}
 }

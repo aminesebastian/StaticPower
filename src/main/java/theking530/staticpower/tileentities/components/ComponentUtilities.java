@@ -2,15 +2,15 @@ package theking530.staticpower.tileentities.components;
 
 import java.util.Optional;
 
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class ComponentUtilities {
-	public static <T extends AbstractTileEntityComponent> Optional<T> getComponent(Class<T> componentClass, TileEntity tileEntity) {
+	public static <T extends AbstractTileEntityComponent> Optional<T> getComponent(Class<T> componentClass, BlockEntity tileEntity) {
 		return getComponent(componentClass, null, tileEntity);
 	}
 
-	public static <T extends AbstractTileEntityComponent> Optional<T> getComponent(Class<T> componentClass, String componentName, TileEntity tileEntity) {
+	public static <T extends AbstractTileEntityComponent> Optional<T> getComponent(Class<T> componentClass, String componentName, BlockEntity tileEntity) {
 		// If the tile entity isn't of the right type, return empty.
 		if (!(tileEntity instanceof TileEntityBase)) {
 			return Optional.empty();

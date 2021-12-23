@@ -4,23 +4,23 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.network.NetworkGUI;
@@ -41,7 +41,7 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		super(name, 0);
 	}
 
-	public boolean isBound(World world, ItemStack wirelessDevice) {
+	public boolean isBound(Level world, ItemStack wirelessDevice) {
 		// Check if we have a tag, if not, not bound.
 		if (!wirelessDevice.hasTag()) {
 			return false;
@@ -55,19 +55,19 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		return Direction.values()[wirelessDevice.getTag().getInt(TERMINAL_SIDE_KEY)];
 	}
 
-	public AbstractCableProviderComponent getCableProvider(World world, ItemStack wirelessDevice) {
+	public AbstractCableProviderComponent getCableProvider(Level world, ItemStack wirelessDevice) {
 		// Check if we have a tag, if not, not bound.
 		if (!wirelessDevice.hasTag()) {
 			return null;
 		}
 
 		// Get the terminal's position.
-		BlockPos terminalPos = BlockPos.fromLong(wirelessDevice.getTag().getLong(TERMINAL_POSITION_KEY));
-		TileEntity te = world.getTileEntity(terminalPos);
+		BlockPos terminalPos = BlockPos.of(wirelessDevice.getTag().getLong(TERMINAL_POSITION_KEY));
+		BlockEntity te = world.getBlockEntity(terminalPos);
 		return ComponentUtilities.getComponent(DigistoreCableProviderComponent.class, te).orElse(null);
 	}
 
-	public ItemStack getTerminalAttachment(World world, ItemStack wirelessDevice) {
+	public ItemStack getTerminalAttachment(Level world, ItemStack wirelessDevice) {
 		AbstractCableProviderComponent provider = getCableProvider(world, wirelessDevice);
 		if (provider != null) {
 			Direction attachmentSide = getTerminalAttachDirection(wirelessDevice);
@@ -96,53 +96,53 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	 * When right clicked, open the filter UI.
 	 */
 	@Override
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
-		if (!world.isRemote && !player.isSneaking()) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+		if (!world.isClientSide && !player.isShiftKeyDown()) {
 			// Check to make sure it's bound.
 			if (isBound(world, item)) {
 				// Check if it has power.
 				if (usePower(item)) {
-					NetworkGUI.openGui((ServerPlayerEntity) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
+					NetworkGUI.openGui((ServerPlayer) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
 						buff.writeInt(getTerminalAttachDirection(item).ordinal());
-						buff.writeBlockPos(BlockPos.fromLong(item.getTag().getLong(TERMINAL_POSITION_KEY)));
+						buff.writeBlockPos(BlockPos.of(item.getTag().getLong(TERMINAL_POSITION_KEY)));
 					});
-					return ActionResult.resultSuccess(item);
+					return InteractionResultHolder.success(item);
 				} else {
-					player.sendStatusMessage(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_not_enough_power"), true);
+					player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_enough_power"), true);
 				}
 			} else {
-				player.sendStatusMessage(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
-				return ActionResult.resultPass(item);
+				player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
+				return InteractionResultHolder.pass(item);
 			}
 		}
-		return ActionResult.resultPass(item);
+		return InteractionResultHolder.pass(item);
 	}
 
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
-		TileEntity hitTe = world.getTileEntity(pos);
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+		BlockEntity hitTe = world.getBlockEntity(pos);
 		DigistoreCableProviderComponent provider = ComponentUtilities.getComponent(DigistoreCableProviderComponent.class, hitTe).orElse(null);
 		if (provider != null) {
 			ItemStack attachmentOnSide = provider.getAttachment(face);
 			if (!attachmentOnSide.isEmpty() && attachmentOnSide.getItem() instanceof DigistoreCraftingTerminal) {
-				CompoundNBT itemNBT = item.getOrCreateTag();
-				itemNBT.putLong(TERMINAL_POSITION_KEY, pos.toLong());
+				CompoundTag itemNBT = item.getOrCreateTag();
+				itemNBT.putLong(TERMINAL_POSITION_KEY, pos.asLong());
 				itemNBT.putInt(TERMINAL_SIDE_KEY, face.ordinal());
-				player.sendStatusMessage(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_bound"), true);
-				return ActionResultType.SUCCESS;
+				player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_bound"), true);
+				return InteractionResult.SUCCESS;
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (worldIn != null && isBound(worldIn, stack)) {
-			tooltip.add(new TranslationTextComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
-					BlockPos.fromLong(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
+			tooltip.add(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
+					BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
 		}
 	}
 
-	public class WirelessDigistoreAccessContainerProvider implements INamedContainerProvider {
+	public class WirelessDigistoreAccessContainerProvider implements MenuProvider {
 		public ItemStack targetItemStack;
 
 		public WirelessDigistoreAccessContainerProvider(ItemStack stack) {
@@ -150,16 +150,16 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 			// Get the item, and open the terminal for that interface.
 			DigistoreWirelessTerminal accessItem = (DigistoreWirelessTerminal) targetItemStack.getItem();
-			return new ContainerDigistoreCraftingTerminal(windowId, inventory, accessItem.getTerminalAttachment(player.getEntityWorld(), targetItemStack),
-					accessItem.getTerminalAttachDirection(targetItemStack), accessItem.getCableProvider(player.getEntityWorld(), targetItemStack));
+			return new ContainerDigistoreCraftingTerminal(windowId, inventory, accessItem.getTerminalAttachment(player.getCommandSenderWorld(), targetItemStack),
+					accessItem.getTerminalAttachDirection(targetItemStack), accessItem.getCableProvider(player.getCommandSenderWorld(), targetItemStack));
 		}
 
 		@Override
-		public ITextComponent getDisplayName() {
-			return targetItemStack.getDisplayName();
+		public Component getDisplayName() {
+			return targetItemStack.getHoverName();
 		}
 	}
 }

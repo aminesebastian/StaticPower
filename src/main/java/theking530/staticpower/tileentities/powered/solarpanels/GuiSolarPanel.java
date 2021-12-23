@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.powered.solarpanels;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.DrawableWidget;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
@@ -17,7 +17,7 @@ public class GuiSolarPanel extends StaticPowerTileEntityGui<ContainerSolarPanel,
 	protected DrawableWidget<SpriteDrawable> generatingWidget;
 	protected DrawableWidget<SpriteDrawable> notGeneratingWidget;
 
-	public GuiSolarPanel(ContainerSolarPanel container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiSolarPanel(ContainerSolarPanel container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 120, 90);
 	}
 
@@ -25,7 +25,7 @@ public class GuiSolarPanel extends StaticPowerTileEntityGui<ContainerSolarPanel,
 	public void initializeGui() {
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 
-		registerWidget(new TimeOfDayDrawable(34, 18, 50, getTileEntity().getWorld(), getTileEntity().getPos()));
+		registerWidget(new TimeOfDayDrawable(34, 18, 50, getTileEntity().getLevel(), getTileEntity().getBlockPos()));
 		registerWidget(generatingWidget = new DrawableWidget<SpriteDrawable>(51, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.GREEN_CHECK, 16, 16)));
 		registerWidget(notGeneratingWidget = new DrawableWidget<SpriteDrawable>(51, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16)));
 
@@ -34,7 +34,7 @@ public class GuiSolarPanel extends StaticPowerTileEntityGui<ContainerSolarPanel,
 	}
 
 	@Override
-	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 	}
 

@@ -2,21 +2,21 @@ package theking530.staticpower.client.rendering.tileentity;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.model.IBakedModel;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -41,33 +41,33 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 	/**
 	 * Block renderer to render the blades model.
 	 */
-	protected static BlockRendererDispatcher blockRenderer;
+	protected static BlockRenderDispatcher blockRenderer;
 
-	public TileEntityRenderTurbine(TileEntityRendererDispatcher rendererDispatcherIn) {
+	public TileEntityRenderTurbine(BlockEntityRenderDispatcher rendererDispatcherIn) {
 		super(rendererDispatcherIn);
 	}
 
 	@Override
-	public void renderTileEntityBase(TileEntityTurbine tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight,
+	public void renderTileEntityBase(TileEntityTurbine tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 
 		// Set the block renderer if we haven't already.
 		if (blockRenderer == null) {
-			blockRenderer = Minecraft.getInstance().getBlockRendererDispatcher();
+			blockRenderer = Minecraft.getInstance().getBlockRenderer();
 		}
 
 		// Get the rendering safe world.
-		IBlockDisplayReader world = MinecraftForgeClient.getRegionRenderCacheOptional(tileEntity.getWorld(), pos).map(IBlockDisplayReader.class::cast).orElseGet(() -> tileEntity.getWorld());
+		BlockAndTintGetter world = MinecraftForgeClient.getRegionRenderCacheOptional(tileEntity.getLevel(), pos).map(BlockAndTintGetter.class::cast).orElseGet(() -> tileEntity.getLevel());
 
 		// If the model data exists, use it to render the turbine blades.
 		if (tileEntity.hasTurbineBlades()) {
 			// Get the block state and model.
 			BlockState state = world.getBlockState(pos);
 			ResourceLocation modelLocation = tileEntity.getTurbileBladesItem().getInWorldModel();
-			IBakedModel model = Minecraft.getInstance().getModelManager().getModel(modelLocation);
+			BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelLocation);
 
 			// Get the data.
-			IModelData data = model.getModelData(tileEntity.getWorld(), pos, tileEntity.getWorld().getBlockState(pos), ModelDataManager.getModelData(tileEntity.getWorld(), pos));
+			IModelData data = model.getModelData(tileEntity.getLevel(), pos, tileEntity.getLevel().getBlockState(pos), ModelDataManager.getModelData(tileEntity.getLevel(), pos));
 
 			if (data.hasProperty(TileEntityTurbine.TURBINE_RENDERING_STATE)) {
 				// Get the thread safe rotation container.
@@ -77,40 +77,40 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 				renderingState.rotate(CustomRenderer.getDeltaTime());
 
 				// Push a new matrix.
-				matrixStack.push();
+				matrixStack.pushPose();
 
 				// Perform the first translation, then rotation (having moved into local space).
 				// Repeat this three times.
 				matrixStack.translate(0, 0.25, 0);
 				matrixStack.translate(0.5, 0, 0.5);
-				matrixStack.rotate(new Quaternion(0, renderingState.rotationAngle, 0, true));
+				matrixStack.mulPose(new Quaternion(0, renderingState.rotationAngle, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getBlockModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.getSolid()), false, new Random(), 42, combinedLight,
+				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
 						data);
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
-				matrixStack.rotate(new Quaternion(0, 30, 0, true));
+				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getBlockModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.getSolid()), false, new Random(), 42, combinedLight,
+				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
 						data);
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
-				matrixStack.rotate(new Quaternion(0, 30, 0, true));
+				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getBlockModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.getSolid()), false, new Random(), 42, combinedLight,
+				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
 						data);
 
 				matrixStack.translate(0, 0.22, 0);
 				matrixStack.translate(0.5, 0, 0.5);
-				matrixStack.rotate(new Quaternion(0, 30, 0, true));
+				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getBlockModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.getSolid()), false, new Random(), 42, combinedLight,
+				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
 						data);
 
 				// Pop the matrix we pushed.
-				matrixStack.pop();
+				matrixStack.popPose();
 			}
 		}
 

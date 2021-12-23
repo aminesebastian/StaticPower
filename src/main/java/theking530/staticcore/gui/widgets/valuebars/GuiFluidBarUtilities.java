@@ -9,17 +9,19 @@ import javax.annotation.Nullable;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
+
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
@@ -28,12 +30,12 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 
 public class GuiFluidBarUtilities {
 
-	public static void drawFluidBar(@Nullable MatrixStack stack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, boolean drawOverlay) {
+	public static void drawFluidBar(@Nullable PoseStack stack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height, boolean drawOverlay) {
 		drawFluidBar(stack, fluid, capacity, amount, x, y, zLevel, width, height, null, drawOverlay);
 	}
 
 	@SuppressWarnings("deprecation")
-	public static void drawFluidBar(@Nullable MatrixStack matrixStack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height,
+	public static void drawFluidBar(@Nullable PoseStack matrixStack, FluidStack fluid, int capacity, int amount, float x, float y, float zLevel, float width, float height,
 			MachineSideMode mode, boolean drawOverlay) {
 		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
 			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, 0, mode.getColor());
@@ -55,7 +57,7 @@ public class GuiFluidBarUtilities {
 
 			TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(fluid);
 			if (icon != null) {
-				Minecraft.getInstance().getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
+				Minecraft.getInstance().getTextureManager().bindForSetup(TextureAtlas.LOCATION_BLOCKS);
 
 				float ratio = ((float) amount / (float) capacity);
 				float renderAmount = ratio * (float) height;
@@ -63,8 +65,8 @@ public class GuiFluidBarUtilities {
 				float segmentCapacity = capacity / ((float) height / 16);
 				int segmentsUsed = (int) ((renderAmount + 16) / 16);
 
-				float diffV = icon.getMaxV() - icon.getMinV();
-				Tessellator tessellator = Tessellator.getInstance();
+				float diffV = icon.getV1() - icon.getV0();
+				Tesselator tessellator = Tesselator.getInstance();
 				
 				{
 					float filledRatio = ((float) amount / capacity);
@@ -75,24 +77,24 @@ public class GuiFluidBarUtilities {
 					}
 					depthEffect = Math.min(height - depthHeightStart, depthEffect);
 
-					BufferBuilder tes = tessellator.getBuffer();
-					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-					tes.pos(origin.getX() + width + 0.1f, origin.getY() - depthHeightStart, zLevel)
+					BufferBuilder tes = tessellator.getBuilder();
+					tes.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+					tes.vertex(origin.getX() + width + 0.1f, origin.getY() - depthHeightStart, zLevel)
 							.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
-							.tex(icon.getMaxU(), icon.getMinV()).endVertex();
+							.uv(icon.getU1(), icon.getV0()).endVertex();
 
-					tes.pos(origin.getX() + width - depthEffectSides, origin.getY() - depthHeightStart - depthEffect, zLevel)
+					tes.vertex(origin.getX() + width - depthEffectSides, origin.getY() - depthHeightStart - depthEffect, zLevel)
 							.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
-							.tex(icon.getMaxU(), icon.getMinV() + (filledRatio * diffV)).endVertex();
+							.uv(icon.getU1(), icon.getV0() + (filledRatio * diffV)).endVertex();
 
-					tes.pos(origin.getX() + depthEffectSides, origin.getY() - depthHeightStart - depthEffect, zLevel)
+					tes.vertex(origin.getX() + depthEffectSides, origin.getY() - depthHeightStart - depthEffect, zLevel)
 							.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
-							.tex(icon.getMinU(), icon.getMinV() + (filledRatio * diffV)).endVertex();
+							.uv(icon.getU0(), icon.getV0() + (filledRatio * diffV)).endVertex();
 
-					tes.pos(origin.getX() - 0.1f, origin.getY() - depthHeightStart, zLevel)
+					tes.vertex(origin.getX() - 0.1f, origin.getY() - depthHeightStart, zLevel)
 							.color(fluidColor.getRed() * topColorTint, fluidColor.getGreen() * topColorTint, fluidColor.getBlue() * topColorTint, fluidColor.getAlpha())
-							.tex(icon.getMinU(), icon.getMinV()).endVertex();
-					tessellator.draw();
+							.uv(icon.getU0(), icon.getV0()).endVertex();
+					tessellator.end();
 				}
 
 				for (int i = 0; i < segmentsUsed; i++) {
@@ -109,17 +111,17 @@ public class GuiFluidBarUtilities {
 						yMax = ((i + 1) * 16) * fillRatio;
 					}
 
-					BufferBuilder tes = tessellator.getBuffer();
-					tes.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR_TEX);
-					tes.pos(origin.getX() + width, origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
-							.tex(icon.getMaxU(), icon.getMinV()).endVertex();
-					tes.pos(origin.getX() + width, origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
-							.tex(icon.getMaxU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(origin.getX(), origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
-							.tex(icon.getMinU(), icon.getMinV() + (fillRatio * diffV)).endVertex();
-					tes.pos(origin.getX(), origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
-							.tex(icon.getMinU(), icon.getMinV()).endVertex();
-					tessellator.draw();
+					BufferBuilder tes = tessellator.getBuilder();
+					tes.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+					tes.vertex(origin.getX() + width, origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.uv(icon.getU1(), icon.getV0()).endVertex();
+					tes.vertex(origin.getX() + width, origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.uv(icon.getU1(), icon.getV0() + (fillRatio * diffV)).endVertex();
+					tes.vertex(origin.getX(), origin.getY() - yMax, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.uv(icon.getU0(), icon.getV0() + (fillRatio * diffV)).endVertex();
+					tes.vertex(origin.getX(), origin.getY() - yMin, zLevel).color(fluidColor.getRed(), fluidColor.getGreen(), fluidColor.getBlue(), fluidColor.getAlpha())
+							.uv(icon.getU0(), icon.getV0()).endVertex();
+					tessellator.end();
 				}
 			}
 		}
@@ -137,18 +139,18 @@ public class GuiFluidBarUtilities {
 		}
 	}
 
-	public static List<ITextComponent> getTooltip(int fluidAmount, int maxCapacity, FluidStack fluid) {
-		List<ITextComponent> tooltip = new ArrayList<ITextComponent>();
+	public static List<Component> getTooltip(int fluidAmount, int maxCapacity, FluidStack fluid) {
+		List<Component> tooltip = new ArrayList<Component>();
 
 		if (fluid != null && !fluid.isEmpty()) {
-			ITextComponent name = fluid.getDisplayName();
+			Component name = fluid.getDisplayName();
 			tooltip.add(name);
-			tooltip.add(new StringTextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
-					.append(new TranslationTextComponent("gui.staticpower.millbuckets")));
+			tooltip.add(new TextComponent(NumberFormat.getNumberInstance(Locale.US).format(fluidAmount) + "/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity))
+					.append(new TranslatableComponent("gui.staticpower.millbuckets")));
 			return tooltip;
 		} else {
-			tooltip.add(new TranslationTextComponent("gui.staticpower.empty"));
-			tooltip.add(new StringTextComponent("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(new TranslationTextComponent("gui.staticpower.millbuckets")));
+			tooltip.add(new TranslatableComponent("gui.staticpower.empty"));
+			tooltip.add(new TextComponent("0/" + NumberFormat.getNumberInstance(Locale.US).format(maxCapacity)).append(new TranslatableComponent("gui.staticpower.millbuckets")));
 			return tooltip;
 		}
 	}

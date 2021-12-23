@@ -1,8 +1,8 @@
 package theking530.staticpower.cables.redstone.basic.gui;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -24,11 +24,11 @@ public class ContainerBasicRedstoneIO extends StaticPowerTileEntityContainer<Til
 
 	private Direction hitSide;
 
-	public ContainerBasicRedstoneIO(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerBasicRedstoneIO(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityRedstoneCable) resolveTileEntityFromDataPacket(inv, data), Direction.values()[data.readInt()]);
 	}
 
-	public ContainerBasicRedstoneIO(int windowId, PlayerInventory playerInventory, TileEntityRedstoneCable cableTe, Direction sideHit) {
+	public ContainerBasicRedstoneIO(int windowId, Inventory playerInventory, TileEntityRedstoneCable cableTe, Direction sideHit) {
 		super(TYPE, windowId, playerInventory, cableTe);
 		this.hitSide = sideHit;
 	}

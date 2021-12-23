@@ -8,9 +8,9 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -21,6 +21,8 @@ import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModule;
+
+import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule.CableConfigurationWrapper;
 
 public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 	@SuppressWarnings("unused")
@@ -42,7 +44,7 @@ public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule 
 	}
 
 	@Override
-	public void updateNetworkValues(World world, NetworkMapper mapper) {
+	public void updateNetworkValues(Level world, NetworkMapper mapper) {
 		// Stop providing power.
 		stopProvidingPower();
 
@@ -55,7 +57,7 @@ public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule 
 			for (Direction dir : Direction.values()) {
 				if (!entry.getKey().isDisabledOnSide(dir) && !entry.getValue().configuration.getSideConfig(dir).isOutputSide()) {
 					// Get the target position.
-					BlockPos targetPos = entry.getKey().getPos().offset(dir);
+					BlockPos targetPos = entry.getKey().getPos().relative(dir);
 					// If this position contains a cable, let's see if its a valid redstone cable.
 					if (CableNetworkManager.get(world).isTrackingCable(targetPos)) {
 						// Get the cable at the target location.

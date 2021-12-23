@@ -12,14 +12,14 @@ import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusFactory;
 import mezz.jei.api.registration.IModIngredientRegistration;
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
@@ -73,7 +73,7 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 
 	@Override
 	public String getDisplayName(ProbabilityItemStackOutput ingredient) {
-		ITextComponent displayNameTextComponent = ingredient.getItem().getDisplayName();
+		Component displayNameTextComponent = ingredient.getItem().getHoverName();
 		String displayName = displayNameTextComponent.getString();
 		JEIErrorUtilSnippet.checkNotNull(displayName, "itemStack.getDisplayName()");
 		return displayName;
@@ -179,9 +179,9 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 	public Collection<String> getCreativeTabNames(ProbabilityItemStackOutput ingredient) {
 		Collection<String> creativeTabsStrings = new ArrayList<>();
 		Item item = ingredient.getItem().getItem();
-		for (ItemGroup itemGroup : item.getCreativeTabs()) {
+		for (CreativeModeTab itemGroup : item.getCreativeTabs()) {
 			if (itemGroup != null) {
-				String creativeTabName = itemGroup.getGroupName().getString();
+				String creativeTabName = itemGroup.getDisplayName().getString();
 				creativeTabsStrings.add(creativeTabName);
 			}
 		}

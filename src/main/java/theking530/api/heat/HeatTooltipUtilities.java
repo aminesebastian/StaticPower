@@ -1,25 +1,25 @@
 package theking530.api.heat;
 
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class HeatTooltipUtilities {
 
-	public static IFormattableTextComponent getHeatConductivityTooltip(double heatDissipation) {
-		return new StringTextComponent(TextFormatting.GRAY + "Heat Conductivity: ").append(GuiTextUtilities.formatConductivityToString(heatDissipation)).mergeStyle(TextFormatting.BLUE);
+	public static MutableComponent getHeatConductivityTooltip(double heatDissipation) {
+		return new TextComponent(ChatFormatting.GRAY + "Heat Conductivity: ").append(GuiTextUtilities.formatConductivityToString(heatDissipation)).withStyle(ChatFormatting.BLUE);
 	}
 
-	public static IFormattableTextComponent getHeatGenerationTooltip(double heatGeneration) {
-		return new StringTextComponent(TextFormatting.GRAY + "Heat Generation: ").append(GuiTextUtilities.formatHeatRateToString(heatGeneration)).mergeStyle(TextFormatting.GOLD);
+	public static MutableComponent getHeatGenerationTooltip(double heatGeneration) {
+		return new TextComponent(ChatFormatting.GRAY + "Heat Generation: ").append(GuiTextUtilities.formatHeatRateToString(heatGeneration)).withStyle(ChatFormatting.GOLD);
 	}
 
-	public static IFormattableTextComponent getHeatCapacityTooltip(double capacity) {
-		return new StringTextComponent(TextFormatting.GRAY + "Heat Capacity: ").append(GuiTextUtilities.formatHeatToString(capacity)).mergeStyle(TextFormatting.GREEN);
+	public static MutableComponent getHeatCapacityTooltip(double capacity) {
+		return new TextComponent(ChatFormatting.GRAY + "Heat Capacity: ").append(GuiTextUtilities.formatHeatToString(capacity)).withStyle(ChatFormatting.GREEN);
 	}
 
-	public static IFormattableTextComponent getOverheatingTooltip(double temperature) {
-		return new StringTextComponent(TextFormatting.GRAY + "Overheats At: ").append(GuiTextUtilities.formatHeatToString(temperature)).mergeStyle(TextFormatting.RED);
+	public static MutableComponent getOverheatingTooltip(double temperature) {
+		return new TextComponent(ChatFormatting.GRAY + "Overheats At: ").append(GuiTextUtilities.formatHeatToString(temperature)).withStyle(ChatFormatting.RED);
 	}
 }

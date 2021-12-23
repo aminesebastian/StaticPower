@@ -3,26 +3,29 @@ package theking530.staticpower.tileentities.nonpowered.conveyors;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
 
 public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock implements IConveyorBlock {
 	protected final Map<Direction, VoxelShape> ENTITY_SHAPES = new HashMap<>();
@@ -39,12 +42,12 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	}
 
 	@Override
-	protected void setFacingBlockStateOnPlacement(World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		world.setBlockState(pos, state.with(FACING, placer.getHorizontalFacing()), 2);
+	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+		world.setBlock(pos, state.setValue(FACING, placer.getDirection()), 2);
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
 	}
 
@@ -54,37 +57,37 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		cacheVoxelShapes();
 		// Get the appropriate shape.
-		if (context.getEntity() instanceof PlayerEntity) {
-			return INTERACTION_SHAPES.get(state.get(StaticPowerTileEntityBlock.FACING));
+		if (context.getEntity() instanceof Player) {
+			return INTERACTION_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
 		} else {
-			return ENTITY_SHAPES.get(state.get(StaticPowerTileEntityBlock.FACING));
+			return ENTITY_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
 		}
 	}
 
 	@Override
-	public VoxelShape getRaytraceShape(BlockState state, IBlockReader worldIn, BlockPos pos) {
-		return ENTITY_SHAPES.get(state.get(StaticPowerTileEntityBlock.FACING));
+	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
+		return ENTITY_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
 	}
 
 	@Override
-	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		// We only rotate here, no need to check the mode of the wrench.
 		if (facing != Direction.UP && facing != Direction.DOWN) {
-			if (facing != world.getBlockState(pos).get(FACING)) {
-				world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing), 1 | 2);
+			if (facing != world.getBlockState(pos).getValue(FACING)) {
+				world.setBlock(pos, world.getBlockState(pos).setValue(FACING, facing), 1 | 2);
 			} else {
-				world.setBlockState(pos, world.getBlockState(pos).with(FACING, facing.getOpposite()), 1 | 2);
+				world.setBlock(pos, world.getBlockState(pos).setValue(FACING, facing.getOpposite()), 1 | 2);
 			}
 		}
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 
 	public static VoxelShape generateSlantedBoundingBox(Direction facingDirection, float precision, float yStartOffset, float yEndOffset, float thickness, float angle, boolean upwards) {
 		// Create an empty bounding box initially.
-		VoxelShape output = Block.makeCuboidShape(0, 0, 0, 0, 0, 0);
+		VoxelShape output = Block.box(0, 0, 0, 0, 0, 0);
 
 		// Define helper variables.
 		float yStart = 0;
@@ -115,13 +118,13 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 
 			// Build the bounds.
 			if (facingDirection == Direction.NORTH) {
-				output = VoxelShapes.combine(output, Block.makeCuboidShape(0, yStart, forwardStart, 16, yEnd, forwardEnd), IBooleanFunction.OR);
+				output = Shapes.joinUnoptimized(output, Block.box(0, yStart, forwardStart, 16, yEnd, forwardEnd), BooleanOp.OR);
 			} else if (facingDirection == Direction.EAST) {
-				output = VoxelShapes.combine(output, Block.makeCuboidShape(16 - forwardStart, yStart, 0, 16 - forwardEnd, yEnd, 16), IBooleanFunction.OR);
+				output = Shapes.joinUnoptimized(output, Block.box(16 - forwardStart, yStart, 0, 16 - forwardEnd, yEnd, 16), BooleanOp.OR);
 			} else if (facingDirection == Direction.WEST) {
-				output = VoxelShapes.combine(output, Block.makeCuboidShape(forwardStart, yStart, 0, forwardEnd, yEnd, 16), IBooleanFunction.OR);
+				output = Shapes.joinUnoptimized(output, Block.box(forwardStart, yStart, 0, forwardEnd, yEnd, 16), BooleanOp.OR);
 			} else if (facingDirection == Direction.SOUTH) {
-				output = VoxelShapes.combine(output, Block.makeCuboidShape(0, yStart, 16 - forwardStart, 16, yEnd, 16 - forwardEnd), IBooleanFunction.OR);
+				output = Shapes.joinUnoptimized(output, Block.box(0, yStart, 16 - forwardStart, 16, yEnd, 16 - forwardEnd), BooleanOp.OR);
 			}
 		}
 

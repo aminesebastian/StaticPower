@@ -2,17 +2,17 @@ package theking530.staticcore.network;
 
 import java.util.function.Consumer;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraft.network.FriendlyByteBuf;
 import theking530.staticpower.container.StaticPowerContainer;
 
 public class NetworkGUI {
-	public static void openGui(ServerPlayerEntity player, INamedContainerProvider containerSupplier, Consumer<PacketBuffer> extraDataWriter) {
+	public static void openGui(ServerPlayer player, MenuProvider containerSupplier, Consumer<FriendlyByteBuf> extraDataWriter) {
 		NetworkHooks.openGui(player, containerSupplier, extraDataWriter);
-		if (player.openContainer instanceof StaticPowerContainer) {
-			((StaticPowerContainer) player.openContainer).setName(containerSupplier.getDisplayName());
+		if (player.containerMenu instanceof StaticPowerContainer) {
+			((StaticPowerContainer) player.containerMenu).setName(containerSupplier.getDisplayName());
 		}
 	}
 }

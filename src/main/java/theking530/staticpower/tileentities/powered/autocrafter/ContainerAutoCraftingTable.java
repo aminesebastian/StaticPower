@@ -3,10 +3,10 @@ package theking530.staticpower.tileentities.powered.autocrafter;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -30,11 +30,11 @@ public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<T
 
 	private List<ItemStack> lastCraftingPattern;
 
-	public ContainerAutoCraftingTable(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerAutoCraftingTable(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityAutoCraftingTable) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerAutoCraftingTable(int windowId, PlayerInventory playerInventory, TileEntityAutoCraftingTable owner) {
+	public ContainerAutoCraftingTable(int windowId, Inventory playerInventory, TileEntityAutoCraftingTable owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -67,7 +67,7 @@ public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<T
 	}
 
 	@Override
-	public void consumeJEITransferRecipe(PlayerEntity entity, ItemStack[][] recipe) {
+	public void consumeJEITransferRecipe(Player entity, ItemStack[][] recipe) {
 		if (recipe.length == 9) {
 			for (int i = 0; i < 9; i++) {
 				// Skip holes in the recipe.

@@ -2,16 +2,16 @@ package theking530.staticpower.tileentities.nonpowered.experiencehopper;
 
 import java.util.List;
 
-import net.minecraft.entity.item.ExperienceOrbEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.world.entity.ExperienceOrb;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderHopper;
@@ -26,7 +26,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 
 public class TileEntityExperienceHopper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityExperienceHopper> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityExperienceHopper(), ModBlocks.ExperienceHopper);
+	public static final BlockEntityTypeAllocator<TileEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityExperienceHopper(), ModBlocks.ExperienceHopper);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -45,9 +45,9 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 	@Override
 	public void process() {
 		// Handle the upgrade tick on the server.
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			// Create the AABB to search within.
-			AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.1, pos.getY() + 0.5, pos.getZ() + 0.1, pos.getX() + 0.9, pos.getY() + 1.05, pos.getZ() + 0.9);
+			AABB aabb = new AABB(worldPosition.getX() + 0.1, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.1, worldPosition.getX() + 0.9, worldPosition.getY() + 1.05, worldPosition.getZ() + 0.9);
 
 			// Track how much we filled with XP.
 			int filled = 0;
@@ -64,20 +64,20 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 
 			// Play a sound and synchronize if there were any experience filled.
 			if (filled > 0) {
-				getWorld().playSound(null, pos, SoundEvents.ENTITY_EXPERIENCE_ORB_PICKUP, SoundCategory.BLOCKS, 0.15F, (getWorld().rand.nextFloat() + 1) / 2);
+				getLevel().playSound(null, worldPosition, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.15F, (getLevel().random.nextFloat() + 1) / 2);
 			}
 		}
 	}
 
-	protected int takeXPFromPlayers(AxisAlignedBB bounds, int amountToTake) {
+	protected int takeXPFromPlayers(AABB bounds, int amountToTake) {
 		// Take experience from players.
 		int filled = 0;
-		List<PlayerEntity> players = getWorld().getEntitiesWithinAABB(PlayerEntity.class, bounds);
-		for (PlayerEntity player : players) {
+		List<Player> players = getLevel().getEntitiesOfClass(Player.class, bounds);
+		for (Player player : players) {
 			// Check if the player has experience.
-			if (player.experienceTotal > 0) {
+			if (player.totalExperience > 0) {
 				// Get the XP amount to drain.
-				int playerDrainAmount = SDMath.clamp(amountToTake, 0, player.experienceTotal);
+				int playerDrainAmount = SDMath.clamp(amountToTake, 0, player.totalExperience);
 
 				// Fill with the XP
 				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, playerDrainAmount), FluidAction.EXECUTE);
@@ -90,17 +90,17 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 		return filled;
 	}
 
-	protected int suckXPOrbs(AxisAlignedBB bounds) {
+	protected int suckXPOrbs(AABB bounds) {
 		// Vacuum experience if requested.
 		int filled = 0;
-		List<ExperienceOrbEntity> xpOrbs = getWorld().getEntitiesWithinAABB(ExperienceOrbEntity.class, bounds);
-		for (ExperienceOrbEntity orb : xpOrbs) {
-			int tempFilled = internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.SIMULATE);
-			if (tempFilled != orb.xpValue) {
+		List<ExperienceOrb> xpOrbs = getLevel().getEntitiesOfClass(ExperienceOrb.class, bounds);
+		for (ExperienceOrb orb : xpOrbs) {
+			int tempFilled = internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value), FluidAction.SIMULATE);
+			if (tempFilled != orb.value) {
 				break;
 			} else {
 				filled += tempFilled;
-				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.xpValue), FluidAction.EXECUTE);
+				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value), FluidAction.EXECUTE);
 				orb.remove();
 			}
 		}

@@ -1,7 +1,7 @@
 package theking530.api.digistore;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
 
@@ -11,7 +11,7 @@ import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreS
  * @author Amine Sebastian
  *
  */
-public interface IDigistoreInventory extends INBTSerializable<CompoundNBT> {
+public interface IDigistoreInventory extends INBTSerializable<CompoundTag> {
 	/**
 	 * Locks the state of this inventory to not accept any other new item types.
 	 * 

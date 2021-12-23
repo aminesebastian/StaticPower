@@ -3,13 +3,13 @@ package theking530.staticpower.fluid;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.ITag.INamedTag;
+import net.minecraft.tags.Tag.Named;
 import net.minecraftforge.fluids.FluidAttributes;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Flowing;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;
@@ -17,7 +17,7 @@ import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class StaticPowerFluidBundle {
 	public final String name;
-	public final INamedTag<Fluid> Tag;
+	public final Named<Fluid> Tag;
 	public final StaticPowerFluidBlock FluidBlock;
 	public final AbstractStaticPowerFluid.Source Fluid;
 	public final AbstractStaticPowerFluid.Flowing FlowingFluid;
@@ -25,7 +25,7 @@ public class StaticPowerFluidBundle {
 	private final StaticPowerFluidBuilder builder;
 	private Item cachedBucketItem;
 
-	public StaticPowerFluidBundle(String name, INamedTag<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid,
+	public StaticPowerFluidBundle(String name, Named<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid,
 			Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
 		this.name = name;
 		Tag = tag;
@@ -91,8 +91,8 @@ public class StaticPowerFluidBundle {
 		public StaticPowerFluidBundle build() {
 			String stillTexture = "blocks/fluids/" + name + "_still";
 			String flowingTexture = "blocks/fluids/" + name + "_flowing";
-			INamedTag<Fluid> tag = FluidTags.makeWrapperTag(name);
-			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.create(Material.WATER));
+			Named<Fluid> tag = FluidTags.bind(name);
+			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.of(Material.WATER));
 			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid,
 					() -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
 			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid,

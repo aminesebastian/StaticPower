@@ -2,18 +2,18 @@ package theking530.staticpower.data.crafting.wrappers.former;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
-public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FormerRecipe> {
+public class FormerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FormerRecipe> {
 	public static final FormerRecipeSerializer INSTANCE = new FormerRecipeSerializer();
 
 	private FormerRecipeSerializer() {
@@ -21,17 +21,17 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 	}
 
 	@Override
-	public FormerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public FormerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the input mold.
-		JsonObject moldElement = JSONUtils.getJsonObject(json, "mold");
-		Ingredient mold = Ingredient.deserialize(moldElement);
+		JsonObject moldElement = GsonHelper.getAsJsonObject(json, "mold");
+		Ingredient mold = Ingredient.fromJson(moldElement);
 
 		// Get the output item.
-		JsonObject outputElement = JSONUtils.getJsonObject(json, "output");
+		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
 		// Start with the default processing values.
@@ -39,8 +39,8 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 		int processingTime = StaticPowerConfig.SERVER.formerProcessingTime.get();
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+		if (GsonHelper.isValidNode(json, "processing")) {
+			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
@@ -50,11 +50,11 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 	}
 
 	@Override
-	public FormerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public FormerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		long power = buffer.readLong();
 		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
-		Ingredient mold = Ingredient.read(buffer);
+		Ingredient mold = Ingredient.fromNetwork(buffer);
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
@@ -62,11 +62,11 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, FormerRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, FormerRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInputIngredient().write(buffer);
-		recipe.getRequiredMold().write(buffer);
+		recipe.getRequiredMold().toNetwork(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 	}
 }

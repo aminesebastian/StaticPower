@@ -2,9 +2,9 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.network
 
 import java.util.function.Supplier;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreSyncedSearchMode;
@@ -30,7 +30,7 @@ public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(windowId);
 		writeStringOnServer(searchString, buffer);
 		buffer.writeInt(searchMode.ordinal());
@@ -39,7 +39,7 @@ public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		windowId = buffer.readInt();
 		searchString = readStringOnServer(buffer);
 		searchMode = DigistoreSyncedSearchMode.values()[buffer.readInt()];
@@ -50,9 +50,9 @@ public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			ServerPlayerEntity player = ctx.get().getSender();
-			if (player.openContainer.windowId == windowId) {
-				AbstractContainerDigistoreTerminal<?> digistoreContainer = (AbstractContainerDigistoreTerminal<?>) player.openContainer;
+			ServerPlayer player = ctx.get().getSender();
+			if (player.containerMenu.containerId == windowId) {
+				AbstractContainerDigistoreTerminal<?> digistoreContainer = (AbstractContainerDigistoreTerminal<?>) player.containerMenu;
 				digistoreContainer.updateSortAndFilter(searchString, searchMode, sortType, sortDescending);
 			}
 		});

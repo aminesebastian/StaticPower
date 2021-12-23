@@ -1,12 +1,12 @@
 package theking530.staticpower.tileentities.powered.fermenter;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFermenter extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityFermenter> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
+	public static final BlockEntityTypeAllocator<TileEntityFermenter> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -107,7 +107,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
@@ -158,7 +158,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFermenter(windowId, inventory, this);
 	}
 }

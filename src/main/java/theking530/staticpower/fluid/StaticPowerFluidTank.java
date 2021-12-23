@@ -6,12 +6,14 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<CompoundNBT> {
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+
+public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 	protected Queue<Float> ioCaptureFrames;
 	protected Queue<Float> filledCaptureFrames;
@@ -178,20 +180,20 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag nbt = new CompoundTag();
 		nbt.putFloat("recieved", averageFilled);
 		nbt.putFloat("extracted", averageDrained);
 		nbt.putInt("capacity", capacity);
 
-		CompoundNBT tankNbt = new CompoundNBT();
+		CompoundTag tankNbt = new CompoundTag();
 		this.writeToNBT(tankNbt);
 		nbt.put("tank", tankNbt);
 		return nbt;
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		averageFilled = nbt.getFloat("recieved");
 		averageDrained = nbt.getFloat("extracted");
 		capacity = nbt.getInt("capacity");

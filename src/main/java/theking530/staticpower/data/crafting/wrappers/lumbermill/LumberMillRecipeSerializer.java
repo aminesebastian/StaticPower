@@ -2,10 +2,10 @@ package theking530.staticpower.data.crafting.wrappers.lumbermill;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
@@ -14,7 +14,7 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<LumberMillRecipe> {
+public class LumberMillRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LumberMillRecipe> {
 	public static final LumberMillRecipeSerializer INSTANCE = new LumberMillRecipeSerializer();
 
 	private LumberMillRecipeSerializer() {
@@ -22,9 +22,9 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public LumberMillRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public LumberMillRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Start with the default values.
@@ -32,14 +32,14 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		int processingTime = StaticPowerConfig.SERVER.lumberMillProcessingTime.get();
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+		if (GsonHelper.isValidNode(json, "processing")) {
+			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Get the outputs.
-		JsonObject outputs = JSONUtils.getJsonObject(json, "outputs");
+		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
 		ProbabilityItemStackOutput primaryOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.getAsJsonObject("primary"));
 		ProbabilityItemStackOutput secondaryOutput = ProbabilityItemStackOutput.EMPTY;
 		FluidStack fluidOutput = FluidStack.EMPTY;
@@ -59,7 +59,7 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public LumberMillRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public LumberMillRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		long power = buffer.readLong();
 		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
@@ -71,7 +71,7 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, LumberMillRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, LumberMillRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInput().write(buffer);

@@ -1,9 +1,9 @@
 package theking530.staticpower.cables.redstone;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class RedstoneCableSideConfiguration implements INBTSerializable<CompoundNBT> {
+public class RedstoneCableSideConfiguration implements INBTSerializable<CompoundTag> {
 	public enum RedstoneCableSignalLogic {
 		INPUT, OUTPUT, INOUT
 	}
@@ -48,15 +48,15 @@ public class RedstoneCableSideConfiguration implements INBTSerializable<Compound
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
 		output.putInt("logic_type", logicType.ordinal());
 		output.putString("selector", selector);
 		return output;
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		logicType = RedstoneCableSignalLogic.values()[nbt.getInt("logic_type")];
 		selector = nbt.getString("selector");
 	}

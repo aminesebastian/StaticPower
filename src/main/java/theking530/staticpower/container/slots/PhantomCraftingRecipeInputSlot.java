@@ -1,26 +1,26 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
 
 public class PhantomCraftingRecipeInputSlot extends CraftingRecipeInputSlot {
 
-	public PhantomCraftingRecipeInputSlot(IInventory inventory, int index, int xPosition, int yPosition) {
+	public PhantomCraftingRecipeInputSlot(Container inventory, int index, int xPosition, int yPosition) {
 		super(inventory, index, xPosition, yPosition);
 	}
 
 	@Override
-	public boolean canTakeStack(PlayerEntity player) {
-		super.canTakeStack(player);
-		inventory.setInventorySlotContents(slotNumber, ItemStack.EMPTY);
+	public boolean mayPickup(Player player) {
+		super.mayPickup(player);
+		container.setItem(index, ItemStack.EMPTY);
 		return false;
 	}
 
-	public boolean isItemValid(ItemStack itemStack) {
+	public boolean mayPlace(ItemStack itemStack) {
 		ItemStack tempItemStack = itemStack.copy();
 		tempItemStack.setCount(1);
-		inventory.setInventorySlotContents(slotNumber, tempItemStack);
+		container.setItem(index, tempItemStack);
 		return false;
 	}
 }

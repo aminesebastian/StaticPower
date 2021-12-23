@@ -4,11 +4,11 @@ import java.util.Map;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
@@ -17,7 +17,7 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<LatheRecipe> {
+public class LatheRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LatheRecipe> {
 	public static final LatheRecipeSerializer INSTANCE = new LatheRecipeSerializer();
 
 	private LatheRecipeSerializer() {
@@ -25,10 +25,10 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 	}
 
 	@Override
-	public LatheRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public LatheRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredients.
-		Map<String, StaticPowerIngredient> map = LatheRecipe.deserializeKey(JSONUtils.getJsonObject(json, "key"));
-		String[] astring = LatheRecipe.patternFromJson(JSONUtils.getJsonArray(json, "pattern"));
+		Map<String, StaticPowerIngredient> map = LatheRecipe.deserializeKey(GsonHelper.getAsJsonObject(json, "key"));
+		String[] astring = LatheRecipe.patternFromJson(GsonHelper.getAsJsonArray(json, "pattern"));
 		int width = astring[0].length();
 		int height = astring.length;
 		NonNullList<StaticPowerIngredient> inputs = LatheRecipe.deserializeIngredients(astring, map, width, height);
@@ -38,14 +38,14 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 		int processingTime = StaticPowerConfig.SERVER.latheProcessingTime.get();
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
+		if (GsonHelper.isValidNode(json, "processing")) {
+			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			powerCost = processingElement.get("power").getAsInt();
 			processingTime = processingElement.get("time").getAsInt();
 		}
 
 		// Get the outputs.
-		JsonObject outputs = JSONUtils.getJsonObject(json, "outputs");
+		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
 		ProbabilityItemStackOutput primaryOutput = ProbabilityItemStackOutput.parseFromJSON(outputs.getAsJsonObject("primary"));
 		ProbabilityItemStackOutput secondaryOutput = ProbabilityItemStackOutput.EMPTY;
 		FluidStack fluidOutput = FluidStack.EMPTY;
@@ -65,7 +65,7 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 	}
 
 	@Override
-	public LatheRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public LatheRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		long power = buffer.readLong();
 		int time = buffer.readInt();
 		int width = buffer.readVarInt();
@@ -84,7 +84,7 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, LatheRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, LatheRecipe recipe) {
 		buffer.writeLong(recipe.getPowerCost());
 		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeVarInt(recipe.recipeWidth);

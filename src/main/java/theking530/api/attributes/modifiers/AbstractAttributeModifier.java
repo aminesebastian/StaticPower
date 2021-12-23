@@ -2,7 +2,7 @@ package theking530.api.attributes.modifiers;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 
 public abstract class AbstractAttributeModifier<T> {
 	protected T value;
@@ -29,12 +29,12 @@ public abstract class AbstractAttributeModifier<T> {
 		read(json);
 	}
 
-	public void deserialize(CompoundNBT nbt) {
+	public void deserialize(CompoundTag nbt) {
 		read(nbt);
 	}
 
-	public CompoundNBT serialize() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serialize() {
+		CompoundTag output = new CompoundTag();
 		output.putString("type", getType());
 		write(output);
 		return output;
@@ -42,7 +42,7 @@ public abstract class AbstractAttributeModifier<T> {
 
 	protected abstract void read(JsonObject json);
 
-	protected abstract void read(CompoundNBT nbt);
+	protected abstract void read(CompoundTag nbt);
 
-	protected abstract void write(CompoundNBT nbt);
+	protected abstract void write(CompoundTag nbt);
 }

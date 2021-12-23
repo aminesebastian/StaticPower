@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.tank;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
@@ -13,7 +13,7 @@ public class GuiTank extends StaticPowerTileEntityGui<ContainerTank, TileEntityT
 	@SuppressWarnings("unused")
 	private GuiInfoTab infoTab;
 
-	public GuiTank(ContainerTank container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiTank(ContainerTank container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 185);
 	}
 

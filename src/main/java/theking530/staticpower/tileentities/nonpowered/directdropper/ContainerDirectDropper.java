@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.directdropper;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -18,11 +18,11 @@ public class ContainerDirectDropper extends StaticPowerTileEntityContainer<TileE
 		}
 	}
 
-	public ContainerDirectDropper(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDirectDropper(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityDirectDropper) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerDirectDropper(int windowId, PlayerInventory playerInventory, TileEntityDirectDropper owner) {
+	public ContainerDirectDropper(int windowId, Inventory playerInventory, TileEntityDirectDropper owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

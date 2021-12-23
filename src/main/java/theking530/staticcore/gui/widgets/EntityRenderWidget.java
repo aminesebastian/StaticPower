@@ -1,9 +1,9 @@
 package theking530.staticcore.gui.widgets;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.entity.LivingEntity;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
@@ -17,7 +17,7 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Calculate the scale.
 		int scale = (int) (getSize().getX() + getSize().getY()) / 4;
 
@@ -33,6 +33,6 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 		GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 1.0f, Color.BLACK);
 
 		// And finally the entity.
-		InventoryScreen.drawEntityOnScreen((int) offset.getX(), (int) offset.getY(), scale, (float) (offset.getX()) - mouseX, (float) (offset.getY()) - mouseY - scale, entity);
+		InventoryScreen.renderEntityInInventory((int) offset.getX(), (int) offset.getY(), scale, (float) (offset.getX()) - mouseX, (float) (offset.getY()) - mouseY - scale, entity);
 	}
 }

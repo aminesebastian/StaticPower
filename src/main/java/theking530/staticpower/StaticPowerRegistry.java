@@ -2,16 +2,16 @@ package theking530.staticpower;
 
 import java.util.HashSet;
 
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.fluid.FlowingFluid;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
@@ -31,7 +31,7 @@ public class StaticPowerRegistry {
 	public static final HashSet<Item> ITEMS = new HashSet<>();
 	public static final HashSet<Block> BLOCKS = new HashSet<>();
 	public static final HashSet<FlowingFluid> FLUIDS = new HashSet<FlowingFluid>();
-	public static final HashSet<IRecipeSerializer> RECIPE_SERIALIZERS = new HashSet<IRecipeSerializer>();
+	public static final HashSet<RecipeSerializer> RECIPE_SERIALIZERS = new HashSet<RecipeSerializer>();
 	public static final HashSet<AbstractEntityType<?>> ENTITIES = new HashSet<AbstractEntityType<?>>();
 	public static final HashSet<AbstractStaticPowerTree> TREES = new HashSet<AbstractStaticPowerTree>();
 
@@ -95,7 +95,7 @@ public class StaticPowerRegistry {
 		return fluid;
 	}
 
-	public static IRecipeSerializer preRegisterRecipeSerializer(IRecipeSerializer recipeSerializer) {
+	public static RecipeSerializer preRegisterRecipeSerializer(RecipeSerializer recipeSerializer) {
 		RECIPE_SERIALIZERS.add(recipeSerializer);
 		return recipeSerializer;
 	}
@@ -118,11 +118,11 @@ public class StaticPowerRegistry {
 		}
 	}
 
-	public static void onRegisterTileEntityTypes(RegistryEvent.Register<TileEntityType<?>> event) {
+	public static void onRegisterTileEntityTypes(RegistryEvent.Register<BlockEntityType<?>> event) {
 		StaticCoreRegistry.registerTileEntityTypes(event);
 	}
 
-	public static void onRegisterContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
+	public static void onRegisterContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
 		StaticCoreRegistry.registerContainerTypes(event);
 	}
 
@@ -136,8 +136,8 @@ public class StaticPowerRegistry {
 		}
 	}
 
-	public static void onRegisterRecipeSerializers(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-		for (IRecipeSerializer serializer : RECIPE_SERIALIZERS) {
+	public static void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
+		for (RecipeSerializer serializer : RECIPE_SERIALIZERS) {
 			event.getRegistry().register(serializer);
 		}
 	}
