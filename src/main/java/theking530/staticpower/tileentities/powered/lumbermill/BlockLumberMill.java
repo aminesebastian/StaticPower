@@ -24,6 +24,6 @@ public class BlockLumberMill extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityLumberMill.TYPE.create();
+		return TileEntityLumberMill.TYPE.create(pos, state);
 	}
 }

@@ -5,16 +5,16 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
@@ -54,6 +54,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	protected final GuiTabManager tabManager;
 	/** The item renderer. */
 	protected final GuiDrawItem itemRenderer;
+	protected final Inventory inventory;
 
 	protected Vector2D sizeTarget;
 	protected Vector2D previousSizeTarget;
@@ -75,8 +76,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param guiXSize        The gui's xSize.
 	 * @param guiYSize        The gui's ySize;
 	 */
-	public StaticPowerContainerGui(T container, final Inventory playerInventory, Component title, int guiXSize, int guiYSize) {
+	public StaticPowerContainerGui(T container, final Inventory playerInventory, Component title, int guiXSize,
+			int guiYSize) {
 		super(container, playerInventory, title);
+		inventory = playerInventory;
 		widgetContainer = new WidgetContainer(this);
 		imageWidth = guiXSize;
 		imageHeight = guiYSize;
@@ -102,8 +105,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void containerTick() {
+		super.containerTick();
 		updateData();
 		widgetContainer.tick();
 	}
@@ -162,7 +165,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		renderBackground(stack);
 
 		// Update the widgets and then draw the background.
-		widgetContainer.update(stack, new Vector2D(leftPos, topPos), new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
+		widgetContainer.update(stack, new Vector2D(leftPos, topPos), new Vector2D(getXSize(), getYSize()), partialTicks,
+				mouseX, mouseY);
 		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks);
 
 		// Draw the container background.
@@ -176,7 +180,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 
 		// Draw the slots.
 		if (menu instanceof StaticPowerTileEntityContainer) {
-			drawContainerSlots(stack, menu.slots, ((StaticPowerTileEntityContainer<?>) menu).getTileEntity().getComponent(SideConfigurationComponent.class));
+			drawContainerSlots(stack, menu.slots, ((StaticPowerTileEntityContainer<?>) menu).getTileEntity()
+					.getComponent(SideConfigurationComponent.class));
 		} else {
 			drawContainerSlots(stack, menu.slots);
 		}
@@ -238,7 +243,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// regular clicked chain. Use the SWAP just as a placeholder.
 		if (Screen.hasControlDown()) {
 			if (hoveredSlot != null) {
-				slotClicked(hoveredSlot, hoveredSlot.index, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
+				slotClicked(hoveredSlot, hoveredSlot.index, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON,
+						ClickType.SWAP);
 				return true;
 			}
 		}
@@ -316,7 +322,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// Draw the inventory label if requested at the designated location.
 		if (shouldDrawInventoryLabel()) {
 			Vector2D inventoryLabelLocation = getInventoryLabelDrawLocation();
-			font.draw(stack, inventory.getDisplayName().getString(), inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
+			font.draw(stack, inventory.getDisplayName().getString(), inventoryLabelLocation.getX(),
+					inventoryLabelLocation.getY(), 4210752);
 		}
 	}
 
@@ -459,8 +466,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param borderTint      The tint to apply to the border (the two pixel rounded
 	 *                        corner border).
 	 */
-	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
-		GuiDrawUtilities.drawGenericBackground(width, height, xPos + leftPos, yPos + topPos, 0.0f, backgroundColor, borderTint, true, true, true, true);
+	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor,
+			Color borderTint) {
+		GuiDrawUtilities.drawGenericBackground(width, height, xPos + leftPos, yPos + topPos, 0.0f, backgroundColor,
+				borderTint, true, true, true, true);
 	}
 
 	/**
@@ -498,7 +507,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param slotMode The mode of the slot (this dictates the potential color
 	 *                 border).
 	 */
-	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
+	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height,
+			MachineSideMode slotMode) {
 		if (slotMode == MachineSideMode.Regular) {
 			GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, 0);
 		} else {
@@ -525,7 +535,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		for (Slot slot : slots) {
 			if (slot instanceof StaticPowerContainerSlot) {
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
-				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
+				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize
+						: handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
 				handlerSlot.drawSlotOverlay(itemRenderer, leftPos, topPos, slotSize, sizePosOffset);
 			}
@@ -536,7 +547,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		drawContainerSlots(matrixStack, slots, null);
 	}
 
-	public void drawContainerSlots(PoseStack matrixStack, List<Slot> slots, @Nullable SideConfigurationComponent sideConfiguration) {
+	public void drawContainerSlots(PoseStack matrixStack, List<Slot> slots,
+			@Nullable SideConfigurationComponent sideConfiguration) {
 		for (Slot slot : slots) {
 			// Skip null slots
 			if (slot == null) {
@@ -561,31 +573,39 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 				MachineSideMode intendedMode = handlerSlot.getMode();
 
 				// If the slot is an output slot, increase the size of the slot.
-				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
+				int slotSize = intendedMode.isOutputMode() || slot instanceof OutputSlot ? outputSlotSize
+						: handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
 
 				// If side configuration is present, draw the slow with a border.
 				if (sideConfiguration != null) {
 					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
 						// Get the side mode to draw with.
-						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular;
+						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0
+								? intendedMode
+								: MachineSideMode.Regular;
 
 						// If the drawn side is regular, check to see if we can render one of the two
 						// general output or input modes.
 						if (drawnSideMode == MachineSideMode.Regular) {
-							if (intendedMode.isOutputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
+							if (intendedMode.isOutputMode()
+									&& sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
 								drawnSideMode = MachineSideMode.Output;
-							} else if (intendedMode.isInputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {
+							} else if (intendedMode.isInputMode()
+									&& sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {
 								drawnSideMode = MachineSideMode.Input;
 							}
 						}
 
-						drawEmptySlot(matrixStack, slot.x + leftPos - sizePosOffset, slot.y + topPos - sizePosOffset, slotSize, slotSize, drawnSideMode);
+						drawEmptySlot(matrixStack, slot.x + leftPos - sizePosOffset, slot.y + topPos - sizePosOffset,
+								slotSize, slotSize, drawnSideMode);
 					} else {
-						drawEmptySlot(matrixStack, slot.x + leftPos - sizePosOffset, slot.y + topPos - sizePosOffset, slotSize, slotSize);
+						drawEmptySlot(matrixStack, slot.x + leftPos - sizePosOffset, slot.y + topPos - sizePosOffset,
+								slotSize, slotSize);
 					}
 				} else {
-					drawEmptySlot(matrixStack, slot.x + leftPos - sizePosOffset, slot.y + topPos - sizePosOffset, slotSize, slotSize);
+					drawEmptySlot(matrixStack, slot.x + leftPos - sizePosOffset, slot.y + topPos - sizePosOffset,
+							slotSize, slotSize);
 				}
 
 				// Check if this slot's inventory is an InventoryComponent
@@ -595,12 +615,14 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 					if (component.areSlotsLockable()) {
 						// If the slot is locked, render the phantom item & the lock indicator.
 						if (component.isSlotLocked(slot.getSlotIndex())) {
-							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), leftPos, topPos, slot.x, slot.y, 0.5f);
+							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), leftPos, topPos,
+									slot.x, slot.y, 0.5f);
 							GlStateManager._enableDepthTest();
 						}
 
 						// Draw the yellow line lockable indicator.
-						GuiDrawUtilities.drawColoredRectangle(slot.x + leftPos - sizePosOffset, slot.y + topPos - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f,
+						GuiDrawUtilities.drawColoredRectangle(slot.x + leftPos - sizePosOffset,
+								slot.y + topPos - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f,
 								new Color(0.9f, 0.8f, 0));
 					}
 				}
@@ -672,7 +694,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// CAN BE DONE WAY BETTER - TO DO.
 		if (changeOccured) {
 			Vector2D expectedDifference = previousSizeTarget.clone().subtract(sizeTarget);
-			Vector2D currentDifference = new Vector2D(imageWidth - sizeTarget.getXi(), imageHeight - sizeTarget.getYi());
+			Vector2D currentDifference = new Vector2D(imageWidth - sizeTarget.getXi(),
+					imageHeight - sizeTarget.getYi());
 			Vector2D alpha = currentDifference.clone().divide(expectedDifference);
 			alpha = new Vector2D(1.0f, 1.0f).subtract(alpha);
 			if (Float.isNaN(alpha.getX())) {

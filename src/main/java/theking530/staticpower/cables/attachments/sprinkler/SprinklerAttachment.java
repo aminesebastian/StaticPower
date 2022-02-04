@@ -4,22 +4,22 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.FarmBlock;
-import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.FarmBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.utilities.SDMath;
@@ -103,12 +103,12 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 				// Set a random X and Z velocity.
 				float random = fluidCable.getWorld().getRandom().nextFloat();
-				RANDOM *= 2;
-				RANDOM -= 1;
-				RANDOM *= 0.02;
+				random *= 2;
+				random -= 1;
+				random *= 0.02;
 
 				// Set the motion.
-				orb.setDeltaMovement(RANDOM, 0.25, RANDOM);
+				orb.setDeltaMovement(random, 0.25, random);
 
 				// Add the entity orb to the world.
 				fluidCable.getWorld().addFreshEntity(orb);

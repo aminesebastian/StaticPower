@@ -88,7 +88,7 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return filtered ? TileEntityConveyorHopper.FILTERED_TYPE.create() : TileEntityConveyorHopper.TYPE.create();
+		return filtered ? TileEntityConveyorHopper.FILTERED_TYPE.create() : TileEntityConveyorHopper.TYPE.create(pos, state);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBottler extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityBottler> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityBottler(), ModBlocks.Bottler);
+	public static final BlockEntityTypeAllocator<TileEntityBottler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityBottler(), ModBlocks.Bottler);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;

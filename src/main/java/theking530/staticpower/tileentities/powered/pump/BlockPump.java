@@ -67,19 +67,19 @@ public class BlockPump extends StaticPowerTileEntityBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.IRON) {
-			return TileEntityPump.TYPE_IRON.create();
+			return TileEntityPump.TYPE_IRON.create(pos, state);
 		} else if (tier == StaticPowerTiers.BASIC) {
-			return TileEntityPump.TYPE_BASIC.create();
+			return TileEntityPump.TYPE_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return TileEntityPump.TYPE_ADVANCED.create();
+			return TileEntityPump.TYPE_ADVANCED.create(pos, state);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return TileEntityPump.TYPE_STATIC.create();
+			return TileEntityPump.TYPE_STATIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return TileEntityPump.TYPE_ENERGIZED.create();
+			return TileEntityPump.TYPE_ENERGIZED.create(pos, state);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return TileEntityPump.TYPE_LUMUM.create();
+			return TileEntityPump.TYPE_LUMUM.create(pos, state);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return TileEntityPump.TYPE_CREATIVE.create();
+			return TileEntityPump.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
 	}

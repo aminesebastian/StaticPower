@@ -84,7 +84,7 @@ public class BlockPowerMonitor extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityPowerMonitor.TYPE.create();
+		return TileEntityPowerMonitor.TYPE.create(pos, state);
 	}
 
 	@Override

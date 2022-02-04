@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.randomitem;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;

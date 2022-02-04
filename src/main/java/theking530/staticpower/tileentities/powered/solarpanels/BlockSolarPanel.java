@@ -58,17 +58,17 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (tierType == StaticPowerTiers.BASIC) {
-			return TileEntitySolarPanel.TYPE_BASIC.create();
+			return TileEntitySolarPanel.TYPE_BASIC.create(pos, state);
 		} else if (tierType == StaticPowerTiers.ADVANCED) {
-			return TileEntitySolarPanel.TYPE_ADVANCED.create();
+			return TileEntitySolarPanel.TYPE_ADVANCED.create(pos, state);
 		} else if (tierType == StaticPowerTiers.STATIC) {
-			return TileEntitySolarPanel.TYPE_STATIC.create();
+			return TileEntitySolarPanel.TYPE_STATIC.create(pos, state);
 		} else if (tierType == StaticPowerTiers.ENERGIZED) {
-			return TileEntitySolarPanel.TYPE_ENERGIZED.create();
+			return TileEntitySolarPanel.TYPE_ENERGIZED.create(pos, state);
 		} else if (tierType == StaticPowerTiers.LUMUM) {
-			return TileEntitySolarPanel.TYPE_LUMUM.create();
+			return TileEntitySolarPanel.TYPE_LUMUM.create(pos, state);
 		} else if (tierType == StaticPowerTiers.CREATIVE) {
-			return TileEntitySolarPanel.TYPE_CREATIVE.create();
+			return TileEntitySolarPanel.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
 	}

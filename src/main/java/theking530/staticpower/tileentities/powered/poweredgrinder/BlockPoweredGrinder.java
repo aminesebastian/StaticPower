@@ -24,6 +24,6 @@ public class BlockPoweredGrinder extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityPoweredGrinder.TYPE.create();
+		return TileEntityPoweredGrinder.TYPE.create(pos, state);
 	}
 }

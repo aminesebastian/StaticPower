@@ -2,15 +2,15 @@ package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import java.util.List;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.platform.Lighting;
-import net.minecraft.world.item.TooltipFlag.Default;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.TooltipFlag.Default;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.button.StandardButton;

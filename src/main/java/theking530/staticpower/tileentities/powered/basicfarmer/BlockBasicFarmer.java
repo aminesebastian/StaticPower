@@ -24,6 +24,6 @@ public class BlockBasicFarmer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityBasicFarmer.TYPE.create();
+		return TileEntityBasicFarmer.TYPE.create(pos, state);
 	}
 }

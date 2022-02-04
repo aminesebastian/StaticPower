@@ -2,8 +2,8 @@ package theking530.staticpower.cables.attachments;
 
 import java.util.List;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 
 public class AttachmentTooltipUtilities {

@@ -2,10 +2,10 @@ package theking530.staticpower.tileentities.nonpowered.randomitem;
 
 import java.util.stream.Collectors;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
@@ -22,7 +22,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityRandomItemGenerator extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityRandomItemGenerator> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityRandomItemGenerator(),
+	public static final BlockEntityTypeAllocator<TileEntityRandomItemGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityRandomItemGenerator(),
 			ModBlocks.RandomItemGenerator);
 	private static final float GENERATION_RATE = 1;
 	public final InventoryComponent inventory;

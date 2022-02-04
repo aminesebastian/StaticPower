@@ -24,6 +24,6 @@ public class BlockFormer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityFormer.TYPE.create();
+		return TileEntityFormer.TYPE.create(pos, state);
 	}
 }

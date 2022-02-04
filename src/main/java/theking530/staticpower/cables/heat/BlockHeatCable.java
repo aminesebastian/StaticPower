@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -73,15 +73,15 @@ public class BlockHeatCable extends AbstractCableBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.COPPER) {
-			return TileEntityHeatCable.TYPE_COPPER.create();
+			return TileEntityHeatCable.TYPE_COPPER.create(pos, state);
 		} else if (tier == StaticPowerTiers.TIN) {
-			return TileEntityHeatCable.TYPE_TIN.create();
+			return TileEntityHeatCable.TYPE_TIN.create(pos, state);
 		} else if (tier == StaticPowerTiers.SILVER) {
-			return TileEntityHeatCable.TYPE_SILVER.create();
+			return TileEntityHeatCable.TYPE_SILVER.create(pos, state);
 		} else if (tier == StaticPowerTiers.GOLD) {
-			return TileEntityHeatCable.TYPE_GOLD.create();
+			return TileEntityHeatCable.TYPE_GOLD.create(pos, state);
 		} else if (tier == StaticPowerTiers.ALUMINIUM) {
-			return TileEntityHeatCable.TYPE_ALUMINIUM.create();
+			return TileEntityHeatCable.TYPE_ALUMINIUM.create(pos, state);
 		}
 		return null;
 	}

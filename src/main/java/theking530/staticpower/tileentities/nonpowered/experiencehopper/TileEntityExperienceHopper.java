@@ -2,10 +2,10 @@ package theking530.staticpower.tileentities.nonpowered.experiencehopper;
 
 import java.util.List;
 
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,7 +26,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 
 public class TileEntityExperienceHopper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityExperienceHopper(), ModBlocks.ExperienceHopper);
+	public static final BlockEntityTypeAllocator<TileEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityExperienceHopper(), ModBlocks.ExperienceHopper);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

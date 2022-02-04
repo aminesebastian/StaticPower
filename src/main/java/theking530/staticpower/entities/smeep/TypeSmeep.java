@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
@@ -25,7 +24,7 @@ public class TypeSmeep extends AbstractSpawnableMobType<EntitySmeep> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void registerRenderers(FMLClientSetupEvent event) {
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		RenderingRegistry.registerEntityRenderingHandler(getType(), RendererSmeep::new);
 	}
 

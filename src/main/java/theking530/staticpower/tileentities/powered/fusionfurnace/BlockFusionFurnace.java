@@ -24,6 +24,6 @@ public class BlockFusionFurnace extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityFusionFurnace.TYPE.create();
+		return TileEntityFusionFurnace.TYPE.create(pos, state);
 	}
 }

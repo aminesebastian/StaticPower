@@ -13,18 +13,18 @@ import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
@@ -155,10 +155,10 @@ public class StaticCoreRegistry {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerTileEntitySpecialRenderers() {
+	public static void registerTileEntitySpecialRenderers(RegisterRenderers event) {
 		StaticCoreRegistry.processTileEntityTypeAllocators((allocator) -> {
 			if (allocator.requiresTileEntitySpecialRenderer()) {
-				ClientRegistry.bindTileEntityRenderer(allocator.getType(), allocator.getTileEntitySpecialRenderer());
+				event.registerBlockEntityRenderer(allocator.getType(), allocator.getTileEntitySpecialRenderer());
 			}
 		});
 	}
@@ -170,12 +170,12 @@ public class StaticCoreRegistry {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerScreenFactories() {
-		DeferredWorkQueue.runLater(() -> {
+	public static void registerScreenFactories(FMLClientSetupEvent event) {
+		event.enqueueWork(() -> {
 			for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> container : CONTAINER_ALLOCATORS) {
 				container.registerScreen();
 			}
-			LOGGER.info("Registered all Static Power container types.");
+			LOGGER.info("Registered all Static Power container types.");	
 		});
 	}
 

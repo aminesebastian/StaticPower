@@ -1,8 +1,8 @@
 package theking530.staticpower.cables.item;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemRoutingParcelClient {
 	public static final int ROTATION_PER_BLOCK = 90;

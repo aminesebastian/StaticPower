@@ -23,6 +23,6 @@ public class BlockAutoCraftingTable extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityAutoCraftingTable.TYPE.create();
+		return TileEntityAutoCraftingTable.TYPE.create(pos, state);
 	}
 }

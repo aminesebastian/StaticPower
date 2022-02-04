@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.network;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 
 public class ServerAttachmentDataContainer {

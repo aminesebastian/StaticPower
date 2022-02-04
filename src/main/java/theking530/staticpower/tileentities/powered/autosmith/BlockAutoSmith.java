@@ -24,6 +24,6 @@ public class BlockAutoSmith extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityAutoSmith.TYPE.create();
+		return TileEntityAutoSmith.TYPE.create(pos, state);
 	}
 }

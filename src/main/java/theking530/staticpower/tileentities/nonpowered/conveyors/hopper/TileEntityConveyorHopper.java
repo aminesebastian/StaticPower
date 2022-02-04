@@ -30,9 +30,9 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.IConveyorBlock;
 
 public class TileEntityConveyorHopper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityConveyorHopper(type, false), ModBlocks.ConveyorHopper);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorHopper(type, false), ModBlocks.ConveyorHopper);
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityConveyorHopper(type, true),
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorHopper(type, true),
 			ModBlocks.ConveyorFilteredHopper);
 
 	public final InventoryComponent internalInventory;

@@ -1,8 +1,8 @@
 package theking530.staticpower.items;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Tier;
-import net.minecraft.ChatFormatting;
 
 public class EquipmentMaterial {
 

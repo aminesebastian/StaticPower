@@ -8,7 +8,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.init.ModEntities;
 
@@ -25,7 +24,7 @@ public class TestTrainEntityType extends AbstractEntityType<TestTrainEntity> {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void registerRenderers(FMLClientSetupEvent event) {
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		RenderingRegistry.registerEntityRenderingHandler(ModEntities.TestTrainEntity.getType(), (EntityRenderDispatcher manager) -> {
 			return new MinecartRenderer<TestTrainEntity>(manager);
 		});

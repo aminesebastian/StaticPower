@@ -25,7 +25,7 @@ import theking530.staticpower.tileentities.components.items.OutputServoComponent
 
 public class TileEntityConveyorSupplier extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityConveyorSupplier(), ModBlocks.ConveyorSupplier);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorSupplier(), ModBlocks.ConveyorSupplier);
 
 	public final InventoryComponent internalInventory;
 	protected final ConveyorMotionComponent conveyor;

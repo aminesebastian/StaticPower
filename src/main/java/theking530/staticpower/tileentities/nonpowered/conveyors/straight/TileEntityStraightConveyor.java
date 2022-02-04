@@ -13,7 +13,7 @@ import theking530.staticpower.tileentities.components.control.ConveyorMotionComp
 
 public class TileEntityStraightConveyor extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityStraightConveyor(), ModBlocks.StraightConveyor);
+	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityStraightConveyor(), ModBlocks.StraightConveyor);
 
 	protected final ConveyorMotionComponent conveyor;
 

@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;

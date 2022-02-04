@@ -24,6 +24,6 @@ public class BlockFluidGenerator extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityFluidGenerator.TYPE.create();
+		return TileEntityFluidGenerator.TYPE.create(pos, state);
 	}
 }

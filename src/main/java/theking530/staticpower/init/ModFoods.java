@@ -1,8 +1,8 @@
 package theking530.staticpower.init;
 
-import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
 
 public class ModFoods {
 	public static final FoodProperties STATIC_CROP = (new FoodProperties.Builder()).nutrition(3).saturationMod(0.3F).alwaysEat().effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 2), 1.0f).build();

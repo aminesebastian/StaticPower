@@ -24,6 +24,6 @@ public class BlockFermenter extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityFermenter.TYPE.create();
+		return TileEntityFermenter.TYPE.create(pos, state);
 	}
 }

@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.item.Item;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag.Named;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.Tag.Named;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import theking530.staticpower.StaticPower;
 
 /**

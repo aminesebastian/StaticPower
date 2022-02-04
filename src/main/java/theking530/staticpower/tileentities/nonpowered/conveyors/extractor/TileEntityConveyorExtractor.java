@@ -22,7 +22,7 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityConveyorExtractor(), ModBlocks.ConveyorExtractor);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorExtractor(), ModBlocks.ConveyorExtractor);
 
 	public final InventoryComponent internalInventory;
 	protected final ConveyorMotionComponent conveyor;

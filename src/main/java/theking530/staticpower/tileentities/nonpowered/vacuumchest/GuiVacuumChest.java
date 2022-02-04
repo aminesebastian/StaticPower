@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.nonpowered.vacuumchest;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Items;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;

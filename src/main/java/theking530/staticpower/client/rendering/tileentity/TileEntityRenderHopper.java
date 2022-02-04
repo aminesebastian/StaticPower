@@ -1,12 +1,12 @@
 package theking530.staticpower.client.rendering.tileentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -20,8 +20,8 @@ import theking530.staticpower.tileentities.nonpowered.experiencehopper.TileEntit
 public class TileEntityRenderHopper extends StaticPowerTileEntitySpecialRenderer<TileEntityExperienceHopper> {
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
 
-	public TileEntityRenderHopper(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderHopper(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

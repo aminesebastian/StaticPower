@@ -201,9 +201,9 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 			getDigistoreNetwork().ifPresent((network) -> {
 				// If the player is holding an item, attempt to insert it.
 				// Otherwise, attempt to extract items/trigger a crafting job.
-				if (!getPlayerInventory().getCarried().isEmpty()) {
+				if (!getCarried().isEmpty()) {
 					// Get the item to insert. When right clicking, only insert a single item.
-					ItemStack stackToInsert = getPlayerInventory().getCarried().copy();
+					ItemStack stackToInsert = getCarried().copy();
 					if (button == MouseButton.RIGHT) {
 						stackToInsert.setCount(1);
 					}
@@ -213,7 +213,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 					int inserted = stackToInsert.getCount() - remaining.getCount();
 
 					// Update the player's held item.
-					getPlayerInventory().getCarried().shrink(inserted);
+					getCarried().shrink(inserted);
 					((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
 				} else {
 					// Get the clicked stack (if it event exists.
@@ -268,7 +268,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 							}
 
 							// Then, set the held item after extracting.
-							getPlayerInventory().setCarried(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
+							setCarried(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
 							((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
 						} else if (button == MouseButton.LEFT && shiftHeld) {
 							// Get the item (up to a full stack). If empty, return.

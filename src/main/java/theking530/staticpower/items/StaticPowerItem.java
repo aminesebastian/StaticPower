@@ -5,25 +5,23 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
 
@@ -107,11 +105,6 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 		stack.deserializeNBT(tag);
 	}
 
-	@Override
-	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable Player player, @Nullable BlockState blockState) {
-		return super.getHarvestLevel(stack, tool, player, blockState);
-	}
-
 	/**
 	 * Override of onItemRickClick that calls expanded version
 	 * {@link #onStaticPowerItemRightClicked(World, PlayerEntity, Hand, ItemStack)}
@@ -130,12 +123,14 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		super.useOn(context);
-		return onStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(), context.getClickedFace(), context.getPlayer(), context.getItemInHand());
+		return onStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(),
+				context.getClickedFace(), context.getPlayer(), context.getItemInHand());
 	}
 
 	@Override
 	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-		return onPreStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(), context.getClickedFace(), context.getPlayer(), stack);
+		return onPreStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(),
+				context.getClickedFace(), context.getPlayer(), stack);
 	}
 
 	/**
@@ -147,7 +142,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item   The {@link ItemStack}.
 	 * @return The result of the action.
 	 */
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (this.isEdible()) {
 			ItemStack itemstack = player.getItemInHand(hand);
 			if (player.canEat(this.getFoodProperties().canAlwaysEat())) {
@@ -172,7 +168,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item    The item stack that was used.
 	 * @return The result of the action (SUCCESS, PASS, FAIL, CONSUME).
 	 */
-	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
+			Direction face, Player player, ItemStack item) {
 		return InteractionResult.PASS;
 	}
 
@@ -187,7 +184,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item
 	 * @return
 	 */
-	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
+			Direction face, Player player, ItemStack item) {
 		return InteractionResult.PASS;
 	}
 
@@ -201,7 +199,8 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param isShowingAdvanced True if advanced tooltips are requested.
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
 	}
 
 	@OnlyIn(Dist.CLIENT)

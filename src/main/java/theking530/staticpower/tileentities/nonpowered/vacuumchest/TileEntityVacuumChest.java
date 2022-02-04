@@ -4,20 +4,20 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.IUpgradeItem.UpgradeType;
@@ -44,7 +44,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVacuumChest extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
+	public static final BlockEntityTypeAllocator<TileEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityVacuumChest(), ModBlocks.VacuumChest);
 
 	public static final int DEFAULT_RANGE = 6;
 	public static final int DEFAULT_TANK_SIZE = 5000;

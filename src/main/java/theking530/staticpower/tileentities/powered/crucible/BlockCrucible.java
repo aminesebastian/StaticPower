@@ -24,6 +24,6 @@ public class BlockCrucible extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityCrucible.TYPE.create();
+		return TileEntityCrucible.TYPE.create(pos, state);
 	}
 }

@@ -23,6 +23,6 @@ public class BlockAutoSolderingTable extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityAutoSolderingTable.TYPE.create();
+		return TileEntityAutoSolderingTable.TYPE.create(pos, state);
 	}
 }

@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,7 +37,9 @@ public class PacketSyncDigistoreInventory extends NetworkMessage {
 			NbtIo.writeCompressed(inventory, out);
 			buffer.writeByteArray(out.toByteArray());
 		} catch (Exception e) {
-			StaticPower.LOGGER.error("An error occured when attempting to serialize a JEI recipe for display in an IJEIReipceTransferHandler.", e);
+			StaticPower.LOGGER.error(
+					"An error occured when attempting to serialize a JEI recipe for display in an IJEIReipceTransferHandler.",
+					e);
 		}
 	}
 
@@ -48,18 +51,19 @@ public class PacketSyncDigistoreInventory extends NetworkMessage {
 			byte[] compressedData = buffer.readByteArray();
 			inventory = NbtIo.readCompressed(new ByteArrayInputStream(compressedData));
 		} catch (Exception e) {
-			StaticPower.LOGGER.error("An error occured when attempting to deserialize a JEI recipe for display in an IJEIReipceTransferHandler.", e);
+			StaticPower.LOGGER.error(
+					"An error occured when attempting to deserialize a JEI recipe for display in an IJEIReipceTransferHandler.",
+					e);
 		}
 	}
 
-	@SuppressWarnings("rawtypes")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 			if (container instanceof AbstractContainerDigistoreTerminal && container.containerId == windowId) {
 				DigistoreInventorySnapshot snapshot = DigistoreInventorySnapshot.deserialize(inventory);
-				((AbstractContainerDigistoreTerminal) container).syncContentsFromServer(snapshot);
+				((AbstractContainerDigistoreTerminal<?>) container).syncContentsFromServer(snapshot);
 			}
 		});
 	}

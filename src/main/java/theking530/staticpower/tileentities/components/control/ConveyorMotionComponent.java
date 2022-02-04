@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.function.Predicate;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
@@ -94,7 +95,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 
 				// Clear the old item.
 				item.setItem(ItemStack.EMPTY);
-				item.remove();
+				item.remove(RemovalReason.DISCARDED);
 			}
 		}
 	}

@@ -24,6 +24,6 @@ public class BlockSqueezer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntitySqueezer.TYPE.create();
+		return TileEntitySqueezer.TYPE.create(pos, state);
 	}
 }

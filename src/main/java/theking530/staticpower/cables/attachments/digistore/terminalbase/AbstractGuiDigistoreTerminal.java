@@ -8,15 +8,15 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocus.Mode;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fml.ModList;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
@@ -296,6 +296,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		typeAmountSprite.getDrawable().setUV(0, 1 - typesPercent, 1, 1);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
 		if (!searchBar.isFocused()) {

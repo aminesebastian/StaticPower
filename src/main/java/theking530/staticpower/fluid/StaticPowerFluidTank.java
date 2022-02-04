@@ -11,8 +11,6 @@ import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 	protected Queue<Float> ioCaptureFrames;

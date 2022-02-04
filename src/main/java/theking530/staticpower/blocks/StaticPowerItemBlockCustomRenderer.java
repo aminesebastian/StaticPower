@@ -1,12 +1,14 @@
 package theking530.staticpower.blocks;
 
+import java.util.function.Supplier;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.ItemCustomRendererPassthroughModel;
@@ -15,8 +17,8 @@ public class StaticPowerItemBlockCustomRenderer extends StaticPowerItemBlock imp
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerItemBlockCustomRenderer.class);
 
 	public StaticPowerItemBlockCustomRenderer(Block block,
-			java.util.function.Supplier<java.util.concurrent.Callable<net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer>> renderer) {
-		super(block, new Item.Properties().setISTER(renderer));
+			Supplier<java.util.concurrent.Callable<net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer>> renderer) {
+		super(block, new Item.Properties()); //.setISTER(renderer)
 	}
 
 	@Override

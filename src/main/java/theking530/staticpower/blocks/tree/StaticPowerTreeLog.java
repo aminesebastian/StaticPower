@@ -2,27 +2,24 @@ package theking530.staticpower.blocks.tree;
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
 import theking530.staticpower.utilities.WorldUtilities;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 	private final Block strippedVariant;
@@ -49,12 +46,12 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 	}
 
 	@Deprecated
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player,
-			InteractionHand handIn, BlockHitResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
+			BlockHitResult hit) {
 		// If there is a striped variant defined.
 		if (strippedVariant != null) {
 			// If the player is holding an axe.
-			if (player.getItemInHand(handIn).getToolTypes().contains(ToolType.AXE)) {
+			if (player.getItemInHand(handIn).isCorrectToolForDrops(state)) {
 				// Update to the stripped variant.
 				worldIn.setBlockAndUpdate(pos, strippedVariant.defaultBlockState());
 

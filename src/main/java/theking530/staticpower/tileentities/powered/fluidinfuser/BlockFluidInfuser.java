@@ -24,6 +24,6 @@ public class BlockFluidInfuser extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityFluidInfuser.TYPE.create();
+		return TileEntityFluidInfuser.TYPE.create(pos, state);
 	}
 }

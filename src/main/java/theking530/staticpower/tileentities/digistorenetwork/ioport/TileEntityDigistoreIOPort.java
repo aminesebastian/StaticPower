@@ -1,12 +1,12 @@
 package theking530.staticpower.tileentities.digistorenetwork.ioport;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -17,7 +17,7 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityDigistoreIOPort(), ModBlocks.DigistoreIOPort);
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityDigistoreIOPort(), ModBlocks.DigistoreIOPort);
 
 	public TileEntityDigistoreIOPort() {
 		super(TYPE, 5000);
@@ -40,13 +40,13 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 			boolean itemInserted = false;
 
 			// Loop through the whole inventory.
-			for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+			for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 				// Skip empty slots.
-				if (player.inventory.getItem(i).isEmpty()) {
+				if (player.getInventory().getItem(i).isEmpty()) {
 					continue;
 				}
 				// Get the item in the slot.
-				ItemStack currentItem = player.inventory.getItem(i).copy();
+				ItemStack currentItem = player.getInventory().getItem(i).copy();
 
 				// Skip any items that are not currently in the digistore system.
 				if (!module.containsItem(currentItem)) {
@@ -59,7 +59,7 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 				// Update the slot contents.
 				if (currentItem.getCount() != remaining.getCount()) {
 					itemInserted = true;
-					player.inventory.setItem(i, remaining);
+					player.getInventory().setItem(i, remaining);
 				}
 			}
 

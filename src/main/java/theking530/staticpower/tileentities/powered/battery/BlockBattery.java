@@ -93,17 +93,17 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (tier == StaticPowerTiers.BASIC) {
-			return TileEntityBattery.TYPE_BASIC.create();
+			return TileEntityBattery.TYPE_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return TileEntityBattery.TYPE_ADVANCED.create();
+			return TileEntityBattery.TYPE_ADVANCED.create(pos, state);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return TileEntityBattery.TYPE_STATIC.create();
+			return TileEntityBattery.TYPE_STATIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return TileEntityBattery.TYPE_ENERGIZED.create();
+			return TileEntityBattery.TYPE_ENERGIZED.create(pos, state);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return TileEntityBattery.TYPE_LUMUM.create();
+			return TileEntityBattery.TYPE_LUMUM.create(pos, state);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return TileEntityBattery.TYPE_CREATIVE.create();
+			return TileEntityBattery.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
 	}

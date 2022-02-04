@@ -4,16 +4,14 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 import theking530.staticpower.StaticPower;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class StaticPowerFluidBucket extends BucketItem {
 

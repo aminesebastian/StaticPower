@@ -1,14 +1,15 @@
 package theking530.staticpower.tileentities.nonpowered.miner;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
+import com.mojang.math.Vector3f;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
@@ -26,7 +27,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityMiner(), ModBlocks.Miner);
+	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityMiner(), ModBlocks.Miner);
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;

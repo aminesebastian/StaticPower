@@ -1,15 +1,13 @@
 package theking530.staticpower.tileentities.nonpowered.miner;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
 
 public class BlockMiner extends StaticPowerMachineBlock {
 
@@ -24,6 +22,6 @@ public class BlockMiner extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityMiner.TYPE.create();
+		return TileEntityMiner.TYPE.create(pos, state);
 	}
 }

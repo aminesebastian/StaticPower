@@ -9,7 +9,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent.Register;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.init.ModEntities;
 
@@ -26,7 +25,7 @@ public class CauldronContainedEntityType extends AbstractEntityType<CauldronCont
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void registerRenderers(FMLClientSetupEvent event) {
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		RenderingRegistry.registerEntityRenderingHandler(ModEntities.CauldronContainedEntity.getType(), (EntityRenderDispatcher manager) -> {
 			return new ItemEntityRenderer(manager, Minecraft.getInstance().getItemRenderer());
 		});

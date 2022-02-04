@@ -2,9 +2,9 @@ package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import java.util.function.BiConsumer;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.digistore.CapabilityDigistoreInventory;
@@ -13,8 +13,6 @@ import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
-
-import theking530.staticpower.tileentities.components.items.InventoryComponent.InventoryChangeType;
 
 public class DigistoreInventoryComponent extends InventoryComponent implements IDigistoreInventory {
 	private BiConsumer<InventoryChangeType, ItemStack> digistoreChangeCallback;

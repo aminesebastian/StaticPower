@@ -30,7 +30,7 @@ public class BlockTurbine extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityTurbine.TYPE.create();
+		return TileEntityTurbine.TYPE.create(pos, state);
 	}
 
 	@Override

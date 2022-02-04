@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.redstone;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class RedstoneCableConfiguration implements INBTSerializable<CompoundTag> {

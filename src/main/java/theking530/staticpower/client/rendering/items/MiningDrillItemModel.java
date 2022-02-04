@@ -9,25 +9,25 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockElementRotation;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.renderer.block.model.BlockElementRotation;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -53,7 +53,8 @@ public class MiningDrillItemModel implements BakedModel {
 	public ItemOverrides getOverrides() {
 		return new ItemOverrides() {
 			@Override
-			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
+					@Nullable LivingEntity livingEntity, int x) {
 				return new MiningDrillWithAttachments(stack, emptyDrillModel);
 			}
 		};
@@ -103,7 +104,8 @@ public class MiningDrillItemModel implements BakedModel {
 		}
 
 		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand,
+				IModelData data) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
@@ -115,20 +117,24 @@ public class MiningDrillItemModel implements BakedModel {
 			stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent((handler) -> {
 				if (!handler.getStackInSlot(0).isEmpty()) {
 					drillBitEquipped.set(true);
-					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0), Minecraft.getInstance().level, null);
+					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0),
+							Minecraft.getInstance().level, null);
 					List<BakedQuad> drillBitQuads = itemModel.getQuads(state, side, rand, data);
-					output.addAll(transformQuads(drillBitQuads, new Vector3f(0.3f, 0.3f, -0.001f), new Vector3f(0.55f, 0.55f, 1.1f), new Quaternion(0, 0, 135, true)));
+					output.addAll(transformQuads(drillBitQuads, new Vector3f(0.3f, 0.3f, -0.001f),
+							new Vector3f(0.55f, 0.55f, 1.1f), new Quaternion(0, 0, 135, true)));
 				}
 			});
 
 			if (drillBitEquipped.get()) {
 				// Add a mini drill.
 				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
-				output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f), new Quaternion(0, 0, 0, true)));
+				output.addAll(transformQuads(baseQuads, new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(1.0f, 1.0f, 1.0f),
+						new Quaternion(0, 0, 0, true)));
 			} else {
 				// Add the full drill.
 				List<BakedQuad> baseQuads = BaseModel.getQuads(state, side, rand, data);
-				output.addAll(transformQuads(baseQuads, new Vector3f(0.15f, 0.15f, 0.0f), new Vector3f(1.3f, 1.3f, 1.0f), new Quaternion(0, 0, 0, true)));
+				output.addAll(transformQuads(baseQuads, new Vector3f(0.15f, 0.15f, 0.0f),
+						new Vector3f(1.3f, 1.3f, 1.0f), new Quaternion(0, 0, 0, true)));
 			}
 
 			// Draw the power bar.
@@ -138,27 +144,36 @@ public class MiningDrillItemModel implements BakedModel {
 				float sideOffset = drillBitEquipped.get() ? 0.5f : 0.0f;
 
 				// Get the atlas texture.
-				TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+				TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap()
+						.getAtlas(TextureAtlas.LOCATION_BLOCKS);
 
 				// Draw the durability background.
 				TextureAtlasSprite blackSprite = blocksTexture.getSprite(StaticPowerSprites.BLACK_TEXTURE);
 				BlockFaceUV durabilityBgUv = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-				BlockElementFace durabilityPartFace = new BlockElementFace(null, -1, blackSprite.getName().toString(), durabilityBgUv);
-				BlockElementRotation rotation = new BlockElementRotation(new Vector3f(0.0f, 0.0f, 0.0f), Direction.Axis.Z, 135, false);
-				BakedQuad durabilityBackground = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -12.0f + topOffset, 8.5f), new Vector3f(2.0f - sideOffset, -11.35f + topOffset, 8.51f),
-						durabilityPartFace, blackSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
+				BlockElementFace durabilityPartFace = new BlockElementFace(null, -1, blackSprite.getName().toString(),
+						durabilityBgUv);
+				BlockElementRotation rotation = new BlockElementRotation(new Vector3f(0.0f, 0.0f, 0.0f),
+						Direction.Axis.Z, 135, false);
+				BakedQuad durabilityBackground = FaceBaker.bakeQuad(
+						new Vector3f(-3.0f + sideOffset, -12.0f + topOffset, 8.5f),
+						new Vector3f(2.0f - sideOffset, -11.35f + topOffset, 8.51f), durabilityPartFace, blackSprite,
+						Direction.SOUTH, SimpleModelTransform.IDENTITY, rotation, false,
+						new ResourceLocation("dummy_name"));
 				output.add(durabilityBackground);
 
 				// Draw the durability bar.
-				float bitDurability = (float) EnergyHandlerItemStackUtilities.getStoredPower(stack) / EnergyHandlerItemStackUtilities.getCapacity(stack);
+				float bitDurability = (float) EnergyHandlerItemStackUtilities.getStoredPower(stack)
+						/ EnergyHandlerItemStackUtilities.getCapacity(stack);
 				float xUVCoord = bitDurability * 15.999f;
 				TextureAtlasSprite durabilityTexture = blocksTexture.getSprite(StaticPowerSprites.TOOL_POWER_BAR);
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { xUVCoord, 0.0f, xUVCoord, 16.0f }, 0);
-				BlockElementFace durabilityBarFace = new BlockElementFace(null, -1, durabilityTexture.getName().toString(), blockFaceUV);
+				BlockElementFace durabilityBarFace = new BlockElementFace(null, -1,
+						durabilityTexture.getName().toString(), blockFaceUV);
 
 				BakedQuad durabilityBar = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -12.0f + topOffset, 8.5f),
-						new Vector3f(-3.0f + (bitDurability * 5.0f) - sideOffset, -11.35f + topOffset, 8.511f), durabilityBarFace, durabilityTexture, Direction.SOUTH,
-						SimpleModelTransform.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
+						new Vector3f(-3.0f + (bitDurability * 5.0f) - sideOffset, -11.35f + topOffset, 8.511f),
+						durabilityBarFace, durabilityTexture, Direction.SOUTH, SimpleModelTransform.IDENTITY, rotation,
+						false, new ResourceLocation("dummy_name"));
 				output.add(durabilityBar);
 			} catch (Exception e) {
 				// No nothing -- this is just for those edge cases where resources are reloaded.
@@ -204,7 +219,8 @@ public class MiningDrillItemModel implements BakedModel {
 			// Otherwise, return the particle texture for the base model.
 			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
 			if (inv != null && !inv.getStackInSlot(0).isEmpty()) {
-				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inv.getStackInSlot(0), Minecraft.getInstance().level, null);
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inv.getStackInSlot(0),
+						Minecraft.getInstance().level, null);
 				return itemModel.getParticleIcon();
 			}
 			return BaseModel.getParticleIcon();

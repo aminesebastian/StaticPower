@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLumberMill extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityLumberMill(), ModBlocks.LumberMill);
+	public static final BlockEntityTypeAllocator<TileEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLumberMill(), ModBlocks.LumberMill);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;

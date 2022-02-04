@@ -4,19 +4,19 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -80,7 +80,7 @@ public class BlockFluidCable extends AbstractCableBlock {
 	}
 
 	@Override
-	public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(world, pos);
 		if (cable instanceof FluidCableComponent) {
 			FluidStack fluid = ((FluidCableComponent) cable).getFluidInTank(0);
@@ -89,7 +89,7 @@ public class BlockFluidCable extends AbstractCableBlock {
 				return attributes.getLuminosity(fluid);
 			}
 		}
-		return state.getLightEmission();
+		return super.getLightEmission(state, world, pos);
 	}
 
 	@Override
@@ -101,17 +101,17 @@ public class BlockFluidCable extends AbstractCableBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.BASIC) {
-			return TileEntityFluidCable.TYPE_BASIC.create();
+			return TileEntityFluidCable.TYPE_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return TileEntityFluidCable.TYPE_ADVANCED.create();
+			return TileEntityFluidCable.TYPE_ADVANCED.create(pos, state);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return TileEntityFluidCable.TYPE_STATIC.create();
+			return TileEntityFluidCable.TYPE_STATIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return TileEntityFluidCable.TYPE_ENERGIZED.create();
+			return TileEntityFluidCable.TYPE_ENERGIZED.create(pos, state);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return TileEntityFluidCable.TYPE_LUMUM.create();
+			return TileEntityFluidCable.TYPE_LUMUM.create(pos, state);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return TileEntityFluidCable.TYPE_CREATIVE.create();
+			return TileEntityFluidCable.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
 	}

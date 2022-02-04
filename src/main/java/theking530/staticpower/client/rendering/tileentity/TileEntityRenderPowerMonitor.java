@@ -3,7 +3,7 @@ package theking530.staticpower.client.rendering.tileentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -19,8 +19,8 @@ import theking530.staticpower.tileentities.powered.powermonitor.TileEntityPowerM
 public class TileEntityRenderPowerMonitor extends StaticPowerTileEntitySpecialRenderer<TileEntityPowerMonitor> {
 	private WorldLineGraphRenderer graphRenderer;
 
-	public TileEntityRenderPowerMonitor(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderPowerMonitor(BlockEntityRendererProvider.Context context) {
+		super(context);
 		graphRenderer= new WorldLineGraphRenderer(0.02f, 13, 7);
 	}
 

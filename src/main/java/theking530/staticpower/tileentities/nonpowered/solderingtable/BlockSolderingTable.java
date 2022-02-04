@@ -1,22 +1,20 @@
 package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.ToolType;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
-
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
 
 public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 	protected static final VoxelShape SHAPE;
@@ -46,6 +44,6 @@ public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntitySolderingTable.TYPE.create();
+		return TileEntitySolderingTable.TYPE.create(pos, state);
 	}
 }

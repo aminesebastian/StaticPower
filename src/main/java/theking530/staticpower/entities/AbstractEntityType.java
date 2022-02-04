@@ -1,10 +1,10 @@
 package theking530.staticpower.entities;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticpower.StaticPower;
 
 public abstract class AbstractEntityType<T extends Entity> {
@@ -18,7 +18,7 @@ public abstract class AbstractEntityType<T extends Entity> {
 
 	public abstract void registerAttributes(RegistryEvent.Register<EntityType<?>> event);
 
-	public abstract void registerRenderers(FMLClientSetupEvent event);
+	public abstract void registerRenderers(EntityRenderersEvent.RegisterRenderers event);
 
 	public EntityType<T> getType() {
 		return type;

@@ -1,9 +1,9 @@
 package theking530.staticpower.cables.item;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
 

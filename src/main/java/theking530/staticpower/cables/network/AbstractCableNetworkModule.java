@@ -3,10 +3,10 @@ package theking530.staticpower.cables.network;
 import java.util.List;
 import java.util.Set;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 
 public abstract class AbstractCableNetworkModule {

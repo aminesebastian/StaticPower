@@ -2,9 +2,9 @@ package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
 import java.util.function.Supplier;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.utilities.ItemUtilities;

@@ -24,6 +24,6 @@ public class BlockCaster extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityCaster.TYPE.create();
+		return TileEntityCaster.TYPE.create(pos, state);
 	}
 }

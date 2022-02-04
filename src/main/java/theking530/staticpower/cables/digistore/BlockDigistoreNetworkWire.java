@@ -1,11 +1,11 @@
 package theking530.staticpower.cables.digistore;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -30,7 +30,8 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_EXTENSION);
 		BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_STRAIGHT);
-		BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_DIGISTORE_ATTACHMENT);
+		BakedModel attachmentModel = event.getModelRegistry()
+				.get(StaticPowerAdditionalModels.CABLE_DIGISTORE_ATTACHMENT);
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
@@ -43,11 +44,11 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityDigistoreWire.TYPE.create();
+		return TileEntityDigistoreWire.TYPE.create(pos, state);
 	}
 
 	@Override
-	public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(world, pos);
 		if (cable instanceof DigistoreCableProviderComponent) {
 			DigistoreCableProviderComponent digistoreCable = (DigistoreCableProviderComponent) cable;
@@ -55,6 +56,6 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 				return 15;
 			}
 		}
-		return 0;
+		return super.getLightEmission(state, world, pos);
 	}
 }

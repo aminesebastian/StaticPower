@@ -9,29 +9,29 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.BlockElementRotation;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -49,6 +49,8 @@ import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 public class PortableBatteryItemModel implements BakedModel {
 	private final Int2ObjectMap<PortableBatteryModel> cache = new Int2ObjectArrayMap<>();
 	private final BakedModel baseModel;
+	private final static BlockElementRotation IDENTITY = new BlockElementRotation(new Vector3f(0, 0, 0),
+			Direction.Axis.X, 0, false);
 
 	public PortableBatteryItemModel(BakedModel baseModel) {
 		this.baseModel = baseModel;
@@ -58,7 +60,8 @@ public class PortableBatteryItemModel implements BakedModel {
 	public ItemOverrides getOverrides() {
 		return new ItemOverrides() {
 			@Override
-			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
+					@Nullable LivingEntity livingEntity, int x) {
 				// Make sure we have a valid portable battery.
 				if (!(stack.getItem() instanceof PortableBattery)) {
 					return originalModel;
@@ -75,12 +78,14 @@ public class PortableBatteryItemModel implements BakedModel {
 				int intRatio = (int) (ratio * 50);
 
 				// Hash the unique info about this model.
-				int hash = Objects.hash(stack.getItem().getRegistryName() + ((PortableBattery) stack.getItem()).tier.toString() + intRatio);
+				int hash = Objects.hash(stack.getItem().getRegistryName()
+						+ ((PortableBattery) stack.getItem()).tier.toString() + intRatio);
 
 				// Check to see if we need to cache this model, if we do, do it.
 				PortableBatteryModel model = PortableBatteryItemModel.this.cache.get(hash);
 				if (model == null) {
-					model = new PortableBatteryModel(baseModel, ratio, ((PortableBattery) stack.getItem()).tier == StaticPowerTiers.CREATIVE);
+					model = new PortableBatteryModel(baseModel, ratio,
+							((PortableBattery) stack.getItem()).tier == StaticPowerTiers.CREATIVE);
 					PortableBatteryItemModel.this.cache.put(hash, model);
 				}
 				return model;
@@ -137,7 +142,8 @@ public class PortableBatteryItemModel implements BakedModel {
 		}
 
 		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand,
+				IModelData data) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
@@ -146,17 +152,23 @@ public class PortableBatteryItemModel implements BakedModel {
 				quads = new ArrayList<BakedQuad>();
 				quads.addAll(baseModel.getQuads(state, side, rand, data));
 
-				TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
-				TextureAtlasSprite sideSprite = blocksTexture.getSprite(creative ? StaticPowerSprites.PORTABLE_CREATIVE_BATTERY_FILL_BAR : StaticPowerSprites.PORTABLE_BATTERY_FILL_BAR);
+				TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap()
+						.getAtlas(TextureAtlas.LOCATION_BLOCKS);
+				TextureAtlasSprite sideSprite = blocksTexture
+						.getSprite(creative ? StaticPowerSprites.PORTABLE_CREATIVE_BATTERY_FILL_BAR
+								: StaticPowerSprites.PORTABLE_BATTERY_FILL_BAR);
 
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-				BlockElementFace blockPartFace = new BlockElementFace(null, 1, sideSprite.getName().toString(), blockFaceUV);
+				BlockElementFace blockPartFace = new BlockElementFace(null, 1, sideSprite.getName().toString(),
+						blockFaceUV);
 
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
-						new ResourceLocation("dummy_name")));
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f),
+						new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH,
+						null, IDENTITY, false, new ResourceLocation("dummy_name")));
 
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f), new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH, SimpleModelTransform.IDENTITY, null, false,
-						new ResourceLocation("dummy_name")));
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f),
+						new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH,
+						null, IDENTITY, false, new ResourceLocation("dummy_name")));
 			}
 			return quads;
 		}

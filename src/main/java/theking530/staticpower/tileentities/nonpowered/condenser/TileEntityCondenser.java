@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.nonpowered.condenser;
 
 import java.util.Optional;
 
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -28,7 +28,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityCondenser extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCondenser> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityCondenser(), ModBlocks.Condenser);
+	public static final BlockEntityTypeAllocator<TileEntityCondenser> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCondenser(), ModBlocks.Condenser);
 
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final float DEFAULT_HEAT_GENERATION = 50.0f;

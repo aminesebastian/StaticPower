@@ -7,18 +7,19 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -79,7 +80,6 @@ public class CoverBuilder {
 	);
 	private final ThreadLocal<Quad> collectors = ThreadLocal.withInitial(Quad::new);
 
-	@SuppressWarnings("deprecation")
 	public void buildFacadeQuads(@Nullable BlockState state, CableRenderingState cableState, RenderType layer, Random rand, List<BakedQuad> quads, Direction dir) {
 		// Get the blockstate for the cover and return early if its empty.
 		BlockState blockState = cableState.covers[dir.ordinal()];
@@ -189,7 +189,7 @@ public class CoverBuilder {
 	 */
 	public List<BakedQuad> buildFacadeItemQuads(ItemStack textureItem, Direction side) {
 		List<BakedQuad> facadeQuads = new ArrayList<>();
-		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(textureItem, null, null);
+		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(textureItem, null, null, 0);
 		List<BakedQuad> modelQuads = gatherQuads(model, null, new Random(), EmptyModelData.INSTANCE);
 
 		BakedPipeline pipeline = this.pipelines.get();

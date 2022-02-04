@@ -24,6 +24,6 @@ public class BlockCentrifuge extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityCentrifuge.TYPE.create();
+		return TileEntityCentrifuge.TYPE.create(pos, state);
 	}
 }

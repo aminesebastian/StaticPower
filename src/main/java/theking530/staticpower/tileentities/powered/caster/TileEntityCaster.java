@@ -31,7 +31,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCaster extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCaster> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityCaster(), ModBlocks.Caster);
+	public static final BlockEntityTypeAllocator<TileEntityCaster> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCaster(), ModBlocks.Caster);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

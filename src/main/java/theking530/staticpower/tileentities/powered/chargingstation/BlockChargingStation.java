@@ -24,6 +24,6 @@ public class BlockChargingStation extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityChargingStation.TYPE.create();
+		return TileEntityChargingStation.TYPE.create(pos, state);
 	}
 }

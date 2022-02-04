@@ -5,15 +5,15 @@ import javax.annotation.Nonnull;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.ComposterBlock;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -23,8 +23,6 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -50,9 +48,7 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.integration.TOP.PluginTOP;
 
-@SuppressWarnings("deprecation")
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventRegistry {
 	public static final String TOP_MODID = "theoneprobe";
@@ -98,7 +94,7 @@ public class StaticPowerModEventRegistry {
 		CapabilityStaticPowerPlayerData.register();
 
 		// Register composter recipes.
-		DeferredWorkQueue.runLater(() -> {
+		event.enqueueWork(() -> {
 			ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);
 		});
 

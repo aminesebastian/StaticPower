@@ -37,7 +37,7 @@ public class BlockRampUpConveyor extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityRampUpConveyor.TYPE.create();
+		return TileEntityRampUpConveyor.TYPE.create(pos, state);
 	}
 
 	@Override

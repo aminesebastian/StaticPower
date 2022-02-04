@@ -24,6 +24,6 @@ public class BlockBottler extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityBottler.TYPE.create();
+		return TileEntityBottler.TYPE.create(pos, state);
 	}
 }

@@ -1,8 +1,8 @@
 package theking530.staticpower.init;
 
 import net.minecraft.world.food.Foods;
-import net.minecraft.world.item.Tiers;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tiers;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;

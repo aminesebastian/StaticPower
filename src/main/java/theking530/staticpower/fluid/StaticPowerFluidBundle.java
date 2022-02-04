@@ -3,13 +3,13 @@ package theking530.staticpower.fluid;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag.Named;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.fluids.FluidAttributes;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Flowing;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;

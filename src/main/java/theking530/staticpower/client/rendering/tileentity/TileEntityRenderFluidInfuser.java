@@ -3,11 +3,11 @@ package theking530.staticpower.client.rendering.tileentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,8 +20,8 @@ import theking530.staticpower.tileentities.powered.fluidinfuser.TileEntityFluidI
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderFluidInfuser extends StaticPowerTileEntitySpecialRenderer<TileEntityFluidInfuser> {
 
-	public TileEntityRenderFluidInfuser(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderFluidInfuser(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class TileEntityRenderFluidInfuser extends StaticPowerTileEntitySpecialRe
 			// Render the item inside the infuser.
 			if (!tileEntity.internalInventory.getStackInSlot(0).isEmpty()) {
 				// Get the baked model and check if it wants to render the item in 3d or 2d.
-				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(tileEntity.internalInventory.getStackInSlot(0), null, null);
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(tileEntity.internalInventory.getStackInSlot(0), null, null, combinedOverlay);
 				boolean render3D = itemModel.isGui3d();
 
 				int forwardBlockLightLevel = LevelRenderer.getLightColor(tileEntity.getLevel(), tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));

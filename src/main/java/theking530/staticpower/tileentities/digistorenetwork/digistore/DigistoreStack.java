@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreStack {

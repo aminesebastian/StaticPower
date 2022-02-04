@@ -24,6 +24,6 @@ public class BlockSolidGenerator extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntitySolidGenerator.TYPE.create();
+		return TileEntitySolidGenerator.TYPE.create(pos, state);
 	}
 }

@@ -24,6 +24,6 @@ public class BlockMixer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityMixer.TYPE.create();
+		return TileEntityMixer.TYPE.create(pos, state);
 	}
 }

@@ -24,6 +24,6 @@ public class BlockLathe extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityLathe.TYPE.create();
+		return TileEntityLathe.TYPE.create(pos, state);
 	}
 }

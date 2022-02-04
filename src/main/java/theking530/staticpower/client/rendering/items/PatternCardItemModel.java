@@ -37,7 +37,7 @@ public class PatternCardItemModel implements BakedModel {
 		return new ItemOverrides() {
 			@Override
 			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
-					@Nullable LivingEntity livingEntity) {
+					@Nullable LivingEntity livingEntity, int x) {
 				// Make sure we have a valid portable battery.
 				if (!(stack.getItem() instanceof DigistorePatternCard)) {
 					return originalModel;
@@ -49,7 +49,8 @@ public class PatternCardItemModel implements BakedModel {
 						EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
 						if (pattern != null && !pattern.getOutput().isEmpty()) {
 							// Get the baked model for the recipe output.
-							return Minecraft.getInstance().getItemRenderer().getModel(pattern.getOutput(), world, livingEntity);
+							return Minecraft.getInstance().getItemRenderer().getModel(pattern.getOutput(), world,
+									livingEntity, x);
 						}
 					}
 					return encodedModel;

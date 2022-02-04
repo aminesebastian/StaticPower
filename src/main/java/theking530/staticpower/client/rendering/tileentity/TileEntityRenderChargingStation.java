@@ -1,17 +1,17 @@
 package theking530.staticpower.client.rendering.tileentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.LevelRenderer;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.BlockPos;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -21,8 +21,8 @@ import theking530.staticpower.tileentities.powered.chargingstation.TileEntityCha
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderChargingStation extends StaticPowerTileEntitySpecialRenderer<TileEntityChargingStation> {
 
-	public TileEntityRenderChargingStation(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderChargingStation(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class TileEntityRenderChargingStation extends StaticPowerTileEntitySpecia
 			if (!stack.isEmpty()) {
 				// Get the baked model and check if it wants to render the item in 3d or 2d.
 				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(stack, null,
-						null);
+						null, combinedOverlay);
 				boolean render3D = itemModel.isGui3d();
 
 				if (render3D) {

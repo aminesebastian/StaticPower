@@ -1,16 +1,16 @@
 package theking530.staticpower.client.rendering.tileentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.core.Direction;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -30,8 +30,8 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 	protected static final Vector3D BLOCK_RENDER_SCALE = new Vector3D(0.3f, 0.3f, 0.3f);
 	protected static final Vector3D ITEM_RENDER_SCALE = new Vector3D(0.25f, 0.25f, 0.25f);
 
-	public AbstractCableTileEntityRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public AbstractCableTileEntityRenderer(BlockEntityRendererProvider.Context context) {
+		super(context);
 		this.shouldPreRotateTowardsFacingDirection = false;
 	}
 
@@ -49,7 +49,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		float renderRotation = packet.getRenderRotation(partialTicks);
 
 		// Get the baked model and check if it wants to render the item in 3d or 2d.
-		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(packet.getContainedItem(), null, null);
+		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(packet.getContainedItem(), null, null, combinedOverlay);
 		boolean render3D = itemModel.isGui3d();
 
 		// Determine which scale to use when drawing.

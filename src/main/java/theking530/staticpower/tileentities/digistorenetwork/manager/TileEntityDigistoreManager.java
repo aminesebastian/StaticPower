@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.manager;
 
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -13,7 +13,7 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityDigistoreManager(), ModBlocks.DigistoreManager);
 
 	public static final int ENERGY_STORAGE = 1000000;
 

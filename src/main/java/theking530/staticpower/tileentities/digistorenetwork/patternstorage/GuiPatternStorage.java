@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.digistorenetwork.patternstorage;
 
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.utilities.MetricConverter;

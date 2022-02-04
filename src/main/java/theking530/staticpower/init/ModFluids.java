@@ -1,7 +1,7 @@
 package theking530.staticpower.init;
 
-import net.minecraft.world.item.Items;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.Items;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;

@@ -59,7 +59,7 @@ public class BlockConveyorSupplier extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityConveyorSupplier.TYPE.create();
+		return TileEntityConveyorSupplier.TYPE.create(pos, state);
 	}
 
 	@Override

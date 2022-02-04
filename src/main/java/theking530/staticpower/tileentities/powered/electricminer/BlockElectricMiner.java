@@ -24,6 +24,6 @@ public class BlockElectricMiner extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityElectricMiner.TYPE.create();
+		return TileEntityElectricMiner.TYPE.create(pos, state);
 	}
 }

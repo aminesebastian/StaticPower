@@ -1,22 +1,20 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import java.util.Random;
-
 import com.mojang.blaze3d.vertex.PoseStack;
-
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -43,8 +41,8 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 	 */
 	protected static BlockRenderDispatcher blockRenderer;
 
-	public TileEntityRenderTurbine(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderTurbine(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override
@@ -85,29 +83,25 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, renderingState.rotationAngle, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
-						data);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
+				
+				matrixStack.translate(0, 0.2, 0);
+				matrixStack.translate(0.5, 0, 0.5);
+				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
+				matrixStack.translate(-0.5, 0, -0.5);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
-						data);
-
-				matrixStack.translate(0, 0.2, 0);
-				matrixStack.translate(0.5, 0, 0.5);
-				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
-				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
-						data);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
 
 				matrixStack.translate(0, 0.22, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(world, model, state, pos, matrixStack, buffer.getBuffer(RenderType.solid()), false, new Random(), 42, combinedLight,
-						data);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
 
 				// Pop the matrix we pushed.
 				matrixStack.popPose();

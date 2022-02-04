@@ -9,21 +9,21 @@ import javax.annotation.Nullable;
 
 import org.apache.commons.lang3.tuple.Pair;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
@@ -34,8 +34,10 @@ import theking530.staticpower.utilities.RaytracingUtilities.AdvancedRayTraceResu
 
 public class CableBoundsCache {
 	private static final Direction[] XAxisDirectionPriority = Direction.values();
-	private static final Direction[] ZAxisDirectionPriority = new Direction[] { Direction.UP, Direction.DOWN, Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
-	private static final Direction[] YAxisDirectionPriority = new Direction[] { Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN };
+	private static final Direction[] ZAxisDirectionPriority = new Direction[] { Direction.UP, Direction.DOWN,
+			Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH };
+	private static final Direction[] YAxisDirectionPriority = new Direction[] { Direction.EAST, Direction.WEST,
+			Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN };
 
 	private VoxelShape CoreShape;
 	private final HashMap<Direction, VoxelShape> CableExtensionShapes;
@@ -61,7 +63,8 @@ public class CableBoundsCache {
 	 * @param ctx
 	 * @return
 	 */
-	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, EntityCollisionContext ctx, boolean forCollision) {
+	public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext ctx,
+			boolean forCollision) {
 		// Cache the shapes if need be.
 		if (!IsCached) {
 			// Cache the shapes
@@ -78,7 +81,8 @@ public class CableBoundsCache {
 		// Get some attributes to use in the check.
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(world, pos);
 		for (Direction dir : Direction.values()) {
-			if ((cable != null && cable.hasAttachment(dir)) || CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE
+			if ((cable != null && cable.hasAttachment(dir))
+					|| CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.CABLE
 					|| CableUtilities.getConnectionState(world, pos, dir) == CableConnectionState.TILE_ENTITY) {
 				if (!cable.isSideDisabled(dir)) {
 					output = Shapes.or(output, CableExtensionShapes.get(dir));
@@ -92,9 +96,10 @@ public class CableBoundsCache {
 		// outlines for unattached attachments to disturb collision). Don't perform an
 		// OR here, let it take in the
 		// original and modify that internally.
-		if (!forCollision) {
-			if (ctx.getEntity().isPresent() && ctx.getEntity().get() instanceof Player) {
-				output = addAttachmentOutline(pos, (Player) ctx.getEntity().get(), ctx, output, forCollision);
+		if (!forCollision && ctx instanceof EntityCollisionContext) {
+			EntityCollisionContext entityCtx = (EntityCollisionContext) ctx;
+			if (entityCtx.getEntity().isPresent() && entityCtx.getEntity().get() instanceof Player) {
+				output = addAttachmentOutline(pos, (Player) entityCtx.getEntity().get(), ctx, output, forCollision);
 			}
 		}
 
@@ -114,7 +119,8 @@ public class CableBoundsCache {
 		Pair<Vec3, Vec3> vec = RaytracingUtilities.getVectors(entity);
 
 		// Get the cable attachment.
-		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getCommandSenderWorld(), pos);
+		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getCommandSenderWorld(),
+				pos);
 
 		// Leave early if we dont find a cable there (this is in case the block starts
 		// rendering before the TE is validated).
@@ -150,29 +156,39 @@ public class CableBoundsCache {
 			// Then check for a held cable cover or held cable attachment.
 			if (!entity.getMainHandItem().isEmpty()) {
 				if (entity.getMainHandItem().getItem() instanceof CableCover) {
-					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, entity.getMainHandItem(), dir), dir, CableBoundsHoverType.HELD_COVER));
+					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+							entity.getMainHandItem(), dir), dir, CableBoundsHoverType.HELD_COVER));
 				}
-				if (entity.getMainHandItem().getItem() instanceof AbstractCableAttachment && CableUtilities.getConnectionState(entity.level, pos, dir) != CableConnectionState.CABLE) {
-					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, entity.getMainHandItem(), dir), dir,
+				if (entity.getMainHandItem().getItem() instanceof AbstractCableAttachment
+						&& CableUtilities.getConnectionState(entity.level, pos, dir) != CableConnectionState.CABLE) {
+					bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+							entity.getMainHandItem(), dir), dir, CableBoundsHoverType.HELD_ATTACHMENT));
+					bounds.add(new CableHoverCheckRequest(CableExtensionShapes.get(dir), dir,
 							CableBoundsHoverType.HELD_ATTACHMENT));
-					bounds.add(new CableHoverCheckRequest(CableExtensionShapes.get(dir), dir, CableBoundsHoverType.HELD_ATTACHMENT));
 				}
 			}
 
 			// Then put in the bounds for an attached attachment.
 			if (!cable.getAttachment(dir).isEmpty()) {
-				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getAttachment(dir), dir), dir, CableBoundsHoverType.ATTACHED_ATTACHMENT));
+				bounds.add(new CableHoverCheckRequest(
+						getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getAttachment(dir), dir),
+						dir, CableBoundsHoverType.ATTACHED_ATTACHMENT));
 			}
 
 			// Then put in the bounds for an attached cover.
 			if (!cable.getCover(dir).isEmpty()) {
-				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getCover(dir), dir), dir, CableBoundsHoverType.ATTACHED_COVER));
+				bounds.add(new CableHoverCheckRequest(
+						getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getCover(dir), dir), dir,
+						CableBoundsHoverType.ATTACHED_COVER));
 			}
 
 			// If the side has neither an attachment, nor a cover, but is still attached to
 			// a tile entity, check the default attachment.
-			if (CableUtilities.getConnectionState(entity.level, pos, dir) == CableConnectionState.TILE_ENTITY && cable.getCover(dir).isEmpty() && cable.getAttachment(dir).isEmpty()) {
-				bounds.add(new CableHoverCheckRequest(getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, ItemStack.EMPTY, dir), dir, CableBoundsHoverType.DEFAULT_ATTACHMENT));
+			if (CableUtilities.getConnectionState(entity.level, pos, dir) == CableConnectionState.TILE_ENTITY
+					&& cable.getCover(dir).isEmpty() && cable.getAttachment(dir).isEmpty()) {
+				bounds.add(new CableHoverCheckRequest(
+						getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, ItemStack.EMPTY, dir), dir,
+						CableBoundsHoverType.DEFAULT_ATTACHMENT));
 			}
 
 			// Finally, put the bounds for the cable. Include the bounds for the default
@@ -188,7 +204,8 @@ public class CableBoundsCache {
 		bounds.forEach(x -> rawBounds.add(x.bounds.bounds()));
 
 		// Raytrace against all 6 attachment bounds.
-		AdvancedRayTraceResult<BlockHitResult> result = RaytracingUtilities.collisionRayTrace(pos, vec.getLeft(), vec.getRight(), rawBounds);
+		AdvancedRayTraceResult<BlockHitResult> result = RaytracingUtilities.collisionRayTrace(pos, vec.getLeft(),
+				vec.getRight(), rawBounds);
 
 		// Check to see which direction's bounds we hit and return it.
 		if (result != null) {
@@ -228,7 +245,8 @@ public class CableBoundsCache {
 		CableExtensionShapes.put(Direction.DOWN, Block.box(coreMin, 0.0D, coreMin, coreMax, coreMin, coreMax));
 	}
 
-	protected VoxelShape getAttachmentShapeForSide(BlockGetter world, BlockPos pos, @Nullable ItemStack attachment, Direction side) {
+	protected VoxelShape getAttachmentShapeForSide(BlockGetter world, BlockPos pos, @Nullable ItemStack attachment,
+			Direction side) {
 		double attachmentMin = 8.0D - getDefaultAttachmentBounds(world, pos, side).getX();
 		double attachmentMax = 8.0D + getDefaultAttachmentBounds(world, pos, side).getX();
 		double attachmentDepth = getDefaultAttachmentBounds(world, pos, side).getZ();
@@ -250,13 +268,16 @@ public class CableBoundsCache {
 		case NORTH:
 			return Block.box(attachmentMin, attachmentMin, 0.0D, attachmentMax, attachmentMax, attachmentDepth);
 		case SOUTH:
-			return Block.box(attachmentMin, attachmentMin, 16.0D - attachmentDepth, attachmentMax, attachmentMax, 16.0D);
+			return Block.box(attachmentMin, attachmentMin, 16.0D - attachmentDepth, attachmentMax, attachmentMax,
+					16.0D);
 		case EAST:
-			return Block.box(16.0D - attachmentDepth, attachmentMin, attachmentMin, 16.0D, attachmentMax, attachmentMax);
+			return Block.box(16.0D - attachmentDepth, attachmentMin, attachmentMin, 16.0D, attachmentMax,
+					attachmentMax);
 		case WEST:
 			return Block.box(0.0D, attachmentMin, attachmentMin, attachmentDepth, attachmentMax, attachmentMax);
 		case UP:
-			return Block.box(attachmentMin, 16.0D - attachmentDepth, attachmentMin, attachmentMax, 16.0D, attachmentMax);
+			return Block.box(attachmentMin, 16.0D - attachmentDepth, attachmentMin, attachmentMax, 16.0D,
+					attachmentMax);
 		case DOWN:
 			return Block.box(attachmentMin, 0.0D, attachmentMin, attachmentMax, attachmentDepth, attachmentMax);
 		}
@@ -277,12 +298,14 @@ public class CableBoundsCache {
 	 * @param shape  The shape to add the outline too.
 	 * @return
 	 */
-	protected VoxelShape addAttachmentOutline(BlockPos pos, Player entity, CollisionContext context, VoxelShape shape, boolean forCollision) {
+	protected VoxelShape addAttachmentOutline(BlockPos pos, Player entity, CollisionContext context, VoxelShape shape,
+			boolean forCollision) {
 		// Gets the hovered result.
 		CableBoundsHoverResult hoverResult = getHoveredAttachmentOrCover(pos, entity);
 
 		// Get some attributes to use in the check.
-		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getCommandSenderWorld(), pos);
+		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getCommandSenderWorld(),
+				pos);
 
 		// Cover us just in case the cable renders before the te is ready.
 		if (cable == null) {
@@ -297,21 +320,25 @@ public class CableBoundsCache {
 			if (!cable.isSideDisabled(hoveredDirection)) {
 				switch (hoverResult.type) {
 				case ATTACHED_COVER:
-					shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getCover(hoveredDirection), hoveredDirection));
+					shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+							cable.getCover(hoveredDirection), hoveredDirection));
 					break;
 				case ATTACHED_ATTACHMENT:
-					shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getAttachment(hoveredDirection), hoveredDirection));
+					shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+							cable.getAttachment(hoveredDirection), hoveredDirection));
 					break;
 				case HELD_COVER:
 					// Don't add for held items when checking for collision.
 					if (!forCollision) {
-						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, entity.getMainHandItem(), hoveredDirection));
+						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+								entity.getMainHandItem(), hoveredDirection));
 					}
 					break;
 				case HELD_ATTACHMENT:
 					// Don't add for held items when checking for collision.
 					if (!forCollision) {
-						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, entity.getMainHandItem(), hoveredDirection));
+						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+								entity.getMainHandItem(), hoveredDirection));
 					}
 					break;
 				default:
@@ -321,7 +348,8 @@ public class CableBoundsCache {
 				}
 
 				// Also include the extension shape if required.
-				if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY || cable.hasAttachment(hoveredDirection)) {
+				if (cable.getConnectionState(hoveredDirection) == CableConnectionState.TILE_ENTITY
+						|| cable.hasAttachment(hoveredDirection)) {
 					shape = Shapes.or(shape, CableExtensionShapes.get(hoveredDirection));
 				}
 			}
@@ -329,10 +357,13 @@ public class CableBoundsCache {
 			for (Direction dir : Direction.values()) {
 				if (!cable.isSideDisabled(dir)) {
 					if (cable.hasCover(dir)) {
-						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getCover(dir), dir));
+						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+								cable.getCover(dir), dir));
 					} else if (cable.hasAttachment(dir)) {
-						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getAttachment(dir), dir));
-					} else if (cable.getConnectionState(dir) == CableConnectionState.TILE_ENTITY && !cable.hasAttachment(dir)) {
+						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos,
+								cable.getAttachment(dir), dir));
+					} else if (cable.getConnectionState(dir) == CableConnectionState.TILE_ENTITY
+							&& !cable.hasAttachment(dir)) {
 						shape = Shapes.or(shape, getAttachmentShapeForSide(cable.getWorld(), pos, null, dir));
 					}
 				}

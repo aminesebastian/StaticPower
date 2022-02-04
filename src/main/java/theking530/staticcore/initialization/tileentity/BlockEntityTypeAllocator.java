@@ -5,8 +5,7 @@ import java.util.function.Function;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,6 +14,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
+import theking530.staticcore.utilities.TriFunction;
+import theking530.staticpower.client.rendering.tileentity.StaticPowerTileEntitySpecialRenderer;
+import theking530.staticpower.tileentities.TileEntityBase;
 
 /**
  * Pre-registers a {@link TileEntity} for initialization through the registry
@@ -22,17 +24,18 @@ import net.minecraftforge.event.RegistryEvent;
  * {@link TileEntity} and {@link Block} list combination. The registry name for
  * the tile entity type will be the registry name of the first provided block.
  */
-public class BlockEntityTypeAllocator<T extends BlockEntity> {
+public class BlockEntityTypeAllocator<T extends TileEntityBase> {
 	protected static final Logger LOGGER = LogManager.getLogger("StaticCore");
 	@OnlyIn(Dist.CLIENT)
-	public Function<BlockEntityRenderDispatcher, ? extends BlockEntityRenderer<T>> rendererFactory;
+	public BlockEntityRendererProvider<T> rendererFactory;
 
-	public final Function<BlockEntityTypeAllocator<T>, T> factory;
+	public final TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory;
 	public final Block[] blocks;
 	protected BlockEntityType<T> type;
 	private boolean registered;
 
-	public BlockEntityTypeAllocator(Function<BlockEntityTypeAllocator<T>, T> factory, Block... blocks) {
+	public BlockEntityTypeAllocator(TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory,
+			Block... blocks) {
 		this.factory = factory;
 		this.blocks = blocks;
 		this.registered = false;
@@ -44,13 +47,14 @@ public class BlockEntityTypeAllocator<T extends BlockEntity> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public BlockEntityTypeAllocator<T> setTileEntitySpecialRenderer(Function<BlockEntityRenderDispatcher, ? extends BlockEntityRenderer<T>> rendererFactory) {
-		this.rendererFactory = rendererFactory;
+	public BlockEntityTypeAllocator<T> setTileEntitySpecialRenderer(
+			Function<BlockEntityRendererProvider.Context, StaticPowerTileEntitySpecialRenderer<T>> supplier) {
+		this.rendererFactory = (context) -> supplier.apply(context);
 		return this;
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public Function<BlockEntityRenderDispatcher, ? extends BlockEntityRenderer<T>> getTileEntitySpecialRenderer() {
+	public BlockEntityRendererProvider<T> getTileEntitySpecialRenderer() {
 		return rendererFactory;
 	}
 

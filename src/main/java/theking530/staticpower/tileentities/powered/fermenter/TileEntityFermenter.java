@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFermenter extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityFermenter> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
+	public static final BlockEntityTypeAllocator<TileEntityFermenter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFermenter(), ModBlocks.Fermenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

@@ -1,11 +1,11 @@
 package theking530.staticpower.cables;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 

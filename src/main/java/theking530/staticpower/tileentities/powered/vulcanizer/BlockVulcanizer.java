@@ -24,6 +24,6 @@ public class BlockVulcanizer extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityVulcanizer.TYPE.create();
+		return TileEntityVulcanizer.TYPE.create(pos, state);
 	}
 }

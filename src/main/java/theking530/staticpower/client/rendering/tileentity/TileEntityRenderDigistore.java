@@ -3,7 +3,7 @@ package theking530.staticpower.client.rendering.tileentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -20,8 +20,8 @@ import theking530.staticpower.utilities.MetricConverter;
 public class TileEntityRenderDigistore extends StaticPowerTileEntitySpecialRenderer<TileEntityDigistore> {
 	private static final float ICON_SIZE = 0.09f;
 
-	public TileEntityRenderDigistore(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderDigistore(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

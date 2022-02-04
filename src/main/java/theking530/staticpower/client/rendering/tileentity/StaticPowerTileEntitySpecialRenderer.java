@@ -3,17 +3,17 @@ package theking530.staticpower.client.rendering.tileentity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import com.mojang.blaze3d.platform.Lighting;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.core.Direction;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -26,9 +26,11 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	protected static final float TEXEL = (1.0f / 16.0f);
 	protected ItemRenderer ItemRenderer;
 	protected boolean shouldPreRotateTowardsFacingDirection;
+	protected BlockEntityRenderDispatcher renderer;
 
-	public StaticPowerTileEntitySpecialRenderer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public StaticPowerTileEntitySpecialRenderer(BlockEntityRendererProvider.Context context) {
+		super();
+		renderer = context.getBlockEntityRenderDispatcher();
 		shouldPreRotateTowardsFacingDirection = true;
 	}
 
@@ -37,7 +39,8 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 * underlying block.
 	 */
 	@Override
-	public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLight, int combinedOverlay) {
 		BlockPos tileEntityPos = tileEntity.getBlockPos();
 		ItemRenderer = Minecraft.getInstance().getItemRenderer();
 
@@ -57,9 +60,11 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 			}
 
 			// Render the tile entity.
-			renderTileEntityBase(tileEntity, tileEntityPos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			renderTileEntityBase(tileEntity, tileEntityPos, partialTicks, matrixStack, buffer, combinedLight,
+					combinedOverlay);
 		} catch (Exception e) {
-			LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s.", tileEntity), e);
+			LOGGER.error(String.format("An error occured when attempting to draw tile entity base: %1$s.", tileEntity),
+					e);
 		}
 
 		matrixStack.popPose();
@@ -84,5 +89,6 @@ public abstract class StaticPowerTileEntitySpecialRenderer<T extends TileEntityB
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	protected abstract void renderTileEntityBase(T tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay);
+	protected abstract void renderTileEntityBase(T tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack,
+			MultiBufferSource buffer, int combinedLight, int combinedOverlay);
 }

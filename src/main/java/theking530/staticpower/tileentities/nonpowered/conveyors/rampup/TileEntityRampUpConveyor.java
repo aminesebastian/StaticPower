@@ -13,7 +13,7 @@ import theking530.staticpower.tileentities.components.control.ConveyorMotionComp
 
 public class TileEntityRampUpConveyor extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityRampUpConveyor(), ModBlocks.RampUpConveyor);
+	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityRampUpConveyor(), ModBlocks.RampUpConveyor);
 
 	protected final ConveyorMotionComponent conveyor;
 

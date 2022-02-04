@@ -1,20 +1,18 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticpower.client.rendering.blocks.DigistoreModel;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
-
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock.HasGuiType;
 
 public class BlockDigistore extends BaseDigistoreBlock {
 
@@ -29,7 +27,7 @@ public class BlockDigistore extends BaseDigistoreBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityDigistore.TYPE.create();
+		return TileEntityDigistore.TYPE.create(pos, state);
 	}
 	@Override
 	public boolean hasModelOverride(BlockState state) {

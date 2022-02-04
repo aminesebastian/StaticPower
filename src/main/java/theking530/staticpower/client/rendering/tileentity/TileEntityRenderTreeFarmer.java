@@ -3,7 +3,7 @@ package theking530.staticpower.client.rendering.tileentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -15,8 +15,8 @@ import theking530.staticpower.tileentities.powered.treefarmer.TileEntityTreeFarm
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderTreeFarmer extends StaticPowerTileEntitySpecialRenderer<TileEntityTreeFarm> {
 
-	public TileEntityRenderTreeFarmer(BlockEntityRenderDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderTreeFarmer(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override

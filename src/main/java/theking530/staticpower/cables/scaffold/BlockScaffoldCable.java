@@ -2,10 +2,10 @@ package theking530.staticpower.cables.scaffold;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -32,6 +32,6 @@ public class BlockScaffoldCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityScaffoldCable.TYPE.create();
+		return TileEntityScaffoldCable.TYPE.create(pos, state);
 	}
 }

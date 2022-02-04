@@ -1,9 +1,9 @@
 package theking530.staticpower.container;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 
 public abstract class StaticPowerItemContainer<T extends Item> extends StaticPowerContainer {

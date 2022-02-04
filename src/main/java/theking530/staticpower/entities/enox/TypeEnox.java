@@ -8,7 +8,6 @@ import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
@@ -23,7 +22,7 @@ public class TypeEnox extends AbstractSpawnableMobType<EntityEnox> {
 		DefaultAttributes.put(ModEntities.Enox.getType(), EntityEnox.getAttributes().build());
 	}
 
-	public void registerRenderers(FMLClientSetupEvent event) {
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
 		RenderingRegistry.registerEntityRenderingHandler(getType(), RendererEnox::new);
 	}
 

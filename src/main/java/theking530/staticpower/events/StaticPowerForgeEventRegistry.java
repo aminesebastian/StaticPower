@@ -3,25 +3,25 @@ package theking530.staticpower.events;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.DrawHighlightEvent;
+import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -36,8 +36,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.event.server.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.fmlserverevents.FMLServerAboutToStartEvent;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
@@ -73,7 +73,7 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void onServerAboutToStart(FMLServerAboutToStartEvent serverStarted) {
-		ReloadableResourceManager resourceManager = (ReloadableResourceManager) serverStarted.getServer().getDataPackRegistries().getResourceManager();
+		ReloadableResourceManager resourceManager = (ReloadableResourceManager) serverStarted.getServer().getResourceManager();
 		resourceManager.registerReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
 		StaticPower.LOGGER.info("Server resource reload listener created!");
@@ -87,7 +87,7 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void renderBlockHighlights(DrawHighlightEvent.HighlightBlock event) {
+	public static void renderBlockHighlights(DrawSelectionEvent.HighlightBlock event) {
 		StaticPowerClientEventHandler.renderMultiHarvestBoundingBoxes(event);
 	}
 

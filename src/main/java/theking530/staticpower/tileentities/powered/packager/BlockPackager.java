@@ -24,6 +24,6 @@ public class BlockPackager extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityPackager.TYPE.create();
+		return TileEntityPackager.TYPE.create(pos, state);
 	}
 }

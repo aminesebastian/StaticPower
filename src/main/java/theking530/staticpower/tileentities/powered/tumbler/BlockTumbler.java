@@ -24,6 +24,6 @@ public class BlockTumbler extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityTumbler.TYPE.create();
+		return TileEntityTumbler.TYPE.create(pos, state);
 	}
 }

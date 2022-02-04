@@ -31,7 +31,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityTumbler extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityTumbler> TYPE = new BlockEntityTypeAllocator<>((type) -> new TileEntityTumbler(), ModBlocks.Tumbler);
+	public static final BlockEntityTypeAllocator<TileEntityTumbler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTumbler(), ModBlocks.Tumbler);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
