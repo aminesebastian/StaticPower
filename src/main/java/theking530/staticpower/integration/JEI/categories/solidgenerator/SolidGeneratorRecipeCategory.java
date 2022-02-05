@@ -65,8 +65,8 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -109,7 +109,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	public List<Component> getTooltipStrings(SolidFuelRecipe recipe, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			int burnTime = ForgeHooks.getBurnTime(recipe.getFuel());
+			int burnTime = ForgeHooks.getBurnTime(recipe.getFuel(), null);
 			output.add(new TextComponent("Generates: ").append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get() * burnTime)));
 		}
 

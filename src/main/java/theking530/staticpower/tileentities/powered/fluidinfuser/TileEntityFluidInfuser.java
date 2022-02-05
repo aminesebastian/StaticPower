@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.fluidinfuser;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -34,7 +36,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFluidInfuser extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<TileEntityFluidInfuser>((type) -> new TileEntityFluidInfuser(),
+	public static final BlockEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<TileEntityFluidInfuser>((type, pos, state) -> new TileEntityFluidInfuser(pos, state),
 			ModBlocks.FluidInfuser);
 
 	static {
@@ -52,8 +54,8 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 	public final RecipeProcessingComponent<FluidInfusionRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
-	public TileEntityFluidInfuser() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityFluidInfuser(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Get the tier object.
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.BASIC);

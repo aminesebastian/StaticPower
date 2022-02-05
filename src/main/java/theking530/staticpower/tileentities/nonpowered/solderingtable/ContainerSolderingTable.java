@@ -21,7 +21,8 @@ import theking530.staticpower.utilities.ItemUtilities;
 
 public class ContainerSolderingTable extends AbstractContainerSolderingTable<TileEntitySolderingTable> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerSolderingTable, GuiSolderingTable> TYPE = new ContainerTypeAllocator<>("soldering_table", ContainerSolderingTable::new);
+	public static final ContainerTypeAllocator<ContainerSolderingTable, GuiSolderingTable> TYPE = new ContainerTypeAllocator<>(
+			"soldering_table", ContainerSolderingTable::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiSolderingTable::new);
@@ -68,38 +69,39 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 	}
 
 	@Override
-	public ItemStack clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
+	public void clicked(int slotId, int dragType, ClickType clickTypeIn, Player player) {
 		// If we clicked on the output slot, do the crafting.
 		if (slotId == 10) {
 			// Get the recipe. If we dont currently have a valid recipe, just return an
 			// empty itemstack.
 			SolderingRecipe recipe = getTileEntity().getCurrentRecipe().orElse(null);
 			if (recipe == null || !getTileEntity().hasRequiredItems()) {
-				return ItemStack.EMPTY;
+				return;
 			}
 
 			if (clickTypeIn == ClickType.PICKUP) {
 				// If the player clicked on the output and their held item does not stack with
 				// the output, do nothing and return an empty itemstack.
-				ItemStack heldItem = getPlayerInventory().getCarried();
+				ItemStack heldItem = getCarried();
 				if (!heldItem.isEmpty() && !ItemUtilities.areItemStacksStackable(heldItem, recipe.getResultItem())) {
-					return ItemStack.EMPTY;
+					return;
 				}
 
 				// If crafting the item would result in a stack larger than the max stack size,
 				// do nothing.
-				if (recipe.getResultItem().getCount() + heldItem.getCount() > recipe.getResultItem().getMaxStackSize()) {
-					return ItemStack.EMPTY;
+				if (recipe.getResultItem().getCount() + heldItem.getCount() > recipe.getResultItem()
+						.getMaxStackSize()) {
+					return;
 				}
 
 				// Craft the output.
 				ItemStack craftedResult = getTileEntity().craftItem(1);
 
 				// Update the player's held item.
-				if (getPlayerInventory().getCarried().isEmpty()) {
-					getPlayerInventory().setCarried(craftedResult);
+				if (getCarried().isEmpty()) {
+					setCarried(craftedResult);
 				} else {
-					getPlayerInventory().getCarried().grow(craftedResult.getCount());
+					getCarried().grow(craftedResult.getCount());
 				}
 
 				// If on the server, update the held item.
@@ -113,12 +115,12 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 				// Update the output slot (do this even though we do it on tick to ensure we
 				// dont display an item when its no longer craftable).
 				updateOutputSlot();
-				return craftedResult;
 			} else if (clickTypeIn == ClickType.QUICK_MOVE) {
 				// Craft the output.
 				if (!getTileEntity().getLevel().isClientSide) {
 					int amount = 0;
-					while (InventoryUtilities.canFullyInsertItemIntoPlayerInventory(recipe.getResultItem().copy(), player.inventory)) {
+					while (InventoryUtilities.canFullyInsertItemIntoPlayerInventory(recipe.getResultItem().copy(),
+							player.getInventory())) {
 						ItemStack craftedResult = getTileEntity().craftItem(1);
 						player.addItem(craftedResult);
 						// Tell the slot we crafted.
@@ -132,12 +134,9 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 					System.out.println(amount);
 					((ServerPlayer) player).refreshContainer(this, this.getItems());
 				}
-				return ItemStack.EMPTY;
-			} else {
-				return ItemStack.EMPTY;
 			}
 		} else {
-			return super.clicked(slotId, dragType, clickTypeIn, player);
+			super.clicked(slotId, dragType, clickTypeIn, player);
 		}
 	}
 

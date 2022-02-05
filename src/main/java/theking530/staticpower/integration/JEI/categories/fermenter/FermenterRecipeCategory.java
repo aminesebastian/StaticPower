@@ -61,8 +61,8 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override

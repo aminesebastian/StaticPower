@@ -67,8 +67,8 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override

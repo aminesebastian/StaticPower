@@ -2,17 +2,19 @@ package theking530.staticpower.tileentities.powered.turbine;
 
 import java.util.Optional;
 
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -49,7 +51,7 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 
 public class TileEntityTurbine extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityTurbine> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTurbine(), ModBlocks.Turbine);
+	public static final BlockEntityTypeAllocator<TileEntityTurbine> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTurbine(pos, state), ModBlocks.Turbine);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -70,8 +72,8 @@ public class TileEntityTurbine extends TileEntityMachine {
 	@UpdateSerialize
 	private boolean isGenerating;
 
-	public TileEntityTurbine() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityTurbine(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 		enableFaceInteraction();
 		this.isGenerating = false;
 		this.renderingState = new TurbineRenderingState();

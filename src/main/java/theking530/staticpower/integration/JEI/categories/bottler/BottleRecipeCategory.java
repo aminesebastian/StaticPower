@@ -59,8 +59,8 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -85,8 +85,10 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		GuiDrawUtilities.drawSlot(matrixStack, 107, 36, 20, 20, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 50, 56, 1.0f, 16, 52,
+				MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(),
+				powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 72, 18, 28, 5, 0);
@@ -100,7 +102,8 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			output.add(new TextComponent("Usage: ")
-					.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get())));
+					.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.bottlerPowerUsage.get()
+							* StaticPowerConfig.SERVER.bottlerProcessingTime.get())));
 		}
 
 		return output;
@@ -134,8 +137,10 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		fluids.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
-				(int) (StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get()), true);
-		processingTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(), (int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
-				false);
+				(int) (StaticPowerConfig.SERVER.bottlerPowerUsage.get()
+						* StaticPowerConfig.SERVER.bottlerProcessingTime.get()),
+				true);
+		processingTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
+				(int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(), false);
 	}
 }

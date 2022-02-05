@@ -36,8 +36,8 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.tileentities.TileEntityBase;
 
-@SuppressWarnings("deprecation")
 public class StaticCoreRegistry {
 	protected static final Logger LOGGER = LogManager.getLogger("StaticCore");
 	protected static final List<BlockEntityTypeAllocator<? extends BlockEntity>> TILE_ENTITY_ALLOCATORS = new LinkedList<>();
@@ -175,19 +175,19 @@ public class StaticCoreRegistry {
 			for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> container : CONTAINER_ALLOCATORS) {
 				container.registerScreen();
 			}
-			LOGGER.info("Registered all Static Power container types.");	
+			LOGGER.info("Registered all Static Power container types.");
 		});
 	}
 
 	@SuppressWarnings("unchecked")
 	public static void processTileEntityTypeAllocators(
-			Consumer<BlockEntityTypeAllocator<BlockEntity>> allocatorConsumer) {
+			Consumer<BlockEntityTypeAllocator<TileEntityBase>> allocatorConsumer) {
 		// Process the allocators.
 		for (AnnotationData annotation : getAnnotationsOfType(TileEntityTypePopulator.class)) {
 			try {
 				Class<?> act = Class.forName(annotation.getClass().getName());
 				Field field = act.getField(annotation.memberName());
-				allocatorConsumer.accept((BlockEntityTypeAllocator<BlockEntity>) field.get(null));
+				allocatorConsumer.accept((BlockEntityTypeAllocator<TileEntityBase>) field.get(null));
 			} catch (Exception e) {
 				LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.",
 						annotation.memberName()), e);

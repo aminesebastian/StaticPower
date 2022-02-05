@@ -20,7 +20,8 @@ import theking530.staticpower.init.ModItems;
 
 public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerChainsaw, GuiChainsaw> TYPE = new ContainerTypeAllocator<>("chainsaw", ContainerChainsaw::new);
+	public static final ContainerTypeAllocator<ContainerChainsaw, GuiChainsaw> TYPE = new ContainerTypeAllocator<>(
+			"chainsaw", ContainerChainsaw::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiChainsaw::new);
@@ -45,26 +46,28 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 		});
 
 		// Drill Bit
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronChainsawBlade), 0.3f, inventory, 0, 80, 24) {
-			@Override
-			public void setChanged() {
-				super.setChanged();
+		this.addSlot(
+				new StaticPowerContainerSlot(new ItemStack(ModItems.IronChainsawBlade), 0.3f, inventory, 0, 80, 24) {
+					@Override
+					public void setChanged() {
+						super.setChanged();
 
-				// Update the blade.
-				int bladeSlot = getPlayerInventory().player.inventory.selected;
-				if (bladeSlot >= 0) {
-					if (!getPlayerInventory().player.level.isClientSide) {
-						ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
-						serverPlayer.slotChanged(ContainerChainsaw.this, playerHotbarStart + bladeSlot, getItemStack());
+						// Update the blade.
+						int bladeSlot = getPlayerInventory().player.getInventory().selected;
+						if (bladeSlot >= 0) {
+							if (!getPlayerInventory().player.level.isClientSide) {
+								ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
+								serverPlayer.slotChanged(ContainerChainsaw.this, playerHotbarStart + bladeSlot,
+										getItemStack());
+							}
+						}
 					}
-				}
-			}
 
-			@Override
-			public boolean mayPlace(ItemStack stack) {
-				return stack.getItem() instanceof ChainsawBlade;
-			}
-		});
+					@Override
+					public boolean mayPlace(ItemStack stack) {
+						return stack.getItem() instanceof ChainsawBlade;
+					}
+				});
 
 		// Upgrades
 //		this.addSlot(new UpgradeItemSlot(inventory, 1, 61, 38));
@@ -100,10 +103,10 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 	}
 
 	@Override
-	public ItemStack clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
+	public void clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
 		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
-			return ItemStack.EMPTY;
+			return;
 		}
-		return super.clicked(slot, dragType, clickTypeIn, player);
+		super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

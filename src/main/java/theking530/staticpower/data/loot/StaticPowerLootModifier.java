@@ -26,7 +26,8 @@ public class StaticPowerLootModifier extends LootModifier {
 	public final float chance;
 	public final ItemStack output;
 
-	public StaticPowerLootModifier(ItemStack output, int minCount, int maxCount, float chance, LootItemCondition[] conditionsIn) {
+	public StaticPowerLootModifier(ItemStack output, int minCount, int maxCount, float chance,
+			LootItemCondition[] conditionsIn) {
 		super(conditionsIn);
 		this.output = output;
 		this.minCount = minCount;
@@ -60,7 +61,7 @@ public class StaticPowerLootModifier extends LootModifier {
 			int minCount = json.getAsJsonPrimitive("minCount").getAsInt();
 			int maxCount = json.getAsJsonPrimitive("maxCount").getAsInt();
 			float chance = json.getAsJsonPrimitive("chance").getAsFloat();
-			ItemStack output = ShapedRecipe.itemFromJson(json);
+			ItemStack output = ShapedRecipe.itemStackFromJson(json);
 			return new StaticPowerLootModifier(output, minCount, maxCount, chance, conditionsIn);
 		}
 

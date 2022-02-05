@@ -20,7 +20,8 @@ import theking530.staticpower.init.ModItems;
 
 public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerMiningDrill, GuiMiningDrill> TYPE = new ContainerTypeAllocator<>("mining_drill", ContainerMiningDrill::new);
+	public static final ContainerTypeAllocator<ContainerMiningDrill, GuiMiningDrill> TYPE = new ContainerTypeAllocator<>(
+			"mining_drill", ContainerMiningDrill::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiMiningDrill::new);
@@ -51,11 +52,12 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 				super.setChanged();
 
 				// Update the drill.
-				int drillSlot = getPlayerInventory().player.inventory.selected;
+				int drillSlot = getPlayerInventory().player.getInventory().selected;
 				if (drillSlot >= 0) {
 					if (!getPlayerInventory().player.level.isClientSide) {
 						ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
-						serverPlayer.slotChanged(ContainerMiningDrill.this, playerHotbarStart + drillSlot, getItemStack());
+						serverPlayer.slotChanged(ContainerMiningDrill.this, playerHotbarStart + drillSlot,
+								getItemStack());
 					}
 				}
 			}
@@ -100,10 +102,10 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 	}
 
 	@Override
-	public ItemStack clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
+	public void clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
 		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
-			return ItemStack.EMPTY;
+			return;
 		}
-		return super.clicked(slot, dragType, clickTypeIn, player);
+		super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

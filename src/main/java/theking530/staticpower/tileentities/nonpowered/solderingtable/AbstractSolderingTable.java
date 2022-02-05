@@ -2,9 +2,11 @@ package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
 import java.util.Optional;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.api.ISolderingIron;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
@@ -22,16 +24,19 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 	public final InventoryComponent solderingIronInventory;
 	public final InventoryComponent inventory;
 
-	public AbstractSolderingTable(BlockEntityTypeAllocator<? extends AbstractSolderingTable> allocator) {
-		super(allocator, StaticPowerTiers.BASIC);
+	public AbstractSolderingTable(BlockEntityTypeAllocator<? extends AbstractSolderingTable> allocator, BlockPos pos,
+			BlockState state) {
+		super(allocator, pos, state, StaticPowerTiers.BASIC);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
-		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
-		registerComponent(solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setShiftClickPriority(100)
-				.setFilter(new ItemStackHandlerFilter() {
-					public boolean canInsertItem(int slot, ItemStack stack) {
-						return stack.getItem() instanceof ISolderingIron;
-					}
-				}));
+		registerComponent(
+				inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
+		registerComponent(
+				solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never)
+						.setShiftClickEnabled(true).setShiftClickPriority(100).setFilter(new ItemStackHandlerFilter() {
+							public boolean canInsertItem(int slot, ItemStack stack) {
+								return stack.getItem() instanceof ISolderingIron;
+							}
+						}));
 
 		// Don't drop the pattern or output slots.
 		patternInventory.setShouldDropContentsOnBreak(false);

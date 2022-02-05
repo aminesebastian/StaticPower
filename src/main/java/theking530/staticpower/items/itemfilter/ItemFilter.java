@@ -4,19 +4,19 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -29,8 +29,6 @@ import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.ItemUtilities;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class ItemFilter extends StaticPowerItem {
 	/** Indicates if we are in whitelist or blacklist modes. */
@@ -65,18 +63,19 @@ public class ItemFilter extends StaticPowerItem {
 		}
 
 		// Add the inventory.
-		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(filterTier).itemFilterSlots.get()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory(
+				"default", stack, StaticPowerConfig.getTier(filterTier).itemFilterSlots.get()));
 	}
 
 	/**
 	 * When right clicked, open the filter UI.
 	 */
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide && !player.isShiftKeyDown()) {
 			NetworkGUI.openGui((ServerPlayer) player, new ItemFilterContainerProvider(item), buff -> {
-				buff.writeInt(player.inventory.selected);
+				buff.writeInt(player.getInventory().selected);
 			});
 			return InteractionResultHolder.success(item);
 		}
@@ -160,7 +159,8 @@ public class ItemFilter extends StaticPowerItem {
 				boolean empty = true;
 				for (int i = 0; i < inv.getSlots(); i++) {
 					if (!inv.getStackInSlot(i).isEmpty()) {
-						tooltip.add(new TextComponent("Slot " + (i + 1) + ": ").append(inv.getStackInSlot(i).getHoverName()));
+						tooltip.add(new TextComponent("Slot " + (i + 1) + ": ")
+								.append(inv.getStackInSlot(i).getHoverName()));
 						empty = false;
 					}
 				}

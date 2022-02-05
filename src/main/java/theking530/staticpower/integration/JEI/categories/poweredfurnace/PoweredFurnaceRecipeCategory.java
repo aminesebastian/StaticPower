@@ -61,8 +61,8 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override

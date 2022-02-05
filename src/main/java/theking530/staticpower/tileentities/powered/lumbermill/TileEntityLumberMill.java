@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.lumbermill;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -34,7 +36,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLumberMill extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLumberMill(), ModBlocks.LumberMill);
+	public static final BlockEntityTypeAllocator<TileEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLumberMill(pos, state), ModBlocks.LumberMill);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;
@@ -47,8 +49,8 @@ public class TileEntityLumberMill extends TileEntityMachine {
 	public final RecipeProcessingComponent<LumberMillRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
-	public TileEntityLumberMill() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityLumberMill(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Get the tier.
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());

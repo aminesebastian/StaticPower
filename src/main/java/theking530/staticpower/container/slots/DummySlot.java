@@ -29,8 +29,8 @@ public class DummySlot extends Slot {
 	}
 
 	@Override
-	public ItemStack onTake(Player thePlayer, ItemStack stack) {
-		return stack;
+	public void onTake(Player thePlayer, ItemStack stack) {
+
 	}
 
 	@Override

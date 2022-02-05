@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.powered.treefarmer;
 
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.ProcessingComponentStateWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;

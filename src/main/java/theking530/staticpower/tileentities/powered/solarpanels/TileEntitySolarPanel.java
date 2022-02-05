@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.solarpanels;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -19,48 +21,56 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 public class TileEntitySolarPanel extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.BASIC), ModBlocks.SolarPanelBasic);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.BASIC),
+			ModBlocks.SolarPanelBasic);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.ADVANCED), ModBlocks.SolarPanelAdvanced);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.ADVANCED),
+			ModBlocks.SolarPanelAdvanced);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.STATIC), ModBlocks.SolarPanelStatic);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.STATIC),
+			ModBlocks.SolarPanelStatic);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.ENERGIZED), ModBlocks.SolarPanelEnergized);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.ENERGIZED),
+			ModBlocks.SolarPanelEnergized);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.LUMUM), ModBlocks.SolarPanelLumum);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.LUMUM),
+			ModBlocks.SolarPanelLumum);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator) -> new TileEntitySolarPanel(allocator, StaticPowerTiers.CREATIVE), ModBlocks.SolarPanelCreative);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.CREATIVE),
+			ModBlocks.SolarPanelCreative);
 
 	public EnergyStorageComponent energyStorage;
 	public SideConfigurationComponent sideConfiguration;
 	private final boolean isCreative;
 
-	public TileEntitySolarPanel(BlockEntityTypeAllocator<TileEntitySolarPanel> allocator, ResourceLocation tierType) {
-		super(allocator);
+	public TileEntitySolarPanel(BlockEntityTypeAllocator<TileEntitySolarPanel> allocator, BlockPos pos,
+			BlockState state, ResourceLocation tierType) {
+		super(allocator, pos, state);
 		// Set the values based on the tier.
 		StaticPowerTier tier = StaticPowerConfig.getTier(tierType);
 		isCreative = tierType == StaticPowerTiers.CREATIVE;
 
 		// Set the energy storage.
-		registerComponent(
-				energyStorage = new EnergyStorageComponent("PowerBuffer", tier.solarPanelPowerStorage.get(), tier.solarPanelPowerGeneration.get(), tier.solarPanelPowerGeneration.get()));
+		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", tier.solarPanelPowerStorage.get(),
+				tier.solarPanelPowerGeneration.get(), tier.solarPanelPowerGeneration.get()));
 
 		// Don't let the storage recieve from outside sources.
 		energyStorage.getStorage().setCanRecieve(false);
 
 		// Set the side config to only output on the bottom and disable on the rest.
-		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig", new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Disabled, MachineSideMode.Disabled,
-				MachineSideMode.Disabled, MachineSideMode.Disabled, MachineSideMode.Disabled }));
+		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig",
+				new MachineSideMode[] { MachineSideMode.Output, MachineSideMode.Disabled, MachineSideMode.Disabled,
+						MachineSideMode.Disabled, MachineSideMode.Disabled, MachineSideMode.Disabled }));
 
 		// Set the distribution component.
 		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage.getStorage()));
@@ -77,7 +87,8 @@ public class TileEntitySolarPanel extends TileEntityBase {
 	public void generateRF() {
 		if (isGenerating() && energyStorage.canAcceptPower(1)) {
 			if (energyStorage.getStorage().getStoredPower() < energyStorage.getStorage().getCapacity()) {
-				long generateAmount = getLevel().isRaining() ? energyStorage.getStorage().getMaxReceive() / 2 : energyStorage.getStorage().getMaxReceive();
+				long generateAmount = getLevel().isRaining() ? energyStorage.getStorage().getMaxReceive() / 2
+						: energyStorage.getStorage().getMaxReceive();
 				energyStorage.getStorage().setCanRecieve(true);
 				energyStorage.getStorage().receivePower(generateAmount, false);
 				energyStorage.getStorage().setCanRecieve(false);

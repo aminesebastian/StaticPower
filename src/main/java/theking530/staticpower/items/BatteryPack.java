@@ -94,9 +94,9 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 					List<PowerEnergyInterface> items = new ArrayList<PowerEnergyInterface>();
 
 					// Iterate through the inventory.
-					for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+					for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 						// Get the stack in the slot. Skip if its empty.
-						ItemStack inventoryStack = player.inventory.getItem(i);
+						ItemStack inventoryStack = player.getInventory().getItem(i);
 						if (inventoryStack.isEmpty() || inventoryStack == stack || inventoryStack.getItem() instanceof BatteryPack) {
 							continue;
 						}

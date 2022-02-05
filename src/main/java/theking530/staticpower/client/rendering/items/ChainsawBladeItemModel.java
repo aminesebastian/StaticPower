@@ -44,7 +44,8 @@ public class ChainsawBladeItemModel implements BakedModel {
 	public ItemOverrides getOverrides() {
 		return new ItemOverrides() {
 			@Override
-			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world, @Nullable LivingEntity livingEntity) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
+					@Nullable LivingEntity livingEntity, int x) {
 				return new ChainsawBladeWithLayers(stack, baseChainsawBlade);
 			}
 		};
@@ -94,7 +95,8 @@ public class ChainsawBladeItemModel implements BakedModel {
 		}
 
 		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand,
+				IModelData data) {
 			// If the side is null, do nothing.
 			if (side != null) {
 				return Collections.emptyList();
@@ -105,7 +107,8 @@ public class ChainsawBladeItemModel implements BakedModel {
 			output.addAll(BaseModel.getQuads(state, side, rand, data));
 
 			// Attempt to get the attributable capability. Return early if it fails.
-			IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
+			IAttributable attributable = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY)
+					.orElse(null);
 			if (attributable == null) {
 				return output;
 			}
@@ -114,9 +117,10 @@ public class ChainsawBladeItemModel implements BakedModel {
 			ChainsawBlade bit = (ChainsawBlade) stack.getItem();
 
 			// Add all the quads.
-			List<BakedQuad> layers = bit.getRenderLayers().getOrderedRenderQuads(stack, attributable, state, side, rand, data);
+			List<BakedQuad> layers = bit.getRenderLayers().getOrderedRenderQuads(stack, attributable, state, side, rand,
+					data);
 			output.addAll(layers);
-			
+
 			return output;
 		}
 
@@ -157,7 +161,8 @@ public class ChainsawBladeItemModel implements BakedModel {
 			// Otherwise, return the particle texture for the base model.
 			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
 			if (inv != null && !inv.getStackInSlot(0).isEmpty()) {
-				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inv.getStackInSlot(0), Minecraft.getInstance().level, null);
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inv.getStackInSlot(0),
+						Minecraft.getInstance().level, null, 0);
 				return itemModel.getParticleIcon();
 			}
 			return BaseModel.getParticleIcon();

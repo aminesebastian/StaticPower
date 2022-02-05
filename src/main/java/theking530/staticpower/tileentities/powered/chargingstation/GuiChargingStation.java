@@ -2,9 +2,9 @@ package theking530.staticpower.tileentities.powered.chargingstation;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Items;
-import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;

@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.centrifuge;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -32,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCentrifuge extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
+	public static final BlockEntityTypeAllocator<TileEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCentrifuge(pos, state), ModBlocks.Centrifuge);
 
 	public final InventoryComponent inputInventory;
 
@@ -52,8 +54,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@UpdateSerialize
 	private long centrifugeMotorPowerCost;
 
-	public TileEntityCentrifuge() {
-		super(TYPE, StaticPowerTiers.ADVANCED);
+	public TileEntityCentrifuge(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
 		// Initialize the current speed.
 		currentSpeed = 0;
 

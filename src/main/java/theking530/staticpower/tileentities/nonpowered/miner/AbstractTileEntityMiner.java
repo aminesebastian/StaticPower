@@ -52,23 +52,27 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	private final List<BlockPos> blocks;
 	private int currentBlockIndex;
 
-	public AbstractTileEntityMiner(BlockEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator) {
-		super(allocator);
+	public AbstractTileEntityMiner(BlockEntityTypeAllocator<? extends AbstractTileEntityMiner> allocator, BlockPos pos,
+			BlockState state) {
+		super(allocator, pos, state);
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return stack.getItem() instanceof DrillBit;
-			}
-		}));
+		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never)
+				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return stack.getItem() instanceof DrillBit;
+					}
+				}));
 
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
-		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::upgradeInventoryChanged));
-
 		registerComponent(
-				processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess, this::processingCompleted, true));
+				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
+						.setModifiedCallback(this::upgradeInventoryChanged));
+
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
+				getProcessingTime(), this::canProcess, this::canProcess, this::processingCompleted, true));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setProcessingPowerUsage(getFuelUsage());
@@ -77,8 +81,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
 		// Add the heat storage and the upgrade inventory to the heat component.
-		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", 350.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 350.0f, 1.0f)
+				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
@@ -98,7 +102,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			if (!InventoryUtilities.isInventoryEmpty(internalInventory)) {
 				for (int i = 0; i < internalInventory.getSlots(); i++) {
 					ItemStack stackInSlot = internalInventory.getStackInSlot(i);
-					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(outputInventory, stackInSlot, false);
+					ItemStack remaining = InventoryUtilities.insertItemIntoInventory(outputInventory, stackInSlot,
+							false);
 					if (remaining.getCount() != stackInSlot.getCount()) {
 						internalInventory.extractItem(i, stackInSlot.getCount() - remaining.getCount(), false);
 					}
@@ -112,7 +117,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
-				miningSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.2f, 0.5f, getBlockPos(), 64);
+				miningSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(),
+						SoundSource.BLOCKS, 0.2f, 0.5f, getBlockPos(), 64);
 			} else {
 				miningSoundComponent.stopPlayingSound();
 			}
@@ -120,7 +126,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			if (processingComponent.isPerformingWork()) {
 				if (SDMath.diceRoll(0.5)) {
 					BlockPos minedPos = getCurrentlyTargetedBlockPos();
-					getLevel().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f, minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
+					getLevel().addParticle(ParticleTypes.POOF, minedPos.getX() + 0.5f, minedPos.getY() + 0.5f,
+							minedPos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
 				}
 			}
 		}
@@ -143,7 +150,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	public int getTicksRemainingUntilCompletion() {
-		return getBlocksRemaining() * processingComponent.getMaxProcessingTime() - processingComponent.getCurrentProcessingTime();
+		return getBlocksRemaining() * processingComponent.getMaxProcessingTime()
+				- processingComponent.getCurrentProcessingTime();
 	}
 
 	/**
@@ -177,7 +185,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			return ProcessingCheckState.error("Drill bit needs repair!");
 		}
 		if (!heatStorage.getStorage().canFullyAbsorbHeat(getHeatGeneration())) {
-			return ProcessingCheckState.error("Not enough heat capacity (Requires " + GuiTextUtilities.formatHeatToString(getHeatGeneration()).getString() + ")");
+			return ProcessingCheckState.error("Not enough heat capacity (Requires "
+					+ GuiTextUtilities.formatHeatToString(getHeatGeneration()).getString() + ")");
 		}
 		return ProcessingCheckState.ok();
 	}
@@ -229,8 +238,10 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// Play the sound.
-			level.playSound(null, getBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.2f, 0.75f);
-			level.playSound(null, getCurrentlyTargetedBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundSource.BLOCKS, 0.2f, 0.75f);
+			level.playSound(null, getBlockPos(), minedBlockState.getSoundType().getBreakSound(), SoundSource.BLOCKS,
+					0.2f, 0.75f);
+			level.playSound(null, getCurrentlyTargetedBlockPos(), minedBlockState.getSoundType().getBreakSound(),
+					SoundSource.BLOCKS, 0.2f, 0.75f);
 
 			// Damage the drill bit.
 			if (getDrillBit().hurt(1, level.random, null)) {
@@ -272,7 +283,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		if (shouldDraw) {
 			// If we were already drawing, remove and re-do it.
 			if (shouldDrawRadiusPreview) {
-				CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
+				CustomRenderer.removeCubeRenderer(this, "range");
 			}
 
 			// Get the radius.
@@ -281,14 +292,14 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			// Set the scale equal to the range * 2 plus 1.
 			Vector3f scale = new Vector3f((radius * 2) + 1, getBlockPos().getY() - 0.98f, (radius * 2) + 1);
 			// Shift over so we center the range around the farmer.
-			Vector3f position = new Vector3f(getTileEntity().getBlockPos().getX(), 1.0f, getTileEntity().getBlockPos().getZ());
+			Vector3f position = new Vector3f(getBlockPos().getX(), 1.0f, getBlockPos().getZ());
 			position.add(new Vector3f(-radius, 0.0f, -radius));
 
 			// Add the entry.
-			CustomRenderer.addCubeRenderer(getTileEntity(), "range", position, scale, new Color(1.0f, 0.1f, 0.2f, 0.25f));
+			CustomRenderer.addCubeRenderer(this, "range", position, scale, new Color(1.0f, 0.1f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
-			CustomRenderer.removeCubeRenderer(getTileEntity(), "range");
+			CustomRenderer.removeCubeRenderer(this, "range");
 		}
 
 		// Update the drawing value.
@@ -307,10 +318,12 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		for (int i = getBlockPos().getY() - 1; i >= 2; i--) {
 			List<BlockPos> tempList = new ArrayList<BlockPos>();
 			BlockPos startingPos = new BlockPos(getBlockPos().getX(), i, getBlockPos().getZ());
-			for (BlockPos pos : BlockPos.betweenClosed(startingPos.offset(range, 0, range), startingPos.offset(-range, 0, -range))) {
+			for (BlockPos pos : BlockPos.betweenClosed(startingPos.offset(range, 0, range),
+					startingPos.offset(-range, 0, -range))) {
 				// If the position is on the y level under the miner, and it exists on the same
 				// X or Y plane, skip it.
-				if (pos.getY() == this.getBlockPos().getY() - 1 && (pos.getX() == getBlockPos().getX() || pos.getZ() == getBlockPos().getZ())) {
+				if (pos.getY() == this.getBlockPos().getY() - 1
+						&& (pos.getX() == getBlockPos().getX() || pos.getZ() == getBlockPos().getZ())) {
 					continue;
 				}
 
@@ -350,10 +363,10 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 	}
 
 	protected boolean canMineBlock(BlockState block, BlockPos pos) {
-		if (block.getBlock().isAir(block, getLevel(), pos)) {
+		if (block.isAir()) {
 			return false;
 		}
-		if (block.hasTileEntity()) {
+		if (block.hasBlockEntity()) {
 			return false;
 		}
 		if (!block.getFluidState().isEmpty()) {
@@ -364,7 +377,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 	public BlockPos getCurrentlyTargetedBlockPos() {
 		if (currentBlockIndex == -1 || currentBlockIndex >= blocks.size()) {
-			StaticPower.LOGGER.warn(String.format("Attempting to render an invalid current block index: %1$s.", currentBlockIndex));
+			StaticPower.LOGGER.warn(
+					String.format("Attempting to render an invalid current block index: %1$s.", currentBlockIndex));
 			return new BlockPos(0, 0, 0);
 		}
 

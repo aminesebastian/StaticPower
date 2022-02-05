@@ -67,8 +67,8 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override

@@ -7,25 +7,27 @@ import java.util.Collections;
 import javax.annotation.Nullable;
 
 import mezz.jei.api.ingredients.IIngredientHelper;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.ingredients.subtypes.ISubtypeManager;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusFactory;
 import mezz.jei.api.registration.IModIngredientRegistration;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
+import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class ProbabilityItemStackHelper implements IIngredientHelper<ProbabilityItemStackOutput> {
 	private final ISubtypeManager subtypeManager;
@@ -54,15 +56,10 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 		return focus;
 	}
 
-	@Override
-	@Nullable
-	public ProbabilityItemStackOutput getMatch(Iterable<ProbabilityItemStackOutput> ingredients, ProbabilityItemStackOutput toMatch) {
-		return getMatch(ingredients, toMatch, UidContext.Ingredient);
-	}
-
 	@Nullable
 	@Override
-	public ProbabilityItemStackOutput getMatch(Iterable<ProbabilityItemStackOutput> ingredients, ProbabilityItemStackOutput toMatch, UidContext context) {
+	public ProbabilityItemStackOutput getMatch(Iterable<ProbabilityItemStackOutput> ingredients,
+			ProbabilityItemStackOutput toMatch, UidContext context) {
 		for (ProbabilityItemStackOutput stack : ingredients) {
 			if (isEquivalent(toMatch.getItem(), stack.getItem(), context)) {
 				return stack;
@@ -77,11 +74,6 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 		String displayName = displayNameTextComponent.getString();
 		JEIErrorUtilSnippet.checkNotNull(displayName, "itemStack.getDisplayName()");
 		return displayName;
-	}
-
-	@Override
-	public String getUniqueId(ProbabilityItemStackOutput ingredient) {
-		return getUniqueId(ingredient, UidContext.Ingredient);
 	}
 
 	@Override
@@ -234,7 +226,13 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 		return registryName.toString();
 	}
 
+	@Override
+	public IIngredientType<ProbabilityItemStackOutput> getIngredientType() {
+		return PluginJEI.PROBABILITY_ITEM_STACK;
+	}
+
 	public enum UidMode {
 		NORMAL, WILDCARD
 	}
+
 }

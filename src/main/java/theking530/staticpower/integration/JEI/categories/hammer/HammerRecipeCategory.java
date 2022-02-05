@@ -5,8 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,12 +15,13 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.Block;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
@@ -57,8 +59,8 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -87,11 +89,11 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 		// Get the buffer and render the large hammer.
 		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 21, -1);
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(location.getX(), location.getY(), 0.0F);
-		RenderSystem.scalef(2.5F, 2.5F, 2.5F);
+		RenderSystem.applyModelViewMatrix();
+		RenderSystem.getModelViewMatrix().translate(new Vector3f(location.getX(), location.getY(), 0.0F));
+//	TO-DO	RenderSystem.getModelViewMatrix().createScaleMatrix(p_27633_, p_27634_, p_27635_)(2.5F, 2.5F, 2.5F); 
 		Minecraft.getInstance().getItemRenderer().renderGuiItem(new ItemStack(ModItems.IronMetalHammer), 0, 0);
-		RenderSystem.popMatrix();
+		RenderSystem.backupProjectionMatrix();
 
 		if (!recipe.isBlockType()) {
 			GuiDrawUtilities.drawStringWithSize(matrixStack, "Requires Anvil", 89, 47, 1.0f, Color.EIGHT_BIT_GREY, false);

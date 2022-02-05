@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities.nonpowered.placer;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -13,6 +14,8 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.util.FakePlayer;
@@ -27,18 +30,18 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutomaticPlacer extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityAutomaticPlacer> TYPE = new BlockEntityTypeAllocator<TileEntityAutomaticPlacer>((type) -> new TileEntityAutomaticPlacer(),
-			ModBlocks.AutomaticPlacer);
+	public static final BlockEntityTypeAllocator<TileEntityAutomaticPlacer> TYPE = new BlockEntityTypeAllocator<TileEntityAutomaticPlacer>(
+			(type, pos, state) -> new TileEntityAutomaticPlacer(pos, state), ModBlocks.AutomaticPlacer);
 	public static final int PLACE_DELAY = 4;
 
 	public final InventoryComponent inventory;
 	public final RedstonePulseReactorComponent pulseControl;
 
-	public TileEntityAutomaticPlacer() {
-		super(TYPE);
+	public TileEntityAutomaticPlacer(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
 		registerComponent(inventory = new InventoryComponent("Inventory", 9).setShiftClickEnabled(true));
-		registerComponent(pulseControl = new RedstonePulseReactorComponent("PulseControl", PLACE_DELAY, this::place).shouldControlOnState(true)
-				.setProcessingGate(() -> !InventoryUtilities.isInventoryEmpty(inventory)));
+		registerComponent(pulseControl = new RedstonePulseReactorComponent("PulseControl", PLACE_DELAY, this::place)
+				.shouldControlOnState(true).setProcessingGate(() -> !InventoryUtilities.isInventoryEmpty(inventory)));
 	}
 
 	protected boolean place() {
@@ -47,7 +50,7 @@ public class TileEntityAutomaticPlacer extends TileEntityConfigurable {
 		if (!itemToPlace.isEmpty() && itemToPlace.getItem() instanceof BlockItem) {
 			// Check to make sure the block we're placing is not a tile entity.
 			Block blockToPlace = ((BlockItem) itemToPlace.getItem()).getBlock();
-			if (blockToPlace.hasTileEntity(blockToPlace.defaultBlockState())) {
+			if (blockToPlace instanceof EntityBlock) {
 				return false;
 			}
 
@@ -56,12 +59,14 @@ public class TileEntityAutomaticPlacer extends TileEntityConfigurable {
 			// method.
 			FakePlayer player = FakePlayerFactory.getMinecraft((ServerLevel) getLevel());
 			player.setItemInHand(InteractionHand.MAIN_HAND, itemToPlace.copy());
-			InteractionResult placementResult = itemToPlace
-					.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f), Direction.DOWN, worldPosition.relative(getFacingDirection()), false)));
+			InteractionResult placementResult = itemToPlace.useOn(
+					new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f),
+							Direction.DOWN, worldPosition.relative(getFacingDirection()), false)));
 
 			// If successful, extract the item. Otherwise, just return false.
 			if (placementResult.consumesAction()) {
-				getLevel().playSound(null, getBlockPos(), SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 0.5f, 1.0f);
+				getLevel().playSound(null, getBlockPos(), SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 0.5f,
+						1.0f);
 				inventory.extractItem(slotToUse, 1, false);
 				return true;
 			} else {

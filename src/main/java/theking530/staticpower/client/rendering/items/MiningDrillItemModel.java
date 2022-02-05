@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -39,6 +38,7 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
+import theking530.staticpower.utilities.ModelUtilities;
 
 @OnlyIn(Dist.CLIENT)
 @SuppressWarnings("deprecation")
@@ -118,7 +118,7 @@ public class MiningDrillItemModel implements BakedModel {
 				if (!handler.getStackInSlot(0).isEmpty()) {
 					drillBitEquipped.set(true);
 					BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(handler.getStackInSlot(0),
-							Minecraft.getInstance().level, null);
+							Minecraft.getInstance().level, null, 0);
 					List<BakedQuad> drillBitQuads = itemModel.getQuads(state, side, rand, data);
 					output.addAll(transformQuads(drillBitQuads, new Vector3f(0.3f, 0.3f, -0.001f),
 							new Vector3f(0.55f, 0.55f, 1.1f), new Quaternion(0, 0, 135, true)));
@@ -157,7 +157,7 @@ public class MiningDrillItemModel implements BakedModel {
 				BakedQuad durabilityBackground = FaceBaker.bakeQuad(
 						new Vector3f(-3.0f + sideOffset, -12.0f + topOffset, 8.5f),
 						new Vector3f(2.0f - sideOffset, -11.35f + topOffset, 8.51f), durabilityPartFace, blackSprite,
-						Direction.SOUTH, SimpleModelTransform.IDENTITY, rotation, false,
+						Direction.SOUTH, ModelUtilities.IDENTITY, rotation, false,
 						new ResourceLocation("dummy_name"));
 				output.add(durabilityBackground);
 
@@ -172,7 +172,7 @@ public class MiningDrillItemModel implements BakedModel {
 
 				BakedQuad durabilityBar = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -12.0f + topOffset, 8.5f),
 						new Vector3f(-3.0f + (bitDurability * 5.0f) - sideOffset, -11.35f + topOffset, 8.511f),
-						durabilityBarFace, durabilityTexture, Direction.SOUTH, SimpleModelTransform.IDENTITY, rotation,
+						durabilityBarFace, durabilityTexture, Direction.SOUTH, ModelUtilities.IDENTITY, rotation,
 						false, new ResourceLocation("dummy_name"));
 				output.add(durabilityBar);
 			} catch (Exception e) {
@@ -220,7 +220,7 @@ public class MiningDrillItemModel implements BakedModel {
 			IItemHandler inv = stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null);
 			if (inv != null && !inv.getStackInSlot(0).isEmpty()) {
 				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inv.getStackInSlot(0),
-						Minecraft.getInstance().level, null);
+						Minecraft.getInstance().level, null, 0);
 				return itemModel.getParticleIcon();
 			}
 			return BaseModel.getParticleIcon();

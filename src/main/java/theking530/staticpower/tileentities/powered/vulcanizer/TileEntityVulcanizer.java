@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.vulcanizer;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
@@ -32,7 +34,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVulcanizer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<TileEntityVulcanizer>((type) -> new TileEntityVulcanizer(), ModBlocks.Vulcanizer);
+	public static final BlockEntityTypeAllocator<TileEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<TileEntityVulcanizer>(
+			(type, pos, state) -> new TileEntityVulcanizer(pos, state), ModBlocks.Vulcanizer);
 
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
@@ -44,20 +47,22 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 	@UpdateSerialize
 	private FluidStack currentProcessingFluidStack;
 
-	public TileEntityVulcanizer() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityVulcanizer(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Get the tier object.
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());
 
 		// Setup the inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(
+				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent", VulcanizerRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent",
+				VulcanizerRecipe.RECIPE_TYPE, StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
+				this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -70,18 +75,21 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
-			return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
-		}));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get(),
+				(fluidStack) -> {
+					return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
+				}));
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
 		fluidTankComponent.setUpgradeInventory(upgradesInventory);
 		fluidTankComponent.setCanDrain(false);
 
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Input));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, fluidTankComponent,
+				MachineSideMode.Input));
 
 		// Create the fluid container component.
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo",
+				fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);

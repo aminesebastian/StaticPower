@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.packager;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -33,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class TileEntityPackager extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityPackager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPackager(), ModBlocks.Packager);
+	public static final BlockEntityTypeAllocator<TileEntityPackager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPackager(pos, state), ModBlocks.Packager);
 
 	/** The input inventory containing the items to pack. */
 	public final InventoryComponent inputInventory;
@@ -56,8 +58,8 @@ public class TileEntityPackager extends TileEntityMachine {
 	@UpdateSerialize
 	protected int currentProcessingGridSize;
 
-	public TileEntityPackager() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityPackager(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Default to a 2x2.
 		gridSize = 2;

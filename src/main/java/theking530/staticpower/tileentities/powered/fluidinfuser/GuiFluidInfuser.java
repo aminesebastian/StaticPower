@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.powered.fluidinfuser;
 
 import java.util.Optional;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;

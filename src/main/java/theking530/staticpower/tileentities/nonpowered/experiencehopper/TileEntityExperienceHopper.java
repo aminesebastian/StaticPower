@@ -2,10 +2,13 @@ package theking530.staticpower.tileentities.nonpowered.experiencehopper;
 
 import java.util.List;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
@@ -26,7 +29,8 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 
 public class TileEntityExperienceHopper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityExperienceHopper(), ModBlocks.ExperienceHopper);
+	public static final BlockEntityTypeAllocator<TileEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityExperienceHopper(pos, state), ModBlocks.ExperienceHopper);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -36,10 +40,12 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 
 	public final FluidTankComponent internalTank;
 
-	public TileEntityExperienceHopper() {
-		super(TYPE);
-		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 100).setCanFill(true).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, internalTank, MachineSideMode.Output));
+	public TileEntityExperienceHopper(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
+		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 100).setCanFill(true)
+				.setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
+		registerComponent(
+				new FluidOutputServoComponent("FluidOutputServoComponent", 100, internalTank, MachineSideMode.Output));
 	}
 
 	@Override
@@ -47,7 +53,8 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 		// Handle the upgrade tick on the server.
 		if (!level.isClientSide) {
 			// Create the AABB to search within.
-			AABB aabb = new AABB(worldPosition.getX() + 0.1, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.1, worldPosition.getX() + 0.9, worldPosition.getY() + 1.05, worldPosition.getZ() + 0.9);
+			AABB aabb = new AABB(worldPosition.getX() + 0.1, worldPosition.getY() + 0.5, worldPosition.getZ() + 0.1,
+					worldPosition.getX() + 0.9, worldPosition.getY() + 1.05, worldPosition.getZ() + 0.9);
 
 			// Track how much we filled with XP.
 			int filled = 0;
@@ -64,7 +71,8 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 
 			// Play a sound and synchronize if there were any experience filled.
 			if (filled > 0) {
-				getLevel().playSound(null, worldPosition, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.15F, (getLevel().random.nextFloat() + 1) / 2);
+				getLevel().playSound(null, worldPosition, SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.15F,
+						(getLevel().random.nextFloat() + 1) / 2);
 			}
 		}
 	}
@@ -80,7 +88,8 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 				int playerDrainAmount = SDMath.clamp(amountToTake, 0, player.totalExperience);
 
 				// Fill with the XP
-				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, playerDrainAmount), FluidAction.EXECUTE);
+				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, playerDrainAmount),
+						FluidAction.EXECUTE);
 				filled = playerDrainAmount;
 
 				// Drain the XP.
@@ -95,13 +104,14 @@ public class TileEntityExperienceHopper extends TileEntityConfigurable {
 		int filled = 0;
 		List<ExperienceOrb> xpOrbs = getLevel().getEntitiesOfClass(ExperienceOrb.class, bounds);
 		for (ExperienceOrb orb : xpOrbs) {
-			int tempFilled = internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value), FluidAction.SIMULATE);
+			int tempFilled = internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value),
+					FluidAction.SIMULATE);
 			if (tempFilled != orb.value) {
 				break;
 			} else {
 				filled += tempFilled;
 				internalTank.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value), FluidAction.EXECUTE);
-				orb.remove();
+				orb.remove(RemovalReason.DISCARDED);
 			}
 		}
 		return filled;

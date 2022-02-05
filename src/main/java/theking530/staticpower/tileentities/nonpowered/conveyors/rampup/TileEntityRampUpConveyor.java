@@ -13,18 +13,21 @@ import theking530.staticpower.tileentities.components.control.ConveyorMotionComp
 
 public class TileEntityRampUpConveyor extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityRampUpConveyor(), ModBlocks.RampUpConveyor);
+	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityRampUpConveyor(pos, state), ModBlocks.RampUpConveyor);
 
 	protected final ConveyorMotionComponent conveyor;
 
-	public TileEntityRampUpConveyor() {
-		super(TYPE);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.15f, 0.1f, 0f)).setShouldAffectEntitiesAbove(false));
+	public TileEntityRampUpConveyor(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
+		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.15f, 0.1f, 0f))
+				.setShouldAffectEntitiesAbove(false));
 	}
 
 	@Override
 	protected void postInit(Level world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
-		conveyor.updateBounds(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
+		conveyor.updateBounds(
+				new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
 	}
 }

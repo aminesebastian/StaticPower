@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -30,9 +31,11 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.IConveyorBlock;
 
 public class TileEntityConveyorHopper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorHopper(type, false), ModBlocks.ConveyorHopper);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, false), ModBlocks.ConveyorHopper);
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorHopper(type, true),
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, true),
 			ModBlocks.ConveyorFilteredHopper);
 
 	public final InventoryComponent internalInventory;
@@ -41,12 +44,16 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 	protected AABB hopperBox;
 	protected boolean filtered;
 
-	public TileEntityConveyorHopper(BlockEntityTypeAllocator<TileEntityConveyorHopper> type, boolean filtered) {
-		super(type);
+	public TileEntityConveyorHopper(BlockEntityTypeAllocator<TileEntityConveyorHopper> type, BlockPos pos,
+			BlockState state, boolean filtered) {
+		super(type, pos, state);
 		this.filtered = filtered;
-		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f)).setShouldAffectEntitiesAbove(false));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output).setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
-		registerComponent(filterInventory = new InventoryComponent("FilterInventory", 1, MachineSideMode.Never).setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
+		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f))
+				.setShouldAffectEntitiesAbove(false));
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output)
+				.setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
+		registerComponent(filterInventory = new InventoryComponent("FilterInventory", 1, MachineSideMode.Never)
+				.setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
 		registerComponent(new OutputServoComponent("OutputServo", 0, internalInventory));
 	}
 
@@ -80,7 +87,7 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 
 				// Update or remove the item entity.
 				if (remaining.isEmpty()) {
-					conveyorEntity.remove();
+					conveyorEntity.remove(RemovalReason.DISCARDED);
 				} else {
 					conveyorEntity.setItem(remaining.copy());
 				}
@@ -115,8 +122,10 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 	@Override
 	protected void postInit(Level world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
-		hopperBox = new AABB(pos.getX() + .25, pos.getY(), pos.getZ() + .25, pos.getX() + .75, pos.getY() + 0.1, pos.getZ() + .75);
-		conveyor.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		hopperBox = new AABB(pos.getX() + .25, pos.getY(), pos.getZ() + .25, pos.getX() + .75, pos.getY() + 0.1,
+				pos.getZ() + .75);
+		conveyor.updateBounds(
+				new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 
 		// Make sure the front is output only.
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(Direction.DOWN, MachineSideMode.Output);

@@ -17,7 +17,6 @@ import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockElementRotation;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -43,14 +42,13 @@ import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
+import theking530.staticpower.utilities.ModelUtilities;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
 public class PortableBatteryItemModel implements BakedModel {
 	private final Int2ObjectMap<PortableBatteryModel> cache = new Int2ObjectArrayMap<>();
 	private final BakedModel baseModel;
-	private final static BlockElementRotation IDENTITY = new BlockElementRotation(new Vector3f(0, 0, 0),
-			Direction.Axis.X, 0, false);
 
 	public PortableBatteryItemModel(BakedModel baseModel) {
 		this.baseModel = baseModel;
@@ -164,11 +162,11 @@ public class PortableBatteryItemModel implements BakedModel {
 
 				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f),
 						new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH,
-						null, IDENTITY, false, new ResourceLocation("dummy_name")));
+						ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name")));
 
 				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f),
 						new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH,
-						null, IDENTITY, false, new ResourceLocation("dummy_name")));
+						ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name")));
 			}
 			return quads;
 		}

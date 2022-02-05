@@ -1,11 +1,13 @@
 package theking530.staticpower.tileentities.powered.chargingstation;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
@@ -26,7 +28,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityChargingStation extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityChargingStation> TYPE = new BlockEntityTypeAllocator<TileEntityChargingStation>((type) -> new TileEntityChargingStation(),
+	public static final BlockEntityTypeAllocator<TileEntityChargingStation> TYPE = new BlockEntityTypeAllocator<TileEntityChargingStation>((type, pos, state) -> new TileEntityChargingStation(pos, state),
 			ModBlocks.ChargingStation);
 
 	static {
@@ -40,8 +42,8 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public TileEntityChargingStation() {
-		super(TYPE, StaticPowerTiers.ENERGIZED);
+	public TileEntityChargingStation(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ENERGIZED);
 
 		// Add the input inventory that only takes energy storing items.
 		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

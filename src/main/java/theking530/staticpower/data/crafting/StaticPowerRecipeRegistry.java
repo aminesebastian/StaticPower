@@ -59,7 +59,8 @@ public class StaticPowerRecipeRegistry {
 	 * @return Optional of the recipe if it exists, otherwise empty.
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T extends AbstractStaticPowerRecipe> Optional<T> getRecipe(RecipeType<T> recipeType, RecipeMatchParameters matchParameters) {
+	public static <T extends AbstractStaticPowerRecipe> Optional<T> getRecipe(RecipeType<T> recipeType,
+			RecipeMatchParameters matchParameters) {
 		// If no recipes of this type exist, return empty.
 		if (!RECIPES.containsKey(recipeType)) {
 			return Optional.empty();
@@ -182,7 +183,8 @@ public class StaticPowerRecipeRegistry {
 		cachePackagerRecipes(manager, null);
 
 		// Log the completion.
-		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), RECIPES.size() + FURNACE_RECIPES.size() + CRAFTING_RECIPES.size()));
+		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"),
+				RECIPES.size() + FURNACE_RECIPES.size() + CRAFTING_RECIPES.size()));
 	}
 
 	public static void cacheDynamicBottlerRecipes(RecipeManager manager, @Nullable Level world) {
@@ -197,8 +199,9 @@ public class StaticPowerRecipeRegistry {
 			}
 
 			// If this is a burnable, cache it.
-			if (ForgeHooks.getBurnTime(instance) > 0) {
-				ResourceLocation recipe = new ResourceLocation(item.getRegistryName().getNamespace(), item.getRegistryName().getPath() + "_solid_fuel_dynamic");
+			if (ForgeHooks.getBurnTime(instance, null) > 0) {
+				ResourceLocation recipe = new ResourceLocation(item.getRegistryName().getNamespace(),
+						item.getRegistryName().getPath() + "_solid_fuel_dynamic");
 				SolidFuelRecipe solidFuelRecipe = new SolidFuelRecipe(recipe, instance.copy());
 				addRecipe(solidFuelRecipe);
 			}
@@ -228,7 +231,8 @@ public class StaticPowerRecipeRegistry {
 				// If we can't fill the container with the fluid, skip this container.
 				FluidTank simulatedTank = new FluidTank(FluidAttributes.BUCKET_VOLUME);
 				simulatedTank.fill(new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME), FluidAction.EXECUTE);
-				FluidActionResult result = FluidUtil.tryFillContainer(container, simulatedTank, FluidAttributes.BUCKET_VOLUME, null, true);
+				FluidActionResult result = FluidUtil.tryFillContainer(container, simulatedTank,
+						FluidAttributes.BUCKET_VOLUME, null, true);
 				ItemStack emptyContainer = container.copy();
 
 				if (!result.isSuccess() || result.getResult().isEmpty() || emptyContainer.isEmpty()) {
@@ -237,12 +241,14 @@ public class StaticPowerRecipeRegistry {
 
 				// Create the recipe.
 				FluidStack fluidStack = new FluidStack(fluid, FluidAttributes.BUCKET_VOLUME);
-				ResourceLocation recipe = new ResourceLocation(fluid.getRegistryName().getNamespace(), fluid.getRegistryName().getPath() + "_bottler_dynamic");
+				ResourceLocation recipe = new ResourceLocation(fluid.getRegistryName().getNamespace(),
+						fluid.getRegistryName().getPath() + "_bottler_dynamic");
 				BottleRecipe bucketRecipe = new BottleRecipe(recipe, result.getResult(), emptyContainer, fluidStack);
 
 				// Add the recipe if is not a duplicate, otherwise, skip it.
 				addRecipe(bucketRecipe);
-				LOGGER.info(String.format("Registering a dynamic bottler recipe for item: %1$s and fluid: %2$s.", emptyContainer.getHoverName().getString(),
+				LOGGER.info(String.format("Registering a dynamic bottler recipe for item: %1$s and fluid: %2$s.",
+						emptyContainer.getHoverName().getString(),
 						fluid.getAttributes().getDisplayName(fluidStack).getString()));
 			}
 		}
@@ -281,15 +287,21 @@ public class StaticPowerRecipeRegistry {
 				// Create and add the 2x2 recipe.
 				if (twoRecipe.isPresent()) {
 					CraftingRecipe recipe = twoRecipe.get();
-					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
-					PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 2,
-							new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getResultItem()));
+					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(),
+							recipe.getId().getPath() + "_packager_2_dynamic");
+					PackagerRecipe packRecipe = new PackagerRecipe(id,
+							StaticPowerConfig.SERVER.packagerProcessingTime.get(),
+							StaticPowerConfig.SERVER.packagerPowerUsage.get(), 2,
+							new StaticPowerIngredient(instance.copy(), 4),
+							new ProbabilityItemStackOutput(recipe.getResultItem()));
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
 				StaticPower.LOGGER.error(
 						"An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported. Check the debug log for more details.");
-				StaticPower.LOGGER.debug("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
+				StaticPower.LOGGER.debug(
+						"An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.",
+						e);
 			}
 
 			try {
@@ -298,15 +310,21 @@ public class StaticPowerRecipeRegistry {
 				// Create and add the 3x3 recipe.
 				if (threeRecipe.isPresent()) {
 					CraftingRecipe recipe = threeRecipe.get();
-					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
-					PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 3,
-							new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getResultItem()));
+					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(),
+							recipe.getId().getPath() + "_packager_3_dynamic");
+					PackagerRecipe packRecipe = new PackagerRecipe(id,
+							StaticPowerConfig.SERVER.packagerProcessingTime.get(),
+							StaticPowerConfig.SERVER.packagerPowerUsage.get(), 3,
+							new StaticPowerIngredient(instance.copy(), 9),
+							new ProbabilityItemStackOutput(recipe.getResultItem()));
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
 				StaticPower.LOGGER.error(
 						"An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported. Check the debug log for more details.");
-				StaticPower.LOGGER.debug("An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
+				StaticPower.LOGGER.debug(
+						"An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported.",
+						e);
 			}
 		}
 		// Log the completion.

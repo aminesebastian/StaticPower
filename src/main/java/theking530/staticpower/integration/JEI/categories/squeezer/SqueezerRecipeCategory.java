@@ -62,10 +62,10 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
-
+	
 	@Override
 	@Nonnull
 	public IDrawable getBackground() {

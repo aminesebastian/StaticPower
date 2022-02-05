@@ -1,14 +1,17 @@
 package theking530.staticpower.tileentities.powered.solidgenerator;
 
-import net.minecraft.world.entity.player.Player;
+import com.mojang.math.Vector3f;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.sounds.SoundEvents;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -33,7 +36,7 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
+	public static final BlockEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntitySolidGenerator(pos, state), ModBlocks.SolidGenerator);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -44,15 +47,15 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	public long powerGenerationPerTick;
 
-	public TileEntitySolidGenerator() {
-		super(TYPE, StaticPowerTiers.IRON);
+	public TileEntitySolidGenerator(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.IRON);
 		disableFaceInteraction();
 
 		// Register the input inventory and only let it receive items if they are
 		// burnable.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return ForgeHooks.getBurnTime(stack) > 0;
+				return ForgeHooks.getBurnTime(stack, null) > 0;
 			}
 		}));
 

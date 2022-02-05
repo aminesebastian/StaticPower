@@ -15,6 +15,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,8 +38,9 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 	public String FlowingTexture;
 	public Named<Fluid> Tag;
 
-	public AbstractStaticPowerFluid(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid,
-			String stillTexture, String flowingTexture, Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+	public AbstractStaticPowerFluid(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock,
+			Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
+			Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
 		setRegistryName(name);
 		Bucket = bucket;
 		FluidBlock = fluidBlock;
@@ -72,7 +74,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 
 	@Override
 	protected void beforeDestroyingBlock(LevelAccessor worldIn, BlockPos pos, BlockState state) {
-		BlockEntity tileentity = state.getBlock().hasTileEntity(state) ? worldIn.getBlockEntity(pos) : null;
+		BlockEntity tileentity = state.getBlock() instanceof EntityBlock ? worldIn.getBlockEntity(pos) : null;
 		Block.dropResources(state, worldIn, pos, tileentity);
 	}
 
@@ -87,7 +89,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 	}
 
 	@Override
-	protected boolean canBeReplacedWith(FluidState fluidState, BlockGetter blockReader, BlockPos pos, Fluid fluid, Direction direction) {
+	protected boolean canBeReplacedWith(FluidState fluidState, BlockGetter blockReader, BlockPos pos, Fluid fluid,
+			Direction direction) {
 		return blockReader.getBlockState(pos).getBlock() == Blocks.AIR;
 	}
 
@@ -115,7 +118,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 	@Override
 	public void tick(Level worldIn, BlockPos pos, FluidState state) {
 		// Check if we're gaseous.
-		if (getFluid().getAttributes().isGaseous()) {
+		if (state.getType().getAttributes().isGaseous()) {
 			// If the fluid is near the world height, kill it.
 			if (pos.getY() > worldIn.getMaxBuildHeight() - 5) {
 				worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
@@ -129,7 +132,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 
 				// If we can flow upwards, do so. Otherwise, check if the block above is solid.
 				// If it is not, let the gas continue going up.
-				if (canSpreadTo(worldIn, pos, worldIn.getBlockState(pos), Direction.UP, pos.relative(Direction.UP), getStateAbove, state, getFluid())) {
+				if (canSpreadTo(worldIn, pos, worldIn.getBlockState(pos), Direction.UP, pos.relative(Direction.UP),
+						getStateAbove, state, state.getType())) {
 					worldIn.setBlock(pos.offset(0, 1, 0), this.createLegacyBlock(state), 3);
 					worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
 				} else if (!worldIn.getBlockState(pos.relative(Direction.UP)).canOcclude()) {
@@ -152,7 +156,9 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 
 	@Override
 	protected FluidAttributes createAttributes() {
-		FluidAttributes.Builder attributes = FluidAttributes.builder(new ResourceLocation(StaticPower.MOD_ID, StillTexture), new ResourceLocation(StaticPower.MOD_ID, FlowingTexture))
+		FluidAttributes.Builder attributes = FluidAttributes
+				.builder(new ResourceLocation(StaticPower.MOD_ID, StillTexture),
+						new ResourceLocation(StaticPower.MOD_ID, FlowingTexture))
 				.translationKey(FluidBlock.get().getDescriptionId().replace("block", "fluid")).color(0xaaffffff);
 		if (AdditionalAtrributesDelegate != null) {
 			AdditionalAtrributesDelegate.accept(attributes);
@@ -162,8 +168,9 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 
 	public static class Source extends AbstractStaticPowerFluid {
 
-		public Source(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-				String flowingTexture, Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+		public Source(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock,
+				Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
+				Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
 			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
 		}
 
@@ -180,9 +187,11 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 
 	public static class Flowing extends AbstractStaticPowerFluid {
 
-		public Flowing(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-				String flowingTexture, Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
-			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
+		public Flowing(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock,
+				Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture, String flowingTexture,
+				Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag,
+					attributes);
 		}
 
 		@Override

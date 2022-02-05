@@ -1,10 +1,12 @@
 package theking530.staticpower.tileentities.powered.powermonitor;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
@@ -34,8 +36,8 @@ import theking530.staticpower.tileentities.components.serialization.SaveSerializ
 
 public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerMetricsSyncConsumer {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<TileEntityPowerMonitor>((allocator) -> new TileEntityPowerMonitor(allocator),
-			ModBlocks.PowerMonitor);
+	public static final BlockEntityTypeAllocator<TileEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<TileEntityPowerMonitor>(
+			(allocator, pos, state) -> new TileEntityPowerMonitor(allocator, pos, state), ModBlocks.PowerMonitor);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -61,11 +63,13 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 
 	protected PowerDistributionComponent powerDistributor;
 
-	public TileEntityPowerMonitor(BlockEntityTypeAllocator<TileEntityPowerMonitor> allocator) {
-		super(allocator);
+	public TileEntityPowerMonitor(BlockEntityTypeAllocator<TileEntityPowerMonitor> allocator, BlockPos pos,
+			BlockState state) {
+		super(allocator, pos, state);
 
 		// Add the power distributor.
-		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+		registerComponent(
+				powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
 
 		// Setup the energy storage component.
 		energyStorage.setAutoSyncPacketsEnabled(true);
@@ -73,10 +77,12 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 			if (direction == null) {
 				return false;
 			}
-			if (action == EnergyManipulationAction.PROVIDE && this.ioSideConfiguration.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Output) {
+			if (action == EnergyManipulationAction.PROVIDE && this.ioSideConfiguration
+					.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Output) {
 				return false;
 			}
-			if (action == EnergyManipulationAction.RECIEVE && this.ioSideConfiguration.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Input) {
+			if (action == EnergyManipulationAction.RECIEVE && this.ioSideConfiguration
+					.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Input) {
 				return false;
 			}
 			if (this.ioSideConfiguration.getWorldSpaceDirectionConfiguration(direction) == MachineSideMode.Disabled) {
@@ -102,7 +108,8 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 		registerComponent(chargingInventory = new InventoryComponent("ChargingInventorySlot", 1));
 
 		// Add the charging input.
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(
+				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 
 		// Create the metric capturing values.
 		metrics = new PowerTransferMetrics();
@@ -122,19 +129,23 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 				ItemStack stack = chargingInventory.getStackInSlot(0);
 				// If it's not empty and is an energy storing item.
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
-						long charged = EnergyHandlerItemStackUtilities.receivePower(stack, energyStorage.getStorage().getCurrentMaximumPowerOutput(), false);
+					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities
+							.getCapacity(stack)) {
+						long charged = EnergyHandlerItemStackUtilities.receivePower(stack,
+								energyStorage.getStorage().getCurrentMaximumPowerOutput(), false);
 						energyStorage.useBulkPower(charged);
 					}
 				}
 			}
 
 			// Capture metrics.
-			metrics.addMetric(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
+			metrics.addMetric(energyStorage.getStorage().getReceivedPerTick(),
+					energyStorage.getStorage().getExtractedPerTick());
 
 			if (!getLevel().isClientSide() && getLevel().getGameTime() % 20 == 0) {
 				TileEntityPowerMetricsSyncPacket msg = new TileEntityPowerMetricsSyncPacket(getBlockPos(), metrics);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 20, msg);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
+						getLevel(), getBlockPos(), 20, msg);
 			}
 		}
 	}
@@ -221,8 +232,9 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	}
 
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.TOP, false, MachineSideMode.Never).setSide(BlockSide.BOTTOM, false, MachineSideMode.Never).setSide(BlockSide.BACK,
-				false, MachineSideMode.Never);
+		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.TOP, false, MachineSideMode.Never)
+				.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never)
+				.setSide(BlockSide.BACK, false, MachineSideMode.Never);
 	}
 
 	// Tab Integration
@@ -240,8 +252,10 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	@Override
 	public void recieveMetrics(PowerTransferMetrics metrics) {
 		this.metrics = metrics;
-		recievedData = new FloatGraphDataSet(new Color(0.1f, 1.0f, 0.2f, 0.75f), metrics.getData(MetricCategory.SECONDS).getInputValues());
-		providedData = new FloatGraphDataSet(new Color(1.0f, 0.1f, 0.2f, 0.75f), metrics.getData(MetricCategory.SECONDS).getOutputValues());
+		recievedData = new FloatGraphDataSet(new Color(0.1f, 1.0f, 0.2f, 0.75f),
+				metrics.getData(MetricCategory.SECONDS).getInputValues());
+		providedData = new FloatGraphDataSet(new Color(1.0f, 0.1f, 0.2f, 0.75f),
+				metrics.getData(MetricCategory.SECONDS).getOutputValues());
 	}
 
 	/**

@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.caster;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -31,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCaster extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCaster> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCaster(), ModBlocks.Caster);
+	public static final BlockEntityTypeAllocator<TileEntityCaster> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCaster(pos, state), ModBlocks.Caster);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -41,8 +43,8 @@ public class TileEntityCaster extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 	public final RecipeProcessingComponent<CastingRecipe> processingComponent;
 
-	public TileEntityCaster() {
-		super(TYPE, StaticPowerTiers.ENERGIZED);
+	public TileEntityCaster(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ENERGIZED);
 
 		// Get the tier object.
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.BASIC);

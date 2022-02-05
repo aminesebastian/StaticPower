@@ -28,30 +28,33 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void render(PoseStack matrixStack, int xPosition, int yPosition, @Nullable ProbabilityItemStackOutput ingredient) {
+	public void render(PoseStack matrixStack, int xPosition, int yPosition,
+			@Nullable ProbabilityItemStackOutput ingredient) {
 		if (ingredient != null) {
-			RenderSystem.pushMatrix();
-			RenderSystem.multMatrix(matrixStack.last().pose());
+			RenderSystem.applyModelViewMatrix();
+			RenderSystem.setProjectionMatrix(matrixStack.last().pose());
 			RenderSystem.enableDepthTest();
-			Lighting.turnBackOn();
+			Lighting.setupForFlatItems();
 			Minecraft minecraft = Minecraft.getInstance();
 			Font font = getFontRenderer(minecraft, ingredient);
 			ItemRenderer itemRenderer = minecraft.getItemRenderer();
-			itemRenderer.renderAndDecorateItem(null, ingredient.getItem(), xPosition, yPosition);
+			itemRenderer.renderAndDecorateItem(ingredient.getItem(), xPosition, yPosition);
 			itemRenderer.renderGuiItemDecorations(font, ingredient.getItem(), xPosition, yPosition, null);
 
 			// Draw the percentage string manually.
 			if (ingredient.getOutputChance() != 1.0f) {
-				String percentageString = GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
+				String percentageString = GuiTextUtilities
+						.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
 				int width = Minecraft.getInstance().font.width(percentageString);
-				GuiDrawUtilities.drawStringWithSize(matrixStack, percentageString, xPosition - 1.5f + (width / 2), yPosition + 2, 0.5f, Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, percentageString, xPosition - 1.5f + (width / 2),
+						yPosition + 2, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 			} else if (ingredient.getAdditionalBonus() > 0) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "*", xPosition + 3, yPosition + 6, 1.0f, Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "*", xPosition + 3, yPosition + 6, 1.0f,
+						Color.EIGHT_BIT_YELLOW, true);
 			}
 
 			RenderSystem.disableBlend();
-			Lighting.turnOff();
-			RenderSystem.popMatrix();
+			RenderSystem.backupProjectionMatrix();
 		}
 	}
 
@@ -66,15 +69,20 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			// Formulate the output percentage tooltip and then add it.
 			if (ingredient.getOutputChance() != 1.0f) {
 				Component outputPercentage = new TranslatableComponent("gui.staticpower.output_chance").append(": ")
-						.append(ChatFormatting.GREEN.toString() + String.valueOf((int) (ingredient.getOutputChance() * 100)) + "%");
+						.append(ChatFormatting.GREEN.toString()
+								+ String.valueOf((int) (ingredient.getOutputChance() * 100)) + "%");
 				tooltip.add(outputPercentage);
 			}
 
 			// Add the tooltip for the bonus output.
 			if (ingredient.getAdditionalBonus() > 0) {
-				Component bonus = new TranslatableComponent("gui.staticpower.bonus_output").withStyle(ChatFormatting.GREEN).append(": ")
-						.append(ChatFormatting.GOLD.toString() + String.valueOf(ingredient.getAdditionalBonus()) + ChatFormatting.GRAY.toString() + ChatFormatting.ITALIC.toString()
-								+ " (" + GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100).getString() + "%)");
+				Component bonus = new TranslatableComponent("gui.staticpower.bonus_output")
+						.withStyle(ChatFormatting.GREEN).append(": ")
+						.append(ChatFormatting.GOLD.toString()
+								+ String.valueOf(ingredient.getAdditionalBonus()) + ChatFormatting.GRAY.toString()
+								+ ChatFormatting.ITALIC.toString() + " (" + GuiTextUtilities
+										.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100).getString()
+								+ "%)");
 				tooltip.add(bonus);
 			}
 
@@ -91,7 +99,8 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 
 	@Override
 	public Font getFontRenderer(Minecraft minecraft, ProbabilityItemStackOutput ingredient) {
-		Font fontRenderer = ingredient.getItem().getItem().getFontRenderer(ingredient.getItem());
+		Font fontRenderer = null; // To-DO: =
+							// ingredient.getItem().getItem().getFontRenderer(ingredient.getItem());
 		if (fontRenderer == null) {
 			fontRenderer = minecraft.font;
 		}

@@ -1,7 +1,5 @@
 package theking530.staticpower.client.rendering.blocks;
 
-import static net.minecraftforge.client.model.SimpleModelTransform.IDENTITY;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
@@ -15,20 +13,20 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableList.Builder;
+import com.mojang.math.Vector3f;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import com.mojang.math.Vector3f;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ModelLoader;
@@ -43,11 +41,13 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.utilities.ModelUtilities;
 
 @OnlyIn(Dist.CLIENT)
 public class DefaultMachineBakedModel extends AbstractBakedModel {
 	@SuppressWarnings("deprecation")
-	protected static final TextureAtlas BLOCKS_TEXTURE = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+	protected static final TextureAtlas BLOCKS_TEXTURE = ModelLoader.instance().getSpriteMap()
+			.getAtlas(TextureAtlas.LOCATION_BLOCKS);
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMachineBakedModel.class);
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
 	private final HashMap<Direction, Boolean> sideConfigurationRenderControl;
@@ -86,7 +86,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state,
+			@Nonnull IModelData tileData) {
 		Optional<MachineSideMode[]> configurations = getSideConfigurations(world, pos);
 		ModelDataMap modelDataMap = getEmptyIModelData();
 		modelDataMap.setData(SIDE_CONFIG, configurations);
@@ -95,11 +96,13 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side, @Nonnull Random rand, @Nonnull IModelData data) {
+	protected List<BakedQuad> getBakedQuadsFromIModelData(@Nullable BlockState state, Direction side,
+			@Nonnull Random rand, @Nonnull IModelData data) {
 		// Check if the data has the SIDE_CONFIG property. If not, something has gone
 		// wrong.
 		if (!data.hasProperty(SIDE_CONFIG)) {
-			conditionallyLogError("Encountered invalid side configuration data when attempting to bake quads for machine.");
+			conditionallyLogError(
+					"Encountered invalid side configuration data when attempting to bake quads for machine.");
 			return BaseModel.getQuads(state, side, rand);
 		}
 		// Attempt to get the side configuration.
@@ -143,8 +146,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		return newQuads.build();
 	}
 
-	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side, TextureAtlas blocksTexture, BakedQuad originalQuad,
-			MachineSideMode sideConfiguration) {
+	protected void renderQuadsForSide(@Nullable BlockState state, Builder<BakedQuad> newQuads, Direction side,
+			TextureAtlas blocksTexture, BakedQuad originalQuad, MachineSideMode sideConfiguration) {
 		// Add the original quads.
 		newQuads.add(originalQuad);
 
@@ -165,7 +168,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 			}
 
 			BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.005f, 0.005f, 15.995f, 15.995f }, 0);
-			BlockElementFace blockPartFace = new BlockElementFace(side, -1, sideSprite.getName().toString(), blockFaceUV);
+			BlockElementFace blockPartFace = new BlockElementFace(side, -1, sideSprite.getName().toString(),
+					blockFaceUV);
 			Vector3f posOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, 0.005f));
 			posOffset.add(16.0f, 16.0f, 16.0f);
 
@@ -173,7 +177,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 			// Check if we have a facing property.
 			if (state != null && state.hasProperty(StaticPowerTileEntityBlock.FACING)) {
-				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side, state.getValue(StaticPowerTileEntityBlock.FACING));
+				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side,
+						state.getValue(StaticPowerTileEntityBlock.FACING));
 
 				// If we do, see if we have a requested offset. If we do, apply it.
 				if (sideOffsets.containsKey(blockSide)) {
@@ -188,12 +193,14 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 				}
 			}
 
-			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side, IDENTITY, null, true, new ResourceLocation("dummy_name"));
+			BakedQuad newQuad = FaceBaker.bakeQuad(negOffset, posOffset, blockPartFace, sideSprite, side,
+					ModelUtilities.IDENTITY, null, true, new ResourceLocation("dummy_name"));
 			newQuads.add(newQuad);
 		}
 	}
 
-	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, TextureAtlas blocksStitchedTextures, Direction side) {
+	protected TextureAtlasSprite getSpriteForMachineSide(MachineSideMode mode, TextureAtlas blocksStitchedTextures,
+			Direction side) {
 		switch (mode) {
 		case Input:
 			return blocksStitchedTextures.getSprite(StaticPowerSprites.MACHINE_SIDE_INPUT);
@@ -225,8 +232,9 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		return modelDataMap;
 	}
 
-	protected Optional<MachineSideMode[]> getSideConfigurations(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos blockPos) {
-		if (!world.getBlockState(blockPos).hasTileEntity()) {
+	protected Optional<MachineSideMode[]> getSideConfigurations(@Nonnull BlockAndTintGetter world,
+			@Nonnull BlockPos blockPos) {
+		if (!world.getBlockState(blockPos).hasBlockEntity()) {
 			return Optional.empty();
 		}
 
@@ -235,7 +243,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 			TileEntityBase configurable = (TileEntityBase) rawTileEntity;
 			if (configurable.hasComponentOfType(SideConfigurationComponent.class)) {
-				return Optional.of(configurable.getComponent(SideConfigurationComponent.class).getWorldSpaceConfiguration());
+				return Optional
+						.of(configurable.getComponent(SideConfigurationComponent.class).getWorldSpaceConfiguration());
 			}
 		}
 		return Optional.empty();

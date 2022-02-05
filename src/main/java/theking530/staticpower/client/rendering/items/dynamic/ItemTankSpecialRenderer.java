@@ -2,9 +2,11 @@ package theking530.staticpower.client.rendering.items.dynamic;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
@@ -19,12 +21,18 @@ import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRenderer {
+
 	/** Default basic cube renderer. */
 	protected static final BlockModel CUBE_MODEL = new BlockModel();
 
+	public ItemTankSpecialRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
+		super(p_172550_, p_172551_);
+		// TODO Auto-generated constructor stub
+	}
+
 	@Override
-	public void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay) {
+	public void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType,
+			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		// Check to see if the stack has the serialized nbt.
 		if (stack.hasTag() && stack.getTag().contains("SerializableNbt")) {
 			// If it does, get the tank tag and then the subsequent fluid tag.
@@ -45,7 +53,8 @@ public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRendere
 			float yPosition = isGas ? 14.0f * TEXEL - (11.98f * TEXEL * height) : 2.01f * TEXEL;
 
 			// Render the fluid.
-			CUBE_MODEL.drawPreviewCube(new Vector3f(TEXEL * 2.01f, yPosition, TEXEL * 2.01f), new Vector3f(TEXEL * 11.98f, TEXEL * 11.98f * height, TEXEL * 11.98f), fluidColor, matrixStack,
+			CUBE_MODEL.drawPreviewCube(new Vector3f(TEXEL * 2.01f, yPosition, TEXEL * 2.01f),
+					new Vector3f(TEXEL * 11.98f, TEXEL * 11.98f * height, TEXEL * 11.98f), fluidColor, matrixStack,
 					sprite, new Vector3D(1.0f, height, 1.0f));
 		}
 	}

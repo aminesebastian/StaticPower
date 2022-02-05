@@ -2,11 +2,13 @@ package theking530.staticpower.tileentities.powered.autosolderingtable;
 
 import java.util.Optional;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
@@ -28,7 +30,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoSolderingTable>((type) -> new TileEntityAutoSolderingTable(),
+	public static final BlockEntityTypeAllocator<TileEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoSolderingTable>((type, pos, state) -> new TileEntityAutoSolderingTable(pos, state),
 			ModBlocks.AutoSolderingTable);
 
 	static {
@@ -44,8 +46,8 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final InventoryComponent outputInventory;
 
-	public TileEntityAutoSolderingTable() {
-		super(TYPE);
+	public TileEntityAutoSolderingTable(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
 
 		// Enable the power storage on this tile entity as this is the powered
 		// version.

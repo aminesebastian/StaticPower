@@ -18,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.api.wrench.RegularWrenchMode;
@@ -39,12 +40,14 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	}
 
 	@Override
-	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer,
+			ItemStack stack) {
 		world.setBlock(pos, state.setValue(FACING, placer.getDirection()), 2);
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
 	}
 
@@ -57,7 +60,8 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		cacheVoxelShapes();
 		// Get the appropriate shape.
-		if (context.getEntity() instanceof Player) {
+		if (context instanceof EntityCollisionContext
+				&& ((EntityCollisionContext) context).getEntity().orElse(null) instanceof Player) {
 			return INTERACTION_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
 		} else {
 			return ENTITY_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
@@ -70,7 +74,8 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	}
 
 	@Override
-	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world,
+			BlockPos pos, Direction facing, boolean returnDrops) {
 		// We only rotate here, no need to check the mode of the wrench.
 		if (facing != Direction.UP && facing != Direction.DOWN) {
 			if (facing != world.getBlockState(pos).getValue(FACING)) {
@@ -82,7 +87,8 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		return InteractionResult.SUCCESS;
 	}
 
-	public static VoxelShape generateSlantedBoundingBox(Direction facingDirection, float precision, float yStartOffset, float yEndOffset, float thickness, float angle, boolean upwards) {
+	public static VoxelShape generateSlantedBoundingBox(Direction facingDirection, float precision, float yStartOffset,
+			float yEndOffset, float thickness, float angle, boolean upwards) {
 		// Create an empty bounding box initially.
 		VoxelShape output = Block.box(0, 0, 0, 0, 0, 0);
 
@@ -99,7 +105,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 			// Calculate the y positions.
 			yStart = i * angleOffset * precision - yStartOffset;
 			yEnd = (i + 1) * angleOffset * precision + thickness - yEndOffset;
-			
+
 			// Make sure we clamp to not go below 0.
 			yStart = Math.max(yStart, 0);
 			yEnd = Math.max(yEnd, 0);
@@ -115,13 +121,17 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 
 			// Build the bounds.
 			if (facingDirection == Direction.NORTH) {
-				output = Shapes.joinUnoptimized(output, Block.box(0, yStart, forwardStart, 16, yEnd, forwardEnd), BooleanOp.OR);
+				output = Shapes.joinUnoptimized(output, Block.box(0, yStart, forwardStart, 16, yEnd, forwardEnd),
+						BooleanOp.OR);
 			} else if (facingDirection == Direction.EAST) {
-				output = Shapes.joinUnoptimized(output, Block.box(16 - forwardStart, yStart, 0, 16 - forwardEnd, yEnd, 16), BooleanOp.OR);
+				output = Shapes.joinUnoptimized(output,
+						Block.box(16 - forwardStart, yStart, 0, 16 - forwardEnd, yEnd, 16), BooleanOp.OR);
 			} else if (facingDirection == Direction.WEST) {
-				output = Shapes.joinUnoptimized(output, Block.box(forwardStart, yStart, 0, forwardEnd, yEnd, 16), BooleanOp.OR);
+				output = Shapes.joinUnoptimized(output, Block.box(forwardStart, yStart, 0, forwardEnd, yEnd, 16),
+						BooleanOp.OR);
 			} else if (facingDirection == Direction.SOUTH) {
-				output = Shapes.joinUnoptimized(output, Block.box(0, yStart, 16 - forwardStart, 16, yEnd, 16 - forwardEnd), BooleanOp.OR);
+				output = Shapes.joinUnoptimized(output,
+						Block.box(0, yStart, 16 - forwardStart, 16, yEnd, 16 - forwardEnd), BooleanOp.OR);
 			}
 		}
 

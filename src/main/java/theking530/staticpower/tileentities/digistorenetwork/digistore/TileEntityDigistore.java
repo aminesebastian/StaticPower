@@ -2,6 +2,7 @@ package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -40,7 +41,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistore> TYPE = new BlockEntityTypeAllocator<TileEntityDigistore>((type) -> new TileEntityDigistore(), ModBlocks.Digistore);
+	public static final BlockEntityTypeAllocator<TileEntityDigistore> TYPE = new BlockEntityTypeAllocator<TileEntityDigistore>(
+			(type, pos, state) -> new TileEntityDigistore(pos, state), ModBlocks.Digistore);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -58,13 +60,15 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 	@UpdateSerialize
 	private boolean locked;
 
-	public TileEntityDigistore() {
-		super(TYPE, 1000);
-		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 1).setShiftClickEnabled(true));
+	public TileEntityDigistore(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, 1000);
+		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 1)
+				.setShiftClickEnabled(true));
 		inventory.setFilter(new ItemStackHandlerFilter() {
 			@Override
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				IDigistoreInventory inventory = stack.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).orElse(null);
+				IDigistoreInventory inventory = stack
+						.getCapability(CapabilityDigistoreInventory.DIGISTORE_INVENTORY_CAPABILITY).orElse(null);
 				if (inventory == null) {
 					return false;
 				}
@@ -95,7 +99,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 	}
 
 	@Override
-	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand,
+			BlockHitResult hit) {
 		// If the hand is not empty and the held itemstack matches the item stored in
 		// this digistore, attempt to insert it.
 		if (!player.getItemInHand(hand).isEmpty()) {
@@ -112,7 +117,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 						}
 
 						level.playSound(null, worldPosition, SoundEvents.ANVIL_PLACE, SoundSource.PLAYERS, 0.1f, 1.8f);
-						level.playSound(null, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.8f, 1.0f);
+						level.playSound(null, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.8f,
+								1.0f);
 						addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 						return InteractionResult.SUCCESS;
 					}
@@ -123,7 +129,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 					player.setItemSlot(EquipmentSlot.MAINHAND, remaining);
 
 					if (initialCount != remaining.getCount()) {
-						level.playSound(null, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.8f, 1.0f);
+						level.playSound(null, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 0.8f,
+								1.0f);
 						addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 						return InteractionResult.SUCCESS;
 					} else {
@@ -137,25 +144,26 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 				boolean itemInserted = false;
 
 				// Loop through the whole inventory.
-				for (int i = 0; i < player.inventory.getContainerSize(); i++) {
+				for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 					// Get the item in the slot.
-					ItemStack currentItem = player.inventory.getItem(i).copy();
+					ItemStack currentItem = player.getInventory().getItem(i).copy();
 
 					// Skip empty slots.
-					if (player.inventory.getItem(i).isEmpty()) {
+					if (player.getInventory().getItem(i).isEmpty()) {
 						continue;
 					}
 					if (inventory.canAcceptItem(currentItem)) {
 						currentItem = inventory.insertItem(currentItem, false);
-						if (currentItem.getCount() != player.inventory.getItem(i).getCount()) {
+						if (currentItem.getCount() != player.getInventory().getItem(i).getCount()) {
 							itemInserted = true;
-							player.inventory.setItem(i, currentItem);
+							player.getInventory().setItem(i, currentItem);
 						}
 					}
 				}
 
 				if (itemInserted) {
-					level.playSound(null, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 1.0f, 1.0f);
+					level.playSound(null, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 1.0f,
+							1.0f);
 					addUpdateRequest(TileEntityUpdateRequest.blockUpdate(), true);
 					return InteractionResult.SUCCESS;
 				}
@@ -183,7 +191,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 	@Override
 	public IModelData getModelData() {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		return builder.withInitial(RENDERING_STATE, new DigistoreRenderingState(inventory.getStackInSlot(0), inventory.getFilledRatio())).build();
+		return builder.withInitial(RENDERING_STATE,
+				new DigistoreRenderingState(inventory.getStackInSlot(0), inventory.getFilledRatio())).build();
 	}
 
 	public boolean isVoidUpgradeInstalled() {
@@ -228,7 +237,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 		// to a whole stack.
 		int countToDrop = 1;
 		if (!singleItem) {
-			countToDrop = Math.min(inv.getDigistoreStack(0).getStoredItem().getMaxStackSize(), inv.getTotalContainedCount());
+			countToDrop = Math.min(inv.getDigistoreStack(0).getStoredItem().getMaxStackSize(),
+					inv.getTotalContainedCount());
 		}
 
 		// Extract the item.
@@ -237,7 +247,8 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 		// Drop the item. Check the count just in case again (edge case coverage).
 		if (!output.isEmpty()) {
 			Direction facingDirection = getFacingDirection();
-			WorldUtilities.dropItem(getLevel(), facingDirection, getBlockPos().relative(facingDirection), output, output.getCount());
+			WorldUtilities.dropItem(getLevel(), facingDirection, getBlockPos().relative(facingDirection), output,
+					output.getCount());
 		}
 	}
 

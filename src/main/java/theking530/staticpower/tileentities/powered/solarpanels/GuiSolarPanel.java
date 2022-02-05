@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.powered.solarpanels;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.DrawableWidget;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;

@@ -13,18 +13,20 @@ import theking530.staticpower.tileentities.components.control.ConveyorMotionComp
 
 public class TileEntityRampDownConveyor extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityRampDownConveyor> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityRampDownConveyor(), ModBlocks.RampDownConveyor);
+	public static final BlockEntityTypeAllocator<TileEntityRampDownConveyor> TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityRampDownConveyor(pos, state), ModBlocks.RampDownConveyor);
 
 	protected final ConveyorMotionComponent conveyor;
 
-	public TileEntityRampDownConveyor() {
-		super(TYPE);
+	public TileEntityRampDownConveyor(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
 		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.1f, -0.1f, 0f)));
 	}
 
 	@Override
 	protected void postInit(Level world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
-		conveyor.updateBounds(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
+		conveyor.updateBounds(
+				new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
 	}
 }

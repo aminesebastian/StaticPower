@@ -44,11 +44,14 @@ public class TileEntityConfigurable extends TileEntityBase {
 	@SaveSerialize
 	private boolean disableFaceInteraction;
 
-	public TileEntityConfigurable(BlockEntityTypeAllocator<? extends TileEntityConfigurable> allocator) {
-		super(allocator);
+	public TileEntityConfigurable(BlockEntityTypeAllocator<? extends TileEntityConfigurable> allocator, BlockPos pos,
+			BlockState state) {
+		super(allocator, pos, state);
 		disableFaceInteraction();
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::checkSideConfiguration, getDefaultSideConfiguration()));
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
+				this::onSidesConfigUpdate, this::checkSideConfiguration, getDefaultSideConfiguration()));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
+				RedstoneMode.Ignore));
 	}
 
 	@Override
@@ -96,14 +99,19 @@ public class TileEntityConfigurable extends TileEntityBase {
 
 	/* Side Control */
 	protected void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
-		Direction relativeSpaceSide = SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection());
-		if (isFaceInteractionDisabled() && ioSideConfiguration.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
-			ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()), MachineSideMode.Never);
+		Direction relativeSpaceSide = SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT,
+				getFacingDirection());
+		if (isFaceInteractionDisabled() && ioSideConfiguration
+				.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
+			ioSideConfiguration.setWorldSpaceDirectionConfiguration(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
+					MachineSideMode.Never);
 		}
 	}
 
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output
+				|| mode == MachineSideMode.Input;
 	}
 
 	private boolean checkSideConfiguration(Direction direction, MachineSideMode mode) {
@@ -153,7 +161,8 @@ public class TileEntityConfigurable extends TileEntityBase {
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state,
+			LivingEntity placer, ItemStack stack) {
 		return true;
 	}
 

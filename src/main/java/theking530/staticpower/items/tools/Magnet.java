@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -70,8 +71,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 		int radius = getRadius(stack);
 
 		// Create the AABB to search within.
-		AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius, player.getX() + radius, player.getY() + radius,
-				player.getZ() + radius);
+		AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius,
+				player.getX() + radius, player.getY() + radius, player.getZ() + radius);
 
 		// Search for all the item entities.
 		List<ItemEntity> droppedItems = world.getEntitiesOfClass(ItemEntity.class, aabb, (ItemEntity item) -> true);
@@ -87,11 +88,13 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 
 			// If the entity is right next to us, suck it in. Otherwise, pull it towards us.
 			if (distance < 1.1f) {
-				if (player.inventory.add(entity.getItem())) {
+				if (player.getInventory().add(entity.getItem())) {
 					if (entity.getItem().isEmpty()) {
-						entity.remove();
-						world.addParticle(ParticleTypes.PORTAL, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
-						world.playSound(null, player.blockPosition(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F, 1.5F);
+						entity.remove(RemovalReason.UNLOADED_WITH_PLAYER);
+						world.addParticle(ParticleTypes.PORTAL, player.getX() + 0.5, player.getY() + 0.5,
+								player.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
+						world.playSound(null, player.blockPosition(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F,
+								1.5F);
 					}
 				}
 			} else {
@@ -100,7 +103,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 					var11 *= var11;
 					entity.push(x / distance * var11 * 0.06, y / distance * var11 * 0.15, z / distance * var11 * 0.06);
 					Vec3 entityPos = entity.position();
-					world.addParticle(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 0.0D, 0.0D, 0.0D);
+					world.addParticle(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 0.0D, 0.0D,
+							0.0D);
 				}
 			}
 		}
@@ -116,8 +120,9 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
-				.withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
+		tooltip.add(
+				new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
+						.withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
 		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.radius"))
 				.append(" " + ChatFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
 
@@ -168,7 +173,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	 * When shift right clicked, toggle activation.
 	 */
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
+			InteractionHand hand, ItemStack item) {
 		if (player.isShiftKeyDown()) {
 			toggleActivated(item);
 			return InteractionResultHolder.success(item);

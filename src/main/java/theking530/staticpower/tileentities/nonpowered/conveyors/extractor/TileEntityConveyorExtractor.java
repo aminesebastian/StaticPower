@@ -22,15 +22,17 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorExtractor(), ModBlocks.ConveyorExtractor);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorExtractor(pos, state), ModBlocks.ConveyorExtractor);
 
 	public final InventoryComponent internalInventory;
 	protected final ConveyorMotionComponent conveyor;
 	protected AABB importBox;
 
-	public TileEntityConveyorExtractor() {
-		super(TYPE);
-		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(-0.075f, 0f, 0f)).setShouldAffectEntitiesAbove(false));
+	public TileEntityConveyorExtractor(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
+		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(-0.075f, 0f, 0f))
+				.setShouldAffectEntitiesAbove(false));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Input) {
 			public int getSlotLimit(int slot) {
 				return 1;
@@ -61,7 +63,8 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 		offset.multiply(0.3f);
 
 		// Create the entity and spawn it.
-		ConveyorBeltEntity newEntity = new ConveyorBeltEntity(level, getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.5f, getBlockPos().getZ() + 0.5f + offset.getZ(), extracted);
+		ConveyorBeltEntity newEntity = new ConveyorBeltEntity(level, getBlockPos().getX() + 0.5f + offset.getX(),
+				getBlockPos().getY() + 0.5f, getBlockPos().getZ() + 0.5f + offset.getZ(), extracted);
 		newEntity.setDeltaMovement(0, 0, 0);
 		level.addFreshEntity(newEntity);
 	}
@@ -69,11 +72,13 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 	@Override
 	protected void postInit(Level world, BlockPos pos, BlockState state) {
 		super.postInit(world, pos, state);
-		conveyor.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		conveyor.updateBounds(
+				new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 
 		// Make sure the front is input only.
 		Direction facing = getFacingDirection();
-		ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, facing), MachineSideMode.Input);
+		ioSideConfiguration.setWorldSpaceDirectionConfiguration(
+				SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, facing), MachineSideMode.Input);
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package theking530.staticcore.initialization.tileentity;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticpower.tileentities.TileEntityBase;
 
 /**
  * Wrapper class used to help in the initialization of tile entites.
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
  *
  * @param <T>
  */
-public class TileEntityInitializer<T extends BlockEntity> implements BlockEntityType.BlockEntitySupplier<T> {
+public class TileEntityInitializer<T extends TileEntityBase> implements BlockEntityType.BlockEntitySupplier<T> {
 	private BlockEntityTypeAllocator<T> allocator;
 
 	public TileEntityInitializer(BlockEntityTypeAllocator<T> allocator) {

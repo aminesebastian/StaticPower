@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.bottler;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -35,7 +37,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBottler extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityBottler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityBottler(), ModBlocks.Bottler);
+	public static final BlockEntityTypeAllocator<TileEntityBottler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityBottler(pos, state), ModBlocks.Bottler);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -49,8 +51,8 @@ public class TileEntityBottler extends TileEntityMachine {
 
 	public final FluidTankComponent fluidTankComponent;
 
-	public TileEntityBottler() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityBottler(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Get the tier object.
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(getTier());

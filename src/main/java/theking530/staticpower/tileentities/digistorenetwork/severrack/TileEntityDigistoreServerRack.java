@@ -2,10 +2,12 @@ package theking530.staticpower.tileentities.digistorenetwork.severrack;
 
 import javax.annotation.Nonnull;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -20,15 +22,16 @@ import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreI
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreServerRack>(
-			(type) -> new TileEntityDigistoreServerRack(), ModBlocks.DigistoreServerRack);
+			(type, pos, state) -> new TileEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack);
 
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<ServerRackRenderingState> CARD_RENDERING_STATE = new ModelProperty<ServerRackRenderingState>();
 	public final DigistoreInventoryComponent inventory;
 
-	public TileEntityDigistoreServerRack() {
-		super(TYPE, 5000);
-		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8).setShiftClickEnabled(true));
+	public TileEntityDigistoreServerRack(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, 5000);
+		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8)
+				.setShiftClickEnabled(true));
 		inventory.setModifiedCallback((type, stack, comp) -> {
 			if (type != InventoryChangeType.MODIFIED) {
 				if (!getLevel().isClientSide()) {

@@ -60,10 +60,10 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
-
+	
 	@Override
 	@Nonnull
 	public IDrawable getBackground() {

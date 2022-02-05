@@ -19,7 +19,7 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 		this.craftMatrix = craftingInventory;
 	}
 
-	public ItemStack onTake(Player thePlayer, ItemStack stack) {
+	public void onTake(Player thePlayer, ItemStack stack) {
 		// Get current recipe and cache a copy.
 		ItemStack[] originalrecipe = new ItemStack[9];
 		for (int i = 0; i < craftMatrix.getContainerSize(); i++) {
@@ -114,6 +114,5 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 		// Raise the on created and on crafted methods.
 		stack.getItem().onCraftedBy(stack, thePlayer.level, thePlayer);
 		container.onItemCrafted(originalrecipe, stack);
-		return stack;
 	}
 }

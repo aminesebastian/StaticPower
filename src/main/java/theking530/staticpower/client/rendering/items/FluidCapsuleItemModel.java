@@ -9,27 +9,26 @@ import java.util.Random;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.color.item.ItemColor;
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import com.mojang.math.Vector3f;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.SimpleModelTransform;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -39,6 +38,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
+import theking530.staticpower.utilities.ModelUtilities;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
@@ -55,7 +55,7 @@ public class FluidCapsuleItemModel implements BakedModel {
 		return new ItemOverrides() {
 			@Override
 			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
-					@Nullable LivingEntity livingEntity) {
+					@Nullable LivingEntity livingEntity, int x) {
 				// Make sure we have a valid fluid capsule.
 				if (!(stack.getItem() instanceof FluidCapsule)) {
 					return originalModel;
@@ -153,7 +153,7 @@ public class FluidCapsuleItemModel implements BakedModel {
 
 				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(6.5f, 3.5f, 0.0f),
 						new Vector3f(9.5f, 3.5f + (filledRatio * 9.0f), 8.51f), blockPartFace, sideSprite,
-						Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
+						Direction.SOUTH, ModelUtilities.IDENTITY, null, false,
 						new ResourceLocation("dummy_name"));
 
 				quads.add(newQuad);

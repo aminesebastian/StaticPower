@@ -15,7 +15,8 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
 
-public class SolderingRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SolderingRecipe> {
+public class SolderingRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>>
+		implements RecipeSerializer<SolderingRecipe> {
 	public static final SolderingRecipeSerializer INSTANCE = new SolderingRecipeSerializer();
 	private final JsonElement solderingIronTag;
 
@@ -31,7 +32,7 @@ public class SolderingRecipeSerializer extends net.minecraftforge.registries.For
 		int i = astring[0].length();
 		int j = astring.length;
 		NonNullList<Ingredient> nonnulllist = SolderingRecipe.deserializeIngredients(astring, map, i, j);
-		ItemStack itemstack = ShapedRecipe.itemFromJson(GsonHelper.getAsJsonObject(json, "result"));
+		ItemStack itemstack = ShapedRecipe.itemStackFromJson(GsonHelper.getAsJsonObject(json, "result"));
 		Ingredient solderingIron = Ingredient.fromJson(solderingIronTag);
 		return new SolderingRecipe(recipeId, s, i, j, solderingIron, nonnulllist, itemstack);
 	}

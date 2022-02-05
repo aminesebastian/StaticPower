@@ -43,10 +43,10 @@ public class MilkBottleItem extends StaticPowerItem {
 		if (stack.isEmpty()) {
 			return new ItemStack(Items.GLASS_BOTTLE);
 		} else {
-			if (entityLiving instanceof Player && !((Player) entityLiving).abilities.instabuild) {
+			if (entityLiving instanceof Player && !((Player) entityLiving).getAbilities().instabuild) {
 				ItemStack itemstack = new ItemStack(Items.GLASS_BOTTLE);
 				Player playerentity = (Player) entityLiving;
-				if (!playerentity.inventory.add(itemstack)) {
+				if (!playerentity.getInventory().add(itemstack)) {
 					playerentity.drop(itemstack, false);
 				}
 			}

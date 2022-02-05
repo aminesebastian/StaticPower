@@ -1,9 +1,11 @@
 package theking530.staticpower.tileentities.powered.crucible;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -34,7 +36,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCrucible extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCrucible(), ModBlocks.Crucible);
+	public static final BlockEntityTypeAllocator<TileEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCrucible(pos, state), ModBlocks.Crucible);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -47,8 +49,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 	public final RecipeProcessingComponent<CrucibleRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
-	public TileEntityCrucible() {
-		super(TYPE, StaticPowerTiers.ENERGIZED);
+	public TileEntityCrucible(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ENERGIZED);
 
 		// Get the tier object.
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.ENERGIZED);

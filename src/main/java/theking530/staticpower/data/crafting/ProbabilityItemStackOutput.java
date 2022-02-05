@@ -9,7 +9,8 @@ import net.minecraft.util.GsonHelper;
 import theking530.staticcore.utilities.SDMath;
 
 public class ProbabilityItemStackOutput {
-	public static final ProbabilityItemStackOutput EMPTY = new ProbabilityItemStackOutput(ItemStack.EMPTY, 0.0f, 0, 0.0f);
+	public static final ProbabilityItemStackOutput EMPTY = new ProbabilityItemStackOutput(ItemStack.EMPTY, 0.0f, 0,
+			0.0f);
 
 	private final ItemStack item;
 	private final float percentChance;
@@ -103,7 +104,7 @@ public class ProbabilityItemStackOutput {
 	public static ProbabilityItemStackOutput parseFromJSON(JsonObject json) {
 		try {
 			// Capture the output item.
-			ItemStack output = ShapedRecipe.itemFromJson(json);
+			ItemStack output = ShapedRecipe.itemStackFromJson(json);
 			float percentChance = 1.0f;
 			float additionalBonusChance = 0.0f;
 			int additionalBonus = 0;
@@ -121,7 +122,9 @@ public class ProbabilityItemStackOutput {
 
 			return new ProbabilityItemStackOutput(output, percentChance, additionalBonus, additionalBonusChance);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("An error occured when attempting to deserialize json object: %1$s to a ProbabilityItemStack.", json), e);
+			throw new RuntimeException(String.format(
+					"An error occured when attempting to deserialize json object: %1$s to a ProbabilityItemStack.",
+					json), e);
 		}
 	}
 
