@@ -8,6 +8,9 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -24,7 +27,8 @@ public class GuiPowerBarUtilities {
 		List<Component> tooltip = new ArrayList<Component>();
 
 		// Add the input rate to the tooltip.
-		tooltip.add(new TranslatableComponent("gui.staticpower.max_input").append(": ").append(GuiTextUtilities.formatEnergyRateToString(energyPerTick)));
+		tooltip.add(new TranslatableComponent("gui.staticpower.max_input").append(": ")
+				.append(GuiTextUtilities.formatEnergyRateToString(energyPerTick)));
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(GuiTextUtilities.formatEnergyToString(currentEnergy, maxEnergy));
@@ -32,7 +36,8 @@ public class GuiPowerBarUtilities {
 		return tooltip;
 	}
 
-	public static void drawPowerBar(@Nullable PoseStack matrixStack, float xpos, float ypos, float width, float height, float zLevel, long currentEnergy, long maxEnergy) {
+	public static void drawPowerBar(@Nullable PoseStack matrixStack, float xpos, float ypos, float width, float height,
+			float zLevel, long currentEnergy, long maxEnergy) {
 		float u1 = (float) currentEnergy / (float) maxEnergy;
 		float k1 = u1 * height;
 
@@ -40,10 +45,11 @@ public class GuiPowerBarUtilities {
 
 		// Get the origin.
 		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrixStack, xpos, ypos);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GuiTextures.POWER_BAR_BG);
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuilder();
-		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.POWER_BAR_BG);
 		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 		vertexbuffer.vertex(origin.getX() + width, origin.getY(), zLevel).uv(1, 0).endVertex();
 		vertexbuffer.vertex(origin.getX() + width, origin.getY() - height, zLevel).uv(1.0f, 1.0f).endVertex();
@@ -51,13 +57,18 @@ public class GuiPowerBarUtilities {
 		vertexbuffer.vertex(origin.getX(), origin.getY(), zLevel).uv(0, 0).endVertex();
 		tessellator.end();
 
+		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+		RenderSystem.setShaderTexture(0, GuiTextures.POWER_BAR_FG);
 		float glowState = getPowerBarGlow();
-		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.POWER_BAR_FG);
 		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		vertexbuffer.vertex(origin.getX() + width, origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, 0).endVertex();
-		vertexbuffer.vertex(origin.getX() + width, origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, u1).endVertex();
-		vertexbuffer.vertex(origin.getX(), origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).uv(0, u1).endVertex();
-		vertexbuffer.vertex(origin.getX(), origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).uv(0, 0).endVertex();
+		vertexbuffer.vertex(origin.getX() + width, origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f)
+				.uv(1, 0).endVertex();
+		vertexbuffer.vertex(origin.getX() + width, origin.getY() - k1, zLevel)
+				.color(glowState, glowState, glowState, 1.0f).uv(1, u1).endVertex();
+		vertexbuffer.vertex(origin.getX(), origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f)
+				.uv(0, u1).endVertex();
+		vertexbuffer.vertex(origin.getX(), origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).uv(0, 0)
+				.endVertex();
 		tessellator.end();
 	}
 

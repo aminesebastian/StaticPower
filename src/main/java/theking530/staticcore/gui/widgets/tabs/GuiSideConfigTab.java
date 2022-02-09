@@ -1,23 +1,17 @@
 package theking530.staticcore.gui.widgets.tabs;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
+import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
@@ -49,43 +43,43 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 		int xOffset = 3;
 		int yOffset = 8;
-		widgetContainer.registerWidget(topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 17, 20, 20, "T", this::buttonPressed));
-		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 13, 20, 20, "B", this::buttonPressed));
-		widgetContainer.registerWidget(frontButton = new TextButton(xOffset + 15, yOffset + 17, 20, 20, "F", this::buttonPressed));
-		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + 2 + tabHeight / 2, 20, 20, "B", this::buttonPressed));
-		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15, yOffset + 2 + tabHeight / 2, 20, 20, "L", this::buttonPressed));
-		widgetContainer.registerWidget(leftButton = new TextButton(xOffset + 15, yOffset + 2 + tabHeight / 2, 20, 20, "R", this::buttonPressed));
+		widgetContainer.registerWidget(
+				topButton = new TextButton(xOffset + tabWidth / 2, yOffset + 17, 20, 20, "T", this::buttonPressed));
+		widgetContainer.registerWidget(bottomButton = new TextButton(xOffset + tabWidth / 2, yOffset + tabHeight - 13,
+				20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(
+				frontButton = new TextButton(xOffset + 15, yOffset + 17, 20, 20, "F", this::buttonPressed));
+		widgetContainer.registerWidget(backButton = new TextButton(xOffset + tabWidth / 2, yOffset + 2 + tabHeight / 2,
+				20, 20, "B", this::buttonPressed));
+		widgetContainer.registerWidget(rightButton = new TextButton(xOffset + tabWidth - 15,
+				yOffset + 2 + tabHeight / 2, 20, 20, "L", this::buttonPressed));
+		widgetContainer.registerWidget(leftButton = new TextButton(xOffset + 15, yOffset + 2 + tabHeight / 2, 20, 20,
+				"R", this::buttonPressed));
 
 		topButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.TOP));
-		bottomButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.BOTTOM));
-		frontButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.FRONT));
-		backButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.BACK));
-		rightButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.RIGHT));
-		leftButton.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.LEFT));
+		bottomButton.setVisible(
+				te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.BOTTOM));
+		frontButton.setVisible(
+				te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.FRONT));
+		backButton
+				.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.BACK));
+		rightButton.setVisible(
+				te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.RIGHT));
+		leftButton
+				.setVisible(te.getComponent(SideConfigurationComponent.class).getBlockSideEnabledState(BlockSide.LEFT));
 
 		updateTooltips();
 	}
 
 	@Override
 	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		drawButtonBG(matrix, 0, 0);
 		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
+		drawButtonBG(matrix, 0, 0);
+		fontRenderer.drawShadow(matrix, getTitle(), (getTabSide() == TabSide.LEFT ? 11 : 24), 8, titleColor);
 	}
 
 	public void drawButtonBG(PoseStack matrix, int xPos, int yPos) {
-		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, xPos, yPos);
-
-		GL11.glEnable(GL11.GL_BLEND);
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuilder();
-		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.BUTTON_BG);
-		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		vertexbuffer.vertex(position.getX() + 95, position.getY() + 97, 0).uv(0, 1).endVertex();
-		vertexbuffer.vertex(position.getX() + 95, position.getY() + 22, 0).uv(0, 0).endVertex();
-		vertexbuffer.vertex(position.getX() + 10, position.getY() + 22, 0).uv(1, 0).endVertex();
-		vertexbuffer.vertex(position.getX() + 10, position.getY() + 97, 0).uv(1, 1).endVertex();
-		tessellator.end();
-		GL11.glDisable(GL11.GL_BLEND);
+		drawDarkBackground(matrix, 10, 22, 85, 75);
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
@@ -94,19 +88,32 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		}
 		SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
 
-		SideIncrementDirection direction = button.getClickedState() == MouseButton.LEFT ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
+		SideIncrementDirection direction = button.getClickedState() == MouseButton.LEFT ? SideIncrementDirection.FORWARD
+				: SideIncrementDirection.BACKWARDS;
 		if (button == topButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.TOP, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.TOP, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == bottomButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.BOTTOM, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.BOTTOM, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == leftButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.LEFT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.LEFT, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == rightButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.RIGHT, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == frontButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, tileEntity.getFacingDirection()),
+					direction);
 		} else if (button == backButton) {
-			sideComp.modulateWorldSpaceSideMode(SideConfigurationUtilities.getDirectionFromSide(BlockSide.BACK, tileEntity.getFacingDirection()), direction);
+			sideComp.modulateWorldSpaceSideMode(
+					SideConfigurationUtilities.getDirectionFromSide(BlockSide.BACK, tileEntity.getFacingDirection()),
+					direction);
 		}
 		updateTooltips();
 
@@ -148,7 +155,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			}
 
 			// Get the world space direction and current side mode.
-			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, tileEntity.getFacingDirection());
+			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side,
+					tileEntity.getFacingDirection());
 			MachineSideMode currentMode = sideComp.getWorldSpaceDirectionConfiguration(worldSpaceSide);
 
 			// Get the translation components.
@@ -156,7 +164,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			Component translatedModeName = currentMode.getName();
 
 			button.setText(currentMode.getFontColor() + translatedSideName.getString().substring(0, 1));
-			button.setTooltip(translatedSideName.append(" (").append(new TranslatableComponent("gui.staticpower.direction." + worldSpaceSide.toString()))
+			button.setTooltip(translatedSideName.append(" (")
+					.append(new TranslatableComponent("gui.staticpower.direction." + worldSpaceSide.toString()))
 					.append(ChatFormatting.WHITE + ")"), translatedModeName);
 		}
 	}
@@ -164,7 +173,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	public TranslatableComponent conditionallyGetCardinal(BlockSide side) {
 		if (tileEntity instanceof TileEntityBase) {
 			TileEntityBase te = (TileEntityBase) tileEntity;
-			return new TranslatableComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
+			return new TranslatableComponent("gui." + SideConfigurationUtilities
+					.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
 		}
 		return new TranslatableComponent("ERROR");
 	}

@@ -13,7 +13,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.ToolType;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 
 public class BlockSolderingTable extends StaticPowerTileEntityBlock {
@@ -29,7 +28,7 @@ public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 	}
 
 	public BlockSolderingTable(String name) {
-		super(name, Block.Properties.of(Material.METAL).noOcclusion().strength(3.5f).harvestTool(ToolType.PICKAXE));
+		super(name, Block.Properties.of(Material.METAL).noOcclusion().strength(3.5f));
 	}
 
 	@Override
@@ -38,7 +37,8 @@ public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;
 	}
 

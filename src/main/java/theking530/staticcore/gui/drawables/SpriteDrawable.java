@@ -3,12 +3,14 @@ package theking530.staticcore.gui.drawables;
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
@@ -18,6 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector4D;
+import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
 public class SpriteDrawable implements IDrawable {
@@ -89,29 +92,41 @@ public class SpriteDrawable implements IDrawable {
 			GL11.glDisable(GL11.GL_CULL_FACE);
 
 			if (spriteTexture.getName().toString().equals("minecraft:missingno")) {
-				// Bind the texture.
-				Minecraft.getInstance().getTextureManager().bindForSetup(sprite);
-				// Draw the sprite.
-				vertexbuffer.vertex(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getX(), uv.getW()).endVertex();
-				vertexbuffer.vertex(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getX(), uv.getY()).endVertex();
-				vertexbuffer.vertex(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getZ(), uv.getY()).endVertex();
-				vertexbuffer.vertex(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getZ(), uv.getW()).endVertex();
-				tessellator.end();
+				RenderSystem.setShader(GameRenderer::getPositionTexShader);
+				RenderSystem.setShaderTexture(0, sprite);
 
+				// Draw the sprite.
+				vertexbuffer.vertex(x, y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getX(), uv.getW())
+						.endVertex();
+				vertexbuffer.vertex(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.uv(uv.getX(), uv.getY()).endVertex();
+				vertexbuffer.vertex(x + size.getX(), y, z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getZ(), uv.getY())
+						.endVertex();
+				vertexbuffer.vertex(x + size.getX(), y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(uv.getZ(), uv.getW())
+						.endVertex();
+				tessellator.end();
 			} else {
 				// TO-DO: Implement UV here.
 				Minecraft.getInstance().getTextureManager().bindForSetup(TextureAtlas.LOCATION_BLOCKS);
 				// Draw the sprite.
-				vertexbuffer.vertex(x, y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(spriteTexture.getU0(), spriteTexture.getV1())
-						.endVertex();
-				vertexbuffer.vertex(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(spriteTexture.getU0(), spriteTexture.getV0()).endVertex();
-				vertexbuffer.vertex(x + size.getX(), y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv(spriteTexture.getU1(), spriteTexture.getV0())
-						.endVertex();
-				vertexbuffer.vertex(x + size.getX(), y + size.getY(), z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+				vertexbuffer.vertex(x, y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.uv(spriteTexture.getU0(), spriteTexture.getV1()).endVertex();
+				vertexbuffer.vertex(x, y, z).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.uv(spriteTexture.getU0(), spriteTexture.getV0()).endVertex();
+				vertexbuffer.vertex(x + size.getX(), y, z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
+						.uv(spriteTexture.getU1(), spriteTexture.getV0()).endVertex();
+				vertexbuffer.vertex(x + size.getX(), y + size.getY(), z)
+						.color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha())
 						.uv(spriteTexture.getU1(), spriteTexture.getV1()).endVertex();
 				tessellator.end();
 			}
 			GL11.glEnable(GL11.GL_CULL_FACE);
+
 		}
 	}
 }

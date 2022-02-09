@@ -84,17 +84,17 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 		// If not null, and if we are hovering the default attachment, check to see if
 		// we're connected to a tile entity on that side.
 		// If so, then we have a UI, otherwise we do not.
-		if (component != null) {
-			if (hit.hitInfo instanceof CableBoundsHoverResult) {
-				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
-				if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
-					Direction cableSide = hoverResult.direction;
-					return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
-				}
-			}
-		} else {
-			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
-		}
+//TO-DO:		if (component != null) {
+//			if (hit.hitInfo instanceof CableBoundsHoverResult) {
+//				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
+//				if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
+//					Direction cableSide = hoverResult.direction;
+//					return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
+//				}
+//			}
+//		} else {
+//			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
+//		}
 		return HasGuiType.NEVER;
 	}
 
@@ -114,16 +114,16 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	 */
 	@Override
 	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (!world.isClientSide) {
-			if (hit.hitInfo instanceof CableBoundsHoverResult) {
-				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
-				RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
-				NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
-					buf.writeBlockPos(pos);
-					buf.writeInt(hoverResult.direction.ordinal());
-				});
-			}
-		}
+//TO-DO:		if (!world.isClientSide) {
+//			if (hit.hitInfo instanceof CableBoundsHoverResult) {
+//				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
+//				RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
+//				NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
+//					buf.writeBlockPos(pos);
+//					buf.writeInt(hoverResult.direction.ordinal());
+//				});
+//			}
+//		}
 	}
 
 	@Override

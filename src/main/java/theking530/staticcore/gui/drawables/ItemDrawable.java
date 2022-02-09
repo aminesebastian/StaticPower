@@ -28,7 +28,7 @@ public class ItemDrawable implements IDrawable {
 	public void draw(float x, float y, float z) {
 		if (itemStack != null) {
 			float initialValue = Minecraft.getInstance().getItemRenderer().blitOffset;
-			Minecraft.getInstance().getItemRenderer().blitOffset = z - 50.0f;
+			Minecraft.getInstance().getItemRenderer().blitOffset = z - 0.0f;
 
 			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(itemStack, (int) x, (int) y);
 

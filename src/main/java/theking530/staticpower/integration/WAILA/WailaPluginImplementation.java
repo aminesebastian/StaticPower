@@ -42,83 +42,83 @@ public class WailaPluginImplementation implements IWailaPlugin {
 
 	@Override
 	public void register(IRegistrar registrar) {
-		registrar.registerTooltipRenderer(POWER_BAR_RENDERER,
-				new BarTooltipRenderer(100, 10, MAIN_SV_COLOR, ALT_SV_COLOR, Color.DARK_GREY));
-		registrar.registerTooltipRenderer(HEAT_BAR_RENDERER,
-				new BarTooltipRenderer(100, 10, MAIN_HEAT_COLOR, ALT_HEAT_COLOR, Color.DARK_GREY));
-		registrar.registerTooltipRenderer(PROCESSING_BAR_RENDERER,
-				new BarTooltipRenderer(100, 10, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR, Color.DARK_GREY));
-		registrar.registerTooltipRenderer(FLUID_BAR_RENDERER,
-				new BarTooltipRenderer(100, 10, MAIN_FLUID_COLOR, ALT_FLUID_COLOR, Color.DARK_GREY));
-		registrar.registerComponentProvider(new DigistoreMasterPresenceDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new DigistoreDecorator(), TooltipPosition.BODY, BlockDigistore.class);
-		registrar.registerBlockDataProvider(new WailaDataProviders(), BlockEntity.class);
-		registrar.registerComponentProvider(new StaticVoltDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new HeatDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new FluidDecorator(), TooltipPosition.BODY, Block.class);
+//TO-DO:		registrar.registerTooltipRenderer(POWER_BAR_RENDERER,
+//				new BarTooltipRenderer(100, 10, MAIN_SV_COLOR, ALT_SV_COLOR, Color.DARK_GREY));
+//		registrar.registerTooltipRenderer(HEAT_BAR_RENDERER,
+//				new BarTooltipRenderer(100, 10, MAIN_HEAT_COLOR, ALT_HEAT_COLOR, Color.DARK_GREY));
+//		registrar.registerTooltipRenderer(PROCESSING_BAR_RENDERER,
+//				new BarTooltipRenderer(100, 10, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR, Color.DARK_GREY));
+//		registrar.registerTooltipRenderer(FLUID_BAR_RENDERER,
+//				new BarTooltipRenderer(100, 10, MAIN_FLUID_COLOR, ALT_FLUID_COLOR, Color.DARK_GREY));
+//		registrar.registerComponentProvider(new DigistoreMasterPresenceDecorator(), TooltipPosition.BODY, Block.class);
+//		registrar.registerComponentProvider(new DigistoreDecorator(), TooltipPosition.BODY, BlockDigistore.class);
+//		registrar.registerBlockDataProvider(new WailaDataProviders(), BlockEntity.class);
+//		registrar.registerComponentProvider(new StaticVoltDecorator(), TooltipPosition.BODY, Block.class);
+//		registrar.registerComponentProvider(new HeatDecorator(), TooltipPosition.BODY, Block.class);
+//		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.BODY, Block.class);
+//		registrar.registerComponentProvider(new FluidDecorator(), TooltipPosition.BODY, Block.class);
 	}
-
-	public static class StaticVoltDecorator implements IComponentProvider {
-		@Override
-		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			if (accessor.getServerData().contains(WailaDataProviders.POWER_TAG)) {
-				tooltip.add(new Component(POWER_BAR_RENDERER,
-						accessor.getServerData().getCompound(WailaDataProviders.POWER_TAG)));
-			}
-		}
-	}
-
-	public static class HeatDecorator implements IComponentProvider {
-		@Override
-		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			if (accessor.getServerData().contains(WailaDataProviders.HEAT_TAG)) {
-				tooltip.add(new TextComponent(HEAT_BAR_RENDERER,
-						accessor.getServerData().getCompound(WailaDataProviders.HEAT_TAG)));
-			}
-		}
-	}
-
-	public static class ProcessingTimeDecorator implements IComponentProvider {
-		@Override
-		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			if (accessor.getServerData().contains(WailaDataProviders.PROCESSING_TAG)) {
-				tooltip.add(new RenderableTextComponent(PROCESSING_BAR_RENDERER,
-						accessor.getServerData().getCompound(WailaDataProviders.PROCESSING_TAG)));
-			}
-		}
-	}
-
-	public static class FluidDecorator implements IComponentProvider {
-		@Override
-		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			if (accessor.getServerData().contains(WailaDataProviders.FLUID_TAG)) {
-				tooltip.add(new RenderableTextComponent(FLUID_BAR_RENDERER,
-						accessor.getServerData().getCompound(WailaDataProviders.FLUID_TAG)));
-			}
-		}
-	}
-
-	public static class DigistoreDecorator implements IComponentProvider {
-		@Override
-		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-
-		}
-	}
-
-	public static class DigistoreMasterPresenceDecorator implements IComponentProvider {
-		@Override
-		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			if (accessor.getServerData().contains(WailaDataProviders.DIGISTORE_MANAGER_TAG)) {
-				boolean managerPresent = accessor.getServerData().getBoolean(WailaDataProviders.DIGISTORE_MANAGER_TAG);
-				if (managerPresent) {
-					tooltip.add(new TextComponent(ChatFormatting.GREEN.toString())
-							.append(new TranslatableComponent("gui.staticpower.manager_present")));
-				} else {
-					tooltip.add(new TextComponent(ChatFormatting.RED.toString())
-							.append(new TranslatableComponent("gui.staticpower.manager_missing")));
-				}
-			}
-		}
-	}
+//
+//	public static class StaticVoltDecorator implements IComponentProvider {
+//		@Override
+//		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+//			if (accessor.getServerData().contains(WailaDataProviders.POWER_TAG)) {
+//				tooltip.add(new Component(POWER_BAR_RENDERER,
+//						accessor.getServerData().getCompound(WailaDataProviders.POWER_TAG)));
+//			}
+//		}
+//	}
+//
+//	public static class HeatDecorator implements IComponentProvider {
+//		@Override
+//		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+//			if (accessor.getServerData().contains(WailaDataProviders.HEAT_TAG)) {
+//				tooltip.add(new TextComponent(HEAT_BAR_RENDERER,
+//						accessor.getServerData().getCompound(WailaDataProviders.HEAT_TAG)));
+//			}
+//		}
+//	}
+//
+//	public static class ProcessingTimeDecorator implements IComponentProvider {
+//		@Override
+//		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+//			if (accessor.getServerData().contains(WailaDataProviders.PROCESSING_TAG)) {
+//				tooltip.add(new RenderableTextComponent(PROCESSING_BAR_RENDERER,
+//						accessor.getServerData().getCompound(WailaDataProviders.PROCESSING_TAG)));
+//			}
+//		}
+//	}
+//
+//	public static class FluidDecorator implements IComponentProvider {
+//		@Override
+//		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+//			if (accessor.getServerData().contains(WailaDataProviders.FLUID_TAG)) {
+//				tooltip.add(new RenderableTextComponent(FLUID_BAR_RENDERER,
+//						accessor.getServerData().getCompound(WailaDataProviders.FLUID_TAG)));
+//			}
+//		}
+//	}
+//
+//	public static class DigistoreDecorator implements IComponentProvider {
+//		@Override
+//		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+//
+//		}
+//	}
+//
+//	public static class DigistoreMasterPresenceDecorator implements IComponentProvider {
+//		@Override
+//		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+//			if (accessor.getServerData().contains(WailaDataProviders.DIGISTORE_MANAGER_TAG)) {
+//				boolean managerPresent = accessor.getServerData().getBoolean(WailaDataProviders.DIGISTORE_MANAGER_TAG);
+//				if (managerPresent) {
+//					tooltip.add(new TextComponent(ChatFormatting.GREEN.toString())
+//							.append(new TranslatableComponent("gui.staticpower.manager_present")));
+//				} else {
+//					tooltip.add(new TextComponent(ChatFormatting.RED.toString())
+//							.append(new TranslatableComponent("gui.staticpower.manager_missing")));
+//				}
+//			}
+//		}
+//	}
 }

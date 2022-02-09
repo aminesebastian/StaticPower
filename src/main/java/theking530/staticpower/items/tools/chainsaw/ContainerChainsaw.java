@@ -57,8 +57,7 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 						if (bladeSlot >= 0) {
 							if (!getPlayerInventory().player.level.isClientSide) {
 								ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
-								serverPlayer.slotChanged(ContainerChainsaw.this, playerHotbarStart + bladeSlot,
-										getItemStack());
+								// TO-DO: serverPlayer.slotChanged(ContainerChainsaw.this, playerHotbarStart + bladeSlot, getItemStack());
 							}
 						}
 					}

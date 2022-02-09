@@ -6,6 +6,9 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
+
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -37,7 +40,8 @@ public class GuiHeatBarUtilities {
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuilder();
-		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.HEAT_BAR_BG);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GuiTextures.HEAT_BAR_BG);
 		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 		vertexbuffer.vertex(origin.getX() + width, origin.getY(), zLevel).uv(1, 0).endVertex();
 		vertexbuffer.vertex(origin.getX() + width, origin.getY() - height, zLevel).uv(1.0f, 1.0f).endVertex();
@@ -51,7 +55,8 @@ public class GuiHeatBarUtilities {
 		glowState += 8.0f;
 		glowState /= 2.0f;
 		
-		Minecraft.getInstance().getTextureManager().bindForSetup(GuiTextures.HEAT_BAR_FG);
+		RenderSystem.setShader(GameRenderer::getPositionTexShader);
+		RenderSystem.setShaderTexture(0, GuiTextures.HEAT_BAR_FG);
 		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 		vertexbuffer.vertex(origin.getX() + width, origin.getY(), zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, 0).endVertex();
 		vertexbuffer.vertex(origin.getX() + width, origin.getY() - k1, zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, u1).endVertex();

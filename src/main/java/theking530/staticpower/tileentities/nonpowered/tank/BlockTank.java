@@ -29,7 +29,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.common.ToolType;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -40,11 +39,9 @@ import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
-import theking530.staticpower.blocks.StaticPowerItemBlockCustomRenderer;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
-import theking530.staticpower.client.rendering.items.dynamic.ItemTankSpecialRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -52,15 +49,18 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	private final ResourceLocation tier;
 
 	public BlockTank(String name, ResourceLocation tier) {
-		super(name, Block.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
+		super(name, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
 		this.tier = tier;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "� Capacity ").append(GuiTextUtilities
-				.formatFluidToString(SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultTankCapacity.get(), TileEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
+		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "� Capacity ")
+				.append(GuiTextUtilities.formatFluidToString(
+						SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultTankCapacity.get(),
+								TileEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
 
 		// Check to see if the stack has the serialized nbt.If it does, add the stored
 		// amount of fluid to the tooltip.
@@ -69,17 +69,20 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 			CompoundTag tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
 			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
-			tooltip.add(new TextComponent(ChatFormatting.AQUA.toString() + "� Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
+			tooltip.add(new TextComponent(ChatFormatting.AQUA.toString() + "� Stored ")
+					.append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
 		}
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;
 	}
 
 	@Override
-	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		// Check if the player is holding anything.
 		if (!player.getItemInHand(hand).isEmpty()) {
 			// Get the held item and a pointer to the cauldron.
@@ -91,11 +94,13 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 			// If the cauldron already has contents, attempt to fill the held item,
 			// otherwise, fill the cauldron.
 			if (cauldron.fluidTankComponent.getFluidAmount() > 0) {
-				actionResult = FluidUtil.tryFillContainerAndStow(heldItem, cauldron.fluidTankComponent, player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000,
-						player, true);
+				actionResult = FluidUtil.tryFillContainerAndStow(heldItem, cauldron.fluidTankComponent,
+						player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000, player,
+						true);
 			} else {
-				actionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, cauldron.fluidTankComponent, player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000,
-						player, true);
+				actionResult = FluidUtil.tryEmptyContainerAndStow(heldItem, cauldron.fluidTankComponent,
+						player.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).orElse(null), 1000, player,
+						true);
 			}
 
 			// Check what happened.
@@ -120,7 +125,9 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
 			return new StaticPowerItemBlock(this);
 		} else {
-			return new StaticPowerItemBlockCustomRenderer(this, () -> ItemTankSpecialRenderer::new);
+			return new StaticPowerItemBlock(this);
+			// TO-DO: Fix this so this works. return new
+			// StaticPowerItemBlockCustomRenderer(this, () -> ItemTankSpecialRenderer::new);
 		}
 	}
 
@@ -132,14 +139,15 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 			CompoundTag tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
 			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
-			return new TranslatableComponent(getDescriptionId()).append(" (").append(new TranslatableComponent(fluid.getTranslationKey()).append(")"));
+			return new TranslatableComponent(getDescriptionId()).append(" (")
+					.append(new TranslatableComponent(fluid.getTranslationKey()).append(")"));
 		} else {
 			return new TranslatableComponent(getDescriptionId());
 		}
 	}
 
 	@Override
-	public int getLightValue(BlockState state, BlockGetter world, BlockPos pos) {
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		BlockEntity te = world.getBlockEntity(pos);
 		if (te instanceof TileEntityTank) {
 			FluidStack fluid = ((TileEntityTank) te).fluidTankComponent.getFluid();

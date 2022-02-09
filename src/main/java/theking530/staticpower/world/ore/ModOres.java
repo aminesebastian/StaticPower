@@ -1,14 +1,16 @@
 package theking530.staticpower.world.ore;
 
-import net.minecraft.world.level.block.Block;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.GenerationStep;
+import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
-import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraft.world.level.levelgen.feature.configurations.RangeDecoratorConfiguration;
+import net.minecraft.world.level.levelgen.heightproviders.UniformHeight;
+import net.minecraft.world.level.levelgen.placement.FeatureDecorator;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModBlocks;
@@ -17,9 +19,11 @@ public class ModOres {
 	public static final ConfiguredFeature<OreConfiguration, ?> ZINC = register("ore_zinc",
 			new OreConfigBuilder(ModBlocks.OreZinc).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
 	public static final ConfiguredFeature<OreConfiguration, ?> MAGENSIUM = register("ore_magnesium",
-			new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
+			new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4)
+					.setRarity(8));
 	public static final ConfiguredFeature<OreConfiguration, ?> COPPER = register("ore_copper",
-			new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(16));
+			new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10)
+					.setRarity(16));
 	public static final ConfiguredFeature<OreConfiguration, ?> TIN = register("ore_tin",
 			new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(30).setMaxVeinSize(10).setRarity(18));
 	public static final ConfiguredFeature<OreConfiguration, ?> LEAD = register("ore_lead",
@@ -31,13 +35,15 @@ public class ModOres {
 	public static final ConfiguredFeature<OreConfiguration, ?> PLATINUM = register("ore_platinum",
 			new OreConfigBuilder(ModBlocks.OrePlatinum).setMaxLevel(30).setMinLevel(0).setMaxVeinSize(4).setRarity(10));
 	public static final ConfiguredFeature<OreConfiguration, ?> ALUMINIUM = register("ore_aluminium",
-			new OreConfigBuilder(ModBlocks.OreAluminium).setMaxLevel(80).setMinLevel(40).setMaxVeinSize(10).setRarity(12));
+			new OreConfigBuilder(ModBlocks.OreAluminium).setMaxLevel(80).setMinLevel(40).setMaxVeinSize(10)
+					.setRarity(12));
 	public static final ConfiguredFeature<OreConfiguration, ?> SAPPHIRE = register("ore_sapphire",
 			new OreConfigBuilder(ModBlocks.OreSapphire).setMaxLevel(20).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
 	public static final ConfiguredFeature<OreConfiguration, ?> RUBY = register("ore_ruby",
 			new OreConfigBuilder(ModBlocks.OreRuby).setMaxLevel(25).setMinLevel(0).setMaxVeinSize(4).setRarity(3));
 	public static final ConfiguredFeature<OreConfiguration, ?> RUSTY_IRON_ORE = register("ore_rusty_iron",
-			new OreConfigBuilder(ModBlocks.OreRustyIron).setMaxLevel(100).setMinLevel(50).setMaxVeinSize(8).setRarity(8));
+			new OreConfigBuilder(ModBlocks.OreRustyIron).setMaxLevel(100).setMinLevel(50).setMaxVeinSize(8)
+					.setRarity(8));
 
 	public static void addOreGenFeatures(BiomeLoadingEvent event) {
 		if (StaticPowerConfig.SERVER.generateZincOre.get()) {
@@ -80,7 +86,8 @@ public class ModOres {
 
 	@SuppressWarnings("unchecked")
 	private static ConfiguredFeature<OreConfiguration, ?> register(String name, OreConfigBuilder config) {
-		return (ConfiguredFeature<OreConfiguration, ?>) Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, name, config.build());
+		return (ConfiguredFeature<OreConfiguration, ?>) Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, name,
+				config.build());
 	}
 
 	private static class OreConfigBuilder {
@@ -115,8 +122,12 @@ public class ModOres {
 		}
 
 		public ConfiguredFeature<?, ?> build() {
-			return Feature.ORE.configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE, blockSupplier.defaultBlockState(), maxVeinSize))
-					.decorated(FeatureDecorator.RANGE.configured(new RangeDecoratorConfiguration(minLevel, 0, maxLevel))).squared().count(rarity);
+			return Feature.ORE
+					.configured(new OreConfiguration(OreConfiguration.Predicates.NATURAL_STONE,
+							blockSupplier.defaultBlockState(), maxVeinSize))
+					.decorated(FeatureDecorator.RANGE.configured(new RangeDecoratorConfiguration(
+							UniformHeight.of(VerticalAnchor.aboveBottom(minLevel), VerticalAnchor.belowTop(maxLevel)))))
+					.squared().count(rarity);
 		}
 	}
 }

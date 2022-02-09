@@ -93,11 +93,11 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		VoxelShape output = Block.box(0, 0, 0, 0, 0, 0);
 
 		// Define helper variables.
-		float yStart = 0;
-		float yEnd = 0;
-		float forwardStart = 0;
-		float forwardEnd = 0;
-		float angleOffset = (float) Math.tan(Math.toRadians(angle));
+		double yStart = 0;
+		double yEnd = 0;
+		double forwardStart = 0;
+		double forwardEnd = 0;
+		double angleOffset = Math.tan(Math.toRadians(angle));
 
 		// Calculate the amount of steps, and building the bounding box.
 		int steps = (int) (16.0f / precision);
@@ -120,19 +120,24 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 			}
 
 			// Build the bounds.
+			double minX = 0, minY = yStart, minZ = 0, maxX = 16, maxY = yEnd, maxZ = 16;
 			if (facingDirection == Direction.NORTH) {
-				output = Shapes.joinUnoptimized(output, Block.box(0, yStart, forwardStart, 16, yEnd, forwardEnd),
-						BooleanOp.OR);
+				minZ = forwardStart;
+				maxZ = forwardEnd;
 			} else if (facingDirection == Direction.EAST) {
-				output = Shapes.joinUnoptimized(output,
-						Block.box(16 - forwardStart, yStart, 0, 16 - forwardEnd, yEnd, 16), BooleanOp.OR);
+				minX = 16 - forwardStart;
+				maxX = 16 - forwardEnd;
 			} else if (facingDirection == Direction.WEST) {
-				output = Shapes.joinUnoptimized(output, Block.box(forwardStart, yStart, 0, forwardEnd, yEnd, 16),
-						BooleanOp.OR);
+				minX = forwardStart;
+				maxX = forwardEnd;
 			} else if (facingDirection == Direction.SOUTH) {
-				output = Shapes.joinUnoptimized(output,
-						Block.box(0, yStart, 16 - forwardStart, 16, yEnd, 16 - forwardEnd), BooleanOp.OR);
+				minZ = 16 - forwardStart;
+				maxZ = 16 - forwardEnd;
 			}
+
+			output = Shapes.joinUnoptimized(output, Block.box(Math.min(minX, maxX), Math.min(minY, maxY),
+					Math.min(minZ, maxZ), Math.max(minX, maxX), Math.max(minY, maxY), Math.max(minZ, maxZ)),
+					BooleanOp.OR);
 		}
 
 		// Return the output

@@ -106,7 +106,8 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 
 				// If on the server, update the held item.
 				if (!getTileEntity().getLevel().isClientSide) {
-					((ServerPlayer) player).broadcastCarriedItem();
+					broadcastChanges();
+					// TO-DO: ((ServerPlayer) player).broadcastCarriedItem();
 				}
 
 				// Tell the slot we crafted.
@@ -132,7 +133,8 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 						}
 					}
 					System.out.println(amount);
-					((ServerPlayer) player).refreshContainer(this, this.getItems());
+					broadcastFullState();
+					// Old Way ((ServerPlayer) player).refreshContainer(this, this.getItems());
 				}
 			}
 		} else {
@@ -162,7 +164,8 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 
 			// Sync the slot.
 			ServerPlayer serverplayerentity = (ServerPlayer) getPlayerInventory().player;
-			serverplayerentity.connection.send(new ClientboundContainerSetSlotPacket(containerId, 10, output));
+			serverplayerentity.connection
+					.send(new ClientboundContainerSetSlotPacket(containerId, this.getStateId(), 10, output));
 		}
 	}
 

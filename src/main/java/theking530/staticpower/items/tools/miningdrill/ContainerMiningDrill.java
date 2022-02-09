@@ -56,8 +56,7 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 				if (drillSlot >= 0) {
 					if (!getPlayerInventory().player.level.isClientSide) {
 						ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
-						serverPlayer.slotChanged(ContainerMiningDrill.this, playerHotbarStart + drillSlot,
-								getItemStack());
+						// TO-DO: serverPlayer.slotChanged(ContainerMiningDrill.this, playerHotbarStart + drillSlot, getItemStack());
 					}
 				}
 			}

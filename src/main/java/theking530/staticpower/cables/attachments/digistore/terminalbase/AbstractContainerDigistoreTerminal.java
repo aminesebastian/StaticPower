@@ -155,7 +155,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		// There is a way to optimize this, TO-DO.
 		for (ContainerListener icontainerlistener : this.containerListeners) {
 			if (icontainerlistener instanceof ServerPlayer) {
-				((ServerPlayer) icontainerlistener).refreshContainer(this);
+				// TO-DO: ((ServerPlayer) icontainerlistener).refreshContainer(this);
+				//this.broadcastFullState();
 			}
 		}
 	}
@@ -219,7 +220,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 					// Update the player's held item.
 					getCarried().shrink(inserted);
-					((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
+					// TO-DO: ((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
+					this.broadcastChanges();
 				} else {
 					// Get the clicked stack (if it event exists.
 					ItemStack stack = ItemStack.EMPTY;
@@ -278,7 +280,8 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 							// Then, set the held item after extracting.
 							setCarried(network.extractItem(simulatedStack, simulatedStack.getCount(), false));
-							((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
+							// TO-DO:  ((ServerPlayer) (getPlayerInventory().player)).broadcastCarriedItem();
+							this.broadcastChanges();
 						} else if (button == MouseButton.LEFT && shiftHeld) {
 							// Get the item (up to a full stack). If empty, return.
 							ItemStack simulatedStack = network.extractItem(stack, stack.getMaxStackSize(), true);

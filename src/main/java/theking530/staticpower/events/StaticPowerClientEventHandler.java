@@ -105,8 +105,7 @@ public class StaticPowerClientEventHandler {
 		LOGGER.info("Static Power Client Setup Completed!");
 	}
 
-	public static void registerBlockEntityRenders(RegisterRenderers event) {
-
+	public static void registerBlockEntityRenders(RegisterRenderers event) throws Exception {
 		// Register the tile entity special renderers.
 		LOGGER.info("Registering Tile Entity Special Renderers!");
 		StaticCoreRegistry.registerTileEntitySpecialRenderers(event);

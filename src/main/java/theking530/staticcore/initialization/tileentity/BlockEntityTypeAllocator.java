@@ -76,6 +76,6 @@ public class BlockEntityTypeAllocator<T extends TileEntityBase> {
 	}
 
 	public BlockEntity create(BlockPos pos, BlockState state) {
-		return type.create(pos, state);
+		return factory.apply(this, pos, state);
 	}
 }

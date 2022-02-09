@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.StainedGlassPaneBlock;
+import net.minecraftforge.client.RenderProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.Sheets;
@@ -182,7 +183,7 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 							combinedOverlayIn, matrixStackIn, ivertexbuilder);
 				}
 			} else {
-				itemStackIn.getItem().getItemStackTileEntityRenderer().renderByItem(itemStackIn, transformTypeIn,
+				RenderProperties.get(itemStackIn).getItemStackRenderer().renderByItem(itemStackIn, transformTypeIn,
 						matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 			}
 

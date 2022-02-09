@@ -22,7 +22,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.StaticPower;
 
 /**
@@ -47,11 +46,12 @@ public class CableNetworkManager extends SavedData {
 	private final Level World;
 	private final HashMap<BlockPos, ServerCable> WorldCables;
 	private final HashMap<Long, CableNetwork> Networks;
+	private final String Name;
 	private long CurrentNetworkId = 0;
 	private boolean firstTick = false;
 
 	public CableNetworkManager(String name, Level world) {
-		super(name);
+		Name = name;
 		World = world;
 		WorldCables = new HashMap<BlockPos, ServerCable>();
 		Networks = new HashMap<Long, CableNetwork>();
@@ -83,12 +83,14 @@ public class CableNetworkManager extends SavedData {
 
 	public void addCable(ServerCable cable) {
 		if (!firstTick) {
-			LOGGER.error(String.format("Attempted to add a cable before the world is fully loaded: %1$s.", cable.getPos()));
+			LOGGER.error(
+					String.format("Attempted to add a cable before the world is fully loaded: %1$s.", cable.getPos()));
 			return;
 		}
 
 		if (WorldCables.containsKey(cable.getPos())) {
-			throw new RuntimeException(String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
+			throw new RuntimeException(
+					String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
 		}
 		WorldCables.put(cable.getPos(), cable);
 		LOGGER.debug(String.format("Cable added at position: %1$s.", cable.getPos()));
@@ -105,7 +107,8 @@ public class CableNetworkManager extends SavedData {
 
 	public void refreshCable(ServerCable cable) {
 		if (cable.Network == null) {
-			throw new RuntimeException(String.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
+			throw new RuntimeException(String
+					.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
 		}
 
 		// Get the original network's cables.
@@ -151,7 +154,8 @@ public class CableNetworkManager extends SavedData {
 
 	public void removeCable(BlockPos pos) {
 		if (!WorldCables.containsKey(pos)) {
-			throw new RuntimeException(String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
+			throw new RuntimeException(
+					String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
 		}
 		// Get the cable.
 		ServerCable cable = getCable(pos);
@@ -224,6 +228,10 @@ public class CableNetworkManager extends SavedData {
 		setDirty();
 	}
 
+	public String GetName() {
+		return Name;
+	}
+
 	public CableNetwork getNetworkById(long id) {
 		if (Networks.containsKey(id)) {
 			return Networks.get(id);
@@ -231,8 +239,9 @@ public class CableNetworkManager extends SavedData {
 		return null;
 	}
 
-	@Override
-	public void load(CompoundTag tag) {
+	public static CableNetworkManager load(CompoundTag tag, String name, Level world) {
+		CableNetworkManager output = new CableNetworkManager(name, world);
+
 		// Save the current parcel id.
 		if (tag.contains("current_parcel_id")) {
 			currentItemParcelId = tag.getLong("current_parcel_id");
@@ -248,26 +257,27 @@ public class CableNetworkManager extends SavedData {
 			currentPatternId = tag.getLong("pattern_id");
 		}
 
-		ListTag cables = tag.getList("cables", Constants.NBT.TAG_COMPOUND);
+		ListTag cables = tag.getList("cables", Tag.TAG_COMPOUND);
 		for (Tag cableTag : cables) {
 			CompoundTag cableTagCompound = (CompoundTag) cableTag;
-			ServerCable cable = new ServerCable(World, cableTagCompound);
-			WorldCables.put(cable.getPos(), cable);
+			ServerCable cable = new ServerCable(world, cableTagCompound);
+			output.WorldCables.put(cable.getPos(), cable);
 		}
 
-		ListTag nets = tag.getList("networks", Constants.NBT.TAG_COMPOUND);
+		ListTag nets = tag.getList("networks", Tag.TAG_COMPOUND);
 		for (Tag netTag : nets) {
 			CompoundTag netTagCompound = (CompoundTag) netTag;
 			CableNetwork network = CableNetwork.create(netTagCompound);
-			network.setWorld(World);
-			Networks.put(network.getId(), network);
+			network.setWorld(world);
+			output.Networks.put(network.getId(), network);
 		}
 
 		// Get the current network Id.
-		CurrentNetworkId = tag.getLong("current_network_id");
+		output.CurrentNetworkId = tag.getLong("current_network_id");
 
-		LOGGER.debug(String.format("Deserialized: %1$d cables.", WorldCables.size()));
-		LOGGER.debug(String.format("Deserialized: %1$d networks.", Networks.size()));
+		LOGGER.debug(String.format("Deserialized: %1$d cables.", output.WorldCables.size()));
+		LOGGER.debug(String.format("Deserialized: %1$d networks.", output.Networks.size()));
+		return output;
 	}
 
 	@Override
@@ -304,9 +314,11 @@ public class CableNetworkManager extends SavedData {
 	}
 
 	public static CableNetworkManager get(ServerLevel world) {
-		String name = PREFIX + "_" + world.dimension().location().getNamespace() + "_" + world.dimension().location().getPath();
+		String name = PREFIX + "_" + world.dimension().location().getNamespace() + "_"
+				+ world.dimension().location().getPath();
 
-		return world.getDataStorage().computeIfAbsent(() -> new CableNetworkManager(name, world), name);
+		return world.getDataStorage().computeIfAbsent((tag) -> CableNetworkManager.load(tag, name, world),
+				() -> new CableNetworkManager(name, world), name);
 	}
 
 	private CableNetwork formNetworkAt(Level world, BlockPos pos) {
@@ -414,7 +426,8 @@ public class CableNetworkManager extends SavedData {
 
 	private void addNetwork(CableNetwork network) {
 		if (Networks.containsKey(network.getId())) {
-			throw new RuntimeException(String.format("Attempted to register a network with duplicate Id: %1$s.", network.getId()));
+			throw new RuntimeException(
+					String.format("Attempted to register a network with duplicate Id: %1$s.", network.getId()));
 		}
 		network.setWorld(World);
 		Networks.put(network.getId(), network);
@@ -424,7 +437,8 @@ public class CableNetworkManager extends SavedData {
 
 	private void removeNetwork(long id) {
 		if (!Networks.containsKey(id)) {
-			throw new RuntimeException(String.format("Attempted to remove a network with Id: %1$s that had not been registered.", id));
+			throw new RuntimeException(
+					String.format("Attempted to remove a network with Id: %1$s that had not been registered.", id));
 		}
 
 		Networks.remove(id);

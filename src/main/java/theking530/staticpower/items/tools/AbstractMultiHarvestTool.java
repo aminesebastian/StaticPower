@@ -4,33 +4,36 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.CommandBlock;
-import net.minecraft.world.level.block.JigsawBlock;
-import net.minecraft.world.level.block.StructureBlock;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CommandBlock;
+import net.minecraft.world.level.block.JigsawBlock;
+import net.minecraft.world.level.block.StructureBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
-import net.minecraft.server.level.ServerLevel;
 import theking530.api.multipartitem.AbstractMultiPartItem;
 import theking530.staticpower.StaticPower;
 
@@ -38,19 +41,22 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected float attackDamage;
 	protected Multimap<Attribute, AttributeModifier> toolAttributes;
 
-	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn) {
+	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn,
+			float attackSpeedIn) {
 		super(name, properties.stacksTo(1));
 		this.attackDamage = attackDamageIn + 2.0f;
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", (double) this.attackDamage, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", (double) attackSpeedIn, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier",
+				(double) this.attackDamage, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier",
+				(double) attackSpeedIn, AttributeModifier.Operation.ADDITION));
 		this.toolAttributes = builder.build();
 
 	}
 
-	public abstract boolean canHarvestAtFullSpeed(ItemStack stack, BlockState state);
+	public abstract boolean canHarvestAtFullSpeed(@Nullable Level world, ItemStack stack, BlockState state);
 
-	protected abstract boolean canHarvestBlockInternal(ItemStack stack, BlockState state);
+	protected abstract boolean canHarvestBlockInternal(Level world, ItemStack stack, BlockState state);
 
 	public abstract int getWidth(ItemStack stack);
 
@@ -63,11 +69,20 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	}
 
 	@Override
-	public boolean canHarvestBlock(ItemStack stack, BlockState state) {
-		if (!isReadyToMine(stack)) {
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player player) {
+		if (player == null) {
 			return false;
 		}
-		return canHarvestBlockInternal(stack, state);
+
+		ItemStack thisStack = player.getUseItem();
+		if (thisStack.isEmpty()) {
+			return false;
+		}
+
+		if (!isReadyToMine(thisStack)) {
+			return false;
+		}
+		return canHarvestBlockInternal(world, thisStack, state);
 	}
 
 	/**
@@ -123,11 +138,12 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 						}
 
 						// Check if we can harvest this block.
-						if (canHarvestBlock(itemstack, player.getCommandSenderWorld().getBlockState(offsetPos))) {
+						if (canAttackBlock(state, player.getCommandSenderWorld(), offsetPos, player)) {
 							minableBlocks.add(offsetPos);
 						}
 					} catch (Exception e) {
-						StaticPower.LOGGER.warn(String.format("Unable to mine block at position: %1$s.", offsetPos.toString()), e);
+						StaticPower.LOGGER.warn(
+								String.format("Unable to mine block at position: %1$s.", offsetPos.toString()), e);
 					}
 				}
 			}
@@ -174,16 +190,19 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 
 	protected boolean breakAndHarvestBlock(BlockPos pos, ServerPlayer player) {
 		BlockState blockstate = player.getCommandSenderWorld().getBlockState(pos);
-		int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(player.getCommandSenderWorld(), player.gameMode.getGameModeForPlayer(), player, pos);
+		int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(player.getCommandSenderWorld(),
+				player.gameMode.getGameModeForPlayer(), player, pos);
 		if (exp == -1) {
 			return false;
 		} else {
 			BlockEntity tileentity = player.getCommandSenderWorld().getBlockEntity(pos);
 			Block block = blockstate.getBlock();
-			if ((block instanceof CommandBlock || block instanceof StructureBlock || block instanceof JigsawBlock) && !player.canUseGameMasterBlocks()) {
+			if ((block instanceof CommandBlock || block instanceof StructureBlock || block instanceof JigsawBlock)
+					&& !player.canUseGameMasterBlocks()) {
 				player.getCommandSenderWorld().sendBlockUpdated(pos, blockstate, blockstate, 3);
 				return false;
-			} else if (player.blockActionRestricted(player.getCommandSenderWorld(), pos, player.gameMode.getGameModeForPlayer())) {
+			} else if (player.blockActionRestricted(player.getCommandSenderWorld(), pos,
+					player.gameMode.getGameModeForPlayer())) {
 				return false;
 			} else if (player.isCreative()) {
 				if (breakBlock(blockstate, block, pos, player, tileentity, player.getMainHandItem(), exp, true)) {
@@ -199,7 +218,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 		}
 	}
 
-	protected boolean breakBlock(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean breakBlock(BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		// Indicate to the held item that a block was destroyed using it.
 		heldItem.mineBlock(player.getCommandSenderWorld(), state, pos, player);
 
@@ -211,7 +231,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 			// If the held item is now empty but the copy is not, that means the held item
 			// was made empty and has therefore broken.
 			if (heldItem.isEmpty() && !heldItemCopy.isEmpty()) {
-				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItemCopy, InteractionHand.MAIN_HAND);
+				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItemCopy,
+						InteractionHand.MAIN_HAND);
 			}
 		}
 
@@ -219,7 +240,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 		boolean canHarvestWithDrops = state.canHarvestBlock(player.getCommandSenderWorld(), pos, player);
 
 		// Remove the block.
-		boolean removed = state.removedByPlayer(player.getCommandSenderWorld(), pos, player, canHarvestWithDrops, player.getCommandSenderWorld().getFluidState(pos));
+		boolean removed = state.removedByPlayer(player.getCommandSenderWorld(), pos, player, canHarvestWithDrops,
+				player.getCommandSenderWorld().getFluidState(pos));
 		if (removed) {
 			// Indicate that the player is destroying the block.
 			state.getBlock().destroy(player.getCommandSenderWorld(), pos, state);
@@ -229,7 +251,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 		return removed && canHarvestWithDrops;
 	}
 
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		block.playerDestroy(player.getCommandSenderWorld(), player, pos, state, tileEntity, heldItem);
 		if (experience > 0) {
 			state.getBlock().popExperience((ServerLevel) player.getCommandSenderWorld(), pos, experience);
@@ -238,7 +261,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		return canHarvestAtFullSpeed(stack, state) ? this.getEfficiency(stack) : isReadyToMine(stack) ? 1.0f : 0.0f;
+		return canHarvestAtFullSpeed(null, stack, state) ? this.getEfficiency(stack)
+				: isReadyToMine(stack) ? 1.0f : 0.0f;
 	}
 
 	/**
@@ -261,7 +285,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	 */
 	@SuppressWarnings("deprecation")
 	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
-		return equipmentSlot == EquipmentSlot.MAINHAND ? this.toolAttributes : super.getDefaultAttributeModifiers(equipmentSlot);
+		return equipmentSlot == EquipmentSlot.MAINHAND ? this.toolAttributes
+				: super.getDefaultAttributeModifiers(equipmentSlot);
 	}
 
 	public float getAttackDamage() {
@@ -299,7 +324,8 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 			this.width = width;
 			this.height = height;
 
-			BlockHitResult traceResult = Item.getPlayerPOVHitResult(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
+			BlockHitResult traceResult = Item.getPlayerPOVHitResult(player.getCommandSenderWorld(), player,
+					ClipContext.Fluid.ANY);
 			if (traceResult == null || traceResult.getType() != HitResult.Type.BLOCK) {
 				widthDirection = null;
 				heightDirection = null;

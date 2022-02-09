@@ -11,38 +11,39 @@ import javax.annotation.Nullable;
 
 import com.google.common.collect.Sets;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.level.Level;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -72,7 +73,6 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			Blocks.OAK_BUTTON, Blocks.SPRUCE_BUTTON, Blocks.BIRCH_BUTTON, Blocks.JUNGLE_BUTTON, Blocks.DARK_OAK_BUTTON,
 			Blocks.ACACIA_BUTTON, Blocks.CRIMSON_BUTTON, Blocks.WARPED_BUTTON);
 
-	private static final Set<ToolType> TOOL_TYPES = new HashSet<ToolType>();
 	private static final List<AbstractMultiPartSlot> PARTS = new ArrayList<AbstractMultiPartSlot>();
 	private static final int MAX_RECURSION = 100;
 	private Ingredient woodIngredient;
@@ -81,7 +81,6 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	public Chainsaw(String name, float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
 		super(new Item.Properties().setNoRepair(), name, attackDamageIn, attackSpeedIn);
 		this.tier = tier;
-		TOOL_TYPES.add(ToolType.AXE);
 		PARTS.add(MultiPartSlots.CHAINSAW_BLADE);
 	}
 
@@ -133,17 +132,6 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			});
 		}
 		return efficiency.get();
-	}
-
-	@Override
-	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable Player player,
-			@Nullable BlockState blockState) {
-		if (isSlotPopulated(stack, MultiPartSlots.CHAINSAW_BLADE)) {
-			ItemStack blade = getPartInSlot(stack, MultiPartSlots.CHAINSAW_BLADE);
-			ChainsawBlade bladeItem = (ChainsawBlade) blade.getItem();
-			return bladeItem.getMiningTier(blade).getLevel();
-		}
-		return super.getHarvestLevel(stack, tool, player, blockState);
 	}
 
 	/**
@@ -289,21 +277,10 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	}
 
 	@Override
-	protected boolean canHarvestBlockInternal(ItemStack stack, BlockState state) {
-		// Check the tool.
-		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
-			return true;
-		}
-
+	protected boolean canHarvestBlockInternal(Level world, ItemStack stack, BlockState state) {
 		// If we are able to harvest the block full speed, no need to further check.
 		if (FULL_SPEED_BLOCKS.contains(state.getBlock())) {
 			return true;
-		}
-
-		// Then check by harvest level
-		if (state.getHarvestTool() != null) {
-			int i = this.getHarvestLevel(stack, state.getHarvestTool(), null, state);
-			return i >= state.getHarvestLevel();
 		}
 
 		Material material = state.getMaterial();
@@ -311,25 +288,15 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	}
 
 	@Override
-	public boolean canHarvestAtFullSpeed(ItemStack stack, BlockState state) {
+	public boolean canHarvestAtFullSpeed(Level world, ItemStack stack, BlockState state) {
 		// If we are able to harvest the block full speed, do so.
 		if (FULL_SPEED_BLOCKS.contains(state.getBlock())) {
-			return true;
-		}
-
-		// Check the tool.
-		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
 			return true;
 		}
 
 		// Finally, check the materials.
 		Material material = state.getMaterial();
 		return material == Material.WOOD || material == Material.NETHER_WOOD;
-	}
-
-	@Override
-	public Set<ToolType> getToolTypes(ItemStack stack) {
-		return TOOL_TYPES;
 	}
 
 	@Override
@@ -391,7 +358,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 			// If not air, check to see if it is wood. If it is, and its harvestable,
 			// harvest it.
 			if (getLogTag().test(blockStack)) {
-				if (this.canHarvestBlockInternal(itemstack, state)) {
+				if (this.canHarvestBlockInternal(null, itemstack, state)) {
 					positions.add(pos);
 
 					// Recurse.
@@ -402,6 +369,11 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+		return ToolActions.DEFAULT_AXE_ACTIONS.contains(toolAction);
 	}
 
 	private Ingredient getLogTag() {

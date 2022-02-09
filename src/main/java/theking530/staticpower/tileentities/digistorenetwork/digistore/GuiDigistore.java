@@ -68,7 +68,9 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(inventory.getItemCapacity());
 		infoTab.addKeyValueLine("max", new TextComponent("Max Items"),
-				new TextComponent(ChatFormatting.WHITE.toString()).append(new TextComponent(count.getValueAsString(true))), ChatFormatting.RED);
+				new TextComponent(ChatFormatting.WHITE.toString())
+						.append(new TextComponent(count.getValueAsString(true))),
+				ChatFormatting.RED);
 	}
 
 	@Override
@@ -76,7 +78,8 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
-				GuiDrawUtilities.drawColoredRectangle(stack, 79, 19, 18, 18, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
+				GuiDrawUtilities.drawColoredRectangle(stack, 79, 19, 18, 18, 1.0f,
+						new Color(200, 200, 200, 200).fromEightBitToFloat());
 			}
 		}
 	}
@@ -86,7 +89,8 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.getExtraTooltips(tooltips, stack, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
-				tooltips.addAll(inventory.getDigistoreStack(0).getStoredItem().getTooltipLines(Minecraft.getInstance().player, Default.NORMAL));
+				tooltips.addAll(inventory.getDigistoreStack(0).getStoredItem()
+						.getTooltipLines(Minecraft.getInstance().player, Default.NORMAL));
 			}
 		}
 	}
@@ -100,15 +104,15 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 
 		// Draw the item.
 		if (inventory.getCurrentUniqueItemTypeCount() > 0) {
-			Lighting.turnBackOn();
+			Lighting.setupForFlatItems();
 			itemRenderer.drawItem(inventory.getDigistoreStack(0).getStoredItem(), leftPos, topPos, 80, 21, 1.0f);
-			Lighting.turnOff();
 
 			// Pass the itemstack count through the metric converter.
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
 
 			// Draw the item count string.
-			GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), 98, 37, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), 98, 37, 0.5f,
+					Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 }
