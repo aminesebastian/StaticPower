@@ -1,10 +1,10 @@
 package theking530.staticpower.data.crafting;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class IngredientUtilities {
@@ -22,7 +22,7 @@ public class IngredientUtilities {
 	}
 
 	public static Ingredient deserializeIngredient(CompoundTag nbt) {
-		ListTag ingredientsNbt = nbt.getList("matching_stacks", Constants.NBT.TAG_COMPOUND);
+		ListTag ingredientsNbt = nbt.getList("matching_stacks", Tag.TAG_COMPOUND);
 		ItemStack[] ingredientStacks = new ItemStack[ingredientsNbt.size()];
 		for (int i = 0; i < ingredientsNbt.size(); i++) {
 			CompoundTag outputTagNbt = (CompoundTag) ingredientsNbt.get(i);

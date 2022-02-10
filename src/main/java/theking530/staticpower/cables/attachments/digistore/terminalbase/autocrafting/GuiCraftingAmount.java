@@ -1,8 +1,8 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.DrawableWidget;

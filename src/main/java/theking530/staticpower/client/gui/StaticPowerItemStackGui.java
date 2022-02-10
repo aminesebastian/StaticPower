@@ -1,9 +1,9 @@
 package theking530.staticpower.client.gui;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
 import theking530.staticpower.container.StaticPowerItemContainer;
 
 public abstract class StaticPowerItemStackGui<T extends StaticPowerItemContainer<K>, K extends Item> extends StaticPowerContainerGui<T> {

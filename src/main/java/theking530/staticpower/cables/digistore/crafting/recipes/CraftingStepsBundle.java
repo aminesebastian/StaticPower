@@ -10,12 +10,11 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.TagParser;
-import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.digistore.crafting.AutoCraftingStep;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials;
@@ -72,7 +71,7 @@ public class CraftingStepsBundle {
 	public static CraftingStepsBundle read(CompoundTag nbt) {
 		// Read the steps.
 		List<AutoCraftingStep> steps = new ArrayList<AutoCraftingStep>();
-		ListTag stepNBTList = nbt.getList("steps", Constants.NBT.TAG_COMPOUND);
+		ListTag stepNBTList = nbt.getList("steps", Tag.TAG_COMPOUND);
 		for (Tag step : stepNBTList) {
 			CompoundTag stepTag = (CompoundTag) step;
 			steps.add(AutoCraftingStep.read(stepTag));
@@ -169,7 +168,7 @@ public class CraftingStepsBundle {
 		public static CraftingStepsBundleContainer read(CompoundTag nbt) {
 			// Read the steps.
 			List<CraftingStepsBundle> bundles = new ArrayList<CraftingStepsBundle>();
-			ListTag stepNBTList = nbt.getList("bundles", Constants.NBT.TAG_COMPOUND);
+			ListTag stepNBTList = nbt.getList("bundles", Tag.TAG_COMPOUND);
 			for (Tag step : stepNBTList) {
 				CompoundTag stepTag = (CompoundTag) step;
 				bundles.add(CraftingStepsBundle.read(stepTag));

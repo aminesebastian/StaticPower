@@ -5,15 +5,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
@@ -30,8 +29,8 @@ public abstract class AbstractAttributeDefenition<T, K extends AbstractAttribute
 	/**
 	 * @param id
 	 * @param unlocalizedName
-	 * @param type
 	 * @param color
+	 * @param modifierType
 	 */
 	public AbstractAttributeDefenition(ResourceLocation id, String unlocalizedName, ChatFormatting color, Class<K> modifierType) {
 		this.id = id;
@@ -136,7 +135,7 @@ public abstract class AbstractAttributeDefenition<T, K extends AbstractAttribute
 	public void deserializeNBT(CompoundTag nbt) {
 		// Deserialize the modifiers.
 		modifiers.clear();
-		ListTag modifiersNbtList = nbt.getList("modifiers", Constants.NBT.TAG_COMPOUND);
+		ListTag modifiersNbtList = nbt.getList("modifiers", Tag.TAG_COMPOUND);
 		for (Tag modifierTag : modifiersNbtList) {
 			// Get the modifier tag as a CompoundNBT.
 			CompoundTag modifierNbt = (CompoundTag) modifierTag;

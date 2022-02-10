@@ -8,21 +8,21 @@ import java.util.Map.Entry;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraftforge.registries.RegistryManager;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -64,7 +64,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 				RECIPES.add(jeiRecipe);
 
 				// Add all the potential inputs.
-				for (Entry<ResourceKey<Block>, Block> block : GameRegistry.findRegistry(Block.class).getEntries()) {
+				for (Entry<ResourceKey<Block>, Block> block : RegistryManager.ACTIVE.getRegistry(Block.class).getEntries()) {
 					RecipeMatchParameters matchParams = new RecipeMatchParameters(block.getValue().defaultBlockState());
 					if (recipe.isValid(matchParams)) {
 						jeiRecipe.addInput(new ItemStack(block.getValue()));
@@ -75,7 +75,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 			} else if (recipe.getFluidTags().length > 0) {
 				RECIPES.add(jeiRecipe);
 				// Add all the potential inputs.
-				for (Entry<ResourceKey<Fluid>, Fluid> fluid : GameRegistry.findRegistry(Fluid.class).getEntries()) {
+				for (Entry<ResourceKey<Fluid>, Fluid> fluid : RegistryManager.ACTIVE.getRegistry(Fluid.class).getEntries()) {
 					RecipeMatchParameters matchParams = new RecipeMatchParameters(new FluidStack(fluid.getValue(), 1));
 					if (recipe.isValid(matchParams)) {
 						jeiRecipe.setFluidStack(new FluidStack(fluid.getValue(), 1000));

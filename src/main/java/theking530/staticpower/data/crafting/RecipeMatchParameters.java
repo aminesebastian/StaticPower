@@ -3,9 +3,9 @@ package theking530.staticpower.data.crafting;
 import java.util.HashMap;
 import java.util.Optional;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 
 public class RecipeMatchParameters {

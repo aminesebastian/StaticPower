@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
@@ -265,7 +265,7 @@ public class DigistoreInventory implements Iterable<DigistoreStack>, IDigistoreI
 		}
 
 		if (nbt.contains("slots")) {
-			ListTag digistoreSlots = nbt.getList("slots", Constants.NBT.TAG_COMPOUND);
+			ListTag digistoreSlots = nbt.getList("slots", Tag.TAG_COMPOUND);
 			slots.clear();
 			for (int i = 0; i < digistoreSlots.size(); i++) {
 				CompoundTag slotTagComponent = (CompoundTag) digistoreSlots.get(i);

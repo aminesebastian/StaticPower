@@ -9,11 +9,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerListener;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -55,23 +54,13 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	@Override
 	public void broadcastChanges() {
 		super.broadcastChanges();
+		syncTimer++;
 
-		// If the sync timer is less than the sync time, increment.
-		if (syncTimer < syncTime) {
-			syncTimer++;
-		}
-
-		// If the sync timer is greater than the sync time, send the machine update
-		// packet.
-		if (syncTimer >= syncTime) {
-			syncTimer = 0;
-
-			// Send a packet to all listening players.
-			for (ContainerListener listener : this.containerListeners) {
-				if (listener instanceof ServerPlayer) {
-					NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity(), false);
-					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) listener), msg);
-				}
+		// If the sync timer has passed a sync time interval, perform a sync.
+		if (syncTimer % syncTime == 0 && containerListeners.size() > 0) {
+			if (this.getPlayerInventory().player instanceof ServerPlayer) {
+				NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity(), false);
+				StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.getPlayerInventory().player), msg);
 			}
 		}
 	}

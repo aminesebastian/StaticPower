@@ -18,12 +18,12 @@
 
 package theking530.thirdparty.codechicken.lib.model.pipeline.transformers;
 
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import theking530.thirdparty.codechicken.lib.model.Quad.Vertex;
 import theking530.thirdparty.codechicken.lib.model.pipeline.IPipelineElementFactory;
 import theking530.thirdparty.codechicken.lib.model.pipeline.QuadTransformer;
-import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.world.phys.AABB;
 
 /**
  * This transformer strips quads that are on faces. Simply set the bounds for

@@ -10,12 +10,12 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
@@ -350,7 +350,7 @@ public class DigistoreNetworkCraftingManager {
 
 	public void readFromNbt(CompoundTag tag) {
 		// Get the request NBT list and add the parcels.
-		ListTag requestNBTList = tag.getList("requests", Constants.NBT.TAG_COMPOUND);
+		ListTag requestNBTList = tag.getList("requests", Tag.TAG_COMPOUND);
 		requestNBTList.forEach(requestTag -> {
 			CompoundTag requestNbtTag = (CompoundTag) requestTag;
 			CraftingRequestResponse request = CraftingRequestResponse.read(requestNbtTag);

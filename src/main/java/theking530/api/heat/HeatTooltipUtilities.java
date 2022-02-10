@@ -1,8 +1,8 @@
 package theking530.api.heat;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class HeatTooltipUtilities {

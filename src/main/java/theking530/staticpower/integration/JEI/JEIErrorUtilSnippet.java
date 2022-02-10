@@ -2,12 +2,12 @@ package theking530.staticpower.integration.JEI;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.level.block.Block;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 
 public class JEIErrorUtilSnippet {
 	public static void checkNotEmpty(@Nullable ItemStack itemStack, String name) {

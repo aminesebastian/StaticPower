@@ -4,19 +4,17 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractDigistoreTerminalAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-
-import theking530.staticpower.cables.attachments.AbstractCableAttachment.AbstractCableAttachmentContainerProvider;
 
 public class DigistoreTerminal extends AbstractDigistoreTerminalAttachment {
 	public DigistoreTerminal(String name) {

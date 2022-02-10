@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -144,7 +144,7 @@ public class MiningDrillItemModel implements BakedModel {
 				float sideOffset = drillBitEquipped.get() ? 0.5f : 0.0f;
 
 				// Get the atlas texture.
-				TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap()
+				TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap()
 						.getAtlas(TextureAtlas.LOCATION_BLOCKS);
 
 				// Draw the durability background.

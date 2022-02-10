@@ -5,10 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.gui.widgets.button.SpriteButton;

@@ -2,12 +2,12 @@ package theking530.staticpower.items.itemfilter;
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.InteractionHand;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketItemFilter extends NetworkMessage {

@@ -1,8 +1,8 @@
 package theking530.staticpower.cables.redstone.basic.gui;
 
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;

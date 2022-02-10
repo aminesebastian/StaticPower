@@ -16,8 +16,6 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 
-import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
-
 @OnlyIn(Dist.CLIENT)
 public class TextInputWidget extends AbstractGuiWidget {
 	public enum TextAlignment {

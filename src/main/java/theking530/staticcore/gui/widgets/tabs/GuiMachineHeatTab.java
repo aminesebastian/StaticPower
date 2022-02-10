@@ -1,8 +1,8 @@
 package theking530.staticcore.gui.widgets.tabs;
 
-import net.minecraft.world.item.Items;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;

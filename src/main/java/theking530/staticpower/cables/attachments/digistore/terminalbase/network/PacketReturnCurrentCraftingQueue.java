@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
@@ -47,7 +47,7 @@ public class PacketReturnCurrentCraftingQueue extends NetworkMessage {
 			AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
 			if (container instanceof AbstractContainerDigistoreTerminal && container.containerId == windowId) {
 				AbstractContainerDigistoreTerminal<?> terminalContainer = (AbstractContainerDigistoreTerminal<?>) container;
-				List<CraftingRequestResponse> craftingRequests = DigistoreNetworkCraftingManager.deserializeCraftingQueue(craftingQueue.getList("queue", Constants.NBT.TAG_COMPOUND));
+				List<CraftingRequestResponse> craftingRequests = DigistoreNetworkCraftingManager.deserializeCraftingQueue(craftingQueue.getList("queue", Tag.TAG_COMPOUND));
 				terminalContainer.updateCraftingQueue(craftingRequests);
 			}
 		});

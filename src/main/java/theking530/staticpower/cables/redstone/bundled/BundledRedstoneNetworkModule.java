@@ -8,8 +8,8 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
@@ -21,8 +21,6 @@ import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModule;
-
-import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule.CableConfigurationWrapper;
 
 public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 	@SuppressWarnings("unused")

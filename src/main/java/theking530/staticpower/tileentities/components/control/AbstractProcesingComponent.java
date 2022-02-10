@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.components.control;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;

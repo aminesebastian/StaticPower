@@ -40,10 +40,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.DrawSelectionEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
@@ -54,7 +52,6 @@ import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
-import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.utilities.RaytracingUtilities;
@@ -105,19 +102,6 @@ public class StaticPowerClientEventHandler {
 		LOGGER.info("Static Power Client Setup Completed!");
 	}
 
-	public static void registerBlockEntityRenders(RegisterRenderers event) throws Exception {
-		// Register the tile entity special renderers.
-		LOGGER.info("Registering Tile Entity Special Renderers!");
-		StaticCoreRegistry.registerTileEntitySpecialRenderers(event);
-	}
-
-	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) {
-		// Regsiter entity renderers.
-		LOGGER.info("Registering Entity Renderers!");
-		for (AbstractEntityType<?> type : StaticPowerRegistry.ENTITIES) {
-			type.registerRenderers(event);
-		}
-	}
 
 	public static void onModelBakeEvent(ModelBakeEvent event) {
 		// Loop through all the blocks, and check to see if they are a model supplier.
@@ -138,8 +122,7 @@ public class StaticPowerClientEventHandler {
 						if (override != null) {
 							event.getModelRegistry().put(variantMRL, override);
 						} else {
-							LOGGER.error(String.format("Encountered null model override for block: %1$s.",
-									block.getName().getString()));
+							LOGGER.error(String.format("Encountered null model override for block: %1$s.", block.getName().getString()));
 						}
 					}
 				}
@@ -153,8 +136,7 @@ public class StaticPowerClientEventHandler {
 
 				if (supplier.hasModelOverride(null)) {
 					// Get the existing model.
-					ModelResourceLocation modelLocation = new ModelResourceLocation(item.getRegistryName(),
-							"inventory");
+					ModelResourceLocation modelLocation = new ModelResourceLocation(item.getRegistryName(), "inventory");
 					BakedModel existingModel = event.getModelManager().getModel(modelLocation);
 
 					if (existingModel != null) {
@@ -177,7 +159,7 @@ public class StaticPowerClientEventHandler {
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-		if (event.getMap().location() == TextureAtlas.LOCATION_BLOCKS) {
+		if (event.getAtlas().location() == TextureAtlas.LOCATION_BLOCKS) {
 			int spriteCount = 0;
 			for (ResourceLocation sprite : StaticPowerSprites.SPRITES) {
 				try {
@@ -191,7 +173,7 @@ public class StaticPowerClientEventHandler {
 		}
 	}
 
-	public static void onWorldRender(RenderWorldLastEvent event) {
+	public static void onWorldRender(RenderLevelLastEvent event) {
 		CUSTOM_RENDERER.render(event);
 		renderMultiHarvesteBlockBreakEffect(event);
 	}
@@ -220,12 +202,11 @@ public class StaticPowerClientEventHandler {
 			// Get the tool's item and get the blocks that are currently being targeted for
 			// harvesting.
 			AbstractMultiHarvestTool toolItem = (AbstractMultiHarvestTool) tool.getItem();
-			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getBlockPos(),
-					Minecraft.getInstance().player);
+			List<BlockPos> extraBlocks = toolItem.getMineableExtraBlocks(tool, event.getTarget().getBlockPos(), Minecraft.getInstance().player);
 
 			// Get the world renderer state.
-			LevelRenderer worldRender = event.getContext();
-			PoseStack matrix = event.getMatrix();
+			LevelRenderer worldRender = event.getLevelRenderer();
+			PoseStack matrix = event.getPoseStack();
 			VertexConsumer vertexBuilder = worldRender.renderBuffers.bufferSource().getBuffer(RenderType.lines());
 			Entity viewEntity = renderInfo.getEntity();
 
@@ -238,8 +219,7 @@ public class StaticPowerClientEventHandler {
 			// For all of the harvestable blocks, render the bounding box.
 			for (BlockPos pos : extraBlocks) {
 				if (Minecraft.getInstance().player.getCommandSenderWorld().getWorldBorder().isWithinBounds(pos)) {
-					worldRender.renderHitOutline(matrix, vertexBuilder, viewEntity, vector3d.x(), vector3d.y(),
-							vector3d.z(), pos,
+					worldRender.renderHitOutline(matrix, vertexBuilder, viewEntity, vector3d.x(), vector3d.y(), vector3d.z(), pos,
 							Minecraft.getInstance().player.getCommandSenderWorld().getBlockState(pos));
 				}
 			}
@@ -249,7 +229,7 @@ public class StaticPowerClientEventHandler {
 		}
 	}
 
-	private static void renderMultiHarvesteBlockBreakEffect(RenderWorldLastEvent event) {
+	private static void renderMultiHarvesteBlockBreakEffect(RenderLevelLastEvent event) {
 		// Get the controller. If it is null, return early.
 		MultiPlayerGameMode controller = Minecraft.getInstance().gameMode;
 		if (controller == null) {
@@ -269,21 +249,17 @@ public class StaticPowerClientEventHandler {
 		if (!heldItem.isEmpty() && heldItem.getItem() instanceof AbstractMultiHarvestTool) {
 			// Raytrace from the player's perspective to see which block they are looking
 			// at.
-			BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(),
-					player, ClipContext.Fluid.ANY);
+			BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
 			if (raytraceResult.getType() != HitResult.Type.BLOCK) {
 				return;
 			}
 
 			// Get all the extra blocks that we can mine based on where we are looking.
-			List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem())
-					.getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
+			List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
 
 			// If we're currently mining, draw the block damage texture.
 			if (controller.isDestroying()) {
-				drawBlockDamageTexture(event.getContext(), event.getMatrixStack(),
-						Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(),
-						extraBlocks);
+				drawBlockDamageTexture(event.getLevelRenderer(), event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(), extraBlocks);
 			}
 		}
 	}
@@ -298,8 +274,7 @@ public class StaticPowerClientEventHandler {
 	 * @param extraBlocks   the list of blocks
 	 */
 	@OnlyIn(Dist.CLIENT)
-	private static void drawBlockDamageTexture(LevelRenderer worldRender, PoseStack matrixStackIn, Camera renderInfo,
-			Level world, Iterable<BlockPos> extraBlocks) {
+	private static void drawBlockDamageTexture(LevelRenderer worldRender, PoseStack matrixStackIn, Camera renderInfo, Level world, Iterable<BlockPos> extraBlocks) {
 		// Get the current break progress.
 		int progress = (int) (getCurrentFocusedBlockDamage() * 10.0F) - 1;
 
@@ -313,17 +288,14 @@ public class StaticPowerClientEventHandler {
 
 		// Get the block render dispatcher and use it to render the damage effect.
 		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
-		VertexConsumer vertexBuilder = worldRender.renderBuffers.crumblingBufferSource()
-				.getBuffer(ModelBakery.DESTROY_TYPES.get(progress));
+		VertexConsumer vertexBuilder = worldRender.renderBuffers.crumblingBufferSource().getBuffer(ModelBakery.DESTROY_TYPES.get(progress));
 
 		// Render the effect for each of the blocks.
 		for (BlockPos pos : extraBlocks) {
 			matrixStackIn.pushPose();
 			// Make sure we transform into projection space.
-			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x,
-					(double) pos.getY() - renderInfo.getPosition().y, (double) pos.getZ() - renderInfo.getPosition().z);
-			VertexConsumer matrixBuilder = new SheetedDecalTextureGenerator(vertexBuilder, matrixStackIn.last().pose(),
-					matrixStackIn.last().normal());
+			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x, (double) pos.getY() - renderInfo.getPosition().y, (double) pos.getZ() - renderInfo.getPosition().z);
+			VertexConsumer matrixBuilder = new SheetedDecalTextureGenerator(vertexBuilder, matrixStackIn.last().pose(), matrixStackIn.last().normal());
 
 			// Render the damage.
 			dispatcher.renderBreakingTexture(world.getBlockState(pos), pos, world, matrixStackIn, matrixBuilder);
@@ -338,8 +310,7 @@ public class StaticPowerClientEventHandler {
 			// here...but this is client side only so, would rather lose a few frames vs
 			// introducing incomparability).
 			if (currentBlockDamageMP == null) {
-				currentBlockDamageMP = ObfuscationReflectionHelper.findField(MultiPlayerGameMode.class,
-						"destroyProgress");
+				currentBlockDamageMP = ObfuscationReflectionHelper.findField(MultiPlayerGameMode.class, "destroyProgress");
 			}
 			return currentBlockDamageMP.getFloat(Minecraft.getInstance().gameMode);
 		} catch (Exception e) {

@@ -2,13 +2,13 @@ package theking530.api.attributes.defenitions;
 
 import java.util.List;
 
-import net.minecraft.world.item.Tiers;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Tiers;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.BooleanAttributeModifier;
 import theking530.api.attributes.registration.AttributeRegistration;

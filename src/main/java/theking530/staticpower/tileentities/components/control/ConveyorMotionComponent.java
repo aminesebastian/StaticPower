@@ -3,13 +3,15 @@ package theking530.staticpower.tileentities.components.control;
 import java.util.List;
 import java.util.function.Predicate;
 
+import com.mojang.math.Vector3d;
+
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.Axis;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import theking530.staticcore.utilities.SDMath;

@@ -16,7 +16,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -76,7 +75,7 @@ public class ServerCable {
 
 		// Get the supported network types.
 		supportedNetworkModules = new HashSet<ResourceLocation>();
-		ListTag modules = tag.getList("supported_modules", Constants.NBT.TAG_COMPOUND);
+		ListTag modules = tag.getList("supported_modules", Tag.TAG_COMPOUND);
 		for (Tag moduleTag : modules) {
 			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
 			supportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));

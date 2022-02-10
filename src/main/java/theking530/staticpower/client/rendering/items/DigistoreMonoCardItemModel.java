@@ -29,7 +29,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import theking530.api.digistore.IDigistoreInventory;
@@ -128,7 +128,7 @@ public class DigistoreMonoCardItemModel implements BakedModel {
 				quads = new ArrayList<BakedQuad>();
 				quads.addAll(BaseModel.getQuads(state, side, rand, data));
 
-				TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+				TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 				TextureAtlasSprite sideSprite;
 
 				if (filledRatio < 1.0f) {

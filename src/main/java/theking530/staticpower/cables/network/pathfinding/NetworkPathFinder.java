@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.network.CableNetworkGraph;
 import theking530.staticpower.cables.network.CableNetworkManager;

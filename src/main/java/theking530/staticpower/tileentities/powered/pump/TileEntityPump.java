@@ -22,7 +22,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
@@ -309,7 +308,7 @@ public class TileEntityPump extends TileEntityMachine {
 		positionsToPump.clear();
 
 		// Deserialize the queued positions.
-		ListTag queuedPositions = nbt.getList("queued_positions", Constants.NBT.TAG_COMPOUND);
+		ListTag queuedPositions = nbt.getList("queued_positions", Tag.TAG_COMPOUND);
 		for (Tag posTag : queuedPositions) {
 			CompoundTag posTagCompound = (CompoundTag) posTag;
 			positionsToPump.add(BlockPos.of(posTagCompound.getLong("pos")));

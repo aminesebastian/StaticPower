@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.attachments.retirever;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiCableAttachmentRedstoneTab;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;

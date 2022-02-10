@@ -3,30 +3,28 @@ package theking530.staticpower.blocks.tree;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.BushBlock;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
-import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
-import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
+import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
 public class StaticPowerSapling extends BushBlock implements BonemealableBlock, IItemBlockProvider, IRenderLayerProvider {
 	public static final IntegerProperty STAGE = BlockStateProperties.STAGE;

@@ -1,7 +1,7 @@
 package theking530.staticpower.client.gui;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.tileentities.TileEntityBase;
 

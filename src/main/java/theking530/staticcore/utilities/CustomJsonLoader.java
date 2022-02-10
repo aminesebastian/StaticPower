@@ -13,9 +13,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.Gson;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.resources.ResourceLocation;
 
 public class CustomJsonLoader {
 	public static final Logger LOGGER = LogManager.getLogger(CustomJsonLoader.class);

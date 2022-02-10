@@ -9,16 +9,16 @@ import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
-import net.minecraft.core.NonNullList;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.RegistryManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.init.ModTags;
@@ -87,7 +87,7 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 			if (ModTags.COVER_SAW.contains(coverSourceItem)) {
 				List<T> recipes = new ArrayList<T>();
 				// Get all the registered blocks.
-				for (Entry<ResourceKey<Block>, Block> block : GameRegistry.findRegistry(Block.class).getEntries()) {
+				for (Entry<ResourceKey<Block>, Block> block : RegistryManager.ACTIVE.getRegistry(Block.class).getEntries()) {
 					// If this is a valid cover block, create the recipe.
 					if (CableCover.isValidForCover(block.getValue())) {
 						ItemStack output = cableCover.makeCoverForBlock(block.getValue().defaultBlockState());

@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;

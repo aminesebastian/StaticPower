@@ -58,8 +58,7 @@ public class StaticCoreRegistry {
 		LOGGER.info("Pre-Initializing Registry Attributes and Modifiers.");
 		registerAttributeModifiers();
 		registerAttributeDefenitions();
-		LOGGER.info(String.format("Pre-Initialized: %1$d Attribute Defenitions and %2$d Attribute Modifiers.",
-				AttributeRegistry.getRegisteredAttributeCount(),
+		LOGGER.info(String.format("Pre-Initialized: %1$d Attribute Defenitions and %2$d Attribute Modifiers.", AttributeRegistry.getRegisteredAttributeCount(),
 				AttributeModifierRegistry.getRegisteredAttributeModifierCount()));
 
 		preInitialized = true;
@@ -74,15 +73,14 @@ public class StaticCoreRegistry {
 
 		LOGGER.info("Initializing StaticCore.");
 
-		processTileEntityTypeAllocators((teAllocator) -> {
+		processBlockEntityTypeAllocators((teAllocator) -> {
 			TILE_ENTITY_ALLOCATORS.add(teAllocator);
 		});
 		processContainerTypeAllocators((containerAllocator) -> {
 			CONTAINER_ALLOCATORS.add(containerAllocator);
 		});
 
-		LOGGER.info(String.format("Initialized: %1$d Tile Entity Allocators and %2$d Container Type Allocators.",
-				TILE_ENTITY_ALLOCATORS.size(), CONTAINER_ALLOCATORS.size()));
+		LOGGER.info(String.format("Initialized: %1$d Tile Entity Allocators and %2$d Container Type Allocators.", TILE_ENTITY_ALLOCATORS.size(), CONTAINER_ALLOCATORS.size()));
 
 		initialized = true;
 		LOGGER.info("StaticCore Initialized.");
@@ -109,14 +107,11 @@ public class StaticCoreRegistry {
 					try {
 						return (AbstractAttributeDefenition<?, ?>) cons.newInstance(idIn);
 					} catch (Exception e) {
-						throw new RuntimeException(String.format(
-								"An error occured when attempting to register attribute defenition: %1$s.",
-								id.toString()), e);
+						throw new RuntimeException(String.format("An error occured when attempting to register attribute defenition: %1$s.", id.toString()), e);
 					}
 				});
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process attribute defeinition: %1$s.",
-						annotation.memberName()), e);
+				LOGGER.error(String.format("An error occured when attempting to process attribute defeinition: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
@@ -136,26 +131,20 @@ public class StaticCoreRegistry {
 					try {
 						return (AbstractAttributeModifier<?>) cons.newInstance();
 					} catch (Exception e) {
-						throw new RuntimeException(
-								String.format("An error occured when attempting to register attribute modifier: %1$s.",
-										id.toString()),
-								e);
+						throw new RuntimeException(String.format("An error occured when attempting to register attribute modifier: %1$s.", id.toString()), e);
 					}
 				});
 			} catch (Exception e) {
-				throw new Exception(
-						String.format("An error occured when attempting to process attribute modifier: %1$s.",
-								annotation.memberName()),
-						e);
+				throw new Exception(String.format("An error occured when attempting to process attribute modifier: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerTileEntitySpecialRenderers(RegisterRenderers event) throws Exception {
-		StaticCoreRegistry.processTileEntityTypeAllocators((allocator) -> {
-			if (allocator.requiresTileEntitySpecialRenderer()) {
-				event.registerBlockEntityRenderer(allocator.getType(), allocator.getTileEntitySpecialRenderer());
+	public static void registerBlockEntityRenderers(RegisterRenderers event) throws Exception {
+		StaticCoreRegistry.processBlockEntityTypeAllocators((allocator) -> {
+			if (allocator.requiresBlockEntitySpecialRenderer()) {
+				event.registerBlockEntityRenderer(allocator.getType(), allocator.getBlockEntitySpecialRenderer());
 			}
 		});
 	}
@@ -177,8 +166,7 @@ public class StaticCoreRegistry {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void processTileEntityTypeAllocators(
-			Consumer<BlockEntityTypeAllocator<TileEntityBase>> allocatorConsumer) throws Exception {
+	public static void processBlockEntityTypeAllocators(Consumer<BlockEntityTypeAllocator<TileEntityBase>> allocatorConsumer) throws Exception {
 		// Process the allocators.
 		for (AnnotationData annotation : getAnnotationsOfType(TileEntityTypePopulator.class)) {
 			try {
@@ -187,16 +175,12 @@ public class StaticCoreRegistry {
 				Field field = Class.forName(name).getField(annotation.memberName());
 				allocatorConsumer.accept((BlockEntityTypeAllocator<TileEntityBase>) field.get(null));
 			} catch (Exception e) {
-				throw new Exception(
-						String.format("An error occured when attempting to process tile entity allocator: %1$s.",
-								annotation.memberName()),
-						e);
+				throw new Exception(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
 
-	public static void processContainerTypeAllocators(Consumer<ContainerTypeAllocator<?, ?>> allocatorConsumer)
-			throws Exception {
+	public static void processContainerTypeAllocators(Consumer<ContainerTypeAllocator<?, ?>> allocatorConsumer) throws Exception {
 		// Process the allocators.
 		for (AnnotationData annotation : getAnnotationsOfType(ContainerTypePopulator.class)) {
 			try {
@@ -205,16 +189,12 @@ public class StaticCoreRegistry {
 				Field field = Class.forName(name).getField(annotation.memberName());
 				allocatorConsumer.accept((ContainerTypeAllocator<?, ?>) field.get(null));
 			} catch (Exception e) {
-				throw new Exception(
-						String.format("An error occured when attempting to process container allocator: %1$s.",
-								annotation.memberName()),
-						e);
+				throw new Exception(String.format("An error occured when attempting to process container allocator: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
 
-	public static ArrayList<AnnotationData> getAnnotationsOfType(Class<? extends Annotation> annotationType)
-			throws Exception {
+	public static ArrayList<AnnotationData> getAnnotationsOfType(Class<? extends Annotation> annotationType) throws Exception {
 		// Allocate the output.
 		ArrayList<AnnotationData> output = new ArrayList<AnnotationData>();
 
@@ -228,8 +208,7 @@ public class StaticCoreRegistry {
 						output.add(anno);
 					}
 				} catch (Exception e) {
-					throw new Exception(String.format("An error occured when attempting to process annotation: %1$s.",
-							anno.annotationType().getClassName()), e);
+					throw new Exception(String.format("An error occured when attempting to process annotation: %1$s.", anno.annotationType().getClassName()), e);
 				}
 			}
 		}

@@ -1,7 +1,8 @@
 package theking530.staticpower.client.rendering;
 
-import net.minecraft.core.BlockPos;
 import com.mojang.math.Vector3f;
+
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Color;

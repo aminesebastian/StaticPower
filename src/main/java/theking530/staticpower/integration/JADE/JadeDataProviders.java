@@ -1,13 +1,14 @@
-package theking530.staticpower.integration.WAILA;
+
+package theking530.staticpower.integration.JADE;
 
 import java.util.Optional;
 
 import mcp.mobius.waila.api.IServerDataProvider;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
@@ -16,7 +17,7 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent;
 
-public class WailaDataProviders implements IServerDataProvider<BlockEntity> {
+public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 	public static final String POWER_TAG = "power";
 	public static final String FLUID_TAG = "fluid";
 	public static final String HEAT_TAG = "heat";
@@ -44,18 +45,14 @@ public class WailaDataProviders implements IServerDataProvider<BlockEntity> {
 			CompoundTag heatData = new CompoundTag();
 			heatData.putDouble("value", heatStorage.getCurrentHeat());
 			heatData.putDouble("max", heatStorage.getMaximumHeat());
-			heatData.putString("description",
-					GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat()).getString());
 			data.put(HEAT_TAG, heatData);
 		});
 
 		// Add static volt data.
 		te.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 			CompoundTag powerData = new CompoundTag();
-			powerData.putDouble("value", powerStorage.getStoredPower());
-			powerData.putDouble("max", powerStorage.getCapacity());
-			powerData.putString("description",
-					GuiTextUtilities.formatEnergyToString(powerStorage.getStoredPower()).getString());
+			powerData.putLong("value", powerStorage.getStoredPower());
+			powerData.putLong("max", powerStorage.getCapacity());
 			data.put(POWER_TAG, powerData);
 		});
 

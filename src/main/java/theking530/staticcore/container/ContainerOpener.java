@@ -4,14 +4,14 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraftforge.fmllegacy.network.IContainerFactory;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.IContainerFactory;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.container.StaticPowerContainer;
 

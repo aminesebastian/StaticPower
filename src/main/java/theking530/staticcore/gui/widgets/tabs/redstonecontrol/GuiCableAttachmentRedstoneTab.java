@@ -1,7 +1,7 @@
 package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.cables.AbstractCableProviderComponent;

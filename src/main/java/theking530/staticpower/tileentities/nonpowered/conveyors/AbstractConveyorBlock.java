@@ -61,7 +61,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		cacheVoxelShapes();
 		// Get the appropriate shape.
 		if (context instanceof EntityCollisionContext
-				&& ((EntityCollisionContext) context).getEntity().orElse(null) instanceof Player) {
+				&& ((EntityCollisionContext) context).getEntity() instanceof Player) {
 			return INTERACTION_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
 		} else {
 			return ENTITY_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));

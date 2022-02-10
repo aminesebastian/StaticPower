@@ -49,8 +49,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		long capacity = getCapacity();
-		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackStaticVoltCapability("default", stack, capacity, capacity, capacity));
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticVoltCapability("default", stack, capacity, capacity, capacity));
 	}
 
 	public ItemStack getFilledVariant() {
@@ -64,25 +63,25 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
-		return getDurabilityForDisplay(stack) < 1.0f;
+	public boolean isBarVisible(ItemStack stack) {
+		return getBarWidth(stack) != 0;
 	}
 
 	@Override
-	public int getRGBDurabilityForDisplay(ItemStack stack) {
+	public int getBarColor(ItemStack stack) {
 		return EnergyHandlerItemStackUtilities.getRGBDurabilityForDisplay(stack);
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack) {
+	public int getBarWidth(ItemStack stack) {
 		// Get the energy handler.
 		IStaticVoltHandler handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
 		if (handler == null) {
-			return 0.0f;
+			return 0;
 		}
 
 		// Get the power ratio.
-		return 1.0 - (float) handler.getStoredPower() / (float) handler.getCapacity();
+		return (int) ((float) handler.getStoredPower() / (float) handler.getCapacity() * 13);
 	}
 
 	@Override
@@ -96,9 +95,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public static class EnergyItemJEIInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {
 		@Override
 		public String apply(ItemStack itemStack, UidContext context) {
-			return itemStack.getItem().getRegistryName().toString()
-					+ EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " "
-					+ EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
+			return itemStack.getItem().getRegistryName().toString() + EnergyHandlerItemStackUtilities.getCapacity(itemStack) + " " + EnergyHandlerItemStackUtilities.getStoredPower(itemStack);
 		}
 	}
 

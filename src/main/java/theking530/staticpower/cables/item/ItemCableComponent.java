@@ -16,11 +16,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.network.PacketDistributor;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
@@ -220,7 +219,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 			containedPackets.clear();
 
 			// Deserialize the packets.
-			ListTag packets = nbt.getList("item_packets", Constants.NBT.TAG_COMPOUND);
+			ListTag packets = nbt.getList("item_packets", Tag.TAG_COMPOUND);
 			for (Tag packetTag : packets) {
 				CompoundTag packetTagCompound = (CompoundTag) packetTag;
 				ItemRoutingParcelClient newPacket = ItemRoutingParcelClient.create(packetTagCompound);

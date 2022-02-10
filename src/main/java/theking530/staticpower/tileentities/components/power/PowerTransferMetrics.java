@@ -6,9 +6,8 @@ import java.util.LinkedList;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
@@ -161,8 +160,8 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
 			outputValues.clear();
 
 			// Read the serialized lists.
-			ListTag inputNBT = nbt.getList("input_values", Constants.NBT.TAG_FLOAT);
-			ListTag outputNBT = nbt.getList("output_values", Constants.NBT.TAG_FLOAT);
+			ListTag inputNBT = nbt.getList("input_values", Tag.TAG_FLOAT);
+			ListTag outputNBT = nbt.getList("output_values", Tag.TAG_FLOAT);
 
 			// Populate the arrays.
 			for (Tag valueTag : inputNBT) {

@@ -71,7 +71,7 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 		if (context instanceof EntityCollisionContext) {
 			// Get the item over the hole.
 			EntityCollisionContext eCtx = (EntityCollisionContext) context;
-			ConveyorBeltEntity entity = (ConveyorBeltEntity) eCtx.getEntity().orElse(null);
+			ConveyorBeltEntity entity = (ConveyorBeltEntity) eCtx.getEntity();
 			if (filtered && entity != null) {
 				// If the context is null (then an item entity), and the hopper tile entity is
 				// still there.

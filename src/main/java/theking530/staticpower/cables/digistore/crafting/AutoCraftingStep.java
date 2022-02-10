@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.digistore.crafting;
 
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticpower.data.crafting.IngredientUtilities;
 
 public class AutoCraftingStep {

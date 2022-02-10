@@ -1,14 +1,15 @@
 package theking530.api.heat;
 
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.common.capabilities.CapabilityToken;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 
 public class CapabilityHeatable {
-	@CapabilityInject(IHeatStorage.class)
-	public static Capability<IHeatStorage> HEAT_STORAGE_CAPABILITY = null;
+	public static Capability<IHeatStorage> HEAT_STORAGE_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+	});
 
-	public static void register() {
-		CapabilityManager.INSTANCE.register(IHeatStorage.class);
+	public static void register(RegisterCapabilitiesEvent event) {
+		event.register(IHeatStorage.class);
 	}
 }

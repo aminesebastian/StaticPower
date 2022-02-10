@@ -1,7 +1,7 @@
 package theking530.api.digistore;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
 

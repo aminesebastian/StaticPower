@@ -23,7 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -31,13 +31,13 @@ import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.fmlserverevents.FMLServerAboutToStartEvent;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
@@ -72,7 +72,7 @@ public class StaticPowerForgeEventRegistry {
 	}
 
 	@SubscribeEvent
-	public static void onServerAboutToStart(FMLServerAboutToStartEvent serverStarted) {
+	public static void onServerAboutToStart(ServerAboutToStartEvent serverStarted) {
 		ReloadableResourceManager resourceManager = (ReloadableResourceManager) serverStarted.getServer().getResourceManager();
 		resourceManager.registerReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
@@ -81,7 +81,7 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
-	public static void render(RenderWorldLastEvent event) {
+	public static void render(RenderLevelLastEvent event) {
 		StaticPowerClientEventHandler.onWorldRender(event);
 	}
 

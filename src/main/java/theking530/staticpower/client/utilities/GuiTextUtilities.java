@@ -2,9 +2,9 @@ package theking530.staticpower.client.utilities;
 
 import java.text.NumberFormat;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticpower.utilities.MetricConverter;
 
@@ -274,6 +274,6 @@ public class GuiTextUtilities {
 	}
 
 	public static MutableComponent createTooltipBulletpoint(String localizationKey, ChatFormatting color) {
-		return new TextComponent(color.toString() + "• " + new TranslatableComponent(localizationKey).getString() + " ");
+		return new TextComponent(color.toString() + "â€¢ " + new TranslatableComponent(localizationKey).getString() + " ");
 	}
 }

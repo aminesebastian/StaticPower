@@ -5,17 +5,17 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -32,8 +32,6 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
-
-import theking530.staticpower.cables.attachments.AbstractCableAttachment.AbstractCableAttachmentContainerProvider;
 
 public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCableAttachment {
 	public static final String CRAFTING_INTERFACE_TIMER_TAG = "crafting_interface_timer";

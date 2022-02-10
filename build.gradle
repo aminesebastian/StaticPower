@@ -13,14 +13,15 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}." + project.getProperty("build_number")
+version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}." + "0"  //project.getProperty("build_number")
 group = "com.theking530.staticpower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StaticPower"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '16' // Need this here so eclipse task generates correctly.
+// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-def apiVersion = "${mc_version}-${staticpower_api_major_version}.${staticpower_api_minor_version}." + project.getProperty("build_number")
-def coreVersion = "${mc_version}-${staticpower_core_major_version}.${staticpower_core_minor_version}." + project.getProperty("build_number")
+def apiVersion = "${mc_version}-${staticpower_api_major_version}.${staticpower_api_minor_version}."  + "0"  // project.getProperty("build_number")
+def coreVersion = "${mc_version}-${staticpower_core_major_version}.${staticpower_core_minor_version}."  + "0"  // project.getProperty("build_number")
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
 apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle' 
@@ -31,7 +32,7 @@ minecraft {
     // stable_#            Stables are built at the discretion of the MCP team.
     // Use non-default mappings at your own risk. they may not always work.
     // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'official', version: '1.17.1'
+    mappings channel: 'official', version: '1.18.1'
 
      accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
@@ -97,15 +98,15 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.17.1-37.1.1'
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 	// compile against the JEI API but do not include it at runtime
 	compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
 	// at runtime, use the full JEI jar
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
 	
-	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
 	
 	// Visit https://www.curseforge.com/minecraft/mc-mods/jade/files/all
     // to get the latest version

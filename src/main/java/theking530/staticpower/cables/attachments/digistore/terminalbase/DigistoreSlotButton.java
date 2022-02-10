@@ -16,8 +16,6 @@ import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.utilities.MetricConverter;
 
-import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
-
 @OnlyIn(Dist.CLIENT)
 public class DigistoreSlotButton extends FakeSlotButton {
 

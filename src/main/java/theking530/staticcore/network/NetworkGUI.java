@@ -2,10 +2,10 @@ package theking530.staticcore.network;
 
 import java.util.function.Consumer;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkHooks;
 import theking530.staticpower.container.StaticPowerContainer;
 
 public class NetworkGUI {

@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.components.control.sideconfiguration;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.utilities.Color;
 

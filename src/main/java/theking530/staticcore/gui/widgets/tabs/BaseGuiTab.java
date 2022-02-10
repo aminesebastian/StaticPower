@@ -2,8 +2,6 @@ package theking530.staticcore.gui.widgets.tabs;
 
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;

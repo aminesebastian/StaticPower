@@ -1,7 +1,7 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;

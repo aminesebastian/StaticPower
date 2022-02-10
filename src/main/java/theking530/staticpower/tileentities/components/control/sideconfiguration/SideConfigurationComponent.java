@@ -6,11 +6,11 @@ import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;

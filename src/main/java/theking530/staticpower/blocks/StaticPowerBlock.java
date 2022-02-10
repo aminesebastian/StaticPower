@@ -48,8 +48,7 @@ import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
  * @author Amine Sebastian
  *
  */
-public class StaticPowerBlock extends Block
-		implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider {
+public class StaticPowerBlock extends Block implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider {
 	/**
 	 * Facing property used by blocks that require keeping track of the direction
 	 * they face (does not have to be used).
@@ -78,7 +77,7 @@ public class StaticPowerBlock extends Block
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		return IBreakSerializeable.createItemDrop(this, player, world, pos);
 	}
 
@@ -129,8 +128,7 @@ public class StaticPowerBlock extends Block
 	 * @param te     The {@link TileEntity} of the block (if one existed).
 	 * @param stack  The {@link ItemStack} that the block was harvested by.
 	 */
-	public void onStaticPowerBlockHarvested(Level world, Player player, BlockPos pos, BlockState state,
-			@Nullable BlockEntity te, ItemStack stack) {
+	public void onStaticPowerBlockHarvested(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
 
 	}
 
@@ -151,13 +149,11 @@ public class StaticPowerBlock extends Block
 	 * @param hit    The hit result of the activation.
 	 * @return The result of the activation.
 	 */
-	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player,
-			InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return InteractionResult.PASS;
 	}
 
-	public void onStaticPowerBlockPlaced(Level world, BlockPos pos, BlockState state, LivingEntity placer,
-			ItemStack stack) {
+	public void onStaticPowerBlockPlaced(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 
 	}
 
@@ -165,18 +161,15 @@ public class StaticPowerBlock extends Block
 
 	}
 
-	public void onStaticPowerNeighborChanged(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor,
-			boolean isMoving) {
+	public void onStaticPowerNeighborChanged(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor, boolean isMoving) {
 
 	}
 
-	public void onStaticPowerBlockReplaced(BlockState state, Level world, BlockPos pos, BlockState newState,
-			boolean isMoving, boolean newBlock) {
+	public void onStaticPowerBlockReplaced(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving, boolean newBlock) {
 
 	}
 
-	public void onNeighborReplaced(BlockState state, Direction dir, BlockState facingState, LevelAccessor world,
-			BlockPos pos, BlockPos facingPos) {
+	public void onNeighborReplaced(BlockState state, Direction dir, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
 
 	}
 
@@ -195,8 +188,7 @@ public class StaticPowerBlock extends Block
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
-			boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -208,8 +200,7 @@ public class StaticPowerBlock extends Block
 	 * wrench.
 	 */
 	@Override
-	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world,
-			BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		return InteractionResult.PASS;
 	}
 
@@ -217,14 +208,12 @@ public class StaticPowerBlock extends Block
 	 * Defines the behavior for when this block is sneak right clicked by a wrench.
 	 */
 	@Override
-	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world,
-			BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		return InteractionResult.PASS;
 	}
 
 	@Override
-	public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te,
-			ItemStack stack) {
+	public void playerDestroy(Level world, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity te, ItemStack stack) {
 		// Raise the inheritor's method.
 		onStaticPowerBlockHarvested(world, player, pos, state, te, stack);
 
@@ -255,8 +244,7 @@ public class StaticPowerBlock extends Block
 	}
 
 	@Override
-	public InteractionResult use(final BlockState state, final Level world, final BlockPos pos, final Player player,
-			final InteractionHand hand, final BlockHitResult hit) {
+	public InteractionResult use(final BlockState state, final Level world, final BlockPos pos, final Player player, final InteractionHand hand, final BlockHitResult hit) {
 		// Return the super call if needed.
 		@SuppressWarnings("deprecation")
 		InteractionResult superResult = super.use(state, world, pos, player, hand, hit);
@@ -267,8 +255,7 @@ public class StaticPowerBlock extends Block
 		// Raise the tile entity's activated method and return here if it does not
 		// pass.
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			InteractionResult teResult = ((TileEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player,
-					hand, hit);
+			InteractionResult teResult = ((TileEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player, hand, hit);
 			if (teResult != InteractionResult.PASS) {
 				return teResult;
 			}
@@ -304,8 +291,7 @@ public class StaticPowerBlock extends Block
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor world,
-			BlockPos pos, BlockPos facingPos) {
+	public BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
 		super.updateShape(state, dir, facingState, world, pos, facingPos);
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
 			((TileEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
@@ -316,8 +302,7 @@ public class StaticPowerBlock extends Block
 
 	@Override
 	@SuppressWarnings("deprecation")
-	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos,
-			boolean isMoving) {
+	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
 			((TileEntityBase) world.getBlockEntity(pos)).onNeighborChanged(state, fromPos, isMoving);

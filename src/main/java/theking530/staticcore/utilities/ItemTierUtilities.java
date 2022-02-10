@@ -1,9 +1,9 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.world.item.Tiers;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Tiers;
 
 public class ItemTierUtilities {
 	public static MutableComponent getNameForItemTier(Tiers tier) {

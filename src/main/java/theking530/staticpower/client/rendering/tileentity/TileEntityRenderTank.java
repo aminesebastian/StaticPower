@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
@@ -51,9 +51,9 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 
 		// Draw the glass. We have to do it like this because of how mineraft orders
 		// transparency.
-		if (ModelLoader.instance() != null && ModelLoader.instance().getSpriteMap() != null) {
+		if (ForgeModelBakery.instance() != null && ForgeModelBakery.instance().getSpriteMap() != null) {
 			@SuppressWarnings("deprecation")
-			TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+			TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 			TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
 			CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL),
 					new Color(0.4f, 0.45f, 0.55f, 0.35f), matrixStack, sprite);

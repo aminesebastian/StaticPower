@@ -1,7 +1,7 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 
 public class Vector3D extends Vector2D {
 	public static final Vector3D ZERO = new Vector3D(0, 0, 0);

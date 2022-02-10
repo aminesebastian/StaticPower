@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;

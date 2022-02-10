@@ -3,10 +3,10 @@ package theking530.staticpower.items.fluidcapsule;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -14,8 +14,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import theking530.staticpower.StaticPowerConfig;
-
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityProvider {
 

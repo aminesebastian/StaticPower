@@ -7,11 +7,10 @@ import java.util.Queue;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -73,7 +72,7 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 		maxHistory = nbt.getInt("max_history");
 
 		// Deserialize the history.
-		ListTag serializedEntries = nbt.getList("entries", Constants.NBT.TAG_COMPOUND);
+		ListTag serializedEntries = nbt.getList("entries", Tag.TAG_COMPOUND);
 		for (Tag entryTag : serializedEntries) {
 			CompoundTag entryTagCompound = (CompoundTag) entryTag;
 			DigistoreCraftingTerminalHistoryEntry entry = new DigistoreCraftingTerminalHistoryEntry();
@@ -135,7 +134,7 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 
 			// Deserialize the recipe.
 			recipe = new ItemStack[nbt.getInt("recipe_size")];
-			ListTag serializedRecipe = nbt.getList("recipe", Constants.NBT.TAG_COMPOUND);
+			ListTag serializedRecipe = nbt.getList("recipe", Tag.TAG_COMPOUND);
 			for (int i = 0; i < serializedRecipe.size(); i++) {
 				Tag recipeTag = serializedRecipe.get(i);
 				CompoundTag recipeTagCompound = (CompoundTag) recipeTag;

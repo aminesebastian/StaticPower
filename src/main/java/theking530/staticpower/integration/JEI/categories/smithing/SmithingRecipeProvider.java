@@ -8,17 +8,17 @@ import java.util.Map.Entry;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraftforge.registries.RegistryManager;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
@@ -35,7 +35,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 		// Get all the registered items and add any recipes that can be created from
 		// them.
-		for (Entry<ResourceKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
+		for (Entry<ResourceKey<Item>, Item> item : RegistryManager.ACTIVE.getRegistry(Item.class).getEntries()) {
 			RECIPES.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
 		}
 
@@ -76,7 +76,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 		// Get all the registered items and add any recipes that can be created from
 		// them.
-		for (Entry<ResourceKey<Item>, Item> item : GameRegistry.findRegistry(Item.class).getEntries()) {
+		for (Entry<ResourceKey<Item>, Item> item : RegistryManager.ACTIVE.getRegistry(Item.class).getEntries()) {
 			RECIPES.addAll(makeFromSmithingInput(new ItemStack(item.getValue())));
 		}
 

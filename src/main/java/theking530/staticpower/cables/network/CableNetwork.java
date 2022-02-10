@@ -23,7 +23,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.network.pathfinding.PathCache;
 
 /**
@@ -223,7 +222,7 @@ public class CableNetwork {
 		CableNetwork network = new CableNetwork(BlockPos.of(tag.getLong("origin")), tag.getLong("network_id"));
 
 		// Deserialize the modules.
-		ListTag modules = tag.getList("modules", Constants.NBT.TAG_COMPOUND);
+		ListTag modules = tag.getList("modules", Tag.TAG_COMPOUND);
 		for (Tag moduleTag : modules) {
 			// Get the module compound.
 			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;

@@ -2,7 +2,6 @@ package theking530.staticpower.entities.smeep;
 
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
-import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,7 +12,6 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
-import theking530.staticpower.init.ModEntities;
 
 public class TypeSmeep extends AbstractSpawnableMobType<EntitySmeep> {
 	public TypeSmeep(String name) {

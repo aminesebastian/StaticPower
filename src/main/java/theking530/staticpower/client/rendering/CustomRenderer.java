@@ -4,22 +4,21 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import com.mojang.math.Matrix4f;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
-import com.mojang.math.Vector3f;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.client.model.animation.Animation;
+import net.minecraftforge.client.event.RenderLevelLastEvent;
 import theking530.staticcore.utilities.Color;
 
 @OnlyIn(Dist.CLIENT)
@@ -29,9 +28,9 @@ public class CustomRenderer {
 	private static float lastRenderTime = 0.0f;
 	private static float deltaTime = 0.0f;
 
-	public void render(RenderWorldLastEvent event) {
+	public void render(RenderLevelLastEvent event) {
 		// Get the current matrix stack.
-		PoseStack matrixStack = event.getMatrixStack();
+		PoseStack matrixStack = event.getPoseStack();
 
 		// Start our own stack entry and project us into world space.
 		matrixStack.pushPose();
@@ -69,7 +68,7 @@ public class CustomRenderer {
 		matrixStack.popPose();
 
 		// Update the delta time.
-		float currentTime = Animation.getWorldTime(Minecraft.getInstance().level, event.getPartialTicks());
+		float currentTime = Minecraft.getInstance().level.getGameTime();
 		deltaTime = currentTime - lastRenderTime;
 		lastRenderTime = currentTime;
 	}

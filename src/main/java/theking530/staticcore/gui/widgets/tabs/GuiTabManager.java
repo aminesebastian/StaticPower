@@ -15,8 +15,6 @@ import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabState;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
-import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
-
 @OnlyIn(Dist.CLIENT)
 public class GuiTabManager extends AbstractGuiWidget {
 

@@ -10,8 +10,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
@@ -52,7 +52,7 @@ public class TileEntityRandomItemGenerator extends TileEntityConfigurable implem
 	private void generateItem() {
 		try {
 			// Pick a random item.
-			IForgeRegistry<Item> items = GameRegistry.findRegistry(Item.class);
+			IForgeRegistry<Item> items = RegistryManager.ACTIVE.getRegistry(Item.class);
 			int randomIndex = SDMath.getRandomIntInRange(0, items.getValues().size() - 1);
 			Item item = items.getValues().stream().collect(Collectors.toList()).get(randomIndex);
 

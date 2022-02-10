@@ -7,9 +7,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Predicate;
 
+import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;

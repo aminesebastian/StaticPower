@@ -3,10 +3,10 @@ package theking530.api.attributes;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;

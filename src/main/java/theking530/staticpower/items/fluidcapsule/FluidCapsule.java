@@ -50,23 +50,23 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		FluidUtil.getFluidHandler(stack).ifPresent(fluidHandler -> {
-			tooltip.add(new TextComponent(ChatFormatting.WHITE.toString()).append(GuiTextUtilities
-					.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));
+			tooltip.add(new TextComponent(ChatFormatting.WHITE.toString()).append(GuiTextUtilities.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));
 		});
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
-		return getDurabilityForDisplay(stack) < 1.0f;
+	public boolean isBarVisible(ItemStack stack) {
+		return getBarWidth(stack) != 0;
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack) {
+	public int getBarWidth(ItemStack stack) {
 		IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack).orElse(null);
 		if (handler != null) {
-			return 1.0 - (double) handler.getFluidInTank(0).getAmount() / (double) handler.getTankCapacity(0);
+			double fillRatio = (double) handler.getFluidInTank(0).getAmount() / (double) handler.getTankCapacity(0);
+			return (int) (fillRatio * 13);
 		}
-		return 0.0f;
+		return 0;
 	}
 
 	@Override
@@ -85,8 +85,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 		if (containerHandler == null || containerHandler.getFluidInTank(0).isEmpty()) {
 			return new TranslatableComponent(this.getDescriptionId(stack));
 		}
-		return new TranslatableComponent(this.getDescriptionId(stack)).append(" (")
-				.append(containerHandler.getFluidInTank(0).getDisplayName()).append(")");
+		return new TranslatableComponent(this.getDescriptionId(stack)).append(" (").append(containerHandler.getFluidInTank(0).getDisplayName()).append(")");
 	}
 
 	@Override
@@ -95,15 +94,13 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	}
 
 	@Override
-	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
-			Direction face, Player player, ItemStack item) {
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		IFluidHandler fluidHandler = FluidUtil.getFluidHandler(item).orElse(null);
 		if (fluidHandler != null) {
 			BlockPos fluidTargetPos = pos.relative(face);
 			FluidState usedFluidState = world.getFluidState(fluidTargetPos);
 			if (usedFluidState.isEmpty()) {
-				WorldUtilities.tryPlaceFluid(player, world, context.getHand(), fluidTargetPos, fluidHandler,
-						fluidHandler.getFluidInTank(0));
+				WorldUtilities.tryPlaceFluid(player, world, context.getHand(), fluidTargetPos, fluidHandler, fluidHandler.getFluidInTank(0));
 			} else {
 				WorldUtilities.tryPickUpFluid(item, player, world, fluidTargetPos, face);
 			}
@@ -134,10 +131,8 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 			if (containerHandler == null || containerHandler.getFluidInTank(0).isEmpty()) {
 				return (tier.toString());
 			}
-			return tier.toString() + itemStack.getItem().getRegistryName().toString()
-					+ containerHandler.getFluidInTank(0).getFluid().getRegistryName().toString()
-					+ containerHandler.getFluidInTank(0).getFluid().getRegistryName()
-					+ containerHandler.getFluidInTank(0).getAmount();
+			return tier.toString() + itemStack.getItem().getRegistryName().toString() + containerHandler.getFluidInTank(0).getFluid().getRegistryName().toString()
+					+ containerHandler.getFluidInTank(0).getFluid().getRegistryName() + containerHandler.getFluidInTank(0).getAmount();
 		}
 	}
 }

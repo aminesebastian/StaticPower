@@ -3,9 +3,9 @@ package theking530.staticcore.utilities;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.world.item.Rarity;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Rarity;
 
 public class StaticPowerRarities {
 	private static final Map<String, Rarity> RARITY_MAP = new HashMap<String, Rarity>();

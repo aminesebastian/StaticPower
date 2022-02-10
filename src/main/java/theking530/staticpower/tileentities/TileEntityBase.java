@@ -34,6 +34,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,7 +44,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticpower.StaticPower;
@@ -113,8 +113,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		if (blockEntity instanceof TileEntityBase) {
 			((TileEntityBase) blockEntity).tick();
 		} else {
-			StaticPower.LOGGER.error(
-					"Attempting to call TileEntityBase ticker for block entity that doesn not inherit from TileEntityBase.");
+			StaticPower.LOGGER.error("Attempting to call TileEntityBase ticker for block entity that doesn not inherit from TileEntityBase.");
 		}
 	}
 
@@ -136,9 +135,8 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		// If an update is queued, perform the update.
 		if (updateRequestQueue.size() > 0) {
 			// Debug the update.
-			StaticPower.LOGGER.debug(String.format(
-					"Updating block at position: %1$s with name: %2$s with %3$d updates queued!",
-					getBlockPos().toString(), getLevel().getBlockState(getBlockPos()), updateRequestQueue.size()));
+			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getBlockPos().toString(), getLevel().getBlockState(getBlockPos()),
+					updateRequestQueue.size()));
 
 			// Calculate the flag to use.
 			int flags = 0;
@@ -162,15 +160,13 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 
 			// Perform the block update.
 			if (flags > 0) {
-				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(),
-						getBlockState(), flags, 512);
+				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), getBlockState(), flags, 512);
 			}
 
 			// Perform a data sync if requested.
 			if (shouldSync && !getLevel().isClientSide()) {
 				NetworkMessage msg = new TileEntityBasicSyncPacket(this, renderOnDataSync);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL,
-						getLevel(), getBlockPos(), 100, msg);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 100, msg);
 			}
 
 			// If we also want to mark dirty, do so.
@@ -226,12 +222,9 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	public void addRenderingUpdateRequest() {
 		if (getLevel().isClientSide()) {
 			requestModelDataUpdate();
-			StaticPower.LOGGER.debug(
-					String.format("Executing rendering state update at position: %1$s.", getBlockPos().toString()));
+			StaticPower.LOGGER.debug(String.format("Executing rendering state update at position: %1$s.", getBlockPos().toString()));
 		} else {
-			StaticPower.LOGGER.warn(String.format(
-					"Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.",
-					getBlockPos().toString()));
+			StaticPower.LOGGER.warn(String.format("Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.", getBlockPos().toString()));
 		}
 	}
 
@@ -239,8 +232,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 
 	}
 
-	public InteractionResult onBlockActivated(BlockState currentState, Player player, InteractionHand hand,
-			BlockHitResult hit) {
+	public InteractionResult onBlockActivated(BlockState currentState, Player player, InteractionHand hand, BlockHitResult hit) {
 		return InteractionResult.PASS;
 	}
 
@@ -256,9 +248,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 
 		// Add all the items that are currently in an inventory.
 		if (worldPosition != null) {
-			TileEntityBase baseTe = level.getBlockEntity(worldPosition) instanceof TileEntityBase
-					? (TileEntityBase) level.getBlockEntity(worldPosition)
-					: null;
+			TileEntityBase baseTe = level.getBlockEntity(worldPosition) instanceof TileEntityBase ? (TileEntityBase) level.getBlockEntity(worldPosition) : null;
 			if (baseTe != null) {
 				for (InventoryComponent comp : baseTe.getComponents(InventoryComponent.class)) {
 					// Skip components that should not drop their contents.
@@ -321,17 +311,15 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		transferItemInternally(1, fromInv, fromSlot, toInv, toSlot);
 	}
 
-	public void transferItemInternally(int count, InventoryComponent fromInv, int fromSlot, InventoryComponent toInv,
-			int toSlot) {
+	public void transferItemInternally(int count, InventoryComponent fromInv, int fromSlot, InventoryComponent toInv, int toSlot) {
 		toInv.insertItem(toSlot, fromInv.extractItem(fromSlot, count, false), false);
 	}
 
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getLevel() == null) {
-			LOGGER.error(
-					"There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
-					getDisplayName().getString(), worldPosition);
+			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.", getDisplayName().getString(),
+					worldPosition);
 			return Direction.UP;
 		}
 
@@ -505,8 +493,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		}
 
 		// Sort the inventories.
-		Comparator<InventoryComponent> inventoryComparator = Comparator
-				.comparingInt(InventoryComponent::getShiftClickPriority).reversed();
+		Comparator<InventoryComponent> inventoryComparator = Comparator.comparingInt(InventoryComponent::getShiftClickPriority).reversed();
 		inventories.sort(inventoryComparator);
 
 		// Return the sorted list.
@@ -547,8 +534,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	public void deserializeOnPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer,
-			ItemStack stack) {
+	public void deserializeOnPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		deserializeSaveNbt(nbt);
 		deserializeUpdateNbt(nbt, false);
 	}
@@ -559,8 +545,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state,
-			LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		return false;
 	}
 
@@ -579,9 +564,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : components.values()) {
-			CompoundTag componentTag = nbt.contains(component.getComponentName())
-					? nbt.getCompound(component.getComponentName())
-					: new CompoundTag();
+			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -623,9 +606,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : components.values()) {
-			CompoundTag componentTag = nbt.contains(component.getComponentName())
-					? nbt.getCompound(component.getComponentName())
-					: new CompoundTag();
+			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -666,7 +647,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		if (hasPostInitRun) {
 			serializeUpdateNbt(nbtTagCompound, true);
 		}
-		return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, nbtTagCompound);
+		return ClientboundBlockEntityDataPacket.create(this, (entity) -> nbtTagCompound);
 	}
 
 	/**
@@ -683,8 +664,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		}
 
 		// Call mark and notify locally.
-		getLevel().markAndNotifyBlock(getBlockPos(), getLevel().getChunkAt(getBlockPos()), getBlockState(),
-				getBlockState(), BlockFlags.DEFAULT_AND_RERENDER, 512);
+		getLevel().markAndNotifyBlock(getBlockPos(), getLevel().getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_ALL_IMMEDIATE, 512);
 	}
 
 	/**
@@ -697,7 +677,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	@Override
 	public CompoundTag getUpdateTag() {
 		CompoundTag nbtTagCompound = super.getUpdateTag();
-		save(nbtTagCompound);
+		saveAdditional(nbtTagCompound);
 		return nbtTagCompound;
 	}
 
@@ -718,10 +698,10 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	 * Serializes this {@link TileEntity} to the provided tag.
 	 */
 	@Override
-	public CompoundTag save(CompoundTag parentNBTTagCompound) {
-		super.save(parentNBTTagCompound);
+	public void saveAdditional(CompoundTag parentNBTTagCompound) {
+		super.saveAdditional(parentNBTTagCompound);
 		serializeSaveNbt(parentNBTTagCompound);
-		return serializeUpdateNbt(parentNBTTagCompound, false);
+		serializeUpdateNbt(parentNBTTagCompound, false);
 	}
 
 	/**
@@ -754,9 +734,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	 */
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		LOGGER.error(String.format(
-				"TileEntity: %1$s did not override the method #createMenu. The container for this TE is broken.",
-				getDisplayName().getString()));
+		LOGGER.error(String.format("TileEntity: %1$s did not override the method #createMenu. The container for this TE is broken.", getDisplayName().getString()));
 		return null;
 	}
 

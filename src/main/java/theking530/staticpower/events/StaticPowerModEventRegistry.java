@@ -17,9 +17,11 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,6 +34,7 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
+import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModuleFactory;
@@ -46,6 +49,7 @@ import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModu
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;
+import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
 
@@ -68,7 +72,7 @@ public class StaticPowerModEventRegistry {
 
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE, new BundledRedstoneNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE, new RedstoneNetworkModuleFactory());
-		
+
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_RED, new RedstoneNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_RED, new RedstoneNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GOLD, new RedstoneNetworkModuleFactory());
@@ -86,19 +90,22 @@ public class StaticPowerModEventRegistry {
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GRAY, new RedstoneNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLACK, new RedstoneNetworkModuleFactory());
 
-		// Register capabilities.
-		CapabilityDigistoreInventory.register();
-		CapabilityStaticVolt.register();
-		CapabilityHeatable.register();
-		CapabilityAttributable.register();
-		CapabilityStaticPowerPlayerData.register();
-
 		// Register composter recipes.
 		event.enqueueWork(() -> {
 			ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);
 		});
 
 		LOGGER.info("Static Power Common Setup Completed!");
+	}
+
+	@SubscribeEvent
+	public static void capabilityRegisterEvent(RegisterCapabilitiesEvent event) {
+		// Register capabilities.
+		CapabilityDigistoreInventory.register(event);
+		CapabilityStaticVolt.register(event);
+		CapabilityHeatable.register(event);
+		CapabilityAttributable.register(event);
+		CapabilityStaticPowerPlayerData.register(event);
 	}
 
 	@SubscribeEvent
@@ -123,7 +130,7 @@ public class StaticPowerModEventRegistry {
 	public static void modelRegistryEvent(ModelRegistryEvent event) {
 		// Register any additional models we want.
 		LOGGER.info("Registering Additional Models!");
-		StaticPowerAdditionalModels.regsiterModels();
+		StaticPowerAdditionalModels.registerModels();
 		LOGGER.info(String.format("Registered: %1$d Additional Models!", StaticPowerAdditionalModels.MODELS.size()));
 	}
 
@@ -146,6 +153,20 @@ public class StaticPowerModEventRegistry {
 	public static void textureStitchEvent(TextureStitchEvent.Pre event) {
 		StaticPowerClientEventHandler.onTextureStitchEvent(event);
 		LOGGER.info("Static Power Model Texture Stitch Event Completed!");
+	}
+
+	@SubscribeEvent
+	@OnlyIn(Dist.CLIENT)
+	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) throws Exception {
+		// Regsiter entity renderers.
+		LOGGER.info("Registering Entity Renderers!");
+		for (AbstractEntityType<?> type : StaticPowerRegistry.ENTITIES) {
+			type.registerRenderers(event);
+		}
+		
+		// Register the tile entity special renderers.
+		LOGGER.info("Registering Tile Entity Special Renderers!");
+		StaticCoreRegistry.registerBlockEntityRenderers(event);
 	}
 
 	@SubscribeEvent

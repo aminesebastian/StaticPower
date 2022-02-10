@@ -2,8 +2,8 @@ package theking530.staticpower.items.utilities;
 
 import java.util.concurrent.atomic.AtomicLong;
 
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.util.Mth;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.api.power.IStaticVoltHandler;
@@ -18,7 +18,7 @@ import theking530.api.power.IStaticVoltHandler;
 public class EnergyHandlerItemStackUtilities {
 
 	public static int getRGBDurabilityForDisplay(ItemStack stack) {
-		double hue = (170.0f / 360.0f) + (stack.getItem().getDurabilityForDisplay(stack)) * (40.0f / 360.0f);
+		double hue = (170.0f / 360.0f) + (stack.getDamageValue()) * (40.0f / 360.0f);
 		return Mth.hsvToRgb((float) hue, 1.0F, 1.0F);
 	}
 

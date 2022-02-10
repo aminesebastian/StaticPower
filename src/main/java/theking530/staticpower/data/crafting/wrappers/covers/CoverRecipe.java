@@ -2,15 +2,15 @@ package theking530.staticpower.data.crafting.wrappers.covers;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
+import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.CustomRecipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;

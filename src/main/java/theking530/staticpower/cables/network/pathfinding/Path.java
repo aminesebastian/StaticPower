@@ -2,12 +2,12 @@ package theking530.staticpower.cables.network.pathfinding;
 
 import java.util.Arrays;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.core.Direction;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
-import net.minecraftforge.common.util.Constants;
 
 public class Path {
 	private final BlockPos sourceLocation;
@@ -24,7 +24,7 @@ public class Path {
 
 	public Path(CompoundTag nbt) {
 		// Get the serialized entries.
-		ListTag entries = nbt.getList("entries", Constants.NBT.TAG_COMPOUND);
+		ListTag entries = nbt.getList("entries", Tag.TAG_COMPOUND);
 
 		// Create the array to contain the entries.
 		path = new PathEntry[entries.size()];

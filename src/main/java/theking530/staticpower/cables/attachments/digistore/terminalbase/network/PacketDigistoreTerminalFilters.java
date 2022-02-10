@@ -2,9 +2,9 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.network
 
 import java.util.function.Supplier;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreSyncedSearchMode;

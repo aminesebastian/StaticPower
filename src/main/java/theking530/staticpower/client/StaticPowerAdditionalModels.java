@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerAdditionalModels {
@@ -266,9 +266,9 @@ public class StaticPowerAdditionalModels {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void regsiterModels() {
+	public static void registerModels() {
 		for (ResourceLocation model : MODELS) {
-			ModelLoader.addSpecialModel(model);
+			ForgeModelBakery.addSpecialModel(model);
 			StaticPower.LOGGER.info(String.format("Loading additional model: %1$s.", model.toString()));
 		}
 	}

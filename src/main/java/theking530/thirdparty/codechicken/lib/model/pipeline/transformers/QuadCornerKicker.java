@@ -21,8 +21,8 @@ package theking530.thirdparty.codechicken.lib.model.pipeline.transformers;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.phys.AABB;
 import theking530.thirdparty.codechicken.lib.model.Quad.Vertex;
 import theking530.thirdparty.codechicken.lib.model.pipeline.IPipelineElementFactory;
 import theking530.thirdparty.codechicken.lib.model.pipeline.QuadTransformer;

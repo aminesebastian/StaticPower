@@ -2,10 +2,10 @@ package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
 import java.util.function.Supplier;
 
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;

@@ -42,7 +42,7 @@ public class BlockEntityTypeAllocator<T extends TileEntityBase> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public boolean requiresTileEntitySpecialRenderer() {
+	public boolean requiresBlockEntitySpecialRenderer() {
 		return rendererFactory != null;
 	}
 
@@ -54,7 +54,7 @@ public class BlockEntityTypeAllocator<T extends TileEntityBase> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public BlockEntityRendererProvider<T> getTileEntitySpecialRenderer() {
+	public BlockEntityRendererProvider<T> getBlockEntitySpecialRenderer() {
 		return rendererFactory;
 	}
 

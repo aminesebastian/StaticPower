@@ -107,13 +107,13 @@ public class CoverBuilder {
 				// Check if the block renders on the layer we want to force.
 				if (ItemBlockRenderTypes.canRenderInLayer(blockState, forcedLayer)) {
 					// Force the layer and gather quads.
-					ForgeHooksClient.setRenderLayer(forcedLayer);
+					ForgeHooksClient.setRenderType(forcedLayer);
 					modelQuads.addAll(gatherQuads(model, blockState, rand, modelData));
 				}
 			}
 
 			// Reset.
-			ForgeHooksClient.setRenderLayer(layer);
+			ForgeHooksClient.setRenderType(layer);
 		} else {
 			modelQuads.addAll(gatherQuads(model, blockState, rand, modelData));
 		}

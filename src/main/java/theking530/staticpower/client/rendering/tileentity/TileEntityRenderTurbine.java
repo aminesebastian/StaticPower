@@ -13,11 +13,9 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
@@ -54,13 +52,10 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 			blockRenderer = Minecraft.getInstance().getBlockRenderer();
 		}
 
-		// Get the rendering safe world.
-		BlockAndTintGetter world = MinecraftForgeClient.getRegionRenderCacheOptional(tileEntity.getLevel(), pos).map(BlockAndTintGetter.class::cast).orElseGet(() -> tileEntity.getLevel());
-
 		// If the model data exists, use it to render the turbine blades.
 		if (tileEntity.hasTurbineBlades()) {
 			// Get the block state and model.
-			BlockState state = world.getBlockState(pos);
+			BlockState state = tileEntity.getBlockState();
 			ResourceLocation modelLocation = tileEntity.getTurbileBladesItem().getInWorldModel();
 			BakedModel model = Minecraft.getInstance().getModelManager().getModel(modelLocation);
 

@@ -2,11 +2,11 @@ package theking530.staticpower.cables.redstone.basic.gui;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import theking530.staticcore.gui.widgets.button.ItemButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;

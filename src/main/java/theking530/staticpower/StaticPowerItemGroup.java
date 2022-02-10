@@ -12,8 +12,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryManager;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.init.ModItems;
 
@@ -114,7 +114,7 @@ public class StaticPowerItemGroup extends CreativeModeTab {
 		subTypes.add(ModItems.LumumMagnet.getFilledVariant());
 
 		// Add all the capsules for all fluids.
-		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
+		for (Fluid fluid : RegistryManager.ACTIVE.getRegistry(Fluid.class)) {
 			// Skip the flowing fluids.
 			if (fluid.defaultFluidState().getAmount() != 8) {
 				continue;

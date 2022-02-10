@@ -7,9 +7,8 @@ import java.util.Queue;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.FloatTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class TransferMetrics implements INBTSerializable<CompoundTag> {
@@ -100,8 +99,8 @@ public class TransferMetrics implements INBTSerializable<CompoundTag> {
 		provided.clear();
 
 		// Read the serialized lists.
-		ListTag receivedNBT = nbt.getList("received", Constants.NBT.TAG_FLOAT);
-		ListTag providedNBT = nbt.getList("provided", Constants.NBT.TAG_FLOAT);
+		ListTag receivedNBT = nbt.getList("received", Tag.TAG_FLOAT);
+		ListTag providedNBT = nbt.getList("provided", Tag.TAG_FLOAT);
 
 		// Populate the arrays.
 		for (Tag receivedTag : receivedNBT) {

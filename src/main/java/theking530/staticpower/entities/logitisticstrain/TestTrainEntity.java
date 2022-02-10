@@ -5,8 +5,6 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.init.ModEntities;
 
-import net.minecraft.world.entity.vehicle.AbstractMinecart.Type;
-
 public class TestTrainEntity extends AbstractMinecart {
 
 	public TestTrainEntity(EntityType<?> type, Level world) {

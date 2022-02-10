@@ -15,7 +15,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.util.Constants;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
@@ -405,7 +404,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 		// Load the blocks for mining.
 		blocks.clear();
-		ListTag savedBlocks = nbt.getList("blocks", Constants.NBT.TAG_COMPOUND);
+		ListTag savedBlocks = nbt.getList("blocks", Tag.TAG_COMPOUND);
 		for (Tag blockTag : savedBlocks) {
 			CompoundTag blockTagCompound = (CompoundTag) blockTag;
 			blocks.add(BlockPos.of(blockTagCompound.getLong("pos")));

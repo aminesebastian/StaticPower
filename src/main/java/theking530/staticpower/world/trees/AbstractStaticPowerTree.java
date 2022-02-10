@@ -3,9 +3,9 @@ package theking530.staticpower.world.trees;
 import java.util.Random;
 
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
-import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 
 public abstract class AbstractStaticPowerTree extends AbstractTreeGrower {

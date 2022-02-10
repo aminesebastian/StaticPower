@@ -14,7 +14,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
@@ -551,7 +550,7 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		output.maxTypes = nbt.getInt("max_types");
 
 		// Handle the item stacks.
-		ListTag itemList = nbt.getList("item_list", Constants.NBT.TAG_COMPOUND);
+		ListTag itemList = nbt.getList("item_list", Tag.TAG_COMPOUND);
 		for (Tag itemRawTag : itemList) {
 			CompoundTag itemTag = (CompoundTag) itemRawTag;
 			output.stacks.add(ItemUtilities.readLargeStackItemFromNBT(itemTag));

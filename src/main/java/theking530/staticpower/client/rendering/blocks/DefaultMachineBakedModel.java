@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -46,7 +46,7 @@ import theking530.staticpower.utilities.ModelUtilities;
 @OnlyIn(Dist.CLIENT)
 public class DefaultMachineBakedModel extends AbstractBakedModel {
 	@SuppressWarnings("deprecation")
-	protected static final TextureAtlas BLOCKS_TEXTURE = ModelLoader.instance().getSpriteMap()
+	protected static final TextureAtlas BLOCKS_TEXTURE = ForgeModelBakery.instance().getSpriteMap()
 			.getAtlas(TextureAtlas.LOCATION_BLOCKS);
 	private static final Logger LOGGER = LogManager.getLogger(DefaultMachineBakedModel.class);
 	private static final ModelProperty<Optional<MachineSideMode[]>> SIDE_CONFIG = new ModelProperty<>();
@@ -122,7 +122,7 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 		// Get the block atlas texture.
 		try {
-			TextureAtlas blocksTexture = ModelLoader.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
+			TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 			// Iterate through all the quads.
 			for (BakedQuad quad : baseQuads) {
 				// Get the rendering side.

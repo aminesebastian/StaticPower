@@ -11,8 +11,6 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
 
-import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
-
 @OnlyIn(Dist.CLIENT)
 public class ScrollBarWidget extends AbstractGuiWidget {
 	private int scrollAmount;

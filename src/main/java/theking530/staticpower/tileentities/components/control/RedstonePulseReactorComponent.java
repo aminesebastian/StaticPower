@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.components.control;
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.serialization.SaveSerialize;

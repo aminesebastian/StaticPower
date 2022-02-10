@@ -1,9 +1,9 @@
 package theking530.api.attributes.defenitions;
 
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.ChatFormatting;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.BooleanAttributeModifier;

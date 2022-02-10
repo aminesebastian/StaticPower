@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.attachments.digistore.terminal;
 
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractGuiDigistoreTerminal;
 

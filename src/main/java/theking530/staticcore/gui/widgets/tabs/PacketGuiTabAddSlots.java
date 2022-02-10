@@ -9,7 +9,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.NetworkMessage;

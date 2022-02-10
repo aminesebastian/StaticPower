@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketSyncStaticPowerPlayerDataCapability extends NetworkMessage {

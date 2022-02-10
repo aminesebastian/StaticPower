@@ -9,12 +9,12 @@ import java.util.function.Supplier;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;

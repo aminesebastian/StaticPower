@@ -3,19 +3,19 @@ package theking530.staticpower.integration.JEI;
 import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector4f;
 
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.gui.ingredient.ITooltipCallback;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
-import com.mojang.math.Vector4f;
-import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;

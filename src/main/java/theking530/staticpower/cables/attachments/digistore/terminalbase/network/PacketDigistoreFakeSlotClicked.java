@@ -2,9 +2,9 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.network
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.network.NetworkMessage;

@@ -22,8 +22,6 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
-import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
 	public static final int FLUID_SYNC_MAX_DELTA = 5;
 

@@ -5,9 +5,9 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.widgets.EntityRenderWidget;
 import theking530.staticcore.gui.widgets.GuiIslandWidget;
 import theking530.staticcore.gui.widgets.button.FakeSlotButton;

@@ -2,10 +2,10 @@ package theking530.staticpower.cables.digistore.crafting.network;
 
 import java.util.function.Supplier;
 
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
 import theking530.staticpower.network.NetworkMessage;

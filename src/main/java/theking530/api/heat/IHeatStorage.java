@@ -1,7 +1,7 @@
 package theking530.api.heat;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
 public interface IHeatStorage {

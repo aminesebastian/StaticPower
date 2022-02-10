@@ -1,12 +1,6 @@
 package theking530.staticpower.integration.TOP;
 
-import java.awt.Dimension;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.nbt.CompoundTag;
-import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.SDMath;
 
 public class BarTooltipRenderer {
 	protected Color borderColor;

@@ -249,7 +249,7 @@ public class StaticPowerConfig {
 					maxRubberTreeCount = builder.comment("Controls the max number of trees that can be grown in a biome.").translation(StaticPower.MOD_ID + ".config." + "maxRubberTreeCount")
 							.define("MaxRubberTreeCount", 4);
 					rubberTreeSpawnChance = builder.comment(
-							"When a biome is created, the MinRuberTreeCount amount of trees is allocated. This value represents the chance the number of trees between min and max tree counts will be added in addition. Setting this value to 0 would force all biomes to only contain the MinRubberTreeCount amount of trees, and setting it to 1 will force all biomes to contain MinRubberTreeCount + RandomNumberBetween(MinRubberTreeCount, MaxRubberTreeCount) trees.")
+							"When a biome is created, the MinRuberTreeCount amount of trees is allocated. This value represents the chance the number of trees between min and max tree counts will be added in addition. Setting this value to 0 would force all biomes to only contain the MinRubberTreeCount amount of trees, and setting it to 1 will force all biomes to contain MaxRubberTreeCount + RandomNumberBetween(MinRubberTreeCount, MaxRubberTreeCount) trees.")
 							.translation(StaticPower.MOD_ID + ".config." + "rubberTreeSpawnChance").define("RubberTreeSpawnChance", 0.15);
 					builder.pop();
 				}

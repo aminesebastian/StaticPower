@@ -195,7 +195,7 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		// Get the attachment side we're hovering.
 		CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 
@@ -224,7 +224,7 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 			}
 		}
 
-		return super.getPickBlock(state, target, world, pos, player);
+		return super.getCloneItemStack(state, target, world, pos, player);
 	}
 
 	@Deprecated

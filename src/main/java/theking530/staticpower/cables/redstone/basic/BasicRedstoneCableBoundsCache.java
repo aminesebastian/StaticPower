@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.redstone.basic;
 
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;

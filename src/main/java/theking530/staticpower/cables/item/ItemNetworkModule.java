@@ -17,12 +17,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
@@ -863,7 +863,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	public void readFromNbt(CompoundTag tag) {
 		ActiveParcels = new HashMap<BlockPos, LinkedList<ItemRoutingParcel>>();
 		// Get the parcel NBT list and add the parcels.
-		ListTag parcelNBTList = tag.getList("parcels", Constants.NBT.TAG_COMPOUND);
+		ListTag parcelNBTList = tag.getList("parcels", Tag.TAG_COMPOUND);
 		parcelNBTList.forEach(parcelTag -> {
 			CompoundTag parcelTagCompound = (CompoundTag) parcelTag;
 			ItemRoutingParcel parcel = new ItemRoutingParcel(parcelTagCompound);

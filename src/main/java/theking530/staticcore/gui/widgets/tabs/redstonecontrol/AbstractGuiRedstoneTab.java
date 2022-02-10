@@ -2,9 +2,9 @@ package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.item.Items;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.button.ItemButton;

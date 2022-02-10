@@ -2,10 +2,10 @@ package theking530.staticpower.data.crafting;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticcore.utilities.SDMath;
 
 public class ProbabilityItemStackOutput {

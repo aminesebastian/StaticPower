@@ -6,13 +6,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.util.Constants;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.data.crafting.IngredientUtilities;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -179,7 +179,7 @@ public class EncodedDigistorePattern {
 
 		// Read the inputs.
 		ItemStack[] inputStacks = new ItemStack[9];
-		ListTag inputsNBT = nbt.getList("inputs", Constants.NBT.TAG_COMPOUND);
+		ListTag inputsNBT = nbt.getList("inputs", Tag.TAG_COMPOUND);
 		for (int i = 0; i < inputsNBT.size(); i++) {
 			CompoundTag inputTagNbt = (CompoundTag) inputsNBT.get(i);
 			ItemStack stack = ItemStack.of(inputTagNbt);

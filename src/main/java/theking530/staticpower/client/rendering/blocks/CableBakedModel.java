@@ -11,14 +11,14 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -79,7 +79,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		// Render the covers when we're on the NULL render side. Reason for this is, as
 		// much as we lose some render optimization, if we don't do this, chests placed
 		// on a cover will stop rendering the cover.
-		RenderType layer = MinecraftForgeClient.getRenderLayer();
+		RenderType layer = MinecraftForgeClient.getRenderType();
 		if (side == null) {
 			for (Direction dir : Direction.values()) {
 				if (renderingState.covers[dir.ordinal()] != null) {

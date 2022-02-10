@@ -8,7 +8,7 @@ import java.util.Queue;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.Tag;
 import theking530.staticpower.cables.digistore.crafting.AutoCraftingStep;
 
 public class DigistoreCraftingRequest {
@@ -74,7 +74,7 @@ public class DigistoreCraftingRequest {
 		long id = nbt.getLong("id");
 
 		// Read the pending steps.
-		ListTag remainingStepsNbt = nbt.getList("remaining_steps", Constants.NBT.TAG_COMPOUND);
+		ListTag remainingStepsNbt = nbt.getList("remaining_steps", Tag.TAG_COMPOUND);
 		ArrayList<AutoCraftingStep> remainingSteps = new ArrayList<AutoCraftingStep>();
 		for (int i = 0; i < remainingStepsNbt.size(); i++) {
 			CompoundTag outputTagNbt = (CompoundTag) remainingStepsNbt.get(i);
@@ -82,7 +82,7 @@ public class DigistoreCraftingRequest {
 		}
 
 		// Read the completed steps.
-		ListTag completedStepsNbt = nbt.getList("completed_steps", Constants.NBT.TAG_COMPOUND);
+		ListTag completedStepsNbt = nbt.getList("completed_steps", Tag.TAG_COMPOUND);
 		ArrayList<AutoCraftingStep> completedSteps = new ArrayList<AutoCraftingStep>();
 		for (int i = 0; i < completedStepsNbt.size(); i++) {
 			CompoundTag outputTagNbt = (CompoundTag) completedStepsNbt.get(i);

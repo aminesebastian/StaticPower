@@ -3,9 +3,9 @@ package theking530.staticpower.cables.redstone.basic;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -15,8 +15,6 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModule;
-
-import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule.CableConfigurationWrapper;
 
 public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 

@@ -9,15 +9,15 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fmllegacy.common.registry.GameRegistry;
+import net.minecraftforge.registries.RegistryManager;
 
 public class StaticPowerJsonParsingUtilities {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerJsonParsingUtilities.class);
@@ -25,7 +25,7 @@ public class StaticPowerJsonParsingUtilities {
 	public static FluidStack parseFluidStack(JsonObject object) {
 		try {
 			// Get the fluid. If there is no defined fluid by that name, return null.
-			Fluid fluid = GameRegistry.findRegistry(Fluid.class).getValue(new ResourceLocation(object.get("fluid").getAsString()));
+			Fluid fluid = RegistryManager.ACTIVE.getRegistry(Fluid.class).getValue(new ResourceLocation(object.get("fluid").getAsString()));
 			if (fluid == null) {
 				throw new RuntimeException("An invalid fluid name was supplied.");
 			}

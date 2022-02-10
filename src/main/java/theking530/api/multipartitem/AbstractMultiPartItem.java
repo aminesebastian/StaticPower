@@ -51,16 +51,16 @@ public abstract class AbstractMultiPartItem extends StaticPowerItem {
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
+	public boolean isBarVisible(ItemStack stack) {
 		return isComplete(stack);
 	}
 
 	@Override
-	public double getDurabilityForDisplay(ItemStack stack) {
+	public int getBarWidth(ItemStack stack) {
 		int current = getTotalPartDurability(stack);
 		int max = getTotalMaxPartDurability(stack);
 
 		// Get the power ratio.
-		return (double) current / max;
+		return (int) (((double) current / max) * 13);
 	}
 }

@@ -2,9 +2,9 @@ package theking530.staticpower.cables.attachments.digistore.craftingterminal;
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fmllegacy.network.NetworkEvent.Context;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.network.NetworkMessage;
 
 public class PacketClearDigistoreCraftingTerminal extends NetworkMessage {
