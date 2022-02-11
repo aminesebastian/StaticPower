@@ -36,7 +36,7 @@ public abstract class AbstractAttributeRenderLayer {
 
 	/**
 	 * This method should return the quads to render on top of the item.
-	 * @param stack TODO
+	 * @param stack 
 	 * @param attributable
 	 * 
 	 * @return

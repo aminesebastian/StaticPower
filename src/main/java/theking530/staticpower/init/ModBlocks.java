@@ -120,7 +120,6 @@ public class ModBlocks {
 	public static StaticPowerBlock LumumPlanks;
 
 	// Ore
-	public static StaticPowerOre OreCopper;
 	public static StaticPowerOre OreTin;
 	public static StaticPowerOre OreZinc;
 	public static StaticPowerOre OreSilver;
@@ -134,7 +133,6 @@ public class ModBlocks {
 	public static StaticPowerOre OreRustyIron;
 
 	// Storage Blocks
-	public static StaticPowerBlock BlockCopper;
 	public static StaticPowerBlock BlockTin;
 	public static StaticPowerBlock BlockZinc;
 	public static StaticPowerBlock BlockAluminium;
@@ -370,34 +368,30 @@ public class ModBlocks {
 				LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.copy(Blocks.OAK_PLANKS)));
 
 		// Ore
-		StaticPowerRegistry.preRegisterBlock(OreCopper = new StaticPowerOre("ore_copper",
-				Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
 		StaticPowerRegistry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin",
-				Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.IRON_ORE), 1, 2));;
 		StaticPowerRegistry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc",
-				Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.IRON_ORE), 1, 2));
 		StaticPowerRegistry.preRegisterBlock(OreAluminium = new StaticPowerOre("ore_aluminium",
-				Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.IRON_ORE), 1, 2));
 		StaticPowerRegistry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium",
-				Block.Properties.copy(Blocks.IRON_ORE).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.IRON_ORE), 1, 2));
 		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver",
-				Block.Properties.copy(Blocks.GOLD_ORE).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
 		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead",
-				Block.Properties.copy(Blocks.GOLD_ORE).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
 		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum",
-				Block.Properties.copy(Blocks.GOLD_ORE).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
 		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby",
-				Block.Properties.copy(Blocks.DIAMOND_ORE).requiresCorrectToolForDrops(), 2, 5));
+				Block.Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
 		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire",
-				Block.Properties.copy(Blocks.DIAMOND_ORE).requiresCorrectToolForDrops(), 2, 5));
+				Block.Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
 		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten",
-				Block.Properties.copy(Blocks.ANCIENT_DEBRIS).requiresCorrectToolForDrops()));
+				Block.Properties.copy(Blocks.ANCIENT_DEBRIS)));
 		StaticPowerRegistry.preRegisterBlock(OreRustyIron = new StaticPowerOre("ore_rusty_iron",
-				Block.Properties.copy(Blocks.COAL_ORE).requiresCorrectToolForDrops(), 1, 3));
+				Block.Properties.copy(Blocks.COAL_ORE), 1, 3));
 
 		// Metal Blocks
-		StaticPowerRegistry.preRegisterBlock(
-				BlockCopper = new StaticPowerBlock("block_copper", Block.Properties.of(Material.METAL).strength(1.9f)));
 		StaticPowerRegistry.preRegisterBlock(
 				BlockTin = new StaticPowerBlock("block_tin", Block.Properties.of(Material.METAL).strength(1.7f)));
 		StaticPowerRegistry.preRegisterBlock(

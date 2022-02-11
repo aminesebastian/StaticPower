@@ -29,7 +29,7 @@ public class GuiDrawItem {
 
 	@SuppressWarnings("deprecation")
 	protected void renderItemModelIntoGUI(ItemStack stack, int x, int y, float alpha) {
-		// TO-DO: Fix this later!
+		// TODO: Fix this later!
 //		ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
 //
 //		GlStateManager._color4f(1.0f, 1.0f, 1.0f, 1.0f - alpha);

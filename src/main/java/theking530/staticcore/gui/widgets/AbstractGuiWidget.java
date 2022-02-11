@@ -216,9 +216,9 @@ public abstract class AbstractGuiWidget {
 	 * 
 	 * @param ownerPosition
 	 * @param ownerSize
-	 * @param partialTicks  TODO
-	 * @param mouseX        TODO
-	 * @param mouseY        TODO
+	 * @param partialTicks  
+	 * @param mouseX        
+	 * @param mouseY        
 	 */
 	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		this.ownerSize = ownerSize;
@@ -238,7 +238,7 @@ public abstract class AbstractGuiWidget {
 	 * This method should be overriden to draw anything that should appear behind
 	 * slots/items/anything else.
 	 * 
-	 * @param matrix       TODO
+	 * @param matrix       
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks
@@ -251,7 +251,7 @@ public abstract class AbstractGuiWidget {
 	 * This method should be overriden to render anything that should appear above
 	 * the background but behind any slots/items.
 	 * 
-	 * @param matrix       TODO
+	 * @param matrix       
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks

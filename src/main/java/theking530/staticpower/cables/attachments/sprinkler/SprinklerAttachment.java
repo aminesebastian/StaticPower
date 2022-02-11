@@ -244,8 +244,8 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.sprinkler_description")).withStyle(ChatFormatting.BLUE));
-		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.sprinkler_experience_description")).withStyle(ChatFormatting.GREEN));
-		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.redstone_control_enabled")).withStyle(ChatFormatting.DARK_RED));
+		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.sprinkler_description")).withStyle(ChatFormatting.BLUE));
+		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.sprinkler_experience_description")).withStyle(ChatFormatting.GREEN));
+		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.redstone_control_enabled")).withStyle(ChatFormatting.DARK_RED));
 	}
 }

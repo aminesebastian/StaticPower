@@ -375,7 +375,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional background features (features
 	 * that should appear behind items).
 	 * 
-	 * @param stack        TODO
+	 * @param stack        
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
@@ -388,7 +388,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional background features (features
 	 * that should appear infront of the background, but behind items.).
 	 * 
-	 * @param stack        TODO
+	 * @param stack        
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
@@ -401,7 +401,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional foreground features (features
 	 * that should appear in front of items).
 	 * 
-	 * @param stack        TODO
+	 * @param stack        
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.

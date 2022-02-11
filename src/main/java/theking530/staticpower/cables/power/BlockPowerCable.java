@@ -47,7 +47,7 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TranslatableComponent("gui.staticpower.power_cable_max_rate"));
-		tooltip.add(new TextComponent("ï¿½ ").append(
+		tooltip.add(new TextComponent("• ").append(
 				new TextComponent(ChatFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cablePowerDelivery.get()).getString())));
 	}
 

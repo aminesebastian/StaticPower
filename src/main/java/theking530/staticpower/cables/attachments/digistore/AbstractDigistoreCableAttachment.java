@@ -31,7 +31,7 @@ public abstract class AbstractDigistoreCableAttachment extends AbstractCableAtta
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		long powerUsage = getPowerUsage(stack);
 		if (powerUsage > 0) {
-			tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.digistore_attachment_power_usage").withStyle(ChatFormatting.GREEN)
+			tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.digistore_attachment_power_usage").withStyle(ChatFormatting.GREEN)
 					.append(ChatFormatting.WHITE.toString() + GuiTextUtilities.formatEnergyRateToString(powerUsage).getString())));
 		}
 	}

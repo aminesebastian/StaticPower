@@ -10,6 +10,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
 public class ScrollBarWidget extends AbstractGuiWidget {
@@ -20,7 +21,7 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	public ScrollBarWidget(float xPosition, float yPosition, float height) {
 		super(xPosition, yPosition, 12.0f, height);
 		scrollAmount = 0;
-		scrollHandleDrawable = new SpriteDrawable(StaticPowerSprites.SCROLL_HANDLE, 12, 15);
+		scrollHandleDrawable = new SpriteDrawable(GuiTextures.SCROLL_HANDLE, 12, 15);
 		setMaxScroll(0);
 	}
 
@@ -41,9 +42,9 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 
 		// If the scroll amount is equal to zero, disable the scroll bar.
 		if (maxScroll == 0) {
-			scrollHandleDrawable.setSprite(StaticPowerSprites.SCROLL_HANDLE_DISABLED);
+			scrollHandleDrawable.setSprite(GuiTextures.SCROLL_HANDLE_DISABLED);
 		} else {
-			scrollHandleDrawable.setSprite(StaticPowerSprites.SCROLL_HANDLE);
+			scrollHandleDrawable.setSprite(GuiTextures.SCROLL_HANDLE);
 		}
 
 		// Bring back the scroll amount if we are over scrolled.

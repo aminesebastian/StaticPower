@@ -123,7 +123,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 		tooltip.add(
 				new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
 						.withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
-		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.radius"))
+		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.radius"))
 				.append(" " + ChatFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
 
 		tooltip.add(new TextComponent(""));

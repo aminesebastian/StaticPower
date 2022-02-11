@@ -107,7 +107,6 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 				// If on the server, update the held item.
 				if (!getTileEntity().getLevel().isClientSide) {
 					broadcastChanges();
-					// TO-DO: ((ServerPlayer) player).broadcastCarriedItem();
 				}
 
 				// Tell the slot we crafted.

@@ -3,7 +3,6 @@ package theking530.staticpower.cables.power;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ContainerListener;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.network.PacketDistributor;
@@ -74,11 +73,9 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 	public void sendMetricsToClient() {
 		// Send a packet to all listening players.
 		getTileEntity().powerCableComponent.getPowerNetworkModule().ifPresent(module -> {
-			for (ContainerListener listener : this.containerListeners) {
-				if (listener instanceof ServerPlayer) {
-					NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.containerId, module.getMetrics());
-					StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) listener), msg);
-				}
+			if (this.containerListeners.size() > 0 && getPlayerInventory().player instanceof ServerPlayer) {
+				NetworkMessage msg = new ContainerPowerMetricsSyncPacket(this.containerId, module.getMetrics());
+				StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) getPlayerInventory().player), msg);
 			}
 		});
 	}

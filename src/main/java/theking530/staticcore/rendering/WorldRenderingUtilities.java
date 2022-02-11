@@ -55,7 +55,7 @@ public class WorldRenderingUtilities {
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
 		matrixStack.mulPose(new Quaternion(rotation.getX(), rotation.getY(), rotation.getZ(), true));
-		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(item, tileEntity.getLevel(), null, combinedLight); // TO-DO: Figure out if the last parameter here is correct.
+		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(item, tileEntity.getLevel(), null, combinedLight); // TODO: Figure out if the last parameter here is correct.
 		Minecraft.getInstance().getItemRenderer().render(item, transformType, false, matrixStack, buffer, combinedLight, combinedOverlay, itemModel);
 		matrixStack.popPose();
 	}
@@ -73,7 +73,7 @@ public class WorldRenderingUtilities {
 		matrixStack.scale(scale.getX(), scale.getY(), 0.01f);
 
 		// Get the baked model and check if it wants to render the item in 3d or 2d.
-		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(itemStack, null, null, combinedLight); // TO-DO: Figure out if the last parameter here is correct.
+		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(itemStack, null, null, combinedLight); // TODO: Figure out if the last parameter here is correct.
 		boolean render3D = itemModel.isGui3d();
 
 		// Thank the lord for Storage Drawers
@@ -149,8 +149,7 @@ public class WorldRenderingUtilities {
 	 * @param tint          The tint to apply.
 	 * @param combinedLight The combined light level at the block.
 	 */
-	public static void drawTexturedQuadLit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint,
-			int combinedLight) {
+	public static void drawTexturedQuadLit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint, int combinedLight) {
 		matrixStack.pushPose();
 		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
 		@SuppressWarnings("deprecation")
@@ -182,14 +181,10 @@ public class WorldRenderingUtilities {
 
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
 		matrixStack.scale(scale.getX(), scale.getY(), scale.getZ());
-		builder.vertex(matrixStack.last().pose(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
-				.endVertex();
-		builder.vertex(matrixStack.last().pose(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
-				.endVertex();
-		builder.vertex(matrixStack.last().pose(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
-				.endVertex();
-		builder.vertex(matrixStack.last().pose(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0)
-				.endVertex();
+		builder.vertex(matrixStack.last().pose(), 0.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
+		builder.vertex(matrixStack.last().pose(), 0.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
+		builder.vertex(matrixStack.last().pose(), 1.0f, 0.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
+		builder.vertex(matrixStack.last().pose(), 1.0f, 1.0f, 1.0f).color(tint.getRed(), tint.getGreen(), tint.getBlue(), tint.getAlpha()).uv2(combinedLight).normal(1, 0, 0).endVertex();
 		matrixStack.popPose();
 	}
 
@@ -212,10 +207,11 @@ public class WorldRenderingUtilities {
 	}
 
 	public static void drawLine(PoseStack matrixStack, MultiBufferSource buffer, Vector3D start, Vector3D end, float thickness, Color color) {
-		// TO-DO: Find a workaround for this! GlStateManager._lineWidth(thickness);
+		// TODO: Find a workaround for this! GlStateManager._lineWidth(thickness);
 		VertexConsumer builder = buffer.getBuffer(RenderType.lines());
-		builder.vertex(matrixStack.last().pose(), start.getX(), start.getY(), start.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
-		builder.vertex(matrixStack.last().pose(), end.getX(), end.getY(), end.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		builder.vertex(matrixStack.last().pose(), start.getX(), start.getY(), start.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(1.0f, 0.0f, 0.0f)
+				.endVertex();
+		builder.vertex(matrixStack.last().pose(), end.getX(), end.getY(), end.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(1.0f, 0.0f, 0.0f).endVertex();
 	}
 
 	/**

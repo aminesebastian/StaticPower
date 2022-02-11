@@ -39,9 +39,11 @@ import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
+import theking530.staticpower.blocks.StaticPowerItemBlockCustomRenderer;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.TankMachineBakedModel;
+import theking530.staticpower.client.rendering.items.dynamic.ItemTankSpecialRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -56,7 +58,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "ï¿½ Capacity ").append(
+		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "• Capacity ").append(
 				GuiTextUtilities.formatFluidToString(SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultTankCapacity.get(), TileEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
 
 		// Check to see if the stack has the serialized nbt.If it does, add the stored
@@ -66,7 +68,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 			CompoundTag tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
 			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
-			tooltip.add(new TextComponent(ChatFormatting.AQUA.toString() + "ï¿½ Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
+			tooltip.add(new TextComponent(ChatFormatting.AQUA.toString() + "• Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
 		}
 	}
 
@@ -117,9 +119,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 		if (FMLEnvironment.dist == Dist.DEDICATED_SERVER) {
 			return new StaticPowerItemBlock(this);
 		} else {
-			return new StaticPowerItemBlock(this);
-			// TO-DO: Fix this so this works. return new
-			// StaticPowerItemBlockCustomRenderer(this, () -> ItemTankSpecialRenderer::new);
+			return new StaticPowerItemBlockCustomRenderer(this, ItemTankSpecialRenderer::new);
 		}
 	}
 
@@ -131,10 +131,11 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 			CompoundTag tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
 			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
-			return new TranslatableComponent(getDescriptionId()).append(" (").append(new TranslatableComponent(fluid.getTranslationKey()).append(")"));
-		} else {
-			return new TranslatableComponent(getDescriptionId());
+			if (!fluid.isEmpty()) {
+				return new TranslatableComponent(getDescriptionId()).append(" (").append(new TranslatableComponent(fluid.getTranslationKey()).append(")"));
+			}
 		}
+		return new TranslatableComponent(getDescriptionId());
 	}
 
 	@Override

@@ -74,13 +74,13 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		}
 
 		// Set appropriate GL attributes.
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_LIGHTING);
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glDepthMask(false);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+//		GL11.glPushAttrib(GL11.GL_ENABLE_BIT);
+//		GL11.glDisable(GL11.GL_CULL_FACE);
+//		GL11.glDisable(GL11.GL_LIGHTING);
+//		GL11.glDisable(GL11.GL_TEXTURE_2D);
+//		GL11.glDepthMask(false);
+//		GL11.glEnable(GL11.GL_BLEND);
+//		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
 		// Draw all the data sets.
 		for (String dataLabel : dataSets.keySet()) {
@@ -90,8 +90,8 @@ public class DataGraphWidget extends AbstractGuiWidget {
 		}
 
 		// Clear the gl attributes and pop the transform matrix.
-		GL11.glDepthMask(true);
-		GL11.glPopAttrib();
+//		GL11.glDepthMask(true);
+//		GL11.glPopAttrib();
 
 		// Draw y axis values.
 		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 1.5f, getSize().getY() / 2 - 2, 0.55f,

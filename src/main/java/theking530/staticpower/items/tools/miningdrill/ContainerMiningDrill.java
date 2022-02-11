@@ -20,8 +20,7 @@ import theking530.staticpower.init.ModItems;
 
 public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerMiningDrill, GuiMiningDrill> TYPE = new ContainerTypeAllocator<>(
-			"mining_drill", ContainerMiningDrill::new);
+	public static final ContainerTypeAllocator<ContainerMiningDrill, GuiMiningDrill> TYPE = new ContainerTypeAllocator<>("mining_drill", ContainerMiningDrill::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiMiningDrill::new);
@@ -56,7 +55,7 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 				if (drillSlot >= 0) {
 					if (!getPlayerInventory().player.level.isClientSide) {
 						ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
-						// TO-DO: serverPlayer.slotChanged(ContainerMiningDrill.this, playerHotbarStart + drillSlot, getItemStack());
+						serverPlayer.containerMenu.broadcastFullState();
 					}
 				}
 			}

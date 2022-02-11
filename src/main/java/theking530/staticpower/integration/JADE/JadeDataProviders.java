@@ -69,13 +69,13 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		if (processing.isPresent()) {
 			CompoundTag processingData = new CompoundTag();
 			if (processing.get().isProcessing()) {
-				processingData.putDouble("value", processing.get().getReminingTicks());
+				processingData.putDouble("remaining", processing.get().getReminingTicks());
 				processingData.putDouble("max", processing.get().getMaxProcessingTime());
 				processingData.putString("description",
 						GuiTextUtilities.formatNumberAsString(processing.get().getReminingTicks()).append(" ")
 								.append(new TranslatableComponent("gui.staticpower.ticks_remaining")).getString());
 			} else {
-				processingData.putDouble("value", 0);
+				processingData.putDouble("remaining", 0);
 				processingData.putDouble("max", 0);
 				processingData.putString("description", GuiTextUtilities.formatNumberAsString(0).append(" ")
 						.append(new TranslatableComponent("gui.staticpower.ticks_remaining")).getString());

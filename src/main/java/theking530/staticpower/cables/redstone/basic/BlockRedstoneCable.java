@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,10 +25,14 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.network.NetworkHooks;
+import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableBoundsHoverResult;
+import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.cables.redstone.basic.gui.ContainerBasicRedstoneIO;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
@@ -38,8 +43,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	private final String color;
 
 	public BlockRedstoneCable(String name) {
-		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),
-				name.contains("naked") ? 1.0f : 1.5f);
+		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)), name.contains("naked") ? 1.0f : 1.5f);
 
 		// String the color from the last section of the registry name.
 		this.color = name.substring(name.indexOf("_", name.indexOf("_", name.indexOf("_") + 1) + 1) + 1);
@@ -79,17 +83,15 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 		// If not null, and if we are hovering the default attachment, check to see if
 		// we're connected to a tile entity on that side.
 		// If so, then we have a UI, otherwise we do not.
-//TO-DO:		if (component != null) {
-//			if (hit.hitInfo instanceof CableBoundsHoverResult) {
-//				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
-//				if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
-//					Direction cableSide = hoverResult.direction;
-//					return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
-//				}
-//			}
-//		} else {
-//			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
-//		}
+		if (component != null) {
+			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
+			if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
+				Direction cableSide = hoverResult.direction;
+				return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
+			}
+		} else {
+			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
+		}
 		return HasGuiType.NEVER;
 	}
 
@@ -109,16 +111,14 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	 */
 	@Override
 	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-//TO-DO:		if (!world.isClientSide) {
-//			if (hit.hitInfo instanceof CableBoundsHoverResult) {
-//				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
-//				RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
-//				NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
-//					buf.writeBlockPos(pos);
-//					buf.writeInt(hoverResult.direction.ordinal());
-//				});
-//			}
-//		}
+		if (!world.isClientSide) {
+			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
+			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
+			NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
+				buf.writeBlockPos(pos);
+				buf.writeInt(hoverResult.direction.ordinal());
+			});
+		}
 	}
 
 	@Override

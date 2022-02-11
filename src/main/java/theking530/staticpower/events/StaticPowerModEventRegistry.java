@@ -24,6 +24,7 @@ import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.common.loot.GlobalLootModifierSerializer;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -163,7 +164,7 @@ public class StaticPowerModEventRegistry {
 		for (AbstractEntityType<?> type : StaticPowerRegistry.ENTITIES) {
 			type.registerRenderers(event);
 		}
-		
+
 		// Register the tile entity special renderers.
 		LOGGER.info("Registering Tile Entity Special Renderers!");
 		StaticCoreRegistry.registerBlockEntityRenderers(event);
@@ -197,6 +198,11 @@ public class StaticPowerModEventRegistry {
 	@SubscribeEvent
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		StaticPowerRegistry.onRegisterEntities(event);
+	}
+
+	@SubscribeEvent
+	public static void onAttributeCreate(EntityAttributeCreationEvent event) {
+		StaticPowerRegistry.onRegisterEntityAttributes(event);
 	}
 
 	@SubscribeEvent

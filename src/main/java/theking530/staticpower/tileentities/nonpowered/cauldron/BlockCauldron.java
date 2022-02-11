@@ -115,9 +115,9 @@ public class BlockCauldron extends StaticPowerTileEntityBlock {
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (isClean) {
-			tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.clean_cauldron_description")).withStyle(ChatFormatting.YELLOW));
+			tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.clean_cauldron_description")).withStyle(ChatFormatting.YELLOW));
 		} else {
-			tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.rusty_cauldron_description")).withStyle(ChatFormatting.BLUE));
+			tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.rusty_cauldron_description")).withStyle(ChatFormatting.BLUE));
 		}
 	}
 }

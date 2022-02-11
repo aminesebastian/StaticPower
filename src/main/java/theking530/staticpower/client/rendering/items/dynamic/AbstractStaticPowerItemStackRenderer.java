@@ -27,18 +27,17 @@ import theking530.staticpower.client.rendering.items.ItemCustomRendererPassthrou
 
 public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWithoutLevelRenderer {
 	protected static final float TEXEL = (1.0f / 16.0f);
+	protected final BlockEntityRenderDispatcher dispatcher;
 
 	public AbstractStaticPowerItemStackRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
 		super(p_172550_, p_172551_);
-		// TODO Auto-generated constructor stub
+		dispatcher = p_172550_;
 	}
 
 	@SuppressWarnings("deprecation")
-	public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStack,
-			MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	public void renderByItem(ItemStack stack, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		// Get the base model.
-		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(stack, Minecraft.getInstance().level,
-				null, 0);
+		BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(stack, dispatcher.level, null, 0);
 
 		// If its a passthrough model, grab the original model.
 		if (itemModel instanceof ItemCustomRendererPassthroughModel) {
@@ -56,8 +55,7 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 			matrixStack.translate(0.5f, 0.5f, 0.5f);
 
 			// Render the base item mode.
-			renderItemModel(stack, transformType, true, matrixStack, buffer, Sheets.translucentCullBlockSheet(),
-					combinedLight, combinedOverlay, baseModel);
+			renderItemModel(stack, transformType, true, matrixStack, buffer, Sheets.translucentCullBlockSheet(), combinedLight, combinedOverlay, baseModel);
 
 			// Transform the matrix using the transform type transforms.
 			matrixStack.scale(scale.x(), scale.y(), scale.z());
@@ -78,7 +76,7 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 	}
 
 	/**
-	 * This method should be overriden to write any custom rendering.
+	 * This method should be overridden to write any custom rendering.
 	 * 
 	 * @param stack
 	 * @param defaultModel
@@ -88,8 +86,8 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public abstract void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType,
-			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay);
+	public abstract void render(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+			int combinedOverlay);
 
 	/**
 	 * This method is exposed such that an implementer may need to change the
@@ -103,10 +101,9 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public void renderBaseModel(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType,
-			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		renderItemModel(stack, transformType, true, matrixStack, buffer, Sheets.translucentCullBlockSheet(),
-				combinedLight, combinedOverlay, defaultModel);
+	public void renderBaseModel(ItemStack stack, BakedModel defaultModel, ItemTransforms.TransformType transformType, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+			int combinedOverlay) {
+		renderItemModel(stack, transformType, true, matrixStack, buffer, Sheets.translucentCullBlockSheet(), combinedLight, combinedOverlay, defaultModel);
 	}
 
 	/**
@@ -122,35 +119,28 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 	 * @param combinedOverlayIn
 	 * @param modelIn
 	 */
-	protected void renderItemModel(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn,
-			boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, RenderType renderType,
+	protected void renderItemModel(ItemStack itemStackIn, ItemTransforms.TransformType transformTypeIn, boolean leftHand, PoseStack matrixStackIn, MultiBufferSource bufferIn, RenderType renderType,
 			int combinedLightIn, int combinedOverlayIn, BakedModel modelIn) {
 		if (!itemStackIn.isEmpty()) {
 			matrixStackIn.pushPose();
-			boolean flag = transformTypeIn == ItemTransforms.TransformType.GUI
-					|| transformTypeIn == ItemTransforms.TransformType.GROUND
-					|| transformTypeIn == ItemTransforms.TransformType.FIXED;
+			boolean flag = transformTypeIn == ItemTransforms.TransformType.GUI || transformTypeIn == ItemTransforms.TransformType.GROUND || transformTypeIn == ItemTransforms.TransformType.FIXED;
 			if (itemStackIn.getItem() == Items.TRIDENT && flag) {
-				modelIn = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager()
-						.getModel(new ModelResourceLocation("minecraft:trident#inventory"));
+				modelIn = Minecraft.getInstance().getItemRenderer().getItemModelShaper().getModelManager().getModel(new ModelResourceLocation("minecraft:trident#inventory"));
 			}
 
-			modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn,
-					transformTypeIn, leftHand);
+			modelIn = net.minecraftforge.client.ForgeHooksClient.handleCameraTransforms(matrixStackIn, modelIn, transformTypeIn, leftHand);
 			matrixStackIn.translate(-0.5D, -0.5D, -0.5D);
 			if (!modelIn.isCustomRenderer() && (itemStackIn.getItem() != Items.TRIDENT || flag)) {
 				boolean flag1;
-				if (transformTypeIn != ItemTransforms.TransformType.GUI && !transformTypeIn.firstPerson()
-						&& itemStackIn.getItem() instanceof BlockItem) {
+				if (transformTypeIn != ItemTransforms.TransformType.GUI && !transformTypeIn.firstPerson() && itemStackIn.getItem() instanceof BlockItem) {
 					Block block = ((BlockItem) itemStackIn.getItem()).getBlock();
 					flag1 = !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
 				} else {
 					flag1 = true;
 				}
 				if (modelIn.isLayered()) {
-					net.minecraftforge.client.ForgeHooksClient.drawItemLayered(
-							Minecraft.getInstance().getItemRenderer(), modelIn, itemStackIn, matrixStackIn, bufferIn,
-							combinedLightIn, combinedOverlayIn, flag1);
+					net.minecraftforge.client.ForgeHooksClient.drawItemLayered(Minecraft.getInstance().getItemRenderer(), modelIn, itemStackIn, matrixStackIn, bufferIn, combinedLightIn,
+							combinedOverlayIn, flag1);
 				} else {
 					RenderType rendertype = renderType;
 					VertexConsumer ivertexbuilder;
@@ -164,26 +154,22 @@ public abstract class AbstractStaticPowerItemStackRenderer extends BlockEntityWi
 						}
 
 						if (flag1) {
-							ivertexbuilder = ItemRenderer.getCompassFoilBufferDirect(bufferIn, rendertype,
-									matrixstack$entry);
+							ivertexbuilder = ItemRenderer.getCompassFoilBufferDirect(bufferIn, rendertype, matrixstack$entry);
 						} else {
 							ivertexbuilder = ItemRenderer.getCompassFoilBuffer(bufferIn, rendertype, matrixstack$entry);
 						}
 
 						matrixStackIn.popPose();
 					} else if (flag1) {
-						ivertexbuilder = ItemRenderer.getFoilBufferDirect(bufferIn, rendertype, true,
-								itemStackIn.hasFoil());
+						ivertexbuilder = ItemRenderer.getFoilBufferDirect(bufferIn, rendertype, true, itemStackIn.hasFoil());
 					} else {
 						ivertexbuilder = ItemRenderer.getFoilBuffer(bufferIn, rendertype, true, itemStackIn.hasFoil());
 					}
 
-					Minecraft.getInstance().getItemRenderer().renderModelLists(modelIn, itemStackIn, combinedLightIn,
-							combinedOverlayIn, matrixStackIn, ivertexbuilder);
+					Minecraft.getInstance().getItemRenderer().renderModelLists(modelIn, itemStackIn, combinedLightIn, combinedOverlayIn, matrixStackIn, ivertexbuilder);
 				}
 			} else {
-				RenderProperties.get(itemStackIn).getItemStackRenderer().renderByItem(itemStackIn, transformTypeIn,
-						matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
+				RenderProperties.get(itemStackIn).getItemStackRenderer().renderByItem(itemStackIn, transformTypeIn, matrixStackIn, bufferIn, combinedLightIn, combinedOverlayIn);
 			}
 
 			matrixStackIn.popPose();

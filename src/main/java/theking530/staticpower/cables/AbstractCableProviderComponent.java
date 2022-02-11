@@ -621,7 +621,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			ItemStack incomingAttachment = ItemStack.of(itemNbt);
 
 			// If the attachments have changed on the server, just check for the lights to
-			// be safe (digistore lights for example). TO-DO Watch the performance of this.
+			// be safe (digistore lights for example). TODO Watch the performance of this.
 			if (!ItemUtilities.areItemStacksStackable(incomingAttachment, attachments[i])) {
 				if (getWorld() != null) {
 					getWorld().getChunkSource().getLightEngine().checkBlock(getPos());

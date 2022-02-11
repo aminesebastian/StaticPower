@@ -91,7 +91,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 21, -1);
 		RenderSystem.applyModelViewMatrix();
 		RenderSystem.getModelViewMatrix().translate(new Vector3f(location.getX(), location.getY(), 0.0F));
-//	TO-DO	RenderSystem.getModelViewMatrix().createScaleMatrix(p_27633_, p_27634_, p_27635_)(2.5F, 2.5F, 2.5F); 
+		matrixStack.scale(2.5F, 2.5F, 2.5F);
 		Minecraft.getInstance().getItemRenderer().renderGuiItem(new ItemStack(ModItems.IronMetalHammer), 0, 0);
 		RenderSystem.backupProjectionMatrix();
 

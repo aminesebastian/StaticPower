@@ -69,7 +69,6 @@ public class StaticPowerConfig {
 		public final ConfigValue<Double> rubberTreeSpawnChance;
 		public final ConfigValue<Boolean> disableRubberTreesInSnowyBiomes;
 
-		public final BooleanValue generateCopperOre;
 		public final BooleanValue generateTinOre;
 		public final BooleanValue generateLeadOre;
 		public final BooleanValue generateSilverOre;
@@ -223,8 +222,6 @@ public class StaticPowerConfig {
 							.define("GenerateMagnesiumOre", true);
 					generateAluminiumOre = builder.comment("Disable or Enable Aluminium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminiumore")
 							.define("GenerateAluminiumOre", true);
-					generateCopperOre = builder.comment("Disable or Enable Copper Ore Generation").translation(StaticPower.MOD_ID + ".config." + "copperore").define("GenerateCopperOre",
-							true);
 					generateTinOre = builder.comment("Disable or Enable Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tinore").define("GenerateTinOre", true);
 					generateLeadOre = builder.comment("Disable or Enable Lead Ore Generation").translation(StaticPower.MOD_ID + ".config." + "leadore").define("GenerateLeadOre", true);
 					generateSilverOre = builder.comment("Disable or Enable Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "silverore").define("GenerateSilverOre",

@@ -4,7 +4,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.client.event.EntityRenderersEvent;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import theking530.staticpower.StaticPower;
 
 public abstract class AbstractEntityType<T extends Entity> {
@@ -16,7 +16,8 @@ public abstract class AbstractEntityType<T extends Entity> {
 		type.setRegistryName(fullRegistryName);
 	}
 
-	public abstract void registerAttributes(RegistryEvent.Register<EntityType<?>> event);
+	public void registerAttributes(EntityAttributeCreationEvent event) {
+	}
 
 	public abstract void registerRenderers(EntityRenderersEvent.RegisterRenderers event);
 

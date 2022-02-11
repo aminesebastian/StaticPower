@@ -45,7 +45,7 @@ public class BlockFluidCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TranslatableComponent("gui.staticpower.max_fluid_rate"));
-		tooltip.add(new TextComponent("ï¿½ ")
+		tooltip.add(new TextComponent("• ")
 				.append(new TextComponent(ChatFormatting.AQUA + GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableFluidCapacity.get()).getString())));
 	}
 

@@ -53,8 +53,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 		registrar.registerBlockDataProvider(new JadeDataProviders(), BlockEntity.class);
 		registrar.registerComponentProvider(new StaticVoltDecorator(), TooltipPosition.BODY, Block.class);
 		registrar.registerComponentProvider(new HeatDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new FluidDecorator(), TooltipPosition.BODY, Block.class);
+		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.TAIL, Block.class);
+		// registrar.registerComponentProvider(new FluidDecorator(),
+		// TooltipPosition.BODY, Block.class);
 	}
 
 	public static class StaticVoltDecorator implements IComponentProvider {
@@ -63,8 +64,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 			BlockEntity tile = accessor.getBlockEntity();
 			if (tile != null) {
 				IStaticVoltHandler storage = tile.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
-				if (storage != null && (!accessor.isServerConnected() || accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
+				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
 					long stored, capacity;
+
 					if (accessor.isServerConnected()) {
 						CompoundTag svData = accessor.getServerData().getCompound(JadeDataProviders.POWER_TAG);
 						stored = svData.getLong("value");
@@ -75,7 +77,8 @@ public class JadePluginImplementation implements IWailaPlugin {
 					}
 
 					// Draw bar
-					JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_SV_COLOR, ALT_SV_COLOR, GuiTextUtilities.formatEnergyToString(stored, capacity), POWER_BAR_RENDERER);
+					JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_SV_COLOR, ALT_SV_COLOR, GuiTextUtilities.formatEnergyToString(stored, capacity).withStyle(ChatFormatting.WHITE),
+							POWER_BAR_RENDERER);
 				}
 			}
 		}
@@ -99,7 +102,8 @@ public class JadePluginImplementation implements IWailaPlugin {
 					}
 
 					// Draw bar
-					JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_HEAT_COLOR, ALT_FLUID_COLOR, GuiTextUtilities.formatHeatToString(stored, capacity), HEAT_BAR_RENDERER);
+					JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_HEAT_COLOR, ALT_FLUID_COLOR, GuiTextUtilities.formatHeatToString(stored, capacity).withStyle(ChatFormatting.WHITE),
+							HEAT_BAR_RENDERER);
 				}
 			}
 		}
@@ -108,18 +112,16 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static class ProcessingTimeDecorator implements IComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-			BlockEntity tile = accessor.getBlockEntity();
-			if (tile != null) {
-				if ((accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.PROCESSING_TAG))) {
-					CompoundTag processingData = accessor.getServerData().getCompound(JadeDataProviders.PROCESSING_TAG);
-					double current = processingData.getDouble("value");
-					double totalTime = processingData.getDouble("max");
+			if (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.PROCESSING_TAG)) {
+				CompoundTag processingData = accessor.getServerData().getCompound(JadeDataProviders.PROCESSING_TAG);
+				double remaining = processingData.getDouble("remaining");
+				double totalTime = processingData.getDouble("max");
 
-					// Draw bar
-					if (current > 0) {
-						JadePluginImplementation.drawBar(tooltip, current, totalTime, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR, new TextComponent(processingData.getString("description)")),
-								PROCESSING_BAR_RENDERER);
-					}
+				// Draw bar
+				if (remaining > 0) {
+					JadePluginImplementation.drawBar(tooltip, remaining, totalTime, MAIN_PROCESSING_COLOR, ALT_PROCESSING_COLOR,
+							GuiTextUtilities.formatNumberAsString(remaining).append(" ").append(new TranslatableComponent("gui.staticpower.ticks_remaining")).withStyle(ChatFormatting.WHITE),
+							PROCESSING_BAR_RENDERER);
 				}
 			}
 		}
@@ -172,8 +174,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 
 	public static void drawBar(ITooltip tooltip, double currentValue, double maximum, Color mainColor, Color alternateColor, MutableComponent label, ResourceLocation name) {
 		IElementHelper helper = tooltip.getElementHelper();
-		MutableComponent text = GuiTextUtilities.formatHeatToString(currentValue, maximum);
 		IProgressStyle progressStyle = helper.progressStyle().color(mainColor.encodeInInteger(), alternateColor.encodeInInteger());
-		tooltip.add(helper.progress((float) (currentValue / maximum), text, progressStyle, helper.borderStyle()).tag(name));
+		tooltip.add(helper.progress((float) (currentValue / maximum), label, progressStyle, helper.borderStyle()).tag(name));
 	}
 }

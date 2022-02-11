@@ -659,7 +659,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		super.onDataPacket(net, pkt);
 		// Because we wait for post init from the #getUpdatePacket() method, we must
 		// wait here too.
-		if (hasPostInitRun) {
+		if (hasPostInitRun && pkt.getTag() != null) {
 			deserializeUpdateNbt(pkt.getTag(), true);
 		}
 

@@ -31,7 +31,5 @@ public class ScaffoldNetworkModule extends AbstractCableNetworkModule {
 
 	@Override
 	public void tick(Level world) {
-		// TODO Auto-generated method stub
-
 	}
 }

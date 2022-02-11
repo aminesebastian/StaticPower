@@ -49,7 +49,7 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "ï¿½ Generation ")
+		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "• Generation ")
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tierType).solarPanelPowerGeneration.get())));
 	}
 

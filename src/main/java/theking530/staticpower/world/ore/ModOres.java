@@ -25,7 +25,6 @@ import theking530.staticpower.init.ModBlocks;
 public class ModOres {
 	public static final PlacedFeature ZINC = register("ore_zinc", new OreConfigBuilder(ModBlocks.OreZinc).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
 	public static final PlacedFeature MAGENSIUM = register("ore_magnesium", new OreConfigBuilder(ModBlocks.OreMagnesium).setMaxLevel(70).setMinLevel(30).setMaxVeinSize(4).setRarity(8));
-	public static final PlacedFeature COPPER = register("ore_copper", new OreConfigBuilder(ModBlocks.OreCopper).setMaxLevel(100).setMinLevel(40).setMaxVeinSize(10).setRarity(16));
 	public static final PlacedFeature TIN = register("ore_tin", new OreConfigBuilder(ModBlocks.OreTin).setMaxLevel(100).setMinLevel(30).setMaxVeinSize(10).setRarity(18));
 	public static final PlacedFeature LEAD = register("ore_lead", new OreConfigBuilder(ModBlocks.OreLead).setMaxLevel(35).setMinLevel(0).setMaxVeinSize(3).setRarity(10));
 	public static final PlacedFeature SILVER = register("ore_silver", new OreConfigBuilder(ModBlocks.OreSilver).setMaxLevel(40).setMinLevel(0).setMaxVeinSize(5).setRarity(12));
@@ -42,9 +41,6 @@ public class ModOres {
 		}
 		if (StaticPowerConfig.SERVER.generateMagnesiumOre.get()) {
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MAGENSIUM);
-		}
-		if (StaticPowerConfig.SERVER.generateCopperOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, COPPER);
 		}
 		if (StaticPowerConfig.SERVER.generateTinOre.get()) {
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, TIN);

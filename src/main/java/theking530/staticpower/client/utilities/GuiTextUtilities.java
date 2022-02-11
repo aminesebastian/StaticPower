@@ -274,6 +274,6 @@ public class GuiTextUtilities {
 	}
 
 	public static MutableComponent createTooltipBulletpoint(String localizationKey, ChatFormatting color) {
-		return new TextComponent(color.toString() + "â€¢ " + new TranslatableComponent(localizationKey).getString() + " ");
+		return new TextComponent(color.toString() + "• " + new TranslatableComponent(localizationKey).getString() + " ");
 	}
 }

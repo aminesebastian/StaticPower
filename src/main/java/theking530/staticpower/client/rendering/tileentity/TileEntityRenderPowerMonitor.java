@@ -49,16 +49,16 @@ public class TileEntityRenderPowerMonitor extends StaticPowerTileEntitySpecialRe
 
 		// Draw the max value.
 		WorldRenderingUtilities.drawTextInWorld(this.renderer, GuiTextUtilities.formatEnergyRateToString(maxValue).getString(), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),
-				new Vector3D(0.07f, 0.43f, 0.002f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+				new Vector3D(0.07f, 0.43f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		// Draw the min value.
 		WorldRenderingUtilities.drawTextInWorld(this.renderer, GuiTextUtilities.formatEnergyRateToString(minValue).getString(), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),
-				new Vector3D(0.07f, 0.04f, 0.002f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+				new Vector3D(0.07f, 0.04f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		// Draw the current value.
 		WorldRenderingUtilities.drawTextInWorld(this.renderer,
 				GuiTextUtilities.formatEnergyRateToString(tileEntity.getMetrics().getData(MetricCategory.TICKS).getInputValues().peekLast()).getString(), tileEntity,
-				new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.74f, 0.2245f, 0.002f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+				new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.74f, 0.2145f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		matrixStack.popPose();
 	}

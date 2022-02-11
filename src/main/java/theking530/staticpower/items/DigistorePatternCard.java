@@ -57,14 +57,14 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 			tooltip.add(new TextComponent("Inputs: "));
 			for (ItemStack input : pattern.getInputs()) {
 				if (!input.isEmpty()) {
-					tooltip.add(new TextComponent("  ï¿½").append(input.getHoverName()));
+					tooltip.add(new TextComponent("  •").append(input.getHoverName()));
 				}
 			}
 
 			// Add outputs.
 			tooltip.add(new TextComponent("Output: "));
 			if (!pattern.getOutput().isEmpty()) {
-				MutableComponent outputTooltip = new TextComponent("  ï¿½").append(pattern.getOutput().getHoverName());
+				MutableComponent outputTooltip = new TextComponent("  •").append(pattern.getOutput().getHoverName());
 				if (pattern.getOutput().getCount() > 1) {
 					outputTooltip.append(new TextComponent(" x" + pattern.getOutput().getCount()));
 				}

@@ -8,6 +8,6 @@
 		"volume": 250
 	},
 	"result": {
-		"item": "staticpower:ingot_energized"
+		"item": "staticpower:raw_energized"
 	}
 }

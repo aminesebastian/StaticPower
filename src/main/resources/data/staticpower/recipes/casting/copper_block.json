@@ -8,6 +8,6 @@
 		"item": "staticpower:mold_block"
 	},
 	"output": {
-		"item": "staticpower:block_copper"
+		"item": "minecraft:copper_block"
 	}
 }

@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-	"staticpower:ingot_copper",
 	"staticpower:ingot_tin",
 	"staticpower:ingot_zinc",
 	"staticpower:ingot_silver",

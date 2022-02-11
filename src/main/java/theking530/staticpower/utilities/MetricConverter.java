@@ -4,7 +4,7 @@ import java.text.DecimalFormat;
 
 public class MetricConverter {
 	private static final DecimalFormat FORMATTER = new DecimalFormat("#.##");
-	private static final String[] SUFFIXES = { "y", "z", "a", "f", "p", "n", "ï¿½", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
+	private static final String[] SUFFIXES = { "y", "z", "a", "f", "p", "n", "•", "m", "", "k", "M", "G", "T", "P", "E", "Z", "Y" };
 	private double Value;
 	private String Suffix;
 

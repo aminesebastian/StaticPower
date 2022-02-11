@@ -107,7 +107,7 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("ï¿½ ")
+		tooltip.add(new TextComponent("• ")
 				.append(new TranslatableComponent("gui.staticpower.experience_hopper_description"))
 				.withStyle(ChatFormatting.BLUE));
 	}

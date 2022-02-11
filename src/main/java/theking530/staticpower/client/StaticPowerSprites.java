@@ -56,8 +56,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation FILTER_NBT = registerSprite("gui/filter_nbt");
 	public static final ResourceLocation FILTER_TAG = registerSprite("gui/filter_tag");
 	public static final ResourceLocation FILTER_MOD = registerSprite("gui/filter_mod");
-	public static final ResourceLocation SCROLL_HANDLE = registerSprite("gui/scroll_handle");
-	public static final ResourceLocation SCROLL_HANDLE_DISABLED = registerSprite("gui/scroll_handle_disabled");
 
 	public static final ResourceLocation SORT_ALPHA_ASC = registerSprite("gui/sort_alphabetical_asc");
 	public static final ResourceLocation SORT_ALPHA_DESC = registerSprite("gui/sort_alphabetical_desc");

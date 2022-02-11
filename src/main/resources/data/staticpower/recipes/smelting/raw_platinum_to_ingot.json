@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:raw_platinum"
+  },
+  "result": "staticpower:ingot_platinum",
+  "experience": 0.5,
+  "cookingtime": 200
+}

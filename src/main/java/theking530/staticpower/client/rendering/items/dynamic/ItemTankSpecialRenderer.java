@@ -27,7 +27,6 @@ public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRendere
 
 	public ItemTankSpecialRenderer(BlockEntityRenderDispatcher p_172550_, EntityModelSet p_172551_) {
 		super(p_172550_, p_172551_);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override

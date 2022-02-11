@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:raw_materials/lead"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_lead",
+			"volume": 144
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 4
+		}
+	}
+}

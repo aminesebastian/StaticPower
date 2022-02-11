@@ -200,7 +200,7 @@ public abstract class BaseGuiTab {
 	 * @return True if the event was handled, false otherwise.
 	 */
 	public EInputResult mouseClick(PoseStack matrixStack, int mouseX, int mouseY, int button) {
-		if (!Minecraft.getInstance().player.containerMenu.getCarried().isEmpty()) { // TO-DO: Check if this works.
+		if (!Minecraft.getInstance().player.containerMenu.getCarried().isEmpty()) { // TODO: Check if this works.
 			return EInputResult.UNHANDLED;
 		}
 
@@ -383,7 +383,7 @@ public abstract class BaseGuiTab {
 	 * Override this method to draw any tab contents that should appear BEHIND
 	 * items.
 	 * 
-	 * @param matrix       TODO
+	 * @param matrix       
 	 * @param mouseX       The x position of the mouse.
 	 * @param mouseY       The y position of the mouse.
 	 * @param partialTicks The partial ticks (delta time).
@@ -405,7 +405,7 @@ public abstract class BaseGuiTab {
 	 * Override this method to draw any tab contents that should appear INFRONT
 	 * items.
 	 * 
-	 * @param matrix       TODO
+	 * @param matrix       
 	 * @param partialTicks The partial ticks (delta time).
 	 * @param xPos         The x position of the mouse.
 	 * @param yPos         The y position of the mouse.
@@ -524,7 +524,7 @@ public abstract class BaseGuiTab {
 			stack.translate(-position.getXi(), -position.getYi(), 0.0f);
 		}
 		
-		// TO-DO: Redesign rendering system to use the incoming matrix.
+		// TODO: Redesign rendering system to use the incoming matrix.
 		RenderSystem.applyModelViewMatrix();
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, tabTexture);

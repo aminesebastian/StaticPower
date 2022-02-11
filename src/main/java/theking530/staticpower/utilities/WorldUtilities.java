@@ -219,9 +219,8 @@ public class WorldUtilities {
 			return false;
 		}
 
-		BlockPlaceContext context = new BlockPlaceContext(new UseOnContext(player, hand, new BlockHitResult(Vec3.ZERO, Direction.UP, pos, false))); // TODO: This neds proper
+		BlockPlaceContext context = new BlockPlaceContext(new UseOnContext(player, hand, new BlockHitResult(Vec3.ZERO, Direction.UP, pos, false))); // TODO: This nreds proper
 																																									// context...
-
 		// check that we can place the fluid at the destination
 		BlockState destBlockState = world.getBlockState(pos);
 		Material destMaterial = destBlockState.getMaterial();

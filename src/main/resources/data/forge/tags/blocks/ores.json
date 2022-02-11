@@ -2,7 +2,6 @@
 	"replace": false,
 	"values": [
 		"staticpower:ore_aluminium",
-		"staticpower:ore_copper",
 		"staticpower:ore_lead",
 		"staticpower:ore_magnesium",
 		"staticpower:ore_platinum",
