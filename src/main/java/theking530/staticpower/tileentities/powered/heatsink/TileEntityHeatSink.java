@@ -27,9 +27,9 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 
 public class TileEntityHeatSink extends TileEntityMachine implements MenuProvider {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_ALUMINIUM = new BlockEntityTypeAllocator<TileEntityHeatSink>(
-			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.ALUMINIUM),
-			ModBlocks.AluminiumHeatSink);
+	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_ALUMINUM = new BlockEntityTypeAllocator<TileEntityHeatSink>(
+			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.ALUMINUM),
+			ModBlocks.AluminumHeatSink);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_COPPER = new BlockEntityTypeAllocator<TileEntityHeatSink>(
 			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.COPPER),

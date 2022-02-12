@@ -1,7 +1,12 @@
 package theking530.staticcore.utilities;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import theking530.staticcore.gui.GuiDrawUtilities;
 
 public class GuiDrawItem {
 	protected Color tint;
@@ -27,29 +32,15 @@ public class GuiDrawItem {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	protected void renderItemModelIntoGUI(ItemStack stack, int x, int y, float alpha) {
-		// TODO: Fix this later!
-//		ItemRenderer renderer = Minecraft.getInstance().getItemRenderer();
-//
-//		GlStateManager._color4f(1.0f, 1.0f, 1.0f, 1.0f - alpha);
-//		renderer.renderAndDecorateItem(stack, x, y);
-//		GL11.glEnable(GL11.GL_BLEND);
-//		// Render overlay to fake transparency
-//		GlStateManager._color4f(0.5429f, 0.5429f, 0.5429f, 1.0f - alpha);
-//		GlStateManager._disableTexture();
-//		GlStateManager._disableDepthTest();
-//		GlStateManager._enableBlend();
-//
-//		Tesselator tessellator = Tesselator.getInstance();
-//		BufferBuilder tes = tessellator.getBuilder();
-//		tes.begin(GL11.GL_QUADS, DefaultVertexFormat.POSITION);
-//		tes.vertex(x, y + 16, renderer.blitOffset).endVertex();
-//		tes.vertex(x + 16, y + 16, renderer.blitOffset).endVertex();
-//		tes.vertex(x + 16, y, renderer.blitOffset).endVertex();
-//		tes.vertex(x, y, renderer.blitOffset).endVertex();
-//		tessellator.end();
-//		GlStateManager._enableTexture();
-//		GlStateManager._color4f(1.0f, 1.0f, 1.0f, 1.0f);
+		Minecraft minecraft = Minecraft.getInstance();
+		ItemRenderer itemRenderer = minecraft.getItemRenderer();
+		itemRenderer.renderAndDecorateItem(stack, x, y);
+
+		RenderSystem.disableDepthTest();
+		RenderSystem.enableBlend();
+		GuiDrawUtilities.drawColoredRectangle(x, y, 16, 16, 0, new Color(0.5f, 0.5f, 0.5f, 1.0f - alpha));
+		RenderSystem.disableBlend();
+		RenderSystem.enableDepthTest();
 	}
 }

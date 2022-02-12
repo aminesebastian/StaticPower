@@ -150,9 +150,9 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_HEAT_PLATINUM_EXTENSION = registerModel("block/cables/heat/platinum/extension");
 	public static final ResourceLocation CABLE_HEAT_PLATINUM_ATTACHMENT = registerModel("block/cables/heat/platinum/attachment");
 
-	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_STRAIGHT = registerModel("block/cables/heat/aluminium/straight");
-	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_EXTENSION = registerModel("block/cables/heat/aluminium/extension");
-	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_ATTACHMENT = registerModel("block/cables/heat/aluminium/attachment");
+	public static final ResourceLocation CABLE_HEAT_ALUMINUM_STRAIGHT = registerModel("block/cables/heat/aluminum/straight");
+	public static final ResourceLocation CABLE_HEAT_ALUMINUM_EXTENSION = registerModel("block/cables/heat/aluminum/extension");
+	public static final ResourceLocation CABLE_HEAT_ALUMINUM_ATTACHMENT = registerModel("block/cables/heat/aluminum/attachment");
 
 	public static final ResourceLocation CABLE_SCAFFOLD_STRAIGHT = registerModel("block/cables/scaffold/straight");
 	public static final ResourceLocation CABLE_SCAFFOLD_EXTENSION = registerModel("block/cables/scaffold/extension");

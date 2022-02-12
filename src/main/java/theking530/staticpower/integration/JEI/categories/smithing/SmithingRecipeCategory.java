@@ -60,7 +60,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.AutoSmith.getDescriptionId());
 		background = guiHelper.createBlankDrawable(170, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.AutoSmith));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.AutoSmith));
 		pBar = new AutoSmithProgressBar(49, 19);
 	}
 

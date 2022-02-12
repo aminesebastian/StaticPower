@@ -70,7 +70,7 @@ public class Hammer extends StaticPowerItem {
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		return true;
+		return stack.getDamageValue() < stack.getMaxDamage();
 	}
 
 	@Override

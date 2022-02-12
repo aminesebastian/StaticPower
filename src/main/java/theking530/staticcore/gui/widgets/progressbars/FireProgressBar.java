@@ -20,13 +20,13 @@ public class FireProgressBar extends AbstractProgressBar {
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.46875f,
-				0.4375f, 0.875f);
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY(), 0.0f, getSize().getX(), getSize().getY(),
+				0.0f, 0.46875f, 0.4375f, 0.875f);
 		float topOffset = getSize().getY() * (visualCurrentProgresPercentage);
 
 		if (visualCurrentProgresPercentage > 0) {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + topOffset, getSize().getX(),
-					getSize().getY() * (1.0f - visualCurrentProgresPercentage), 0.0f, 0.40625f * visualCurrentProgresPercentage, 0.4375f, 0.40625f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.FIRE_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY() + topOffset,
+					0.0f, getSize().getX(), getSize().getY() * (1.0f - visualCurrentProgresPercentage), 0.0f, 0.40625f * visualCurrentProgresPercentage, 0.4375f, 0.40625f);
 		}
 
 		if (isProcessingErrored) {

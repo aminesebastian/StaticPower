@@ -9,7 +9,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.tiers.StaticPowerTierAdvanced;
-import theking530.staticpower.data.tiers.StaticPowerTierAluminium;
+import theking530.staticpower.data.tiers.StaticPowerTierAluminum;
 import theking530.staticpower.data.tiers.StaticPowerTierBasic;
 import theking530.staticpower.data.tiers.StaticPowerTierBronze;
 import theking530.staticpower.data.tiers.StaticPowerTierCopper;
@@ -56,7 +56,7 @@ public class StaticPower {
 			StaticPowerConfig.registerTier(StaticPowerTiers.LUMUM, StaticPowerTierLumum::new);
 			StaticPowerConfig.registerTier(StaticPowerTiers.CREATIVE, StaticPowerTierCreative::new);
 
-			StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINIUM, StaticPowerTierAluminium::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINUM, StaticPowerTierAluminum::new);
 			StaticPowerConfig.registerTier(StaticPowerTiers.ZINC, StaticPowerTierZinc::new);
 			StaticPowerConfig.registerTier(StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
 			StaticPowerConfig.registerTier(StaticPowerTiers.COPPER, StaticPowerTierCopper::new);

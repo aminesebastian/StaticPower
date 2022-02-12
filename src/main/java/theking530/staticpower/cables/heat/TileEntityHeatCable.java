@@ -17,9 +17,9 @@ import theking530.staticpower.tileentities.TileEntityBase;
 
 public class TileEntityHeatCable extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_ALUMINIUM = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.ALUMINIUM),
-			ModBlocks.AluminiumHeatCable);
+	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_ALUMINUM = new BlockEntityTypeAllocator<TileEntityHeatCable>(
+			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.ALUMINUM),
+			ModBlocks.AluminumHeatCable);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_COPPER = new BlockEntityTypeAllocator<TileEntityHeatCable>(
 			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.COPPER),

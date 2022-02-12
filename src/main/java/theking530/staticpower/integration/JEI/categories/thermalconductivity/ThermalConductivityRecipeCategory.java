@@ -49,7 +49,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		super(guiHelper);
 		locTitle = new TranslatableComponent("gui.staticpower.heat");
 		background = guiHelper.createBlankDrawable(170, 65);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.CopperHeatSink));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.CopperHeatSink));
 	}
 
 	@Override

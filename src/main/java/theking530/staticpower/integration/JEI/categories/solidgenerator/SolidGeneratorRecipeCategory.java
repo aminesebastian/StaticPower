@@ -52,7 +52,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.SolidGenerator.getDescriptionId());
 		background = guiHelper.createBlankDrawable(90, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.SolidGenerator));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.SolidGenerator));
 		pBar = new ArrowProgressBar(55, 19).setFlipped(true);
 		fireBar = new FireProgressBar(67, 40);
 	}

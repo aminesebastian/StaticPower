@@ -49,8 +49,8 @@ public class FluidProgressBar extends AbstractProgressBar {
 				float uvDiff = icon.getU1() - icon.getU0();
 
 				Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-				GuiDrawUtilities.drawTexturedModalRect(InventoryMenu.BLOCK_ATLAS, screenSpacePosition.getX(), screenSpacePosition.getY(), visualCurrentProgresPercentage * getSize().getX(), getSize().getY(),
-						icon.getU0(), icon.getV0(), icon.getU0() + (uvDiff * visualCurrentProgresPercentage), icon.getV1(), fluidColor);
+				GuiDrawUtilities.drawTexturedModalRect(InventoryMenu.BLOCK_ATLAS, null, screenSpacePosition.getX(), screenSpacePosition.getY(), 0.0f,
+						visualCurrentProgresPercentage * getSize().getX(), getSize().getY(), icon.getU0(), icon.getV0(), icon.getU0() + (uvDiff * visualCurrentProgresPercentage), icon.getV1(), fluidColor);
 			}
 
 			// Draw the leading white line.

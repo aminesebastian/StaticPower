@@ -1,0 +1,6 @@
+{
+    "parent": "block/cube_all",
+    "textures": {
+        "all": "staticpower:blocks/storageblocks/block_raw_lumum_metal"
+    }
+}

@@ -90,7 +90,7 @@ public class ModItems {
 	public static StaticPowerItem RawTungsten;
 	public static StaticPowerItem RawMagnesium;
 	public static StaticPowerItem RawPlatinum;
-	public static StaticPowerItem RawAluminium;
+	public static StaticPowerItem RawAluminum;
 	public static StaticPowerItem RawStatic;
 	public static StaticPowerItem RawEnergized;
 	public static StaticPowerItem RawLumum;
@@ -102,7 +102,7 @@ public class ModItems {
 	public static StaticPowerItem IngotTungsten;
 	public static StaticPowerItem IngotMagnesium;
 	public static StaticPowerItem IngotPlatinum;
-	public static StaticPowerItem IngotAluminium;
+	public static StaticPowerItem IngotAluminum;
 	public static StaticPowerItem IngotStatic;
 	public static StaticPowerItem IngotEnergized;
 	public static StaticPowerItem IngotLumum;
@@ -119,7 +119,7 @@ public class ModItems {
 	public static StaticPowerItem NuggetTungsten;
 	public static StaticPowerItem NuggetMagnesium;
 	public static StaticPowerItem NuggetPlatinum;
-	public static StaticPowerItem NuggetAluminium;
+	public static StaticPowerItem NuggetAluminum;
 	public static StaticPowerItem NuggetStatic;
 	public static StaticPowerItem NuggetEnergized;
 	public static StaticPowerItem NuggetLumum;
@@ -138,7 +138,7 @@ public class ModItems {
 	public static StaticPowerItem PlateTungsten;
 	public static StaticPowerItem PlateMagnesium;
 	public static StaticPowerItem PlatePlatinum;
-	public static StaticPowerItem PlateAluminium;
+	public static StaticPowerItem PlateAluminum;
 	public static StaticPowerItem PlateStatic;
 	public static StaticPowerItem PlateEnergized;
 	public static StaticPowerItem PlateLumum;
@@ -156,7 +156,7 @@ public class ModItems {
 	public static StaticPowerItem GearTungsten;
 	public static StaticPowerItem GearMagnesium;
 	public static StaticPowerItem GearPlatinum;
-	public static StaticPowerItem GearAluminium;
+	public static StaticPowerItem GearAluminum;
 	public static StaticPowerItem GearStatic;
 	public static StaticPowerItem GearEnergized;
 	public static StaticPowerItem GearLumum;
@@ -175,7 +175,7 @@ public class ModItems {
 	public static StaticPowerItem GearBoxTungsten;
 	public static StaticPowerItem GearBoxMagnesium;
 	public static StaticPowerItem GearBoxPlatinum;
-	public static StaticPowerItem GearBoxAluminium;
+	public static StaticPowerItem GearBoxAluminum;
 	public static StaticPowerItem GearBoxStatic;
 	public static StaticPowerItem GearBoxEnergized;
 	public static StaticPowerItem GearBoxLumum;
@@ -194,7 +194,7 @@ public class ModItems {
 	public static StaticPowerItem DustTungsten;
 	public static StaticPowerItem DustMagnesium;
 	public static StaticPowerItem DustPlatinum;
-	public static StaticPowerItem DustAluminium;
+	public static StaticPowerItem DustAluminum;
 	public static StaticPowerItem DustStatic;
 	public static StaticPowerItem DustEnergized;
 	public static StaticPowerItem DustLumum;
@@ -223,7 +223,7 @@ public class ModItems {
 	public static StaticPowerItem ChunksTungsten;
 	public static StaticPowerItem ChunksMagnesium;
 	public static StaticPowerItem ChunksPlatinum;
-	public static StaticPowerItem ChunksAluminium;
+	public static StaticPowerItem ChunksAluminum;
 	public static StaticPowerItem ChunksCoal;
 	public static StaticPowerItem ChunksGold;
 	public static StaticPowerItem ChunksIron;
@@ -243,7 +243,7 @@ public class ModItems {
 	public static StaticPowerItem RodTungsten;
 	public static StaticPowerItem RodMagnesium;
 	public static StaticPowerItem RodPlatinum;
-	public static StaticPowerItem RodAluminium;
+	public static StaticPowerItem RodAluminum;
 	public static StaticPowerItem RodStatic;
 	public static StaticPowerItem RodEnergized;
 	public static StaticPowerItem RodLumum;
@@ -307,12 +307,12 @@ public class ModItems {
 	public static StaticPowerItem WireSilver;
 	public static StaticPowerItem WireGold;
 	public static StaticPowerItem WirePlatinum;
-	public static StaticPowerItem WireAluminium;
+	public static StaticPowerItem WireAluminum;
 	public static StaticPowerItem CoilCopper;
 	public static StaticPowerItem CoilSilver;
 	public static StaticPowerItem CoilGold;
 	public static StaticPowerItem CoilPlatinum;
-	public static StaticPowerItem CoilAluminium;
+	public static StaticPowerItem CoilAluminum;
 	public static StaticPowerItem CoilTin;
 
 	public static DrillBit IronDrillBit;
@@ -524,7 +524,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(IngotPlatinum = new StaticPowerItem("ingot_platinum"));
 		StaticPowerRegistry.preRegisterItem(IngotBrass = new StaticPowerItem("ingot_brass"));
 		StaticPowerRegistry.preRegisterItem(IngotBronze = new StaticPowerItem("ingot_bronze"));
-		StaticPowerRegistry.preRegisterItem(IngotAluminium = new StaticPowerItem("ingot_aluminium"));
+		StaticPowerRegistry.preRegisterItem(IngotAluminum = new StaticPowerItem("ingot_aluminum"));
 		StaticPowerRegistry.preRegisterItem(IngotStatic = new StaticPowerItem("ingot_static"));
 		StaticPowerRegistry.preRegisterItem(IngotEnergized = new StaticPowerItem("ingot_energized"));
 		StaticPowerRegistry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
@@ -540,7 +540,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(RawMagnesium = new StaticPowerItem("raw_magnesium"));
 		StaticPowerRegistry.preRegisterItem(RawTungsten = new StaticPowerItem("raw_tungsten"));
 		StaticPowerRegistry.preRegisterItem(RawPlatinum = new StaticPowerItem("raw_platinum"));
-		StaticPowerRegistry.preRegisterItem(RawAluminium = new StaticPowerItem("raw_aluminium"));
+		StaticPowerRegistry.preRegisterItem(RawAluminum = new StaticPowerItem("raw_aluminum"));
 		StaticPowerRegistry.preRegisterItem(RawStatic = new StaticPowerItem("raw_static"));
 		StaticPowerRegistry.preRegisterItem(RawEnergized = new StaticPowerItem("raw_energized"));
 		StaticPowerRegistry.preRegisterItem(RawLumum = new StaticPowerItem("raw_lumum"));
@@ -554,7 +554,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(NuggetMagnesium = new StaticPowerItem("nugget_magnesium"));
 		StaticPowerRegistry.preRegisterItem(NuggetTungsten = new StaticPowerItem("nugget_tungsten"));
 		StaticPowerRegistry.preRegisterItem(NuggetPlatinum = new StaticPowerItem("nugget_platinum"));
-		StaticPowerRegistry.preRegisterItem(NuggetAluminium = new StaticPowerItem("nugget_aluminium"));
+		StaticPowerRegistry.preRegisterItem(NuggetAluminum = new StaticPowerItem("nugget_aluminum"));
 		StaticPowerRegistry.preRegisterItem(NuggetStatic = new StaticPowerItem("nugget_static"));
 		StaticPowerRegistry.preRegisterItem(NuggetEnergized = new StaticPowerItem("nugget_energized"));
 		StaticPowerRegistry.preRegisterItem(NuggetLumum = new StaticPowerItem("nugget_lumum"));
@@ -723,12 +723,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
 		StaticPowerRegistry.preRegisterItem(WireGold = new StaticPowerItem("wire_gold"));
 		StaticPowerRegistry.preRegisterItem(WirePlatinum = new StaticPowerItem("wire_platinum"));
-		StaticPowerRegistry.preRegisterItem(WireAluminium = new StaticPowerItem("wire_aluminium"));
+		StaticPowerRegistry.preRegisterItem(WireAluminum = new StaticPowerItem("wire_aluminum"));
 		StaticPowerRegistry.preRegisterItem(CoilCopper = new StaticPowerItem("coil_copper"));
 		StaticPowerRegistry.preRegisterItem(CoilSilver = new StaticPowerItem("coil_silver"));
 		StaticPowerRegistry.preRegisterItem(CoilGold = new StaticPowerItem("coil_gold"));
 		StaticPowerRegistry.preRegisterItem(CoilPlatinum = new StaticPowerItem("coil_platinum"));
-		StaticPowerRegistry.preRegisterItem(CoilAluminium = new StaticPowerItem("coil_aluminium"));
+		StaticPowerRegistry.preRegisterItem(CoilAluminum = new StaticPowerItem("coil_aluminum"));
 		StaticPowerRegistry.preRegisterItem(CoilTin = new StaticPowerItem("coil_tin"));
 
 		// Materials
@@ -758,7 +758,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(PlateTungsten = new StaticPowerItem("plate_tungsten"));
 		StaticPowerRegistry.preRegisterItem(PlateMagnesium = new StaticPowerItem("plate_magnesium"));
 		StaticPowerRegistry.preRegisterItem(PlatePlatinum = new StaticPowerItem("plate_platinum"));
-		StaticPowerRegistry.preRegisterItem(PlateAluminium = new StaticPowerItem("plate_aluminium"));
+		StaticPowerRegistry.preRegisterItem(PlateAluminum = new StaticPowerItem("plate_aluminum"));
 		StaticPowerRegistry.preRegisterItem(PlateStatic = new StaticPowerItem("plate_static"));
 		StaticPowerRegistry.preRegisterItem(PlateEnergized = new StaticPowerItem("plate_energized"));
 		StaticPowerRegistry.preRegisterItem(PlateLumum = new StaticPowerItem("plate_lumum"));
@@ -777,7 +777,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GearTungsten = new StaticPowerItem("gear_tungsten"));
 		StaticPowerRegistry.preRegisterItem(GearMagnesium = new StaticPowerItem("gear_magnesium"));
 		StaticPowerRegistry.preRegisterItem(GearPlatinum = new StaticPowerItem("gear_platinum"));
-		StaticPowerRegistry.preRegisterItem(GearAluminium = new StaticPowerItem("gear_aluminium"));
+		StaticPowerRegistry.preRegisterItem(GearAluminum = new StaticPowerItem("gear_aluminum"));
 		StaticPowerRegistry.preRegisterItem(GearStatic = new StaticPowerItem("gear_static"));
 		StaticPowerRegistry.preRegisterItem(GearEnergized = new StaticPowerItem("gear_energized"));
 		StaticPowerRegistry.preRegisterItem(GearLumum = new StaticPowerItem("gear_lumum"));
@@ -797,7 +797,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GearBoxTungsten = new GearBox("gear_box_tungsten", GearTungsten));
 		StaticPowerRegistry.preRegisterItem(GearBoxMagnesium = new GearBox("gear_box_magnesium", GearMagnesium));
 		StaticPowerRegistry.preRegisterItem(GearBoxPlatinum = new GearBox("gear_box_platinum", GearPlatinum));
-		StaticPowerRegistry.preRegisterItem(GearBoxAluminium = new GearBox("gear_box_aluminium", GearAluminium));
+		StaticPowerRegistry.preRegisterItem(GearBoxAluminum = new GearBox("gear_box_aluminum", GearAluminum));
 		StaticPowerRegistry.preRegisterItem(GearBoxStatic = new GearBox("gear_box_static", GearStatic));
 		StaticPowerRegistry.preRegisterItem(GearBoxEnergized = new GearBox("gear_box_energized", GearEnergized));
 		StaticPowerRegistry.preRegisterItem(GearBoxLumum = new GearBox("gear_box_lumum", GearLumum));
@@ -818,7 +818,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DustTungsten = new StaticPowerItem("dust_tungsten"));
 		StaticPowerRegistry.preRegisterItem(DustMagnesium = new StaticPowerItem("dust_magnesium"));
 		StaticPowerRegistry.preRegisterItem(DustPlatinum = new StaticPowerItem("dust_platinum"));
-		StaticPowerRegistry.preRegisterItem(DustAluminium = new StaticPowerItem("dust_aluminium"));
+		StaticPowerRegistry.preRegisterItem(DustAluminum = new StaticPowerItem("dust_aluminum"));
 		StaticPowerRegistry.preRegisterItem(DustStatic = new StaticPowerItem("dust_static"));
 		StaticPowerRegistry.preRegisterItem(DustEnergized = new StaticPowerItem("dust_energized"));
 		StaticPowerRegistry.preRegisterItem(DustLumum = new StaticPowerItem("dust_lumum"));
@@ -847,7 +847,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(RodTungsten = new StaticPowerItem("rod_tungsten"));
 		StaticPowerRegistry.preRegisterItem(RodMagnesium = new StaticPowerItem("rod_magnesium"));
 		StaticPowerRegistry.preRegisterItem(RodPlatinum = new StaticPowerItem("rod_platinum"));
-		StaticPowerRegistry.preRegisterItem(RodAluminium = new StaticPowerItem("rod_aluminium"));
+		StaticPowerRegistry.preRegisterItem(RodAluminum = new StaticPowerItem("rod_aluminum"));
 		StaticPowerRegistry.preRegisterItem(RodStatic = new StaticPowerItem("rod_static"));
 		StaticPowerRegistry.preRegisterItem(RodEnergized = new StaticPowerItem("rod_energized"));
 		StaticPowerRegistry.preRegisterItem(RodLumum = new StaticPowerItem("rod_lumum"));
@@ -875,7 +875,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(ChunksTungsten = new StaticPowerItem("chunks_tungsten"));
 		StaticPowerRegistry.preRegisterItem(ChunksMagnesium = new StaticPowerItem("chunks_magnesium"));
 		StaticPowerRegistry.preRegisterItem(ChunksPlatinum = new StaticPowerItem("chunks_platinum"));
-		StaticPowerRegistry.preRegisterItem(ChunksAluminium = new StaticPowerItem("chunks_aluminium"));
+		StaticPowerRegistry.preRegisterItem(ChunksAluminum = new StaticPowerItem("chunks_aluminum"));
 		StaticPowerRegistry.preRegisterItem(ChunksCoal = new StaticPowerItem("chunks_coal"));
 		StaticPowerRegistry.preRegisterItem(ChunksGold = new StaticPowerItem("chunks_gold"));
 		StaticPowerRegistry.preRegisterItem(ChunksIron = new StaticPowerItem("chunks_iron"));

@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -53,7 +54,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Centrifuge.getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Centrifuge));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Centrifuge));
 		pBar = new CentrifugeProgressBar(79, 26);
 	}
 

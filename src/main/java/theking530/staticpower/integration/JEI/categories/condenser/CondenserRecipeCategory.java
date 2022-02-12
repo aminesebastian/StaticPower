@@ -45,7 +45,7 @@ public class CondenserRecipeCategory extends BaseJEIRecipeCategory<CondensationR
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Condenser.getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Condenser));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Condenser));
 	}
 
 	@Override

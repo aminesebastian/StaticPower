@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
@@ -47,7 +48,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		super(guiHelper);
 		locTitle = new TranslatableComponent("gui.staticpower.hammering");
 		background = guiHelper.createBlankDrawable(110, 50);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModItems.IronMetalHammer));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModItems.IronMetalHammer));
 		arrow = new ArrowProgressBar(57, 16);
 	}
 
@@ -88,13 +89,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
 		// Get the buffer and render the large hammer.
-		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 21, -1);
-		RenderSystem.applyModelViewMatrix();
-		RenderSystem.getModelViewMatrix().translate(new Vector3f(location.getX(), location.getY(), 0.0F));
-		matrixStack.scale(2.5F, 2.5F, 2.5F);
-		Minecraft.getInstance().getItemRenderer().renderGuiItem(new ItemStack(ModItems.IronMetalHammer), 0, 0);
-		RenderSystem.backupProjectionMatrix();
-
+		GuiDrawUtilities.drawTexturedModalSprite(new ResourceLocation("staticpower", "items/tools/hammer_iron"), matrixStack, 23, 5, 0, 32, 32, 0, 0, 1, 1, Color.WHITE);
 		if (!recipe.isBlockType()) {
 			GuiDrawUtilities.drawStringWithSize(matrixStack, "Requires Anvil", 89, 47, 1.0f, Color.EIGHT_BIT_GREY, false);
 		}

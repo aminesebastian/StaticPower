@@ -24,6 +24,6 @@ public class StaticPowerTiers {
 	public static final ResourceLocation TIN = new ResourceLocation(StaticPower.MOD_ID, "tier_tin");
 	public static final ResourceLocation SILVER = new ResourceLocation(StaticPower.MOD_ID, "tier_silver");
 	public static final ResourceLocation GOLD = new ResourceLocation(StaticPower.MOD_ID, "tier_gold");
-	public static final ResourceLocation ALUMINIUM = new ResourceLocation(StaticPower.MOD_ID, "tier_aluminium");
+	public static final ResourceLocation ALUMINUM = new ResourceLocation(StaticPower.MOD_ID, "tier_aluminum");
 	public static final ResourceLocation ZINC = new ResourceLocation(StaticPower.MOD_ID, "tier_zinc");
 }

@@ -86,13 +86,13 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		}
 
 		// Add the pattern slots.
-		addSlot(new EncodedPatternSlot(encoderInventory, new ItemStack(ModItems.PatternCard), DigistorePatternEncoder.PATTERN_INPUT_SLOT, 152, 118) {
+		addSlot(new EncodedPatternSlot(encoderInventory, new ItemStack(ModItems.PatternCard), DigistorePatternEncoder.PATTERN_INPUT_SLOT, 145, 116) {
 			@Override
 			public boolean isActive() {
 				return getViewType() == TerminalViewType.ITEMS;
 			}
 		});
-		addSlot(new OutputSlot(encoderInventory, ModItems.PatternCard.getBlankEncodedCardForPreview(), DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, 152, 154) {
+		addSlot(new OutputSlot(encoderInventory, ModItems.PatternCard.getBlankEncodedCardForPreview(), DigistorePatternEncoder.PATTERN_OUTPUT_SLOT, 145, 156) {
 			@Override
 			public boolean isActive() {
 				return getViewType() == TerminalViewType.ITEMS;

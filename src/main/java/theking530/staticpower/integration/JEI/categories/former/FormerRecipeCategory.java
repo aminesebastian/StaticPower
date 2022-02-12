@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -50,7 +51,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Former.getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Former));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Former));
 		pBar = new ArrowProgressBar(84, 19);
 	}
 

@@ -48,7 +48,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.FluidGenerator.getDescriptionId());
 		background = guiHelper.createBlankDrawable(100, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.FluidGenerator));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.FluidGenerator));
 		pBar = new ArrowProgressBar(60, 19).setFlipped(true);
 		flameBar = new FireProgressBar(42, 40);
 	}

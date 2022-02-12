@@ -1,7 +1,5 @@
 package theking530.staticcore.gui.drawables;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -72,12 +70,10 @@ public class SpriteDrawable implements IDrawable {
 			@SuppressWarnings("deprecation")
 			TextureAtlasSprite atlasSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(sprite);
 			if (atlasSprite.getName().toString().equals("minecraft:missingno")) {
-				GuiDrawUtilities.drawTexturedModalRect(sprite, x, y, size.getX(), size.getY(), getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
+				GuiDrawUtilities.drawTexturedModalRect(sprite, null, x, y, z, size.getX(), size.getY(), getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
 			} else {
-				GuiDrawUtilities.drawTexturedModalSprite(sprite, x, y, size.getX(), size.getY(), getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
+				GuiDrawUtilities.drawTexturedModalSprite(sprite, null, x, y, z, size.getX(), size.getY(), getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
 			}
-			GL11.glEnable(GL11.GL_CULL_FACE);
-
 		}
 	}
 }

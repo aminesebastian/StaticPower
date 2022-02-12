@@ -60,7 +60,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.RustyCauldron.getDescriptionId());
 		background = guiHelper.createBlankDrawable(130, 50);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.RustyCauldron));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.RustyCauldron));
 		arrow = new ArrowProgressBar(57, 16);
 	}
 

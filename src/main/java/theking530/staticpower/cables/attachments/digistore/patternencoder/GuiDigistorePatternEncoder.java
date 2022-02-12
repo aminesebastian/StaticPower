@@ -44,7 +44,7 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		clearRecipeButton.setTooltip(new TextComponent("Clear Recipe"));
 
 		// Add encode button.
-		registerWidget(encodeButton = new SpriteButton(152, 136, 16, 16, StaticPowerSprites.ARROW_DOWN, null, this::onEncodePressed));
+		registerWidget(encodeButton = new SpriteButton(145, 134, 16, 16, StaticPowerSprites.ARROW_DOWN, null, this::onEncodePressed));
 		encodeButton.setTooltip(new TextComponent("Encode Recipe"));
 	}
 

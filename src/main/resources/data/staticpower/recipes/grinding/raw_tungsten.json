@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:raw_materials/tungsten"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_tungsten",
+			"count": 2
+		}
+	]
+}

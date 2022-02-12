@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -49,7 +50,7 @@ public class TumblerRecipeCategory extends BaseJEIRecipeCategory<TumblerRecipe> 
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Tumbler.getDescriptionId());
 		background = guiHelper.createBlankDrawable(70, 70);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Tumbler));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Tumbler));
 		pBar = new GrinderProgressBar(39, 26);
 	}
 

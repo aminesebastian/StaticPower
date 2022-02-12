@@ -29,13 +29,13 @@ public class ArrowProgressBar extends AbstractProgressBar {
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
 		if (flipped) {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY(), -getSize().getX(), getSize().getY(), 0, 0.5f, 0.6875f, 1.0f);
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY(), -getSize().getX() * visualCurrentProgresPercentage, getSize().getY(), 0.0f,
-					0.0f, visualCurrentProgresPercentage * 0.6875f, 0.5f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY(), 0.0f, -getSize().getX(), getSize().getY(), 0, 0.5f, 0.6875f, 1.0f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY(), 0.0f, -getSize().getX() * visualCurrentProgresPercentage,
+					getSize().getY(), 0.0f, 0.0f, visualCurrentProgresPercentage * 0.6875f, 0.5f);
 		} else {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0, 0.5f, 0.6875f, 1.0f);
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX() * visualCurrentProgresPercentage, getSize().getY(), 0.0f, 0.0f,
-					visualCurrentProgresPercentage * 0.6875f, 0.5f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY(), 0.0f, getSize().getX(), getSize().getY(), 0, 0.5f, 0.6875f, 1.0f);
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY(), 0.0f, getSize().getX() * visualCurrentProgresPercentage, getSize().getY(),
+					0.0f, 0.0f, visualCurrentProgresPercentage * 0.6875f, 0.5f);
 		}
 
 		if (isProcessingErrored) {

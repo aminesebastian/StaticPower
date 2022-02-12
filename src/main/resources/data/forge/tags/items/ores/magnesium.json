@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-	"staticpower:ore_magnesium"
+	"staticpower:ore_magnesium",
+	"staticpower:ore_deepslate_magnesium"
   ]
 }

@@ -4,7 +4,7 @@
 		"item": "staticpower:mold_blank"
 	},
 	"mold": {
-		"tag": "forge:ingot"
+		"tag": "forge:ingots"
 	},
 	"output": {
 		"item": "staticpower:mold_ingot"

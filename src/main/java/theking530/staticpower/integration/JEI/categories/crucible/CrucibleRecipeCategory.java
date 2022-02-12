@@ -53,7 +53,7 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Crucible.getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Crucible));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Crucible));
 	}
 
 	@Override

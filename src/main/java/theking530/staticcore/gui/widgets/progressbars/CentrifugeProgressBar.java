@@ -1,8 +1,8 @@
 package theking530.staticcore.gui.widgets.progressbars;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -23,15 +23,15 @@ public class CentrifugeProgressBar extends AbstractProgressBar {
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		float smoothedProgress = visualCurrentProgresPercentage * visualCurrentProgresPercentage;
 
-		GL11.glPushMatrix();
-		GL11.glTranslatef(screenSpacePosition.getX() + 1.5f + getSize().getX() / 2, screenSpacePosition.getY() + getSize().getY() / 2, screenSpacePosition.getY() + getSize().getY() / 2);
-		GL11.glRotatef(-smoothedProgress * 3600.0f, 0.0f, 0.0f, 1.0f);
-		GL11.glTranslatef(-(screenSpacePosition.getX() + getSize().getX() / 2), -(screenSpacePosition.getY() + getSize().getY() / 2), -(screenSpacePosition.getY() + getSize().getY() / 2));
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0.0f, 0.5f, 1.0f, 1.0f);
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY() * visualCurrentProgresPercentage, 0.0f, 0.0f, 1.0f,
-				(0.5f * visualCurrentProgresPercentage));
-		GL11.glPopMatrix();
-
+		matrix.pushPose();
+		matrix.translate(getPosition().getX() + 1.5f + getSize().getX() / 2, getPosition().getY() + getSize().getY() / 2, getPosition().getY() + getSize().getY() / 2);
+		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(0.0f, 0.0f, smoothedProgress * 3600.0f)));
+		matrix.translate(-(getPosition().getX() + getSize().getX() / 2), -(getPosition().getY() + getSize().getY() / 2), -(getPosition().getY() + getSize().getY() / 2));
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, matrix, getPosition().getX(), getPosition().getY(), 0.0f, getSize().getX(), getSize().getY(), 0.0f, 0.5f, 1.0f,
+				1.0f);
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.CENTRIFUGE_PROGRESS_BAR, matrix, getPosition().getX(), getPosition().getY(), 0.0f, getSize().getX(),
+				getSize().getY() * visualCurrentProgresPercentage, 0.0f, 0.0f, 1.0f, (0.5f * visualCurrentProgresPercentage));
+		matrix.popPose();
 		if (isProcessingErrored) {
 			getErrorDrawable().draw(screenSpacePosition.getX() + 1.5f, screenSpacePosition.getY() + 0.5f);
 		}

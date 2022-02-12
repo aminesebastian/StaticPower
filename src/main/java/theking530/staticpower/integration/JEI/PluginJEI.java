@@ -440,9 +440,9 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler), TumblerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Packager), PackagerRecipeCategory.UID);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatCable),
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatCable),
 				ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatSink),
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink),
 				ThermalConductivityRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable), ThermalConductivityRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink), ThermalConductivityRecipeCategory.UID);

@@ -72,8 +72,8 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 			return TileEntityHeatSink.TYPE_SILVER.create(pos, state);
 		} else if (tier == StaticPowerTiers.GOLD) {
 			return TileEntityHeatSink.TYPE_GOLD.create(pos, state);
-		} else if (tier == StaticPowerTiers.ALUMINIUM) {
-			return TileEntityHeatSink.TYPE_ALUMINIUM.create(pos, state);
+		} else if (tier == StaticPowerTiers.ALUMINUM) {
+			return TileEntityHeatSink.TYPE_ALUMINUM.create(pos, state);
 		}
 		return null;
 	}

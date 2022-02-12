@@ -3,13 +3,13 @@ package theking530.staticcore.gui;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector4f;
 
 import net.minecraft.ChatFormatting;
@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -37,7 +38,7 @@ public class GuiDrawUtilities {
 	public static final Color DEFAULT_SLOT_DARK_EDGE_COLOR = new Color(55, 55, 55, 255).fromEightBitToFloat();
 	public static final Color DEFAULT_SLOT_LIGHT_EDGE_COLOR = new Color(255, 255, 255, 255).fromEightBitToFloat();
 	public static final Color DEFAULT_SLOT_CORNER_COLOR = new Color(139, 139, 139, 255).fromEightBitToFloat();
-
+	
 	private static final float BACKGROUND_PIXEL_SIZE = 1.0f / 9.0f;
 
 	public static void drawGenericBackground(int width, int height, int guiLeft, int guiTop, float zLevel, Color mainBackgroundColor, Color rimTint, boolean drawLeft, boolean drawRight,
@@ -127,10 +128,16 @@ public class GuiDrawUtilities {
 		tessellator.end();
 	}
 
-	public static void drawColoredRectangle(@Nullable PoseStack matrixStack, float xCoord, float yCoord, float width, float height, float zLevel, Color color) {
-		Vector2D origin = translatePositionByMatrix(matrixStack, xCoord, yCoord);
-		drawColoredRectangle(origin.getX(), origin.getY(), width, height, zLevel, color);
-
+	public static void drawColoredRectangle(PoseStack matrixStack, float xCoord, float yCoord, float width, float height, float zLevel, Color color) {
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuilder();
+		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+		bufferbuilder.vertex(matrixStack.last().pose(), xCoord, yCoord + height, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
+		bufferbuilder.vertex(matrixStack.last().pose(), xCoord + width, yCoord + height, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
+		bufferbuilder.vertex(matrixStack.last().pose(), xCoord + width, yCoord, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
+		bufferbuilder.vertex(matrixStack.last().pose(), xCoord, yCoord, zLevel).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
+		tessellator.end();
 	}
 
 	public static void drawColoredRectangle(float xCoord, float yCoord, float width, float height, float zLevel, Color color) {
@@ -197,39 +204,31 @@ public class GuiDrawUtilities {
 		matrixStack.popPose();
 	}
 
-	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height, float minU, float minV, float maxU, float maxV) {
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, texture);
-		GlStateManager._enableBlend();
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		bufferbuilder.vertex((double) (x + 0), (double) (y + height), 0.0).uv(minU, maxV).endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + height), 0.0).uv(maxU, maxV).endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + 0), 0.0).uv(maxU, minV).endVertex();
-		bufferbuilder.vertex((double) (x + 0), (double) (y + 0), 0.0).uv(minU, minV).endVertex();
-		tessellator.end();
+	public static void drawTexturedModalRect(ResourceLocation texture, @Nullable PoseStack pose, float x, float y, float z, float width, float height, float minU, float minV, float maxU, float maxV) {
+		drawTexturedModalRect(texture, pose, x, y, z, width, height, minU, minV, maxU, maxV, Color.WHITE);
 	}
 
-	public static void drawTexturedModalRect(ResourceLocation texture, float x, float y, float width, float height, float minU, float minV, float maxU, float maxV, Color color) {
+	public static void drawTexturedModalRect(ResourceLocation texture, @Nullable PoseStack pose, float x, float y, float z, float width, float height, float minU, float minV, float maxU, float maxV,
+			Color color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, texture);
-		GlStateManager._enableBlend();
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
+		Matrix4f matrix = pose == null ? SDMath.IDENTITY : pose.last().pose();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		bufferbuilder.vertex((double) (x + 0), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minU, maxV).endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxU, maxV).endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxU, minV).endVertex();
-		bufferbuilder.vertex((double) (x + 0), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minU, minV).endVertex();
+		bufferbuilder.vertex(matrix, x, (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minU, maxV).endVertex();
+		bufferbuilder.vertex(matrix, (x + width), (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxU, maxV).endVertex();
+		bufferbuilder.vertex(matrix, (x + width), y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxU, minV).endVertex();
+		bufferbuilder.vertex(matrix, x, y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minU, minV).endVertex();
 		tessellator.end();
 	}
 
-	public static void drawTexturedModalSprite(ResourceLocation spriteLocation, float x, float y, float width, float height, float minU, float minV, float maxU, float maxV, Color color) {
+	public static void drawTexturedModalSprite(ResourceLocation spriteLocation, @Nullable PoseStack pose, float x, float y, float z, float width, float height, float minU, float minV, float maxU,
+			float maxV, Color color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
 		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(spriteLocation);
-		GlStateManager._enableBlend();
+		Matrix4f matrix = pose == null ? SDMath.IDENTITY : pose.last().pose();
 
 		float uDiff = sprite.getU1() - sprite.getU0();
 		float vDiff = sprite.getV1() - sprite.getV0();
@@ -242,10 +241,10 @@ public class GuiDrawUtilities {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		bufferbuilder.vertex((double) (x + 0), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minSpriteU, maxSpriteV).endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + height), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxSpriteU, maxSpriteV).endVertex();
-		bufferbuilder.vertex((double) (x + width), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxSpriteU, minSpriteV).endVertex();
-		bufferbuilder.vertex((double) (x + 0), (double) (y + 0), 0.0).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minSpriteU, minSpriteV).endVertex();
+		bufferbuilder.vertex(matrix, (x + 0), (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minSpriteU, maxSpriteV).endVertex();
+		bufferbuilder.vertex(matrix, (x + width), (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxSpriteU, maxSpriteV).endVertex();
+		bufferbuilder.vertex(matrix, (x + width), (y + 0), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxSpriteU, minSpriteV).endVertex();
+		bufferbuilder.vertex(matrix, (x + 0), (y + 0), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minSpriteU, minSpriteV).endVertex();
 		tessellator.end();
 	}
 

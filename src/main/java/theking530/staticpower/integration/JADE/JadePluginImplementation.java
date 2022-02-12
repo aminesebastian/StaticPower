@@ -13,7 +13,6 @@ import mcp.mobius.waila.api.ui.IProgressStyle;
 import net.minecraft.ChatFormatting;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -102,7 +101,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 					}
 
 					// Draw bar
-					JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_HEAT_COLOR, ALT_FLUID_COLOR, GuiTextUtilities.formatHeatToString(stored, capacity).withStyle(ChatFormatting.WHITE),
+					JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_HEAT_COLOR, ALT_HEAT_COLOR, GuiTextUtilities.formatHeatToString(stored, capacity).withStyle(ChatFormatting.WHITE),
 							HEAT_BAR_RENDERER);
 				}
 			}
@@ -130,24 +129,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static class FluidDecorator implements IComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
-//			BlockEntity tile = accessor.getBlockEntity();
-//			if (tile != null) {
-//				IHeatStorage storage = tile.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY).orElse(null);
-//				if (storage != null && (!accessor.isServerConnected() || accessor.getServerData().contains(JadeDataProviders.HEAT_TAG))) {
-//					double stored, capacity;
-//					if (accessor.isServerConnected()) {
-//						CompoundTag heatData = accessor.getServerData().getCompound(JadeDataProviders.HEAT_TAG);
-//						stored = heatData.getDouble("value");
-//						capacity = heatData.getDouble("max");
-//					} else {
-//						stored = storage.getCurrentHeat();
-//						capacity = storage.getMaximumHeat();
-//					}
-//
-//					// Draw bar
-//					JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_FLUID_COLOR, ALT_HEAT_COLOR, GuiTextUtilities.formatHeatToString(stored, capacity), HEAT_BAR_RENDERER);
-//				}
-//			}
+
 		}
 	}
 
@@ -164,9 +146,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 			if (accessor.getServerData().contains(JadeDataProviders.DIGISTORE_MANAGER_TAG)) {
 				boolean managerPresent = accessor.getServerData().getBoolean(JadeDataProviders.DIGISTORE_MANAGER_TAG);
 				if (managerPresent) {
-					tooltip.add(new TextComponent(ChatFormatting.GREEN.toString()).append(new TranslatableComponent("gui.staticpower.manager_present")));
+					tooltip.add(new TranslatableComponent("gui.staticpower.manager_present").withStyle(ChatFormatting.GREEN));
 				} else {
-					tooltip.add(new TextComponent(ChatFormatting.RED.toString()).append(new TranslatableComponent("gui.staticpower.manager_missing")));
+					tooltip.add(new TranslatableComponent("gui.staticpower.manager_missing").withStyle(ChatFormatting.RED));
 				}
 			}
 		}

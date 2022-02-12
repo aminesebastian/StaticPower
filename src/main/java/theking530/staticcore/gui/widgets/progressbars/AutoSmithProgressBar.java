@@ -20,12 +20,12 @@ public class AutoSmithProgressBar extends AbstractProgressBar {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
-		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.AUTO_SMITH_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, getSize().getX(), getSize().getY(), 0.25f,
-				0.0f, 0.75f, 0.5f);
+		GuiDrawUtilities.drawTexturedModalRect(GuiTextures.AUTO_SMITH_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, 0.0f, getSize().getX(),
+				getSize().getY(), 0.25f, 0.0f, 0.75f, 0.5f);
 
 		if (visualCurrentProgresPercentage > 0) {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.AUTO_SMITH_PROGRESS_BAR, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, getSize().getX(),
-					getSize().getY() * (visualCurrentProgresPercentage), 0.25f, 0.5f, 0.75f, 0.5f + (0.5f * visualCurrentProgresPercentage));
+			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.AUTO_SMITH_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f,
+					0.0f, getSize().getX(), getSize().getY() * (visualCurrentProgresPercentage), 0.25f, 0.5f, 0.75f, 0.5f + (0.5f * visualCurrentProgresPercentage));
 		}
 
 		if (isProcessingErrored) {

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:ore_sapphire"
+  },
+  "result": "staticpower:gem_sapphire",
+  "experience": 0.5,
+  "cookingtime": 200
+}

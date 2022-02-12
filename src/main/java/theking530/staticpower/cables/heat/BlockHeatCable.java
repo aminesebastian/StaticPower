@@ -62,10 +62,10 @@ public class BlockHeatCable extends AbstractCableBlock {
 			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_EXTENSION);
 			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_STRAIGHT);
 			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_GOLD_ATTACHMENT);
-		} else if (tier == StaticPowerTiers.ALUMINIUM) {
-			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINIUM_EXTENSION);
-			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINIUM_STRAIGHT);
-			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINIUM_ATTACHMENT);
+		} else if (tier == StaticPowerTiers.ALUMINUM) {
+			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_EXTENSION);
+			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_STRAIGHT);
+			attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_HEAT_ALUMINUM_ATTACHMENT);
 		}
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 	}
@@ -80,8 +80,8 @@ public class BlockHeatCable extends AbstractCableBlock {
 			return TileEntityHeatCable.TYPE_SILVER.create(pos, state);
 		} else if (tier == StaticPowerTiers.GOLD) {
 			return TileEntityHeatCable.TYPE_GOLD.create(pos, state);
-		} else if (tier == StaticPowerTiers.ALUMINIUM) {
-			return TileEntityHeatCable.TYPE_ALUMINIUM.create(pos, state);
+		} else if (tier == StaticPowerTiers.ALUMINUM) {
+			return TileEntityHeatCable.TYPE_ALUMINUM.create(pos, state);
 		}
 		return null;
 	}

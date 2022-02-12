@@ -54,7 +54,7 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.LumberMill.getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.LumberMill));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.LumberMill));
 		pBar = new ArrowProgressBar(63, 19);
 	}
 

@@ -1,0 +1,23 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:gear_copper",
+	"staticpower:gear_tin",
+	"staticpower:gear_zinc",
+	"staticpower:gear_silver",
+	"staticpower:gear_lead",
+	"staticpower:gear_tungsten",
+	"staticpower:gear_magnesium",
+	"staticpower:gear_platinum",
+	"staticpower:gear_aluminum",
+	"staticpower:gear_static",
+	"staticpower:gear_energized",
+	"staticpower:gear_lumum",
+	"staticpower:gear_inert_infusion",
+	"staticpower:gear_redstone_alloy",    
+	"staticpower:gear_iron",    
+	"staticpower:gear_gold",    
+	"staticpower:gear_brass",
+	"staticpower:gear_bronze"
+  ]
+}

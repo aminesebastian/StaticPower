@@ -24,6 +24,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -49,7 +50,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.PoweredFurnace.getDescriptionId());
 		background = guiHelper.createBlankDrawable(120, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.PoweredFurnace));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.PoweredFurnace));
 		pBar = new ArrowProgressBar(62, 19);
 	}
 
@@ -92,14 +93,20 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+
+		float experience = recipe.getExperience();
+		if (experience > 0) {
+			TranslatableComponent experienceString = new TranslatableComponent("gui.staticpower.experience", experience);
+			GuiDrawUtilities.drawStringWithSizeCentered(matrixStack, experienceString.getString(), 100, 12, 0.9f, Color.EIGHT_BIT_GREY, false);
+		}
 	}
 
 	@Override
 	public List<Component> getTooltipStrings(SmeltingRecipe recipe, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ")
-					.append(GuiTextUtilities.formatEnergyToString(TileEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
+			output.add(
+					new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(TileEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
 		}
 
 		// Render the progress bar tooltip.

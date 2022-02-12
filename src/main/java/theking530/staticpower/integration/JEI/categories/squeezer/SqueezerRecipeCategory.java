@@ -51,7 +51,7 @@ public class SqueezerRecipeCategory extends BaseJEIRecipeCategory<SqueezerRecipe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Squeezer.getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Squeezer));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Squeezer));
 	}
 
 	@Override

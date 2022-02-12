@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -94,10 +92,10 @@ public class DataGraphWidget extends AbstractGuiWidget {
 //		GL11.glPopAttrib();
 
 		// Draw y axis values.
-		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 1.5f, getSize().getY() / 2 - 2, 0.55f,
-				Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 1.5f, -getSize().getY() / 2 + 5, 0.55f,
-				Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getX()).getString(), 1.5f, getSize().getY() / 2 - 2, 0.55f, Color.EIGHT_BIT_DARK_GREY,
+				false);
+		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, GuiTextUtilities.formatNumberAsString(minMax.getY()).getString(), 1.5f, -getSize().getY() / 2 + 5, 0.55f, Color.EIGHT_BIT_DARK_GREY,
+				false);
 		GuiDrawUtilities.drawStringWithSizeLeftAligned(matrix, "0", 1.5f, -2f, 0.55f, Color.EIGHT_BIT_DARK_GREY, false);
 
 		matrix.popPose();
@@ -167,8 +165,9 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 	protected void drawDataSet(PoseStack matrix, IGraphDataSet data, float valueScale, float segmentLength, float maxDataHeight) {
 		Color lineColor = data.getLineColor();
-		GL11.glColor4d(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue(), lineColor.getAlpha());
-		GL11.glLineWidth(data.getLineThickness());
+		// GL11.glColor4d(lineColor.getRed(), lineColor.getGreen(), lineColor.getBlue(),
+		// lineColor.getAlpha());
+		// GL11.glLineWidth(data.getLineThickness());
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferBuilder = tessellator.getBuilder();
 		bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
@@ -203,10 +202,10 @@ public class DataGraphWidget extends AbstractGuiWidget {
 			double lastValue = yAxis[yAxis.length - 1];
 			float textYPos = (float) (-lastValue * valueScale) + 6;
 			textYPos = SDMath.clamp(textYPos, -maxDataHeight, maxDataHeight - 2);
-			GL11.glEnable(GL11.GL_TEXTURE_2D);
-			GuiDrawUtilities.drawStringWithSize(matrix, GuiTextUtilities.formatNumberAsString(lastValue).getString(), yAxis.length * segmentLength, textYPos, 0.55f,
-					lineColor.fromFloatToEightBit(), false);
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			// GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GuiDrawUtilities.drawStringWithSize(matrix, GuiTextUtilities.formatNumberAsString(lastValue).getString(), yAxis.length * segmentLength, textYPos, 0.55f, lineColor.fromFloatToEightBit(),
+					false);
+			// GL11.glDisable(GL11.GL_TEXTURE_2D);
 		}
 	}
 
@@ -282,7 +281,7 @@ public class DataGraphWidget extends AbstractGuiWidget {
 
 			this.minMaxValues = new Vector2D();
 			this.data = new double[data.size()];
-			
+
 			// Populate the data array.
 			int index = 0;
 			for (Float value : data) {

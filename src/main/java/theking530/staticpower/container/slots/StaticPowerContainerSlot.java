@@ -46,7 +46,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	}
 
 	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-		this(previewItem, 0.3f, itemHandler, index, xPosition, yPosition, MachineSideMode.Never);
+		this(previewItem, 0.5f, itemHandler, index, xPosition, yPosition, MachineSideMode.Never);
 	}
 
 	public StaticPowerContainerSlot(@Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {

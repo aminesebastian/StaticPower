@@ -1,7 +1,0 @@
-{
-  "replace": false,
-  "values": [
-	"#forge:plates/aluminium",
-	"#forge:ingots/aluminium"
-  ]
-}

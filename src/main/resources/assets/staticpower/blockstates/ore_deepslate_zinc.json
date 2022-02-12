@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/ore/ore_deepslate_zinc" }
+    }
+}

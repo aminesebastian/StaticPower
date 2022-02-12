@@ -50,7 +50,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Fermenter.getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Fermenter));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Fermenter));
 	}
 
 	@Override

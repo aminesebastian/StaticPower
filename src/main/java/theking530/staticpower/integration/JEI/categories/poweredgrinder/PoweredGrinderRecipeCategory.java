@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -51,7 +52,7 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.PoweredGrinder.getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.PoweredGrinder));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.PoweredGrinder));
 		pBar = new GrinderProgressBar(79, 26);
 	}
 

@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"tag": "forge:ingots/aluminum"
+	},
+	"mold": {
+		"item": "staticpower:mold_plate"
+	},
+	"output": {
+		"item": "staticpower:plate_aluminum",
+		"count": 2
+	}
+}

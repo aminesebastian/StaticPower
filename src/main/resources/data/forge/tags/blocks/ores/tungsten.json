@@ -1,6 +1,8 @@
 {
-  "replace": false,
-  "values": [
-	"staticpower:ore_tungsten"
-  ]
+	"replace": false,
+	"values": [
+		"staticpower:ore_tungsten",
+		"staticpower:ore_deepslate_tungsten",
+		"staticpower:ore_nether_tungsten"
+	]
 }

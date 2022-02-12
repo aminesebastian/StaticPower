@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:block_raw_tin"
+		}
+	],
+	"result": {
+		"item": "staticpower:raw_tin",
+		"count": 9
+	}
+}

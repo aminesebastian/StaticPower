@@ -44,7 +44,7 @@ public class ModFluids {
 	public static StaticPowerFluidBundle MoltenTungsten;
 	public static StaticPowerFluidBundle MoltenSilver;
 	public static StaticPowerFluidBundle MoltenLead;
-	public static StaticPowerFluidBundle MoltenAluminium;
+	public static StaticPowerFluidBundle MoltenAluminum;
 	public static StaticPowerFluidBundle MoltenPlatinum;
 	public static StaticPowerFluidBundle MoltenBrass;
 	public static StaticPowerFluidBundle MoltenBronze;
@@ -140,7 +140,7 @@ public class ModFluids {
 		registerFluidBundle(MoltenLead = new StaticPowerFluidBuilder("molten_lead").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(750).density(32).temperature(328).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
 		}).build());
-		registerFluidBundle(MoltenAluminium = new StaticPowerFluidBuilder("molten_aluminium").addAutoBucket().addAttributes(builder -> {
+		registerFluidBundle(MoltenAluminum = new StaticPowerFluidBuilder("molten_aluminum").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(500).density(32).temperature(660).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
 		}).build());
 		registerFluidBundle(MoltenPlatinum = new StaticPowerFluidBuilder("molten_platinum").addAutoBucket().addAttributes(builder -> {

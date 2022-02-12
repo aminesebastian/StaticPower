@@ -7,6 +7,7 @@ import javax.annotation.Nonnull;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -54,7 +55,7 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.FusionFurnace.getDescriptionId());
 		background = guiHelper.createBlankDrawable(160, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.FusionFurnace));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.FusionFurnace));
 		pBar = new FusionProgressBar(79, 19);
 	}
 

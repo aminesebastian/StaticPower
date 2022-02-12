@@ -27,12 +27,9 @@ import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 public class ProbabilityItemStackRenderer implements IIngredientRenderer<ProbabilityItemStackOutput> {
 
 	@Override
-	@SuppressWarnings("deprecation")
 	public void render(PoseStack matrixStack, int xPosition, int yPosition,
 			@Nullable ProbabilityItemStackOutput ingredient) {
 		if (ingredient != null) {
-			RenderSystem.applyModelViewMatrix();
-			RenderSystem.setProjectionMatrix(matrixStack.last().pose());
 			RenderSystem.enableDepthTest();
 			Lighting.setupForFlatItems();
 			Minecraft minecraft = Minecraft.getInstance();
@@ -54,7 +51,6 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			}
 
 			RenderSystem.disableBlend();
-			RenderSystem.backupProjectionMatrix();
 		}
 	}
 
@@ -64,7 +60,6 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			// Get the original item tooltip but remove the last line (that should be the
 			// mod name).
 			List<Component> tooltip = ingredient.getItem().getTooltipLines(Minecraft.getInstance().player, tooltipFlag);
-			tooltip.remove(tooltip.size() - 1);
 
 			// Formulate the output percentage tooltip and then add it.
 			if (ingredient.getOutputChance() != 1.0f) {
