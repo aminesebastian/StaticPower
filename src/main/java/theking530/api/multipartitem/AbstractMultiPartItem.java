@@ -2,6 +2,7 @@ package theking530.api.multipartitem;
 
 import java.util.List;
 
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.items.StaticPowerItem;
@@ -61,6 +62,12 @@ public abstract class AbstractMultiPartItem extends StaticPowerItem {
 		int max = getTotalMaxPartDurability(stack);
 
 		// Get the power ratio.
-		return (int) (((double) current / max) * 13);
+		return 13 - (int) (((double) current / max) * 13);
 	}
+
+	public int getBarColor(ItemStack stack) {
+		float f = Math.max(0.0F, ((float) getTotalMaxPartDurability(stack) - (float) getTotalPartDurability(stack)) / (float) getTotalMaxPartDurability(stack));
+		return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
+	}
+
 }

@@ -53,6 +53,7 @@ import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
 import theking530.staticpower.init.ModItems;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
@@ -98,10 +99,12 @@ public class StaticPowerClientEventHandler {
 		LOGGER.info("Registering Screen Factories!");
 		StaticCoreRegistry.registerScreenFactories(event);
 
+		LOGGER.info("Performing Key Bindings!");
+		ModKeyBindings.registerBindings(event);
+
 		// Log the completion.
 		LOGGER.info("Static Power Client Setup Completed!");
 	}
-
 
 	public static void onModelBakeEvent(ModelBakeEvent event) {
 		// Loop through all the blocks, and check to see if they are a model supplier.

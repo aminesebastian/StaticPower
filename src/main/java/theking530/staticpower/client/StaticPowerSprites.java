@@ -95,7 +95,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation CLOSE = registerSprite("gui/close");
 	public static final ResourceLocation ARROW_DOWN = registerSprite("gui/arrow_down");
 
-	public static final ResourceLocation DURABILITY_BAR = registerSprite("items/tools/durability_bar");
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
 
 	private static ResourceLocation registerSprite(String path) {

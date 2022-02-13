@@ -27,6 +27,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 
 public class Magnet extends StaticPowerEnergyStoringItem {
@@ -71,8 +72,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 		int radius = getRadius(stack);
 
 		// Create the AABB to search within.
-		AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius,
-				player.getX() + radius, player.getY() + radius, player.getZ() + radius);
+		AABB aabb = new AABB(player.getX() - radius, player.getY() - radius, player.getZ() - radius, player.getX() + radius, player.getY() + radius, player.getZ() + radius);
 
 		// Search for all the item entities.
 		List<ItemEntity> droppedItems = world.getEntitiesOfClass(ItemEntity.class, aabb, (ItemEntity item) -> true);
@@ -91,10 +91,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 				if (player.getInventory().add(entity.getItem())) {
 					if (entity.getItem().isEmpty()) {
 						entity.remove(RemovalReason.UNLOADED_WITH_PLAYER);
-						world.addParticle(ParticleTypes.PORTAL, player.getX() + 0.5, player.getY() + 0.5,
-								player.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
-						world.playSound(null, player.blockPosition(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F,
-								1.5F);
+						world.addParticle(ParticleTypes.PORTAL, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
+						world.playSound(null, player.blockPosition(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F, 1.5F);
 					}
 				}
 			} else {
@@ -103,8 +101,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 					var11 *= var11;
 					entity.push(x / distance * var11 * 0.06, y / distance * var11 * 0.15, z / distance * var11 * 0.06);
 					Vec3 entityPos = entity.position();
-					world.addParticle(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 0.0D, 0.0D,
-							0.0D);
+					world.addParticle(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 0.0D, 0.0D, 0.0D);
 				}
 			}
 		}
@@ -120,11 +117,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(
-				new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
-						.withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.radius"))
-				.append(" " + ChatFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
+		tooltip.add(new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive").withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
+		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.radius")).append(" " + ChatFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
 
 		tooltip.add(new TextComponent(""));
 
@@ -143,6 +137,12 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
+
+		// Toggle the state if the toggle magnet button was just pressed.
+		if (ModKeyBindings.TOGGLE_MAGNET.wasJustPressed()) {
+			worldIn.playSound(null, entityIn.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.2f, !isActivated(stack) ? 1.0f : 0.5f);
+			toggleActivated(stack);
+		}
 
 		// Check the power.
 		if (isActivated(stack)) {
@@ -173,8 +173,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	 * When shift right clicked, toggle activation.
 	 */
 	@Override
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
-			InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
 		if (player.isShiftKeyDown()) {
 			toggleActivated(item);
 			return InteractionResultHolder.success(item);

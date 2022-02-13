@@ -6,7 +6,7 @@ import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 import theking530.staticpower.StaticPower;
 
-public abstract class StaticPowerTier {
+public abstract class StaticPowerTier  {
 	/****************
 	 * Tier Settings
 	 ****************/

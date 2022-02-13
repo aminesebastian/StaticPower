@@ -10,7 +10,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
@@ -36,9 +36,9 @@ import theking530.staticpower.client.rendering.items.ChainsawBladeItemModel;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class ChainsawBlade extends AbstractToolPart {
-	public final Tiers miningTier;
+	public final Tier miningTier;
 
-	public ChainsawBlade(String name, Tiers miningTier, ResourceLocation tier) {
+	public ChainsawBlade(String name, Tier miningTier, ResourceLocation tier) {
 		super(name, tier, new Item.Properties().stacksTo(1).durability(1));
 		this.miningTier = miningTier;
 	}
@@ -70,7 +70,7 @@ public class ChainsawBlade extends AbstractToolPart {
 		return StaticPowerConfig.getTier(tier).chainsawBladeUses.get();
 	}
 
-	public Tiers getMiningTier(ItemStack stack) {
+	public Tier getMiningTier(ItemStack stack) {
 		// Get the drill bit attributes, check if it has the promoted attribute. If it
 		// does, promote the item.
 		IAttributable drillBitAttributes = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);

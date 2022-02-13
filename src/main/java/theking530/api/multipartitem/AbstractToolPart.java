@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -84,6 +85,7 @@ public abstract class AbstractToolPart extends StaticPowerItem implements ICusto
 	public boolean isBarVisible(ItemStack stack) {
 		return true;
 	}
+
 
 	@Override
 	public boolean isFoil(ItemStack stack) {

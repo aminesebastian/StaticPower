@@ -6,9 +6,9 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -32,6 +32,7 @@ import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -241,7 +242,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		// If we clicked on an input container slot and we held control, don't raise the
 		// regular clicked chain. Use the SWAP just as a placeholder.
-		if (Screen.hasControlDown()) {
+		if (ModKeyBindings.SLOT_LOCK.isDown()) {
 			if (hoveredSlot != null) {
 				slotClicked(hoveredSlot, hoveredSlot.index, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON,
 						ClickType.SWAP);
@@ -617,7 +618,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 						if (component.isSlotLocked(slot.getSlotIndex())) {
 							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), leftPos, topPos,
 									slot.x, slot.y, 0.5f);
-							GlStateManager._enableDepthTest();
+							RenderSystem.enableDepthTest();
 						}
 
 						// Draw the yellow line lockable indicator.

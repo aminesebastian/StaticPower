@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"staticpower:conveyor_supplier",
+		"staticpower:conveyor_extractor",
+		"staticpower:conveyor_hopper",
+		"staticpower:conveyor_hopper_filtered",
+		"staticpower:conveyor_ramp_up",
+		"staticpower:conveyor_ramp_down",
+		"staticpower:conveyor_straight"
+	]
+}

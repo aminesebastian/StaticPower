@@ -1,0 +1,8 @@
+{
+  "replace": false,
+  "values": [
+    "staticpower:ore_tin",
+    "staticpower:ore_aluminum",
+    "staticpower:ore_rusty_iron"
+  ]
+}

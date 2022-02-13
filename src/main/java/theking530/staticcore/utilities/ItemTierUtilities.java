@@ -3,22 +3,27 @@ package theking530.staticcore.utilities;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 
 public class ItemTierUtilities {
-	public static MutableComponent getNameForItemTier(Tiers tier) {
-		switch (tier) {
-		case WOOD:
+	public static MutableComponent getNameForItemTier(Tier tier) {
+		if (tier == Tiers.WOOD) {
 			return new TranslatableComponent("gui.staticpower.item_tier.wood").withStyle(ChatFormatting.GOLD);
-		case STONE:
+		}
+		if (tier == Tiers.STONE) {
 			return new TranslatableComponent("gui.staticpower.item_tier.stone").withStyle(ChatFormatting.DARK_GRAY);
-		case IRON:
+		}
+		if (tier == Tiers.IRON) {
 			return new TranslatableComponent("gui.staticpower.item_tier.iron").withStyle(ChatFormatting.GRAY);
-		case DIAMOND:
+		}
+		if (tier == Tiers.DIAMOND) {
 			return new TranslatableComponent("gui.staticpower.item_tier.diamond").withStyle(ChatFormatting.AQUA);
-		case GOLD:
+		}
+		if (tier == Tiers.GOLD) {
 			return new TranslatableComponent("gui.staticpower.item_tier.gold").withStyle(ChatFormatting.YELLOW);
-		case NETHERITE:
+		}
+		if (tier == Tiers.NETHERITE) {
 			return new TranslatableComponent("gui.staticpower.item_tier.netherite").withStyle(ChatFormatting.DARK_RED);
 		}
 		return new TranslatableComponent("**ERROR**");

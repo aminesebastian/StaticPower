@@ -4,6 +4,7 @@
 	"item.staticpower.wrench_static": "Static Wrench",
 	"item.staticpower.wrench_energized": "Energized Wrench",
 	"item.staticpower.wrench_lumum": "Lumum Wrench",
+	"item.staticpower.magnet_weak": "Weak Magnet",
 	"item.staticpower.magnet_basic": "Magnet",
 	"item.staticpower.magnet_advanced": "Advanced Magnet",
 	"item.staticpower.magnet_static": "Static Magnet",
@@ -885,6 +886,7 @@
 	"gui.staticpower.digistore_wireless_terminal_bound": "Wireless Terminal bound!",
 	"gui.staticpower.digistore_wireless_terminal_not_bound": "Wireless Terminal must be first bound to a crafting terminal!",
 	"gui.staticpower.digistore_wireless_terminal_out_of_range": "Wireless Terminal's crafting terminal out of range!",
+	"gui.staticpower.digistore_wireless_terminal_not_enough_power": "Wireless Terminal requires more power.",
 	"gui.staticpower.digistore_attachment_power_usage": "Network Power Usage: %1$s",
 	"gui.staticpower.redstone_cable_input_mode": "This cable will read a redstone signal.",
 	"gui.staticpower.redstone_cable_output_mode": "This cable will provide a redstone signal",
@@ -909,5 +911,9 @@
 	"gui.staticpower.digistore_wireless_terminal_advanced_tooltip": "Bound to terminal: %1$s",
 	"gui.staticpower.experience": "%s XP",
 	"entity.staticpower.smeep": "S'Meep",
-	"entity.staticpower.enox": "Enox"
+	"entity.staticpower.enox": "Enox",
+	"key.categories.staticpower": "Static Power",
+	"key.staticpower.lock_slot": "Lock/Unlock Slot",
+	"key.staticpower.toggle_magnet": "Toggle Magnet",
+	"key.staticpower.open_portable_digistore": "Open Portable Digistore"
 }

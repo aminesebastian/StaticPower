@@ -425,6 +425,7 @@ public class ModItems {
 	public static StaticWrench EnergizedWrench;
 	public static StaticWrench LumumWrench;
 
+	public static StaticPowerItem WeakMagnet;
 	public static Magnet BasicMagnet;
 	public static Magnet AdvancedMagnet;
 	public static Magnet StaticMagnet;
@@ -672,7 +673,8 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("wrench_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedWrench = new StaticWrench("wrench_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumWrench = new StaticWrench("wrench_lumum"));
-
+		
+		StaticPowerRegistry.preRegisterItem(WeakMagnet = new StaticPowerItem("magnet_weak"));
 		StaticPowerRegistry.preRegisterItem(BasicMagnet = new Magnet("magnet_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedMagnet = new Magnet("magnet_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterItem(StaticMagnet = new Magnet("magnet_static", StaticPowerTiers.STATIC));

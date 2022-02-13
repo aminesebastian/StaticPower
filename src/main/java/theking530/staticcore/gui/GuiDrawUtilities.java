@@ -212,6 +212,7 @@ public class GuiDrawUtilities {
 			Color color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, texture);
+		RenderSystem.enableBlend();
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		Matrix4f matrix = pose == null ? SDMath.IDENTITY : pose.last().pose();
@@ -227,6 +228,7 @@ public class GuiDrawUtilities {
 			float maxV, Color color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
 		RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+		RenderSystem.enableBlend();
 		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(spriteLocation);
 		Matrix4f matrix = pose == null ? SDMath.IDENTITY : pose.last().pose();
 

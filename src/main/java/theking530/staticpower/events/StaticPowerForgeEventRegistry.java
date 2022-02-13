@@ -22,6 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
@@ -33,6 +34,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.common.Mod;
@@ -53,6 +55,7 @@ import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCa
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.world.ore.ModOres;
@@ -208,6 +211,11 @@ public class StaticPowerForgeEventRegistry {
 				}
 			}
 		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
+	public static void onKeyEvent(KeyInputEvent event) {
+		ModKeyBindings.onKeyEvent(event);
 	}
 
 	/**

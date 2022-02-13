@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:tumbler_recipe",
 	"input": {
-		"tag": "forge:ores/tin"
+		"tag": "forge:raw_materials/tin"
 	},
 	"output": {
 		"item": "staticpower:chunks_tin",

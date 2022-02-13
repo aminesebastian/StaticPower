@@ -10,13 +10,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
@@ -29,6 +33,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
@@ -92,30 +97,55 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		return false;
 	}
 
+	@Override
+	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
+
+		// If the key is down and we're on the server, open the digitstore terminal so
+		// long as the player is NOT in any other UI.
+		if (!worldIn.isClientSide && ModKeyBindings.OPEN_PORTABLE_DIGISTORE.wasJustPressed()) {
+			if (entityIn instanceof Player) {
+				Player player = (Player) entityIn;
+				if (player.containerMenu instanceof InventoryMenu) {
+					worldIn.playSound(null, entityIn.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75f, 1.5f);
+					openTerminalUI(worldIn, player, stack);
+				}else {
+					player.closeContainer();
+				}
+			}
+		}
+	}
+
 	/**
 	 * When right clicked, open the filter UI.
 	 */
 	@Override
 	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
 		if (!world.isClientSide && !player.isShiftKeyDown()) {
-			// Check to make sure it's bound.
-			if (isBound(world, item)) {
-				// Check if it has power.
-				if (usePower(item)) {
-					NetworkGUI.openGui((ServerPlayer) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
-						buff.writeInt(getTerminalAttachDirection(item).ordinal());
-						buff.writeBlockPos(BlockPos.of(item.getTag().getLong(TERMINAL_POSITION_KEY)));
-					});
-					return InteractionResultHolder.success(item);
-				} else {
-					player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_enough_power"), true);
-				}
-			} else {
-				player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
-				return InteractionResultHolder.pass(item);
+			if (openTerminalUI(world, player, item)) {
+				return InteractionResultHolder.success(item);
 			}
 		}
 		return InteractionResultHolder.pass(item);
+	}
+
+	protected boolean openTerminalUI(Level world, Player player, ItemStack item) {
+		if (isBound(world, item)) {
+			// Check if it has power.
+			if (usePower(item)) {
+				NetworkGUI.openGui((ServerPlayer) player, new WirelessDigistoreAccessContainerProvider(item), buff -> {
+					buff.writeInt(getTerminalAttachDirection(item).ordinal());
+					buff.writeBlockPos(BlockPos.of(item.getTag().getLong(TERMINAL_POSITION_KEY)));
+				});
+				return true;
+			} else {
+				player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_enough_power"), true);
+				return false;
+			}
+		} else {
+			player.displayClientMessage(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_not_bound"), true);
+			return false;
+		}
 	}
 
 	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
@@ -137,8 +167,7 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (worldIn != null && isBound(worldIn, stack)) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
-					BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
+			tooltip.add(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip", BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
 		}
 	}
 

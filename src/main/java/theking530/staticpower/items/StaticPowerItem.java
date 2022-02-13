@@ -11,6 +11,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -123,14 +124,12 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
 		super.useOn(context);
-		return onStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(),
-				context.getClickedFace(), context.getPlayer(), context.getItemInHand());
+		return onStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(), context.getClickedFace(), context.getPlayer(), context.getItemInHand());
 	}
 
 	@Override
 	public InteractionResult onItemUseFirst(ItemStack stack, UseOnContext context) {
-		return onPreStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(),
-				context.getClickedFace(), context.getPlayer(), stack);
+		return onPreStaticPowerItemUsedOnBlock(context, context.getLevel(), context.getClickedPos(), context.getClickedFace(), context.getPlayer(), stack);
 	}
 
 	/**
@@ -142,8 +141,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item   The {@link ItemStack}.
 	 * @return The result of the action.
 	 */
-	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player,
-			InteractionHand hand, ItemStack item) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
 		if (this.isEdible()) {
 			ItemStack itemstack = player.getItemInHand(hand);
 			if (player.canEat(this.getFoodProperties().canAlwaysEat())) {
@@ -168,8 +166,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item    The item stack that was used.
 	 * @return The result of the action (SUCCESS, PASS, FAIL, CONSUME).
 	 */
-	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
-			Direction face, Player player, ItemStack item) {
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		return InteractionResult.PASS;
 	}
 
@@ -184,8 +181,7 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param item
 	 * @return
 	 */
-	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
-			Direction face, Player player, ItemStack item) {
+	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		return InteractionResult.PASS;
 	}
 
@@ -199,8 +195,17 @@ public class StaticPowerItem extends Item implements ITooltipProvider {
 	 * @param isShowingAdvanced True if advanced tooltips are requested.
 	 */
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
-			boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+	}
+
+	@Override
+	public int getBarWidth(ItemStack stack) {
+		return Math.round(13.0F - (float) stack.getDamageValue() * 13.0F / (float) stack.getMaxDamage());
+	}
+	@Override
+	public int getBarColor(ItemStack stack) {
+		float f = Math.max(0.0F, ((float) stack.getMaxDamage() - (float) stack.getDamageValue()) / (float) stack.getMaxDamage());
+		return Mth.hsvToRgb(f / 3.0F, 1.0F, 1.0F);
 	}
 
 	@OnlyIn(Dist.CLIENT)

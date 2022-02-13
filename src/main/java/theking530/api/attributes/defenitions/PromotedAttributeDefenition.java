@@ -8,6 +8,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.modifiers.BooleanAttributeModifier;
@@ -67,7 +68,7 @@ public class PromotedAttributeDefenition extends AbstractAttributeDefenition<Boo
 		baseValue = nbt.getBoolean("base_value");
 	}
 
-	public Tiers modifyItemTier(Tiers baseTier) {
+	public Tier modifyItemTier(Tier baseTier) {
 		// If false, do nothing.
 		if (!getValue()) {
 			return baseTier;

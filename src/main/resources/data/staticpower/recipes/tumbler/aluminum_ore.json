@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:tumbler_recipe",
 	"input": {
-		"tag": "forge:ores/aluminum"
+		"tag": "forge:raw_materials/aluminum"
 	},
 	"output": {
 		"item": "staticpower:chunks_aluminum",

@@ -43,6 +43,7 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVacuumChest extends TileEntityConfigurable implements MenuProvider {
@@ -60,9 +61,12 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final FluidOutputServoComponent fluidOutputServo;
-
+	
+	@UpdateSerialize
 	protected float vacuumDiamater;
+	@UpdateSerialize
 	protected boolean shouldTeleport;
+	@UpdateSerialize
 	protected boolean shouldVacuumExperience;
 
 	public TileEntityVacuumChest(BlockPos pos, BlockState state) {

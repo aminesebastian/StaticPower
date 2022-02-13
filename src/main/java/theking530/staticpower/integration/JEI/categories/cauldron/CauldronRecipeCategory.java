@@ -59,7 +59,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	public CauldronRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.RustyCauldron.getDescriptionId());
-		background = guiHelper.createBlankDrawable(130, 50);
+		background = guiHelper.createBlankDrawable(140, 55);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.RustyCauldron));
 		arrow = new ArrowProgressBar(57, 16);
 	}
@@ -114,7 +114,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		float scale = 1.6f;
 		{
 			blockStack.pushPose();
-			blockStack.translate(-4.5, -0.55f, 1.0f);
+			blockStack.translate(2.0, -1.7f, 1.75f);
 			blockStack.scale(scale, scale, 16);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 
