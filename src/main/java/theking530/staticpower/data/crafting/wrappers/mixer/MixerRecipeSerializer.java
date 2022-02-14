@@ -50,8 +50,12 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?
 		// Capture the processing and power costs.
 		if (GsonHelper.isValidNode(json, "processing")) {
 			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
+			if (processingElement.has("power")) {
+				powerCost = processingElement.get("power").getAsInt();
+			}
+			if (processingElement.has("time")) {
+				processingTime = processingElement.get("time").getAsInt();
+			}
 		}
 
 		// Get the fluid result.

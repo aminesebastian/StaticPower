@@ -143,8 +143,13 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		// Set the input fluids.
 		List<FluidStack> fluids = new ArrayList<FluidStack>();
-		fluids.add(recipe.getPrimaryFluidInput());
-		fluids.add(recipe.getSecondaryFluidInput());
+		if (!recipe.getPrimaryFluidInput().isEmpty()) {
+			fluids.add(recipe.getPrimaryFluidInput());
+		}
+		if (!recipe.getSecondaryFluidInput().isEmpty()) {
+			fluids.add(recipe.getSecondaryFluidInput());
+		}
+
 		ingredients.setInputs(VanillaTypes.FLUID, fluids);
 
 		// Set the output.
@@ -172,7 +177,7 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		fluids.init(OUTPUT_SLOT, false, 128, 2, 16, 52, getFluidTankDisplaySize(recipe.getOutput()), false, null);
 		fluids.set(ingredients);
-
+		
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}

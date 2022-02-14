@@ -1,8 +1,12 @@
 package theking530.staticpower.init;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Items;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.fluid.StaticPowerFluidBundle.StaticPowerFluidBuilder;
@@ -32,8 +36,9 @@ public class ModFluids {
 	public static StaticPowerFluidBundle BeetJuice;
 	public static StaticPowerFluidBundle Fertilizer;
 	public static StaticPowerFluidBundle Honey;
-	public static StaticPowerFluidBundle Concrete;
 	public static StaticPowerFluidBundle Latex;
+
+	public static Map<MinecraftColor, StaticPowerFluidBundle> ColoredConrete;
 
 	public static StaticPowerFluidBundle MoltenIron;
 	public static StaticPowerFluidBundle MoltenGold;
@@ -105,9 +110,15 @@ public class ModFluids {
 			builder.viscosity(2000).density(64).sound(SoundEvents.HONEY_BLOCK_STEP);
 		}).build());
 
-		registerFluidBundle(Concrete = new StaticPowerFluidBuilder("concrete").addAutoBucket().addAttributes(builder -> {
-			builder.viscosity(2500).density(64).sound(SoundEvents.HONEY_BLOCK_STEP);
-		}).build());
+		// Create all colors of concrete.
+		ColoredConrete = new HashMap<>();
+		for (MinecraftColor color : MinecraftColor.values()) {
+			StaticPowerFluidBundle bundle;
+			registerFluidBundle(bundle = new StaticPowerFluidBuilder("concrete_" + color.getId()).setTextureName("concrete").addAutoBucket().addAttributes(builder -> {
+				builder.viscosity(2500).density(64).sound(SoundEvents.HONEY_BLOCK_STEP).color(color.getColor().fromFloatToEightBit().encodeInInteger());
+			}).build());
+			ColoredConrete.put(color, bundle);
+		}
 
 		registerFluidBundle(Latex = new StaticPowerFluidBuilder("latex").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(1500).density(32).sound(SoundEvents.HONEY_BLOCK_STEP);

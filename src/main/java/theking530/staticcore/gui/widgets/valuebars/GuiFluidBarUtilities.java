@@ -167,6 +167,8 @@ public class GuiFluidBarUtilities {
 				tes.vertex(origin.getX(), origin.getY() - yMin, zLevel).uv(icon.getU0(), icon.getV0()).endVertex();
 				tessellator.end();
 			}
+
+			RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
 		}
 	}
 

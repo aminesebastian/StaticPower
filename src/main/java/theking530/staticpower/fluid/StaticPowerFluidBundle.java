@@ -25,8 +25,7 @@ public class StaticPowerFluidBundle {
 	private final StaticPowerFluidBuilder builder;
 	private Item cachedBucketItem;
 
-	public StaticPowerFluidBundle(String name, Named<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid,
-			Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
+	public StaticPowerFluidBundle(String name, Named<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid, Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
 		this.name = name;
 		Tag = tag;
 		FluidBlock = fluidBlock;
@@ -49,6 +48,7 @@ public class StaticPowerFluidBundle {
 
 	public static class StaticPowerFluidBuilder {
 		public String name;
+		private String textureName;
 		private Supplier<Item> bucketSupplier;
 		private Consumer<FluidAttributes.Builder> attributes;
 		private BucketItem autoBucket;
@@ -60,6 +60,7 @@ public class StaticPowerFluidBundle {
 
 		public StaticPowerFluidBuilder(String name) {
 			this.name = name;
+			this.textureName = name;
 			this.shouldRegisterBucketItem = true;
 		}
 
@@ -84,19 +85,22 @@ public class StaticPowerFluidBundle {
 			return this;
 		}
 
+		public StaticPowerFluidBuilder setTextureName(String textureName) {
+			this.textureName = textureName;
+			return this;
+		}
+
 		public boolean getShouldRegisterBucket() {
 			return shouldRegisterBucketItem;
 		}
 
 		public StaticPowerFluidBundle build() {
-			String stillTexture = "blocks/fluids/" + name + "_still";
-			String flowingTexture = "blocks/fluids/" + name + "_flowing";
+			String stillTexture = "blocks/fluids/" + textureName + "_still";
+			String flowingTexture = "blocks/fluids/" + textureName + "_flowing";
 			Named<Fluid> tag = FluidTags.bind(name);
 			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.of(Material.WATER));
-			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid,
-					() -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
-			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid,
-					() -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
+			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
+			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
 
 			return new StaticPowerFluidBundle(name, tag, fluidBlock, fluid, flowingFluid, bucketSupplier, this);
 

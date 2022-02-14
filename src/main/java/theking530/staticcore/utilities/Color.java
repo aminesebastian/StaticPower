@@ -1,5 +1,8 @@
 package theking530.staticcore.utilities;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Basic color class.
  * 
@@ -7,6 +10,10 @@ package theking530.staticcore.utilities;
  *
  */
 public class Color extends Vector4D {
+
+	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green",
+			"red", "black");
+
 	public static final Color EIGHT_BIT_RED = new Color(255.0f, 0.0f, 0.0f, 255.0f);
 	public static final Color EIGHT_BIT_WHITE = new Color(255.0f, 255.0f, 255.0f, 255.0f);
 	public static final Color EIGHT_BIT_GREY = new Color(128.0f, 128.0f, 128.0f, 255.0f);
