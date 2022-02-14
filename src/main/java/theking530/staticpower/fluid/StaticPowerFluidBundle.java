@@ -5,7 +5,6 @@ import java.util.function.Supplier;
 
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag.Named;
-import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -51,7 +50,7 @@ public class StaticPowerFluidBundle {
 		private String textureName;
 		private Supplier<Item> bucketSupplier;
 		private Consumer<FluidAttributes.Builder> attributes;
-		private BucketItem autoBucket;
+		private StaticPowerFluidBucket autoBucket;
 		private boolean shouldRegisterBucketItem;
 
 		private AbstractStaticPowerFluid.Source fluid;
@@ -69,19 +68,19 @@ public class StaticPowerFluidBundle {
 			return this;
 		}
 
-		public StaticPowerFluidBuilder addAutoBucket() {
-			autoBucket = new StaticPowerFluidBucket("bucket_" + name, () -> fluid);
+		public StaticPowerFluidBuilder addAutoBucket(boolean dynamicModel) {
+			autoBucket = new StaticPowerFluidBucket(dynamicModel, "bucket_" + name, () -> fluid);
 			bucketSupplier = () -> autoBucket;
+			shouldRegisterBucketItem = true;
 			return this;
+		}
+
+		public StaticPowerFluidBuilder addAutoBucket() {
+			return addAutoBucket(false);
 		}
 
 		public StaticPowerFluidBuilder addBucketSupplier(Supplier<Item> bucketSupplier) {
 			this.bucketSupplier = bucketSupplier;
-			return this;
-		}
-
-		public StaticPowerFluidBuilder setShouldRegisterBucket(boolean shouldRegister) {
-			shouldRegisterBucketItem = shouldRegister;
 			return this;
 		}
 

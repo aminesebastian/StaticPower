@@ -52,6 +52,7 @@ import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
+import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
@@ -140,7 +141,10 @@ public class StaticPowerClientEventHandler {
 				if (supplier.hasModelOverride(null)) {
 					// Get the existing model.
 					ModelResourceLocation modelLocation = new ModelResourceLocation(item.getRegistryName(), "inventory");
-					BakedModel existingModel = event.getModelManager().getModel(modelLocation);
+					BakedModel existingModel = supplier.getBaseModelOverride(event);
+					if (existingModel == null) {
+						existingModel = event.getModelManager().getModel(modelLocation);
+					}
 
 					if (existingModel != null) {
 						BakedModel override = supplier.getModelOverride(null, existingModel, event);
@@ -159,6 +163,8 @@ public class StaticPowerClientEventHandler {
 		event.getItemColors().register(new CapsuleColorProvider(), ModItems.EnergizedFluidCapsule);
 		event.getItemColors().register(new CapsuleColorProvider(), ModItems.LumumFluidCapsule);
 		event.getItemColors().register(new CapsuleColorProvider(), ModItems.CreativeFluidCapsule);
+
+		ModFluids.registerDynamicBucketColorProviders(event);
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {

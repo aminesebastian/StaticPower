@@ -1,17 +1,23 @@
 package theking530.staticpower.init;
 
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Items;
+import net.minecraftforge.client.event.ColorHandlerEvent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPowerRegistry;
+import theking530.staticpower.client.rendering.items.DynamicBucketItemModel.DyanmicBucketColorProvider;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.fluid.StaticPowerFluidBundle.StaticPowerFluidBuilder;
+import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class ModFluids {
+	public static final Set<StaticPowerFluidBundle> FLUID_BUNDLES = new LinkedHashSet<>();
 	public static StaticPowerFluidBundle StaticFluid;
 	public static StaticPowerFluidBundle EnergizedFluid;
 	public static StaticPowerFluidBundle LumumFluid;
@@ -96,7 +102,7 @@ public class ModFluids {
 			builder.viscosity(2000);
 		}).addAutoBucket().build());
 
-		registerFluidBundle(Milk = new StaticPowerFluidBuilder("milk").addBucketSupplier(() -> Items.MILK_BUCKET).setShouldRegisterBucket(false).build());
+		registerFluidBundle(Milk = new StaticPowerFluidBuilder("milk").addBucketSupplier(() -> Items.MILK_BUCKET).build());
 
 		registerFluidBundle(AppleJuice = new StaticPowerFluidBuilder("juice_apple").addAutoBucket().build());
 		registerFluidBundle(BerryJuice = new StaticPowerFluidBuilder("juice_berry").addAutoBucket().build());
@@ -114,7 +120,7 @@ public class ModFluids {
 		ColoredConrete = new HashMap<>();
 		for (MinecraftColor color : MinecraftColor.values()) {
 			StaticPowerFluidBundle bundle;
-			registerFluidBundle(bundle = new StaticPowerFluidBuilder("concrete_" + color.getId()).setTextureName("concrete").addAutoBucket().addAttributes(builder -> {
+			registerFluidBundle(bundle = new StaticPowerFluidBuilder("concrete_" + color.getId()).setTextureName("concrete").addAutoBucket(true).addAttributes(builder -> {
 				builder.viscosity(2500).density(64).sound(SoundEvents.HONEY_BLOCK_STEP).color(color.getColor().fromFloatToEightBit().encodeInInteger());
 			}).build());
 			ColoredConrete.put(color, bundle);
@@ -165,6 +171,18 @@ public class ModFluids {
 		}).build());
 	}
 
+	public static void registerDynamicBucketColorProviders(ColorHandlerEvent.Item event) {
+		// Register item color providers for all autobuckets that requested it.
+		for (StaticPowerFluidBundle fluid : FLUID_BUNDLES) {
+			if (fluid.getSourceBuilder().getShouldRegisterBucket() && fluid.getBucket() instanceof StaticPowerFluidBucket) {
+				StaticPowerFluidBucket customBucket = (StaticPowerFluidBucket) fluid.getBucket();
+				if (customBucket.requiresDynamicModel()) {
+					event.getItemColors().register(new DyanmicBucketColorProvider(), customBucket);
+				}
+			}
+		}
+	}
+
 	public static void registerFluidBundle(StaticPowerFluidBundle bundle) {
 		StaticPowerRegistry.preRegisterBlock(bundle.FluidBlock);
 		StaticPowerRegistry.preRegisterFluid(bundle.Fluid);
@@ -172,5 +190,6 @@ public class ModFluids {
 		if (bundle.getSourceBuilder().getShouldRegisterBucket()) {
 			StaticPowerRegistry.preRegisterItem(bundle.getBucket());
 		}
+		FLUID_BUNDLES.add(bundle);
 	}
 }

@@ -86,7 +86,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation IMPORT = registerSprite("gui/import_icon");
 	public static final ResourceLocation EXPORT = registerSprite("gui/export_icon");
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
-	
+
 	public static final ResourceLocation SIZE_TWO_CRAFTING = registerSprite("gui/2x2");
 	public static final ResourceLocation SIZE_THREE_CRAFTING = registerSprite("gui/3x3");
 
@@ -96,6 +96,8 @@ public class StaticPowerSprites {
 	public static final ResourceLocation ARROW_DOWN = registerSprite("gui/arrow_down");
 
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
+
+	public static final ResourceLocation CONCRETE_BUCKET_TOP_LAYER = registerSprite("items/buckets/bucket_concrete_top_layer");
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);

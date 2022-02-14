@@ -9,8 +9,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 
 public interface ICustomModelSupplier {
-	@OnlyIn(Dist.CLIENT)	
+	@OnlyIn(Dist.CLIENT)
 	public boolean hasModelOverride(BlockState state);
-	@OnlyIn(Dist.CLIENT)	
+
+	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event);
+
+	public default BakedModel getBaseModelOverride(ModelBakeEvent event) {
+		return null;
+	}
 }
