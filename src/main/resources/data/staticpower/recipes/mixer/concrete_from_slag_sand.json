@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:mixer_recipe",
+	"fluid_input_1": {
+		"fluid": "minecraft:water",
+		"volume": 10
+	},
+	"item_input_1": {
+		"tag": "minecraft:sand"
+	},
+	"item_input_2": {
+		"item": "staticpower:slag"
+	},
+	"result": {
+		"fluid": "staticpower:concrete",
+		"volume": 20
+	}
+}

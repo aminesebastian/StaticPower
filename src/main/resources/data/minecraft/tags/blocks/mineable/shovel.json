@@ -1,6 +1,8 @@
 {
-  "replace": false,
-  "values": [
-	"#staticpower:farmland"
-  ]
+	"replace": false,
+	"values": [
+		"staticpower:grass_static",
+		"staticpower:grass_energized",
+		"#staticpower:farmland"
+	]
 }

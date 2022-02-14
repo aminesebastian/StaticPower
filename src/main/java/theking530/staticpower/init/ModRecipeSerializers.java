@@ -9,9 +9,10 @@ import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe
 import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.covers.CoverRecipe;
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.enchanter.EnchanterRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipeSerializer;
-import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipeSerializer;
@@ -40,7 +41,7 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(SolderingRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(FluidInfusionRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(CoverRecipe.SERIALIZER_INSTANCE);
-		StaticPowerRegistry.preRegisterRecipeSerializer(FarmingFertalizerRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(FertalizerRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(CentrifugeRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(FusionFurnaceRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(FluidGeneratorRecipeSerializer.INSTANCE);
@@ -57,5 +58,6 @@ public class ModRecipeSerializers {
 		StaticPowerRegistry.preRegisterRecipeSerializer(TurbineRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(HammerRecipeSerializer.INSTANCE);
 		StaticPowerRegistry.preRegisterRecipeSerializer(CauldronRecipeSerializer.INSTANCE);
+		StaticPowerRegistry.preRegisterRecipeSerializer(EnchanterRecipeSerializer.INSTANCE);
 	}
 }

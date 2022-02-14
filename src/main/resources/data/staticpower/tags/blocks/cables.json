@@ -37,6 +37,24 @@
 		"staticpower:cable_heat_silver",
 		"staticpower:cable_heat_gold",
 		"staticpower:cable_heat_aluminum",
-		"staticpower:cable_scaffold"
+		"staticpower:cable_scaffold",
+		"staticpower:cable_redstone_basic_naked",
+		"staticpower:cable_redstone_basic_black",
+		"staticpower:cable_redstone_basic_dark_green",
+		"staticpower:cable_redstone_basic_dark_blue",
+		"staticpower:cable_redstone_basic_dark_aqua",
+		"staticpower:cable_redstone_basic_red",
+		"staticpower:cable_redstone_basic_dark_purple",
+		"staticpower:cable_redstone_basic_gold",
+		"staticpower:cable_redstone_basic_gray",
+		"staticpower:cable_redstone_basic_dark_gray",
+		"staticpower:cable_redstone_basic_blue",
+		"staticpower:cable_redstone_basic_green",
+		"staticpower:cable_redstone_basic_aqua",
+		"staticpower:cable_redstone_basic_red",
+		"staticpower:cable_redstone_basic_light_purple",
+		"staticpower:cable_redstone_basic_yellow",
+		"staticpower:cable_redstone_basic_white",
+		"staticpower:cable_bundled_redstone"
 	]
 }

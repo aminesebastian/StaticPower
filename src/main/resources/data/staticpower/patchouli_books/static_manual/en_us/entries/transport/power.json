@@ -9,28 +9,28 @@
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/cables/power/power_cable_basic_ingot",
-			"recipe2": "staticpower:crafting/cables/power/power_cable_basic_plate"
+			"recipe": "staticpower:crafting/cables/power/regular/power_cable_basic_ingot",
+			"recipe2": "staticpower:crafting/cables/power/regular/power_cable_basic_plate"
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/cables/power/power_cable_advanced_ingot",
-			"recipe2": "staticpower:crafting/cables/power/power_cable_advanced_plate"
+			"recipe": "staticpower:crafting/cables/power/regular/power_cable_advanced_ingot",
+			"recipe2": "staticpower:crafting/cables/power/regular/power_cable_advanced_plate"
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/cables/power/power_cable_static_ingot",
-			"recipe2": "staticpower:crafting/cables/power/power_cable_static_plate"
+			"recipe": "staticpower:crafting/cables/power/regular/power_cable_static_ingot",
+			"recipe2": "staticpower:crafting/cables/power/regular/power_cable_static_plate"
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/cables/power/power_cable_energized_ingot",
-			"recipe2": "staticpower:crafting/cables/power/power_cable_energized_plate"
+			"recipe": "staticpower:crafting/cables/power/regular/power_cable_energized_ingot",
+			"recipe2": "staticpower:crafting/cables/power/regular/power_cable_energized_plate"
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/cables/power/power_cable_lumum_ingot",
-			"recipe2": "staticpower:crafting/cables/power/power_cable_lumum_plate"
+			"recipe": "staticpower:crafting/cables/power/regular/power_cable_lumum_ingot",
+			"recipe2": "staticpower:crafting/cables/power/regular/power_cable_lumum_plate"
 		}
 	]
 }

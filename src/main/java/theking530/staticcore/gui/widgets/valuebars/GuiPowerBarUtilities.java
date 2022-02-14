@@ -46,7 +46,6 @@ public class GuiPowerBarUtilities {
 		Vector2D origin = GuiDrawUtilities.translatePositionByMatrix(matrixStack, xpos, ypos);
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
 		RenderSystem.setShaderTexture(0, GuiTextures.POWER_BAR_BG);
-
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder vertexbuffer = tessellator.getBuilder();
 		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);

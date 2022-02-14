@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/fluids/molten_bronze" }
+    }
+}

@@ -16,7 +16,6 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModItems;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
@@ -112,6 +111,9 @@ public class TileEntityFermenter extends TileEntityMachine {
 		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
 		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
 			return ProcessingCheckState.outputFluidDoesNotMatch();
 		}
@@ -125,7 +127,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canProcessRecipe(FermenterRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain))) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
@@ -138,8 +140,11 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState processingCompleted(FermenterRecipe recipe) {
+		// Add the residual.
+		if (!recipe.getResidualOutput().isEmpty()) {
+			outputInventory.insertItem(0, recipe.getResidualOutput().calculateOutput(), false);
+		}
 		fluidTankComponent.fill(recipe.getOutputFluidStack(), FluidAction.EXECUTE);
-		outputInventory.insertItem(0, new ItemStack(ModItems.DistilleryGrain), false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		return ProcessingCheckState.ok();
 	}
@@ -150,7 +155,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 			if (recipe != null) {
 				FluidStack fermentingResult = recipe.getOutputFluidStack();
 				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {
-					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain))) {
+					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
 						return i;
 					}
 				}

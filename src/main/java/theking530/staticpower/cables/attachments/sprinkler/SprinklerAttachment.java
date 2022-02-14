@@ -32,7 +32,7 @@ import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
+import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
@@ -129,7 +129,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 	@SuppressWarnings("deprecation")
 	protected boolean handleFertilization(ItemStack attachment, Direction side, FluidStack fluidContained, FluidCableComponent fluidCable) {
 		// Get the fertilization recipe. If one does not exist, return early.
-		FarmingFertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidContained)).orElse(null);
+		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidContained)).orElse(null);
 		if (recipe == null) {
 			return false;
 		}

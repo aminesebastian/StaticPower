@@ -35,6 +35,7 @@
 		"staticpower:power_monitor",
 		"staticpower:experience_hopper",
 		"staticpower:glass_obsidian",
-		"staticpower:chest_vacuum"
+		"staticpower:chest_vacuum",
+		"staticpower:machine_enchanter"
 	]
 }

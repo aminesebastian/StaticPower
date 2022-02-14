@@ -101,13 +101,13 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
-		// Draw the progress bar as a fluid (can't use the widget here because this is a singleton class).
+		// Draw the progress bar as a fluid (can't use the widget here because this is a
+		// singleton class).
 		GuiDrawUtilities.drawSlot(matrixStack, 100, 23, 24, 8, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 24;
 		FluidStack fluid = recipe.getOutput();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 100, 31, 1, progress, 8, false);
-		
-		
+
 		mixerPBar.setCurrentProgress(processingTimer.getValue());
 		mixerPBar.setMaxProgress(processingTimer.getMaxValue());
 		mixerPBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
@@ -163,8 +163,13 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		// Add the input fluids.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(PRIMARY_FLUID_INPUT_SLOT, true, 32, 2, 16, 52, getFluidTankDisplaySize(recipe.getPrimaryFluidInput()), false, null);
-		fluids.init(SECONDARY_FLUID_INPUT_SLOT, true, 80, 2, 16, 52, getFluidTankDisplaySize(recipe.getSecondaryFluidInput()), false, null);
+		if (!recipe.getPrimaryFluidInput().isEmpty()) {
+			fluids.init(PRIMARY_FLUID_INPUT_SLOT, true, 32, 2, 16, 52, getFluidTankDisplaySize(recipe.getPrimaryFluidInput()), false, null);
+		}
+		if (!recipe.getSecondaryFluidInput().isEmpty()) {
+			fluids.init(SECONDARY_FLUID_INPUT_SLOT, true, 80, 2, 16, 52, getFluidTankDisplaySize(recipe.getSecondaryFluidInput()), false, null);
+		}
+
 		fluids.init(OUTPUT_SLOT, false, 128, 2, 16, 52, getFluidTankDisplaySize(recipe.getOutput()), false, null);
 		fluids.set(ingredients);
 

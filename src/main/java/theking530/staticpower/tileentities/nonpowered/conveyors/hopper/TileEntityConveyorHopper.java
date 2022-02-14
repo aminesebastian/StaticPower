@@ -77,7 +77,7 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 				ConveyorBeltEntity conveyorEntity = (ConveyorBeltEntity) entity;
 
 				// Check if this item should be skipped.
-				if (!filterItem(conveyorEntity)) {
+				if (!doesItemPassFilter(conveyorEntity)) {
 					continue;
 				}
 
@@ -95,15 +95,15 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 		}
 	}
 
-	public boolean filterItem(ItemEntity entity) {
+	public boolean doesItemPassFilter(ItemEntity entity) {
 		// If we're not filtered, do nothing. Perform this check here for safety.
 		if (!filtered) {
-			return true;
+			return false;
 		}
 
 		// If the filter inventory is empty, do nothing.
 		if (filterInventory.getStackInSlot(0).isEmpty()) {
-			return true;
+			return false;
 		}
 
 		// If this is an item entity, and there is a filter, perform the filter.
@@ -116,7 +116,7 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 			ItemStack stack = entity.getItem();
 			return filter.evaluateItemStackAgainstFilter(filterStack, stack);
 		}
-		return true;
+		return false;
 	}
 
 	@Override

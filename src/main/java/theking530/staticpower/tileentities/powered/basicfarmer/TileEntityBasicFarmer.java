@@ -42,7 +42,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.data.crafting.wrappers.farmer.FarmingFertalizerRecipe;
+import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
@@ -113,7 +113,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 				this::processingCompleted, true).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage)
 						.setProcessingPowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get()).setCompletedPowerUsage(StaticPowerConfig.SERVER.basicFarmerHarvestPowerUsage.get()));
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
+			return StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
 		}));
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
@@ -216,7 +216,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	public float getGrowthBonus() {
-		FarmingFertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FarmingFertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(this.fluidTankComponent.getFluid())).orElse(null);
+		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(this.fluidTankComponent.getFluid())).orElse(null);
 		if (recipe != null) {
 			return recipe.getFertalizationAmount();
 		}

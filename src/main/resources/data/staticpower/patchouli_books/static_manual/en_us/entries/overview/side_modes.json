@@ -33,7 +33,7 @@
 		{
 			"type": "text",
 			"title": "Items",
-			"text": "The side configurations for items are more complex but also, more powerful! A machine can have up to 6 options: $(9)$(bold)input, $(5)$(bold)secondary input, $(6)$(bold)output, $(2)$(bold)primary output, $(#c4be00)$(bold)secondary output, $(reset)and $(4)$(bold)disabled. $(reset)The role these configurions play can differ from machine to machine, although the majority only offer the primary 3 $(bold)$(9)op$(6)ti$(4)ons."
+			"text": "The side configurations for items are more complex but also, more powerful! A machine can have up to 8 options: $(9)$(bold)input, $(d)$(bold)secondary input, $(5)$(bold)tertiary input, $(6)$(bold)output, $(2)$(bold)secondary output, $(#c4be00)$(bold)tertiary output, $(b)$(bold)quaternary output, $(reset)and $(4)$(bold)disabled. $(reset)The role these configurions play can differ from machine to machine, although the majority only offer the primary 3 $(bold)$(9)op$(6)ti$(4)ons."
 		},
 		{
 			"type": "text",

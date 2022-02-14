@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/fluids/juice_pumpkin" }
+    }
+}

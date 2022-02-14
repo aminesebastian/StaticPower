@@ -64,7 +64,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		return getBarWidth(stack) != 0;
+		return EnergyHandlerItemStackUtilities.getStoredPower(stack) > 0;
 	}
 
 	@Override
@@ -81,7 +81,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		}
 
 		// Get the power ratio.
-		return (int) ((float) handler.getStoredPower() / (float) handler.getCapacity() * 13);
+		return (int) (handler.getStoredPower() / handler.getCapacity()) * 13;
 	}
 
 	@Override

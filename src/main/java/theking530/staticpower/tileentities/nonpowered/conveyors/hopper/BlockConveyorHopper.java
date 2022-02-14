@@ -33,8 +33,7 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 	protected final boolean filtered;
 
 	static {
-		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(Block.box(0, 0, 0, 4, 8, 16), Block.box(12, 0, 0, 16, 8, 16),
-				BooleanOp.OR);
+		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(Block.box(0, 0, 0, 4, 8, 16), Block.box(12, 0, 0, 16, 8, 16), BooleanOp.OR);
 		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(PASSED_FILTER_SHAPE, Block.box(0, 0, 0, 16, 8, 4), BooleanOp.OR);
 		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(PASSED_FILTER_SHAPE, Block.box(0, 0, 12, 16, 8, 16), BooleanOp.OR);
 	}
@@ -45,8 +44,7 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
-			InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return filtered ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 	}
 
@@ -71,18 +69,19 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 		if (context instanceof EntityCollisionContext) {
 			// Get the item over the hole.
 			EntityCollisionContext eCtx = (EntityCollisionContext) context;
-			ConveyorBeltEntity entity = (ConveyorBeltEntity) eCtx.getEntity();
-			if (filtered && entity != null) {
-				// If the context is null (then an item entity), and the hopper tile entity is
-				// still there.
-				if (worldIn.getBlockEntity(pos) != null) {
-					// Get the hopper and the item entity.
-					TileEntityConveyorHopper conveyor = (TileEntityConveyorHopper) worldIn.getBlockEntity(pos);
+			if (eCtx.getEntity() instanceof ConveyorBeltEntity) {
+				ConveyorBeltEntity entity = (ConveyorBeltEntity) eCtx.getEntity();
+				if (filtered && entity != null) {
+					// If the context is null (then an item entity), and the hopper tile entity is
+					// still there.
+					if (worldIn.getBlockEntity(pos) != null) {
+						// Get the hopper and the item entity.
+						TileEntityConveyorHopper conveyor = (TileEntityConveyorHopper) worldIn.getBlockEntity(pos);
 
-					// For the item, check if the item passes the filter, if true, use the regular
-					// shape, if not, cover the hole.
-					return conveyor.filterItem(entity) ? super.getShape(state, worldIn, pos, context)
-							: NOT_PASSED_FILTER_SHAPE;
+						// For the item, check if the item passes the filter, if true, use the regular
+						// shape, if not, cover the hole.
+						return conveyor.doesItemPassFilter(entity) ? super.getShape(state, worldIn, pos, context) : NOT_PASSED_FILTER_SHAPE;
+					}
 				}
 			}
 		}
@@ -92,23 +91,18 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return filtered ? TileEntityConveyorHopper.FILTERED_TYPE.create(pos, state)
-				: TileEntityConveyorHopper.TYPE.create(pos, state);
+		return filtered ? TileEntityConveyorHopper.FILTERED_TYPE.create(pos, state) : TileEntityConveyorHopper.TYPE.create(pos, state);
 	}
 
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
-			boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.experience_hopper_tooltip")
-					.withStyle(ChatFormatting.GREEN));
+			tooltip.add(new TranslatableComponent("gui.staticpower.experience_hopper_tooltip").withStyle(ChatFormatting.GREEN));
 		}
 	}
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("• ")
-				.append(new TranslatableComponent("gui.staticpower.experience_hopper_description"))
-				.withStyle(ChatFormatting.BLUE));
+		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.experience_hopper_description")).withStyle(ChatFormatting.BLUE));
 	}
 }

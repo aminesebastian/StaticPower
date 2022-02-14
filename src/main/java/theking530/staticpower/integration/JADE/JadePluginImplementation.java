@@ -52,7 +52,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 		registrar.registerBlockDataProvider(new JadeDataProviders(), BlockEntity.class);
 		registrar.registerComponentProvider(new StaticVoltDecorator(), TooltipPosition.BODY, Block.class);
 		registrar.registerComponentProvider(new HeatDecorator(), TooltipPosition.BODY, Block.class);
-		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.TAIL, Block.class);
+		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.BODY, Block.class);
 		// registrar.registerComponentProvider(new FluidDecorator(),
 		// TooltipPosition.BODY, Block.class);
 	}

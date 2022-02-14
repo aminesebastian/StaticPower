@@ -56,7 +56,11 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {
-		return getBarWidth(stack) != 0;
+		IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack).orElse(null);
+		if (handler != null) {
+			return !handler.getFluidInTank(0).isEmpty();
+		}
+		return false;
 	}
 
 	@Override

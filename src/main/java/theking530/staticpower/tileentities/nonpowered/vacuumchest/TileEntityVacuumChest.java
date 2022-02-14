@@ -93,7 +93,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 	@Override
 	public void process() {
 		// Handle the upgrade tick on the server.
-		if (!level.isClientSide) {
+		if (!level.isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
 			upgradeTick();
 
 			// Vacuum every other tick.

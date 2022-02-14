@@ -1,8 +1,8 @@
 {
 	"type": "staticpower:farming_fertalizer_recipe",
 	"fertilizer": {
-		"fluid": "staticpower:liquid_fertilizer",
+		"fluid": "staticpower:fertilizer",
 		"volume": 1
 	},
-	"fertilization_chance": 0.5
+	"fertilization_chance": 0.35
 }

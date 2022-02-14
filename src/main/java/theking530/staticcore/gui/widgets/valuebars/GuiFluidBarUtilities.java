@@ -127,9 +127,9 @@ public class GuiFluidBarUtilities {
 			{
 				float filledRatio = ((float) amount / capacity);
 				float depthEffect = (1.0f * filledRatio) + (depthDistance * (1.0f - filledRatio));
-				float depthHeightStart = (filledRatio * height) + 0.25f;
+				float depthHeightStart = (filledRatio * height);
 				if (isGas) {
-					depthHeightStart = height - depthHeightStart - 0.25f;
+					depthHeightStart = height - depthHeightStart;
 				}
 				depthEffect = Math.min(height - depthHeightStart, depthEffect);
 

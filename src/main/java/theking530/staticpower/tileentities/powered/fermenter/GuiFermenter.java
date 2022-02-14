@@ -7,6 +7,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
@@ -39,6 +40,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 

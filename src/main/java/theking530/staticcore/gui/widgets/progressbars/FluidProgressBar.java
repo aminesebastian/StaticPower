@@ -44,7 +44,8 @@ public class FluidProgressBar extends AbstractProgressBar {
 			if (icon != null) {
 				// Get the fluid color.
 				Color fluidColor = GuiDrawUtilities.getFluidColor(displayFluidStack);
-
+				fluidColor.setW(1.0f);
+				
 				// Calculate the UV difference.
 				float uvDiff = icon.getU1() - icon.getU0();
 

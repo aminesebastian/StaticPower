@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
@@ -29,22 +30,30 @@ public class FermenterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 		FluidStack fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(outputElement);
 
+		// Get the residual output.
+		ProbabilityItemStackOutput residualOutput = ProbabilityItemStackOutput.EMPTY;
+		if(json.has("residual")) {
+			JsonObject residualElement = GsonHelper.getAsJsonObject(json, "residual");
+			residualOutput = ProbabilityItemStackOutput.parseFromJSON(residualElement);
+		}
+
 		// Create the recipe.
-		return new FermenterRecipe(recipeId, input, fluidOutput);
+		return new FermenterRecipe(recipeId, input, residualOutput, fluidOutput);
 	}
 
 	@Override
 	public FermenterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		FluidStack output = buffer.readFluidStack();
-
+		ProbabilityItemStackOutput residualOutput = ProbabilityItemStackOutput.readFromBuffer(buffer);
 		// Create the recipe.
-		return new FermenterRecipe(recipeId, input, output);
+		return new FermenterRecipe(recipeId, input, residualOutput, output);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, FermenterRecipe recipe) {
 		recipe.getInputIngredient().write(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluidStack());
+		recipe.getResidualOutput().writeToBuffer(buffer);
 	}
 }
