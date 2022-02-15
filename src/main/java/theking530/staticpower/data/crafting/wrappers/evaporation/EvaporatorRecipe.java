@@ -5,6 +5,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class EvaporatorRecipe extends AbstractMachineRecipe {
@@ -14,8 +15,8 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 	private final FluidStack outputFluid;
 	private final float requiredHeat;
 
-	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, int processingTime) {
-		super(name, processingTime, 0);
+	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
 		this.requiredHeat = requiredHeat;

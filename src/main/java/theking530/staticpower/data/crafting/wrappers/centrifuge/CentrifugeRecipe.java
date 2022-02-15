@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -21,9 +22,9 @@ public class CentrifugeRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput output3;
 	private final int minimumSpeed;
 
-	public CentrifugeRecipe(ResourceLocation name, int processingTime, long powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput output1, ProbabilityItemStackOutput output2,
-			ProbabilityItemStackOutput output3, int minimumSpeed) {
-		super(name, processingTime, powerCost);
+	public CentrifugeRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output1, ProbabilityItemStackOutput output2,
+			ProbabilityItemStackOutput output3, int minimumSpeed, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.input = input;
 		this.output1 = output1;
 		this.output2 = output2;

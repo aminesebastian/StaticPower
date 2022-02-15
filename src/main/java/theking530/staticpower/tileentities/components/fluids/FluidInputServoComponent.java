@@ -32,7 +32,12 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public String getComponentName() {
-		return "Fluid Input Servo";
+		return super.getComponentName();
+	}
+
+	public FluidInputServoComponent setTank(IFluidHandler tank) {
+		this.owningTank = tank;
+		return this;
 	}
 
 	@Override
@@ -41,7 +46,9 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 		if (!isEnabled()) {
 			return;
 		}
-		
+		if (owningTank == null) {
+			return;
+		}
 		if (!getTileEntity().getLevel().isClientSide) {
 			for (Direction dir : Direction.values()) {
 				// If we can't input from the provided side, skip it.

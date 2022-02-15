@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -18,8 +19,8 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 	private final List<StaticPowerIngredient> inputs;
 	private final ProbabilityItemStackOutput output;
 
-	public FusionFurnaceRecipe(ResourceLocation name, int processingTime, long powerCost, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output) {
-		super(name, processingTime, powerCost);
+	public FusionFurnaceRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputs = inputs;
 		this.output = output;
 	}

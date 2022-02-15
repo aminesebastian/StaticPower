@@ -20,6 +20,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 	protected float currentFrameDrained;
 	protected float averageFilled;
 	protected float averageDrained;
+	protected boolean voidExcess;
 
 	public StaticPowerFluidTank(int capacity) {
 		this(capacity, fluid -> true);
@@ -30,6 +31,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 		ioCaptureFrames = new LinkedList<Float>();
 		filledCaptureFrames = new LinkedList<Float>();
 		drainedCaptureFrames = new LinkedList<Float>();
+		voidExcess = false;
 	}
 
 	@Override
@@ -38,10 +40,11 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 			return 0;
 		}
 		if (action.simulate()) {
-			if (fluid.isEmpty()) {
+			if (voidExcess) {
+				return resource.getAmount();
+			} else if (fluid.isEmpty()) {
 				return Math.min(capacity, resource.getAmount());
-			}
-			if (!fluid.isFluidEqual(resource)) {
+			} else if (!fluid.isFluidEqual(resource)) {
 				return 0;
 			}
 			return Math.min(capacity - fluid.getAmount(), resource.getAmount());
@@ -50,9 +53,8 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 			fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
 			onContentsChanged();
 			currentFrameFilled += fluid.getAmount();
-			return fluid.getAmount();
-		}
-		if (!fluid.isFluidEqual(resource)) {
+			return voidExcess ? resource.getAmount() : fluid.getAmount();
+		} else if (!fluid.isFluidEqual(resource)) {
 			return 0;
 		}
 		int filled = capacity - fluid.getAmount();
@@ -67,7 +69,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 			currentFrameFilled += filled;
 			onContentsChanged();
 		}
-		return filled;
+		return voidExcess ? resource.getAmount() : filled;
 	}
 
 	@Override
@@ -175,6 +177,10 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 	 */
 	public float getDrainedPerTick() {
 		return averageDrained;
+	}
+
+	public void setVoidExcess(boolean voidExcess) {
+		this.voidExcess = voidExcess;
 	}
 
 	@Override

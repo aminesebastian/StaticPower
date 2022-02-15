@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:centrifuge_recipe",
 	"input": {
-		"item": "minecraft:lime_concrete_powder"
+		"item": "minecraft:lime_concrete_powder",
+		"count": 8
 	},
 	"minimum_speed": 220,
 	"outputs": [

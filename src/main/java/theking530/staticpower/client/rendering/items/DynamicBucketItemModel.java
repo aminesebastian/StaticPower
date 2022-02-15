@@ -10,16 +10,13 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Transformation;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -30,29 +27,30 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.ItemTextureQuadConverter;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.items.StaticPowerFluidBucket;
-import theking530.staticpower.utilities.ModelUtilities;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
 public class DynamicBucketItemModel implements BakedModel {
 	private final Int2ObjectMap<DynamicBucketModel> cache = new Int2ObjectArrayMap<>();
 	private final BakedModel baseModel;
+	private final ResourceLocation fluidMask;
 
-	public DynamicBucketItemModel(BakedModel baseModel) {
+	public DynamicBucketItemModel(BakedModel baseModel, ResourceLocation fluidMask) {
 		this.baseModel = baseModel;
+		this.fluidMask = fluidMask;
 	}
 
 	@Override
@@ -77,10 +75,9 @@ public class DynamicBucketItemModel implements BakedModel {
 				// Check to see if we need to cache this model, if we do, do it.
 				DynamicBucketModel model = DynamicBucketItemModel.this.cache.get(hash);
 				if (model == null) {
-					model = new DynamicBucketModel(baseModel);
+					model = new DynamicBucketModel(baseModel, handler.getFluidInTank(0));
 					DynamicBucketItemModel.this.cache.put(hash, model);
 				}
-				model = new DynamicBucketModel(baseModel);
 				return model;
 			}
 		};
@@ -98,7 +95,7 @@ public class DynamicBucketItemModel implements BakedModel {
 
 	@Override
 	public boolean doesHandlePerspectives() {
-		return false;
+		return baseModel.doesHandlePerspectives();
 	}
 
 	@Override
@@ -133,11 +130,13 @@ public class DynamicBucketItemModel implements BakedModel {
 
 	private class DynamicBucketModel extends AbstractBakedModel {
 		private final BakedModel baseModel;
+		private final FluidStack fluid;
 		private List<BakedQuad> quads = null;
 
-		protected DynamicBucketModel(BakedModel baseModel) {
+		protected DynamicBucketModel(BakedModel baseModel, FluidStack fluid) {
 			super(baseModel);
 			this.baseModel = baseModel;
+			this.fluid = fluid;
 		}
 
 		@Override
@@ -151,34 +150,42 @@ public class DynamicBucketItemModel implements BakedModel {
 				return Collections.emptyList();
 			}
 			if (quads == null) {
-				DynamicBucketModel model = new DynamicBucketModel();
-				
 				quads = new ArrayList<BakedQuad>();
 				quads.addAll(baseModel.getQuads(state, side, rand, data));
 
 				// Draw the fluid.
-				TextureAtlasSprite sideSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.CONCRETE_BUCKET_TOP_LAYER);
-				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-				BlockElementFace blockPartFace = new BlockElementFace(null, 2, sideSprite.getName().toString(), blockFaceUV);
-				BakedQuad newQuad = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH, ModelUtilities.IDENTITY, null,
-						false, new ResourceLocation("dummy_name"));
-				quads.add(newQuad);
-				newQuad = FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.49f), new Vector3f(16.0f, 16.0f, 8.51f), blockPartFace, sideSprite, Direction.NORTH, ModelUtilities.IDENTITY, null, false,
-						new ResourceLocation("dummy_name"));
-				quads.add(newQuad);
+				TextureAtlasSprite sideSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(fluidMask);
 
+				Transformation transform = Transformation.identity();
+				quads.addAll(ItemTextureQuadConverter.convertTexture(transform, sideSprite, GuiDrawUtilities.getStillFluidSprite(fluid), 7.499f / 16f, Direction.NORTH,
+						fluid.getFluid().getAttributes().getColor(), 0, fluid.getFluid().getAttributes().getLuminosity()));
+				quads.addAll(ItemTextureQuadConverter.convertTexture(transform, sideSprite, GuiDrawUtilities.getStillFluidSprite(fluid), 8.501f / 16f, Direction.SOUTH,
+						fluid.getFluid().getAttributes().getColor(), 0, fluid.getFluid().getAttributes().getLuminosity()));
 			}
 			return quads;
 		}
 
 		@Override
 		public boolean doesHandlePerspectives() {
-			return true;
+			return baseModel.doesHandlePerspectives();
+		}
+
+		@Override
+		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack poseStack) {
+			// We call the parent first to have it push its transform onto the stack. Hacky
+			// af, but it works!
+			baseModel.handlePerspective(cameraTransformType, poseStack);
+			return net.minecraftforge.client.ForgeHooksClient.handlePerspective(this, cameraTransformType, poseStack);
+		}
+
+		@Override
+		public @Nonnull IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+			return baseModel.getModelData(world, pos, state, tileData);
 		}
 
 		@Override
 		public boolean isGui3d() {
-			return false;
+			return baseModel.isGui3d();
 		}
 
 		@Override
@@ -188,7 +195,7 @@ public class DynamicBucketItemModel implements BakedModel {
 
 		@Override
 		public boolean isCustomRenderer() {
-			return false;
+			return baseModel.isCustomRenderer();
 		}
 
 		@Override
@@ -206,23 +213,5 @@ public class DynamicBucketItemModel implements BakedModel {
 			return null;
 		}
 
-	}
-
-	public static class DyanmicBucketColorProvider implements ItemColor {
-		@Override
-		public int getColor(ItemStack stack, int tintIndex) {
-			if (tintIndex != 2) {
-				return -1;
-			}
-
-			// Get the fluid handler.
-			IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack).orElse(null);
-			if (handler == null || handler.getFluidInTank(0).isEmpty()) {
-				return -1;
-			} else {
-				FluidAttributes attributes = handler.getFluidInTank(0).getFluid().getAttributes();
-				return attributes.getColor(handler.getFluidInTank(0));
-			}
-		}
 	}
 }

@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 
@@ -30,39 +31,34 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Start with the default processing values.
-		int processingTime = TileEntityEvaporator.DEFAULT_PROCESSING_TIME;
 		float heatCost = TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
 
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = json.getAsJsonObject("processing");
-			processingTime = processingElement.get("time").getAsInt();
-		}
-
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(TileEntityEvaporator.DEFAULT_PROCESSING_TIME, 0, json);
 		// Capture the heat cost.
 		if (GsonHelper.isValidNode(json, "heat")) {
 			heatCost = json.get("heat").getAsFloat();
 		}
 
 		// Create the recipe.
-		return new EvaporatorRecipe(recipeId, inputFluid, outputFluid, heatCost, processingTime);
+		return new EvaporatorRecipe(recipeId, inputFluid, outputFluid, heatCost, processing);
 	}
 
 	@Override
 	public EvaporatorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		int time = buffer.readInt();
 		float heat = buffer.readFloat();
 		FluidStack input = buffer.readFluidStack();
 		FluidStack output = buffer.readFluidStack();
 		// Create the recipe.
-		return new EvaporatorRecipe(recipeId, input, output, heat, time);
+		return new EvaporatorRecipe(recipeId, input, output, heat, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, EvaporatorRecipe recipe) {
-		buffer.writeInt(recipe.getProcessingTime());
+		;
 		buffer.writeFloat(recipe.getRequiredHeat());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

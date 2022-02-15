@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -20,8 +21,8 @@ public class GrinderRecipe extends AbstractMachineRecipe {
 	private final ItemStack[] outputItems;
 	private final StaticPowerIngredient inputItem;
 
-	public GrinderRecipe(ResourceLocation name, int processingTime, long powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput... outputs) {
-		super(name, processingTime, powerCost);
+	public GrinderRecipe(ResourceLocation name, StaticPowerIngredient input, MachineRecipeProcessingSection processing, ProbabilityItemStackOutput... outputs) {
+		super(name, processing);
 		this.inputItem = input;
 		this.outputs = outputs;
 		// Cache the output items.

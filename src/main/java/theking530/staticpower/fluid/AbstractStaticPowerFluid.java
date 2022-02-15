@@ -114,7 +114,6 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 		return fluidIn == getFlowing() || fluidIn == getSource();
 	}
 
-	@SuppressWarnings("deprecation")
 	@Override
 	public void tick(Level worldIn, BlockPos pos, FluidState state) {
 		// Check if we're gaseous.

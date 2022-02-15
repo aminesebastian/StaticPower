@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
@@ -52,7 +53,6 @@ import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
-import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
@@ -163,12 +163,10 @@ public class StaticPowerClientEventHandler {
 		event.getItemColors().register(new CapsuleColorProvider(), ModItems.EnergizedFluidCapsule);
 		event.getItemColors().register(new CapsuleColorProvider(), ModItems.LumumFluidCapsule);
 		event.getItemColors().register(new CapsuleColorProvider(), ModItems.CreativeFluidCapsule);
-
-		ModFluids.registerDynamicBucketColorProviders(event);
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {
-		if (event.getAtlas().location() == TextureAtlas.LOCATION_BLOCKS) {
+		if (event.getAtlas().location() == InventoryMenu.BLOCK_ATLAS) {
 			int spriteCount = 0;
 			for (ResourceLocation sprite : StaticPowerSprites.SPRITES) {
 				try {

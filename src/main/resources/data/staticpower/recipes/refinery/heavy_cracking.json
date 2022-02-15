@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:refinery_recipe",
+	"fluid_input_1": {
+		"fluid": "staticpower:oil_heavy",
+		"volume": 4
+	},
+	"fluid_input_2": {
+		"fluid": "minecraft:water",
+		"volume": 3
+	},
+	"output_1": {
+		"fluid": "staticpower:oil_light",
+		"volume": 3
+	}
+}

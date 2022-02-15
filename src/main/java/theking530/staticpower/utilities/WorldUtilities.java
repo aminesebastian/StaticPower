@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
@@ -174,7 +175,7 @@ public class WorldUtilities {
 		// Execute the fill. Remove the fluid from the world.
 		handler.fill(fillableStack, FluidAction.EXECUTE);
 		worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
-
+		worldIn.gameEvent(playerIn, GameEvent.FLUID_PICKUP, pos);
 		// If the player is not null, play the pickup sound.
 		if (playerIn != null) {
 			SoundEvent soundevent = fillableStack.getFluid().getAttributes().getFillSound(fillableStack);
@@ -249,6 +250,9 @@ public class WorldUtilities {
 					}
 					player.level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
 				}
+	
+
+				world.gameEvent(player, GameEvent.FLUID_PLACE, pos);
 				return true;
 			}
 		}

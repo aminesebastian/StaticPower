@@ -48,7 +48,9 @@ public class GuiUpgradeTab extends BaseGuiTab {
 		}
 
 		// Change the shape for a 4 slot upgrade inventory.
-		if (upgradesInventory.getSlots() == 4) {
+		if (upgradesInventory.getSlots() == 1) {
+			this.tabHeight = 18;
+		} else if (upgradesInventory.getSlots() == 4) {
 			this.tabWidth = 18;
 			this.tabHeight = 38;
 		}
@@ -89,7 +91,10 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	}
 
 	protected void positionSlots() {
-		if (slots.size() == 3) {
+		if (slots.size() == 1) {
+			slots.get(0).x = this.xPosition + tabWidth + 4;
+			slots.get(0).y = this.yPosition + 22;
+		} else if (slots.size() == 3) {
 			for (int i = 0; i < slots.size(); i++) {
 				slots.get(i).x = this.xPosition + tabWidth + 4;
 				slots.get(i).y = this.yPosition + 24 + (i * 18);

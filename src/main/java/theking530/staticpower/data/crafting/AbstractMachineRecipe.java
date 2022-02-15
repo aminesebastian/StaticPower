@@ -3,13 +3,11 @@ package theking530.staticpower.data.crafting;
 import net.minecraft.resources.ResourceLocation;
 
 public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
-	protected final int processingTime;
-	protected final long powerCost;
+	protected final MachineRecipeProcessingSection processingSection;
 
-	public AbstractMachineRecipe(ResourceLocation name, int processingTime, long powerCost) {
+	public AbstractMachineRecipe(ResourceLocation name, MachineRecipeProcessingSection processingSection) {
 		super(name);
-		this.processingTime = processingTime;
-		this.powerCost = powerCost;
+		this.processingSection = processingSection;
 	}
 
 	/**
@@ -18,7 +16,7 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	 * @return
 	 */
 	public int getProcessingTime() {
-		return processingTime;
+		return processingSection.getProcessingTime();
 	}
 
 	/**
@@ -27,6 +25,10 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	 * @return
 	 */
 	public long getPowerCost() {
-		return powerCost;
+		return processingSection.getPowerCost();
+	}
+
+	public MachineRecipeProcessingSection getProcessingSection() {
+		return processingSection;
 	}
 }

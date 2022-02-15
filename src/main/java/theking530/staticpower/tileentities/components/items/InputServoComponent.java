@@ -97,6 +97,10 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 			return;
 		}
 
+		if (inventory == null) {
+			return;
+		}
+
 		// If we have an empty inventory, do nothing.
 		if (inventory.getSlots() == 0) {
 			return;
@@ -197,6 +201,11 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 				}
 			}
 		}
+	}
+
+	public InputServoComponent setInventory(InventoryComponent inventory) {
+		this.inventory = inventory;
+		return this;
 	}
 
 	public boolean canInputFromSide(BlockSide blockSide) {

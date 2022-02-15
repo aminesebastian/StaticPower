@@ -4,12 +4,12 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
@@ -43,33 +43,18 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?
 			fluidInput2 = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("fluid_input_2"));
 		}
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.mixerPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.mixerProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			if (processingElement.has("power")) {
-				powerCost = processingElement.get("power").getAsInt();
-			}
-			if (processingElement.has("time")) {
-				processingTime = processingElement.get("time").getAsInt();
-			}
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.mixerProcessingTime.get(), StaticPowerConfig.SERVER.mixerPowerUsage.get(), json);
 
 		// Get the fluid result.
 		FluidStack output = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("result"));
 
 		// Create the recipe.
-		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, processingTime, powerCost);
+		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, processing);
 	}
 
 	@Override
 	public MixerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
-
 		StaticPowerIngredient input1 = StaticPowerIngredient.read(buffer);
 		StaticPowerIngredient input2 = StaticPowerIngredient.read(buffer);
 		FluidStack fluidInput1 = buffer.readFluidStack();
@@ -77,17 +62,16 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?
 		FluidStack output = buffer.readFluidStack();
 
 		// Create the recipe.
-		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, time, power);
+		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, MixerRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getPrimaryItemInput().write(buffer);
 		recipe.getSecondaryItemInput().write(buffer);
 		buffer.writeFluidStack(recipe.getPrimaryFluidInput());
 		buffer.writeFluidStack(recipe.getSecondaryFluidInput());
 		buffer.writeFluidStack(recipe.getOutput());
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

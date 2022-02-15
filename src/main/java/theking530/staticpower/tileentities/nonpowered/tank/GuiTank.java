@@ -3,6 +3,7 @@ package theking530.staticpower.tileentities.nonpowered.tank;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
@@ -24,5 +25,6 @@ public class GuiTank extends StaticPowerTileEntityGui<ContainerTank, TileEntityT
 
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().voidUpgradeInventory).setTabSide(TabSide.LEFT));
 	}
 }

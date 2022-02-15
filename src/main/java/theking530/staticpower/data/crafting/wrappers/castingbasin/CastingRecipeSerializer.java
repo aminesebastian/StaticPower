@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
@@ -34,39 +35,28 @@ public class CastingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer
 		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
-		// Start with the default processing values.
-		long powerCost = StaticPowerConfig.SERVER.casterPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.casterProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.casterProcessingTime.get(), StaticPowerConfig.SERVER.casterPowerUsage.get(), json);
 
 		// Create the recipe.
-		return new CastingRecipe(recipeId, processingTime, powerCost, output, fluidInput, mold);
+		return new CastingRecipe(recipeId, output, fluidInput, mold, processing);
 	}
 
 	@Override
 	public CastingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		FluidStack fluidInput = buffer.readFluidStack();
 		Ingredient mold = Ingredient.fromNetwork(buffer);
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new CastingRecipe(recipeId, time, power, output, fluidInput, mold);
+		return new CastingRecipe(recipeId, output, fluidInput, mold, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CastingRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		recipe.getRequiredMold().toNetwork(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

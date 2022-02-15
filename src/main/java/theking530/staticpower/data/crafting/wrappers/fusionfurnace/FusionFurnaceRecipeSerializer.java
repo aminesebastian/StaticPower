@@ -9,11 +9,11 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -36,29 +36,19 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<RecipeSeri
 			inputs.add(input);
 		}
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.fusionFurnacePowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(),
+				StaticPowerConfig.SERVER.fusionFurnacePowerUsage.get(), json);
 
 		// Get the output.
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(json.getAsJsonObject("output"));
 
 		// Craete the recipe.
-		return new FusionFurnaceRecipe(recipeId, processingTime, powerCost, inputs, output);
+		return new FusionFurnaceRecipe(recipeId, inputs, output, processing);
 	}
 
 	@Override
 	public FusionFurnaceRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
-
 		int inputCount = buffer.readByte();
 		List<StaticPowerIngredient> inputs = new ArrayList<StaticPowerIngredient>();
 		for (int i = 0; i < inputCount; i++) {
@@ -68,13 +58,11 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<RecipeSeri
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Craete the recipe.
-		return new FusionFurnaceRecipe(recipeId, time, power, inputs, output);
+		return new FusionFurnaceRecipe(recipeId, inputs, output, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, FusionFurnaceRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeByte(recipe.getInputs().size());
 
 		for (StaticPowerIngredient ing : recipe.getInputs()) {
@@ -82,5 +70,6 @@ public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<RecipeSeri
 		}
 
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

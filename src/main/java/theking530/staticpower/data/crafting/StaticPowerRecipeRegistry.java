@@ -282,8 +282,8 @@ public class StaticPowerRecipeRegistry {
 				if (twoRecipe.isPresent()) {
 					CraftingRecipe recipe = twoRecipe.get();
 					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
-					PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 2,
-							new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getResultItem()));
+					PackagerRecipe packRecipe = new PackagerRecipe(id, 2, new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getResultItem()),
+							MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get()));
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
@@ -299,8 +299,8 @@ public class StaticPowerRecipeRegistry {
 				if (threeRecipe.isPresent()) {
 					CraftingRecipe recipe = threeRecipe.get();
 					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
-					PackagerRecipe packRecipe = new PackagerRecipe(id, StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 3,
-							new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getResultItem()));
+					PackagerRecipe packRecipe = new PackagerRecipe(id, 3, new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getResultItem()),
+							MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get()));
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {

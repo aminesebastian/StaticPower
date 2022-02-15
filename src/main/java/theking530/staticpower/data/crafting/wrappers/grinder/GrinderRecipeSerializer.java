@@ -11,6 +11,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -27,16 +28,9 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
-		// Start with the default processing values.
-		long powerCost = StaticPowerConfig.SERVER.poweredGrinderPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(),
+				StaticPowerConfig.SERVER.poweredGrinderPowerUsage.get(), json);
 
 		// Check the outputs. If it is an array, get all the outputs and make a new
 		// recipe. Otherwise, just get the single output and make a new recipe.
@@ -47,35 +41,32 @@ public class GrinderRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer
 			for (int i = 0; i < outputArray.size(); i++) {
 				outputs[i] = ProbabilityItemStackOutput.parseFromJSON(outputArray.get(i).getAsJsonObject());
 			}
-			return new GrinderRecipe(recipeId, processingTime, powerCost, input, outputs);
+			return new GrinderRecipe(recipeId, input, processing, outputs);
 		} else {
 			ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement.getAsJsonObject());
-			return new GrinderRecipe(recipeId, processingTime, powerCost, input, output);
+			return new GrinderRecipe(recipeId, input, processing, output);
 		}
 
 	}
 
 	@Override
 	public GrinderRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		int outputCount = buffer.readByte();
 		ProbabilityItemStackOutput[] outputs = new ProbabilityItemStackOutput[outputCount];
 		for (int i = 0; i < outputCount; i++) {
 			outputs[i] = ProbabilityItemStackOutput.readFromBuffer(buffer);
 		}
-		return new GrinderRecipe(recipeId, time, power, input, outputs);
+		return new GrinderRecipe(recipeId, input, MachineRecipeProcessingSection.fromBuffer(buffer), outputs);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, GrinderRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInputIngredient().write(buffer);
 		buffer.writeByte(recipe.getOutputItems().length);
 		for (int i = 0; i < recipe.getOutputItems().length; i++) {
 			recipe.getOutputItems()[i].writeToBuffer(buffer);
 		}
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

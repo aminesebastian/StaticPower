@@ -6,6 +6,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -17,8 +18,8 @@ public class FormerRecipe extends AbstractMachineRecipe {
 	private Ingredient requiredMold;
 	private ProbabilityItemStackOutput outputItemStack;
 
-	public FormerRecipe(ResourceLocation name, int processingTime, long powerCost, ProbabilityItemStackOutput output, StaticPowerIngredient input, Ingredient mold) {
-		super(name, processingTime, powerCost);
+	public FormerRecipe(ResourceLocation name, ProbabilityItemStackOutput output, StaticPowerIngredient input, Ingredient mold, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		inputIngredient = input;
 		requiredMold = mold;
 		outputItemStack = output;

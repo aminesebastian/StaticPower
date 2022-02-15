@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticpower.fluid.StaticPowerFluidTank;
+import theking530.staticpower.items.upgrades.VoidUpgrade;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
@@ -163,6 +164,9 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 		// Set the capacity.
 		getStorage().setCapacity((int) (defaultCapacity * upgradeMultiplier));
+
+		// Handle the void upgrade.
+		fluidStorage.setVoidExcess(upgradeInventory.hasUpgradeOfClass(VoidUpgrade.class));
 	}
 
 	public float getVisualFillLevel() {

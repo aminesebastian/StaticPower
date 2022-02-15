@@ -11,6 +11,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
@@ -57,32 +58,23 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 			modifiers = new RecipeModifierWrapper[0];
 		}
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.autoSmithPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.autoSmithProcessingTime.get();
-		int repairAmount = 0;
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.autoSmithProcessingTime.get(), StaticPowerConfig.SERVER.autoSmithPowerUsage.get(),
+				json);
 
 		// Capture the repair amount if provided.
+		int repairAmount = 0;
 		if (GsonHelper.isValidNode(json, "repair_amount")) {
 			repairAmount = GsonHelper.getAsInt(json, "repair_amount");
 		}
 
 		// Create the recipe.
-		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, modifiedFlid, modifiers, repairAmount, powerCost, processingTime);
+		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, modifiedFlid, modifiers, repairAmount, processing);
 	}
 
 	@Override
 	public AutoSmithRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		// Read the processing times.
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		int repairAmount = buffer.readInt();
 
 		// Read the input item, modifier, and fluid.
@@ -100,14 +92,12 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 		}
 
 		// Create the recipe.
-		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, fluidInput, modifiers, repairAmount, power, time);
+		return new AutoSmithRecipe(recipeId, smithingTarget, modifierMaterial, fluidInput, modifiers, repairAmount, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, AutoSmithRecipe recipe) {
 		// Write the processing costs.
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getRepairAmount());
 
 		// Write the input item, modifier, and fluid.
@@ -122,5 +112,7 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 		for (RecipeModifierWrapper modifier : recipe.getModifiers()) {
 			buffer.writeNbt(modifier.serialize());
 		}
+
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

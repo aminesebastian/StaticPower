@@ -17,6 +17,7 @@ import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
 import theking530.api.attributes.registration.AttributeModifierRegistry;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -31,8 +32,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	private final int repairAmount;
 
 	public AutoSmithRecipe(ResourceLocation name, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidStack modifierFluid,
-			RecipeModifierWrapper[] modifiers, int repairAmount, long powerCost, int processingTime) {
-		super(name, processingTime, powerCost);
+			RecipeModifierWrapper[] modifiers, int repairAmount, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.modifierMaterial = modifierMaterial;
 		this.smithTarget = smithTarget;
 		this.modifierFluid = modifierFluid;

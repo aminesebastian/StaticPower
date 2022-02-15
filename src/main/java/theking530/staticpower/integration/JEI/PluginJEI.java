@@ -48,6 +48,7 @@ import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
 import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
+import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
@@ -76,6 +77,7 @@ import theking530.staticpower.integration.JEI.categories.mixer.MixerRecipeCatego
 import theking530.staticpower.integration.JEI.categories.packager.PackagerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.poweredgrinder.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.refinery.RefineryRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeProvider;
 import theking530.staticpower.integration.JEI.categories.solderingtable.SolderingTableRecipeCategory;
@@ -151,6 +153,8 @@ public class PluginJEI implements IModPlugin {
 	private CauldronRecipeCategory cauldronRecipeCategory;
 	@Nullable
 	private FertilizerRecipeCategory fertilizerRecipeCategory;
+	@Nullable
+	private RefineryRecipeCategory refineryRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -279,6 +283,10 @@ public class PluginJEI implements IModPlugin {
 		// Fertilization
 		fertilizerRecipeCategory = new FertilizerRecipeCategory(guiHelper);
 		registration.addRecipeCategories(fertilizerRecipeCategory);
+		
+		// Refinery
+		refineryRecipeCategory = new RefineryRecipeCategory(guiHelper);
+		registration.addRecipeCategories(refineryRecipeCategory);
 	}
 
 	@Override
@@ -361,6 +369,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(HammerRecipe.RECIPE_TYPE), HammerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CauldronRecipe.RECIPE_TYPE), CauldronRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FertalizerRecipe.RECIPE_TYPE), FertilizerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(RefineryRecipe.RECIPE_TYPE), RefineryRecipeCategory.UID);
 	}
 
 	@Override
@@ -415,6 +424,8 @@ public class PluginJEI implements IModPlugin {
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer), FertilizerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment), FertilizerRecipeCategory.UID);
+		
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Refinery), RefineryRecipeCategory.UID);
 	}
 
 	@Override

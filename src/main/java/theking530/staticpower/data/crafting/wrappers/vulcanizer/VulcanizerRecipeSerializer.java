@@ -10,6 +10,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
@@ -22,16 +23,9 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 
 	@Override
 	public VulcanizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
-		// Start with the default processing values.
-		long powerCost = StaticPowerConfig.SERVER.vulcanizerPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.vulcanizerProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
+				StaticPowerConfig.SERVER.vulcanizerPowerUsage.get(), json);
 
 		// Get the input fluid.
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
@@ -41,24 +35,20 @@ public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement.getAsJsonObject());
-		return new VulcanizerRecipe(recipeId, processingTime, powerCost, input, output);
+		return new VulcanizerRecipe(recipeId, input, output, processing);
 	}
 
 	@Override
 	public VulcanizerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		// Start with the default processing values.
-		long power = buffer.readLong();
-		int processingTime = buffer.readInt();
 		FluidStack input = buffer.readFluidStack();
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		return new VulcanizerRecipe(recipeId, processingTime, power, input, output);
+		return new VulcanizerRecipe(recipeId, input, output, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, VulcanizerRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

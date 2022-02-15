@@ -12,16 +12,15 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class DigistoreVoidUpgrade extends BaseUpgrade {
+public class VoidUpgrade extends BaseUpgrade {
 
-	public DigistoreVoidUpgrade(String name) {
+	public VoidUpgrade(String name) {
 		super(name, new Properties().stacksTo(1));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.WHITE + "Voids all excess items"));
-		tooltip.add(new TextComponent(ChatFormatting.WHITE + "entering a Digistore."));
+		tooltip.add(new TextComponent(ChatFormatting.WHITE + "Voids all excess items or liquids."));
 	}
 }

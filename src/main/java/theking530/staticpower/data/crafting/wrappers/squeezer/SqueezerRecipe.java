@@ -5,6 +5,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -16,8 +17,8 @@ public class SqueezerRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput output;
 	private final FluidStack outputFluid;
 
-	public SqueezerRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, int processingTime, long powerCost) {
-		super(name, processingTime, powerCost);
+	public SqueezerRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.input = input;
 		this.output = output;
 		this.outputFluid = outputFluid;

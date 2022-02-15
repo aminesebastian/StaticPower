@@ -7,14 +7,12 @@ import java.util.Set;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.client.event.ColorHandlerEvent;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.client.rendering.items.DynamicBucketItemModel.DyanmicBucketColorProvider;
+import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.fluid.StaticPowerFluidBundle.StaticPowerFluidBuilder;
-import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class ModFluids {
 	public static final Set<StaticPowerFluidBundle> FLUID_BUNDLES = new LinkedHashSet<>();
@@ -45,6 +43,7 @@ public class ModFluids {
 	public static StaticPowerFluidBundle Latex;
 
 	public static Map<MinecraftColor, StaticPowerFluidBundle> ColoredConrete;
+	public static Map<MinecraftColor, StaticPowerFluidBundle> Dyes;
 
 	public static StaticPowerFluidBundle MoltenIron;
 	public static StaticPowerFluidBundle MoltenGold;
@@ -59,6 +58,11 @@ public class ModFluids {
 	public static StaticPowerFluidBundle MoltenPlatinum;
 	public static StaticPowerFluidBundle MoltenBrass;
 	public static StaticPowerFluidBundle MoltenBronze;
+
+	public static StaticPowerFluidBundle CrudeOil;
+	public static StaticPowerFluidBundle LightOil;
+	public static StaticPowerFluidBundle HeavyOil;
+	public static StaticPowerFluidBundle Fuel;
 
 	public static void init() {
 		registerFluidBundle(StaticFluid = new StaticPowerFluidBuilder("fluid_static").addAutoBucket().addAttributes(builder -> {
@@ -120,10 +124,22 @@ public class ModFluids {
 		ColoredConrete = new HashMap<>();
 		for (MinecraftColor color : MinecraftColor.values()) {
 			StaticPowerFluidBundle bundle;
-			registerFluidBundle(bundle = new StaticPowerFluidBuilder("concrete_" + color.getId()).setTextureName("concrete").addAutoBucket(true).addAttributes(builder -> {
-				builder.viscosity(2500).density(64).sound(SoundEvents.HONEY_BLOCK_STEP).color(color.getColor().fromFloatToEightBit().encodeInInteger());
-			}).build());
+			registerFluidBundle(bundle = new StaticPowerFluidBuilder("concrete_" + color.getId()).setTextureName("concrete").addAutoBucket(true, StaticPowerSprites.CONCRETE_BUCKET_FLUID_MASK)
+					.addAttributes(builder -> {
+						builder.viscosity(2500).density(64).sound(SoundEvents.HONEY_BLOCK_STEP).color(color.getColor().fromFloatToEightBit().encodeInInteger());
+					}).build());
 			ColoredConrete.put(color, bundle);
+		}
+
+		// Create all colors of dye.
+		Dyes = new HashMap<>();
+		for (MinecraftColor color : MinecraftColor.values()) {
+			StaticPowerFluidBundle bundle;
+			registerFluidBundle(
+					bundle = new StaticPowerFluidBuilder("dye_" + color.getId()).setTextureName("dye").addAutoBucket(true, StaticPowerSprites.DYE_BUCKET_FLUID_MASK).addAttributes(builder -> {
+						builder.sound(SoundEvents.BUCKET_FILL, SoundEvents.BUCKET_EMPTY).color(color.getColor().fromFloatToEightBit().encodeInInteger());
+					}).build());
+			Dyes.put(color, bundle);
 		}
 
 		registerFluidBundle(Latex = new StaticPowerFluidBuilder("latex").addAutoBucket().addAttributes(builder -> {
@@ -169,18 +185,19 @@ public class ModFluids {
 		registerFluidBundle(MoltenBronze = new StaticPowerFluidBuilder("molten_bronze").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(1500).density(32).temperature(950).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
 		}).build());
-	}
-
-	public static void registerDynamicBucketColorProviders(ColorHandlerEvent.Item event) {
-		// Register item color providers for all autobuckets that requested it.
-		for (StaticPowerFluidBundle fluid : FLUID_BUNDLES) {
-			if (fluid.getSourceBuilder().getShouldRegisterBucket() && fluid.getBucket() instanceof StaticPowerFluidBucket) {
-				StaticPowerFluidBucket customBucket = (StaticPowerFluidBucket) fluid.getBucket();
-				if (customBucket.requiresDynamicModel()) {
-					event.getItemColors().register(new DyanmicBucketColorProvider(), customBucket);
-				}
-			}
-		}
+		
+		registerFluidBundle(CrudeOil = new StaticPowerFluidBuilder("oil_crude").addAutoBucket(true, StaticPowerSprites.OIL_BUCKET_FLUID_MASK).addAttributes(builder -> {
+			builder.viscosity(1500).density(32).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
+		}).build());
+		registerFluidBundle(LightOil = new StaticPowerFluidBuilder("oil_light").addAutoBucket(true, StaticPowerSprites.OIL_BUCKET_FLUID_MASK).addAttributes(builder -> {
+			builder.viscosity(1500).density(32).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
+		}).build());
+		registerFluidBundle(HeavyOil = new StaticPowerFluidBuilder("oil_heavy").addAutoBucket(true, StaticPowerSprites.OIL_BUCKET_FLUID_MASK).addAttributes(builder -> {
+			builder.viscosity(1500).density(32).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
+		}).build());
+		registerFluidBundle(Fuel = new StaticPowerFluidBuilder("fuel").addAutoBucket(true, StaticPowerSprites.OIL_BUCKET_FLUID_MASK).addAttributes(builder -> {
+			builder.viscosity(1500).density(32).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
+		}).build());
 	}
 
 	public static void registerFluidBundle(StaticPowerFluidBundle bundle) {

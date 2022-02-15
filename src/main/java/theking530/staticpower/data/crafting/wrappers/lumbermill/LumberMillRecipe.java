@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -21,9 +22,8 @@ public class LumberMillRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput secondaryOutput;
 	private final FluidStack outputFluid;
 
-	public LumberMillRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput primaryOutput, ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid,
-			int processingTime, long powerCost) {
-		super(name, processingTime, powerCost);
+	public LumberMillRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput primaryOutput, ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.input = input;
 		this.primaryOutput = primaryOutput;
 		this.secondaryOutput = secondaryOutput;

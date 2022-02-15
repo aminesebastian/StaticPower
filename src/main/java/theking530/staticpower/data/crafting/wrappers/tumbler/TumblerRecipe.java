@@ -5,6 +5,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -15,8 +16,8 @@ public class TumblerRecipe extends AbstractMachineRecipe {
 	private final ProbabilityItemStackOutput output;
 	private final StaticPowerIngredient inputItem;
 
-	public TumblerRecipe(ResourceLocation name, int processingTime, long powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput output) {
-		super(name, processingTime, powerCost);
+	public TumblerRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputItem = input;
 		this.output = output;
 	}

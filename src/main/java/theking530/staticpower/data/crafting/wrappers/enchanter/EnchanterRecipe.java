@@ -14,6 +14,7 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.EnchantmentRecipeWrapper;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipeSerializer;
@@ -25,8 +26,8 @@ public class EnchanterRecipe extends AbstractMachineRecipe {
 	private final FluidStack inputFluidStack;
 	private final List<EnchantmentRecipeWrapper> enchantments;
 
-	public EnchanterRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, FluidStack inputFluid, int processingTime, long powerCost, List<EnchantmentRecipeWrapper> enchantments) {
-		super(name, processingTime, powerCost);
+	public EnchanterRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, FluidStack inputFluid, List<EnchantmentRecipeWrapper> enchantments, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		inputIngredients = inputs;
 		inputFluidStack = inputFluid;
 		this.enchantments = enchantments;

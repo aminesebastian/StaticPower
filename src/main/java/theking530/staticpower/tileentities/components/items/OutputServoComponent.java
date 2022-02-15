@@ -67,6 +67,9 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 			return;
 		}
 
+		if (inventory == null) {
+			return;
+		}
 		// If we have an empty inventory, do nothing.
 		if (inventory.getSlots() == 0) {
 			return;
@@ -98,8 +101,6 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 					Direction facing = getWorld().getBlockState(getPos()).getValue(StaticPowerTileEntityBlock.FACING);
 					Direction direction = SideConfigurationUtilities.getDirectionFromSide(side, facing);
 
-
-					
 					// Get the tile entity in that direction.
 					BlockEntity te = getWorld().getBlockEntity(getPos().relative(direction));
 
@@ -149,12 +150,16 @@ public class OutputServoComponent extends AbstractTileEntityComponent {
 		}
 	}
 
+	public OutputServoComponent setInventory(InventoryComponent inventory) {
+		this.inventory = inventory;
+		return this;
+	}
+
 	public boolean canOutputFromSide(BlockSide blockSide) {
 		if (getTileEntity().hasComponentOfType(SideConfigurationComponent.class)) {
 			// Get the side's machine side mode.
 			SideConfigurationComponent sideModeConfiguration = getTileEntity().getComponent(SideConfigurationComponent.class);
-			MachineSideMode sideMode = sideModeConfiguration
-					.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection()));
+			MachineSideMode sideMode = sideModeConfiguration.getWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(blockSide, getTileEntity().getFacingDirection()));
 
 			// If the mode matches this servo's output mode OR the side is the generic
 			// output side and this output mode is an output mode and there are no output

@@ -225,6 +225,12 @@ public class StaticPowerConfig {
 		public final LongValue vulcanizerPowerUsage;
 		public final ConfigValue<Integer> vulcanizerProcessingTime;
 
+		public final LongValue enchanterPowerUsage;
+		public final ConfigValue<Integer> enchanterProcessingTime;
+
+		public final LongValue refineryPowerUsage;
+		public final ConfigValue<Integer> refineryProcessingTime;
+
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Generation");
 			{
@@ -235,8 +241,8 @@ public class StaticPowerConfig {
 						generateZincOre = builder.comment("Disable or Enable Zinc Ore Generation").translation(StaticPower.MOD_ID + ".config." + "zincore").define("GenerateZincOre", true);
 						generateMagnesiumOre = builder.comment("Disable or Enable Magnesium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "magnesiumore")
 								.define("GenerateMagnesiumOre", true);
-						generateAluminumOre = builder.comment("Disable or Enable Aluminum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminumore")
-								.define("GenerateAluminumOre", true);
+						generateAluminumOre = builder.comment("Disable or Enable Aluminum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminumore").define("GenerateAluminumOre",
+								true);
 						generateTinOre = builder.comment("Disable or Enable Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tinore").define("GenerateTinOre", true);
 						generateLeadOre = builder.comment("Disable or Enable Lead Ore Generation").translation(StaticPower.MOD_ID + ".config." + "leadore").define("GenerateLeadOre", true);
 						generateSilverOre = builder.comment("Disable or Enable Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "silverore").define("GenerateSilverOre", true);
@@ -683,6 +689,25 @@ public class StaticPowerConfig {
 							.translation(StaticPower.MOD_ID + ".config." + "vulcanizerProcessingTime").define("VulcanizerProcessingTime", 200);
 					builder.pop();
 				}
+				{
+					builder.push("Enchanter");
+					enchanterPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "enchanterPowerUsage").defineInRange("EnchanterPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					enchanterProcessingTime = builder
+							.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "enchanterProcessingTime").define("EnchanterProcessingTime", 200);
+					builder.pop();
+				}
+				{
+					builder.push("Refinery");
+					refineryPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "refineryPowerUsage").defineInRange("RefineryPowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					refineryProcessingTime = builder
+							.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime").define("RefineryProcessingTime", 20);
+					builder.pop();
+				}
+
 			}
 			builder.pop();
 		}

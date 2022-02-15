@@ -2,8 +2,8 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
 		"ggg",
-		"ggg",
-		"gpg"
+		"gpg",
+		"ggg"
 	],
 	"key": {
 		"g": {
@@ -14,6 +14,6 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:upgrade_digistore_void"
+		"item": "staticpower:upgrade_void"
 	}
 }

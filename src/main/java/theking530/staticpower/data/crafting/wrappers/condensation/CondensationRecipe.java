@@ -5,6 +5,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class CondensationRecipe extends AbstractMachineRecipe {
@@ -14,8 +15,8 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 	private final FluidStack outputFluid;
 	private final float heatGeneration;
 
-	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, int processingTime, float heatGeneration) {
-		super(name, processingTime, 0);
+	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float heatGeneration, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
 		this.heatGeneration = heatGeneration;

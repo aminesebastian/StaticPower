@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.nonpowered.condenser.TileEntityCondenser;
 
@@ -29,9 +30,6 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<RecipeSeria
 		JsonObject outputFluidObject = GsonHelper.getAsJsonObject(json, "output_fluid");
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
-		// Start with the default processing values.
-		int processingTime = TileEntityCondenser.DEFAULT_PROCESSING_TIME;
-
 		// Capture the heat cost.
 		float heatGeneration = TileEntityCondenser.DEFAULT_HEAT_GENERATION;
 		if (GsonHelper.isValidNode(json, "heat")) {
@@ -39,31 +37,26 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<RecipeSeria
 		}
 
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			processingTime = processingElement.get("power").getAsInt();
-		}
-
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(TileEntityCondenser.DEFAULT_PROCESSING_TIME, 0, json);
 		// Create the recipe.
-		return new CondensationRecipe(recipeId, inputFluid, outputFluid, processingTime, heatGeneration);
+		return new CondensationRecipe(recipeId, inputFluid, outputFluid, heatGeneration, processing);
 	}
 
 	@Override
 	public CondensationRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		int time = buffer.readInt();
 		float heat = buffer.readFloat();
 		FluidStack input = buffer.readFluidStack();
 		FluidStack output = buffer.readFluidStack();
 
 		// Create the recipe.
-		return new CondensationRecipe(recipeId, input, output, time, heat);
+		return new CondensationRecipe(recipeId, input, output, heat, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CondensationRecipe recipe) {
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFloat(recipe.getHeatGeneration());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

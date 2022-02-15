@@ -97,7 +97,9 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
 
-	public static final ResourceLocation CONCRETE_BUCKET_TOP_LAYER = registerSprite("items/buckets/bucket_concrete_top_layer");
+	public static final ResourceLocation CONCRETE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_concrete_mask");
+	public static final ResourceLocation OIL_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_oil_mask");
+	public static final ResourceLocation DYE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_dye_mask");
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);

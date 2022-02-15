@@ -1,0 +1,15 @@
+{
+	"type": "staticpower:mixer_recipe",
+	"fluid_input_1": {
+		"fluid": "staticpower:concrete_gray",
+		"volume": 100
+	},
+	"fluid_input_2": {
+		"fluid": "staticpower:dye_purple",
+		"volume": 100
+	},
+	"result": {
+		"fluid": "staticpower:concrete_purple",
+		"volume": 100
+	}
+}

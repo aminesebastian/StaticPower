@@ -21,6 +21,7 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderTank;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.items.upgrades.VoidUpgrade;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -29,6 +30,8 @@ import theking530.staticpower.tileentities.components.fluids.FluidOutputServoCom
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 
 public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
@@ -39,22 +42,19 @@ public class TileEntityTank extends TileEntityBase {
 			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ADVANCED),
-			ModBlocks.AdvancedTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityTank>(
 			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ENERGIZED),
-			ModBlocks.EnergizedTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityTank>(
 			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.CREATIVE),
-			ModBlocks.CreativeTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativeTank);
 
 	public static final int MACHINE_TANK_CAPACITY_MULTIPLIER = 4;
 
@@ -73,42 +73,45 @@ public class TileEntityTank extends TileEntityBase {
 	public final FluidContainerInventoryComponent inputFluidContainerComponent;
 	public final FluidContainerInventoryComponent outputFluidContainerComponent;
 	public final FluidTankComponent fluidTankComponent;
+	public final UpgradeInventoryComponent voidUpgradeInventory;
 	public final SideConfigurationComponent ioSideConfiguration;
 
-	public TileEntityTank(BlockEntityTypeAllocator<TileEntityTank> allocator, BlockPos pos, BlockState state,
-			ResourceLocation tier) {
+	public TileEntityTank(BlockEntityTypeAllocator<TileEntityTank> allocator, BlockPos pos, BlockState state, ResourceLocation tier) {
 		super(allocator, pos, state);
 
 		// Get the tier.
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 
+		// Add the void upgrade component.
+		registerComponent(voidUpgradeInventory = new UpgradeInventoryComponent("VoidUpgradeInventory", 1));
+		voidUpgradeInventory.setShiftClickEnabled(true);
+		voidUpgradeInventory.setFilter(new ItemStackHandlerFilter() {
+			@Override
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return stack.getItem() instanceof VoidUpgrade;
+			}
+		});
+		
 		// Add the tank component.
-		int capacity = SDMath.multiplyRespectingOverflow(tierObject.defaultTankCapacity.get(),
-				MACHINE_TANK_CAPACITY_MULTIPLIER);
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", capacity)
-				.setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
+		int capacity = SDMath.multiplyRespectingOverflow(tierObject.defaultTankCapacity.get(), MACHINE_TANK_CAPACITY_MULTIPLIER);
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
 		fluidTankComponent.setCanFill(true);
 		fluidTankComponent.setAutoSyncPacketsEnabled(true);
+		fluidTankComponent.setUpgradeInventory(voidUpgradeInventory);
 
 		// Add the side configuration component.
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", (side, mode) -> {
 		}, (side, mode) -> {
-			return mode == MachineSideMode.Input || mode == MachineSideMode.Output || mode == MachineSideMode.Disabled
-					|| mode == MachineSideMode.Regular;
+			return mode == MachineSideMode.Input || mode == MachineSideMode.Output || mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular;
 		}));
 
 		// Add the inventory for the fluid containers.
-		registerComponent(inputFluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo",
-				fluidTankComponent));
-		registerComponent(
-				outputFluidContainerComponent = new FluidContainerInventoryComponent("FluidDrainContainerServo",
-						fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(inputFluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent));
+		registerComponent(outputFluidContainerComponent = new FluidContainerInventoryComponent("FluidDrainContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Add the two components to auto input and output fluids.
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent",
-				fluidTankComponent.getCapacity() / 100, fluidTankComponent, MachineSideMode.Input));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent",
-				fluidTankComponent.getCapacity() / 100, fluidTankComponent, MachineSideMode.Output));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", fluidTankComponent.getCapacity() / 100, fluidTankComponent, MachineSideMode.Input));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", fluidTankComponent.getCapacity() / 100, fluidTankComponent, MachineSideMode.Output));
 	}
 
 	@Override
@@ -131,8 +134,7 @@ public class TileEntityTank extends TileEntityBase {
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state,
-			LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		return true;
 	}
 }

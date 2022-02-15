@@ -4,13 +4,11 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -24,11 +22,17 @@ import theking530.staticpower.client.rendering.items.DynamicBucketItemModel;
 
 public class StaticPowerFluidBucket extends BucketItem implements ICustomModelSupplier {
 	private final boolean useDynamicModel;
+	private final ResourceLocation fluidMaskSprite;
 
-	public StaticPowerFluidBucket(boolean useDynamicModel, String name, Supplier<? extends Fluid> supplier) {
+	public StaticPowerFluidBucket(boolean useDynamicModel, ResourceLocation fluidMaskSprite, String name, Supplier<? extends Fluid> supplier) {
 		super(supplier, new Properties().stacksTo(1).tab(StaticPower.CREATIVE_TAB));
 		setRegistryName(name);
 		this.useDynamicModel = useDynamicModel;
+		this.fluidMaskSprite = fluidMaskSprite;
+	}
+
+	public StaticPowerFluidBucket(String name, Supplier<? extends Fluid> supplier) {
+		this(false, null, name, supplier);
 	}
 
 	@Override
@@ -54,6 +58,6 @@ public class StaticPowerFluidBucket extends BucketItem implements ICustomModelSu
 
 	@Override
 	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
-		return new DynamicBucketItemModel(existingModel);
+		return new DynamicBucketItemModel(existingModel, fluidMaskSprite);
 	}
 }

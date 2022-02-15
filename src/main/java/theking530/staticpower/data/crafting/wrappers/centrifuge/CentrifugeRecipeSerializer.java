@@ -10,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -29,16 +30,9 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		// Get the minimum speed.
 		int minimumSpeed = json.get("minimum_speed").getAsInt();
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.centrifugePowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.centrifugeProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.centrifugeProcessingTime.get(),
+				StaticPowerConfig.SERVER.centrifugePowerUsage.get(), json);
 
 		// Get the outputs.
 		JsonArray outputs = json.getAsJsonArray("outputs");
@@ -59,13 +53,11 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		}
 
 		// Create the recipe.
-		return new CentrifugeRecipe(recipeId, processingTime, powerCost, input, firstOutput, secondOutput, thirdOutput, minimumSpeed);
+		return new CentrifugeRecipe(recipeId, input, firstOutput, secondOutput, thirdOutput, minimumSpeed, processing);
 	}
 
 	@Override
 	public CentrifugeRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		int speed = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		ProbabilityItemStackOutput output1 = ProbabilityItemStackOutput.readFromBuffer(buffer);
@@ -73,18 +65,16 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		ProbabilityItemStackOutput output3 = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new CentrifugeRecipe(recipeId, time, power, input, output1, output2, output3, speed);
+		return new CentrifugeRecipe(recipeId, input, output1, output2, output3, speed, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CentrifugeRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getMinimumSpeed());
 		recipe.getInput().write(buffer);
 		recipe.getOutput1().writeToBuffer(buffer);
 		recipe.getOutput2().writeToBuffer(buffer);
 		recipe.getOutput3().writeToBuffer(buffer);
-
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

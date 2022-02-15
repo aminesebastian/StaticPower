@@ -82,7 +82,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 		
 		boolean wasExtensionDrawn = false;
 		for (Direction dir : Direction.values()) {
-			if (cableComponent.getConnectionState(dir) != CableConnectionState.NONE) {
+			if (cableComponent.getConnectionState(dir) != CableConnectionState.NONE && !cableComponent.isSideDisabled(dir)) {
 				wasExtensionDrawn = true;
 				drawExtensions(dir, sprite, filledPercentage, radius, fluidColor, matrixStack);
 			}

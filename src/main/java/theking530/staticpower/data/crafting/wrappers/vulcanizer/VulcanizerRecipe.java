@@ -6,6 +6,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
@@ -15,8 +16,8 @@ public class VulcanizerRecipe extends AbstractMachineRecipe {
 	private final FluidStack inputFluid;
 	private final ProbabilityItemStackOutput output;
 
-	public VulcanizerRecipe(ResourceLocation name, int processingTime, long powerCost, FluidStack inputFluid, ProbabilityItemStackOutput output) {
-		super(name, processingTime, powerCost);
+	public VulcanizerRecipe(ResourceLocation name,  FluidStack inputFluid, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.output = output;
 		this.inputFluid = inputFluid;
 	}

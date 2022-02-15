@@ -23,13 +23,21 @@ public class FluidOutputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public String getComponentName() {
-		return "Fluid Output Servo";
+		return super.getComponentName();
+	}
+
+	public FluidOutputServoComponent setTank(IFluidHandler tank) {
+		this.owningTank = tank;
+		return this;
 	}
 
 	@Override
 	public void preProcessUpdate() {
 		// Do nothing if not enabled.
-		if(!isEnabled()) {
+		if (!isEnabled()) {
+			return;
+		}
+		if (owningTank == null) {
 			return;
 		}
 		if (!getTileEntity().getLevel().isClientSide) {

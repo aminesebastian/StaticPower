@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
@@ -37,16 +38,9 @@ public class FluidInfusionRecipeSerializer extends ForgeRegistryEntry<RecipeSeri
 			return null;
 		}
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.fluidInfuserPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get(),
+				StaticPowerConfig.SERVER.fluidInfuserPowerUsage.get(), json);
 
 		// Get the item output.
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(json, "result"));
@@ -60,27 +54,24 @@ public class FluidInfusionRecipeSerializer extends ForgeRegistryEntry<RecipeSeri
 		}
 
 		// Create the recipe.
-		return new FluidInfusionRecipe(recipeId, input, itemOutput, fluidInput, processingTime, powerCost);
+		return new FluidInfusionRecipe(recipeId, input, itemOutput, fluidInput, processing);
 	}
 
 	@Override
 	public FluidInfusionRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		FluidStack fluidInput = buffer.readFluidStack();
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new FluidInfusionRecipe(recipeId, input, output, fluidInput, time, power);
+		return new FluidInfusionRecipe(recipeId, input, output, fluidInput, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, FluidInfusionRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInput().write(buffer);
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

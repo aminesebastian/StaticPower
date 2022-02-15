@@ -10,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -34,39 +35,28 @@ public class FormerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
 		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
-		// Start with the default processing values.
-		long powerCost = StaticPowerConfig.SERVER.formerPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.formerProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.formerProcessingTime.get(), StaticPowerConfig.SERVER.formerPowerUsage.get(), json);
 
 		// Create the recipe.
-		return new FormerRecipe(recipeId, processingTime, powerCost, output, input, mold);
+		return new FormerRecipe(recipeId, output, input, mold, processing);
 	}
 
 	@Override
 	public FormerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		Ingredient mold = Ingredient.fromNetwork(buffer);
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new FormerRecipe(recipeId, time, power, output, input, mold);
+		return new FormerRecipe(recipeId, output, input, mold, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, FormerRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		recipe.getInputIngredient().write(buffer);
 		recipe.getRequiredMold().toNetwork(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

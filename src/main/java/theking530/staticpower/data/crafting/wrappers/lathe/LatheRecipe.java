@@ -24,6 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -43,8 +44,8 @@ public class LatheRecipe extends AbstractMachineRecipe {
 	private final FluidStack outputFluid;
 
 	public LatheRecipe(ResourceLocation name, int recipeWidthIn, int recipeHeightIn, NonNullList<StaticPowerIngredient> inputs, ProbabilityItemStackOutput primaryOutput,
-			ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, int processingTime, long powerCost) {
-		super(name, processingTime, powerCost);
+			ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 
 		this.inputs = inputs;
 		this.recipeWidth = recipeWidthIn;

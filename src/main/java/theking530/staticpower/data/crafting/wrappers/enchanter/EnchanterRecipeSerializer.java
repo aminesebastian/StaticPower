@@ -16,6 +16,7 @@ import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.EnchantmentRecipeWrapper;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
@@ -51,25 +52,16 @@ public class EnchanterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 			enchantments.add(EnchantmentRecipeWrapper.fromJson(element.getAsJsonObject()));
 		}
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.cruciblePowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.crucibleProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (GsonHelper.isValidNode(json, "processing")) {
-			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.enchanterProcessingTime.get(), StaticPowerConfig.SERVER.enchanterPowerUsage.get(),
+				json);
 
 		// Create the recipe.
-		return new EnchanterRecipe(recipeId, inputs, fluidInput, processingTime, powerCost, enchantments);
+		return new EnchanterRecipe(recipeId, inputs, fluidInput, enchantments, processing);
 	}
 
 	@Override
 	public EnchanterRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		FluidStack inputFluid = buffer.readFluidStack();
 
 		// Read all the inputs.
@@ -84,13 +76,11 @@ public class EnchanterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 			enchantments.add(EnchantmentRecipeWrapper.fromBuffer(buffer));
 		}
 
-		return new EnchanterRecipe(recipeId, inputs, inputFluid, time, power, enchantments);
+		return new EnchanterRecipe(recipeId, inputs, inputFluid, enchantments, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, EnchanterRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeFluidStack(recipe.getInputFluidStack());
 
 		// Write the items.
@@ -104,5 +94,6 @@ public class EnchanterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 		for (EnchantmentRecipeWrapper wrapper : recipe.getEnchantments()) {
 			wrapper.writeToBuffer(buffer);
 		}
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

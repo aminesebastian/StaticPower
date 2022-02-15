@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -25,9 +26,9 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
-		// Start with the default processing values.
-		long powerCost = StaticPowerConfig.SERVER.packagerPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.packagerProcessingTime.get();
+		// Capture the processing and power costs.
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(),
+				json);
 
 		// Get the recipe size.
 		int size = json.get("size").getAsInt();
@@ -36,27 +37,24 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(json.get("output").getAsJsonObject());
 
 		// Create the recipe.
-		return new PackagerRecipe(recipeId, processingTime, powerCost, size, input, itemOutput);
+		return new PackagerRecipe(recipeId, size, input, itemOutput, processing);
 	}
 
 	@Override
 	public PackagerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
 		int size = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		ProbabilityItemStackOutput outputs = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new PackagerRecipe(recipeId, time, power, size, input, outputs);
+		return new PackagerRecipe(recipeId, size, input, outputs, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, PackagerRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
 		buffer.writeInt(recipe.getSize());
 		recipe.getInputIngredient().write(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

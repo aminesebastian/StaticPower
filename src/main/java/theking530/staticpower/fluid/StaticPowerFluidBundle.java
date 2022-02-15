@@ -3,6 +3,7 @@ package theking530.staticpower.fluid;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.Tag.Named;
 import net.minecraft.world.item.Item;
@@ -68,15 +69,15 @@ public class StaticPowerFluidBundle {
 			return this;
 		}
 
-		public StaticPowerFluidBuilder addAutoBucket(boolean dynamicModel) {
-			autoBucket = new StaticPowerFluidBucket(dynamicModel, "bucket_" + name, () -> fluid);
+		public StaticPowerFluidBuilder addAutoBucket(boolean dynamicModel, ResourceLocation bucketMask) {
+			autoBucket = new StaticPowerFluidBucket(dynamicModel, bucketMask, "bucket_" + name, () -> fluid);
 			bucketSupplier = () -> autoBucket;
 			shouldRegisterBucketItem = true;
 			return this;
 		}
 
 		public StaticPowerFluidBuilder addAutoBucket() {
-			return addAutoBucket(false);
+			return addAutoBucket(false, null);
 		}
 
 		public StaticPowerFluidBuilder addBucketSupplier(Supplier<Item> bucketSupplier) {
