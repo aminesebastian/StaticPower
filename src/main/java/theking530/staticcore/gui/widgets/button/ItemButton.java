@@ -2,6 +2,7 @@ package theking530.staticcore.gui.widgets.button;
 
 import java.util.function.BiConsumer;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -71,6 +72,7 @@ public class ItemButton extends StandardButton {
 			int halfSizeX = size.getXi() / 2;
 			int halfSizeY = size.getYi() / 2;
 			customRenderer.renderGuiItem(itemIcon, (int) buttonLeft + (halfSizeX - 8), (int) buttonTop + (halfSizeY - 8));
+			RenderSystem.enableBlend();
 		}
 	}
 }

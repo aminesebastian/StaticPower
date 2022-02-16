@@ -1,8 +1,11 @@
-package theking530.staticpower.tileentities.powered.refinery;
+package theking530.staticpower.tileentities.powered.refinery.refinerycontroller;
+
+import java.util.Optional;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
+import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
@@ -12,11 +15,14 @@ import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiRefinery extends StaticPowerTileEntityGui<ContainerRefinery, TileEntityRefinery> {
-	private ArrowProgressBar progressBar;
+	private FluidProgressBar fluidBar1;
+	private FluidProgressBar fluidBar2;
+	private FluidProgressBar fluidBar3;
 
 	public GuiRefinery(ContainerRefinery container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
@@ -32,7 +38,11 @@ public class GuiRefinery extends StaticPowerTileEntityGui<ContainerRefinery, Til
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidOutput2, 126, 22, 16, 54, MachineSideMode.Output2, getTileEntity()));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidOutput3, 148, 22, 16, 54, MachineSideMode.Output3, getTileEntity()));
 
-		registerWidget(progressBar = (ArrowProgressBar) new ArrowProgressBar(76, 43).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget((ArrowProgressBar) new ArrowProgressBar(76, 43).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+
+		registerWidget(fluidBar1 = (FluidProgressBar) new FluidProgressBar(75, 27, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(fluidBar2 = (FluidProgressBar) new FluidProgressBar(75, 32, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(fluidBar3 = (FluidProgressBar) new FluidProgressBar(75, 42, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent));
@@ -43,6 +53,29 @@ public class GuiRefinery extends StaticPowerTileEntityGui<ContainerRefinery, Til
 
 	@Override
 	public void updateData() {
+		// Get the recipe.
+		Optional<RefineryRecipe> recipe = getTileEntity().processingComponent.getCurrentProcessingRecipe();
 
+		// Update the progress bar.
+		if (recipe.isPresent()) {
+			if (recipe.get().getFluidOutput1().isEmpty()) {
+				fluidBar1.setFluidStack(recipe.get().getFluidOutput1());
+				fluidBar1.setVisible(true);
+			} else {
+				fluidBar1.setVisible(false);
+			}
+			if (recipe.get().getFluidOutput2().isEmpty()) {
+				fluidBar2.setFluidStack(recipe.get().getFluidOutput1());
+				fluidBar2.setVisible(true);
+			} else {
+				fluidBar2.setVisible(false);
+			}
+			if (recipe.get().getFluidOutput3().isEmpty()) {
+				fluidBar3.setFluidStack(recipe.get().getFluidOutput1());
+				fluidBar3.setVisible(true);
+			} else {
+				fluidBar3.setVisible(false);
+			}
+		}
 	}
 }

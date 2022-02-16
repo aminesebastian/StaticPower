@@ -12,13 +12,13 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockModelShaper;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,11 +44,18 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
+import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -185,6 +193,25 @@ public class StaticPowerClientEventHandler {
 		renderMultiHarvesteBlockBreakEffect(event);
 	}
 
+	public static void onInitScreenEvent(InitScreenEvent event) {
+		System.out.println(Minecraft.getInstance().screen);
+	}
+
+	public static void onDrawScreen(DrawScreenEvent event) {
+//		TextButton button = new TextButton(50, 50, 20, 20, "test", (btn, mouse) -> {
+//		});
+//		button.updateBeforeRender(event.getPoseStack(), new Vector2D(0,0), event.getPartialTicks(), event.getMouseX(), event.getMouseY());
+//		button.mouseMove(event.getMouseX(), event.getMouseY());
+//		button.renderBehindItems(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+	}
+	public static void onDrawBehindScreen(BackgroundDrawnEvent event) {
+		if(Minecraft.getInstance().screen instanceof AbstractContainerScreen) {
+			AbstractContainerScreen<AbstractContainerMenu> screen = (AbstractContainerScreen)Minecraft.getInstance().screen;
+			GuiDrawUtilities.drawGenericBackground(25, 24, screen.getGuiLeft() + 172, screen.getGuiTop() + 10, 0, GuiDrawUtilities.DEFAULT_BACKGROUND_COLOR, Color.WHITE, false, true, true, true);
+		}
+	}
+	
+	
 	/**
 	 * Renders the outline on the extra blocks
 	 *

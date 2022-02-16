@@ -9,6 +9,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.init.ModUpgrades;
 
 public class GuiTank extends StaticPowerTileEntityGui<ContainerTank, TileEntityTank> {
 	@SuppressWarnings("unused")
@@ -25,6 +26,6 @@ public class GuiTank extends StaticPowerTileEntityGui<ContainerTank, TileEntityT
 
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().voidUpgradeInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().voidUpgradeInventory, ModUpgrades.VoidUpgrade).setTabSide(TabSide.LEFT));
 	}
 }

@@ -81,7 +81,7 @@ import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFu
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
-import theking530.staticpower.tileentities.powered.refinery.BlockRefinery;
+import theking530.staticpower.tileentities.powered.refinery.refinerycontroller.BlockRefinery;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
 import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;

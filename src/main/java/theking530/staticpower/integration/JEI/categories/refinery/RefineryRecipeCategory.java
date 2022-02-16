@@ -109,17 +109,20 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 		// singleton class).
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 24;
 
-		GuiDrawUtilities.drawSlot(matrixStack, 75, 27, 24, 4, 0);
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput1(), 1000, 1000, 75, 31, 1, progress, 4, false);
-
-		if (!recipe.getFluidOutput2().isEmpty()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 75, 34, 24, 4, 0);
-			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput2(), 1000, 1000, 75, 38, 1, progress, 4, false);
+		int yOffset = 0;
+		if (!recipe.getFluidOutput1().isEmpty()) {
+			GuiDrawUtilities.drawSlot(matrixStack, 75, 27, 24, 4, 0);
+			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput1(), 1000, 1000, 75, 31, 1, progress, 4, false);
+			yOffset += 7;
 		}
-
+		if (!recipe.getFluidOutput2().isEmpty()) {
+			GuiDrawUtilities.drawSlot(matrixStack, 75, 27 + yOffset, 24, 4, 0);
+			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput2(), 1000, 1000, 75, 31 + +yOffset, 1, progress, 4, false);
+			yOffset += 7;
+		}
 		if (!recipe.getFluidOutput3().isEmpty()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 75, 42, 24, 4, 0);
-			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput3(), 1000, 1000, 75, 46, 1, progress, 4, false);
+			GuiDrawUtilities.drawSlot(matrixStack, 75, 27 + yOffset, 24, 4, 0);
+			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput3(), 1000, 1000, 75, 31 + +yOffset, 1, progress, 4, false);
 		}
 	}
 
@@ -164,7 +167,9 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 
 		// Set the output(s).
 		List<FluidStack> outputFluids = new ArrayList<FluidStack>();
-		outputFluids.add(recipe.getFluidOutput1());
+		if (!recipe.getFluidOutput1().isEmpty()) {
+			outputFluids.add(recipe.getFluidOutput1());
+		}
 		if (!recipe.getFluidOutput2().isEmpty()) {
 			outputFluids.add(recipe.getFluidOutput2());
 		}
@@ -193,7 +198,9 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 		}
 
 		// Add the fluid output(s).
-		fluids.init(OUTPUT_SLOT_1, false, 104, 2, 16, 52, getFluidTankDisplaySize(recipe.getFluidOutput1()), false, null);
+		if (!recipe.getFluidOutput1().isEmpty()) {
+			fluids.init(OUTPUT_SLOT_1, false, 104, 2, 16, 52, getFluidTankDisplaySize(recipe.getFluidOutput1()), false, null);
+		}
 		if (!recipe.getFluidOutput2().isEmpty()) {
 			fluids.init(OUTPUT_SLOT_2, false, 126, 2, 16, 52, getFluidTankDisplaySize(recipe.getFluidOutput2()), false, null);
 		}

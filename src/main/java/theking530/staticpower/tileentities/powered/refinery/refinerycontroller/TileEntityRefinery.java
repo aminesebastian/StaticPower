@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.refinery;
+package theking530.staticpower.tileentities.powered.refinery.refinerycontroller;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -20,7 +20,6 @@ import theking530.staticpower.tileentities.components.control.RecipeProcessingCo
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -55,8 +54,6 @@ public class TileEntityRefinery extends TileEntityMachine {
 
 	public TileEntityRefinery(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
-		enableFaceInteraction();
-
 		// Get the tier object.
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED);
 
@@ -186,7 +183,7 @@ public class TileEntityRefinery extends TileEntityMachine {
 
 	@Override
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION.copy().setSide(BlockSide.FRONT, true, MachineSideMode.Input).setSide(BlockSide.LEFT, true, MachineSideMode.Output).setSide(BlockSide.BACK, true, MachineSideMode.Output2)
+		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.LEFT, true, MachineSideMode.Output).setSide(BlockSide.BACK, true, MachineSideMode.Output2)
 				.setSide(BlockSide.RIGHT, true, MachineSideMode.Output3).setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input3);
 	}
 }

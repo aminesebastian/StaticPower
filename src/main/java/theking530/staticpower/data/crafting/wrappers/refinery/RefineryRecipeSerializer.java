@@ -44,7 +44,10 @@ public class RefineryRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 				json);
 
 		// Get the fluid result.
-		FluidStack output1 = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("output_1"));
+		FluidStack output1 = FluidStack.EMPTY;
+		if (json.has("output_1")) {
+			output1 = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("output_1"));
+		}
 
 		FluidStack output2 = FluidStack.EMPTY;
 		if (json.has("output_2")) {

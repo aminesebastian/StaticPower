@@ -26,7 +26,7 @@ public class DigistoreCraftingOutputSlot extends ResultSlot {
 			originalrecipe[i] = craftMatrix.getItem(i).copy();
 		}
 
-		// Call the parent.
+		// Call the parent. This handles firing events and checking advancements.
 		super.onTake(thePlayer, stack);
 
 		// On the client, set the items back to the original for a moment.

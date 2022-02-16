@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.refinery;
+package theking530.staticpower.tileentities.powered.refinery.refinerycontroller;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

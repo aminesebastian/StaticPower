@@ -8,7 +8,7 @@
 		"fluid": "minecraft:water",
 		"volume": 3
 	},
-	"output_1": {
+	"output_2": {
 		"fluid": "staticpower:oil_light",
 		"volume": 2
 	}

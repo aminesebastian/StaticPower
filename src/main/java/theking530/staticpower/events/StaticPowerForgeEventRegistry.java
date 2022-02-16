@@ -1,5 +1,6 @@
 package theking530.staticpower.events;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +20,16 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
+import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
+import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -34,6 +39,7 @@ import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fluids.FluidUtil;
@@ -58,6 +64,7 @@ import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.world.ore.ModOres;
 import theking530.staticpower.world.trees.ModTrees;
 
@@ -70,6 +77,8 @@ public class StaticPowerForgeEventRegistry {
 		if (!event.world.isClientSide) {
 			if (event.phase == TickEvent.Phase.END) {
 				CableNetworkManager.get(event.world).tick();
+				// ResearchManager.get(event.world).tick();
+				// TeamManager.get(event.world).tick();
 			}
 		}
 	}
@@ -80,6 +89,19 @@ public class StaticPowerForgeEventRegistry {
 		resourceManager.registerReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
 		StaticPower.LOGGER.info("Server resource reload listener created!");
+
+		TeamManager.get();
+	}
+
+	@SubscribeEvent
+	public static void onSave(Save save) {
+		Path dataPath = save.getWorld().getServer().getWorldPath(new LevelResource("data"));
+		try {
+			TeamManager.get().saveToDisk(dataPath);
+		} catch (Exception e) {
+			StaticPower.LOGGER.error("An error occured when attempting to save data to the disk.", e);
+		}
+
 	}
 
 	@SubscribeEvent
@@ -216,6 +238,21 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
 	public static void onKeyEvent(KeyInputEvent event) {
 		ModKeyBindings.onKeyEvent(event);
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL)
+	public static void onInitScreenEvent(InitScreenEvent event) {
+		StaticPowerClientEventHandler.onInitScreenEvent(event);
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL)
+	public static void onDrawScreen(DrawScreenEvent event) {
+		StaticPowerClientEventHandler.onDrawScreen(event);
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL)
+	public static void onDrawBehindScreen(BackgroundDrawnEvent event) {
+		StaticPowerClientEventHandler.onDrawBehindScreen(event);
 	}
 
 	/**

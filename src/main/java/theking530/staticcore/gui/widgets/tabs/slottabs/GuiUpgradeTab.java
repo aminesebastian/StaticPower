@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
@@ -26,7 +27,11 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	private final StaticPowerContainer container;
 
 	public GuiUpgradeTab(StaticPowerContainer container, InventoryComponent upgradesInventory) {
-		super("Upgrades", Color.EIGHT_BIT_WHITE, 0, 57, GuiTextures.YELLOW_TAB, ModUpgrades.BasicSpeedUpgrade);
+		this(container, upgradesInventory, ModUpgrades.BasicSpeedUpgrade);
+	}
+
+	public GuiUpgradeTab(StaticPowerContainer container, InventoryComponent upgradesInventory, Item icon) {
+		super("Upgrades", Color.EIGHT_BIT_WHITE, 0, 57, GuiTextures.YELLOW_TAB, icon);
 		this.container = container;
 		this.slots = new ArrayList<StaticPowerContainerSlot>();
 		this.upgradesInventory = upgradesInventory;
