@@ -1,15 +1,20 @@
-package theking530.staticpower.data.crafting.wrappers.research;
+package theking530.staticpower.data.research;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class Research extends AbstractStaticPowerRecipe {
 	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
@@ -117,5 +122,56 @@ public class Research extends AbstractStaticPowerRecipe {
 		}
 
 		return true;
+	}
+
+	public static class ResearchInstance {
+		private final ResourceLocation researchName;
+		private final List<Integer> requirementFullfillment;
+		private final Research research;
+
+		public ResearchInstance(ResourceLocation researchName) {
+			this.researchName = researchName;
+			this.requirementFullfillment = new LinkedList<Integer>();
+			research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, researchName).orElse(null);
+
+			// Throw a fatal error if somehow we ended up with an invalid research name.
+			if (research == null) {
+				StaticPower.LOGGER.fatal(String.format("Invalid research with name: %1$s provided.", researchName.toString()));
+			} else {
+				for (int i = 0; i < research.getRequirements().size(); i++) {
+					requirementFullfillment.add(0);
+				}
+			}
+		}
+
+		public ResourceLocation getResearchName() {
+			return researchName;
+		}
+
+		public Research getTrackedResearch() {
+			return research;
+		}
+
+		public int getRequirementFullfillment(int index) {
+			return requirementFullfillment.get(index);
+		}
+
+		public static ResearchInstance deserialize(CompoundTag tag) {
+			String researchName = tag.getString("researchName");
+			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchName));
+
+			int[] fullfillment = tag.getIntArray("requirementFullfillment");
+			for (int i = 0; i < fullfillment.length; i++) {
+				instance.requirementFullfillment.set(i, fullfillment[i]);
+			}
+			return instance;
+		}
+
+		public CompoundTag serialize() {
+			CompoundTag output = new CompoundTag();
+			output.putString("researchName", researchName.toString());
+			output.putIntArray("requirementFullfillment", requirementFullfillment);
+			return output;
+		}
 	}
 }

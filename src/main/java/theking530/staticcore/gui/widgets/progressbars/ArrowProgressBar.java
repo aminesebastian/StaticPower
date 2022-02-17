@@ -9,7 +9,7 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
-public class ArrowProgressBar extends AbstractProgressBar {
+public class ArrowProgressBar extends AbstractProgressBar<ArrowProgressBar> {
 	private boolean flipped;
 
 	public ArrowProgressBar(int xPosition, int yPosition) {

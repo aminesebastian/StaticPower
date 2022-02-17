@@ -38,11 +38,10 @@ public class GuiRefinery extends StaticPowerTileEntityGui<ContainerRefinery, Til
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidOutput2, 126, 22, 16, 54, MachineSideMode.Output2, getTileEntity()));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidOutput3, 148, 22, 16, 54, MachineSideMode.Output3, getTileEntity()));
 
-		registerWidget((ArrowProgressBar) new ArrowProgressBar(76, 43).bindToMachineProcessingComponent(getTileEntity().processingComponent));
-
-		registerWidget(fluidBar1 = (FluidProgressBar) new FluidProgressBar(75, 27, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent));
-		registerWidget(fluidBar2 = (FluidProgressBar) new FluidProgressBar(75, 32, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent));
-		registerWidget(fluidBar3 = (FluidProgressBar) new FluidProgressBar(75, 42, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new ArrowProgressBar(76, 42).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(fluidBar1 = new FluidProgressBar(75, 61, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
+		registerWidget(fluidBar2 = new FluidProgressBar(75, 67, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
+		registerWidget(fluidBar3 = new FluidProgressBar(75, 73, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent));
@@ -58,24 +57,28 @@ public class GuiRefinery extends StaticPowerTileEntityGui<ContainerRefinery, Til
 
 		// Update the progress bar.
 		if (recipe.isPresent()) {
-			if (recipe.get().getFluidOutput1().isEmpty()) {
+			if (!recipe.get().getFluidOutput1().isEmpty()) {
 				fluidBar1.setFluidStack(recipe.get().getFluidOutput1());
 				fluidBar1.setVisible(true);
 			} else {
 				fluidBar1.setVisible(false);
 			}
-			if (recipe.get().getFluidOutput2().isEmpty()) {
-				fluidBar2.setFluidStack(recipe.get().getFluidOutput1());
+			if (!recipe.get().getFluidOutput2().isEmpty()) {
+				fluidBar2.setFluidStack(recipe.get().getFluidOutput2());
 				fluidBar2.setVisible(true);
 			} else {
 				fluidBar2.setVisible(false);
 			}
-			if (recipe.get().getFluidOutput3().isEmpty()) {
-				fluidBar3.setFluidStack(recipe.get().getFluidOutput1());
+			if (!recipe.get().getFluidOutput3().isEmpty()) {
+				fluidBar3.setFluidStack(recipe.get().getFluidOutput3());
 				fluidBar3.setVisible(true);
 			} else {
 				fluidBar3.setVisible(false);
 			}
+		} else {
+			fluidBar1.setVisible(false);
+			fluidBar2.setVisible(false);
+			fluidBar3.setVisible(false);
 		}
 	}
 }

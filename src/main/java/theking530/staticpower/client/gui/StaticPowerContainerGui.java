@@ -64,7 +64,6 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 	protected boolean isInitialized;
-	protected float partialTicks;
 
 	private final SpriteDrawable lockedSprite;
 
@@ -89,10 +88,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		inputSlotSize = 16;
 		itemRenderer = new GuiDrawItem();
 		isScreenSizeChanging = false;
-		partialTicks = 0.0f;
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
 		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
-		registerWidget(tabManager = new GuiTabManager(this));
+		registerWidget(tabManager = new GuiTabManager());
 		container.setName(title);
 	}
 
@@ -206,9 +204,6 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	@Override
 	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		super.render(stack, mouseX, mouseY, partialTicks);
-
-		// Cache the partial ticks.
-		this.partialTicks = partialTicks;
 
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);
@@ -470,7 +465,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor,
 			Color borderTint) {
 		GuiDrawUtilities.drawGenericBackground(width, height, xPos + leftPos, yPos + topPos, 0.0f, backgroundColor,
-				borderTint, true, true, true, true);
+				true, true, true, true);
 	}
 
 	/**

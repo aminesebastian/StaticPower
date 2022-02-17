@@ -29,7 +29,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
  *
  */
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractProgressBar extends AbstractGuiWidget {
+public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> extends AbstractGuiWidget {
 	/**
 	 * The machine processing component this progress bar is bound to (if one
 	 * exists).
@@ -61,6 +61,10 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 	 * remain at 1.
 	 */
 	protected int tickDownRate;
+	/**
+	 * Indicates whether or not to render the error icon if processing is errored.
+	 */
+	protected boolean drawErrorIcons;
 	/**
 	 * Indicates whether or not the processing is stopped due to an error.
 	 */
@@ -162,55 +166,66 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
 				String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
-				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime)
-						.append(new TranslatableComponent("gui.staticpower.seconds.short")));
+				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
 			} else {
 				String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
-				tooltips.add(
-						new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
+				tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
 			}
 		}
 	}
 
-	public AbstractProgressBar disableProgressTooltip() {
+	@SuppressWarnings("unchecked")
+	public T disableProgressTooltip() {
 		enableProgressTooltip = false;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProgressBar enableProgressTooltip() {
+	@SuppressWarnings("unchecked")
+	public T enableProgressTooltip() {
 		enableProgressTooltip = true;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProgressBar setErrorState(boolean errored) {
+	@SuppressWarnings("unchecked")
+	public T setErrorState(boolean errored) {
 		isProcessingErrored = errored;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProgressBar setErrorMessage(String message) {
+	@SuppressWarnings("unchecked")
+	public T setErrorMessage(String message) {
 		processingErrorMessage = message;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProgressBar setAnimationStartAfter(float percentage) {
+	@SuppressWarnings("unchecked")
+	public T setAnimationStartAfter(float percentage) {
 		this.percentageDelay = Optional.of(percentage);
 		this.percentageDelayBefore = false;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProgressBar setAnimationLastUntil(float percentage) {
+	@SuppressWarnings("unchecked")
+	public T setAnimationLastUntil(float percentage) {
 		this.percentageDelay = Optional.of(percentage);
 		this.percentageDelayBefore = true;
-		return this;
+		return (T) this;
 	}
 
+	@SuppressWarnings("unchecked")
+	public T setDisplayErrorIcon(boolean drawErrorIcons) {
+		this.drawErrorIcons = drawErrorIcons;
+		return (T) this;
+	}
+
+	@SuppressWarnings("unchecked")
 	/**
 	 * Binds this progress bar to the provided {@link MachineProcessingComponent}.
 	 * 
 	 * @param component The component to bind to.
 	 * @return This progress bar for chaining of commands.
 	 */
-	public AbstractProgressBar bindToMachineProcessingComponent(MachineProcessingComponent component) {
+	public T bindToMachineProcessingComponent(MachineProcessingComponent component) {
 		machineProcessingComponent = component;
 
 		// Set the initial values.
@@ -218,7 +233,7 @@ public abstract class AbstractProgressBar extends AbstractGuiWidget {
 		currentProgress = machineProcessingComponent.getCurrentProcessingTime();
 		tickDownRate = machineProcessingComponent.getTimeUnitsPerTick();
 		visualCurrentProgress = currentProgress;
-		return this;
+		return (T) this;
 	}
 
 	/**

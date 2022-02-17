@@ -11,7 +11,7 @@ import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemDrawable implements IDrawable {
-	private final ItemStack itemStack;
+	private ItemStack itemStack;
 	private final Vector2D size;
 
 	public ItemDrawable(@Nonnull ItemLike item) {
@@ -26,14 +26,18 @@ public class ItemDrawable implements IDrawable {
 
 	@Override
 	public void draw(float x, float y, float z) {
-		if (itemStack != null) {
+		if (itemStack != null && !itemStack.isEmpty()) {
 			float initialValue = Minecraft.getInstance().getItemRenderer().blitOffset;
-			Minecraft.getInstance().getItemRenderer().blitOffset = z - 0.0f;
+			Minecraft.getInstance().getItemRenderer().blitOffset = z;
 
 			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(itemStack, (int) x, (int) y);
 
 			Minecraft.getInstance().getItemRenderer().blitOffset = initialValue;
 		}
+	}
+
+	public void setItemStack(ItemStack stack) {
+		this.itemStack = stack;
 	}
 
 	@Override

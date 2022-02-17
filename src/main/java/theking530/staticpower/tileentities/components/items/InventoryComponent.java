@@ -231,11 +231,11 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		setSize(nbt.contains("Size", Tag.TAG_INT) ? nbt.getInt("Size") : stacks.size());
 		ListTag tagList = nbt.getList("Items", Tag.TAG_COMPOUND);
 		for (int i = 0; i < tagList.size(); i++) {
-			CompoundTag itemTags = tagList.getCompound(i);
-			int slot = itemTags.getInt("Slot");
+			CompoundTag itemTagCompound = tagList.getCompound(i);
+			int slot = itemTagCompound.getInt("Slot");
 
 			if (slot >= 0 && slot < stacks.size()) {
-				stacks.set(slot, ItemStack.of(itemTags));
+				stacks.set(slot, ItemStack.of(itemTagCompound));
 			}
 		}
 

@@ -13,7 +13,7 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
-public class FluidProgressBar extends AbstractProgressBar {
+public class FluidProgressBar extends AbstractProgressBar<FluidProgressBar> {
 	private FluidStack displayFluidStack;
 
 	public FluidProgressBar(int xPosition, int yPosition, int width, int height) {
@@ -45,21 +45,22 @@ public class FluidProgressBar extends AbstractProgressBar {
 				// Get the fluid color.
 				Color fluidColor = GuiDrawUtilities.getFluidColor(displayFluidStack);
 				fluidColor.setW(1.0f);
-				
+
 				// Calculate the UV difference.
 				float uvDiff = icon.getU1() - icon.getU0();
 
 				Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
-				GuiDrawUtilities.drawTexturedModalRect(InventoryMenu.BLOCK_ATLAS, null, screenSpacePosition.getX(), screenSpacePosition.getY(), 0.0f,
-						visualCurrentProgresPercentage * getSize().getX(), getSize().getY(), icon.getU0(), icon.getV0(), icon.getU0() + (uvDiff * visualCurrentProgresPercentage), icon.getV1(), fluidColor);
+				GuiDrawUtilities.drawTexturedModalRect(InventoryMenu.BLOCK_ATLAS, null, screenSpacePosition.getX(), screenSpacePosition.getY(), 0.0f, visualCurrentProgresPercentage * getSize().getX(),
+						getSize().getY(), icon.getU0(), icon.getV0(), icon.getU0() + (uvDiff * visualCurrentProgresPercentage), icon.getV1(), fluidColor);
 			}
 
 			// Draw the leading white line.
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX() + (visualCurrentProgresPercentage * getSize().getX()), screenSpacePosition.getY(), 0.75f, getSize().getY(), 1.0f, Color.WHITE);
+			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX() + (visualCurrentProgresPercentage * getSize().getX()), screenSpacePosition.getY(), 0.75f, getSize().getY(), 1.0f,
+					Color.WHITE);
 		}
-		
+
 		// Draw the error indicator if needed.
-		if (isProcessingErrored) {
+		if (isProcessingErrored && drawErrorIcons) {
 			getErrorDrawable().draw(screenSpacePosition.getX() + (getSize().getX() / 2.0f) - 8.0f, screenSpacePosition.getY() - (16 - getSize().getY()) / 2);
 		}
 	}

@@ -78,6 +78,33 @@ public class StaticPowerRecipeRegistry {
 	}
 
 	/**
+	 * Attempts to find a recipe by the provided id.
+	 * 
+	 * @param <T>             The type of the recipe.
+	 * @param recipeType      The {@link IRecipeType} of the recipe.
+	 * @param matchParameters The match parameters to used.
+	 * @return Optional of the recipe if it exists, otherwise empty.
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends AbstractStaticPowerRecipe> Optional<T> getRecipe(RecipeType<T> recipeType, ResourceLocation id) {
+		// If no recipes of this type exist, return empty.
+		if (!RECIPES.containsKey(recipeType)) {
+			return Optional.empty();
+		}
+
+		// Iterate through the recipe linked list and return the first instance that
+		// matches.
+		for (AbstractStaticPowerRecipe recipe : RECIPES.get(recipeType)) {
+			if (recipe.getId().equals(id)) {
+				return Optional.of((T) recipe);
+			}
+		}
+
+		// If we find no match, return empty.
+		return Optional.empty();
+	}
+
+	/**
 	 * Gets all the recipes of the provided type.
 	 * 
 	 * @param <T>        The class of the recipe.

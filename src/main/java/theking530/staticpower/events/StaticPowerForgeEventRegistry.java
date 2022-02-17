@@ -26,6 +26,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
@@ -33,12 +34,14 @@ import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
+import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -50,7 +53,9 @@ import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.network.CableNetworkManager;
+import theking530.staticpower.data.StaticPowerGameData;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -71,20 +76,24 @@ import theking530.staticpower.world.trees.ModTrees;
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
 public class StaticPowerForgeEventRegistry {
 	public static final ResourceLocation STATIC_POWER_PLAYER_DATA = new ResourceLocation(StaticPower.MOD_ID, "player_data");
+	public static Path DATA_PATH;
 
 	@SubscribeEvent
 	public static void worldTickEvent(TickEvent.WorldTickEvent event) {
 		if (!event.world.isClientSide) {
 			if (event.phase == TickEvent.Phase.END) {
 				CableNetworkManager.get(event.world).tick();
-				// ResearchManager.get(event.world).tick();
-				// TeamManager.get(event.world).tick();
+				for (StaticPowerGameData data : StaticPowerRegistry.DATA.values()) {
+					data.tick();
+				}
 			}
 		}
 	}
 
 	@SubscribeEvent
 	public static void onServerAboutToStart(ServerAboutToStartEvent serverStarted) {
+		DATA_PATH = serverStarted.getServer().getWorldPath(new LevelResource("data"));
+
 		ReloadableResourceManager resourceManager = (ReloadableResourceManager) serverStarted.getServer().getResourceManager();
 		resourceManager.registerReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
@@ -94,14 +103,29 @@ public class StaticPowerForgeEventRegistry {
 	}
 
 	@SubscribeEvent
-	public static void onSave(Save save) {
-		Path dataPath = save.getWorld().getServer().getWorldPath(new LevelResource("data"));
-		try {
-			TeamManager.get().saveToDisk(dataPath);
-		} catch (Exception e) {
-			StaticPower.LOGGER.error("An error occured when attempting to save data to the disk.", e);
-		}
+	public static void onLoad(Load load) {
+		StaticPowerRegistry.onGameLoaded(load);
+	}
 
+	@SubscribeEvent
+	public static void onSave(Save save) {
+		StaticPowerRegistry.onGameSave(save);
+	}
+
+	@SubscribeEvent
+	public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent loggedIn) {
+		if (!loggedIn.getPlayer().getLevel().isClientSide()) {
+			// TODO: Change this back later, for now there will only be one team.
+			if (!TeamManager.get().getTeamForPlayer(loggedIn.getPlayer()).isPresent()) {
+				if (TeamManager.get().getTeams().size() == 0) {
+					TeamManager.get().createTeam(loggedIn.getPlayer());
+				} else {
+					TeamManager.get().getTeams().get(0).addPlayer(loggedIn.getPlayer());
+				}
+				// Sync the data back to the clients.
+				TeamManager.get().syncToClients();
+			}
+		}
 	}
 
 	@SubscribeEvent
@@ -253,6 +277,11 @@ public class StaticPowerForgeEventRegistry {
 	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public static void onDrawBehindScreen(BackgroundDrawnEvent event) {
 		StaticPowerClientEventHandler.onDrawBehindScreen(event);
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL)
+	public static void onDrawHUD(RenderGameOverlayEvent.Post event) {
+		StaticPowerClientEventHandler.onDrawHUD(event);
 	}
 
 	/**

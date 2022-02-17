@@ -1,6 +1,7 @@
 package theking530.staticpower.events;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -12,7 +13,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -26,7 +26,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -43,6 +42,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
@@ -50,27 +50,30 @@ import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
-import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
-import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.client.gui.StaticPowerExtensionGui;
+import theking530.staticpower.client.gui.StaticPowerHUDElement;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
+import theking530.staticpower.teams.ActiveResearchHUD;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
-@SuppressWarnings("deprecation")
+@SuppressWarnings("resource")
 @OnlyIn(Dist.CLIENT)
 public class StaticPowerClientEventHandler {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerClientEventHandler.class);
 	private static final CustomRenderer CUSTOM_RENDERER = new CustomRenderer();
+	private static final List<StaticPowerExtensionGui> UI_EXTENSIONS = new ArrayList<>();
+	private static final List<StaticPowerExtensionGui> BOUND_UI_EXTENSIONS = new ArrayList<>();
+
+	private static final List<StaticPowerHUDElement> HUD_ELEMENTS = new ArrayList<>();
 
 	protected static Field currentBlockDamageMP;
 
@@ -113,6 +116,9 @@ public class StaticPowerClientEventHandler {
 
 		// Log the completion.
 		LOGGER.info("Static Power Client Setup Completed!");
+
+		// TESTING
+		HUD_ELEMENTS.add(new ActiveResearchHUD());
 	}
 
 	public static void onModelBakeEvent(ModelBakeEvent event) {
@@ -194,24 +200,38 @@ public class StaticPowerClientEventHandler {
 	}
 
 	public static void onInitScreenEvent(InitScreenEvent event) {
-		System.out.println(Minecraft.getInstance().screen);
+		BOUND_UI_EXTENSIONS.clear();
+		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
+			boolean shouldAttach = gui.shouldAttach(event);
+			if (shouldAttach) {
+				event.addListener(gui);
+				BOUND_UI_EXTENSIONS.add(gui);
+			}
+		}
 	}
 
 	public static void onDrawScreen(DrawScreenEvent event) {
-//		TextButton button = new TextButton(50, 50, 20, 20, "test", (btn, mouse) -> {
-//		});
-//		button.updateBeforeRender(event.getPoseStack(), new Vector2D(0,0), event.getPartialTicks(), event.getMouseX(), event.getMouseY());
-//		button.mouseMove(event.getMouseX(), event.getMouseY());
-//		button.renderBehindItems(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
-	}
-	public static void onDrawBehindScreen(BackgroundDrawnEvent event) {
-		if(Minecraft.getInstance().screen instanceof AbstractContainerScreen) {
-			AbstractContainerScreen<AbstractContainerMenu> screen = (AbstractContainerScreen)Minecraft.getInstance().screen;
-			GuiDrawUtilities.drawGenericBackground(25, 24, screen.getGuiLeft() + 172, screen.getGuiTop() + 10, 0, GuiDrawUtilities.DEFAULT_BACKGROUND_COLOR, Color.WHITE, false, true, true, true);
+		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
+			gui.updateData(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+			gui.render(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
 		}
 	}
-	
-	
+
+	public static void onDrawBehindScreen(BackgroundDrawnEvent event) {
+		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
+			gui.renderBackground(event.getPoseStack());
+		}
+	}
+
+	public static void onDrawHUD(RenderGameOverlayEvent.Post event) {
+		for (StaticPowerHUDElement gui : HUD_ELEMENTS) {
+			gui.setCurrentWindow(event.getWindow());
+			gui.updateData(event.getMatrixStack(), 0, 0, event.getPartialTicks());
+			gui.renderBackground(event.getMatrixStack());
+			gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
+		}
+	}
+
 	/**
 	 * Renders the outline on the extra blocks
 	 *
@@ -340,9 +360,6 @@ public class StaticPowerClientEventHandler {
 	// Gets the damage of the current block being targeted by the player.
 	protected static float getCurrentFocusedBlockDamage() {
 		try {
-			// Cache the reflection handle to the private field (considered going ASM
-			// here...but this is client side only so, would rather lose a few frames vs
-			// introducing incomparability).
 			if (currentBlockDamageMP == null) {
 				currentBlockDamageMP = ObfuscationReflectionHelper.findField(MultiPlayerGameMode.class, "destroyProgress");
 			}

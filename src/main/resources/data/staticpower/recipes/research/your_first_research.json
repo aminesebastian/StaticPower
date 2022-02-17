@@ -1,0 +1,26 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.your_first_research",
+	"description": "Welcome to your first research!",
+	"prerequisites": [
+	],
+	"requirements": [
+		{
+			"item": "staticpower:crop_static",
+			"count": 16
+		},
+		{
+			"item": "staticpower:seed_static",
+			"count": 16
+		},
+		{
+			"item": "minecraft:book",
+			"count": 16
+		}
+	],
+	"rewards": [
+	],
+	"icon": {
+		"item": "staticpower:crop_static"
+	}
+}

@@ -13,19 +13,16 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabState;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiTabManager extends AbstractGuiWidget {
 
 	private List<BaseGuiTab> registeredTabs;
 	private BaseGuiTab initiallyOpenTab;
-	protected final StaticPowerContainerGui<?> owningGui;
 
-	public GuiTabManager(StaticPowerContainerGui<?> owningGui) {
+	public GuiTabManager() {
 		super(0.0f, 0.0f, 0.0f, 0.0f);
 		registeredTabs = new ArrayList<BaseGuiTab>();
-		this.owningGui = owningGui;
 		this.setShouldAutoCalculateTooltipBounds(false);
 	}
 
@@ -58,10 +55,6 @@ public class GuiTabManager extends AbstractGuiWidget {
 	public void setInitiallyOpenTab(BaseGuiTab tab) {
 		initiallyOpenTab = tab;
 		initiallyOpenTab.setTabState(TabState.OPEN);
-	}
-
-	public StaticPowerContainerGui<?> getOwningGui() {
-		return owningGui;
 	}
 
 	public void tabClosed(BaseGuiTab tab) {

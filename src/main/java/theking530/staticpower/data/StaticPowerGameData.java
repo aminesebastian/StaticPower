@@ -1,35 +1,48 @@
 package theking530.staticpower.data;
 
+import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Path;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraftforge.fml.util.thread.SidedThreadGroups;
+import theking530.staticpower.StaticPower;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class StaticPowerGameData {
+public abstract class StaticPowerGameData {
 	private final String name;
 
 	public StaticPowerGameData(String name) {
-		super();
 		this.name = name;
+	}
+
+	public abstract void load(CompoundTag tag);
+
+	public abstract CompoundTag serialize(CompoundTag tag);
+
+	public void saveToDisk(BufferedWriter writer) throws IOException {
+		writer.write(JsonUtilities.nbtToPrettyJson(serialize(new CompoundTag())));
+	}
+
+	public void tick() {
 	}
 
 	public String getName() {
 		return name;
 	}
 
-	public void tick() {
-
+	public void onFirstTimeCreated() {
+		StaticPower.LOGGER.debug(String.format("Created GameData with name: %1$s.", getName()));
 	}
 
-	public void load(CompoundTag tag) {
+	public void onSyncedFromServer() {
+		StaticPower.LOGGER.debug(String.format("Recieved synchronization data for GameData with name: %1$s.", getName()));
 	}
 
-	public CompoundTag serialize(CompoundTag tag) {
-
-		return tag;
-	}
-
-	public void saveToDisk(Path dataPath) throws IOException {
-		FileUtilities.writeDataToFile(dataPath, serialize(new CompoundTag()), name);
+	public void syncToClients() {
+		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) {
+			StaticPowerMessageHandler.sendToAllPlayers(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new StaticPowerGameDataSyncPacket(this));
+		} else {
+			StaticPower.LOGGER.warn(String.format("Attempted to synchronize data for GameData with name: %1$s to clients while already on the client.", getName()));
+		}
 	}
 }

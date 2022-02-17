@@ -23,13 +23,13 @@ import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipeSerializer
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipeSerializer;
-import theking530.staticpower.data.crafting.wrappers.research.ResearchSerializer;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.turbine.TurbineRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipeSerializer;
+import theking530.staticpower.data.research.ResearchSerializer;
 
 public class ModRecipeSerializers {
 

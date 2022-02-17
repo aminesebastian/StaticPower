@@ -147,7 +147,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public void syncToClient() {
 		if (!getWorld().isClientSide) {
 			PacketHeatStorageComponent syncPacket = new PacketHeatStorageComponent(this, getPos(), this.getComponentName());
-			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, syncPacket);
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 32, syncPacket);
 		} else {
 			throw new RuntimeException("This method should only be called on the server!");
 		}

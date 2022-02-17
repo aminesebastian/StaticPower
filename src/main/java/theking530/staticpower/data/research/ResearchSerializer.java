@@ -1,4 +1,4 @@
-package theking530.staticpower.data.crafting.wrappers.research;
+package theking530.staticpower.data.research;
 
 import java.util.ArrayList;
 import java.util.List;

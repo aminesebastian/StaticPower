@@ -989,5 +989,6 @@
 	"key.categories.staticpower": "Static Power",
 	"key.staticpower.lock_slot": "Lock/Unlock Slot",
 	"key.staticpower.toggle_magnet": "Toggle Magnet",
-	"key.staticpower.open_portable_digistore": "Open Portable Digistore"
+	"key.staticpower.open_portable_digistore": "Open Portable Digistore",
+	"staticpower.research.your_first_research": "Your First Research"
 }

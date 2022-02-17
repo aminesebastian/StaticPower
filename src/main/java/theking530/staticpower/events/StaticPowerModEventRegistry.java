@@ -53,6 +53,7 @@ import theking530.staticpower.data.loot.StaticPowerLootModifier;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.teams.TeamManager;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventRegistry {
@@ -94,6 +95,11 @@ public class StaticPowerModEventRegistry {
 		// Register composter recipes.
 		event.enqueueWork(() -> {
 			ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);
+		});
+
+		// Register data classes.
+		StaticPowerRegistry.registerDataFactory("teams", () -> {
+			return TeamManager.get();
 		});
 
 		LOGGER.info("Static Power Common Setup Completed!");

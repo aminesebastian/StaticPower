@@ -84,7 +84,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
 				FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 128, packet);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, packet);
 			});
 		}
 	}

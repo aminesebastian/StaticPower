@@ -166,7 +166,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 			// Perform a data sync if requested.
 			if (shouldSync && !getLevel().isClientSide()) {
 				NetworkMessage msg = new TileEntityBasicSyncPacket(this, renderOnDataSync);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 100, msg);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 64, msg);
 			}
 
 			// If we also want to mark dirty, do so.
