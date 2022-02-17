@@ -27,7 +27,7 @@ public class ActiveResearchHUD extends StaticPowerHUDElement {
 	@Override
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		int screenRight = getWindow().getGuiScaledWidth();
-		GuiDrawUtilities.drawGenericBackground(115, 45, screenRight - 118, 3, 0, new Color(1, 0.5f, 1, 0.085f));
+		GuiDrawUtilities.drawGenericBackground(115, 45, screenRight - 118, 3, 0, new Color(1.4f, 0.8f, 1.6f, 0.1f));
 
 		Team team = TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player).orElse(null);
 		if (team != null) {
