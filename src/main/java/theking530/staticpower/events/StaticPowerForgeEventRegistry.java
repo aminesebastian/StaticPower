@@ -36,7 +36,6 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
@@ -99,32 +98,48 @@ public class StaticPowerForgeEventRegistry {
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
 		StaticPower.LOGGER.info("Server resource reload listener created!");
 
-		TeamManager.get();
+		StaticPowerRegistry.onServerStarting(serverStarted);
 	}
 
 	@SubscribeEvent
 	public static void onLoad(Load load) {
-		StaticPowerRegistry.onGameLoaded(load);
+		if (!load.getWorld().isClientSide()) {
+			StaticPowerRegistry.onGameLoaded(load);
+		}
 	}
 
 	@SubscribeEvent
 	public static void onSave(Save save) {
-		StaticPowerRegistry.onGameSave(save);
+		if (!save.getWorld().isClientSide()) {
+			StaticPowerRegistry.onGameSave(save);
+		}
 	}
 
 	@SubscribeEvent
-	public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent loggedIn) {
-		if (!loggedIn.getPlayer().getLevel().isClientSide()) {
+	public static void onPlayerLoad(PlayerEvent.LoadFromFile load) {
+		if (!load.getPlayer().getLevel().isClientSide()) {
 			// TODO: Change this back later, for now there will only be one team.
-			if (!TeamManager.get().getTeamForPlayer(loggedIn.getPlayer()).isPresent()) {
+			if (!TeamManager.get().getTeamForPlayer(load.getPlayer()).isPresent()) {
 				if (TeamManager.get().getTeams().size() == 0) {
-					TeamManager.get().createTeam(loggedIn.getPlayer());
+					TeamManager.get().createTeam(load.getPlayer());
 				} else {
-					TeamManager.get().getTeams().get(0).addPlayer(loggedIn.getPlayer());
+					TeamManager.get().getTeams().get(0).addPlayer(load.getPlayer());
 				}
 				// Sync the data back to the clients.
 				TeamManager.get().syncToClients();
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void onPlayerJoined(PlayerEvent.PlayerLoggedInEvent loggedIn) {
+		// If on the server, send a sync packet for the static power player data
+		// capability.
+		if (!loggedIn.getEntity().getCommandSenderWorld().isClientSide()) {
+			loggedIn.getPlayer().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
+				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) loggedIn.getPlayer(),
+						new PacketSyncStaticPowerPlayerDataCapability(((StaticPowerPlayerData) data).serializeNBT()));
+			});
 		}
 	}
 
@@ -153,18 +168,6 @@ public class StaticPowerForgeEventRegistry {
 			if (!event.getObject().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).isPresent()) {
 				event.addCapability(STATIC_POWER_PLAYER_DATA, new StaticPowerPlayerCapabilityProvider());
 			}
-		}
-	}
-
-	@SubscribeEvent
-	public static void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		// If on the server, send a sync packet for the static power player data
-		// capability.
-		if (!event.getEntity().getCommandSenderWorld().isClientSide()) {
-			event.getPlayer().getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((data) -> {
-				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) event.getPlayer(),
-						new PacketSyncStaticPowerPlayerDataCapability(((StaticPowerPlayerData) data).serializeNBT()));
-			});
 		}
 	}
 

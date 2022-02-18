@@ -2,9 +2,20 @@ package theking530.staticcore.gui.drawables;
 
 import javax.annotation.Nonnull;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Vector2D;
@@ -15,25 +26,61 @@ public class ItemDrawable implements IDrawable {
 	private final Vector2D size;
 
 	public ItemDrawable(@Nonnull ItemLike item) {
-		itemStack = new ItemStack(item);
-		size = new Vector2D(16, 16);
+		this(item, new Vector2D(1, 1));
 	}
 
 	public ItemDrawable(@Nonnull ItemStack stack) {
+		this(stack, new Vector2D(1, 1));
+	}
+
+	public ItemDrawable(@Nonnull ItemLike item, Vector2D size) {
+		itemStack = new ItemStack(item);
+		this.size = size;
+	}
+
+	public ItemDrawable(@Nonnull ItemStack stack, Vector2D size) {
 		itemStack = stack.copy();
-		size = new Vector2D(16, 16);
+		this.size = size;
 	}
 
 	@Override
 	public void draw(float x, float y, float z) {
 		if (itemStack != null && !itemStack.isEmpty()) {
-			float initialValue = Minecraft.getInstance().getItemRenderer().blitOffset;
-			Minecraft.getInstance().getItemRenderer().blitOffset = z;
-
-			Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(itemStack, (int) x, (int) y);
-
-			Minecraft.getInstance().getItemRenderer().blitOffset = initialValue;
+			renderGuiItem(itemStack, x, y, z);
 		}
+	}
+
+	@SuppressWarnings("resource")
+	protected void renderGuiItem(ItemStack item, float x, float y, float z) {
+		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(item, (Level) null, Minecraft.getInstance().player, 0);
+		Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
+		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
+		RenderSystem.enableBlend();
+		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+		PoseStack posestack = RenderSystem.getModelViewStack();
+		posestack.pushPose();
+		posestack.translate(x, y, z);
+		posestack.translate(8.0D, 8.0D, 0.0D);
+		posestack.scale(1.0F, -1.0F, 1.0F);
+		posestack.scale(16.0F * size.getX(), 16.0F * size.getY(), 16.0F);
+		RenderSystem.applyModelViewMatrix();
+		PoseStack posestack1 = new PoseStack();
+		MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
+		boolean flag = !model.usesBlockLight();
+		if (flag) {
+			Lighting.setupForFlatItems();
+		}
+
+		Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.GUI, false, posestack1, multibuffersource$buffersource, 15728880, OverlayTexture.NO_OVERLAY, model);
+		multibuffersource$buffersource.endBatch();
+		RenderSystem.enableDepthTest();
+		if (flag) {
+			Lighting.setupFor3DItems();
+		}
+
+		posestack.popPose();
+		RenderSystem.applyModelViewMatrix();
 	}
 
 	public void setItemStack(ItemStack stack) {
@@ -41,8 +88,9 @@ public class ItemDrawable implements IDrawable {
 	}
 
 	@Override
-	public void setSize(float width, float height) {
-
+	public void setSize(float x, float y) {
+		size.setX(x);
+		size.setY(y);
 	}
 
 	@Override

@@ -1,28 +1,37 @@
 package theking530.staticpower.teams;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.UUID;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.Research.ResearchInstance;
 import theking530.staticpower.utilities.NBTUtilities;
 
 public class Team {
 	private String name;
+	private UUID id;
 	private final HashSet<String> players;
-	private final HashSet<ResourceLocation> completedResearch;
+	private final List<ResourceLocation> completedResearch;
 	private final HashMap<ResourceLocation, ResearchInstance> activeResearch;
 	private ResearchInstance currentResearch;
 
 	public Team(String name) {
-		players = new HashSet<String>();
-		completedResearch = new HashSet<>();
-		activeResearch = new HashMap<>();
+		players = new LinkedHashSet<String>();
+		completedResearch = new ArrayList<>();
+		activeResearch = new LinkedHashMap<>();
 		this.name = name;
+		this.id = UUID.randomUUID();
 	}
 
 	public String getName() {
@@ -51,13 +60,20 @@ public class Team {
 
 	public void setCurrentResearch(ResourceLocation name) {
 		if (!activeResearch.containsKey(name)) {
-			activeResearch.put(name, new ResearchInstance(name));
+			activeResearch.put(name, new ResearchInstance(name, this));
 		}
 		currentResearch = activeResearch.get(name);
 	}
 
-	public HashSet<ResourceLocation> getCompletedResearch() {
+	public List<ResourceLocation> getCompletedResearch() {
 		return completedResearch;
+	}
+
+	public void addCompletedResearch(ResourceLocation research) {
+		this.completedResearch.add(research);
+		if (activeResearch.containsKey(research)) {
+			activeResearch.remove(research);
+		}
 	}
 
 	public HashMap<ResourceLocation, ResearchInstance> getActiveResearch() {
@@ -68,10 +84,26 @@ public class Team {
 		return currentResearch;
 	}
 
+	public boolean isResearching() {
+		return currentResearch != null;
+	}
+
+	public Research getLastCompletedResearch() {
+		return StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completedResearch.get(completedResearch.size() - 1)).orElse(null);
+	}
+
+	public UUID getId() {
+		return id;
+	}
+
 	public CompoundTag serialize() {
 		CompoundTag output = new CompoundTag();
 		output.putString("name", name);
-		output.putString("currentResearch", currentResearch.getResearchName().toString());
+		output.putString("id", id.toString());
+
+		if (currentResearch != null) {
+			output.putString("currentResearch", currentResearch.getResearchName().toString());
+		}
 
 		output.put("players", NBTUtilities.serialize(players, (player, tag) -> {
 			tag.putString("id", player);
@@ -91,6 +123,8 @@ public class Team {
 	public static Team deserialize(CompoundTag tag) {
 		String name = tag.getString("name");
 		Team team = new Team(name);
+		UUID id = UUID.fromString(tag.getString("id"));
+		team.id = id;
 
 		ListTag playersTag = tag.getList("players", Tag.TAG_COMPOUND);
 		team.players.addAll(NBTUtilities.deserialize(playersTag, (playerTag) -> {
@@ -104,12 +138,17 @@ public class Team {
 
 		ListTag activeResearch = tag.getList("activeResearch", Tag.TAG_COMPOUND);
 		NBTUtilities.deserialize(activeResearch, (research) -> {
-			return ResearchInstance.deserialize(research);
+			return ResearchInstance.deserialize(research, team);
 		}).forEach((completed) -> {
 			team.activeResearch.put(completed.getResearchName(), completed);
 		});
 
-		team.currentResearch = team.activeResearch.get(new ResourceLocation(tag.getString("currentResearch")));
+		if (tag.contains("currentResearch")) {
+			ResourceLocation current = new ResourceLocation(tag.getString("currentResearch"));
+			if (team.activeResearch.containsKey(current)) {
+				team.currentResearch = team.activeResearch.get(new ResourceLocation(tag.getString("currentResearch")));
+			}
+		}
 
 		return team;
 	}

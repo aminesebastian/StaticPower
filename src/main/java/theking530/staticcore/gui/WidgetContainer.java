@@ -126,20 +126,23 @@ public class WidgetContainer {
 		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
 		List<Component> tooltips = new ArrayList<Component>();
 		getTooltips(mousePosition, tooltips, Screen.hasShiftDown());
-		
+
 		// Pop the matrix when we're done.
 		matrixStack.popPose();
 
 		// If there are any tooltips to render, render them.
 		if (tooltips.size() > 0) {
 			// Format them and then draw them.
-			Minecraft.getInstance().screen.renderComponentTooltip(matrixStack, tooltips, mouseX, mouseY);
+			if (Minecraft.getInstance().screen != null) {
+				Minecraft.getInstance().screen.renderComponentTooltip(matrixStack, tooltips, mouseX, mouseY);
+			}
 		}
 	}
 
 	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		for (AbstractGuiWidget widget : widgets) {
-			if (widget.isVisible() && !widget.getTooltipsDisabled() && (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
+			if (widget.isVisible() && !widget.getTooltipsDisabled()
+					&& (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
 				widget.getTooltips(mousePosition, tooltips, false);
 			}
 		}

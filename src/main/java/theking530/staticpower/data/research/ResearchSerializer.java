@@ -74,6 +74,20 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			}
 		}
 
+		// Capture all the advancements, and make sure there is an array provided.
+		List<ResourceLocation> advancements = new ArrayList<ResourceLocation>();
+		if (json.has("advancements")) {
+			if (!json.get("advancements").isJsonArray()) {
+				StaticPower.LOGGER.error(String.format("Advancements: %1$s's rewards must be an array!", recipeId.toString()));
+				return null;
+			}
+
+			JsonArray rews = json.get("advancements").getAsJsonArray();
+			for (JsonElement element : rews) {
+				advancements.add(new ResourceLocation(element.getAsString()));
+			}
+		}
+
 		// Capture the appropriate icon.
 		ItemStack itemIcon = null;
 		ResourceLocation textureIcon = null;
@@ -89,7 +103,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		}
 
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, itemIcon, textureIcon);
+		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advancements, itemIcon, textureIcon);
 	}
 
 	@Override
@@ -104,21 +118,21 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		} else {
 			textureIcon = new ResourceLocation(buffer.readUtf());
 		}
-		
+
 		// Prerequisites.
 		List<ResourceLocation> prerequisites = new ArrayList<ResourceLocation>();
 		byte preReqCount = buffer.readByte();
 		for (int i = 0; i < preReqCount; i++) {
 			prerequisites.add(new ResourceLocation(buffer.readUtf()));
 		}
-		
+
 		// Requirements.
 		List<StaticPowerIngredient> requirements = new ArrayList<StaticPowerIngredient>();
 		byte reqCount = buffer.readByte();
 		for (int i = 0; i < reqCount; i++) {
 			requirements.add(StaticPowerIngredient.read(buffer));
 		}
-		
+
 		// Rewards.
 		List<ItemStack> rewards = new ArrayList<ItemStack>();
 		byte rewardCount = buffer.readByte();
@@ -126,8 +140,15 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			rewards.add(buffer.readItem());
 		}
 
+		// Advacements.
+		List<ResourceLocation> advacements = new ArrayList<ResourceLocation>();
+		byte advacementsCount = buffer.readByte();
+		for (int i = 0; i < advacementsCount; i++) {
+			advacements.add(new ResourceLocation(buffer.readUtf()));
+		}
+
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, itemIcon, textureIcon);
+		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advacements, itemIcon, textureIcon);
 	}
 
 	@Override
@@ -158,6 +179,12 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		buffer.writeByte(recipe.getRewards().size());
 		for (ItemStack reward : recipe.getRewards()) {
 			buffer.writeItem(reward);
+		}
+
+		// Rewards.
+		buffer.writeByte(recipe.getAdvancements().size());
+		for (ResourceLocation advancement : recipe.getAdvancements()) {
+			buffer.writeUtf(advancement.toString());
 		}
 	}
 }

@@ -1,9 +1,10 @@
 package theking530.staticpower.teams;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -17,11 +18,11 @@ import theking530.staticpower.data.StaticPowerGameData;
 public class TeamManager extends StaticPowerGameData {
 	private static TeamManager INSTANCE;
 
-	private List<Team> teams;
+	private Map<UUID, Team> teams;
 
 	public TeamManager() {
 		super("teams");
-		teams = new ArrayList<>();
+		teams = new HashMap<>();
 	}
 
 	/**
@@ -31,10 +32,23 @@ public class TeamManager extends StaticPowerGameData {
 	 * @return
 	 */
 	public Optional<Team> getTeamForPlayer(Player player) {
-		for (Team team : teams) {
+		for (Team team : teams.values()) {
 			if (team.hasPlayer(player)) {
 				return Optional.of(team);
 			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Gets the team with the provided id, or empty if not found.
+	 * 
+	 * @param teamId
+	 * @return
+	 */
+	public Optional<Team> getTeamById(UUID teamId) {
+		if (teams.containsKey(teamId)) {
+			return Optional.of(teams.get(teamId));
 		}
 		return Optional.empty();
 	}
@@ -69,7 +83,7 @@ public class TeamManager extends StaticPowerGameData {
 		newTeam.setCurrentResearch(new ResourceLocation("staticpower:research/your_first_research"));
 
 		// Add the new team to the teams array.
-		teams.add(newTeam);
+		teams.put(newTeam.getId(), newTeam);
 	}
 
 	/**
@@ -78,7 +92,7 @@ public class TeamManager extends StaticPowerGameData {
 	 * @return
 	 */
 	public List<Team> getTeams() {
-		return Collections.unmodifiableList(teams);
+		return List.copyOf(teams.values());
 	}
 
 	@Overwrite
@@ -88,14 +102,14 @@ public class TeamManager extends StaticPowerGameData {
 		for (Tag teamTag : teamsTag) {
 			CompoundTag teamTagCompound = (CompoundTag) teamTag;
 			Team team = Team.deserialize(teamTagCompound);
-			teams.add(team);
+			teams.put(team.getId(), team);
 		}
 	}
 
 	@Overwrite
 	public CompoundTag serialize(CompoundTag tag) {
 		ListTag teamsTag = new ListTag();
-		teams.forEach(team -> {
+		teams.values().forEach(team -> {
 			teamsTag.add(team.serialize());
 		});
 		tag.put("teams", teamsTag);

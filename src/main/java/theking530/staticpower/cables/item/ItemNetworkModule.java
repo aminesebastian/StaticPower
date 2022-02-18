@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -55,14 +56,19 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 */
 	@Override
 	public void tick(Level world) {
+		// We have to capture these ahead of time because iterating using an iterator
+		// may cause ConcurrentModificationException.
+		List<BlockPos> positionsToQuery = ActiveParcels.keySet().stream().toList();
 		List<BlockPos> destinationsToRemove = new ArrayList<BlockPos>();
 
 		// For each destination.
-		for (Entry<BlockPos, LinkedList<ItemRoutingParcel>> entry : ActiveParcels.entrySet()) {
+		for (int j = positionsToQuery.size() - 1; j >= 0; j--) {
+			LinkedList<ItemRoutingParcel> parcels = ActiveParcels.get(positionsToQuery.get(j));
+
 			// Get the parcels going to that destination.
-			for (int i = entry.getValue().size() - 1; i >= 0; i--) {
+			for (int i = parcels.size() - 1; i >= 0; i--) {
 				// Get the parcel.
-				ItemRoutingParcel currentPacket = entry.getValue().get(i);
+				ItemRoutingParcel currentPacket = parcels.get(i);
 				// Increment the move time and stop tracking if the transfer returns true (in
 				// the case of a final insert, network transfer, or re-routing). If we are half
 				// way through traversal (meaning, at a point where the item may visual exist
@@ -70,19 +76,19 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				// position is still valid. If it is not, attempt to re-route.
 				if (currentPacket.incrementMoveTimer()) {
 					if (transferItemPacket(currentPacket)) {
-						entry.getValue().remove(i);
+						parcels.remove(i);
 					}
 				} else if (currentPacket.isHalfWayThroughPath()) {
 					if (!isParcelPathValid(currentPacket)) {
 						rerouteOrTransferParcel(currentPacket);
-						entry.getValue().remove(i);
+						parcels.remove(i);
 					}
 				}
 			}
 
 			// If the list of parcels is empty, mark that destination for purging.
-			if (entry.getValue().isEmpty()) {
-				destinationsToRemove.add(entry.getKey());
+			if (parcels.isEmpty()) {
+				destinationsToRemove.add(positionsToQuery.get(j));
 			}
 		}
 
@@ -231,7 +237,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 
 		// If we have a path, get the source inventory.
 		if (shortestPath != null) {
-			// The method #getSourcesForItemRetrieval should only return sources that have tile entities, so no need to check that here.
+			// The method #getSourcesForItemRetrieval should only return sources that have
+			// tile entities, so no need to check that here.
 			IItemHandler sourceInv = targetSource.getDestinationWrapper().getTileEntity()
 					.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, targetSource.getDestinationWrapper().getFirstConnectedDestinationSide()).orElse(null);
 
@@ -391,8 +398,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			// pipe's min move time, and we cannot go slower than the maximum default move
 			// time.
 			if (currentMoveTime < nextPipeMinMoveTime) {
-				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition())
-						.getDoubleProperty(ItemCableComponent.ITEM_CABLE_FRICTION_FACTOR_TAG);
+				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDoubleProperty(ItemCableComponent.ITEM_CABLE_FRICTION_FACTOR_TAG);
 				currentMoveTime = SDMath.clamp(currentMoveTime, 2, nextPipeMinMoveTime);
 			} else if (currentMoveTime > nextPipeMinMoveTime) {
 				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition())
@@ -530,8 +536,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		ItemStack transferedAmount = remainingItems;
 		while (lastTransferedAmount.getCount() != transferedAmount.getCount()) {
 			lastTransferedAmount = transferedAmount;
-			transferedAmount = transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false,
-					parcel.getCurrentMoveTime());
+			transferedAmount = transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false, parcel.getCurrentMoveTime());
 			if (transferedAmount.isEmpty()) {
 				break;
 			}
@@ -575,14 +580,13 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 				lastTransferedAmount = remainingAmount;
 
 				// Try to send the parcel to the nearest location.
-				remainingAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false,
-						false, parcel.getCurrentMoveTime());
+				remainingAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getCurrentEntry().getDirectionOfEntry(), false, false,
+						parcel.getCurrentMoveTime());
 
 				// If there are still remaining items, try to use the other network to return
 				// the parcel to it's sender.
 				if (!remainingAmount.isEmpty()) {
-					Path pathToSource = otherItemModule.getPathForItem(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getPath().getSourceCableLocation(), null,
-							true);
+					Path pathToSource = otherItemModule.getPathForItem(parcel.getContainedItem(), parcel.getCurrentEntry().getPosition(), parcel.getPath().getSourceCableLocation(), null, true);
 					if (pathToSource != null) {
 						remainingAmount = otherItemModule.transferItemStack(parcel.getContainedItem(), pathToSource, parcel.getInDirection(), false, parcel.isHalfWayThroughPath(),
 								parcel.getCurrentMoveTime());

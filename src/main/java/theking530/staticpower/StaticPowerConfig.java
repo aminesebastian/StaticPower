@@ -159,9 +159,10 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> heatSinkTemperatureDamageThreshold;
 
 		public final ConfigValue<Double> poweredGrinderOutputBonusChance;
-		public final LongValue poweredFurnacePowerUsage;
 		public final LongValue poweredGrinderPowerUsage;
 		public final ConfigValue<Integer> poweredGrinderProcessingTime;
+
+		public final LongValue poweredFurnacePowerUsage;
 
 		public final ConfigValue<Double> tumblerOutputBonusChance;
 		public final ConfigValue<Integer> tumblerRequiredSpeed;
@@ -230,6 +231,8 @@ public class StaticPowerConfig {
 
 		public final LongValue refineryPowerUsage;
 		public final ConfigValue<Integer> refineryProcessingTime;
+
+		public final LongValue laboratoryPowerUsage;
 
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Generation");
@@ -705,6 +708,12 @@ public class StaticPowerConfig {
 					refineryProcessingTime = builder
 							.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime").define("RefineryProcessingTime", 20);
+					builder.pop();
+				}
+				{
+					builder.push("Laboratory");
+					laboratoryPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "laboratoryPowerUsage").defineInRange("LaboratoryPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
 					builder.pop();
 				}
 

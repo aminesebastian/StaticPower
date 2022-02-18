@@ -1,7 +1,6 @@
 package theking530.staticpower.data.research;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +14,7 @@ import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.teams.Team;
 
 public class Research extends AbstractStaticPowerRecipe {
 	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
@@ -25,9 +25,10 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final List<ResourceLocation> prerequisites;
 	private final List<StaticPowerIngredient> requirements;
 	private final List<ItemStack> rewards;
+	private final List<ResourceLocation> advancements;
 
 	public Research(ResourceLocation name, String title, String description, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements, List<ItemStack> rewards,
-			ItemStack itemIcon, ResourceLocation textureIcon) {
+			List<ResourceLocation> advancements, ItemStack itemIcon, ResourceLocation textureIcon) {
 		super(name);
 		this.title = title;
 		this.description = description;
@@ -36,6 +37,11 @@ public class Research extends AbstractStaticPowerRecipe {
 		this.rewards = rewards;
 		this.itemIcon = itemIcon;
 		this.textureIcon = textureIcon;
+		this.advancements = advancements;
+	}
+
+	public List<ResourceLocation> getAdvancements() {
+		return advancements;
 	}
 
 	public boolean hasItemStackIcon() {
@@ -128,8 +134,10 @@ public class Research extends AbstractStaticPowerRecipe {
 		private final ResourceLocation researchName;
 		private final List<Integer> requirementFullfillment;
 		private final Research research;
+		private final Team team;
 
-		public ResearchInstance(ResourceLocation researchName) {
+		public ResearchInstance(ResourceLocation researchName, Team team) {
+			this.team = team;
 			this.researchName = researchName;
 			this.requirementFullfillment = new LinkedList<Integer>();
 			research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, researchName).orElse(null);
@@ -156,14 +164,41 @@ public class Research extends AbstractStaticPowerRecipe {
 			return requirementFullfillment.get(index);
 		}
 
-		public static ResearchInstance deserialize(CompoundTag tag) {
+		public void addRequirementFullfillment(int index, int amount) {
+			requirementFullfillment.set(index, requirementFullfillment.get(index) + amount);
+			if (isCompleted()) {
+				//team.addCompletedResearch(researchName);
+			}
+		}
+
+		public float getFullfillmentPercentage() {
+			int fullfillmentCount = 0;
+			int totalRequirements = 0;
+
+			for (int fullfillment : requirementFullfillment) {
+				fullfillmentCount += fullfillment;
+			}
+
+			for (StaticPowerIngredient req : getTrackedResearch().getRequirements()) {
+				totalRequirements += req.getCount();
+			}
+
+			return (float) fullfillmentCount / totalRequirements;
+		}
+
+		public boolean isCompleted() {
+			return getFullfillmentPercentage() >= 1.0f;
+		}
+
+		public static ResearchInstance deserialize(CompoundTag tag, Team team) {
 			String researchName = tag.getString("researchName");
-			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchName));
+			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchName), team);
 
 			int[] fullfillment = tag.getIntArray("requirementFullfillment");
 			for (int i = 0; i < fullfillment.length; i++) {
 				instance.requirementFullfillment.set(i, fullfillment[i]);
 			}
+			System.out.println();
 			return instance;
 		}
 

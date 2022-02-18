@@ -73,6 +73,7 @@ import theking530.staticpower.tileentities.powered.fluidinfuser.BlockFluidInfuse
 import theking530.staticpower.tileentities.powered.former.BlockFormer;
 import theking530.staticpower.tileentities.powered.fusionfurnace.BlockFusionFurnace;
 import theking530.staticpower.tileentities.powered.heatsink.BlockHeatSink;
+import theking530.staticpower.tileentities.powered.laboratory.BlockLaboratory;
 import theking530.staticpower.tileentities.powered.lathe.BlockLathe;
 import theking530.staticpower.tileentities.powered.lumbermill.BlockLumberMill;
 import theking530.staticpower.tileentities.powered.mixer.BlockMixer;
@@ -249,6 +250,7 @@ public class ModBlocks {
 	public static BlockRandomItemGenerator RandomItemGenerator;
 	public static BlockEnchanter Enchanter;
 	public static BlockRefinery Refinery;
+	public static BlockLaboratory Laboratory;
 
 	public static BlockStraightConveyor StraightConveyor;
 	public static BlockRampUpConveyor RampUpConveyor;
@@ -514,7 +516,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(RandomItemGenerator = new BlockRandomItemGenerator("random_item_generator"));
 		StaticPowerRegistry.preRegisterBlock(Enchanter = new BlockEnchanter("machine_enchanter"));
 		StaticPowerRegistry.preRegisterBlock(Refinery = new BlockRefinery("machine_refinery"));
-		
+		StaticPowerRegistry.preRegisterBlock(Laboratory = new BlockLaboratory("laboratory"));
+
 		StaticPowerRegistry.preRegisterBlock(StraightConveyor = new BlockStraightConveyor("conveyor_straight"));
 		StaticPowerRegistry.preRegisterBlock(RampUpConveyor = new BlockRampUpConveyor("conveyor_ramp_up"));
 		StaticPowerRegistry.preRegisterBlock(RampDownConveyor = new BlockRampDownConveyor("conveyor_ramp_down"));

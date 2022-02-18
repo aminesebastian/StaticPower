@@ -466,7 +466,7 @@ public abstract class BaseGuiTab {
 		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(stack, 0, 0);
 		// GlStateManager._disableDepthTest();
 		if (icon != null) {
-			icon.draw(getTabSide() == TabSide.RIGHT ? position.getX() + 3 : position.getX() + tabWidth + 4.0f, position.getY() + 4, 0.0f);
+			icon.draw(getTabSide() == TabSide.RIGHT ? position.getX() + 3 : position.getX() + tabWidth + 4.0f, position.getY() + 4, 100.0f);
 			if (showNotificationBadge && tabState == TabState.CLOSED) {
 				notifictionBadge.draw(getTabSide() == TabSide.RIGHT ? position.getX() + 17 : position.getX() + tabWidth - 4.0f, position.getY() - 2.0f, tabIndex);
 			}

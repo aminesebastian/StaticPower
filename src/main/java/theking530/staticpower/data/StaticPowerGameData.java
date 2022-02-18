@@ -1,8 +1,5 @@
 package theking530.staticpower.data;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 import theking530.staticpower.StaticPower;
@@ -18,10 +15,6 @@ public abstract class StaticPowerGameData {
 	public abstract void load(CompoundTag tag);
 
 	public abstract CompoundTag serialize(CompoundTag tag);
-
-	public void saveToDisk(BufferedWriter writer) throws IOException {
-		writer.write(JsonUtilities.nbtToPrettyJson(serialize(new CompoundTag())));
-	}
 
 	public void tick() {
 	}

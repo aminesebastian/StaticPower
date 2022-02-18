@@ -1,6 +1,7 @@
 package theking530.staticpower.init;
 
 import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
 import theking530.staticpower.StaticPowerRegistry;
@@ -110,7 +111,7 @@ public class ModItems {
 	public static StaticPowerItem IngotRedstoneAlloy;
 	public static StaticPowerItem IngotBrass;
 	public static StaticPowerItem IngotBronze;
-	
+
 	public static StaticPowerItem NuggetCopper;
 	public static StaticPowerItem NuggetTin;
 	public static StaticPowerItem NuggetZinc;
@@ -510,6 +511,14 @@ public class ModItems {
 	public static JuiceBottleItem BeetJuiceBottle;
 	public static JuiceBottleItem BerryJuiceBottle;
 
+	public static StaticPowerItem ResearchTier1;
+	public static StaticPowerItem ResearchTier2;
+	public static StaticPowerItem ResearchTier3;
+	public static StaticPowerItem ResearchTier4;
+	public static StaticPowerItem ResearchTier5;
+	public static StaticPowerItem ResearchTier6;
+	public static StaticPowerItem ResearchTier7;
+
 	public static void init() {
 		// Misc.
 		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
@@ -531,7 +540,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
 		StaticPowerRegistry.preRegisterItem(IngotInertInfusion = new StaticPowerItem("ingot_inert_infusion"));
 		StaticPowerRegistry.preRegisterItem(IngotRedstoneAlloy = new StaticPowerItem("ingot_redstone_alloy"));
-		
+
 		// Raw Ores
 		StaticPowerRegistry.preRegisterItem(RawRustyIron = new StaticPowerItem("raw_rusty_iron"));
 		StaticPowerRegistry.preRegisterItem(RawTin = new StaticPowerItem("raw_tin"));
@@ -673,7 +682,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("wrench_static"));
 		StaticPowerRegistry.preRegisterItem(EnergizedWrench = new StaticWrench("wrench_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumWrench = new StaticWrench("wrench_lumum"));
-		
+
 		StaticPowerRegistry.preRegisterItem(WeakMagnet = new StaticPowerItem("magnet_weak"));
 		StaticPowerRegistry.preRegisterItem(BasicMagnet = new Magnet("magnet_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedMagnet = new Magnet("magnet_advanced", StaticPowerTiers.ADVANCED));
@@ -1019,5 +1028,14 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(MelonJuiceBottle = new JuiceBottleItem("bottle_juice_melon", 40, 6, 8.0f));
 		StaticPowerRegistry.preRegisterItem(BeetJuiceBottle = new JuiceBottleItem("bottle_juice_beetroot", 40, 4, 6.0f));
 		StaticPowerRegistry.preRegisterItem(BerryJuiceBottle = new JuiceBottleItem("bottle_juice_berry", 40, 8, 10.0f));
+
+		// Research
+		StaticPowerRegistry.preRegisterItem(ResearchTier1 = new StaticPowerItem("research_tier_1", new Item.Properties().stacksTo(16)));
+		StaticPowerRegistry.preRegisterItem(ResearchTier2 = new StaticPowerItem("research_tier_2", new Item.Properties().stacksTo(16)));
+		StaticPowerRegistry.preRegisterItem(ResearchTier3 = new StaticPowerItem("research_tier_3", new Item.Properties().stacksTo(16)));
+		StaticPowerRegistry.preRegisterItem(ResearchTier4 = new StaticPowerItem("research_tier_4", new Item.Properties().stacksTo(16)));
+		StaticPowerRegistry.preRegisterItem(ResearchTier5 = new StaticPowerItem("research_tier_5", new Item.Properties().stacksTo(16)));
+		StaticPowerRegistry.preRegisterItem(ResearchTier6 = new StaticPowerItem("research_tier_6", new Item.Properties().stacksTo(16)));
+		StaticPowerRegistry.preRegisterItem(ResearchTier7 = new StaticPowerItem("research_tier_7", new Item.Properties().stacksTo(16)));
 	}
 }

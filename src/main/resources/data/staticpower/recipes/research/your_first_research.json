@@ -6,19 +6,13 @@
 	],
 	"requirements": [
 		{
-			"item": "staticpower:crop_static",
-			"count": 16
-		},
-		{
-			"item": "staticpower:seed_static",
-			"count": 16
-		},
-		{
-			"item": "minecraft:book",
-			"count": 16
+			"item": "staticpower:research_tier_1",
+			"count": 100
 		}
 	],
 	"rewards": [
+	],
+	"advancements": [
 	],
 	"icon": {
 		"item": "staticpower:crop_static"

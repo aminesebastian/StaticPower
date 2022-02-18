@@ -1,6 +1,7 @@
 package theking530.staticpower;
 
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -26,11 +27,13 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
+import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
+import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.StaticPowerGameData;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
@@ -173,6 +176,10 @@ public class StaticPowerRegistry {
 		DATA_FACTORIES.put(dataName, factory);
 	}
 
+	public static void onServerStarting(ServerAboutToStartEvent serverStarted) {
+		DATA.clear();
+	}
+
 	public static void onGameLoaded(Load load) {
 		if (!load.getWorld().isClientSide()) {
 			// TODO: Determine how to prevent it from loading multiple times (if there are
@@ -201,6 +208,9 @@ public class StaticPowerRegistry {
 						// If the file was not found, create the data for the first time.
 						createAndCacheDataFirstTime(entry.getKey());
 					}
+
+					// Then we sync the data to the clients.
+					DATA.get(entry.getKey()).syncToClients();
 				} catch (Exception e) {
 					StaticPower.LOGGER.error(String.format("An error occured when attempting to save data: %1$s to the disk.", entry.getKey()), e);
 				}
@@ -219,18 +229,40 @@ public class StaticPowerRegistry {
 			// Iterate through all the data objects and save the data for each object.
 			DATA.values().parallelStream().forEach((data) -> {
 				BufferedWriter writer = null;
+				File lockFile = null;
+
+				// Create a writer for the file and pass it to the data to save.
+				String formattedName = formatDataSaveFileName(save, data.getName());
+				String lockfileName = formattedName + ".lock";
 				try {
 					// Sync the data to the clients.
 					data.syncToClients();
 
-					// Create a writer for the file and pass it to the data to save.
-					String formattedName = formatDataSaveFileName(save, data.getName());
+					// If there is a lock file, just skip this save.
+					lockFile = new File(lockfileName);
+					if (lockFile.exists() && !lockFile.isDirectory()) {
+						StaticPower.LOGGER.warn(String.format("Skipping saving data for: %1$s to the disk. Lock file still exists.", data.getName()));
+						return;
+					}
+
+					// Create the lock file.
+					lockFile.createNewFile();
+
+					// Write and save the actual data we want to save to the disk.
+					CompoundTag tag = new CompoundTag();
+					data.serialize(tag);
 					writer = new BufferedWriter(new FileWriter(formattedName));
-					data.saveToDisk(writer);
+					writer.write(JsonUtilities.nbtToPrettyJson(tag));
+					writer.close();
 				} catch (Exception e) {
 					StaticPower.LOGGER.error(String.format("An error occured when attempting to save data: %1$s to the disk.", data.getName()), e);
 				} finally {
 					try {
+						// Delete the lock file if it exists.
+						if (lockFile != null && lockFile.exists() && !lockFile.isDirectory()) {
+							lockFile.delete();
+						}
+
 						// Always try to close the writer if not-null.
 						if (writer != null) {
 							writer.close();
@@ -243,6 +275,7 @@ public class StaticPowerRegistry {
 
 			StaticPower.LOGGER.info("Finished Saving Static Power data!");
 		}
+
 	}
 
 	public static StaticPowerGameData getGameDataByName(String name) {

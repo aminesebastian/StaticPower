@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/laboratory",
+	"textures": {
+		"io_frame": "staticpower:blocks/empty_texture"
+	}
+}

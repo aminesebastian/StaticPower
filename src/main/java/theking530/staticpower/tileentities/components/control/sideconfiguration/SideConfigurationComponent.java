@@ -9,6 +9,7 @@ import javax.annotation.Nonnull;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -65,7 +66,14 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	@Override
 	public void onRegistered(TileEntityBase owner) {
 		super.onRegistered(owner);
-		setToDefault(true);
+
+	}
+
+	@Override
+	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
+		if (firstTimePlaced) {
+			setToDefault(true);
+		}
 	}
 
 	/**
