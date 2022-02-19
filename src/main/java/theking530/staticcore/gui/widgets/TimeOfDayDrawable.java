@@ -45,29 +45,25 @@ public class TimeOfDayDrawable extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		Vector2D adjustedLocation = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-		float xPos = adjustedLocation.getX();
-		float yPos = adjustedLocation.getY();
-
+	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		EStateOfDay dayState = getDayState();
 		if (dayState == EStateOfDay.DAY) {
-			day.draw(xPos, yPos);
+			day.draw(pose);
 		} else if (dayState == EStateOfDay.SUNSET) {
-			sunset.draw(xPos, yPos);
+			sunset.draw(pose);
 		} else if (dayState == EStateOfDay.SUNRISE) {
-			sunrise.draw(xPos, yPos);
+			sunrise.draw(pose);
 		} else {
-			night.draw(xPos, yPos);
+			night.draw(pose);
 		}
 
 		if (isRaining()) {
-			rain.draw(xPos, yPos);
-			rainClouds.draw(xPos, yPos);
+			rain.draw(pose);
+			rainClouds.draw(pose);
 		} else if (isSnowing()) {
-			snow.draw(xPos, yPos);
+			snow.draw(pose);
 		} else {
-			clouds.draw(xPos, yPos);
+			clouds.draw(pose);
 		}
 	}
 

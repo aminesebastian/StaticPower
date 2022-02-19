@@ -8,6 +8,10 @@ import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public interface IDrawable {
+	default void draw(PoseStack pose) {
+		draw(pose, 0, 0, 0);
+	}
+
 	default void draw(PoseStack pose, float x, float y) {
 		draw(pose, x, y, 0.0f);
 	}

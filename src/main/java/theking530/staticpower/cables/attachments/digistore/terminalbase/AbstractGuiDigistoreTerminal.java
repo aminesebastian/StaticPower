@@ -404,10 +404,10 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	@Override
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
-		itemRenderer.drawItem(Items.IRON_HELMET, leftPos, topPos, -18, 113, 0.3f);
-		itemRenderer.drawItem(Items.IRON_CHESTPLATE, leftPos, topPos, -18, 131, 0.3f);
-		itemRenderer.drawItem(Items.IRON_LEGGINGS, leftPos, topPos, -18, 149, 0.3f);
-		itemRenderer.drawItem(Items.IRON_BOOTS, leftPos, topPos, -18, 167, 0.3f);
+		itemRenderer.drawItem(stack, Items.IRON_HELMET, leftPos, topPos, -18, 113, 0.3f);
+		itemRenderer.drawItem(stack, Items.IRON_CHESTPLATE, leftPos, topPos, -18, 131, 0.3f);
+		itemRenderer.drawItem(stack, Items.IRON_LEGGINGS, leftPos, topPos, -18, 149, 0.3f);
+		itemRenderer.drawItem(stack, Items.IRON_BOOTS, leftPos, topPos, -18, 167, 0.3f);
 
 		if (viewType == TerminalViewType.CRAFTING) {
 			if (getMenu().getCurrentCraftingQueue().size() > 0) {
@@ -415,7 +415,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 					currentCraftingRequestIndex = getMenu().getCurrentCraftingQueue().size() - 1;
 				}
 				CraftingRequestResponse currentRequest = getMenu().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
-				itemRenderer.drawItem(currentRequest.getCraftingItem(), leftPos, topPos, (imageWidth / 2) - 8, 20, 1.0f);
+				itemRenderer.drawItem(stack, currentRequest.getCraftingItem(), leftPos, topPos, (imageWidth / 2) - 8, 20, 1.0f);
 			}
 		}
 	}

@@ -62,7 +62,7 @@ public class DigistoreSlotButton extends FakeSlotButton {
 			}
 			stack.popPose();
 		} else {
-			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, 16, 16, 200, new Color(0.0f, 0.0f, 0.0f, 0.5f));
+			GuiDrawUtilities.drawRectangle(stack, 16, 16, 0, 0, 200, new Color(0.0f, 0.0f, 0.0f, 0.5f));
 		}
 
 	}

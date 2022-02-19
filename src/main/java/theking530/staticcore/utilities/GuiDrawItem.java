@@ -1,6 +1,7 @@
 package theking530.staticcore.utilities;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -20,26 +21,26 @@ public class GuiDrawItem {
 		shouldDraw = ShouldDraw;
 	}
 
-	public void drawItem(Item item, int guiLeft, int guiTop, int x, int y, float alpha) {
+	public void drawItem(PoseStack pose, Item item, int guiLeft, int guiTop, int x, int y, float alpha) {
 		if (shouldDraw) {
-			drawItem(new ItemStack(item), guiLeft, guiTop, x, y, alpha);
+			drawItem(pose,new ItemStack(item), guiLeft, guiTop, x, y, alpha);
 		}
 	}
 
-	public void drawItem(ItemStack item, int guiLeft, int guiTop, int x, int y, float alpha) {
+	public void drawItem(PoseStack pose,ItemStack item, int guiLeft, int guiTop, int x, int y, float alpha) {
 		if (shouldDraw && !item.isEmpty()) {
-			renderItemModelIntoGUI(item, guiLeft + x, guiTop + y, alpha);
+			renderItemModelIntoGUI(pose, item, guiLeft + x, guiTop + y, alpha);
 		}
 	}
 
-	protected void renderItemModelIntoGUI(ItemStack stack, int x, int y, float alpha) {
+	protected void renderItemModelIntoGUI(PoseStack pose,ItemStack stack, int x, int y, float alpha) {
 		Minecraft minecraft = Minecraft.getInstance();
 		ItemRenderer itemRenderer = minecraft.getItemRenderer();
 		itemRenderer.renderAndDecorateItem(stack, x, y);
 
 		RenderSystem.disableDepthTest();
 		RenderSystem.enableBlend();
-		GuiDrawUtilities.drawColoredRectangle(x, y, 16, 16, 0, new Color(0.5f, 0.5f, 0.5f, 1.0f - alpha));
+		GuiDrawUtilities.drawRectangle(pose, 16, 16,x,y, 0, new Color(0.5f, 0.5f, 0.5f, 1.0f - alpha));
 		RenderSystem.disableBlend();
 		RenderSystem.enableDepthTest();
 	}

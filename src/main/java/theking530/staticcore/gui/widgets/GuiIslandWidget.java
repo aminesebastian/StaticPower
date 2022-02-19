@@ -20,10 +20,8 @@ public class GuiIslandWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		Vector2D screenSpace = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-		GuiDrawUtilities.drawGenericBackground((int) getSize().getX(), (int) getSize().getY(), (int) screenSpace.getX(), (int) screenSpace.getY(), 0.0f, GuiDrawUtilities.DEFAULT_BACKGROUND_COLOR,
-				leftEnabled, rightEnabled, topEnabled, bottomEnabled);
+	public void renderWidgetBackground(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		GuiDrawUtilities.drawGenericBackground(pose, getSize().getX(),  getSize().getY());
 	}
 
 	public GuiIslandWidget setTopEnabledState(boolean state) {

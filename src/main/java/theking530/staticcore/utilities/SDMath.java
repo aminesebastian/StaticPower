@@ -3,6 +3,7 @@ package theking530.staticcore.utilities;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 
@@ -10,9 +11,12 @@ import net.minecraft.core.Direction;
 
 public class SDMath {
 	public static final Matrix4f IDENTITY;
+	public static final PoseStack IDENTITY_STACK;
 	static {
 		IDENTITY = new Matrix4f();
 		IDENTITY.setIdentity();
+		IDENTITY_STACK= new PoseStack();
+		IDENTITY_STACK.setIdentity();
 	}
 	private static final Random RANDOM = new Random();
 

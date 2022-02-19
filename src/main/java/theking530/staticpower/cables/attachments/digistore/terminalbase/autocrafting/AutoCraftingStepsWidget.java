@@ -33,7 +33,8 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Create the auto crafting renderers.
 		for (int i = 0; i < rows * columns; i++) {
 			Vector2D position = getStepRenderPosition(i);
-			AutoCraftingStepWidget stepRenderer = new AutoCraftingStepWidget(position.getX(), position.getY(), getSize().getX() / columns, 22);
+			AutoCraftingStepWidget stepRenderer = new AutoCraftingStepWidget(position.getX(), position.getY(),
+					getSize().getX() / columns, 22);
 			stepRenderers.add(stepRenderer);
 		}
 	}
@@ -60,7 +61,8 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Draw the steps.
 		for (int i = end - 1; i >= start; i--) {
 			int zeroIndex = i - start;
-			stepRenderers.get(zeroIndex).setStepData(request, materials.getMaterials().get(i), request.getCurrentCraftingStepIndex() - 1 == zeroIndex);
+			stepRenderers.get(zeroIndex).setStepData(request, materials.getMaterials().get(i),
+					request.getCurrentCraftingStepIndex() - 1 == zeroIndex);
 			stepRenderers.get(zeroIndex).updateData();
 		}
 	}
@@ -80,11 +82,8 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 
 	@Override
 	public void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		// Get the screen space position.
-		Vector2D screenSpacePos = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(null, getSize().getX(), (rows * 24) - 1, screenSpacePos.getX(), screenSpacePos.getY(), 0);
+		GuiDrawUtilities.drawSlot(matrix, getSize().getX(), (rows * 24) - 1, 0, 0, 0);
 
 		// If there is no request, do nothing else.
 		if (request == null) {
@@ -117,7 +116,8 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 		// Render the vertical dividers.
 		int divisionDistance = this.getSize().getXi() / columns;
 		for (int i = 1; i < columns; i++) {
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePos.getX() + (divisionDistance * i) - 1, screenSpacePos.getY(), 1.0f, (rows * 24) - 1, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawRectangle(matrix, 1.0f, (rows * 24) - 1, (divisionDistance * i) - 1, 0, 1.0f,
+					Color.GREY);
 		}
 	}
 
