@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,6 +17,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector4D;
+import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
 public class StandardButton extends AbstractGuiWidget {
@@ -73,21 +76,20 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		if (!isVisible()) {
 			return;
 		}
 
-		// Calculate the button's left and top.
-		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-		int buttonLeft = (int) position.getX();
-		int buttonTop = (int) position.getY();
-
 		// Draw the button and then the overlay.
 		if (shouldDrawButtonBackground()) {
-			drawButton(matrix, buttonLeft, buttonTop);
+			boolean shouldDrawHighlighted = isClicked() || isHovered() || isToggled();
+			ResourceLocation texture = shouldDrawHighlighted ? GuiTextures.BUTTON_HOVER : GuiTextures.BUTTON;
+			float uPixel = 1.0f / 200.0f;
+			float vPixel = 1.0f / 20.0f;
+			GuiDrawUtilities.drawTexturedBox(pose, texture, getSize().getX(), getSize().getY(), new Vector4D(uPixel * 2, vPixel * 2, uPixel * 198, vPixel * 17));
 		}
-		drawButtonOverlay(matrix, buttonLeft, buttonTop);
+		drawButtonOverlay(pose, 0, 0);
 	}
 
 	@Override
@@ -131,10 +133,6 @@ public class StandardButton extends AbstractGuiWidget {
 			return;
 		}
 		hovered = false;
-	}
-
-	protected void drawButton(PoseStack stack, int transformedButtonLeft, int transformedButtonTop) {
-		GuiDrawUtilities.drawDefaultButton(isClicked() || isHovered() || isToggled(), transformedButtonLeft, transformedButtonTop, getSize().getX(), getSize().getY(), 0.0f);
 	}
 
 	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {

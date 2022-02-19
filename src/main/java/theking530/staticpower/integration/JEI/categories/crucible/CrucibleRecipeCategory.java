@@ -86,8 +86,8 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 
 	@Override
 	public void draw(CrucibleRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 50, 12, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 75, 32, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 50, 12, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 75, 32, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 106, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
@@ -95,7 +95,7 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		GuiHeatBarUtilities.drawHeatBar(matrixStack, 28, 54, 4, 48, 1.0f, recipe.getMinimumTemperature(), getNetHighestMultipleOf10(recipe.getMinimumTemperature()));
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 72, 18, 28, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 72, 18, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
 		FluidStack fluid = recipe.getOutputFluid();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 72, 23, 1, progress, 5, false);

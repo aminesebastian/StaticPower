@@ -74,7 +74,7 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getRequiredFluid(), 0, 0, 53, 56, 1.0f, 24, 40, MachineSideMode.Never, true);
 		TranslatableComponent bonus = new TranslatableComponent("gui.staticpower.fertlization_bonus", GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
 		bonus.append(new TextComponent("%"));
-		GuiDrawUtilities.drawStringWithSizeCentered(matrixStack, bonus.getString(), 65, 9, 0.9f, Color.EIGHT_BIT_YELLOW, true);
+		GuiDrawUtilities.drawStringCentered(matrixStack, bonus.getString(), 65, 9, 0.0f, 0.9f, Color.EIGHT_BIT_YELLOW, true);
 	}
 
 	@Override

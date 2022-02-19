@@ -80,12 +80,20 @@ public class Team {
 		return activeResearch;
 	}
 
+	public ResearchInstance getResearchProgress(ResourceLocation research) {
+		return activeResearch.get(research);
+	}
+
 	public ResearchInstance getCurrentResearch() {
 		return currentResearch;
 	}
 
 	public boolean isResearching() {
 		return currentResearch != null;
+	}
+
+	public boolean isResearching(ResourceLocation research) {
+		return activeResearch.containsKey(research);
 	}
 
 	public Research getLastCompletedResearch() {
@@ -139,8 +147,8 @@ public class Team {
 		ListTag activeResearch = tag.getList("activeResearch", Tag.TAG_COMPOUND);
 		NBTUtilities.deserialize(activeResearch, (research) -> {
 			return ResearchInstance.deserialize(research, team);
-		}).forEach((completed) -> {
-			team.activeResearch.put(completed.getResearchName(), completed);
+		}).forEach((active) -> {
+			team.activeResearch.put(active.getResearchName(), active);
 		});
 
 		if (tag.contains("currentResearch")) {

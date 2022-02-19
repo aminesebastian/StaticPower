@@ -1,16 +1,18 @@
 package theking530.staticcore.gui.drawables;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public interface IDrawable {
-	default void draw(float x, float y) {
-		draw(x, y, 0.0f);
+	default void draw(PoseStack pose, float x, float y) {
+		draw(pose, x, y, 0.0f);
 	}
 
-	public void draw(float x, float y, float z);
+	public void draw(PoseStack pose, float x, float y, float z);
 
 	public void setSize(float width, float height);
 

@@ -2,7 +2,6 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.autocra
 
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
@@ -82,7 +81,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (material == null) {
 			return;
 		}
@@ -106,21 +105,21 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		// the items scenario.
 		Color textColor = isBlockingStep() ? Color.EIGHT_BIT_RED : Color.EIGHT_BIT_WHITE;
 		if (material.getMissingAmount() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 7, 0.5f, textColor, true);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(), localPosition.getXi() + 53, localPosition.getYi() + 12, 0.5f, textColor, true);
-			GuiDrawUtilities.drawColoredRectangle(matrix, localPosition.getXi() + 21, localPosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(), localPosition.getXi() + 53.5f, localPosition.getYi() + 19.5f, 0.5f,
-					new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Missing: " + material.getMissingAmount(), localPosition.getXi() + 53, localPosition.getYi() + 19, 0.5f,
-					new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
+			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 7, 0.0f, 0.5f, textColor, true);
+			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), localPosition.getXi() + 53, localPosition.getYi() + 12, 0.0f, 0.5f, textColor, true);
+			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, localPosition.getXi() + 21, localPosition.getYi() + 14, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), localPosition.getXi() + 53.5f, localPosition.getYi() + 19.5f, 0.0f,
+					0.5f, new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
+			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), localPosition.getXi() + 53, localPosition.getYi() + 19, 0.0f,
+					0.5f, new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
 			MISSING_INGREDIENT_RENDERABLE.draw(screenSpacePosition.getXi() + 2, screenSpacePosition.getYi() + 3);
 		} else if (material.getAmountToCraft() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrix, "Required: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 7, 0.5f, textColor, true);
-			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountStored(), localPosition.getXi() + 53, localPosition.getYi() + 12, 0.5f, textColor, true);
-			GuiDrawUtilities.drawColoredRectangle(matrix, localPosition.getXi() + 21, localPosition.getYi() + 14, 35.0f, 0.5f, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawStringWithSize(matrix, "To Craft: " + material.getAmountToCraft(), localPosition.getXi() + 53, localPosition.getYi() + 19, 0.5f, textColor, true);
+			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 7, 0.0f, 0.5f, textColor, true);
+			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), localPosition.getXi() + 53, localPosition.getYi() + 12, 0.0f, 0.5f, textColor, true);
+			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, localPosition.getXi() + 21, localPosition.getYi() + 14, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawString(matrix, "To Craft: " + material.getAmountToCraft(), localPosition.getXi() + 53, localPosition.getYi() + 19, 0.0f, 0.5f, textColor, true);
 		} else {
-			GuiDrawUtilities.drawStringWithSize(matrix, "Stored: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 11, 0.5f, textColor, true);
+			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountRequired(), localPosition.getXi() + 53, localPosition.getYi() + 11, 0.0f, 0.5f, textColor, true);
 		}
 
 		if (isBlockingStep()) {
@@ -128,7 +127,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		}
 
 		// Draw the bottom divider.
-		GuiDrawUtilities.drawColoredRectangle(matrix, localPosition.getXi(), localPosition.getYi() + getSize().getY(), getSize().getX(), 0.75f, 1.0f, Color.GREY);
+		GuiDrawUtilities.drawRectangle(matrix, getSize().getX(), 0.75f, localPosition.getXi(), localPosition.getYi() + getSize().getY(), 1.0f, Color.GREY);
 	}
 
 	protected boolean isBlockingStep() {

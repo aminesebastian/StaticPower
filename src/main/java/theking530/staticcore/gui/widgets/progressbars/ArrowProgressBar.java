@@ -5,7 +5,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
@@ -23,25 +22,21 @@ public class ArrowProgressBar extends AbstractProgressBar<ArrowProgressBar> {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-
-		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 
 		if (flipped) {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY(), 0.0f, -getSize().getX(),
-					getSize().getY(), 0, 0.5f, 0.6875f, 1.0f);
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX() + getSize().getX(), screenSpacePosition.getY() + 0.5f, 0.0f,
-					-getSize().getX() * visualCurrentProgresPercentage, getSize().getY(), 0.0f, 0.0f, visualCurrentProgresPercentage * 0.6875f, 0.5f);
+			GuiDrawUtilities.drawTexture(matrix, GuiTextures.ARROW_PROGRESS_BAR, -getSize().getX(), getSize().getY(), getSize().getX(), 0, 0.0f, 0, 0.5f, 0.6875f, 1.0f);
+			GuiDrawUtilities.drawTexture(matrix, GuiTextures.ARROW_PROGRESS_BAR, -getSize().getX() * visualCurrentProgresPercentage, getSize().getY(), getSize().getX(), 0.5f, 0.0f, 0.0f,
+					0.0f, visualCurrentProgresPercentage * 0.6875f, 0.5f);
 		} else {
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY(), 0.0f, getSize().getX(), getSize().getY(), 0, 0.5f,
-					0.6875f, 1.0f);
-			GuiDrawUtilities.drawTexturedModalRect(GuiTextures.ARROW_PROGRESS_BAR, null, screenSpacePosition.getX(), screenSpacePosition.getY() + 0.5f, 0.0f,
-					getSize().getX() * visualCurrentProgresPercentage, getSize().getY(), 0.0f, 0.0f, visualCurrentProgresPercentage * 0.6875f, 0.5f);
+			GuiDrawUtilities.drawTexture(matrix, GuiTextures.ARROW_PROGRESS_BAR, getSize().getX(), getSize().getY(), 0, 0, 0.0f, 0, 0.5f, 0.6875f, 1.0f);
+			GuiDrawUtilities.drawTexture(matrix, GuiTextures.ARROW_PROGRESS_BAR, getSize().getX() * visualCurrentProgresPercentage, getSize().getY(), 0, 0 + 0.5f, 0.0f, 0.0f, 0.0f,
+					visualCurrentProgresPercentage * 0.6875f, 0.5f);
 		}
 
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + 2.5f, screenSpacePosition.getY() + 0.5f);
+			getErrorDrawable().draw(matrix, 2.5f, 0.5f);
 		}
 	}
 }

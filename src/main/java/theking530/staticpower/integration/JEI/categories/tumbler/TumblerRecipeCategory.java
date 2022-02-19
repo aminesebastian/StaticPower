@@ -84,8 +84,8 @@ public class TumblerRecipeCategory extends BaseJEIRecipeCategory<TumblerRecipe> 
 
 	@Override
 	public void draw(TumblerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 40, 6, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 38, 46, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 40, 6, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 38, 46, 0);
 
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 66, 16, 60, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 

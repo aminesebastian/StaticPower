@@ -1,5 +1,7 @@
 package theking530.staticcore.gui.drawables;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -63,16 +65,16 @@ public class SpriteDrawable implements IDrawable {
 	}
 
 	@Override
-	public void draw(float x, float y, float z) {
+	public void draw(PoseStack pose, float x, float y, float z) {
 		if (sprite != null) {
 			// Check to see if this is a REAL sprite, or just a texture. We could also just
 			// check for a file extension, but this seems safer.
 			@SuppressWarnings("deprecation")
 			TextureAtlasSprite atlasSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(sprite);
 			if (atlasSprite.getName().toString().equals("minecraft:missingno")) {
-				GuiDrawUtilities.drawTexturedModalRect(sprite, null, x, y, z, size.getX(), size.getY(), getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
+				GuiDrawUtilities.drawTexture(pose, sprite, size.getX(), size.getY(), x, y, z, getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
 			} else {
-				GuiDrawUtilities.drawTexturedModalSprite(sprite, null, x, y, z, size.getX(), size.getY(), getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
+				GuiDrawUtilities.drawSprite(pose, sprite, size.getX(), size.getY(), x, y, z, getUV().getX(), getUV().getY(), getUV().getZ(), getUV().getW(), tint);
 			}
 		}
 	}

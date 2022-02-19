@@ -28,6 +28,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
@@ -177,6 +178,10 @@ public class StaticPowerRegistry {
 	}
 
 	public static void onServerStarting(ServerAboutToStartEvent serverStarted) {
+		DATA.clear();
+	}
+
+	public static void onServerStopping(ServerStoppedEvent serverStarted) {
 		DATA.clear();
 	}
 

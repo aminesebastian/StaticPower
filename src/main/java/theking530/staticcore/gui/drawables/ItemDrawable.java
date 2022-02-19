@@ -1,6 +1,7 @@
 package theking530.staticcore.gui.drawables;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.Lighting;
@@ -18,6 +19,7 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
@@ -44,27 +46,36 @@ public class ItemDrawable implements IDrawable {
 	}
 
 	@Override
-	public void draw(float x, float y, float z) {
+	public void draw(@Nullable PoseStack stack, float x, float y, float z) {
 		if (itemStack != null && !itemStack.isEmpty()) {
-			renderGuiItem(itemStack, x, y, z);
+			renderGuiItem(stack, itemStack, x, y, z);
 		}
 	}
 
 	@SuppressWarnings("resource")
-	protected void renderGuiItem(ItemStack item, float x, float y, float z) {
+	protected void renderGuiItem(@Nullable PoseStack postSackIn, ItemStack item, float x, float y, float z) {
 		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(item, (Level) null, Minecraft.getInstance().player, 0);
 		Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
 		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 		RenderSystem.enableBlend();
 		RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+
 		PoseStack posestack = RenderSystem.getModelViewStack();
 		posestack.pushPose();
-		posestack.translate(x, y, z);
 		posestack.translate(8.0D, 8.0D, 0.0D);
+
+		if (postSackIn != null) {
+			Vector2D offset = GuiDrawUtilities.translatePositionByMatrix(postSackIn, x, y);
+			posestack.translate(offset.getX(), offset.getY(), z);
+		} else {
+			posestack.translate(x, y, z);
+		}
+
 		posestack.scale(1.0F, -1.0F, 1.0F);
 		posestack.scale(16.0F * size.getX(), 16.0F * size.getY(), 16.0F);
 		RenderSystem.applyModelViewMatrix();
+
 		PoseStack posestack1 = new PoseStack();
 		MultiBufferSource.BufferSource multibuffersource$buffersource = Minecraft.getInstance().renderBuffers().bufferSource();
 		boolean flag = !model.usesBlockLight();
@@ -80,6 +91,7 @@ public class ItemDrawable implements IDrawable {
 		}
 
 		posestack.popPose();
+
 		RenderSystem.applyModelViewMatrix();
 	}
 

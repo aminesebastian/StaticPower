@@ -78,7 +78,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
-				GuiDrawUtilities.drawColoredRectangle(stack, 79, 19, 18, 18, 1.0f,
+				GuiDrawUtilities.drawRectangle(stack, 18, 18, 79, 19, 1.0f,
 						new Color(200, 200, 200, 200).fromEightBitToFloat());
 			}
 		}
@@ -111,8 +111,8 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
 
 			// Draw the item count string.
-			GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), 98, 37, 0.5f,
-					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(stack, count.getValueAsString(true), 98, 37, 0.0f,
+					0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 }

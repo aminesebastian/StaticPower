@@ -39,8 +39,8 @@ public class SolidColorButton extends StandardButton {
 	}
 
 	@Override
-	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack pose, int buttonLeft, int buttonTop) {
 		Vector2D size = getSize();
-		GuiDrawUtilities.drawColoredRectangle(buttonLeft + padding, buttonTop + padding, size.getX() - (padding * 2), size.getY() - (padding * 2), 1.0f, color);
+		GuiDrawUtilities.drawRectangle(pose, buttonLeft + padding, buttonTop + padding, size.getX() - (padding * 2), size.getY() - (padding * 2), 1.0f, color);
 	}
 }

@@ -91,8 +91,8 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 	@Override
 	public void draw(MixerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 56, 2, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 56, 38, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 56, 2, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 56, 38, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getPrimaryFluidInput(), 0, 0, 32, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
@@ -103,7 +103,7 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		// Draw the progress bar as a fluid (can't use the widget here because this is a
 		// singleton class).
-		GuiDrawUtilities.drawSlot(matrixStack, 100, 23, 24, 8, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 24, 8, 100, 23, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 24;
 		FluidStack fluid = recipe.getOutput();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 100, 31, 1, progress, 8, false);

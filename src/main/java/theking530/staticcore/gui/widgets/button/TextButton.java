@@ -24,14 +24,14 @@ public class TextButton extends StandardButton {
 	}
 
 	@Override
-	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack pose, int buttonLeft, int buttonTop) {
 		int width = fontRenderer.width(text);
 
-		GuiDrawUtilities.drawStringWithSize(stack, text, getPosition().getXi() + getSize().getX() / 2 + width / 2, getPosition().getYi() - 1 + fontRenderer.lineHeight / 2 + getSize().getY() / 2, 1.0f,
+		GuiDrawUtilities.drawString(pose, text, getSize().getX() / 2 + width / 2, -1 + fontRenderer.lineHeight / 2 + getSize().getY() / 2, 0.0f, 1.0f,
 				isEnabled() ? Color.EIGHT_BIT_WHITE : Color.EIGHT_BIT_WHITE, true);
 
 		if (!isEnabled()) {
-			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 1.0f, new Color(128.0f, 128.0f, 128.0f, 75.0f));
+			GuiDrawUtilities.drawRectangle(pose, buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 1.0f, new Color(128.0f, 128.0f, 128.0f, 75.0f));
 		}
 	}
 

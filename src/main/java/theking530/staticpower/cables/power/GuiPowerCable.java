@@ -103,26 +103,26 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 		float netPosition = xPos + 110;
 
 		// Draw the values background.
-		GuiDrawUtilities.drawSlot(stack, xPos, yPos, 146, 12, 0);
+		GuiDrawUtilities.drawSlot(stack, 146, 12, xPos, yPos, 0);
 
 		// Draw the labels.
-		GuiDrawUtilities.drawStringWithSize(stack, "In:", inPosition, yPos + 4.5f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringWithSize(stack, "Out:", outPosition, yPos + 4.5f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
-		GuiDrawUtilities.drawStringWithSize(stack, "Net:", netPosition, yPos + 4.5f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawString(stack, "In:", inPosition, yPos + 4.5f, 0.0f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawString(stack, "Out:", outPosition, yPos + 4.5f, 0.0f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawString(stack, "Net:", netPosition, yPos + 4.5f, 0.0f, 0.5f, Color.EIGHT_BIT_DARK_GREY, false);
 
 		float recieve = this.getTileEntity().powerCableComponent.getClientLastEnergyReceieve();
 		String recivePerTick = GuiTextUtilities.formatEnergyRateToString(recieve).getString();
 		int recieveWidth = (int) (this.font.width(recivePerTick) * textScale);
-		GuiDrawUtilities.drawStringWithSize(stack, recivePerTick, inPosition + 14 + (recieveWidth / 2), yPos + 9, textScale, new Color(0.0f, 255.0f, 50.0f), true);
+		GuiDrawUtilities.drawString(stack, recivePerTick, inPosition + 14 + (recieveWidth / 2), yPos + 9, 0.0f, textScale, new Color(0.0f, 255.0f, 50.0f), true);
 
 		float extract = -this.getTileEntity().powerCableComponent.getClientLastEnergyReceieve();
 		String extractPerTick = GuiTextUtilities.formatEnergyRateToString(extract).getString();
 		int extractWidth = (int) (this.font.width(extractPerTick) * textScale);
-		GuiDrawUtilities.drawStringWithSize(stack, extractPerTick, outPosition + 14 + (extractWidth / 2), yPos + 9, textScale, new Color(255.0f, 0.0f, 30.0f), true);
+		GuiDrawUtilities.drawString(stack, extractPerTick, outPosition + 14 + (extractWidth / 2), yPos + 9, 0.0f, textScale, new Color(255.0f, 0.0f, 30.0f), true);
 
 		float net = recieve + extract;
 		String netPerTick = GuiTextUtilities.formatEnergyRateToString(net).getString();
 		int netWidth = (int) (this.font.width(netPerTick) * textScale);
-		GuiDrawUtilities.drawStringWithSize(stack, netPerTick, netPosition + 14 + (netWidth / 2), yPos + 9, textScale, new Color(0.0f, 100.0f, 255.0f), true);
+		GuiDrawUtilities.drawString(stack, netPerTick, netPosition + 14 + (netWidth / 2), yPos + 9, 0.0f, textScale, new Color(0.0f, 100.0f, 255.0f), true);
 	}
 }

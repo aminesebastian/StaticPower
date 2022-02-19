@@ -46,9 +46,9 @@ public class GuiFluidBarUtilities {
 
 		// Draw the outline around the fluid slot.
 		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
-			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, 0, mode.getColor());
+			GuiDrawUtilities.drawSlot(matrixStack, (int) width, (int) height, (int) x, (int) (y - height), 0, mode.getColor());
 		} else {
-			GuiDrawUtilities.drawSlot(matrixStack, (int) x, (int) (y - height), (int) width, (int) height, 0);
+			GuiDrawUtilities.drawSlot(matrixStack, (int) width, (int) height, (int) x, (int) (y - height), 0);
 		}
 
 		// Calculate the origin.

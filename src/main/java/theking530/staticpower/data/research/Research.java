@@ -86,6 +86,11 @@ public class Research extends AbstractStaticPowerRecipe {
 		return ResearchSerializer.INSTANCE;
 	}
 
+	@Override
+	public String toString() {
+		return getId().toString();
+	}
+
 	public boolean isValid(RecipeMatchParameters matchParams) {
 		// Check items if requested.
 		if (matchParams.shouldVerifyItems()) {
@@ -167,7 +172,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		public void addRequirementFullfillment(int index, int amount) {
 			requirementFullfillment.set(index, requirementFullfillment.get(index) + amount);
 			if (isCompleted()) {
-				//team.addCompletedResearch(researchName);
+				// team.addCompletedResearch(researchName);
 			}
 		}
 

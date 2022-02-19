@@ -31,7 +31,7 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		if (machineProcessingComponent.isProcessingStoppedDueToError()) {
 			errorDrawable.draw(screenSpacePosition.getX(), screenSpacePosition.getY());

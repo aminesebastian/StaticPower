@@ -52,13 +52,13 @@ public class DigistoreSlotButton extends FakeSlotButton {
 			// Check if this item is ONLY craftable (meaning, there are 0 in the system).
 			if (DigistoreInventorySnapshot.getCraftableStateOfItem(itemIcon) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
 				// Draw a string that says: "Craft".
-				GuiDrawUtilities.drawStringWithSize(stack, "Craft", pos.getX() + 16, pos.getY() + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(stack, "Craft", pos.getX() + 16, pos.getY() + 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			} else {
 				// Pass the itemstack count through the metric converter.
 				MetricConverter count = new MetricConverter(itemIcon.getCount());
 
 				// Draw the item count string manually.
-				GuiDrawUtilities.drawStringWithSize(stack, count.getValueAsString(true), pos.getX() + 16, pos.getY() + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(stack, count.getValueAsString(true), pos.getX() + 16, pos.getY() + 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			}
 			stack.popPose();
 		} else {

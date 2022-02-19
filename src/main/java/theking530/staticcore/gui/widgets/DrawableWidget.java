@@ -55,7 +55,7 @@ public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Get the screen space position and offset it by the scale to center the
 		// entity.
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());

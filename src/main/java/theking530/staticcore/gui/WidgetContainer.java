@@ -35,11 +35,11 @@ public class WidgetContainer {
 	public WidgetContainer(StaticPowerContainerGui<?> owner) {
 		widgets = new HashSet<AbstractGuiWidget>();
 		this.owner = owner;
+		this.ownerPosition = new Vector2D(0, 0);
 	}
 
 	public WidgetContainer() {
-		widgets = new HashSet<AbstractGuiWidget>();
-		this.owner = null;
+		this(null);
 	}
 
 	public void tick() {

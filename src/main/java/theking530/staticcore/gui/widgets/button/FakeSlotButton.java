@@ -63,14 +63,14 @@ public class FakeSlotButton extends StandardButton {
 
 	protected void drawButton(PoseStack stack, int transformedButtonLeft, int transformedButtonTop) {
 		Vector2D position = this.getPosition();
-		GuiDrawUtilities.drawSlot(stack, position.getX(), position.getY(), 16, 16, 0);
+		GuiDrawUtilities.drawSlot(stack, 16, 16, position.getX(), position.getY(), 0);
 	}
 
 	/**
 	 * Draws the button at the location defined at construction time.
 	 */
 	@Override
-	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack pose, int buttonLeft, int buttonTop) {
 		// If the item is not empty, render it.
 		if (!itemIcon.isEmpty()) {
 			Vector2D size = getSize();
@@ -81,7 +81,7 @@ public class FakeSlotButton extends StandardButton {
 
 		// Render the hover effect.
 		if (isHovered()) {
-			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, 16, 16, 200, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+			GuiDrawUtilities.drawRectangle(pose, buttonLeft, buttonTop, 16, 16, 200, new Color(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
 }

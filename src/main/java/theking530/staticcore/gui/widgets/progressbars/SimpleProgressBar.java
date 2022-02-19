@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
@@ -25,10 +24,9 @@ public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBehindItems(pose, mouseX, mouseY, partialTicks);
 
-		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		int width = (int) (getSize().getXi() * visualCurrentProgresPercentage);
 		if (width < 7 && currentProgress > 0) {
 			width = 7;
@@ -42,28 +40,27 @@ public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
 		}
 
 		if (flipped) {
-			GuiDrawUtilities.drawGenericBackground(getSize().getXi(), getSize().getYi(), (int) screenSpacePosition.getX(), (int) screenSpacePosition.getY(), 0, emptyBarColor);
+			GuiDrawUtilities.drawGenericBackground(pose, getSize().getXi(), getSize().getYi(), 0, 0, 0, emptyBarColor);
 			if (width >= 7) {
-				GuiDrawUtilities.drawGenericBackground(width, getSize().getYi(), (int) screenSpacePosition.getX(), (int) screenSpacePosition.getY(), 0, barColor);
+				GuiDrawUtilities.drawGenericBackground(pose, width, getSize().getYi(), 0, 0, 0, barColor);
 			}
 		} else {
-			GuiDrawUtilities.drawGenericBackground(getSize().getXi(), getSize().getYi(), (int) screenSpacePosition.getX(), (int) screenSpacePosition.getY(), 0, emptyBarColor);
+			GuiDrawUtilities.drawGenericBackground(pose, getSize().getXi(), getSize().getYi(), 0, 0, 0, emptyBarColor);
 			if (width >= 7) {
-				GuiDrawUtilities.drawGenericBackground(width, getSize().getYi(), (int) screenSpacePosition.getX(), (int) screenSpacePosition.getY(), 0, barColor);
+				GuiDrawUtilities.drawGenericBackground(pose, width, getSize().getYi(), 0, 0, 0, barColor);
 			}
 		}
 
 		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + 2.5f, screenSpacePosition.getY() + 0.5f);
+			getErrorDrawable().draw(pose, 2.5f, 0.5f);
 		}
 
 		if (visualCurrentProgresPercentage >= 1.0f) {
-			GuiDrawUtilities.drawStringWithSizeCentered(matrix, "Completed!", screenSpacePosition.getX() + (getSize().getXi() / 2), screenSpacePosition.getY() + (getSize().getYi() / 2) + 2f, 0.5f,
-					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose, "Completed!", (getSize().getXi() / 2), (getSize().getYi() / 2) + 2f, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		} else {
-			GuiDrawUtilities.drawStringWithSizeCentered(matrix, GuiTextUtilities.formatNumberAsStringNoDecimal(percent).getString() + "%",
-					screenSpacePosition.getX() + Math.min(Math.max(width, 12 + (visualCurrentProgresPercentage * getSize().getX() - 5)), getSize().getXi() - 10),
-					screenSpacePosition.getY() + (getSize().getYi() / 2) + 2f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsStringNoDecimal(percent).getString() + "%",
+					Math.min(Math.max(width, 12 + (visualCurrentProgresPercentage * getSize().getX() - 5)), getSize().getXi() - 10), (getSize().getYi() / 2) + 2f, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE,
+					true);
 		}
 	}
 }

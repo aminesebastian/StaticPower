@@ -204,13 +204,13 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 			matrixStack.translate(0.0, 0.0, 260.0);
 			if (DigistoreInventorySnapshot.getCraftableStateOfItem(slotStack) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
 				// Draw a string that says: "Craft".
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "Craft", slotIn.x + 16, slotIn.y + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(matrixStack, "Craft", slotIn.x + 16, slotIn.y + 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			} else {
 				// Pass the itemstack count through the metric converter.
 				MetricConverter count = new MetricConverter(slotIn.getItem().getCount());
 
 				// Draw the item count string manually.
-				GuiDrawUtilities.drawStringWithSize(matrixStack, count.getValueAsString(true), slotIn.x + 16, slotIn.y + 15, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(matrixStack, count.getValueAsString(true), slotIn.x + 16, slotIn.y + 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			}
 			matrixStack.popPose();
 		} else {
@@ -397,8 +397,8 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
 		// Draw the bar slots.
-		GuiDrawUtilities.drawSlot(stack, -18, 67, 6, 34, 0);
-		GuiDrawUtilities.drawSlot(stack, -8, 67, 6, 34, 0);
+		GuiDrawUtilities.drawSlot(stack, 6, 34, -18, 67, 0);
+		GuiDrawUtilities.drawSlot(stack, 6, 34, -8, 67, 0);
 	}
 
 	@Override

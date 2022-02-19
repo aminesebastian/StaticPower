@@ -84,9 +84,9 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 
-		GuiDrawUtilities.drawColoredRectangle(stack, 50, 20, 1.0f, 55, 0.0f, Color.GREY);
+		GuiDrawUtilities.drawRectangle(stack, 1.0f, 55, 50, 20, 0.0f, Color.GREY);
 
-		GuiDrawUtilities.drawColoredRectangle(stack, 125, 20, 1.0f, 55, 0.0f, Color.GREY);
+		GuiDrawUtilities.drawRectangle(stack, 1.0f, 55, 125, 20, 0.0f, Color.GREY);
 
 		if (getTileEntity().isDoneMining()) {
 			font.draw(stack, "Done!", 75, 64, 4210752);

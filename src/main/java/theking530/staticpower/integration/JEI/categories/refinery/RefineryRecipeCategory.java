@@ -93,7 +93,7 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 
 	@Override
 	public void draw(RefineryRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 79, 2, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 79, 2, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getPrimaryFluidInput(), 0, 0, 32, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
@@ -111,17 +111,17 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 
 		int yOffset = 0;
 		if (!recipe.getFluidOutput1().isEmpty()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 75, 27, 24, 4, 0);
+			GuiDrawUtilities.drawSlot(matrixStack, 24, 4, 75, 27, 0);
 			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput1(), 1000, 1000, 75, 31, 1, progress, 4, false);
 			yOffset += 7;
 		}
 		if (!recipe.getFluidOutput2().isEmpty()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 75, 27 + yOffset, 24, 4, 0);
+			GuiDrawUtilities.drawSlot(matrixStack, 24, 4, 75, 27 + yOffset, 0);
 			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput2(), 1000, 1000, 75, 31 + +yOffset, 1, progress, 4, false);
 			yOffset += 7;
 		}
 		if (!recipe.getFluidOutput3().isEmpty()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 75, 27 + yOffset, 24, 4, 0);
+			GuiDrawUtilities.drawSlot(matrixStack, 24, 4, 75, 27 + yOffset, 0);
 			GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput3(), 1000, 1000, 75, 31 + +yOffset, 1, progress, 4, false);
 		}
 	}

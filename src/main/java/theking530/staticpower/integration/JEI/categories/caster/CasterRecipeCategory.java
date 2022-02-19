@@ -90,15 +90,15 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 	@Override
 	public void draw(CastingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		// Draw the slots.
-		GuiDrawUtilities.drawSlot(matrixStack, 76, 14, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 118, 30, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 76, 14, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 118, 30, 0);
 
 		// Draw the bars.
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 30, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 97, 20, 41, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 41, 5, 97, 20, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 41;
 		FluidStack fluid = recipe.getInputFluid();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 97, 25, 1, progress, 5, false);

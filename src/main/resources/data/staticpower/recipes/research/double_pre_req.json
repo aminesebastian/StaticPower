@@ -1,0 +1,22 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.your_third_research",
+	"description": "Welcome to your optional research!",
+	"prerequisites": [
+		"staticpower:research/your_first_research",
+		"staticpower:research/second_branch_research2"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_3",
+			"count": 50
+		}
+	],
+	"rewards": [
+	],
+	"advancements": [
+	],
+	"icon": {
+		"item": "staticpower:crop_energized"
+	}
+}

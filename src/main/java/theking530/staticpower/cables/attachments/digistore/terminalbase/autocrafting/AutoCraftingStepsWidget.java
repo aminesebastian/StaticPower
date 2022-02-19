@@ -79,12 +79,12 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Get the screen space position.
 		Vector2D screenSpacePos = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(null, screenSpacePos.getX(), screenSpacePos.getY(), getSize().getX(), (rows * 24) - 1, 0);
+		GuiDrawUtilities.drawSlot(null, getSize().getX(), (rows * 24) - 1, screenSpacePos.getX(), screenSpacePos.getY(), 0);
 
 		// If there is no request, do nothing else.
 		if (request == null) {

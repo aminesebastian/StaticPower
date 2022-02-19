@@ -1,6 +1,5 @@
-package theking530.staticpower.teams;
+package theking530.staticpower.teams.research;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -14,6 +13,8 @@ import theking530.staticpower.client.gui.StaticPowerHUDElement;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.Research.ResearchInstance;
+import theking530.staticpower.teams.Team;
+import theking530.staticpower.teams.TeamManager;
 
 public class ActiveResearchHUD extends StaticPowerHUDElement {
 	private final ItemDrawable itemRenderer;
@@ -30,7 +31,6 @@ public class ActiveResearchHUD extends StaticPowerHUDElement {
 	@Override
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		int screenRight = getWindow().getGuiScaledWidth();
-
 		Team team = TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player).orElse(null);
 		if (team != null) {
 			ResearchInstance current = null;
@@ -53,7 +53,7 @@ public class ActiveResearchHUD extends StaticPowerHUDElement {
 			itemRenderer.setItemStack(research.getItemIcon());
 			itemRenderer.setSize(1.0f, 1.0f);
 			itemRenderer.draw(screenRight - width, 7);
-			GuiDrawUtilities.drawStringWithSizeLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), screenRight - width + 20, 15, 0.75f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), screenRight - width + 20, 15, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.
 			progressBar.setPosition(screenRight - width + 20, 19);
@@ -65,22 +65,16 @@ public class ActiveResearchHUD extends StaticPowerHUDElement {
 			}
 
 			// Draw requirements.
-
 			if (team.isResearching()) {
 				for (int i = 0; i < research.getRequirements().size(); i++) {
 					int xOffset = i * 20;
 					StaticPowerIngredient requirement = research.getRequirements().get(i);
 					itemRenderer.setItemStack(requirement.getIngredient().getItems()[0]);
 					itemRenderer.setSize(0.75f, 0.75f);
-					itemRenderer.draw(screenRight - 25 - xOffset, 26);
+					itemRenderer.draw(screenRight - 25 - xOffset, 25);
 
-					pose.pushPose();
-					RenderSystem.enableBlend();
-					pose.translate(0, 0, 255);
-					GuiDrawUtilities.drawColoredRectangle(screenRight - 16 - xOffset, 34, 9, 9, 100, new Color(1.0f, 0.8f, 1.0f, 0.01f));
-					GuiDrawUtilities.drawStringWithSize(pose, Integer.toString(requirement.getCount() - current.getRequirementFullfillment(i)), screenRight - 8 - xOffset, 41, 0.75f,
+					GuiDrawUtilities.drawString(pose, Integer.toString(requirement.getCount() - current.getRequirementFullfillment(i)), screenRight - 8 - xOffset, 39, 255, 0.75f,
 							Color.EIGHT_BIT_WHITE, true);
-					pose.popPose();
 				}
 			}
 		}

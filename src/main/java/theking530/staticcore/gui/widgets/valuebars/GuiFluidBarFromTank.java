@@ -33,7 +33,7 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		tank.updateBeforeRendering(partialTicks);
 
 		if (owningTileEntity != null) {

@@ -62,7 +62,8 @@ import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.Capsu
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
-import theking530.staticpower.teams.ActiveResearchHUD;
+import theking530.staticpower.teams.research.ActiveResearchHUD;
+import theking530.staticpower.teams.research.GuiResearchMenu;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
 @SuppressWarnings("resource")
@@ -113,7 +114,10 @@ public class StaticPowerClientEventHandler {
 
 		LOGGER.info("Performing Key Bindings!");
 		ModKeyBindings.registerBindings(event);
-
+		ModKeyBindings.addCallback(ModKeyBindings.OPEN_RESEARCH, (binding) -> {
+			GuiResearchMenu.tryOpen();
+		});
+		
 		// Log the completion.
 		LOGGER.info("Static Power Client Setup Completed!");
 
@@ -212,7 +216,7 @@ public class StaticPowerClientEventHandler {
 
 	public static void onDrawScreen(DrawScreenEvent event) {
 		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
-			gui.updateData(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+			gui.tick();
 			gui.render(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
 		}
 	}
@@ -226,7 +230,7 @@ public class StaticPowerClientEventHandler {
 	public static void onDrawHUD(RenderGameOverlayEvent.Post event) {
 		for (StaticPowerHUDElement gui : HUD_ELEMENTS) {
 			gui.setCurrentWindow(event.getWindow());
-			gui.updateData(event.getMatrixStack(), 0, 0, event.getPartialTicks());
+			gui.tick();
 			gui.renderBackground(event.getMatrixStack());
 			gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
 		}

@@ -32,6 +32,10 @@ public class ModKeyBindings {
 	 * If the player has a wireless digistore terminal in their inventory, attempts to open it.
 	 */
 	public static final KeyBinding OPEN_PORTABLE_DIGISTORE = create("open_portable_digistore", GLFW.GLFW_KEY_TAB);
+	/**
+	 * Opens the research window.
+	 */
+	public static final KeyBinding OPEN_RESEARCH = create("open_research", GLFW.GLFW_KEY_R);
 
 	/**
 	 * Passing this function a binding and a callback will ensure the callback is

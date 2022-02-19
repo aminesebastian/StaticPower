@@ -90,11 +90,10 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
-		GuiDrawUtilities.drawSlot(null, position.getX(), position.getY(), getSize().getX(), getSize().getY(), 0);
+	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		GuiDrawUtilities.drawSlot(pose, getSize().getX(), getSize().getY(), 0, 0, 0);
 
 		Vector2D scrollHandlePosition = getScrollHandleLocation();
-		scrollHandleDrawable.draw(scrollHandlePosition.getX(), scrollHandlePosition.getY());
+		scrollHandleDrawable.draw(pose, scrollHandlePosition.getX(), scrollHandlePosition.getY());
 	}
 }

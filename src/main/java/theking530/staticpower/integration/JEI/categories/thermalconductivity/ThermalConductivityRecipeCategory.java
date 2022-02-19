@@ -83,8 +83,8 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	@SuppressWarnings("deprecation")
 	@Override
 	public void draw(ThermalConductivityJEIRecipeWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 5, 5, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 30, 5, 135, 55, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 5, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 135, 55, 30, 5, 0);
 
 		String conductivity = new TextComponent("Heat Conductivity: ").append(ChatFormatting.BLUE.toString())
 				.append(GuiTextUtilities.formatConductivityToString(recipe.getRecipe().getThermalConductivity())).getString();
@@ -99,32 +99,32 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		int xPos = 160;
 
 		if (recipe.getRecipe().getThermalConductivity() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrixStack, conductivity, xPos, yPos, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, conductivity, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 			yPos += 10;
 		}
 
 		if (recipe.getRecipe().getHeatAmount() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrixStack, heat, xPos, yPos, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, heat, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 35, 32, 20, 20, 0);
-			GuiDrawUtilities.drawStringWithSize(matrixStack, overheatTemp, xPos, 44f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 32, 0);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, 44f, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
 		if (!recipe.getFluidInput().isEmpty()) {
 			if (recipe.getFluidInput().getFluid().getRegistryName().toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.5f, ChatFormatting.BLUE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.0f, 0.5f, ChatFormatting.BLUE, false);
 			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.5f, ChatFormatting.BLUE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.0f, 0.5f, ChatFormatting.BLUE, false);
 			}
 		}
 
 		if (!recipe.getOutputFluid().isEmpty()) {
 			if (recipe.getOutputFluid().getFluid().getRegistryName().toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 58, 0.5f, ChatFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 58, 0.0f, 0.5f, ChatFormatting.WHITE, false);
 			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 58, 0.5f, ChatFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 58, 0.0f, 0.5f, ChatFormatting.WHITE, false);
 			}
 		}
 

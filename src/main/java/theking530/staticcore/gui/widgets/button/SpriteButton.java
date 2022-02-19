@@ -43,12 +43,12 @@ public class SpriteButton extends StandardButton {
 	}
 
 	@Override
-	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack pose, int buttonLeft, int buttonTop) {
 		if (getHoveredTexture() != null && (isClicked() || isHovered() || isToggled())) {
 			drawable.setSprite(getHoveredTexture());
 		} else {
 			drawable.setSprite(getRegularTexture());
 		}
-		drawable.draw(buttonLeft, buttonTop);
+		drawable.draw(pose, buttonLeft, buttonTop);
 	}
 }

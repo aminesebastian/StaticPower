@@ -32,6 +32,7 @@ public abstract class AbstractGuiWidget {
 	private boolean autoHandleTooltipBounds;
 	private RectangleBounds cachedBounds;
 	private PoseStack lastMatrixStack;
+	private final WidgetContainer internalContainer;
 
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
 		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
@@ -41,6 +42,7 @@ public abstract class AbstractGuiWidget {
 		isVisible = true;
 		isEnabled = true;
 		autoHandleTooltipBounds = true;
+		internalContainer = new WidgetContainer();
 	}
 
 	/**
@@ -216,14 +218,15 @@ public abstract class AbstractGuiWidget {
 	 * 
 	 * @param ownerPosition
 	 * @param ownerSize
-	 * @param partialTicks  
-	 * @param mouseX        
-	 * @param mouseY        
+	 * @param partialTicks
+	 * @param mouseX
+	 * @param mouseY
 	 */
 	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		this.ownerSize = ownerSize;
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
+		internalContainer.update(matrixStack, screenSpacePosition, ownerSize, partialTicks, mouseX, mouseY);
 
 		// Make a NEW matrix that translates from local space to screen space. We make a
 		// new matrix so that it's owned by this widget, and not modified by any
@@ -238,12 +241,54 @@ public abstract class AbstractGuiWidget {
 	 * This method should be overriden to draw anything that should appear behind
 	 * slots/items/anything else.
 	 * 
-	 * @param matrix       
+	 * @param matrix
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks
 	 */
 	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		matrix.pushPose();
+		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
+		internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
+		renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
+		matrix.popPose();
+	}
+
+	/**
+	 * This method should be overriden to render anything that should appear above
+	 * the background but behind any slots/items.
+	 * 
+	 * @param matrix
+	 * @param mouseX
+	 * @param mouseY
+	 * @param partialTicks
+	 */
+	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		matrix.pushPose();
+		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
+		internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
+		matrix.popPose();
+	}
+
+	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		matrix.pushPose();
+		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
+		internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks);
+		renderWidgetForeground(matrix, mouseX, mouseY, partialTicks);
+		matrix.popPose();
+	}
+
+	/**
+	 * This method should be overriden to draw anything that should appear behind
+	 * slots/items/anything else.
+	 * 
+	 * @param matrix
+	 * @param mouseX
+	 * @param mouseY
+	 * @param partialTicks
+	 */
+	protected void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 
@@ -251,22 +296,26 @@ public abstract class AbstractGuiWidget {
 	 * This method should be overriden to render anything that should appear above
 	 * the background but behind any slots/items.
 	 * 
-	 * @param matrix       
+	 * @param matrix
 	 * @param mouseX
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 	}
 
-	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	protected void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 
+	}
+
+	public void registerWidget(AbstractGuiWidget widget) {
+		internalContainer.registerWidget(widget);
 	}
 
 	/* Tooltip */
 	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-
+		internalContainer.getTooltips(mousePosition, tooltips, showAdvanced);
 	}
 
 	public boolean getTooltipsDisabled() {
@@ -302,26 +351,26 @@ public abstract class AbstractGuiWidget {
 
 	/* Input Events */
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
-		return EInputResult.UNHANDLED;
+		return internalContainer.handleMouseClick(mouseX, mouseY, button);
 	}
 
 	public void mouseMove(int mouseX, int mouseY) {
-
+		internalContainer.handleMouseMove(mouseX, mouseY);
 	}
 
 	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-		return EInputResult.UNHANDLED;
+		return internalContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
 	}
 
 	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-		return EInputResult.UNHANDLED;
+		return internalContainer.handleMouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
 	}
 
 	public EInputResult characterTyped(char character, int p_charTyped_2_) {
-		return EInputResult.UNHANDLED;
+		return internalContainer.characterTyped(character, p_charTyped_2_);
 	}
 
 	public EInputResult keyPressed(int key, int scanCode, int modifiers) {
-		return EInputResult.UNHANDLED;
+		return internalContainer.handleKeyPressed(key, scanCode, modifiers);
 	}
 }

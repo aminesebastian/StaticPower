@@ -109,7 +109,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Capture the max progress.
 		if (machineProcessingComponent != null) {
 			maxProgress = machineProcessingComponent.getMaxProcessingTime();
@@ -270,8 +270,9 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * 
 	 * @param maxProgress
 	 */
-	public void setMaxProgress(int maxProgress) {
+	public T setMaxProgress(int maxProgress) {
 		this.maxProgress = maxProgress;
+		return (T) this;
 	}
 
 	protected IDrawable getErrorDrawable() {

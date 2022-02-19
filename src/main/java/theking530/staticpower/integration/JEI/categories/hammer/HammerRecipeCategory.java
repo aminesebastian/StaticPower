@@ -83,15 +83,15 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 	@SuppressWarnings("deprecation")
 	@Override
 	public void draw(HammerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 4, 16, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 86, 14, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 4, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 86, 14, 0);
 
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
 		// Get the buffer and render the large hammer.
-		GuiDrawUtilities.drawTexturedModalSprite(new ResourceLocation("staticpower", "items/tools/hammer_iron"), matrixStack, 23, 5, 0, 32, 32, 0, 0, 1, 1, Color.WHITE);
+		GuiDrawUtilities.drawSprite(matrixStack, new ResourceLocation("staticpower", "items/tools/hammer_iron"), 32, 32, 23, 5, 0, 0, 0, 1, 1, Color.WHITE);
 		if (!recipe.isBlockType()) {
-			GuiDrawUtilities.drawStringWithSize(matrixStack, "Requires Anvil", 89, 47, 1.0f, Color.EIGHT_BIT_GREY, false);
+			GuiDrawUtilities.drawString(matrixStack, "Requires Anvil", 89, 47, 0.0f, 1.0f, Color.EIGHT_BIT_GREY, false);
 		}
 	}
 

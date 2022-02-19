@@ -43,11 +43,11 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 				String percentageString = GuiTextUtilities
 						.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
 				int width = Minecraft.getInstance().font.width(percentageString);
-				GuiDrawUtilities.drawStringWithSize(matrixStack, percentageString, xPosition - 1.5f + (width / 2),
-						yPosition + 2, 0.5f, Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawString(matrixStack, percentageString, xPosition - 1.5f + (width / 2),
+						yPosition + 2, 0.0f, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 			} else if (ingredient.getAdditionalBonus() > 0) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "*", xPosition + 3, yPosition + 6, 1.0f,
-						Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawString(matrixStack, "*", xPosition + 3, yPosition + 6, 0.0f,
+						1.0f, Color.EIGHT_BIT_YELLOW, true);
 			}
 
 			RenderSystem.disableBlend();

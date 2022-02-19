@@ -88,9 +88,9 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 
 	@Override
 	public void draw(LumberMillRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 41, 19, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 89, 17, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 119, 17, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 41, 19, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 89, 17, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 119, 17, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);

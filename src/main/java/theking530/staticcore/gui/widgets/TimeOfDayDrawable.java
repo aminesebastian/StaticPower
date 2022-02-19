@@ -45,7 +45,7 @@ public class TimeOfDayDrawable extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		Vector2D adjustedLocation = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
 		float xPos = adjustedLocation.getX();
 		float yPos = adjustedLocation.getY();

@@ -17,7 +17,7 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Calculate the scale.
 		int scale = (int) (getSize().getX() + getSize().getY()) / 4;
 
@@ -27,7 +27,7 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 		Vector2D offset = new Vector2D(screenSpacePosition.getX() + (getSize().getX() / 2.0f), screenSpacePosition.getY() + (getSize().getY() / 2.0f) + scale);
 
 		// Draw the slot border.
-		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0);
+		GuiDrawUtilities.drawSlot(null, getSize().getX(), getSize().getY(), screenSpacePosition.getX(), screenSpacePosition.getY(), 0);
 
 		// Then the background.
 		GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 1.0f, Color.BLACK);

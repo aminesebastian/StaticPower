@@ -91,12 +91,12 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 	public void draw(LatheRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				GuiDrawUtilities.drawSlot(matrixStack, 32 + x * 18, 5 + y * 18, 16, 16, 0);
+				GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 32 + x * 18, 5 + y * 18, 0);
 			}
 		}
 
-		GuiDrawUtilities.drawSlot(matrixStack, 120, 5, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 120, 39, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 120, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 120, 39, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);

@@ -88,16 +88,16 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 	@Override
 	public void draw(CentrifugeRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 80, 6, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 80, 6, 0);
 
-		GuiDrawUtilities.drawSlot(matrixStack, 78, 46, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 104, 32, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 52, 32, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 78, 46, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 104, 32, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 52, 32, 0);
 
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		String rpmText = String.valueOf(recipe.getMinimumSpeed()) + " RPM";
-		GuiDrawUtilities.drawSlot(matrixStack, 103, 12.5f, Minecraft.getInstance().font.width(rpmText) + 4, 11, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, Minecraft.getInstance().font.width(rpmText) + 4, 11, 103, 12.5f, 0);
 		Minecraft.getInstance().font.drawShadow(matrixStack, rpmText, 105, 14, Color.EIGHT_BIT_WHITE.encodeInInteger());
 
 		pBar.setCurrentProgress(processingTimer.getValue());

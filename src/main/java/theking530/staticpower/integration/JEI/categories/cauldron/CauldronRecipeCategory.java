@@ -94,8 +94,8 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	@SuppressWarnings("deprecation")
 	@Override
 	public void draw(CauldronRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 4, 6, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 105, 22, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 4, 6, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 105, 22, 0);
 
 		arrow.setPosition(23, 6);
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
@@ -107,7 +107,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 0, 0);
 
 		// Render the time.
-		GuiDrawUtilities.drawStringWithSizeCentered(matrixStack, "Cook time: " + recipe.getRequiredTimeInCauldron(), 65, 4, 0.8f, Color.EIGHT_BIT_YELLOW, true);
+		GuiDrawUtilities.drawStringCentered(matrixStack, "Cook time: " + recipe.getRequiredTimeInCauldron(), 65, 4, 0.0f, 0.8f, Color.EIGHT_BIT_YELLOW, true);
 
 		// Render the block.
 		PoseStack blockStack = new PoseStack();

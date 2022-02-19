@@ -39,6 +39,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
@@ -99,6 +100,11 @@ public class StaticPowerForgeEventRegistry {
 		StaticPower.LOGGER.info("Server resource reload listener created!");
 
 		StaticPowerRegistry.onServerStarting(serverStarted);
+	}
+
+	@SubscribeEvent
+	public static void onServerAboutToStart(ServerStoppedEvent serverStopped) {
+		StaticPowerRegistry.onServerStopping(serverStopped);
 	}
 
 	@SubscribeEvent

@@ -83,9 +83,9 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 
 	@Override
 	public void draw(PackagerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 30, 22, 16, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 30, 22, 0);
 
-		GuiDrawUtilities.drawSlot(matrixStack, 77, 20, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 77, 20, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());

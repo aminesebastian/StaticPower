@@ -151,7 +151,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		// Render the tab backgrounds.
 		for (BaseGuiTab tab : registeredTabs) {
 			matrix.pushPose();
@@ -168,7 +168,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
 			if (tab.isOpen()) {
 				matrix.pushPose();
@@ -180,7 +180,7 @@ public class GuiTabManager extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		for (BaseGuiTab tab : registeredTabs) {
 			matrix.pushPose();
 			matrix.translate(tab.xPosition, tab.yPosition, 0);
