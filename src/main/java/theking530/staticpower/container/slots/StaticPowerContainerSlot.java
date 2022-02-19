@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.utilities.GuiDrawItem;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
@@ -27,8 +27,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	private boolean drawFluidContainerAsFluid;
 	private boolean isEnabled;
 
-	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition,
-			@Nonnull MachineSideMode mode) {
+	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.previewItem = previewItem;
 		this.previewAlpha = previewAlpha;
@@ -84,7 +83,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 		return inventoryComponent != null ? inventoryComponent.getMode() : mode;
 	}
 
-	public void drawSlotOverlay(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
+	public void drawSlotOverlay(int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 
 	}
 
@@ -98,9 +97,9 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 		return isEnabled;
 	}
 
-	public void drawBeforeItem(PoseStack matrixStack, GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
+	public void drawBeforeItem(PoseStack matrixStack, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 		if (!getPreviewItem().isEmpty()) {
-			itemRenderer.drawItem(getPreviewItem(), guiLeft, guiTop, x, y, getPreviewAlpha());
+			GuiDrawUtilities.drawItem(matrixStack, getPreviewItem(), x, y, 0.0f, getPreviewAlpha());
 		}
 		if (drawFluidContainerAsFluid) {
 			IFluidHandlerItem fluidItem = getItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);

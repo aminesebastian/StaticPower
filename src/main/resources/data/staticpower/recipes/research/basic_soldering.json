@@ -1,0 +1,21 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_soldering",
+	"description": "Watch your fingers!",
+	"prerequisites": [
+		"staticpower:research/basic_research"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 10
+		}
+	],
+	"rewards": [
+	],
+	"advancements": [
+	],
+	"icon": {
+		"item": "staticpower:soldering_iron"
+	}
+}

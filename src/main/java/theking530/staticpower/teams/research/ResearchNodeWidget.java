@@ -2,7 +2,6 @@ package theking530.staticpower.teams.research;
 
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -20,15 +19,15 @@ import theking530.staticpower.data.research.Research;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
 
-public class ResearchWidget extends AbstractGuiWidget {
+public class ResearchNodeWidget extends AbstractGuiWidget {
 	private final Research research;
 	private final ItemDrawable itemRenderer;
 	private final SimpleProgressBar progressBar;
 	private float hoveredScale;
 
-	public ResearchWidget(Research research, float xPosition, float yPosition, float width, float height) {
+	public ResearchNodeWidget(Research research, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		registerWidget(progressBar = new SimpleProgressBar(0, 0, 86, 7).setMaxProgress(100));
+		registerWidget(progressBar = new SimpleProgressBar(26, 20, 86, 7).setMaxProgress(100));
 		progressBar.setVisible(false);
 		this.research = research;
 		itemRenderer = new ItemDrawable(ItemStack.EMPTY);
@@ -37,18 +36,24 @@ public class ResearchWidget extends AbstractGuiWidget {
 	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		super.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY);
 
-		// Handle scale.
-		boolean hovered = this.isPointInsideBounds(new Vector2D(mouseX, mouseY));
-		hovered = true;
-		if (hovered) {
+		if (isHovered()) {
 			hoveredScale = Math.min(1, hoveredScale + partialTicks * 0.45f);
 		} else {
 			hoveredScale = Math.max(0, hoveredScale - partialTicks * 0.45f);
 		}
+
+		setPosition(getInitialPosition().getX(), this.getInitialPosition().getY() - (hoveredScale * getSize().getY() / 4));
 	}
 
 	@Override
 	public void renderWidgetBackground(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+
+	}
+
+	@Override
+	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		DEBUG_HOVER = false;
+
 		Team team = TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player).orElse(null);
 		boolean hovered = this.isPointInsideBounds(new Vector2D(mouseX, mouseY));
 		String translatedTitle = new TranslatableComponent(research.getTitle()).getString();
@@ -62,12 +67,6 @@ public class ResearchWidget extends AbstractGuiWidget {
 
 		float width = getSize().getX();
 		float height = getSize().getY();
-		pose.pushPose();
-		pose.translate(getPosition().getX(), getPosition().getY(), 0);
-
-		if (hovered) {
-			pose.translate(0, 0, 10);
-		}
 
 		Color drawColor;
 		if (hovered) {
@@ -77,16 +76,15 @@ public class ResearchWidget extends AbstractGuiWidget {
 		}
 
 		GuiDrawUtilities.drawGenericBackground(pose, (int) width, (int) height, 4, 4, 0, drawColor);
-		GuiDrawUtilities.drawGenericBackground(pose, (int) 24, (int) 24, 0, 0, 0, new Color(1.0f, 0.0f, 1.0f, 1.0f));
+		GuiDrawUtilities.drawGenericBackground(pose, (int) 24, (int) 24, 0, 0, 0, new Color(0.6f, 0.4f, 1.0f, 1.0f));
 
 		itemRenderer.setItemStack(research.getItemIcon());
 		itemRenderer.setSize(1.0f, 1.0f);
 		itemRenderer.draw(pose, 4, 4, 100);
-		hovered = true;
-		progressBar.setVisible(hovered);
-		if (hovered) {
-			GuiDrawUtilities.drawStringLeftAligned(pose, translatedTitle, 28, 16, 255.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
 
+		if (isHovered()) {
+			GuiDrawUtilities.drawStringLeftAligned(pose, translatedTitle, 28, 16, 255.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
+			progressBar.setVisible(true);
 			for (int i = 0; i < research.getRequirements().size(); i++) {
 				int xOffset = i * 20;
 				StaticPowerIngredient requirement = research.getRequirements().get(i);
@@ -111,13 +109,9 @@ public class ResearchWidget extends AbstractGuiWidget {
 					progressBar.setCurrentProgress(0);
 				}
 			}
-
+		} else {
+			progressBar.setVisible(false);
 		}
-		pose.popPose();
-	}
-
-	@Override
-	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 	}
 
 	@Override

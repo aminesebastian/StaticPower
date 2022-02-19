@@ -29,10 +29,9 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 
 		// Get the screen space position and offset it by the scale to center the
 		// entity.
-		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(pose, getPosition());
+		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(pose, new Vector2D(0, 0));
 		Vector2D offset = new Vector2D(screenSpacePosition.getX() + (getSize().getX() / 2.0f), screenSpacePosition.getY() + (getSize().getY() / 2.0f) + scale);
 
-		
 		// And finally the entity.
 		InventoryScreen.renderEntityInInventory((int) offset.getX(), (int) offset.getY(), scale, (float) (offset.getX()) - mouseX, (float) (offset.getY()) - mouseY - scale, entity);
 	}

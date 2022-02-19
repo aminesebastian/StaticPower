@@ -88,22 +88,19 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		if (drawDefaultDarkBackground) {
 			super.renderBackground(pose);
 		}
+		pose.pushPose();
+		pose.translate(leftOffset, topOffset, 0);
 
 		// Update the widgets and then draw the background.
 		widgetContainer.renderBackground(pose, mouseX, mouseY, partialTicks);
-
+		
 		// Draw any extras.
-		pose.pushPose();
-		pose.translate(leftOffset, topOffset, 0);
 		drawBackgroundExtras(pose, partialTicks, mouseX, mouseY);
-		pose.popPose();
 
 		// Draw any widgets that need to appear above slots/items.
 		widgetContainer.renderBehindItems(pose, mouseX, mouseY, partialTicks);
 
 		// Draw anything infront of the background but behind the items.
-		pose.pushPose();
-		pose.translate(leftOffset, topOffset, 0);
 		drawBehindItems(pose, partialTicks, mouseX, mouseY);
 		pose.popPose();
 	}

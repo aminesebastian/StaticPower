@@ -22,9 +22,9 @@ public class CentrifugeProgressBar extends AbstractProgressBar<CentrifugeProgres
 		float smoothedProgress = visualCurrentProgresPercentage * visualCurrentProgresPercentage;
 
 		matrix.pushPose();
-		matrix.translate(getPosition().getX() + 1.5f + getSize().getX() / 2, getSize().getY() / 2, getSize().getY() / 2);
+		matrix.translate(1.5f + getSize().getX() / 2, getSize().getY() / 2, getSize().getY() / 2);
 		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(0.0f, 0.0f, smoothedProgress * 3600.0f)));
-		matrix.translate(-(getPosition().getX() + getSize().getX() / 2), -(getSize().getY() / 2), -(getSize().getY() / 2));
+		matrix.translate(-(getSize().getX() / 2), -(getSize().getY() / 2), -(getSize().getY() / 2));
 		GuiDrawUtilities.drawTexture(matrix, GuiTextures.CENTRIFUGE_PROGRESS_BAR, getSize().getX(), getSize().getY(), 0, 0, 0.0f, 0.0f, 0.5f, 1.0f, 1.0f);
 		GuiDrawUtilities.drawTexture(matrix, GuiTextures.CENTRIFUGE_PROGRESS_BAR, getSize().getX(), getSize().getY() * visualCurrentProgresPercentage, 0, 0, 0.0f, 0.0f, 0.0f, 1.0f,
 				(0.5f * visualCurrentProgresPercentage));

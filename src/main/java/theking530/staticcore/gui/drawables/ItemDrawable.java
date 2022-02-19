@@ -27,6 +27,10 @@ public class ItemDrawable implements IDrawable {
 	private ItemStack itemStack;
 	private final Vector2D size;
 
+	public ItemDrawable() {
+		this(ItemStack.EMPTY, new Vector2D(1, 1));
+	}
+
 	public ItemDrawable(@Nonnull ItemLike item) {
 		this(item, new Vector2D(1, 1));
 	}
@@ -48,10 +52,12 @@ public class ItemDrawable implements IDrawable {
 	@Override
 	public void draw(@Nullable PoseStack stack, float x, float y, float z) {
 		if (itemStack != null && !itemStack.isEmpty()) {
-			renderGuiItem(stack, itemStack, x, y, z);
+			// We add +10 here to account for the depth of the item clipping through its background.
+			GuiDrawUtilities.drawItem(stack, itemStack, x, y, z + 10, size.getX(), size.getY());
 		}
 	}
 
+	@Deprecated()
 	@SuppressWarnings("resource")
 	protected void renderGuiItem(@Nullable PoseStack postSackIn, ItemStack item, float x, float y, float z) {
 		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(item, (Level) null, Minecraft.getInstance().player, 0);
@@ -95,8 +101,9 @@ public class ItemDrawable implements IDrawable {
 		RenderSystem.applyModelViewMatrix();
 	}
 
-	public void setItemStack(ItemStack stack) {
+	public ItemDrawable setItemStack(ItemStack stack) {
 		this.itemStack = stack;
+		return this;
 	}
 
 	@Override

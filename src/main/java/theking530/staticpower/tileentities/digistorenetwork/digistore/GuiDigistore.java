@@ -18,7 +18,6 @@ import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.GuiDrawItem;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -28,12 +27,10 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 
 	private GuiInfoTab infoTab;
 	private TextButton lockedButton;
-	private final GuiDrawItem itemRenderer;
 	private final IDigistoreInventory inventory;
 
 	public GuiDigistore(ContainerDigistore container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 150);
-		itemRenderer = new GuiDrawItem();
 		inventory = getTileEntity().inventory;
 	}
 
@@ -67,10 +64,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(inventory.getItemCapacity());
-		infoTab.addKeyValueLine("max", new TextComponent("Max Items"),
-				new TextComponent(ChatFormatting.WHITE.toString())
-						.append(new TextComponent(count.getValueAsString(true))),
-				ChatFormatting.RED);
+		infoTab.addKeyValueLine("max", new TextComponent("Max Items"), new TextComponent(ChatFormatting.WHITE.toString()).append(new TextComponent(count.getValueAsString(true))), ChatFormatting.RED);
 	}
 
 	@Override
@@ -78,8 +72,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
-				GuiDrawUtilities.drawRectangle(stack, 18, 18, 79, 19, 1.0f,
-						new Color(200, 200, 200, 200).fromEightBitToFloat());
+				GuiDrawUtilities.drawRectangle(stack, 18, 18, 79, 19, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
 			}
 		}
 	}
@@ -89,8 +82,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.getExtraTooltips(tooltips, stack, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
-				tooltips.addAll(inventory.getDigistoreStack(0).getStoredItem()
-						.getTooltipLines(Minecraft.getInstance().player, Default.NORMAL));
+				tooltips.addAll(inventory.getDigistoreStack(0).getStoredItem().getTooltipLines(Minecraft.getInstance().player, Default.NORMAL));
 			}
 		}
 	}
@@ -105,14 +97,13 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		// Draw the item.
 		if (inventory.getCurrentUniqueItemTypeCount() > 0) {
 			Lighting.setupForFlatItems();
-			itemRenderer.drawItem(inventory.getDigistoreStack(0).getStoredItem(), leftPos, topPos, 80, 21, 1.0f);
+			GuiDrawUtilities.drawItem(stack, inventory.getDigistoreStack(0).getStoredItem(), 80, 21, 1.0f);
 
 			// Pass the itemstack count through the metric converter.
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
 
 			// Draw the item count string.
-			GuiDrawUtilities.drawString(stack, count.getValueAsString(true), 98, 37, 0.0f,
-					0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(stack, count.getValueAsString(true), 98, 37, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 }

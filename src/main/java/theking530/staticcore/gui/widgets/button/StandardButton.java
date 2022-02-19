@@ -16,8 +16,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
@@ -83,11 +83,7 @@ public class StandardButton extends AbstractGuiWidget {
 
 		// Draw the button and then the overlay.
 		if (shouldDrawButtonBackground()) {
-			boolean shouldDrawHighlighted = isClicked() || isHovered() || isToggled();
-			ResourceLocation texture = shouldDrawHighlighted ? GuiTextures.BUTTON_HOVER : GuiTextures.BUTTON;
-			float uPixel = 1.0f / 200.0f;
-			float vPixel = 1.0f / 20.0f;
-			GuiDrawUtilities.drawTexturedBox(pose, texture, getSize().getX(), getSize().getY(), new Vector4D(uPixel * 2, vPixel * 2, uPixel * 198, vPixel * 17));
+			drawButton(pose);
 		}
 		drawButtonOverlay(pose, 0, 0);
 	}
@@ -133,6 +129,34 @@ public class StandardButton extends AbstractGuiWidget {
 			return;
 		}
 		hovered = false;
+	}
+
+	protected void drawButton(PoseStack pose) {
+		boolean shouldDrawHighlighted = isClicked() || isHovered() || isToggled();
+		ResourceLocation texture = shouldDrawHighlighted ? GuiTextures.BUTTON_HOVER : GuiTextures.BUTTON;
+
+		float uPixel = 1.0f / 200.0f;
+		float vPixel = 1.0f / 20.0f;
+		float width = getSize().getX();
+		float height = getSize().getY();
+		float x = 0;
+		float y = 0;
+		float zLevel = 0;
+
+		// Body
+		GuiDrawUtilities.drawTexture(pose, texture, width - 4, height - 5, x + 2, y + 2, zLevel, uPixel * 2, vPixel * 2, uPixel * 198, vPixel * 17);
+
+		// Corners
+		GuiDrawUtilities.drawTexture(pose, texture, 2, 2, x, y, zLevel, 0.0f, 0.0f, 2 * uPixel, 2 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, 2, x + width - 2, y, zLevel, 198 * uPixel, 0, 1, 2 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, 3, x, y + height - 3, zLevel, 0.0f, 17 * vPixel, 2 * uPixel, 20 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, 3, x + width - 2, y + height - 3, zLevel, 198 * uPixel, 17 * vPixel, 1, 20 * vPixel);
+
+		// Sides
+		GuiDrawUtilities.drawTexture(pose, texture, width - 4, 2, x + 2, y, zLevel, 2 * uPixel, 0, 198 * uPixel, 2 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, height - 5, x, y + 2, zLevel, 0.0f, 2 * vPixel, 2 * uPixel, 17 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, 2, height - 5, x + width - 2, y + 2, zLevel, 198 * uPixel, 2 * vPixel, 1, 17 * vPixel);
+		GuiDrawUtilities.drawTexture(pose, texture, width - 4, 3, x + 2, y + height - 3, zLevel, 2 * uPixel, 17 * vPixel, 198 * uPixel, 20 * vPixel);
 	}
 
 	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {

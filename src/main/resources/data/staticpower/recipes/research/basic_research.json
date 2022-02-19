@@ -1,0 +1,20 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_research",
+	"description": "Nerd!",
+	"prerequisites": [
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 1
+		}
+	],
+	"rewards": [
+	],
+	"advancements": [
+	],
+	"icon": {
+		"item": "staticpower:research_tier_1"
+	}
+}

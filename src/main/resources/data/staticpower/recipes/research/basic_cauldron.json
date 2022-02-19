@@ -1,0 +1,21 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_cauldron",
+	"description": "Double double toil and trouble!",
+	"prerequisites": [
+		"staticpower:research/basic_research"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 40
+		}
+	],
+	"rewards": [
+	],
+	"advancements": [
+	],
+	"icon": {
+		"item": "staticpower:rusty_cauldron"
+	}
+}

@@ -1,0 +1,21 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_capsules",
+	"description": "Buckets are for chumps!",
+	"prerequisites": [
+		"staticpower:research/basic_research"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 35
+		}
+	],
+	"rewards": [
+	],
+	"advancements": [
+	],
+	"icon": {
+		"item": "staticpower:fluid_capsule_iron"
+	}
+}

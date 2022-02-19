@@ -31,7 +31,7 @@ public class TextButton extends StandardButton {
 				isEnabled() ? Color.EIGHT_BIT_WHITE : Color.EIGHT_BIT_WHITE, true);
 
 		if (!isEnabled()) {
-			GuiDrawUtilities.drawRectangle(pose, buttonLeft, buttonTop, getSize().getX(), getSize().getY(), 1.0f, new Color(128.0f, 128.0f, 128.0f, 75.0f));
+			GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), new Color(0.5f, 0.5f, 0.5f, 0.75f));
 		}
 	}
 

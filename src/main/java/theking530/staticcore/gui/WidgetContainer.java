@@ -53,82 +53,47 @@ public class WidgetContainer {
 		// Update the owner position.
 		this.ownerPosition = ownerPosition;
 
-		// Translate so we draw relative to the owner now.
-		matrixStack.pushPose();
-		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
-
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
 				widget.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY);
 			}
 		}
-
-		// Pop the matrix when we're done.
-		matrixStack.popPose();
 	}
 
 	public void renderBackground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		// Translate so we draw relative to the owner now.
-		matrixStack.pushPose();
-		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
-
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
 				widget.renderBackground(matrixStack, mouseX, mouseY, partialTicks);
 			}
 		}
-
-		// Pop the matrix when we're done.
-		matrixStack.popPose();
 	}
 
 	public void renderBehindItems(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		// Translate so we draw relative to the owner now.
-		matrixStack.pushPose();
-		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
-
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
 				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);
 			}
 		}
-
-		// Pop the matrix when we're done.
-		matrixStack.popPose();
 	}
 
 	public void renderForegound(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		// Translate so we draw relative to the owner now.
-		matrixStack.pushPose();
-		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
-
 		// Render the foreground of all the widgets.
 		for (AbstractGuiWidget widget : widgets) {
 			if (widget.isVisible()) {
 				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 			}
 		}
-
-		// Pop the matrix when we're done.
-		matrixStack.popPose();
 	}
 
 	public void renderTooltips(PoseStack matrixStack, int mouseX, int mouseY) {
-		// Translate so we draw relative to the owner now.
-		matrixStack.pushPose();
-		matrixStack.translate(ownerPosition.getX(), ownerPosition.getY(), 0);
-
 		// Capture all the tooltips for all the widgets. Skip any invisible widgets or
 		// widgets that are not hovered.
 		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
 		List<Component> tooltips = new ArrayList<Component>();
 		getTooltips(mousePosition, tooltips, Screen.hasShiftDown());
-
-		// Pop the matrix when we're done.
-		matrixStack.popPose();
 
 		// If there are any tooltips to render, render them.
 		if (tooltips.size() > 0) {

@@ -234,7 +234,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Input;
+		return mode == MachineSideMode.Input || mode == MachineSideMode.Disabled;
 	}
 
 	@Override

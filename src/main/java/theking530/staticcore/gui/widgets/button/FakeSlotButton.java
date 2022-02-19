@@ -6,7 +6,6 @@ import java.util.function.BiConsumer;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +19,6 @@ import theking530.staticcore.utilities.Vector2D;
 @OnlyIn(Dist.CLIENT)
 public class FakeSlotButton extends StandardButton {
 	protected ItemStack itemIcon;
-	protected final ItemRenderer customRenderer;
 
 	/**
 	 * Creates an item button using an item stack as the icon.
@@ -32,7 +30,6 @@ public class FakeSlotButton extends StandardButton {
 	public FakeSlotButton(ItemStack icon, int xPos, int yPos, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, 18, 18, onClicked);
 		itemIcon = icon;
-		customRenderer = Minecraft.getInstance().getItemRenderer();
 	}
 
 	/**
@@ -56,14 +53,14 @@ public class FakeSlotButton extends StandardButton {
 
 	@Override
 	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		if(!itemIcon.isEmpty()) {
-			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, showAdvanced ? Default.ADVANCED : Default.NORMAL));	
+		if (!itemIcon.isEmpty()) {
+			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, showAdvanced ? Default.ADVANCED : Default.NORMAL));
 		}
 	}
 
-	protected void drawButton(PoseStack stack, int transformedButtonLeft, int transformedButtonTop) {
-		Vector2D position = this.getPosition();
-		GuiDrawUtilities.drawSlot(stack, 16, 16, position.getX(), position.getY(), 0);
+	@Override
+	protected void drawButton(PoseStack stack) {
+		GuiDrawUtilities.drawSlot(stack, 16, 16, 0, 0, 0);
 	}
 
 	/**
@@ -76,7 +73,7 @@ public class FakeSlotButton extends StandardButton {
 			Vector2D size = getSize();
 			int halfSizeX = size.getXi() / 2;
 			int halfSizeY = size.getYi() / 2;
-			customRenderer.renderGuiItem(itemIcon, (int) buttonLeft + (halfSizeX - 9), (int) buttonTop + (halfSizeY - 9));
+			GuiDrawUtilities.drawItem(pose, itemIcon, (halfSizeX - 9), (halfSizeY - 9), 100.0f);
 		}
 
 		// Render the hover effect.

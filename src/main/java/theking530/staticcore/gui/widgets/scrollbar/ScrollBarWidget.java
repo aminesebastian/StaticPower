@@ -83,10 +83,9 @@ public class ScrollBarWidget extends AbstractGuiWidget {
 	}
 
 	public Vector2D getScrollHandleLocation() {
-		Vector2D position = GuiDrawUtilities.translatePositionByMatrix(getLastRenderMatrix(), getPosition());
 		float adjustedScale = getSize().getY() - scrollHandleDrawable.getSize().getY();
-		float yLocation = position.getY() + (getScrollPercent() * adjustedScale);
-		return new Vector2D(position.getX(), yLocation);
+		float yLocation = (getScrollPercent() * adjustedScale);
+		return new Vector2D(0, yLocation);
 	}
 
 	@Override

@@ -112,7 +112,6 @@ public class TileEntityChargingStation extends TileEntityMachine {
 			// to check the result of the call to insertItem as we already know the result
 			// is going to be empty.
 			if (InventoryUtilities.canFullyInsertStackIntoSlot(chargedInventory, i, unchargedInventory.getStackInSlot(fromSlot))) {
-				System.out.println(unchargedInventory.getStackInSlot(fromSlot));
 				ItemStack stack = unchargedInventory.extractItem(fromSlot, 1, false);
 				chargedInventory.insertItem(i, stack, false);
 			}

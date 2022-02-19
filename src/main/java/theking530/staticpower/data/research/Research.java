@@ -203,7 +203,6 @@ public class Research extends AbstractStaticPowerRecipe {
 			for (int i = 0; i < fullfillment.length; i++) {
 				instance.requirementFullfillment.set(i, fullfillment[i]);
 			}
-			System.out.println();
 			return instance;
 		}
 

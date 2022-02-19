@@ -98,13 +98,11 @@ public class ConveyorBeltEntity extends ItemEntity {
 
 	@Override
 	public InteractionResult interact(Player player, InteractionHand hand) {
-		System.out.println("INITIAL_TEST");
 		return InteractionResult.PASS;
 	}
 
 	@Override
 	public InteractionResult interactAt(Player player, Vec3 vec, InteractionHand hand) {
-		System.out.println("TEST");
 		return InteractionResult.PASS;
 	}
 

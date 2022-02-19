@@ -22,7 +22,8 @@ public abstract class AbstractGuiWidget {
 	 * The owning container of this widget.
 	 */
 	protected WidgetContainer owningContainer;
-
+	protected boolean DEBUG_HOVER;
+	private Vector2D initialPosition;
 	private Vector2D position;
 	private Vector2D size;
 	private Vector2D ownerSize;
@@ -32,13 +33,16 @@ public abstract class AbstractGuiWidget {
 	private boolean autoHandleTooltipBounds;
 	private RectangleBounds cachedBounds;
 	private PoseStack lastMatrixStack;
+	private Vector2D lastMousePosition;
 	private final WidgetContainer internalContainer;
 
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
 		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
+		initialPosition = new Vector2D(xPosition, yPosition);
 		position = new Vector2D(xPosition, yPosition);
 		size = new Vector2D(width, height);
 		ownerSize = new Vector2D(0.0f, 0.0f);
+		lastMousePosition = new Vector2D(0.0f, 0.0f);
 		isVisible = true;
 		isEnabled = true;
 		autoHandleTooltipBounds = true;
@@ -141,6 +145,15 @@ public abstract class AbstractGuiWidget {
 	}
 
 	/**
+	 * Gets the first position that this widget was rendered;
+	 * 
+	 * @return
+	 */
+	public Vector2D getInitialPosition() {
+		return initialPosition;
+	}
+
+	/**
 	 * Gets the overall bounds of this widget. X and Y are the minimum X and Y
 	 * coordinates, Z and W and the maximum x and y coordinates. This value is in
 	 * screen space
@@ -185,6 +198,19 @@ public abstract class AbstractGuiWidget {
 	}
 
 	/**
+	 * Gets the last known mouse position.
+	 * 
+	 * @return
+	 */
+	public Vector2D getLastMousePosition() {
+		return lastMousePosition;
+	}
+
+	public boolean isHovered() {
+		return DEBUG_HOVER || isPointInsideBounds(this.getLastMousePosition());
+	}
+
+	/**
 	 * Gets the size of the owner of this widget.
 	 * 
 	 * @return
@@ -224,6 +250,7 @@ public abstract class AbstractGuiWidget {
 	 */
 	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		this.ownerSize = ownerSize;
+		lastMousePosition = new Vector2D(mouseX, mouseY);
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
 		internalContainer.update(matrixStack, screenSpacePosition, ownerSize, partialTicks, mouseX, mouseY);
@@ -266,8 +293,8 @@ public abstract class AbstractGuiWidget {
 	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
-		internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
+		internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
 	}
 

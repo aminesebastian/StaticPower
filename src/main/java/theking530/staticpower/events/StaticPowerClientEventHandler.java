@@ -115,9 +115,11 @@ public class StaticPowerClientEventHandler {
 		LOGGER.info("Performing Key Bindings!");
 		ModKeyBindings.registerBindings(event);
 		ModKeyBindings.addCallback(ModKeyBindings.OPEN_RESEARCH, (binding) -> {
-			GuiResearchMenu.tryOpen();
+			if (binding.wasJustPressed()) {
+				GuiResearchMenu.tryOpen();
+			}
 		});
-		
+
 		// Log the completion.
 		LOGGER.info("Static Power Client Setup Completed!");
 

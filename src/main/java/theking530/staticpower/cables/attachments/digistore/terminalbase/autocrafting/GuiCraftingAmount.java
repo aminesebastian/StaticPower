@@ -75,7 +75,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 				rightRecipe = (TextButton) new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)).setTooltip(new TranslatableComponent("gui.staticpower.next_recipe")));
 
 		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 119));
-		registerWidget(stepsWidget = new AutoCraftingStepsWidget(8, 53, 136, 95, MAX_ROWS, COLUMNS));
+		registerWidget(stepsWidget = new AutoCraftingStepsWidget(7, 53, 136, 95, MAX_ROWS, COLUMNS));
 
 		// Since we start at 1 item, disable the ability to decrement until we have gone
 		// up at least once.
@@ -112,6 +112,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 				getMenu().updateCraftingResponse(getCurrentBundle().getOutput(), Integer.parseInt(text));
 			}
 		}));
+		
 	}
 
 	private CraftingStepsBundle getCurrentBundle() {

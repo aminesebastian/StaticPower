@@ -80,7 +80,7 @@ public class TeamManager extends StaticPowerGameData {
 		}
 
 		// Set the initial research.
-		newTeam.setCurrentResearch(new ResourceLocation("staticpower:research/your_first_research"));
+		newTeam.setCurrentResearch(new ResourceLocation("staticpower:research/basic_research"));
 
 		// Add the new team to the teams array.
 		teams.put(newTeam.getId(), newTeam);

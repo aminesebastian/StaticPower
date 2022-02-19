@@ -12,7 +12,6 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.GuiDrawItem;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
@@ -21,7 +20,6 @@ import theking530.staticpower.client.StaticPowerSprites;
 public class AutoCraftingStepWidget extends AbstractGuiWidget {
 	public static final int TICKS_PER_INGREDIENT = 20;
 	public static final SpriteDrawable MISSING_INGREDIENT_RENDERABLE;
-	public static final GuiDrawItem ITEM_RENDERER;
 	private RequiredAutoCraftingMaterial material;
 	private CraftingRequestResponse sourceRequest;
 	private boolean isCurrentStep;
@@ -30,15 +28,13 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 
 	static {
 		MISSING_INGREDIENT_RENDERABLE = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
-		ITEM_RENDERER = new GuiDrawItem();
 	}
 
 	public AutoCraftingStepWidget(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 	}
 
-	public AutoCraftingStepWidget setStepData(CraftingRequestResponse request, RequiredAutoCraftingMaterial material,
-			boolean isCurrentStep) {
+	public AutoCraftingStepWidget setStepData(CraftingRequestResponse request, RequiredAutoCraftingMaterial material, boolean isCurrentStep) {
 		this.material = material;
 		this.sourceRequest = request;
 		this.isCurrentStep = isCurrentStep;
@@ -66,13 +62,10 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		// ingredient).
 		if (!ing.isEmpty()) {
 			// Get the screen space position.
-			Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(getLastRenderMatrix(),
-					getPosition());
+			Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(getLastRenderMatrix(), getPosition());
 
 			// Get all the tooltips and add them to the tooltips list.
-			if (mousePosition.getX() >= screenSpacePosition.getXi()
-					&& mousePosition.getX() <= screenSpacePosition.getXi() + 18
-					&& mousePosition.getY() >= screenSpacePosition.getYi()
+			if (mousePosition.getX() >= screenSpacePosition.getXi() && mousePosition.getX() <= screenSpacePosition.getXi() + 18 && mousePosition.getY() >= screenSpacePosition.getYi()
 					&& mousePosition.getY() <= screenSpacePosition.getYi() + 18) {
 				tooltips.addAll(getCurrentIndexItemStack().getTooltipLines(null, Default.NORMAL));
 			} else if (this.isPointInsideBounds(mousePosition)) {
@@ -96,8 +89,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		// If it has items, draw the item (rotate through all the itemstacks in the
 		// ingredient).
 		if (!ing.isEmpty()) {
-			ITEM_RENDERER.drawItem(matrix, getCurrentIndexItemStack(), 0, 0,  2,
-					3, 1.0f);
+			GuiDrawUtilities.drawItem(matrix, getCurrentIndexItemStack(), 2, 3, 100.0f);
 		}
 
 		// If we're missing any items, render the missing scenario. If we have to craft,
@@ -106,27 +98,19 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget {
 		// the items scenario.
 		Color textColor = isBlockingStep() ? Color.EIGHT_BIT_RED : Color.EIGHT_BIT_WHITE;
 		if (material.getMissingAmount() > 0) {
-			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), 53, 7, 0.0f, 0.5f,
-					textColor, true);
-			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), 53, 12, 0.0f, 0.5f, textColor,
-					true);
+			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), 53, 7, 0.0f, 0.5f, textColor, true);
+			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), 53, 12, 0.0f, 0.5f, textColor, true);
 			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, 21, 14, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53.5f, 19.5f, 0.0f, 0.5f,
-					new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
-			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53, 19, 0.0f, 0.5f,
-					new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
+			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53.5f, 19.5f, 0.0f, 0.5f, new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
+			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53, 19, 0.0f, 0.5f, new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
 			MISSING_INGREDIENT_RENDERABLE.draw(matrix, 2, 3);
 		} else if (material.getAmountToCraft() > 0) {
-			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), 53, 7, 0.0f, 0.5f,
-					textColor, true);
-			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), 53, 12, 0.0f, 0.5f, textColor,
-					true);
+			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), 53, 7, 0.0f, 0.5f, textColor, true);
+			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), 53, 12, 0.0f, 0.5f, textColor, true);
 			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, 21, 14, 1.0f, Color.GREY);
-			GuiDrawUtilities.drawString(matrix, "To Craft: " + material.getAmountToCraft(), 53, 19, 0.0f, 0.5f,
-					textColor, true);
+			GuiDrawUtilities.drawString(matrix, "To Craft: " + material.getAmountToCraft(), 53, 19, 0.0f, 0.5f, textColor, true);
 		} else {
-			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountRequired(), 53, 11, 0.0f, 0.5f,
-					textColor, true);
+			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountRequired(), 53, 11, 0.0f, 0.5f, textColor, true);
 		}
 
 		if (isBlockingStep()) {

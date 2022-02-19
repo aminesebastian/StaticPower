@@ -1,13 +1,14 @@
 {
 	"type": "staticpower:research",
-	"title": "staticpower.research.your_first_research",
-	"description": "Welcome to your first research!",
+	"title": "staticpower.research.basic_farming",
+	"description": "Get yourself a green thumb.",
 	"prerequisites": [
+		"staticpower:research/basic_research"
 	],
 	"requirements": [
 		{
 			"item": "staticpower:research_tier_1",
-			"count": 100
+			"count": 20
 		}
 	],
 	"rewards": [
@@ -15,6 +16,6 @@
 	"advancements": [
 	],
 	"icon": {
-		"item": "staticpower:crop_static"
+		"item": "staticpower:seed_static"
 	}
 }

@@ -5,19 +5,17 @@ import java.util.function.BiConsumer;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
 public class ItemButton extends StandardButton {
 
 	protected ItemStack itemIcon;
-	protected final ItemRenderer customRenderer;
 
 	/**
 	 * Creates an item button using an item stack as the icon.
@@ -30,9 +28,7 @@ public class ItemButton extends StandardButton {
 	 */
 	public ItemButton(ItemStack icon, int xPos, int yPos, int width, int height, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, width, height, onClicked);
-
 		itemIcon = icon;
-		customRenderer = Minecraft.getInstance().getItemRenderer();
 	}
 
 	/**
@@ -71,7 +67,7 @@ public class ItemButton extends StandardButton {
 			Vector2D size = this.getSize();
 			int halfSizeX = size.getXi() / 2;
 			int halfSizeY = size.getYi() / 2;
-			customRenderer.renderGuiItem(itemIcon, (int) buttonLeft + (halfSizeX - 8), (int) buttonTop + (halfSizeY - 8));
+			GuiDrawUtilities.drawItem(stack, itemIcon, halfSizeX - 8, halfSizeY - 8, 0.0f);
 			RenderSystem.enableBlend();
 		}
 	}

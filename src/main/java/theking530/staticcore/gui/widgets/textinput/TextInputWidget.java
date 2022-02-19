@@ -83,7 +83,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiDrawUtilities.drawSlot(matrix, getSize().getX(), getSize().getY(), getPosition().getX(), getPosition().getY(), 0);
+		GuiDrawUtilities.drawSlot(matrix, getSize().getX(), getSize().getY(), 0, 0, 0);
 		textField.x = getPosition().getXi() + 2;
 		textField.y = getPosition().getYi() + 2;
 
@@ -94,7 +94,13 @@ public class TextInputWidget extends AbstractGuiWidget {
 
 		textField.setWidth((int) getSize().getX());
 		textField.setHeight((int) getSize().getY());
+
+		// We have to translate backwards to render in owner space for this vanilla
+		// minecraft element.
+		matrix.pushPose();
+		matrix.translate(-getPosition().getX(), -getPosition().getY(), 0);
 		textField.render(matrix, mouseX, mouseX, partialTicks);
+		matrix.popPose();
 	}
 
 	@Override

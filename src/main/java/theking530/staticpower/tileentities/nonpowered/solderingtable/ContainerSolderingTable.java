@@ -131,7 +131,6 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Til
 							break;
 						}
 					}
-					System.out.println(amount);
 					broadcastFullState();
 					// Old Way ((ServerPlayer) player).refreshContainer(this, this.getItems());
 				}
