@@ -24,3 +24,4 @@ server
 
 # Files from Forge MDK
 forge*changelog.txt
+/.DS_Store
