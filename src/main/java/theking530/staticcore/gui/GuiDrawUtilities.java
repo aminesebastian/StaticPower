@@ -281,6 +281,19 @@ public class GuiDrawUtilities {
 		matrixStack.popPose();
 	}
 
+	public static void drawLine(PoseStack pose, float width, float x1, float y1, float x2, float y2) {
+		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+		RenderSystem.enableBlend();
+		Tesselator tessellator = Tesselator.getInstance();
+		BufferBuilder bufferbuilder = tessellator.getBuilder();
+		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
+		bufferbuilder.vertex(pose.last().pose(), x2, y1, 1).color(1, 0, 0, 1.0f).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x1, y2, 1).color(0, 1, 1, 1.0f).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x1 + width, y2, 1).color(0, 1, 1, 1.0f).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x2 + width, y1, 1).color(1, 0, 0, 1.0f).endVertex();
+		tessellator.end();
+	}
+
 	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float alpha) {
 		drawItem(pose, item, 0, 0, 0, 1, 1, alpha);
 	}
