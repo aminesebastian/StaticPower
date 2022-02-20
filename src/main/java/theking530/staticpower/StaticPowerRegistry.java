@@ -15,6 +15,7 @@ import java.util.function.Supplier;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
@@ -182,11 +183,10 @@ public class StaticPowerRegistry {
 	}
 
 	public static void onServerStopping(ServerStoppedEvent serverStarted) {
-		DATA.clear();
 	}
 
 	public static void onGameLoaded(Load load) {
-		if (!load.getWorld().isClientSide()) {
+		if (!load.getWorld().isClientSide() && load.getWorld().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from loading multiple times (if there are
 			// multiple worlds loaded).
 			StaticPower.LOGGER.info("Loading Static Power data!");
@@ -226,7 +226,7 @@ public class StaticPowerRegistry {
 	}
 
 	public static void onGameSave(Save save) {
-		if (!save.getWorld().isClientSide()) {
+		if (!save.getWorld().isClientSide() && save.getWorld().dimensionType().effectsLocation().equals(new ResourceLocation("minecraft:overworld"))) {
 			// TODO: Determine how to prevent it from saving multiple times (if there are
 			// multiple worlds loaded).
 			StaticPower.LOGGER.info("Saving Static Power data!");

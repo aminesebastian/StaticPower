@@ -17,7 +17,7 @@ import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
 import theking530.staticpower.client.StaticPowerSprites;
 
-public class AutoCraftingStepWidget extends AbstractGuiWidget {
+public class AutoCraftingStepWidget extends AbstractGuiWidget<AutoCraftingStepWidget> {
 	public static final int TICKS_PER_INGREDIENT = 20;
 	public static final SpriteDrawable MISSING_INGREDIENT_RENDERABLE;
 	private RequiredAutoCraftingMaterial material;

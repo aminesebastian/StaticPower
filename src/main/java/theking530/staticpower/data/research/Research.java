@@ -1,20 +1,17 @@
 package theking530.staticpower.data.research;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import theking530.staticpower.StaticPower;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.teams.Team;
+import theking530.staticpower.items.ResearchItem;
 
 public class Research extends AbstractStaticPowerRecipe {
 	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
@@ -26,9 +23,11 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final List<StaticPowerIngredient> requirements;
 	private final List<ItemStack> rewards;
 	private final List<ResourceLocation> advancements;
+	private final boolean hiddenUntilAvailable;
+	private final Color color;
 
 	public Research(ResourceLocation name, String title, String description, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements, List<ItemStack> rewards,
-			List<ResourceLocation> advancements, ItemStack itemIcon, ResourceLocation textureIcon) {
+			List<ResourceLocation> advancements, ItemStack itemIcon, ResourceLocation textureIcon, boolean hiddenUntilAvailable, Color color) {
 		super(name);
 		this.title = title;
 		this.description = description;
@@ -38,6 +37,12 @@ public class Research extends AbstractStaticPowerRecipe {
 		this.itemIcon = itemIcon;
 		this.textureIcon = textureIcon;
 		this.advancements = advancements;
+		this.hiddenUntilAvailable = hiddenUntilAvailable;
+		if (color == null) {
+			this.color = calculateColor();
+		} else {
+			this.color = color;
+		}
 	}
 
 	public List<ResourceLocation> getAdvancements() {
@@ -74,6 +79,14 @@ public class Research extends AbstractStaticPowerRecipe {
 
 	public ResourceLocation getTextureIcon() {
 		return textureIcon;
+	}
+
+	public boolean isHiddenUntilAvailable() {
+		return hiddenUntilAvailable;
+	}
+
+	public Color getColor() {
+		return color;
 	}
 
 	@Override
@@ -135,82 +148,20 @@ public class Research extends AbstractStaticPowerRecipe {
 		return true;
 	}
 
-	public static class ResearchInstance {
-		private final ResourceLocation researchName;
-		private final List<Integer> requirementFullfillment;
-		private final Research research;
-		private final Team team;
-
-		public ResearchInstance(ResourceLocation researchName, Team team) {
-			this.team = team;
-			this.researchName = researchName;
-			this.requirementFullfillment = new LinkedList<Integer>();
-			research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, researchName).orElse(null);
-
-			// Throw a fatal error if somehow we ended up with an invalid research name.
-			if (research == null) {
-				StaticPower.LOGGER.fatal(String.format("Invalid research with name: %1$s provided.", researchName.toString()));
-			} else {
-				for (int i = 0; i < research.getRequirements().size(); i++) {
-					requirementFullfillment.add(0);
+	private Color calculateColor() {
+		int maxTier = 0;
+		Color color = Color.WHITE;
+		for (StaticPowerIngredient input : requirements) {
+			if (input.getIngredient().getItems()[0].getItem() instanceof ResearchItem) {
+				ResearchItem item = (ResearchItem) input.getIngredient().getItems()[0].getItem();
+				if (item.getResearchTier() > maxTier) {
+					maxTier = item.getResearchTier();
+					color = item.getColor();
 				}
 			}
 		}
 
-		public ResourceLocation getResearchName() {
-			return researchName;
-		}
-
-		public Research getTrackedResearch() {
-			return research;
-		}
-
-		public int getRequirementFullfillment(int index) {
-			return requirementFullfillment.get(index);
-		}
-
-		public void addRequirementFullfillment(int index, int amount) {
-			requirementFullfillment.set(index, requirementFullfillment.get(index) + amount);
-			if (isCompleted()) {
-				// team.addCompletedResearch(researchName);
-			}
-		}
-
-		public float getFullfillmentPercentage() {
-			int fullfillmentCount = 0;
-			int totalRequirements = 0;
-
-			for (int fullfillment : requirementFullfillment) {
-				fullfillmentCount += fullfillment;
-			}
-
-			for (StaticPowerIngredient req : getTrackedResearch().getRequirements()) {
-				totalRequirements += req.getCount();
-			}
-
-			return (float) fullfillmentCount / totalRequirements;
-		}
-
-		public boolean isCompleted() {
-			return getFullfillmentPercentage() >= 1.0f;
-		}
-
-		public static ResearchInstance deserialize(CompoundTag tag, Team team) {
-			String researchName = tag.getString("researchName");
-			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchName), team);
-
-			int[] fullfillment = tag.getIntArray("requirementFullfillment");
-			for (int i = 0; i < fullfillment.length; i++) {
-				instance.requirementFullfillment.set(i, fullfillment[i]);
-			}
-			return instance;
-		}
-
-		public CompoundTag serialize() {
-			CompoundTag output = new CompoundTag();
-			output.putString("researchName", researchName.toString());
-			output.putIntArray("requirementFullfillment", requirementFullfillment);
-			return output;
-		}
+		return color;
 	}
+
 }

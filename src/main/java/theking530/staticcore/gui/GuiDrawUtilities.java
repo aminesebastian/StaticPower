@@ -1,5 +1,8 @@
 package theking530.staticcore.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.platform.GlStateManager;
@@ -18,7 +21,6 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
@@ -32,6 +34,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -45,6 +48,12 @@ public class GuiDrawUtilities {
 	public static final Color DEFAULT_SLOT_CORNER_COLOR = new Color(139, 139, 139, 255).fromEightBitToFloat();
 
 	private static final float BACKGROUND_PIXEL_SIZE = 1.0f / 9.0f;
+
+	public static final PoseStack IDENTITY_STACK;
+	static {
+		IDENTITY_STACK = new PoseStack();
+		IDENTITY_STACK.setIdentity();
+	}
 
 	public static void drawTexturedBox(PoseStack pose, ResourceLocation texture, float width, float height, Vector4D borderDefenitions, float x, float y, float z, Color tint) {
 		RenderSystem.setShader(GameRenderer::getPositionTexShader);
@@ -129,9 +138,9 @@ public class GuiDrawUtilities {
 		}
 	}
 
-	public static void drawSlot(PoseStack pose, float width, float height, float x, float y, float z, Color color) {
-		if (color != null) {
-			drawRectangle(pose, width + 4, height + 4, x - 2, y - 2, z, color);
+	public static void drawSlotWithBorder(PoseStack pose, float width, float height, float x, float y, float z, Color borderColor) {
+		if (borderColor != null) {
+			drawRectangle(pose, width + 4, height + 4, x - 2, y - 2, z, borderColor);
 		}
 
 		drawRectangle(pose, 1, 1 + height, x - 1, y - 1, z, DEFAULT_SLOT_DARK_EDGE_COLOR);
@@ -146,14 +155,11 @@ public class GuiDrawUtilities {
 	}
 
 	public static void drawSlot(PoseStack pose, float width, float height, float x, float y, float z) {
-		drawSlot(pose, width, height, x, y, z, null);
+		drawSlotWithBorder(pose, width, height, x, y, z, null);
 	}
 
-	public void drawVerticalBar(PoseStack pose, float width, float height, float x, float y, float fillAmount, Color color) {
-		drawSlot(null, width, height, x, y, 0);
-		int filledHeight = (int) (fillAmount * height);
-		float zLevel = 0.0f;
-		drawRectangle(pose, x + width, y + height, x, y + (height - filledHeight), zLevel, color);
+	public static void drawSlot(PoseStack pose, float width, float height) {
+		drawSlotWithBorder(pose, width, height, 0, 0, 0, null);
 	}
 
 	public static void drawRectangle(PoseStack pose, float width, float height, Color color) {
@@ -203,9 +209,25 @@ public class GuiDrawUtilities {
 		drawSprite(pose, spriteLocation, width, height, x, y, z, minU, minV, maxU, maxV, Color.WHITE);
 	}
 
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x, float y, float z, Color color) {
+		drawSprite(pose, spriteLocation, width, height, x, y, z, 0, 0, 1, 1, color);
+	}
+
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x, float y, float z) {
+		drawSprite(pose, spriteLocation, width, height, x, y, z, 0, 0, 1, 1, Color.WHITE);
+	}
+
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, Color color) {
+		drawSprite(pose, spriteLocation, width, height, 0, 0, 0, 0, 0, 1, 1, color);
+	}
+
+	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height) {
+		drawSprite(pose, spriteLocation, width, height, 0, 0, 0, 0, 0, 1, 1, Color.WHITE);
+	}
+
 	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float x, float y, float z, float minU, float minV, float maxU, float maxV, Color color) {
 		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
-		RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 		RenderSystem.enableBlend();
 		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(spriteLocation);
 
@@ -232,13 +254,42 @@ public class GuiDrawUtilities {
 	}
 
 	public static void drawStringCentered(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, Color color, boolean withShadow) {
+		@SuppressWarnings("resource")
 		float width = Minecraft.getInstance().font.width(text) * scale;
 		drawString(matrixStack, text, xPos + (width / 2), yPos, zPos, scale, color.encodeInInteger(), withShadow);
 	}
 
 	public static void drawStringLeftAligned(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, Color color, boolean withShadow) {
+		@SuppressWarnings("resource")
 		float width = Minecraft.getInstance().font.width(text) * scale;
 		drawString(matrixStack, text, xPos + width, yPos, zPos, scale, color.encodeInInteger(), withShadow);
+	}
+
+	public static List<String> wrapString(String string, int maxWidth) {
+		// Draw the description.
+		List<String> lines = new ArrayList<String>();
+		StringBuilder currentLine = new StringBuilder();
+		int currentLineWidth = 0;
+
+		for (String word : string.split(" ")) {
+			@SuppressWarnings("resource")
+			int wordWidth = Minecraft.getInstance().font.width(word);
+			if (wordWidth == 0 || currentLineWidth + wordWidth < maxWidth) {
+				currentLine.append(word + " ");
+				currentLineWidth += wordWidth;
+			} else {
+				lines.add(currentLine.toString().trim());
+				currentLine = new StringBuilder();
+				currentLine.append(word + " ");
+				currentLineWidth = 0;
+			}
+		}
+
+		if (currentLine.toString().trim().length() > 0) {
+			lines.add(currentLine.toString().trim());
+		}
+
+		return lines;
 	}
 
 	public static void drawStringWithSize(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, ChatFormatting color, boolean withShadow) {
@@ -256,6 +307,7 @@ public class GuiDrawUtilities {
 	 * @param color
 	 * @param withShadow
 	 */
+	@SuppressWarnings("resource")
 	public static void drawString(PoseStack matrixStack, String text, float xPos, float yPos, float zPos, float scale, int color, boolean withShadow) {
 		// The matrix stack cannot be null.
 		if (matrixStack == null) {
@@ -265,15 +317,13 @@ public class GuiDrawUtilities {
 
 		final float scaleFactor = scale;
 		final float inverseScaleFactor = 1.0f / scaleFactor;
-		final int offset = 0;
-
 		matrixStack.pushPose();
 		matrixStack.scale(scaleFactor, scaleFactor, 1.0f);
 		matrixStack.translate(0, 0, zPos);
 
 		RenderSystem.disableBlend();
-		final int X = (int) ((xPos + offset - Minecraft.getInstance().font.width(text) * scaleFactor) * inverseScaleFactor);
-		final int Y = (int) ((yPos + offset - 7.0f * scaleFactor) * inverseScaleFactor);
+		final int X = (int) ((xPos - Minecraft.getInstance().font.width(text) * scaleFactor) * inverseScaleFactor);
+		final int Y = (int) ((yPos - 7.0f * scaleFactor) * inverseScaleFactor);
 		MultiBufferSource.BufferSource buffer = MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 		Minecraft.getInstance().font.drawInBatch(text, X, Y, color, withShadow, matrixStack.last().pose(), buffer, true, 0, 15728880);
 		buffer.endBatch();
@@ -281,17 +331,30 @@ public class GuiDrawUtilities {
 		matrixStack.popPose();
 	}
 
-	public static void drawLine(PoseStack pose, float width, float x1, float y1, float x2, float y2) {
-		RenderSystem.setShader(GameRenderer::getPositionColorShader);
+	public static void drawLine(PoseStack pose, Vector3D start, Vector3D end, Color startcolor, Color endColor, float thickness) {
+		RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
 		RenderSystem.enableBlend();
+		RenderSystem.disableCull();
+		RenderSystem.lineWidth(thickness);
+
+		Vector2D normal = end.copy().subtract(start).normalize();
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
-		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		bufferbuilder.vertex(pose.last().pose(), x2, y1, 1).color(1, 0, 0, 1.0f).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x1, y2, 1).color(0, 1, 1, 1.0f).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x1 + width, y2, 1).color(0, 1, 1, 1.0f).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x2 + width, y1, 1).color(1, 0, 0, 1.0f).endVertex();
+		bufferbuilder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
+		bufferbuilder.vertex(pose.last().pose(), start.getX(), start.getY(), start.getZ()).color(startcolor.getRed(), startcolor.getBlue(), startcolor.getGreen(), startcolor.getAlpha())
+				.normal(normal.getX(), normal.getY(), 0).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), end.getX(), end.getY(), end.getZ()).color(endColor.getRed(), endColor.getBlue(), endColor.getGreen(), endColor.getAlpha())
+				.normal(normal.getX(), normal.getY(), 0).endVertex();
 		tessellator.end();
+		RenderSystem.enableCull();
+	}
+
+	public static void drawLine(PoseStack pose, Vector3D start, Vector3D end, Color color, float thickness) {
+		drawLine(pose, start, end, color, color, thickness);
+	}
+
+	public static void drawLine(PoseStack pose, Vector3D start, Vector3D end, Color color) {
+		drawLine(pose, start, end, color, color, 1.0f);
 	}
 
 	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float alpha) {

@@ -86,6 +86,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation IMPORT = registerSprite("gui/import_icon");
 	public static final ResourceLocation EXPORT = registerSprite("gui/export_icon");
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
+	public static final ResourceLocation TEAM_ICON = registerSprite("gui/team_icon");
 
 	public static final ResourceLocation SIZE_TWO_CRAFTING = registerSprite("gui/2x2");
 	public static final ResourceLocation SIZE_THREE_CRAFTING = registerSprite("gui/3x3");
@@ -100,6 +101,8 @@ public class StaticPowerSprites {
 	public static final ResourceLocation CONCRETE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_concrete_mask");
 	public static final ResourceLocation OIL_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_oil_mask");
 	public static final ResourceLocation DYE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_dye_mask");
+
+	public static final ResourceLocation RESEARCH_NODE_CONNECTION = registerSprite("gui/research_node_connection");
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);

@@ -6,14 +6,20 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
+import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.client.gui.StaticPowerContainerGui;
 
-public abstract class AbstractGuiWidget {
+@SuppressWarnings({ "unchecked" })
+public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public enum EInputResult {
 		HANDLED, UNHANDLED
 	}
@@ -22,11 +28,14 @@ public abstract class AbstractGuiWidget {
 	 * The owning container of this widget.
 	 */
 	protected WidgetContainer owningContainer;
+	protected final WidgetContainer internalContainer;
 	protected boolean DEBUG_HOVER;
 	private Vector2D initialPosition;
 	private Vector2D position;
+	private float zLevel;
+	private float ticksHovered;
 	private Vector2D size;
-	private Vector2D ownerSize;
+	private Vector2D parentSize;
 	private boolean isVisible;
 	private boolean isEnabled;
 	private boolean tooltipsDisabled;
@@ -34,50 +43,59 @@ public abstract class AbstractGuiWidget {
 	private RectangleBounds cachedBounds;
 	private PoseStack lastMatrixStack;
 	private Vector2D lastMousePosition;
-	private final WidgetContainer internalContainer;
+	private final Font fontRenderer;
 
+	@SuppressWarnings("resource")
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
 		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		initialPosition = new Vector2D(xPosition, yPosition);
 		position = new Vector2D(xPosition, yPosition);
 		size = new Vector2D(width, height);
-		ownerSize = new Vector2D(0.0f, 0.0f);
+		parentSize = new Vector2D(0.0f, 0.0f);
 		lastMousePosition = new Vector2D(0.0f, 0.0f);
 		isVisible = true;
 		isEnabled = true;
+		zLevel = 0.0f;
 		autoHandleTooltipBounds = true;
-		internalContainer = new WidgetContainer();
+		internalContainer = new WidgetContainer(WidgetParent.fromWidget(this));
+		fontRenderer = getMinecraft().font;
 	}
 
 	/**
-	 * Sets the owning conatiner of this widget. This is called straight from the
+	 * Sets the owning container of this widget. This is called straight from the
 	 * {@link WidgetContainer} that will contain this widget.
 	 * 
 	 * @param container
+	 * @param parent    TODO
 	 */
 	public void setOwningContainer(WidgetContainer container) {
 		owningContainer = container;
 	}
 
 	/**
-	 * This method is raised when this widget is added to a container that exists on
-	 * a ContainerScreen. This will NOT be called on any other object that defines a
-	 * WidgetContainer.
+	 * Gets the parent for this widget.
+	 * 
+	 * @return
+	 */
+	public WidgetParent getParent() {
+		return owningContainer.getParent();
+	}
+
+	/**
+	 * This method is raised when this widget is added to a parent.
 	 * 
 	 * @param gui
 	 */
-	public void addedToGui(@Nullable StaticPowerContainerGui<?> gui) {
+	public void addedToParent(@Nullable WidgetParent parent) {
 
 	}
 
 	/**
-	 * This method is raised when this widget is removed from a container that
-	 * exists on a ContainerScreen. This will NOT be called on any other object that
-	 * defines a WidgetContainer.
+	 * This method is raised when this widget is removed from a parent.
 	 * 
 	 * @param gui
 	 */
-	public void removedFromGui(@Nullable StaticPowerContainerGui<?> gui) {
+	public void removedFromParent(@Nullable WidgetParent parent) {
 
 	}
 
@@ -105,9 +123,9 @@ public abstract class AbstractGuiWidget {
 	 * @param isVisible
 	 * @return
 	 */
-	public AbstractGuiWidget setVisible(boolean isVisible) {
+	public T setVisible(boolean isVisible) {
 		this.isVisible = isVisible;
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -116,9 +134,9 @@ public abstract class AbstractGuiWidget {
 	 * @param isEnabled
 	 * @return
 	 */
-	public AbstractGuiWidget setEnabled(boolean isEnabled) {
+	public T setEnabled(boolean isEnabled) {
 		this.isEnabled = isEnabled;
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -129,10 +147,31 @@ public abstract class AbstractGuiWidget {
 	 * @param yPos
 	 * @return
 	 */
-	public AbstractGuiWidget setPosition(float xPos, float yPos) {
+	public T setPosition(float xPos, float yPos) {
 		position.setX(xPos);
 		position.setY(yPos);
-		return this;
+		return (T) this;
+	}
+
+	/**
+	 * Sets the zLevel for this widget. All matricies will be translated by this
+	 * value in the z direction.
+	 * 
+	 * @param zLevel
+	 * @return
+	 */
+	public T setZLevel(float zLevel) {
+		this.zLevel = zLevel;
+		return (T) this;
+	}
+
+	/**
+	 * Returns the zLevel for this widget.
+	 * 
+	 * @return
+	 */
+	public float getZLevel() {
+		return zLevel;
 	}
 
 	/**
@@ -154,6 +193,16 @@ public abstract class AbstractGuiWidget {
 	}
 
 	/**
+	 * Gets the last screen space absolute position that this widget was rendered
+	 * at.
+	 * 
+	 * @return
+	 */
+	public Vector2D getScreenSpacePosition() {
+		return GuiDrawUtilities.translatePositionByMatrix(lastMatrixStack, getPosition());
+	}
+
+	/**
 	 * Gets the overall bounds of this widget. X and Y are the minimum X and Y
 	 * coordinates, Z and W and the maximum x and y coordinates. This value is in
 	 * screen space
@@ -171,10 +220,10 @@ public abstract class AbstractGuiWidget {
 	 * @param height
 	 * @return
 	 */
-	public AbstractGuiWidget setSize(float width, float height) {
+	public T setSize(float width, float height) {
 		size.setX(width);
 		size.setY(height);
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -207,16 +256,20 @@ public abstract class AbstractGuiWidget {
 	}
 
 	public boolean isHovered() {
-		return DEBUG_HOVER || isPointInsideBounds(this.getLastMousePosition());
+		return (DEBUG_HOVER || isPointInsideBounds(getLastMousePosition())) && isEnabled();
+	}
+
+	public float getTicksHovered() {
+		return ticksHovered;
 	}
 
 	/**
-	 * Gets the size of the owner of this widget.
+	 * Gets the size of the parent of this widget.
 	 * 
 	 * @return
 	 */
-	public Vector2D getOwnerSize() {
-		return ownerSize;
+	public Vector2D getParentSize() {
+		return parentSize;
 	}
 
 	/**
@@ -243,17 +296,20 @@ public abstract class AbstractGuiWidget {
 	 * Updates this widget with the position and size of it's owner.
 	 * 
 	 * @param ownerPosition
-	 * @param ownerSize
+	 * @param parentSize
 	 * @param partialTicks
 	 * @param mouseX
 	 * @param mouseY
 	 */
-	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
-		this.ownerSize = ownerSize;
+	public void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+		this.parentSize = parentSize;
 		lastMousePosition = new Vector2D(mouseX, mouseY);
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
-		internalContainer.update(matrixStack, screenSpacePosition, ownerSize, partialTicks, mouseX, mouseY);
+		matrixStack.pushPose();
+		transformPoseBeforeRender(matrixStack);
+		internalContainer.update(matrixStack, parentSize, partialTicks, mouseX, mouseY);
+		matrixStack.popPose();
 
 		// Make a NEW matrix that translates from local space to screen space. We make a
 		// new matrix so that it's owned by this widget, and not modified by any
@@ -262,6 +318,12 @@ public abstract class AbstractGuiWidget {
 		lastMatrixStack.translate(screenSpacePosition.getX() - getPosition().getX(), screenSpacePosition.getY() - getPosition().getY(), 0);
 
 		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
+
+		if (isHovered()) {
+			ticksHovered += partialTicks;
+		} else {
+			ticksHovered = 0;
+		}
 	}
 
 	/**
@@ -275,7 +337,7 @@ public abstract class AbstractGuiWidget {
 	 */
 	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
-		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
+		transformPoseBeforeRender(matrix);
 		internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
 		renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
@@ -292,7 +354,7 @@ public abstract class AbstractGuiWidget {
 	 */
 	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
-		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
+		transformPoseBeforeRender(matrix);
 		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 		internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
@@ -300,7 +362,7 @@ public abstract class AbstractGuiWidget {
 
 	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
-		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
+		transformPoseBeforeRender(matrix);
 		internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks);
 		renderWidgetForeground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
@@ -336,7 +398,50 @@ public abstract class AbstractGuiWidget {
 
 	}
 
-	public void registerWidget(AbstractGuiWidget widget) {
+	/**
+	 * Performs the translation from parent space to this widget's space for
+	 * rendering. Careful when overidding this method as the bounds aren't updated
+	 * until the next render request.
+	 * 
+	 * @param matrix
+	 */
+	protected void transformPoseBeforeRender(PoseStack matrix) {
+		matrix.translate(getPosition().getX(), getPosition().getY(), zLevel);
+	}
+
+	/**
+	 * Gets the current runing instance of minecraft.
+	 * 
+	 * @return
+	 */
+	protected Minecraft getMinecraft() {
+		return Minecraft.getInstance();
+	}
+
+	/**
+	 * Gets the font renderer.
+	 * 
+	 * @return
+	 */
+	protected Font getFontRenderer() {
+		return fontRenderer;
+	}
+
+	/**
+	 * Gets the local player.
+	 * 
+	 * @return
+	 */
+	@SuppressWarnings("resource")
+	protected Player getLocalPlayer() {
+		return getMinecraft().player;
+	}
+
+	protected void playSoundLocally(SoundEvent sound, float volume, float pitch) {
+		getLocalPlayer().level.playSound(getLocalPlayer(), getLocalPlayer().blockPosition(), sound, SoundSource.MASTER, volume, pitch);
+	}
+
+	public void registerWidget(@SuppressWarnings("rawtypes") AbstractGuiWidget widget) {
 		internalContainer.registerWidget(widget);
 	}
 
@@ -349,7 +454,7 @@ public abstract class AbstractGuiWidget {
 		return tooltipsDisabled;
 	}
 
-	public AbstractGuiWidget setTooltipsDisabled(boolean disabled) {
+	public AbstractGuiWidget<T> setTooltipsDisabled(boolean disabled) {
 		tooltipsDisabled = disabled;
 		return this;
 	}
@@ -371,9 +476,18 @@ public abstract class AbstractGuiWidget {
 	 * 
 	 * @return
 	 */
-	public AbstractGuiWidget setShouldAutoCalculateTooltipBounds(boolean value) {
+	public AbstractGuiWidget<T> setShouldAutoCalculateTooltipBounds(boolean value) {
 		this.autoHandleTooltipBounds = value;
 		return this;
+	}
+
+	/**
+	 * Returns all the child widgets for this widget.
+	 * 
+	 * @return
+	 */
+	public List<AbstractGuiWidget<?>> getChildren() {
+		return internalContainer.getWidgets();
 	}
 
 	/* Input Events */
@@ -381,8 +495,8 @@ public abstract class AbstractGuiWidget {
 		return internalContainer.handleMouseClick(mouseX, mouseY, button);
 	}
 
-	public void mouseMove(int mouseX, int mouseY) {
-		internalContainer.handleMouseMove(mouseX, mouseY);
+	public EInputResult mouseMove(int mouseX, int mouseY) {
+		return internalContainer.handleMouseMove(mouseX, mouseY);
 	}
 
 	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {

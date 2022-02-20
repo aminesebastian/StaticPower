@@ -9,12 +9,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.Level;
-import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 
-public class TimeOfDayDrawable extends AbstractGuiWidget {
+public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 	public enum EStateOfDay {
 		NIGHT, SUNRISE, DAY, SUNSET
 	}

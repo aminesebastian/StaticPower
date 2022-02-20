@@ -61,4 +61,10 @@ public class RectangleBounds extends AbstractVector {
 	public boolean isPointInBounds(Vector2D point) {
 		return point.getX() >= getX() && point.getX() < getX() + getWidth() && point.getY() >= getY() && point.getY() < getY() + getHeight();
 	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public RectangleBounds copy() {
+		return new RectangleBounds(values.get(0), values.get(1), values.get(2), values.get(3));
+	}
 }

@@ -3,6 +3,10 @@ package theking530.staticcore.utilities;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.gson.JsonObject;
+
+import net.minecraft.network.FriendlyByteBuf;
+
 /**
  * Basic color class.
  * 
@@ -93,8 +97,23 @@ public class Color extends Vector4D {
 	}
 
 	@Override
-	public Color clone() {
+	public Color copy() {
 		return new Color(values.get(0), values.get(1), values.get(2), values.get(3));
+	}
+
+	public void toBuffer(FriendlyByteBuf buff) {
+		buff.writeFloat(getRed());
+		buff.writeFloat(getGreen());
+		buff.writeFloat(getBlue());
+		buff.writeFloat(getAlpha());
+	}
+
+	public static Color fromJson(JsonObject object) {
+		return new Color(object.get("r").getAsFloat(), object.get("g").getAsFloat(), object.get("b").getAsFloat(), object.get("a").getAsFloat());
+	}
+
+	public static Color fromBuffer(FriendlyByteBuf buff) {
+		return new Color(buff.readFloat(), buff.readFloat(), buff.readFloat(), buff.readFloat());
 	}
 
 	public static Color lerp(Color first, Color second, float alpha) {

@@ -20,6 +20,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
+import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
@@ -110,8 +111,7 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture,
-			IDrawable icon) {
+	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture, IDrawable icon) {
 		this.tabWidth = tabWidth;
 		this.tabHeight = tabHeight;
 		this.icon = icon;
@@ -122,7 +122,7 @@ public abstract class BaseGuiTab {
 		tabTexture = texture;
 		tabState = TabState.CLOSED;
 		tabSide = TabSide.RIGHT;
-		widgetContainer = new WidgetContainer();
+		widgetContainer = new WidgetContainer(WidgetParent.fromTab(this));
 		fontRenderer = Minecraft.getInstance().font;
 		initialPositionSet = false;
 		notifictionBadge = new SpriteDrawable(StaticPowerSprites.NOTIFICATION, 9, 9);
@@ -138,8 +138,7 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture,
-			Item item) {
+	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture, Item item) {
 		this(title, titleColor, tabWidth, tabHeight, texture, new ItemDrawable(item));
 	}
 
@@ -151,8 +150,7 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param block     The block that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture,
-			Block block) {
+	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture, Block block) {
 		this(title, titleColor, tabWidth, tabHeight, texture, new ItemDrawable(block));
 	}
 
@@ -164,16 +162,14 @@ public abstract class BaseGuiTab {
 	 * @param tabYPosition The new y position.
 	 * @param partialTicks The partial ticks (delta time).
 	 */
-	public void updateTabPosition(PoseStack stack, int tabXPosition, int tabYPosition, float partialTicks, int mouseX,
-			int mouseY, int index) {
+	public void updateTabPosition(PoseStack stack, int tabXPosition, int tabYPosition, float partialTicks, int mouseX, int mouseY, int index) {
 		updateAnimation(partialTicks);
 
 		tabIndex = index;
 		this.xPosition = tabXPosition;
 		this.yPosition = tabYPosition;
 
-		widgetContainer.update(stack, new Vector2D(0, 0), new Vector2D(currentWidth, currentHeight), partialTicks,
-				mouseX, mouseY);
+		widgetContainer.update(stack, new Vector2D(currentWidth, currentHeight), partialTicks, mouseX, mouseY);
 		if (!initialPositionSet) {
 			initialPositionSet = true;
 			initialized(xPosition, yPosition);
@@ -182,12 +178,10 @@ public abstract class BaseGuiTab {
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(stack, new Vector2D(0, 0));
 		if (this.tabSide == TabSide.LEFT) {
 			cachedIconBounds.update(screenSpacePosition.getX() + this.tabWidth, screenSpacePosition.getY(), 24, 24);
-			cachedTabBounds.update(screenSpacePosition.getX() + (tabWidth - currentWidth), screenSpacePosition.getY(),
-					currentWidth + 24, currentHeight + 24);
+			cachedTabBounds.update(screenSpacePosition.getX() + (tabWidth - currentWidth), screenSpacePosition.getY(), currentWidth + 24, currentHeight + 24);
 		} else {
 			cachedIconBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), 24, 24);
-			cachedTabBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), currentWidth + 24,
-					currentHeight + 24);
+			cachedTabBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), currentWidth + 24, currentHeight + 24);
 		}
 	}
 
@@ -218,8 +212,7 @@ public abstract class BaseGuiTab {
 				return EInputResult.HANDLED;
 			}
 		} else {
-			if (tabState == TabState.OPEN
-					&& widgetContainer.handleMouseClick(mouseX, mouseY, button) == EInputResult.HANDLED) {
+			if (tabState == TabState.OPEN && widgetContainer.handleMouseClick(mouseX, mouseY, button) == EInputResult.HANDLED) {
 				return EInputResult.HANDLED;
 			}
 		}
@@ -232,10 +225,11 @@ public abstract class BaseGuiTab {
 	 * @param x The x position of the mouse.
 	 * @param y The y position of the mouse.
 	 */
-	public void mouseHover(int x, int y) {
+	public EInputResult mouseHover(int x, int y) {
 		if (tabState == TabState.OPEN) {
-			widgetContainer.handleMouseMove(x, y);
+			return widgetContainer.handleMouseMove(x, y);
 		}
+		return EInputResult.UNHANDLED;
 	}
 
 	/**
@@ -374,8 +368,7 @@ public abstract class BaseGuiTab {
 		return tabIndex;
 	}
 
-	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX,
-			int mouseY) {
+	public void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
 
 	}
 
@@ -529,61 +522,38 @@ public abstract class BaseGuiTab {
 		// Top
 		buff.pos(stack, tabLeft + 1, tabTop, zLevel, 0.0f, 0.0f);
 		buff.pos(stack, tabLeft + 1, tabTop + 3, zLevel, 0.0f, yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 3, zLevel,
-				1.0f - xPixel * 4.0f, yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop, zLevel,
-				1.0f - xPixel * 4.0f, 0.0f);
+		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 3, zLevel, 1.0f - xPixel * 4.0f, yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop, zLevel, 1.0f - xPixel * 4.0f, 0.0f);
 
 		// Bottom
 		buff.pos(stack, tabLeft + 1, tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 0.0f, 1.0f);
-		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime),
-				tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f, 1.0f);
-		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime),
-				tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f,
-				1.0f - yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 1, tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 0.0f,
-				1.0f - yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f, 1.0f);
+		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f, 1.0f - yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 1, tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 0.0f, 1.0f - yPixel * 4.0f);
 
 		// Right Side
-		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime),
-				tabTop + 21.4 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f, yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f,
-				1.0f - yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel,
-				1.0f - xPixel * 3.0f, 1.0f - yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime),
-				tabTop + 21.4 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f,
-				yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 21.4 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f, yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f, 1.0f - yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f - xPixel * 3.0f, 1.0f - yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21.4 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 3.0f, yPixel * 4.0f);
 
 		// Body
-		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime),
-				tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f,
-				yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 3, zLevel,
-				1.0f - xPixel * 4.0f, 1.0f - yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f, yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 21 + (tabWidth * animationTimer / animationTime), tabTop + 3, zLevel, 1.0f - xPixel * 4.0f, 1.0f - yPixel * 4.0f);
 		buff.pos(stack, tabLeft + 1, tabTop + 3, zLevel, 0, 1.0f - yPixel * 4.0f);
-		buff.pos(stack, tabLeft + 1, tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 0,
-				yPixel * 4.0f);
+		buff.pos(stack, tabLeft + 1, tabTop + 21 + (tabHeight * animationTimer / animationTime), zLevel, 0, yPixel * 4.0f);
 
 		// Bottom Corner
-		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime),
-				tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1, 1);
-		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime),
-				tabTop + 20 + (tabHeight * animationTimer / animationTime), zLevel, 1, 1.0f - yPixel * 5.0f);
-		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime),
-				tabTop + 20 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f,
-				1.0f - yPixel * 5.0f);
-		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime),
-				tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f, 1);
+		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1, 1);
+		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 20 + (tabHeight * animationTimer / animationTime), zLevel, 1, 1.0f - yPixel * 5.0f);
+		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 20 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f, 1.0f - yPixel * 5.0f);
+		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 24 + (tabHeight * animationTimer / animationTime), zLevel, 1.0f - xPixel * 4.0f, 1);
 
 		// Top Corner
-		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f,
-				yPixel * 5.0f);
+		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f, yPixel * 5.0f);
 		buff.pos(stack, tabLeft + 23.5 + (tabWidth * animationTimer / animationTime), tabTop, zLevel, 1.0f, 0);
-		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop, zLevel,
-				1.0f - xPixel * 4.0f, 0);
-		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel,
-				1.0f - xPixel * 4.0f, yPixel * 5.0f);
+		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop, zLevel, 1.0f - xPixel * 4.0f, 0);
+		buff.pos(stack, tabLeft + 20 + (tabWidth * animationTimer / animationTime), tabTop + 4, zLevel, 1.0f - xPixel * 4.0f, yPixel * 5.0f);
 
 		buff.end();
 		stack.popPose();

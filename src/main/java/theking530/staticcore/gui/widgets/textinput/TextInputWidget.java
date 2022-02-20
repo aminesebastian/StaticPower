@@ -5,7 +5,6 @@ import java.util.function.Predicate;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -17,7 +16,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
-public class TextInputWidget extends AbstractGuiWidget {
+public class TextInputWidget extends AbstractGuiWidget<TextInputWidget> {
 	public enum TextAlignment {
 		LEFT, CENTER, RIGHT
 	}
@@ -25,13 +24,11 @@ public class TextInputWidget extends AbstractGuiWidget {
 	private final EditBox textField;
 	private BiConsumer<TextInputWidget, String> textChangedConsumer;
 	private Predicate<String> filter;
-	private final Font fontRenderer;
 	private TextAlignment alignment;
 
 	public TextInputWidget(String initialString, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		fontRenderer = Minecraft.getInstance().font;
-		textField = new StaticPowerTextFieldWidget(fontRenderer, (int) xPosition, (int) yPosition, (int) width, (int) height, new TextComponent(""));
+		textField = new StaticPowerTextFieldWidget(getFontRenderer(), (int) xPosition, (int) yPosition, (int) width, (int) height, new TextComponent(""));
 		textField.setValue(initialString);
 		alignment = TextAlignment.LEFT;
 	}
@@ -88,7 +85,7 @@ public class TextInputWidget extends AbstractGuiWidget {
 		textField.y = getPosition().getYi() + 2;
 
 		if (alignment == TextAlignment.CENTER) {
-			int currentTextWidth = fontRenderer.width(getText());
+			int currentTextWidth = getFontRenderer().width(getText());
 			textField.x = ((getPosition().getXi() + getPosition().getXi() + getSize().getXi()) / 2) - (currentTextWidth / 2);
 		}
 
@@ -111,8 +108,9 @@ public class TextInputWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void mouseMove(int mouseX, int mouseY) {
+	public EInputResult mouseMove(int mouseX, int mouseY) {
 		textField.mouseMoved(mouseX, mouseY);
+		return EInputResult.UNHANDLED;
 	}
 
 	@Override

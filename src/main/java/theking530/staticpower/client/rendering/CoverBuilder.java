@@ -260,7 +260,7 @@ public class CoverBuilder {
 			}
 		} else if (attachment != null) {
 			// If we have an attachment, create a hole the size of the attachment.
-			bounds = attachment.getBounds().clone().divide(16.0f);
+			bounds = attachment.getBounds().copy().divide(16.0f);
 		} else {
 			// Otherwise, return early.
 			return Collections.singletonList(fb);

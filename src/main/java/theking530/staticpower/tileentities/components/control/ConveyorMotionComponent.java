@@ -67,7 +67,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 
 			// Rotate the velocity towards the facing direction of the block (This should be
 			// cached!!!).
-			Vector3D rotatedVelocity = velocity.clone();
+			Vector3D rotatedVelocity = velocity.copy();
 			// If we're on the Z axis as forward instead of X, swap X and Z.
 			if (facing.getAxis() == Axis.Z) {
 				float tempX = rotatedVelocity.getX();

@@ -26,7 +26,7 @@ public class SquareProgressBar extends AbstractProgressBar<SquareProgressBar> {
 			if (getSize().getX() > 18 && getSize().getY() > 18) {
 				errorDrawable.draw(pose, 0, 0);
 			} else {
-				GuiDrawUtilities.drawSlot(pose, getSize().getX(), getSize().getY(), 0, 0, 0, new Color(1.0f, 0.0f, 0.0f));
+				GuiDrawUtilities.drawSlotWithBorder(pose, getSize().getX(), getSize().getY(), 0, 0, 0, new Color(1.0f, 0.0f, 0.0f));
 			}
 		} else {
 			GuiDrawUtilities.drawSlot(pose, getSize().getX(), getSize().getY(), 0, 0, 0);

@@ -18,6 +18,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
+import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
@@ -76,7 +77,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	public StaticPowerContainerGui(T container, final Inventory playerInventory, Component title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
 		inventory = playerInventory;
-		widgetContainer = new WidgetContainer(this);
+		widgetContainer = new WidgetContainer(WidgetParent.fromScreen(this));
 		imageWidth = guiXSize;
 		imageHeight = guiYSize;
 		sizeTarget = new Vector2D(imageWidth, imageHeight);
@@ -163,7 +164,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		stack.translate(leftPos, topPos, 0);
 
 		// Update the widgets and then draw the background.
-		widgetContainer.update(stack, new Vector2D(leftPos, topPos), new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
+		widgetContainer.update(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
 		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks);
 
 		// Draw the container background.
@@ -495,7 +496,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		if (slotMode == MachineSideMode.Regular) {
 			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 0);
 		} else {
-			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 0, slotMode.getColor());
+			GuiDrawUtilities.drawSlotWithBorder(matrixStack, width, height, xPos, yPos, 0, slotMode.getColor());
 		}
 	}
 
@@ -663,9 +664,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// changing, raise the change completed method and mark changing as false. THIS
 		// CAN BE DONE WAY BETTER - TO DO.
 		if (changeOccured) {
-			Vector2D expectedDifference = previousSizeTarget.clone().subtract(sizeTarget);
+			Vector2D expectedDifference = previousSizeTarget.copy().subtract(sizeTarget);
 			Vector2D currentDifference = new Vector2D(imageWidth - sizeTarget.getXi(), imageHeight - sizeTarget.getYi());
-			Vector2D alpha = currentDifference.clone().divide(expectedDifference);
+			Vector2D alpha = currentDifference.copy().divide(expectedDifference);
 			alpha = new Vector2D(1.0f, 1.0f).subtract(alpha);
 			if (Float.isNaN(alpha.getX())) {
 				alpha.setX(0.0f);

@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_capsules",
-	"description": "Buckets are for chumps!",
+	"description": "Buckets are for chumps! Capsules are a convenient way of storing multiple buckets word of fluid in a single item.",
 	"prerequisites": [
 		"staticpower:research/basic_research"
 	],

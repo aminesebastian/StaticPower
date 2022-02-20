@@ -114,9 +114,15 @@ public class StaticPowerClientEventHandler {
 
 		LOGGER.info("Performing Key Bindings!");
 		ModKeyBindings.registerBindings(event);
+
+		// TODO: Build a system to handle this non-manually.
 		ModKeyBindings.addCallback(ModKeyBindings.OPEN_RESEARCH, (binding) -> {
 			if (binding.wasJustPressed()) {
-				GuiResearchMenu.tryOpen();
+				if (Minecraft.getInstance().screen == null) {
+					Minecraft.getInstance().setScreen(new GuiResearchMenu());
+				} else if (Minecraft.getInstance().screen instanceof GuiResearchMenu) {
+					Minecraft.getInstance().screen.onClose();
+				}
 			}
 		});
 

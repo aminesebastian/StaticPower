@@ -12,7 +12,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiPowerBarFromEnergyStorage extends AbstractGuiWidget {
+public class GuiPowerBarFromEnergyStorage extends AbstractGuiWidget<GuiPowerBarFromEnergyStorage> {
 
 	private IStaticVoltHandler energyStorage;
 

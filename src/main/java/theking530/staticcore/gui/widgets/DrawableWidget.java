@@ -5,11 +5,10 @@ import java.util.List;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
-import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.utilities.Vector2D;
 
-public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
+public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget<DrawableWidget<T>> {
 	private T drawable;
 	private Component tooltip;
 	private float zLevel;
@@ -26,7 +25,7 @@ public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget {
 	}
 
 	@Override
-	public AbstractGuiWidget setSize(float width, float height) {
+	public DrawableWidget<T> setSize(float width, float height) {
 		this.drawable.setSize(width, height);
 		return super.setSize(width, height);
 	}

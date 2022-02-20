@@ -1,14 +1,7 @@
 package theking530.staticpower.teams.research;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -16,10 +9,11 @@ import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
-import theking530.staticpower.data.research.Research.ResearchInstance;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.teams.Team;
+import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 
-public class ActiveResearchWidget extends AbstractGuiWidget {
+public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget> {
 	private final SimpleProgressBar progressBar;
 	private boolean drawBackground;
 	private Color backgroundTint;
@@ -77,7 +71,7 @@ public class ActiveResearchWidget extends AbstractGuiWidget {
 		if (team != null && research != null) {
 			int requirementCount = research.getRequirements().size();
 			int width = Math.max(115, requirementCount * 21);
-			int height = team.isResearching() ? 45 : 30;
+			int height = team.getResearchManager().hasSelectedResearch() ? 45 : 34;
 			this.setSize(width, height);
 
 			// Draw background.
@@ -86,29 +80,34 @@ public class ActiveResearchWidget extends AbstractGuiWidget {
 			}
 
 			// Draw icon.
-			GuiDrawUtilities.drawItem(pose, research.getItemIcon(), 3, 3, 0, 1.0f);
+			GuiDrawUtilities.drawItem(pose, research.getItemIcon(), 4, 4, 10, 1.0f);
 			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 23, 13, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.
 			progressBar.setPosition(20, 16);
 			progressBar.setSize(width * 0.75f, 7);
-			if (team.isResearching()) {
+			if (team.getResearchManager().hasSelectedResearch()) {
 				progressBar.setCurrentProgress((int) (currentProgress.getFullfillmentPercentage() * 100));
 			} else {
 				progressBar.setCurrentProgress(100);
 			}
 
 			// Draw requirements.
-			if (team.isResearching()) {
+			if (team.getResearchManager().hasSelectedResearch() && !team.getResearchManager().getSelectedResearch().isCompleted()) {
 				for (int i = 0; i < research.getRequirements().size(); i++) {
 					int xOffset = i * 20;
 					StaticPowerIngredient requirement = research.getRequirements().get(i);
 					GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 20 - xOffset, 22, 0, 0.75f, 0.75f);
 
-					GuiDrawUtilities.drawString(pose, Integer.toString(requirement.getCount() - currentProgress.getRequirementFullfillment(i)), getSize().getX() - 7f - xOffset, 40, 255, 0.5f,
+					GuiDrawUtilities.drawString(pose, Integer.toString(requirement.getCount() - currentProgress.getRequirementFullfillment(i)), getSize().getX() - 7f - xOffset, 40, 1, 0.5f,
 							Color.EIGHT_BIT_WHITE, true);
 				}
 			}
+
+			// Draw the tooltip.
+			String openTooltip = new TranslatableComponent("gui.staticpower.research_menu_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
+					.getString();
+			GuiDrawUtilities.drawStringLeftAligned(pose, openTooltip, 5, getSize().getY() - 5, 0, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 		}
 	}
 }

@@ -29,7 +29,7 @@ import theking530.staticpower.tileentities.components.control.MachineProcessingC
  *
  */
 @OnlyIn(Dist.CLIENT)
-public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> extends AbstractGuiWidget {
+public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> extends AbstractGuiWidget<T> {
 	/**
 	 * The machine processing component this progress bar is bound to (if one
 	 * exists).

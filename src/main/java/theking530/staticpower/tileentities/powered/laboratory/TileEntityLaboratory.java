@@ -24,11 +24,11 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
-import theking530.staticpower.data.research.Research.ResearchInstance;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
+import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
@@ -119,6 +119,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
 			if (SDMath.diceRoll(0.25f)) {
+				@SuppressWarnings("resource")
 				float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 				randomOffset /= 3.5f;
 
@@ -157,7 +158,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		if (instance != null) {
 			for (int i = 0; i < internalInventory.getSlots(); i++) {
 				if (!internalInventory.getStackInSlot(i).isEmpty()) {
-					instance.addRequirementFullfillment(i, 1);
+					instance.getResearchManager().addProgressToSelectedResearch(i, 1);
 				}
 			}
 			InventoryUtilities.clearInventory(internalInventory);
@@ -215,6 +216,10 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		}
 	}
 
+	public void setTeam(UUID teamId) {
+		this.owningTeam = teamId.toString();
+	}
+
 	public Optional<Team> getOwningTeam() {
 		if (owningTeam == null) {
 			return Optional.empty();
@@ -225,8 +230,8 @@ public class TileEntityLaboratory extends TileEntityMachine {
 	public Optional<ResearchInstance> getCurrentResearchInstance() {
 		Team team = getOwningTeam().orElse(null);
 		if (team != null) {
-			if (team.getCurrentResearch() != null) {
-				return Optional.of(team.getCurrentResearch());
+			if (team.getResearchManager().getSelectedResearch() != null) {
+				return Optional.of(team.getResearchManager().getSelectedResearch());
 			}
 		}
 		return Optional.empty();

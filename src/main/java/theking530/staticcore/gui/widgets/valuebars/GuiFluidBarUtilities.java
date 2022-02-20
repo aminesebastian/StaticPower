@@ -47,7 +47,7 @@ public class GuiFluidBarUtilities {
 
 		// Draw the outline around the fluid slot.
 		if (mode != null && mode != MachineSideMode.Regular && mode != MachineSideMode.Never) {
-			GuiDrawUtilities.drawSlot(pose, (int) width, (int) height, (int) x, (int) (y - height), 0, mode.getColor());
+			GuiDrawUtilities.drawSlotWithBorder(pose, (int) width, (int) height, (int) x, (int) (y - height), 0, mode.getColor());
 		} else {
 			GuiDrawUtilities.drawSlot(pose, (int) width, (int) height, (int) x, (int) (y - height), 0);
 		}

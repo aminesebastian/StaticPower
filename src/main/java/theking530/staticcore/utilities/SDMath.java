@@ -3,7 +3,6 @@ package theking530.staticcore.utilities;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 
@@ -11,12 +10,9 @@ import net.minecraft.core.Direction;
 
 public class SDMath {
 	public static final Matrix4f IDENTITY;
-	public static final PoseStack IDENTITY_STACK;
 	static {
 		IDENTITY = new Matrix4f();
 		IDENTITY.setIdentity();
-		IDENTITY_STACK= new PoseStack();
-		IDENTITY_STACK.setIdentity();
 	}
 	private static final Random RANDOM = new Random();
 
@@ -87,6 +83,18 @@ public class SDMath {
 		return Math.max(Math.min(value, max), min);
 	}
 
+	public static float lerp(int a, int b, float alpha) {
+		return (b * alpha) + (a * (1 - alpha));
+	}
+
+	public static double lerp(double a, double b, float alpha) {
+		return (b * alpha) + (a * (1 - alpha));
+	}
+
+	public static float lerp(float a, float b, float alpha) {
+		return (b * alpha) + (a * (1 - alpha));
+	}
+
 	public static int multiplyRespectingOverflow(int base, int multiplier) {
 		try {
 			int output = Math.multiplyExact(base, multiplier);
@@ -127,5 +135,13 @@ public class SDMath {
 			break;
 		}
 		return offset;
+	}
+
+	public static float getAngleBetweenVectors(AbstractVector start, AbstractVector finish) {
+		AbstractVector normStart = start.copy();
+		AbstractVector normEnd = finish.copy();
+		float dot = normStart.dot(normEnd);
+		float magnitudes = start.getLength() * finish.getLength();
+		return (float) Math.acos(dot / magnitudes);
 	}
 }

@@ -28,8 +28,22 @@ public class Vector3D extends Vector2D {
 		values.set(2, z);
 	}
 
+	public Vector3D add(float x, float y, float z) {
+		add(new Vector3D(x, y, z));
+		return this;
+	}
+
+	public Vector3D substract(float x, float y, float z) {
+		subtract(new Vector3D(x, y, z));
+		return this;
+	}
+
+	public Vector4D promote() {
+		return new Vector4D(getX(), getY(), getZ(), 0.0f);
+	}
+
 	@Override
-	public Vector3D clone() {
+	public Vector3D copy() {
 		return new Vector3D(values.get(0), values.get(1), values.get(2));
 	}
 }

@@ -8,6 +8,7 @@ import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Overwrite;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -17,12 +18,23 @@ import theking530.staticpower.data.StaticPowerGameData;
 
 public class TeamManager extends StaticPowerGameData {
 	private static TeamManager INSTANCE;
-
 	private Map<UUID, Team> teams;
 
 	public TeamManager() {
 		super("teams");
 		teams = new HashMap<>();
+	}
+
+	@Override
+	public void tick() {
+		boolean isDirty = false;
+		for (Team team : teams.values()) {
+			isDirty &= team.isDirty();
+			team.markDirty(false);
+		}
+		if (isDirty) {
+			syncToClients();
+		}
 	}
 
 	/**
@@ -80,7 +92,7 @@ public class TeamManager extends StaticPowerGameData {
 		}
 
 		// Set the initial research.
-		newTeam.setCurrentResearch(new ResourceLocation("staticpower:research/basic_research"));
+		newTeam.getResearchManager().setSelectedResearch(new ResourceLocation("staticpower:research/basic_research"));
 
 		// Add the new team to the teams array.
 		teams.put(newTeam.getId(), newTeam);
@@ -121,5 +133,15 @@ public class TeamManager extends StaticPowerGameData {
 			INSTANCE = new TeamManager();
 		}
 		return INSTANCE;
+	}
+
+	@SuppressWarnings("resource")
+	public static Team getLocalTeam() {
+		return TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player).orElse(null);
+	}
+
+	@Override
+	public String toString() {
+		return "TeamManager [teams=" + teams + "]";
 	}
 }

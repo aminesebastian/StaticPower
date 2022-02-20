@@ -12,7 +12,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget {
+public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromHeatStorage> {
 
 	private IHeatStorage heatStorage;
 
@@ -23,7 +23,8 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget {
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiHeatBarUtilities.drawHeatBar(matrix, getPosition().getX(), getPosition().getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat());
+		GuiHeatBarUtilities.drawHeatBar(matrix, getPosition().getX(), getPosition().getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentHeat(),
+				heatStorage.getMaximumHeat());
 	}
 
 	@Override

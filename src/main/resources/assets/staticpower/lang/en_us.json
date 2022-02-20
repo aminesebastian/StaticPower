@@ -992,6 +992,7 @@
 	"gui.staticpower.experience": "%s XP",
 	"gui.staticpower.fertlization": "Fertilization",
 	"gui.staticpower.fertlization_bonus": "Fertilization Bonus: %s",
+	"gui.staticpower.research_menu_key_tooltip": "Press %1$s to view more",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox",
 	"key.categories.staticpower": "Static Power",
@@ -999,8 +1000,11 @@
 	"key.staticpower.toggle_magnet": "Toggle Magnet",
 	"key.staticpower.open_portable_digistore": "Open Portable Digistore",
 	"key.staticpower.open_research": "Open Research Window",
-	"staticpower.research.your_first_research": "Your First Research",
-	"staticpower.research.your_second_research": "Your Second Research",
-	"staticpower.research.your_second_second_research": "Your 2nd Second Research",
-	"staticpower.research.your_third_research": "Your Third Research"
+	"staticpower.research.basic_capsules": "Portable Fluids",
+	"staticpower.research.basic_cauldron": "Rubber Galore",
+	"staticpower.research.basic_farming": "Alien Farming",
+	"staticpower.research.basic_hamering": "Hammer Time",
+	"staticpower.research.basic_research": "Back to School!",
+	"staticpower.research.basic_soldering": "Basic Soldering",
+	"staticpower.research.third_level": "Your Third Research"
 }

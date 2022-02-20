@@ -1,9 +1,9 @@
 package theking530.staticpower.init;
 
 import net.minecraft.world.food.Foods;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
@@ -31,6 +31,7 @@ import theking530.staticpower.items.GearBox;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
+import theking530.staticpower.items.ResearchItem;
 import theking530.staticpower.items.StaticPowerBurnableItem;
 import theking530.staticpower.items.StaticPowerFood;
 import theking530.staticpower.items.StaticPowerItem;
@@ -1030,12 +1031,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(BerryJuiceBottle = new JuiceBottleItem("bottle_juice_berry", 40, 8, 10.0f));
 
 		// Research
-		StaticPowerRegistry.preRegisterItem(ResearchTier1 = new StaticPowerItem("research_tier_1", new Item.Properties().stacksTo(16)));
-		StaticPowerRegistry.preRegisterItem(ResearchTier2 = new StaticPowerItem("research_tier_2", new Item.Properties().stacksTo(16)));
-		StaticPowerRegistry.preRegisterItem(ResearchTier3 = new StaticPowerItem("research_tier_3", new Item.Properties().stacksTo(16)));
-		StaticPowerRegistry.preRegisterItem(ResearchTier4 = new StaticPowerItem("research_tier_4", new Item.Properties().stacksTo(16)));
-		StaticPowerRegistry.preRegisterItem(ResearchTier5 = new StaticPowerItem("research_tier_5", new Item.Properties().stacksTo(16)));
-		StaticPowerRegistry.preRegisterItem(ResearchTier6 = new StaticPowerItem("research_tier_6", new Item.Properties().stacksTo(16)));
-		StaticPowerRegistry.preRegisterItem(ResearchTier7 = new StaticPowerItem("research_tier_7", new Item.Properties().stacksTo(16)));
+		StaticPowerRegistry.preRegisterItem(ResearchTier1 = new ResearchItem("research_tier_1", MinecraftColor.RED.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier2 = new ResearchItem("research_tier_2", MinecraftColor.LIME.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier3 = new ResearchItem("research_tier_3", MinecraftColor.BLACK.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier4 = new ResearchItem("research_tier_4", MinecraftColor.CYAN.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier5 = new ResearchItem("research_tier_5", MinecraftColor.MAGENTA.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier6 = new ResearchItem("research_tier_6", MinecraftColor.YELLOW.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier7 = new ResearchItem("research_tier_7", MinecraftColor.WHITE.getColor(), 1));
 	}
 }

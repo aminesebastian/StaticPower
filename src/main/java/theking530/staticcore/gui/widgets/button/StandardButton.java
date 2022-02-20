@@ -6,22 +6,18 @@ import java.util.function.BiConsumer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
-public class StandardButton extends AbstractGuiWidget {
+public class StandardButton extends AbstractGuiWidget<StandardButton> {
 
 	public enum MouseButton {
 		NONE, LEFT, RIGHT, MIDDLE;
@@ -32,7 +28,6 @@ public class StandardButton extends AbstractGuiWidget {
 	protected int mouseY;
 	protected Object data;
 
-	private boolean hovered;
 	private MouseButton currentlyPressedMouseButton;
 	private boolean toggleable;
 	private boolean toggled;
@@ -45,7 +40,6 @@ public class StandardButton extends AbstractGuiWidget {
 		super(xPos, yPos, width, height);
 		clickSoundPitch = 1.0f;
 		onClicked = onClickedEvent;
-		hovered = false;
 		currentlyPressedMouseButton = MouseButton.NONE;
 		toggleable = false;
 		toggled = false;
@@ -114,21 +108,22 @@ public class StandardButton extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void mouseMove(int mouseX, int mouseY) {
+	public EInputResult mouseMove(int mouseX, int mouseY) {
 		// Always just update the clicked state to NONE here.
 		currentlyPressedMouseButton = MouseButton.NONE;
 
 		if (!isVisible() || !isEnabled()) {
-			return;
+			return EInputResult.UNHANDLED;
 		}
 
 		this.mouseX = mouseX;
 		this.mouseY = mouseY;
-		if (isPointInsideBounds(new Vector2D(mouseX, mouseY))) {
-			hovered = true;
-			return;
+
+		if (isHovered()) {
+			return EInputResult.HANDLED;
+		} else {
+			return EInputResult.UNHANDLED;
 		}
-		hovered = false;
 	}
 
 	protected void drawButton(PoseStack pose) {
@@ -162,20 +157,10 @@ public class StandardButton extends AbstractGuiWidget {
 	protected void drawButtonOverlay(PoseStack stack, int buttonLeft, int buttonTop) {
 	}
 
-	@Override
-	public StandardButton setEnabled(boolean isEnabled) {
-		super.setEnabled(isEnabled);
-		if (!isEnabled) {
-			this.hovered = false;
-		}
-		return this;
-	}
-
 	protected void playSound(MouseButton state) {
 		if (clickSoundEnabled) {
 			float pitch = state == MouseButton.LEFT ? clickSoundPitch : clickSoundPitch * 1.1f;
-			LocalPlayer player = Minecraft.getInstance().player;
-			player.level.playSound(player, player.blockPosition(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 1.0f, pitch);
+			playSoundLocally(SoundEvents.UI_BUTTON_CLICK, 1.0f, pitch);
 		}
 	}
 
@@ -195,10 +180,6 @@ public class StandardButton extends AbstractGuiWidget {
 
 	public boolean isToggled() {
 		return toggled;
-	}
-
-	public boolean isHovered() {
-		return hovered;
 	}
 
 	public boolean isClicked() {

@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -102,8 +103,14 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			return null;
 		}
 
+		// Capture the hidden driver and color.
+		boolean hidden = json.has("hiddenUntilAvailable") ? json.get("hiddenUntilAvailable").getAsBoolean() : false;
+		Color color = null;
+		if (json.has("color")) {
+			color = Color.fromJson(json.get("color").getAsJsonObject());
+		}
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advancements, itemIcon, textureIcon);
+		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advancements, itemIcon, textureIcon, hidden, color);
 	}
 
 	@Override
@@ -147,8 +154,11 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			advacements.add(new ResourceLocation(buffer.readUtf()));
 		}
 
+		boolean hidden = buffer.readBoolean();
+		Color color = Color.fromBuffer(buffer);
+
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advacements, itemIcon, textureIcon);
+		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advacements, itemIcon, textureIcon, hidden, color);
 	}
 
 	@Override
@@ -186,5 +196,8 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		for (ResourceLocation advancement : recipe.getAdvancements()) {
 			buffer.writeUtf(advancement.toString());
 		}
+
+		buffer.writeBoolean(recipe.isHiddenUntilAvailable());
+		recipe.getColor().toBuffer(buffer);
 	}
 }

@@ -31,6 +31,7 @@ import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
+import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidTankComponent;
 import theking530.staticpower.tileentities.components.heat.PacketHeatStorageComponent;
@@ -43,6 +44,7 @@ import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLock
 import theking530.staticpower.tileentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
 import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
+import theking530.staticpower.tileentities.powered.laboratory.PacketSetLaboratoryTeam;
 import theking530.staticpower.tileentities.powered.packager.PacketPackagerSizeChange;
 import theking530.staticpower.tileentities.powered.powermonitor.PacketPowerMonitorSync;
 
@@ -95,5 +97,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(TileEntityPowerMetricsSyncPacket.class);
 		
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(PacketSetLaboratoryTeam.class);
+		StaticPowerMessageHandler.registerMessage(PacketSetSelectedResearch.class);
 	}
 }

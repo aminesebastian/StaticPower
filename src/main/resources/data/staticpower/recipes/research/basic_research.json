@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_research",
-	"description": "Nerd!",
+	"description": "Here at the company, we take our research and development VERY seriously. So much so that you guys are the ONLY team we pay more than minimum wage. Put that extra penny to good use!",
 	"prerequisites": [
 	],
 	"requirements": [

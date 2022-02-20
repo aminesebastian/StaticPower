@@ -16,7 +16,7 @@ import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
 
-public class AutoCraftingStepsWidget extends AbstractGuiWidget {
+public class AutoCraftingStepsWidget extends AbstractGuiWidget<AutoCraftingStepsWidget> {
 	private CraftingRequestResponse request;
 	private int rows;
 	private int columns;

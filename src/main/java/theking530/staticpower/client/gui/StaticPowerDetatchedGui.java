@@ -6,6 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
 import theking530.staticcore.gui.WidgetContainer;
+import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
@@ -27,11 +28,13 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	protected float partialTicks;
 	protected boolean isInitialized;
 	protected boolean drawDefaultDarkBackground;
+	protected boolean visible;
 
 	public StaticPowerDetatchedGui(int width, int height) {
 		super(new TextComponent(""));
 		drawDefaultDarkBackground = true;
-		widgetContainer = new WidgetContainer();
+		widgetContainer = new WidgetContainer(WidgetParent.fromScreen(this));
+		visible = true;
 		registerWidget(tabManager = new GuiTabManager());
 		init(Minecraft.getInstance(), width, height);
 	}
@@ -58,6 +61,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	 */
 	@Override
 	public void render(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		if (!visible) {
+			return;
+		}
+
 		super.render(pose, mouseX, mouseY, partialTicks);
 		// Cache these values because we dont get them in the background render call.
 		this.mouseX = mouseX;
@@ -65,7 +72,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		this.partialTicks = partialTicks;
 
 		// Update the widgets.
-		widgetContainer.update(pose, new Vector2D(leftOffset, topOffset), new Vector2D(width, height), partialTicks, mouseX, mouseY);
+		widgetContainer.update(pose, new Vector2D(width, height), partialTicks, mouseX, mouseY);
 
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);
@@ -85,6 +92,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 
 	@Override
 	public void renderBackground(PoseStack pose) {
+		if (!visible) {
+			return;
+		}
+
 		if (drawDefaultDarkBackground) {
 			super.renderBackground(pose);
 		}
@@ -93,7 +104,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 
 		// Update the widgets and then draw the background.
 		widgetContainer.renderBackground(pose, mouseX, mouseY, partialTicks);
-		
+
 		// Draw any extras.
 		drawBackgroundExtras(pose, partialTicks, mouseX, mouseY);
 
@@ -147,7 +158,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		this.drawDefaultDarkBackground = drawDefaultDarkBackground;
 	}
 
-	public void registerWidget(AbstractGuiWidget widget) {
+	public void registerWidget(AbstractGuiWidget<?> widget) {
 		widgetContainer.registerWidget(widget);
 	}
 
@@ -156,16 +167,29 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		return false;
 	}
 
+	public boolean isVisible() {
+		return visible;
+	}
+
+	public void setVisible(boolean visible) {
+		this.visible = visible;
+	}
+
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
-		widgetContainer.handleMouseClick(mouseX, mouseY, button);
+		if (visible) {
+			widgetContainer.handleMouseClick(mouseX, mouseY, button);
+		}
 		return superCallResult;
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-		EInputResult result = widgetContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+		EInputResult result = EInputResult.UNHANDLED;
+		if (visible) {
+			result = widgetContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+		}
 		if (result != EInputResult.HANDLED) {
 			return super.mouseScrolled(mouseX, mouseY, scrollDelta);
 		}
@@ -174,7 +198,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-		EInputResult result = widgetContainer.handleMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		EInputResult result = EInputResult.UNHANDLED;
+		if (visible) {
+			result = widgetContainer.handleMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		}
 		if (result != EInputResult.HANDLED) {
 			return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 		}
@@ -183,7 +210,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 
 	@Override
 	public boolean charTyped(char character, int p_charTyped_2_) {
-		EInputResult result = widgetContainer.characterTyped(character, p_charTyped_2_);
+		EInputResult result = EInputResult.UNHANDLED;
+		if (visible) {
+			result = widgetContainer.characterTyped(character, p_charTyped_2_);
+		}
 		if (result == EInputResult.UNHANDLED) {
 			return super.charTyped(character, p_charTyped_2_);
 		}
@@ -192,7 +222,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 
 	@Override
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
-		EInputResult result = widgetContainer.handleKeyPressed(key, scanCode, modifiers);
+		EInputResult result = EInputResult.UNHANDLED;
+		if (visible) {
+			result = widgetContainer.handleKeyPressed(key, scanCode, modifiers);
+		}
 		if (result == EInputResult.UNHANDLED) {
 			return super.keyPressed(key, scanCode, modifiers);
 		}
