@@ -28,6 +28,10 @@ public class Vector3D extends Vector2D {
 		values.set(2, z);
 	}
 
+	public int getZi() {
+		return Math.round(values.get(2));
+	}
+
 	public Vector3D add(float x, float y, float z) {
 		add(new Vector3D(x, y, z));
 		return this;

@@ -41,7 +41,6 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLaboratory extends TileEntityMachine {
 	@TileEntityTypePopulator()
@@ -54,7 +53,6 @@ public class TileEntityLaboratory extends TileEntityMachine {
 	public static final float DEFAULT_PROCESSING_TIME_MULT = 1.3f;
 
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
@@ -90,7 +88,6 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 7));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
@@ -134,76 +131,83 @@ public class TileEntityLaboratory extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canStartProcessing() {
-		if (getOwningTeam().orElse(null) == null) {
+		if (!getOwningTeam().isPresent()) {
 			return ProcessingCheckState.error("Missing Team!");
 		}
 
-		if (doesInventorySatisfyCurrentResearch(inputInventory)) {
-			moveItems();
-			return ProcessingCheckState.ok();
+		if (!getCurrentResearchInstance().isPresent()) {
+			return ProcessingCheckState.error("Missing Selected Research!");
 		}
-		return ProcessingCheckState.error("Missing items");
+
+		if (!doInputsSatisfySelectedResearch()) {
+			return ProcessingCheckState.error("Missing items");
+		}
+
+		return ProcessingCheckState.ok();
 	}
 
 	protected ProcessingCheckState canContinueProcessing() {
-		if (getOwningTeam().orElse(null) == null) {
-			return ProcessingCheckState.error("Missing Team!");
+		if (!getOwningTeam().isPresent()) {
+			return ProcessingCheckState.cancel();
+		}
+		if (!getCurrentResearchInstance().isPresent()) {
+			return ProcessingCheckState.cancel();
+		}
+
+		if (!doInputsSatisfySelectedResearch()) {
+			return ProcessingCheckState.cancel();
 		}
 
 		return ProcessingCheckState.ok();
 	}
 
 	protected ProcessingCheckState processingCompleted() {
+		if (!getOwningTeam().isPresent()) {
+			return ProcessingCheckState.cancel();
+		}
+		if (!getCurrentResearchInstance().isPresent()) {
+			return ProcessingCheckState.cancel();
+		}
+
+		Set<Integer> slotsToUse = getSlotsThatSatisfyResearch();
+		if (slotsToUse.size() == 0) {
+			return ProcessingCheckState.cancel();
+		}
+
 		ResearchInstance instance = getCurrentResearchInstance().orElse(null);
-		if (instance != null) {
-			for (int i = 0; i < internalInventory.getSlots(); i++) {
-				if (!internalInventory.getStackInSlot(i).isEmpty()) {
-					instance.getResearchManager().addProgressToSelectedResearch(i, 1);
-				}
-			}
-			InventoryUtilities.clearInventory(internalInventory);
-			return ProcessingCheckState.ok();
+		for (int slot : slotsToUse) {
+			instance.getResearchManager().addProgressToSelectedResearch(slot, 1);
+			inputInventory.getStackInSlot(slot).shrink(1);
 		}
-		return ProcessingCheckState.error("Missing Team or Active Research!");
+		return ProcessingCheckState.ok();
 	}
 
-	protected boolean moveItems() {
-		if (doesInventorySatisfyCurrentResearch(inputInventory)) {
-			Set<Integer> slots = getSlotsThatSatisfyResearch(inputInventory);
-			for (int slot : slots) {
-				ItemStack stackToMove = inputInventory.getStackInSlot(slot).copy();
-				stackToMove.setCount(1);
-				inputInventory.getStackInSlot(slot).shrink(1);
-				internalInventory.setStackInSlot(slot, stackToMove);
-			}
-		}
-		return true;
+	protected boolean doInputsSatisfySelectedResearch() {
+		return getSlotsThatSatisfyResearch().size() > 0;
 	}
 
-	protected boolean doesInventorySatisfyCurrentResearch(InventoryComponent comp) {
-		return getSlotsThatSatisfyResearch(comp).size() > 0;
-	}
-
-	protected Set<Integer> getSlotsThatSatisfyResearch(InventoryComponent comp) {
-		Set<Integer> slotsToMove = new HashSet<Integer>();
+	protected Set<Integer> getSlotsThatSatisfyResearch() {
+		Set<Integer> slotsToConsume = new HashSet<Integer>();
 		getCurrentResearchInstance().ifPresent((instance) -> {
 			// There is nothing to move if the instance is finished.
 			if (instance.isCompleted()) {
 				return;
 			}
 			for (StaticPowerIngredient ing : instance.getTrackedResearch().getRequirements()) {
-				for (int i = 0; i < comp.getSlots(); i++) {
-					if (slotsToMove.contains(i)) {
+				for (int i = 0; i < inputInventory.getSlots(); i++) {
+					if (slotsToConsume.contains(i)) {
 						continue;
 					}
 
-					if (ing.test(comp.getStackInSlot(i))) {
-						slotsToMove.add(i);
+					if (ing.test(inputInventory.getStackInSlot(i))) {
+						if (instance.getRequirementFullfillment(i) < ing.getCount()) {
+							slotsToConsume.add(i);
+						}
 					}
 				}
 			}
 		});
-		return slotsToMove;
+		return slotsToConsume;
 	}
 
 	@Override

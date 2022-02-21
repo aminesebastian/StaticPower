@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -17,6 +18,7 @@ import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector4D;
 
 @SuppressWarnings({ "unchecked" })
 public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
@@ -338,9 +340,18 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
+		Vector4D clip = getClipMask(matrix);
+		if (clip != null) {
+			RenderSystem.enableScissor(clip.getXi(), clip.getYi(), clip.getZi(), clip.getWi());
+		}
+
 		internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
 		renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
+
+		if (clip != null) {
+			RenderSystem.disableScissor();
+		}
 	}
 
 	/**
@@ -355,17 +366,35 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
+		Vector4D clip = getClipMask(matrix);
+		if (clip != null) {
+			RenderSystem.enableScissor(clip.getXi(), clip.getYi(), clip.getZi(), clip.getWi());
+		}
+
 		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 		internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
+
+		if (clip != null) {
+			RenderSystem.disableScissor();
+		}
 	}
 
 	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
+		Vector4D clip = getClipMask(matrix);
+		if (clip != null) {
+			RenderSystem.enableScissor(clip.getXi(), clip.getYi(), clip.getZi(), clip.getWi());
+		}
+
 		internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks);
 		renderWidgetForeground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
+
+		if (clip != null) {
+			RenderSystem.disableScissor();
+		}
 	}
 
 	/**
@@ -409,6 +438,10 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.translate(getPosition().getX(), getPosition().getY(), zLevel);
 	}
 
+	protected Vector4D getClipMask(PoseStack matrix) {
+		return null;
+	}
+
 	/**
 	 * Gets the current runing instance of minecraft.
 	 * 
@@ -443,6 +476,14 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 	public void registerWidget(@SuppressWarnings("rawtypes") AbstractGuiWidget widget) {
 		internalContainer.registerWidget(widget);
+	}
+
+	public void removeWidget(@SuppressWarnings("rawtypes") AbstractGuiWidget widget) {
+		internalContainer.removeWidget(widget);
+	}
+
+	public void clearChildren() {
+		internalContainer.clearWidgets();
 	}
 
 	/* Tooltip */

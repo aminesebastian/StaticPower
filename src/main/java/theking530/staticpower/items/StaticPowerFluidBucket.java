@@ -11,6 +11,8 @@ import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -52,11 +54,13 @@ public class StaticPowerFluidBucket extends BucketItem implements ICustomModelSu
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public BakedModel getBaseModelOverride(ModelBakeEvent event) {
 		return event.getModelRegistry().get(new ModelResourceLocation(new ResourceLocation("minecraft", "bucket"), "inventory"));
 	}
 
 	@Override
+	@OnlyIn(Dist.CLIENT)
 	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new DynamicBucketItemModel(existingModel, fluidMaskSprite);
 	}

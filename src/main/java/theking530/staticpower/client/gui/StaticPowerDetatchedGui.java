@@ -54,6 +54,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 
 	public void tick() {
 		widgetContainer.tick();
+		updateBeforeRender();
 	}
 
 	/**
@@ -102,11 +103,11 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		pose.pushPose();
 		pose.translate(leftOffset, topOffset, 0);
 
-		// Update the widgets and then draw the background.
-		widgetContainer.renderBackground(pose, mouseX, mouseY, partialTicks);
-
 		// Draw any extras.
 		drawBackgroundExtras(pose, partialTicks, mouseX, mouseY);
+
+		// Update the widgets and then draw the background.
+		widgetContainer.renderBackground(pose, mouseX, mouseY, partialTicks);
 
 		// Draw any widgets that need to appear above slots/items.
 		widgetContainer.renderBehindItems(pose, mouseX, mouseY, partialTicks);
@@ -114,6 +115,18 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		// Draw anything infront of the background but behind the items.
 		drawBehindItems(pose, partialTicks, mouseX, mouseY);
 		pose.popPose();
+	}
+
+	/**
+	 * Override this method to perform any logic before drawing.
+	 * 
+	 * @param pose
+	 * @param partialTicks The delta time.
+	 * @param mouseX       The mouse's x position.
+	 * @param mouseY       The mouse's y position.
+	 */
+	protected void updateBeforeRender() {
+
 	}
 
 	/**

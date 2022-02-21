@@ -39,15 +39,22 @@ public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
 			percent = 1;
 		}
 
+		// Handle the glow effect for when progress is completed.
+		Color actualBarColor = barColor.copy();
+		if (visualCurrentProgresPercentage >= 1.0f) {
+			float glowFactor = GuiDrawUtilities.getSinFunction(5.0f, 3.0f);
+			actualBarColor.setW(glowFactor);
+		}
+
 		if (flipped) {
 			GuiDrawUtilities.drawGenericBackground(pose, getSize().getXi(), getSize().getYi(), 0, 0, 0, emptyBarColor);
 			if (width >= 7) {
-				GuiDrawUtilities.drawGenericBackground(pose, width, getSize().getYi(), 0, 0, 0, barColor);
+				GuiDrawUtilities.drawGenericBackground(pose, width, getSize().getYi(), 0, 0, 0, actualBarColor);
 			}
 		} else {
 			GuiDrawUtilities.drawGenericBackground(pose, getSize().getXi(), getSize().getYi(), 0, 0, 0, emptyBarColor);
 			if (width >= 7) {
-				GuiDrawUtilities.drawGenericBackground(pose, width, getSize().getYi(), 0, 0, 0, barColor);
+				GuiDrawUtilities.drawGenericBackground(pose, width, getSize().getYi(), 0, 0, 0, actualBarColor);
 			}
 		}
 

@@ -150,18 +150,6 @@ public class StaticPowerForgeEventRegistry {
 	}
 
 	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void render(RenderLevelLastEvent event) {
-		StaticPowerClientEventHandler.onWorldRender(event);
-	}
-
-	@SubscribeEvent
-	@OnlyIn(Dist.CLIENT)
-	public static void renderBlockHighlights(DrawSelectionEvent.HighlightBlock event) {
-		StaticPowerClientEventHandler.renderMultiHarvestBoundingBoxes(event);
-	}
-
-	@SubscribeEvent
 	public static void onBiomeLoading(BiomeLoadingEvent event) {
 		ModOres.addOreGenFeatures(event);
 		ModTrees.addTreeFeatures(event);
@@ -273,26 +261,6 @@ public class StaticPowerForgeEventRegistry {
 		ModKeyBindings.onKeyEvent(event);
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onInitScreenEvent(InitScreenEvent event) {
-		StaticPowerClientEventHandler.onInitScreenEvent(event);
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onDrawScreen(DrawScreenEvent event) {
-		StaticPowerClientEventHandler.onDrawScreen(event);
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onDrawBehindScreen(BackgroundDrawnEvent event) {
-		StaticPowerClientEventHandler.onDrawBehindScreen(event);
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onDrawHUD(RenderGameOverlayEvent.Post event) {
-		StaticPowerClientEventHandler.onDrawHUD(event);
-	}
-
 	/**
 	 * This event is raised when the resources are loaded/reloaded.
 	 */
@@ -331,4 +299,5 @@ public class StaticPowerForgeEventRegistry {
 			}
 		}
 	}
+
 }

@@ -3,10 +3,12 @@ package theking530.staticpower.teams.research;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
@@ -14,6 +16,7 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchLevels;
 import theking530.staticpower.data.research.ResearchLevels.ResearchLevel;
@@ -24,26 +27,46 @@ import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 @SuppressWarnings("resource")
 public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected static final int TIER_LEVEL_HEIGHT = 80;
+	protected static final int HISTORY_HEIGHT = 35;
+
 	protected Team team;
 	protected ResearchInstance currentResearch;
+	protected ResearchNodeWidget expandedNode;
+	protected SelectedResearchWidget selectedResearchWidget;
+
 	protected ScrollBox nodeScrollBox;
 	protected List<HorizontalBox> tierBoxes;
 	protected List<ResearchNodeWidget> researchNodes;
-	protected ResearchNodeWidget expandedNode;
-	protected SelectedResearchWidget selectedResearchWidget;
+
+	protected ScrollBox sideBarScrollBox;
+	protected List<ResearchHistoryWidget> historyWidgets;
 
 	public GuiResearchMenu() {
 		super(400, 400);
 		setDrawDefaultDarkBackground(false);
+		Minecraft.getInstance().level.playLocalSound(Minecraft.getInstance().player.getOnPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.MASTER, 1.0f, 1.5f, true);
 	}
 
 	@Override
 	public void initializeGui() {
-		registerWidget(nodeScrollBox = new ScrollBox(105, 20, 10000, 0));
-		registerWidget(selectedResearchWidget = new SelectedResearchWidget(0, 0, 109, 76));
-
 		researchNodes = new ArrayList<ResearchNodeWidget>();
 		tierBoxes = new ArrayList<HorizontalBox>();
+		historyWidgets = new ArrayList<ResearchHistoryWidget>();
+
+		registerWidget(selectedResearchWidget = new SelectedResearchWidget(TeamManager.getLocalTeam().getResearchManager(), 0, 0, 109, 76).setZLevel(500));
+
+		registerWidget(nodeScrollBox = new ScrollBox(105, 20, 10000, 0));
+		initializeResearchNodes();
+
+		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
+		initializeSideBar();
+	}
+
+	protected void initializeResearchNodes() {
+		// Remove existing nodes.
+		nodeScrollBox.clearChildren();
+		tierBoxes.clear();
+		researchNodes.clear();
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
@@ -51,9 +74,11 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			HorizontalBox box = new HorizontalBox(0, y * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.75f)).setDrawBackground(true);
 			ResearchLevel level = levels.getLevels().get(y);
 
-			for (Research research : level.getResearch()) {
+			for (int i = 0; i < level.getResearch().size(); i++) {
+				Research research = level.getResearch().get(i);
 				if (!research.isHiddenUntilAvailable()) {
-					ResearchNodeWidget widget = new ResearchNodeWidget(research, 0, TIER_LEVEL_HEIGHT / 4, 24, 24);
+					int offset = level.getResearch().size() < 3 ? 0 : i % 2 == 0 ? 7 : -7;
+					ResearchNodeWidget widget = new ResearchNodeWidget(research, 0, TIER_LEVEL_HEIGHT / 2 - 12 + offset, 24, 24);
 					box.registerWidget(widget);
 					researchNodes.add(widget);
 				}
@@ -61,29 +86,58 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			nodeScrollBox.registerWidget(box);
 			tierBoxes.add(box);
 		}
+
+		// Add another box to the bottom to prevent the last research level from getting
+		// clipped when expanded.
+		HorizontalBox box = new HorizontalBox(0, levels.getLevels().size() * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(0, 0, 0, 0.75f)).setDrawBackground(true);
+		tierBoxes.add(box);
+		nodeScrollBox.registerWidget(box);
+	}
+
+	protected void initializeSideBar() {
+		// Remove existing history.
+		sideBarScrollBox.clearChildren();
+		historyWidgets.clear();
+
+		if (TeamManager.getLocalTeam() != null) {
+			int index = 0;
+			// We need to iterate backwards here.
+			List<ResourceLocation> completed = new ArrayList<>(TeamManager.getLocalTeam().getResearchManager().getCompletedResearch());
+			for (int i = completed.size() - 1; i >= 0; i--) {
+				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
+				if (research != null) {
+					float tint = index % 2 == 0 ? 0.5f : 0.0f;
+					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, index * HISTORY_HEIGHT, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f))
+							.setDrawBackground(true);
+					historyWidgets.add(historyWidget);
+					sideBarScrollBox.registerWidget(historyWidget);
+					index++;
+				}
+			}
+		}
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
-		Team team = TeamManager.getLocalTeam();
-		if (team != null) {
-			currentResearch = team.getResearchManager().getSelectedResearch();
-			if (currentResearch != null) {
-				selectedResearchWidget.setResearch(currentResearch);
-				selectedResearchWidget.setVisible(true);
-			} else {
-				selectedResearchWidget.setVisible(false);
-			}
-		}
-
+	public void updateBeforeRender() {
+		// Capture the screen size.
 		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+
+		// Size up the node area.
 		for (HorizontalBox box : tierBoxes) {
 			box.setSize(screenWidth - 105, TIER_LEVEL_HEIGHT);
 		}
-		nodeScrollBox.setSize(nodeScrollBox.getSize().getX(), screenHeight);
+		nodeScrollBox.setPosition(104, 22);
+		nodeScrollBox.setSize(screenWidth - 105, screenHeight - 22);
 
+		// Size up the sidebar.
+		sideBarScrollBox.setPosition(0, selectedResearchWidget.getSize().getY());
+		sideBarScrollBox.setSize(102, screenHeight - selectedResearchWidget.getSize().getY());
+		for (ResearchHistoryWidget widgets : historyWidgets) {
+			widgets.setSize(102, HISTORY_HEIGHT);
+		}
+
+		// Handle the expanded node.
 		if (expandedNode != null) {
 			if (!expandedNode.isHovered()) {
 				expandedNode.setExpanded(false);
@@ -108,14 +162,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	}
 
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
-		RenderSystem.enableBlend();
-
 		// Draw the sidebar and background bar.
 		GuiDrawUtilities.drawRectangle(pose, getMinecraft().screen.width, getMinecraft().screen.height, 0, 0, -0.1f, new Color(0, 0, 0, 0.5f));
 		GuiDrawUtilities.drawGenericBackground(pose, 110, getMinecraft().screen.height + 8, -5, -4, 0.0f, new Color(0.75f, 0.5f, 1.0f, 0.85f));
-		GuiDrawUtilities.drawGenericBackground(pose, getMinecraft().screen.width, 28, 0, -4, 100.0f, new Color(0.75f, 0.5f, 1.0f, 0.85f));
-		GuiDrawUtilities.drawGenericBackground(pose, 113, 80, -4, -4, 0.0f, new Color(0.25f, 0.5f, 1.0f, 1.0f));
-
+		GuiDrawUtilities.drawGenericBackground(pose, getMinecraft().screen.width, 28, 108, -4, 500.0f, new Color(0.75f, 0.5f, 1.0f, 0.99f));
 		drawConnectingLines(pose, partialTicks, mouseX, mouseY);
 	}
 
@@ -136,11 +186,12 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				index++;
 				pose.pushPose();
 				Vector3D expandedPosition = outerNode.getScreenSpacePosition().promote();
-				expandedPosition.add(11, 1, -7);
+				expandedPosition.add(11, 1, 100);
 				Vector3D preReqPosition = node.getScreenSpacePosition().promote();
-				preReqPosition.add(11, 20f, -7);
+				preReqPosition.add(11, 20f, 100);
 
-				Color lineColor = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+				Color startLineColor = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+				Color endLineColor = new Color(0.0f, 0.0f, 0.0f, 0.5f);
 
 				// If no node is expanded, draw the connecting lines behind everything.
 				// If a node is expanded, only draw lines for that node and push them over
@@ -148,12 +199,15 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				if (this.expandedNode != null) {
 					if (outerNode == expandedNode) {
 						preReqPosition.add(0, 0, 500);
-						float timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 2)) / 10, 0, 1);
-						lineColor = new Color(timeHovered, timeHovered, timeHovered, 1);
+						float timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 2)) / 5, 0, 1);
+						startLineColor = new Color(timeHovered, timeHovered, timeHovered, 1);
+
+						timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 4)) / 5, 0, 1);
+						endLineColor = new Color(timeHovered, timeHovered, timeHovered, 1);
 					}
 				}
 
-				GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, lineColor, 4.0f);
+				GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 4.0f);
 				pose.popPose();
 			}
 		}

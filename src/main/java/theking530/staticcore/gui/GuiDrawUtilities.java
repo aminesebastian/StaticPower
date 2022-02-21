@@ -424,6 +424,13 @@ public class GuiDrawUtilities {
 		RenderSystem.enableDepthTest();
 	}
 
+	public static float getSinFunction(float period, float amplitude) {
+		@SuppressWarnings("resource")
+		double sin = (Math.sin(Minecraft.getInstance().level.getGameTime() / period));
+		sin = (sin + amplitude) / (amplitude + 1);
+		return (float) sin;
+	}
+
 	public static TextureAtlasSprite getStillFluidSprite(FluidStack fluidStack) {
 		Fluid fluid = fluidStack.getFluid();
 		FluidAttributes attributes = fluid.getAttributes();

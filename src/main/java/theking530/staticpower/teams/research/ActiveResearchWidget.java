@@ -72,6 +72,9 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 			int requirementCount = research.getRequirements().size();
 			int width = Math.max(115, requirementCount * 21);
 			int height = team.getResearchManager().hasSelectedResearch() ? 45 : 34;
+			if (team.getResearchManager().hasSelectedResearch() && research.getRequirements().size() > 4) {
+				height += 5;
+			}
 			this.setSize(width, height);
 
 			// Draw background.

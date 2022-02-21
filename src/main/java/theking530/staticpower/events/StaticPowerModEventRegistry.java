@@ -117,11 +117,6 @@ public class StaticPowerModEventRegistry {
 
 	@SubscribeEvent
 	public static void enqueueIMC(InterModEnqueueEvent event) {
-//		// Only register if the one probe is loaded.
-//		ModList modList = ModList.get();
-//		if (modList.isLoaded(TOP_MODID)) {
-//			PluginTOP.sendIMC();
-//		}
 		LOGGER.info("Static Power IMC Messages Enqueued!");
 	}
 

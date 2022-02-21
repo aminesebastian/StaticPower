@@ -94,6 +94,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		this.powerMultiplier = 1.0f;
 	}
 
+	@SuppressWarnings("resource")
 	public void preProcessUpdate() {
 		// Check for upgrades on the server.
 		if (!getWorld().isClientSide) {
@@ -553,6 +554,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return ProcessingCheckState.ok();
 	}
 
+	@SuppressWarnings("resource")
 	protected void setIsOnBlockState(boolean on) {
 		if (!getWorld().isClientSide && shouldControlOnBlockState) {
 			BlockState currentState = getWorld().getBlockState(getPos());

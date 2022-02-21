@@ -270,6 +270,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * 
 	 * @param maxProgress
 	 */
+	@SuppressWarnings("unchecked")
 	public T setMaxProgress(int maxProgress) {
 		this.maxProgress = maxProgress;
 		return (T) this;

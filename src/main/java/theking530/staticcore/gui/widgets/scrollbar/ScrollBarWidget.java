@@ -9,11 +9,10 @@ import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
-public class ScrollBarWidget extends AbstractGuiWidget {
+public class ScrollBarWidget extends AbstractGuiWidget<ScrollBarWidget> {
 	private int scrollAmount;
 	private int maxScroll;
 	private final SpriteDrawable scrollHandleDrawable;

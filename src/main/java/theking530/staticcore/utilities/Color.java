@@ -56,6 +56,16 @@ public class Color extends Vector4D {
 		return getW();
 	}
 
+	public Color lighten(float r, float g, float b, float a) {
+		add(new Vector4D(r, g, b, a));
+		return this;
+	}
+
+	public Color darken(float r, float g, float b, float a) {
+		subtract(new Vector4D(r, g, b, a));
+		return this;
+	}
+
 	@Override
 	public String toString() {
 		return toStringInternal(true);

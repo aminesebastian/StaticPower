@@ -87,7 +87,7 @@ public class WidgetContainer {
 					matrixStack.pushPose();
 					transformer.accept(matrixStack, i);
 				}
-				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);
+				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);			
 				if (transformer != null) {
 					matrixStack.popPose();
 				}
@@ -103,8 +103,8 @@ public class WidgetContainer {
 				if (transformer != null) {
 					matrixStack.pushPose();
 					transformer.accept(matrixStack, i);
-				}
-				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+				}			
+				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);			
 				if (transformer != null) {
 					matrixStack.popPose();
 				}
@@ -215,6 +215,13 @@ public class WidgetContainer {
 		widget.setOwningContainer(this);
 		widget.addedToParent(parent);
 		return this;
+	}
+
+	public void clearWidgets() {
+		for (AbstractGuiWidget<?> widget : widgets) {
+			widget.removedFromParent(parent);
+		}
+		widgets.clear();
 	}
 
 	public boolean removeWidget(AbstractGuiWidget<?> widget) {

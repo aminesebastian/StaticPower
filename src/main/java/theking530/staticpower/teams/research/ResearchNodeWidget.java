@@ -34,7 +34,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	public ResearchNodeWidget(Research research, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		registerWidget(progressBar = new SimpleProgressBar(28, 20, 86, 7).setMaxProgress(100));
+		registerWidget(progressBar = new SimpleProgressBar(28, 20, 86, 7).setMaxProgress(100).disableProgressTooltip());
 		progressBar.setVisible(false);
 		title = new TranslatableComponent(research.getTitle()).getString();
 		this.research = research;
@@ -64,12 +64,15 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		float maxHeight = 15 + (description.size() * 5);
 		setSize(collapsedSize.getX() + (maxWidth * hoveredAlpha), collapsedSize.getY() + (maxHeight * hoveredAlpha));
 
-		// Move the widget up if hovered and to the left if going off screen.
-		float parentMaxX = getParent().getOwningWidget().getScreenSpacePosition().getX() + getParent().getOwningWidget().getSize().getX();
+		// Move the widget up if hovered and to the up and left if going off screen.
 		Vector2D screenSpaceInitial = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getInitialPosition());
+
+		float parentMaxX = getParent().getOwningWidget().getScreenSpacePosition().getX() + getParent().getOwningWidget().getSize().getX();
 		float thisMaxX = screenSpaceInitial.getX() + getSize().getX();
-		float maxOffset = Math.max(thisMaxX - parentMaxX + 4, 0);
-		setPosition(getInitialPosition().getX() - maxOffset, getInitialPosition().getY() - (hoveredAlpha * getSize().getY() / 4));
+		float maxOffsetX = Math.max(thisMaxX - parentMaxX + 4, 0);
+
+		float maxOffsetY = (hoveredAlpha * (getSize().getY() / 2 - collapsedSize.getY() / 2));
+		setPosition(getInitialPosition().getX() - maxOffsetX, getInitialPosition().getY() - maxOffsetY);
 	}
 
 	public Research getResearch() {
@@ -186,10 +189,11 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	}
 
 	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-
+		super.getTooltips(mousePosition, tooltips, showAdvanced);
 	}
 
 	public void setExpanded(boolean expanded) {
+		playSoundLocally(SoundEvents.BOOK_PAGE_TURN, 0.75f, expanded ? 2.0f : 1.5f);
 		this.expand = expanded;
 	}
 
@@ -227,6 +231,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			} else {
 				playSoundLocally(SoundEvents.VILLAGER_NO, 1.0f, 2.0f);
 			}
+			playSoundLocally(SoundEvents.BOOK_PUT, 1.0f, 2.0f);
 			return EInputResult.HANDLED;
 		}
 

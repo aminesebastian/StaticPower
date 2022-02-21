@@ -1,7 +1,9 @@
 package theking530.staticpower.blocks;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,15 +15,9 @@ public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
 		this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Y));
 	}
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If
-	 * inapplicable, returns the passed blockstate.
-	 * 
-	 * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever
-	 *             possible. Implementing/overriding is fine.
-	 */
-	public BlockState rotate(BlockState state, Rotation rot) {
-		switch (rot) {
+	@Override
+	public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation direction) {
+		switch (direction) {
 		case COUNTERCLOCKWISE_90:
 		case CLOCKWISE_90:
 			switch ((Direction.Axis) state.getValue(AXIS)) {
@@ -37,10 +33,12 @@ public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
 		}
 	}
 
+	@Override
 	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(AXIS);
 	}
 
+	@Override
 	public BlockState getStateForPlacement(BlockPlaceContext context) {
 		return this.defaultBlockState().setValue(AXIS, context.getClickedFace().getAxis());
 	}

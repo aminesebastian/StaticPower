@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -45,19 +46,6 @@ public class ResearchManager {
 		return completedResearch.contains(research);
 	}
 
-	public void addCompletedResearch(ResourceLocation research) {
-		if (completedResearch.contains(research)) {
-			return;
-		}
-
-		completedResearch.add(research);
-		if (activeResearch.containsKey(research)) {
-			activeResearch.remove(research);
-		}
-		selectedResearch = null;
-		team.markDirty(true);
-	}
-
 	public boolean isSelectedResearch(ResourceLocation research) {
 		if (selectedResearch == null) {
 			return false;
@@ -77,7 +65,7 @@ public class ResearchManager {
 		if (hasSelectedResearch() && !getSelectedResearch().isCompleted()) {
 			selectedResearch.requirementFullfillment.set(requirementIndex, selectedResearch.requirementFullfillment.get(requirementIndex) + amount);
 			if (selectedResearch.isCompleted()) {
-				addCompletedResearch(selectedResearch.getTrackedResearch().getId());
+				markResearchAsCompleted(selectedResearch.getTrackedResearch().getId());
 			}
 		}
 	}
@@ -120,6 +108,32 @@ public class ResearchManager {
 
 	public Team getTeam() {
 		return team;
+	}
+
+	protected void markResearchAsCompleted(ResourceLocation research) {
+		// If we already completed this, wtf you doin.
+		if (completedResearch.contains(research)) {
+			StaticPower.LOGGER.warn(String.format("Team: %1$s attempted to complete already completed research: %2$s.", team, research.toString()));
+			return;
+		}
+
+		// Add the completed research and remove it from the active research tree.
+		completedResearch.add(research);
+		if (activeResearch.containsKey(research)) {
+			activeResearch.remove(research);
+		}
+
+		// Clear the selected research.
+		selectedResearch = null;
+
+		// Play a happy sound.
+		team.playLocalSoundForAllPlayers(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0f, 1.0f);
+		team.playLocalSoundForAllPlayers(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
+		team.playLocalSoundForAllPlayers(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
+		StaticPower.LOGGER.info(String.format("Team: %1$s completed research: %2$s!", team, research.toString()));
+
+		// Mark the team as dirty.
+		team.markDirty(true);
 	}
 
 	public CompoundTag serialize() {
