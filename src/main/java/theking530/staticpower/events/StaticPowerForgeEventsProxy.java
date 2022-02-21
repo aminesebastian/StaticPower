@@ -20,7 +20,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
@@ -41,8 +40,8 @@ import theking530.staticpower.teams.research.GuiResearchMenu;
  */
 @SuppressWarnings("resource")
 @OnlyIn(Dist.CLIENT)
-public class StaticPowerClientEventHandler {
-	public static final Logger LOGGER = LogManager.getLogger(StaticPowerClientEventHandler.class);
+public class StaticPowerForgeEventsProxy {
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerForgeEventsProxy.class);
 
 	/**
 	 * This event is raised by the client setup event (duh).
@@ -82,18 +81,16 @@ public class StaticPowerClientEventHandler {
 		ModKeyBindings.registerBindings(event);
 
 		// TODO: Build a system to handle this non-manually.
-		DistExecutor.safeRunWhenOn(Dist.CLIENT, () -> () -> {
-			ModKeyBindings.addCallback(ModKeyBindings.OPEN_RESEARCH, (binding) -> {
-				if (binding.wasJustPressed()) {
-					if (Minecraft.getInstance().screen == null) {
-						Minecraft.getInstance().setScreen(new GuiResearchMenu());
-					} else if (Minecraft.getInstance().screen instanceof GuiResearchMenu) {
-						Minecraft.getInstance().screen.onClose();
-					}
+		ModKeyBindings.addCallback(ModKeyBindings.OPEN_RESEARCH, (binding) -> {
+			if (binding.wasJustPressed()) {
+				if (Minecraft.getInstance().screen == null) {
+					Minecraft.getInstance().setScreen(new GuiResearchMenu());
+				} else if (Minecraft.getInstance().screen instanceof GuiResearchMenu) {
+					Minecraft.getInstance().screen.onClose();
 				}
-			});
-			StaticPowerRenderEventHandler.addHUDElement(new ActiveResearchHUD());
+			}
 		});
+		StaticPowerForgeBusClient.addHUDElement(new ActiveResearchHUD());
 
 		// Log the completion.
 		LOGGER.info("Static Power Client Setup Completed!");

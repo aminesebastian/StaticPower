@@ -28,7 +28,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
@@ -55,9 +55,9 @@ import theking530.staticpower.utilities.RaytracingUtilities;
  */
 @SuppressWarnings("resource")
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
-public class StaticPowerRenderEventHandler {
+public class StaticPowerForgeBusClient {
 	protected static Field currentBlockDamageMP;
-	public static final Logger LOGGER = LogManager.getLogger(StaticPowerRenderEventHandler.class);
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerForgeBusClient.class);
 	private static final CustomRenderer CUSTOM_RENDERER = new CustomRenderer();
 	private static final List<StaticPowerExtensionGui> UI_EXTENSIONS = new ArrayList<>();
 	private static final List<StaticPowerExtensionGui> BOUND_UI_EXTENSIONS = new ArrayList<>();
@@ -108,6 +108,12 @@ public class StaticPowerRenderEventHandler {
 			gui.renderBackground(event.getMatrixStack());
 			gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
 		}
+	}
+
+	@SubscribeEvent
+	public static void onClientJoinedServer(ClientPlayerNetworkEvent.LoggedInEvent loggedIn) {
+		// Clear our local copy of the game data when we load.
+		//StaticPowerRegistry.clearAllGameData();
 	}
 
 	/**

@@ -44,7 +44,7 @@ import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.container.slots.DigistoreSlot;
 import theking530.staticpower.container.slots.NoCountRenderSlot;
-import theking530.staticpower.events.StaticPowerModEventRegistry;
+import theking530.staticpower.events.StaticPowerModEventsCommon;
 import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.utilities.MetricConverter;
 
@@ -137,7 +137,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		registerWidget(sortButton = new SpriteButton(-19, 18, 18, 18, StaticPowerSprites.SORT_NUMERICAL_DESC, null, this::onSortButtonPressed));
 
 		// Add search mode button.
-		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
+		if (ModList.get().isLoaded(StaticPowerModEventsCommon.JEI_MODID)) {
 			registerWidget(searchModeButton = new SpriteButton(-19, 38, 18, 18, StaticPowerSprites.SEARCH_MODE_DEFAULT, null, this::onSearchModeButtonPressed));
 		}
 
@@ -226,7 +226,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		// If we have JEI installed two way syncing enabled, changes to the JEI search
 		// bar will also
 		// affect the digistore search bar.
-		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
+		if (ModList.get().isLoaded(StaticPowerModEventsCommon.JEI_MODID)) {
 			if (DigistoreTerminal.getSearchMode(getMenu().getAttachment()) == DigistoreSyncedSearchMode.TWO_WAY) {
 				String jeiSearchString = Strings.nullToEmpty(PluginJEI.RUNTIME.getIngredientFilter().getFilterText());
 				searchBar.setText(jeiSearchString);
@@ -562,7 +562,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		boolean descending = DigistoreTerminal.getSortDescending(attachment);
 
 		// Update tooltips and sprites.
-		if (ModList.get().isLoaded(StaticPowerModEventRegistry.JEI_MODID)) {
+		if (ModList.get().isLoaded(StaticPowerModEventsCommon.JEI_MODID)) {
 			switch (searchMode) {
 			case DEFAULT:
 				searchModeButton.setTooltip(new TextComponent("Default Search Mode"));

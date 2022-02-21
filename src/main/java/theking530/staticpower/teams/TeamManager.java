@@ -14,14 +14,18 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.data.StaticPowerGameData;
 
 public class TeamManager extends StaticPowerGameData {
-	private static TeamManager INSTANCE;
+	public static ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "teams");
 	private Map<UUID, Team> teams;
 
 	public TeamManager() {
-		super("teams");
+		super(ID);
 		teams = new HashMap<>();
 	}
 
@@ -129,13 +133,11 @@ public class TeamManager extends StaticPowerGameData {
 	}
 
 	public static TeamManager get() {
-		if (INSTANCE == null) {
-			INSTANCE = new TeamManager();
-		}
-		return INSTANCE;
+		return StaticPowerRegistry.getGameDataById(ID);
 	}
 
 	@SuppressWarnings("resource")
+	@OnlyIn(Dist.CLIENT)
 	public static Team getLocalTeam() {
 		return TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player).orElse(null);
 	}

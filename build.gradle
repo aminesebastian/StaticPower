@@ -18,9 +18,11 @@ version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_versio
 group = "com.theking530.staticpower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StaticPower"
 
-// Mojang ships Java 17 to end users in 1.18+, so your mod should target Java 17.
-java.toolchain.languageVersion = JavaLanguageVersion.of(17)
-
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
 def apiVersion = "${mc_version}-${staticpower_api_major_version}.${staticpower_api_minor_version}."  + "0"  // project.getProperty("build_number")
 def coreVersion = "${mc_version}-${staticpower_core_major_version}.${staticpower_core_minor_version}."  + "0"  // project.getProperty("build_number")
 
@@ -42,9 +44,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-			// Temp fix for patchouli.
-			properties 'mixin.env.disableRefMap': 'true'
+			
+			// For Patchuloi
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 			
             mods {
                 examplemod {
@@ -61,7 +64,11 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
+			
+			// For Patchuloi
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+			
             mods {
                 examplemod {
                     source sourceSets.main

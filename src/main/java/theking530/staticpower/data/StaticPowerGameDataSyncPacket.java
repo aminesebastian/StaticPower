@@ -4,12 +4,13 @@ import java.util.function.Supplier;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.network.NetworkMessage;
 
 public class StaticPowerGameDataSyncPacket extends NetworkMessage {
-	protected String name;
+	protected ResourceLocation id;
 	protected CompoundTag serializedData;
 
 	public StaticPowerGameDataSyncPacket() {
@@ -17,25 +18,25 @@ public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 	}
 
 	public StaticPowerGameDataSyncPacket(StaticPowerGameData data) {
-		name = data.getName();
+		id = data.getId();
 		serializedData = data.serialize(new CompoundTag());
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeUtf(name);
+		buffer.writeUtf(id.toString());
 		buffer.writeNbt(serializedData);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		name = buffer.readUtf();
+		id = new ResourceLocation(buffer.readUtf());
 		serializedData = buffer.readNbt();
 	}
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
-		StaticPowerGameData gameData = StaticPowerRegistry.getGameDataByName(name);
+		StaticPowerGameData gameData = StaticPowerRegistry.getGameDataById(id);
 		gameData.load(serializedData);
 		gameData.onSyncedFromServer();
 	}

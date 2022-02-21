@@ -39,7 +39,7 @@ import theking530.staticpower.data.JsonUtilities;
 import theking530.staticpower.data.StaticPowerGameData;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
-import theking530.staticpower.events.StaticPowerForgeEventRegistry;
+import theking530.staticpower.events.StaticPowerForgeEventsCommon;
 import theking530.staticpower.world.trees.AbstractStaticPowerTree;
 
 /**
@@ -57,9 +57,9 @@ public class StaticPowerRegistry {
 	public static final HashSet<RecipeSerializer> RECIPE_SERIALIZERS = new LinkedHashSet<>();
 	public static final HashSet<AbstractEntityType<?>> ENTITIES = new LinkedHashSet<>();
 	public static final HashSet<AbstractStaticPowerTree> TREES = new LinkedHashSet<>();
-	public static final HashMap<String, StaticPowerGameData> DATA = new LinkedHashMap<>();
 
-	private static final HashMap<String, Supplier<StaticPowerGameData>> DATA_FACTORIES = new LinkedHashMap<>();
+	private static final HashMap<ResourceLocation, StaticPowerGameData> DATA = new LinkedHashMap<>();
+	private static final HashMap<ResourceLocation, Supplier<StaticPowerGameData>> DATA_FACTORIES = new LinkedHashMap<>();
 
 	/**
 	 * Pre-registers an item for registration through the registry event.
@@ -174,8 +174,8 @@ public class StaticPowerRegistry {
 		}
 	}
 
-	public static void registerDataFactory(String dataName, Supplier<StaticPowerGameData> factory) {
-		DATA_FACTORIES.put(dataName, factory);
+	public static void registerDataFactory(ResourceLocation id, Supplier<StaticPowerGameData> factory) {
+		DATA_FACTORIES.put(id, factory);
 	}
 
 	public static void onServerStarting(ServerAboutToStartEvent serverStarted) {
@@ -237,7 +237,7 @@ public class StaticPowerRegistry {
 				File lockFile = null;
 
 				// Create a writer for the file and pass it to the data to save.
-				String formattedName = formatDataSaveFileName(save, data.getName());
+				String formattedName = formatDataSaveFileName(save, data.getId());
 				String lockfileName = formattedName + ".lock";
 				try {
 					// Sync the data to the clients.
@@ -246,7 +246,7 @@ public class StaticPowerRegistry {
 					// If there is a lock file, just skip this save.
 					lockFile = new File(lockfileName);
 					if (lockFile.exists() && !lockFile.isDirectory()) {
-						StaticPower.LOGGER.warn(String.format("Skipping saving data for: %1$s to the disk. Lock file still exists.", data.getName()));
+						StaticPower.LOGGER.warn(String.format("Skipping saving data for: %1$s to the disk. Lock file still exists.", data.getId()));
 						return;
 					}
 
@@ -260,7 +260,7 @@ public class StaticPowerRegistry {
 					writer.write(JsonUtilities.nbtToPrettyJson(tag));
 					writer.close();
 				} catch (Exception e) {
-					StaticPower.LOGGER.error(String.format("An error occured when attempting to save data: %1$s to the disk.", data.getName()), e);
+					StaticPower.LOGGER.error(String.format("An error occured when attempting to save data: %1$s to the disk.", data.getId()), e);
 				} finally {
 					try {
 						// Delete the lock file if it exists.
@@ -273,7 +273,7 @@ public class StaticPowerRegistry {
 							writer.close();
 						}
 					} catch (IOException e) {
-						StaticPower.LOGGER.error(String.format("An error occured when attempting to close the save data writer for data: %1$s.", data.getName()), e);
+						StaticPower.LOGGER.error(String.format("An error occured when attempting to close the save data writer for data: %1$s.", data.getId()), e);
 					}
 				}
 			});
@@ -283,21 +283,38 @@ public class StaticPowerRegistry {
 
 	}
 
-	public static StaticPowerGameData getGameDataByName(String name) {
-		if (!DATA.containsKey(name)) {
-			createAndCacheDataFirstTime(name);
+	@SuppressWarnings("unchecked")
+	public static <T extends StaticPowerGameData> T getGameDataById(ResourceLocation id) {
+		if (!DATA.containsKey(id)) {
+			createAndCacheDataFirstTime(id);
 		}
-		return DATA.get(name);
+		return (T) DATA.get(id);
 	}
 
-	private static StaticPowerGameData createAndCacheDataFirstTime(String name) {
-		StaticPowerGameData newInstance = DATA_FACTORIES.get(name).get();
+	public static void clearAllGameData() {
+		DATA.clear();
+	}
+
+	public static void syncAllGameDataToClients() {
+		for (StaticPowerGameData data : DATA.values()) {
+			data.syncToClients();
+		}
+	}
+
+	public static void tickGameData() {
+		for (StaticPowerGameData data : DATA.values()) {
+			data.tick();
+		}
+	}
+
+	private static StaticPowerGameData createAndCacheDataFirstTime(ResourceLocation id) {
+		StaticPowerGameData newInstance = DATA_FACTORIES.get(id).get();
 		newInstance.onFirstTimeCreated();
-		DATA.put(newInstance.getName(), newInstance);
+		DATA.put(newInstance.getId(), newInstance);
 		return newInstance;
 	}
 
-	private static String formatDataSaveFileName(WorldEvent event, String name) {
-		return String.format("%1$s/%2$s_%3$s.json", StaticPowerForgeEventRegistry.DATA_PATH.toAbsolutePath().toString(), StaticPower.MOD_ID, name);
+	private static String formatDataSaveFileName(WorldEvent event, ResourceLocation id) {
+		return String.format("%1$s/%2$s_%3$s.json", StaticPowerForgeEventsCommon.DATA_PATH.toAbsolutePath().toString(), id.getNamespace(), id.getPath());
 	}
 }

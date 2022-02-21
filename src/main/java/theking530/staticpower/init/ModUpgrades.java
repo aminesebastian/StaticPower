@@ -12,10 +12,10 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.CraftingUpgrade;
-import theking530.staticpower.items.upgrades.VoidUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
+import theking530.staticpower.items.upgrades.VoidUpgrade;
 
 public class ModUpgrades {
 	// Upgrades

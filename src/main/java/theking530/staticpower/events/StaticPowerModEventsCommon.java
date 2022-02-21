@@ -56,11 +56,11 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.teams.TeamManager;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
-public class StaticPowerModEventRegistry {
+public class StaticPowerModEventsCommon {
 	public static final String TOP_MODID = "theoneprobe";
 	public static final String JEI_MODID = "jei";
 
-	public static final Logger LOGGER = LogManager.getLogger(StaticPowerModEventRegistry.class);
+	public static final Logger LOGGER = LogManager.getLogger(StaticPowerModEventsCommon.class);
 
 	@SubscribeEvent
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
@@ -98,8 +98,8 @@ public class StaticPowerModEventRegistry {
 		});
 
 		// Register data classes.
-		StaticPowerRegistry.registerDataFactory("teams", () -> {
-			return TeamManager.get();
+		StaticPowerRegistry.registerDataFactory(TeamManager.ID, () -> {
+			return new TeamManager();
 		});
 
 		LOGGER.info("Static Power Common Setup Completed!");
@@ -123,7 +123,7 @@ public class StaticPowerModEventRegistry {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void clientSetupEvent(FMLClientSetupEvent event) {
-		StaticPowerClientEventHandler.onClientSetupEvent(event);
+		StaticPowerForgeEventsProxy.onClientSetupEvent(event);
 		LOGGER.info("Static Power Client Setup Completed!");
 	}
 
@@ -139,21 +139,21 @@ public class StaticPowerModEventRegistry {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void modelBakeEvent(ModelBakeEvent event) {
-		StaticPowerClientEventHandler.onModelBakeEvent(event);
+		StaticPowerForgeEventsProxy.onModelBakeEvent(event);
 		LOGGER.info("Static Power Model Overrides Completed!");
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onItemColorBakeEvent(ColorHandlerEvent.Item event) {
-		StaticPowerClientEventHandler.onItemColorBakeEvent(event);
+		StaticPowerForgeEventsProxy.onItemColorBakeEvent(event);
 		LOGGER.info("Static Power Item Color Overrides Completed!");
 	}
 
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void textureStitchEvent(TextureStitchEvent.Pre event) {
-		StaticPowerClientEventHandler.onTextureStitchEvent(event);
+		StaticPowerForgeEventsProxy.onTextureStitchEvent(event);
 		LOGGER.info("Static Power Model Texture Stitch Event Completed!");
 	}
 

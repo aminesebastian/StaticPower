@@ -23,14 +23,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.LevelResource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
-import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
-import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
-import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
@@ -55,7 +49,6 @@ import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.data.StaticPowerGameData;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -74,7 +67,7 @@ import theking530.staticpower.world.ore.ModOres;
 import theking530.staticpower.world.trees.ModTrees;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.FORGE)
-public class StaticPowerForgeEventRegistry {
+public class StaticPowerForgeEventsCommon {
 	public static final ResourceLocation STATIC_POWER_PLAYER_DATA = new ResourceLocation(StaticPower.MOD_ID, "player_data");
 	public static Path DATA_PATH;
 
@@ -83,9 +76,7 @@ public class StaticPowerForgeEventRegistry {
 		if (!event.world.isClientSide) {
 			if (event.phase == TickEvent.Phase.END) {
 				CableNetworkManager.get(event.world).tick();
-				for (StaticPowerGameData data : StaticPowerRegistry.DATA.values()) {
-					data.tick();
-				}
+				StaticPowerRegistry.tickGameData();
 			}
 		}
 	}
@@ -123,6 +114,8 @@ public class StaticPowerForgeEventRegistry {
 
 	@SubscribeEvent
 	public static void onPlayerLoad(PlayerEvent.LoadFromFile load) {
+		// When called on the server, add the player to a team if one does not exist.
+		// When called on the client, clear the local data registry.
 		if (!load.getPlayer().getLevel().isClientSide()) {
 			// TODO: Change this back later, for now there will only be one team.
 			if (!TeamManager.get().getTeamForPlayer(load.getPlayer()).isPresent()) {
@@ -131,8 +124,6 @@ public class StaticPowerForgeEventRegistry {
 				} else {
 					TeamManager.get().getTeams().get(0).addPlayer(load.getPlayer());
 				}
-				// Sync the data back to the clients.
-				TeamManager.get().syncToClients();
 			}
 		}
 	}
@@ -146,6 +137,9 @@ public class StaticPowerForgeEventRegistry {
 				StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) loggedIn.getPlayer(),
 						new PacketSyncStaticPowerPlayerDataCapability(((StaticPowerPlayerData) data).serializeNBT()));
 			});
+
+			// Also synchronize all the game data.
+			StaticPowerRegistry.syncAllGameDataToClients();
 		}
 	}
 
