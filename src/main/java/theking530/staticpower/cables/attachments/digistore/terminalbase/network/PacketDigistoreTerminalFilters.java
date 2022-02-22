@@ -5,10 +5,10 @@ import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreSyncedSearchMode;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketDigistoreTerminalFilters extends NetworkMessage {
 	protected int windowId;

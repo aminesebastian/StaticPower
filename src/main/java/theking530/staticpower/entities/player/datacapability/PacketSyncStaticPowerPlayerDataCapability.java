@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 
 public class PacketSyncStaticPowerPlayerDataCapability extends NetworkMessage {
 	protected CompoundTag playerCapabilityData;

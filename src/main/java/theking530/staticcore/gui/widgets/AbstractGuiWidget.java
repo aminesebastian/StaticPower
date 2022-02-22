@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -17,6 +16,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector4D;
 
@@ -342,7 +342,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		transformPoseBeforeRender(matrix);
 		Vector4D clip = getClipMask(matrix);
 		if (clip != null) {
-			RenderSystem.enableScissor(clip.getXi(), clip.getYi(), clip.getZi(), clip.getWi());
+			RenderingUtilities.applyScissorMask(clip);
 		}
 
 		internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
@@ -350,7 +350,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.popPose();
 
 		if (clip != null) {
-			RenderSystem.disableScissor();
+			RenderingUtilities.clearScissorMask();
 		}
 	}
 
@@ -368,7 +368,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		transformPoseBeforeRender(matrix);
 		Vector4D clip = getClipMask(matrix);
 		if (clip != null) {
-			RenderSystem.enableScissor(clip.getXi(), clip.getYi(), clip.getZi(), clip.getWi());
+			RenderingUtilities.applyScissorMask(clip);
 		}
 
 		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
@@ -376,7 +376,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.popPose();
 
 		if (clip != null) {
-			RenderSystem.disableScissor();
+			RenderingUtilities.clearScissorMask();;
 		}
 	}
 
@@ -385,7 +385,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		transformPoseBeforeRender(matrix);
 		Vector4D clip = getClipMask(matrix);
 		if (clip != null) {
-			RenderSystem.enableScissor(clip.getXi(), clip.getYi(), clip.getZi(), clip.getWi());
+			RenderingUtilities.applyScissorMask(clip);
 		}
 
 		internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks);
@@ -393,7 +393,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.popPose();
 
 		if (clip != null) {
-			RenderSystem.disableScissor();
+			RenderingUtilities.clearScissorMask();
 		}
 	}
 
@@ -438,7 +438,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.translate(getPosition().getX(), getPosition().getY(), zLevel);
 	}
 
-	protected Vector4D getClipMask(PoseStack matrix) {
+	public Vector4D getClipMask(PoseStack matrix) {
 		return null;
 	}
 

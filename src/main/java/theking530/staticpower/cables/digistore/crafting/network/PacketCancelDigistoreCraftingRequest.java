@@ -6,8 +6,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketCancelDigistoreCraftingRequest extends NetworkMessage {
 	protected int windowId;

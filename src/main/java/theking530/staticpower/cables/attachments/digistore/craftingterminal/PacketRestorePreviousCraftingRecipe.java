@@ -6,7 +6,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class PacketRestorePreviousCraftingRecipe extends NetworkMessage {

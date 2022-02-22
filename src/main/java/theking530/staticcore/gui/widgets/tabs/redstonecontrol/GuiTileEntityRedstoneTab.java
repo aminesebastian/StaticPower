@@ -2,7 +2,7 @@ package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;

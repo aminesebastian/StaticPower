@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -111,11 +112,12 @@ public abstract class BaseGuiTab {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
+	@SuppressWarnings("resource")
 	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, ResourceLocation texture, IDrawable icon) {
 		this.tabWidth = tabWidth;
 		this.tabHeight = tabHeight;
 		this.icon = icon;
-		this.title = title;
+		this.title = new TranslatableComponent(title).getString();
 		this.titleColor = titleColor.encodeInInteger();
 		cachedIconBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		cachedTabBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
@@ -193,6 +195,7 @@ public abstract class BaseGuiTab {
 	 * @param button The button that was clicked.
 	 * @return True if the event was handled, false otherwise.
 	 */
+	@SuppressWarnings("resource")
 	public EInputResult mouseClick(PoseStack matrixStack, int mouseX, int mouseY, int button) {
 		if (!Minecraft.getInstance().player.containerMenu.getCarried().isEmpty()) { // TODO: Check if this works.
 			return EInputResult.UNHANDLED;

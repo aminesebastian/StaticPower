@@ -61,6 +61,20 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			return null;
 		}
 
+		// Capture all the unlocks.
+		List<ResearchUnlock> unlocks = new ArrayList<ResearchUnlock>();
+		if (json.has("unlocks")) {
+			if (!json.get("unlocks").isJsonArray()) {
+				StaticPower.LOGGER.error(String.format("Research: %1$s's unlocks must be an array!", recipeId.toString()));
+				return null;
+			}
+
+			JsonArray ulcks = json.get("unlocks").getAsJsonArray();
+			for (JsonElement element : ulcks) {
+				unlocks.add(ResearchUnlock.fromJson(element));
+			}
+		}
+
 		// Capture all the rewards, and make sure there is an array provided.
 		List<ItemStack> rewards = new ArrayList<ItemStack>();
 		if (json.has("rewards")) {
@@ -90,14 +104,9 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		}
 
 		// Capture the appropriate icon.
-		ItemStack itemIcon = null;
-		ResourceLocation textureIcon = null;
+		ResearchIcon icon = null;
 		if (json.has("icon")) {
-			if (json.get("icon").isJsonObject()) {
-				itemIcon = ShapedRecipe.itemStackFromJson(json.get("icon").getAsJsonObject());
-			} else {
-				textureIcon = new ResourceLocation(json.get("icon").getAsString());
-			}
+			icon = ResearchIcon.fromJson(json.get("icon"));
 		} else {
 			StaticPower.LOGGER.error(String.format("Research: %1$s is missing an icon!", recipeId.toString()));
 			return null;
@@ -109,22 +118,16 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		if (json.has("color")) {
 			color = Color.fromJson(json.get("color").getAsJsonObject());
 		}
+
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advancements, itemIcon, textureIcon, hidden, color);
+		return new Research(recipeId, title, description, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
 	}
 
 	@Override
 	public Research fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		String title = buffer.readUtf();
 		String description = buffer.readUtf();
-		ItemStack itemIcon = null;
-
-		ResourceLocation textureIcon = null;
-		if (buffer.readBoolean()) {
-			itemIcon = buffer.readItem();
-		} else {
-			textureIcon = new ResourceLocation(buffer.readUtf());
-		}
+		ResearchIcon icon = ResearchIcon.fromBuffer(buffer);
 
 		// Prerequisites.
 		List<ResourceLocation> prerequisites = new ArrayList<ResourceLocation>();
@@ -138,6 +141,13 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		byte reqCount = buffer.readByte();
 		for (int i = 0; i < reqCount; i++) {
 			requirements.add(StaticPowerIngredient.read(buffer));
+		}
+
+		// Unlocks.
+		List<ResearchUnlock> unlocks = new ArrayList<ResearchUnlock>();
+		byte unlockCount = buffer.readByte();
+		for (int i = 0; i < unlockCount; i++) {
+			unlocks.add(ResearchUnlock.fromBuffer(buffer));
 		}
 
 		// Rewards.
@@ -158,7 +168,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		Color color = Color.fromBuffer(buffer);
 
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, advacements, itemIcon, textureIcon, hidden, color);
+		return new Research(recipeId, title, description, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
 	}
 
 	@Override
@@ -166,12 +176,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		buffer.writeUtf(recipe.getTitle());
 		buffer.writeUtf(recipe.getDescription());
 
-		buffer.writeBoolean(recipe.hasItemStackIcon());
-		if (recipe.hasItemStackIcon()) {
-			buffer.writeItem(recipe.getItemIcon());
-		} else {
-			buffer.writeUtf(recipe.getTextureIcon().toString());
-		}
+		recipe.getIcon().toBuffer(buffer);
 
 		// Prerequisites.
 		buffer.writeByte(recipe.getPrerequisites().size());
@@ -183,6 +188,12 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		buffer.writeByte(recipe.getRequirements().size());
 		for (StaticPowerIngredient req : recipe.getRequirements()) {
 			req.write(buffer);
+		}
+
+		// Unlocks.
+		buffer.writeByte(recipe.getUnlocks().size());
+		for (ResearchUnlock unlock : recipe.getUnlocks()) {
+			unlock.toBuffer(buffer);
 		}
 
 		// Rewards.

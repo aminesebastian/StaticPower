@@ -14,15 +14,15 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.research.ResearchManager;
 import theking530.staticpower.utilities.NBTUtilities;
 
 public class Team {
+	private String id;
 	private String name;
-	private UUID id;
 	private final HashSet<String> players;
 	private final ResearchManager researchContainer;
 	private boolean dirty;
@@ -31,7 +31,7 @@ public class Team {
 		players = new LinkedHashSet<String>();
 		researchContainer = new ResearchManager(this);
 		this.name = name;
-		this.id = UUID.randomUUID();
+		this.id = UUID.randomUUID().toString();
 	}
 
 	public String getName() {
@@ -126,8 +126,26 @@ public class Team {
 		return dirty;
 	}
 
-	public UUID getId() {
+	public String getId() {
 		return id;
+	}
+
+	public static Team fromTag(CompoundTag tag) {
+		Team output = new Team(tag.getString("name"));
+		output.deserialize(tag);
+		return output;
+	}
+
+	public void deserialize(CompoundTag tag) {
+		name = tag.getString("name");
+		id = tag.getString("id");
+
+		ListTag playersTag = tag.getList("players", Tag.TAG_COMPOUND);
+		players.addAll(NBTUtilities.deserialize(playersTag, (playerTag) -> {
+			return playerTag.getString("id");
+		}));
+
+		researchContainer.deserialize(tag.getCompound("research"), this);
 	}
 
 	public CompoundTag serialize() {
@@ -140,21 +158,6 @@ public class Team {
 		}));
 
 		return output;
-	}
-
-	public static Team deserialize(CompoundTag tag) {
-		String name = tag.getString("name");
-		Team team = new Team(name);
-		UUID id = UUID.fromString(tag.getString("id"));
-		team.id = id;
-
-		ListTag playersTag = tag.getList("players", Tag.TAG_COMPOUND);
-		team.players.addAll(NBTUtilities.deserialize(playersTag, (playerTag) -> {
-			return playerTag.getString("id");
-		}));
-
-		team.researchContainer.deserialize(tag.getCompound("research"), team);
-		return team;
 	}
 
 	@Override

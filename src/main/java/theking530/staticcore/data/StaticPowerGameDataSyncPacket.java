@@ -1,4 +1,4 @@
-package theking530.staticpower.data;
+package theking530.staticcore.data;
 
 import java.util.function.Supplier;
 
@@ -6,8 +6,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 
 public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 	protected ResourceLocation id;
@@ -36,8 +35,8 @@ public class StaticPowerGameDataSyncPacket extends NetworkMessage {
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
-		StaticPowerGameData gameData = StaticPowerRegistry.getGameDataById(id);
-		gameData.load(serializedData);
-		gameData.onSyncedFromServer();
+		StaticPowerGameData gameData = StaticPowerGameDataManager.getOrCreateaGameData(id);
+		gameData.deserialize(serializedData);
+		gameData.onSyncedFromServer(serializedData);
 	}
 }

@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;

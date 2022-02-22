@@ -3,8 +3,6 @@ package theking530.staticpower.teams;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -16,25 +14,27 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.data.StaticPowerGameData;
+import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.StaticPowerRegistry;
-import theking530.staticpower.data.StaticPowerGameData;
 
 public class TeamManager extends StaticPowerGameData {
-	public static ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "teams");
-	private Map<UUID, Team> teams;
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "teams");
+	private Map<String, Team> teams;
 
 	public TeamManager() {
 		super(ID);
-		teams = new HashMap<>();
+		teams = new HashMap<String, Team>();
 	}
 
 	@Override
 	public void tick() {
 		boolean isDirty = false;
 		for (Team team : teams.values()) {
-			isDirty &= team.isDirty();
-			team.markDirty(false);
+			if (team.isDirty()) {
+				isDirty = true;
+				team.markDirty(false);
+			}
 		}
 		if (isDirty) {
 			syncToClients();
@@ -47,13 +47,13 @@ public class TeamManager extends StaticPowerGameData {
 	 * @param player
 	 * @return
 	 */
-	public Optional<Team> getTeamForPlayer(Player player) {
+	public Team getTeamForPlayer(Player player) {
 		for (Team team : teams.values()) {
 			if (team.hasPlayer(player)) {
-				return Optional.of(team);
+				return team;
 			}
 		}
-		return Optional.empty();
+		return null;
 	}
 
 	/**
@@ -62,11 +62,11 @@ public class TeamManager extends StaticPowerGameData {
 	 * @param teamId
 	 * @return
 	 */
-	public Optional<Team> getTeamById(UUID teamId) {
+	public Team getTeamById(String teamId) {
 		if (teams.containsKey(teamId)) {
-			return Optional.of(teams.get(teamId));
+			return teams.get(teamId);
 		}
-		return Optional.empty();
+		return null;
 	}
 
 	/**
@@ -87,7 +87,7 @@ public class TeamManager extends StaticPowerGameData {
 		// For all the players, if they're also on another team, remove them from that
 		// team.
 		for (Player player : players) {
-			Team existingTeam = getTeamForPlayer(players[0]).orElse(null);
+			Team existingTeam = getTeamForPlayer(players[0]);
 			if (existingTeam != null) {
 				existingTeam.removePlayer(player);
 			}
@@ -112,13 +112,27 @@ public class TeamManager extends StaticPowerGameData {
 	}
 
 	@Overwrite
-	public void load(CompoundTag tag) {
+	public void loadFromDisk(CompoundTag tag) {
 		teams.clear();
 		ListTag teamsTag = tag.getList("teams", Tag.TAG_COMPOUND);
 		for (Tag teamTag : teamsTag) {
 			CompoundTag teamTagCompound = (CompoundTag) teamTag;
-			Team team = Team.deserialize(teamTagCompound);
+			Team team = Team.fromTag(teamTagCompound);
 			teams.put(team.getId(), team);
+		}
+	}
+
+	@Override
+	public void deserialize(CompoundTag tag) {
+		ListTag teamsTag = tag.getList("teams", Tag.TAG_COMPOUND);
+		for (Tag teamTag : teamsTag) {
+			CompoundTag teamTagCompound = (CompoundTag) teamTag;
+			String teamId = teamTagCompound.getString("id");
+			if(teams.containsKey(teamId)) {
+				teams.get(teamId).deserialize(teamTagCompound);
+			}else {
+				teams.put(teamId, Team.fromTag(teamTagCompound));
+			}
 		}
 	}
 
@@ -133,13 +147,13 @@ public class TeamManager extends StaticPowerGameData {
 	}
 
 	public static TeamManager get() {
-		return StaticPowerRegistry.getGameDataById(ID);
+		return StaticPowerGameDataManager.getOrCreateaGameData(ID);
 	}
 
 	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)
 	public static Team getLocalTeam() {
-		return TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player).orElse(null);
+		return TeamManager.get().getTeamForPlayer(Minecraft.getInstance().player);
 	}
 
 	@Override

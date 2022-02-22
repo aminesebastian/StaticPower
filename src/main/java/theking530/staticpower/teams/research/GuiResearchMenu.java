@@ -9,12 +9,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
@@ -70,8 +73,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
-			float tint = y % 2 == 0 ? 0.1f : 0.0f;
-			HorizontalBox box = new HorizontalBox(0, y * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.75f)).setDrawBackground(true);
+			float tint = y % 2 == 0 ? 0.05f : 0.0f;
+			HorizontalBox box = new HorizontalBox(0, y * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(1, 1, 1, tint)).setDrawBackground(true);
 			ResearchLevel level = levels.getLevels().get(y);
 
 			for (int i = 0; i < level.getResearch().size(); i++) {
@@ -89,7 +92,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		// Add another box to the bottom to prevent the last research level from getting
 		// clipped when expanded.
-		HorizontalBox box = new HorizontalBox(0, levels.getLevels().size() * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(0, 0, 0, 0.75f)).setDrawBackground(true);
+		HorizontalBox box = new HorizontalBox(0, levels.getLevels().size() * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(0, 0, 0, 0.0f)).setDrawBackground(true);
 		tierBoxes.add(box);
 		nodeScrollBox.registerWidget(box);
 	}
@@ -163,16 +166,40 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		// Draw the sidebar and background bar.
-		GuiDrawUtilities.drawRectangle(pose, getMinecraft().screen.width, getMinecraft().screen.height, 0, 0, -0.1f, new Color(0, 0, 0, 0.5f));
-		GuiDrawUtilities.drawGenericBackground(pose, 110, getMinecraft().screen.height + 8, -5, -4, 0.0f, new Color(0.75f, 0.5f, 1.0f, 0.85f));
-		GuiDrawUtilities.drawGenericBackground(pose, getMinecraft().screen.width, 28, 108, -4, 500.0f, new Color(0.75f, 0.5f, 1.0f, 0.99f));
+		GuiDrawUtilities.drawRectangle(pose, getMinecraft().screen.width, getMinecraft().screen.height, 0, 0, -100.1f, new Color(0, 0, 0, 0.8f));
+		GuiDrawUtilities.drawGenericBackground(pose, 110, getMinecraft().screen.height + 8, -5, -4, 0.0f, new Color(0.75f, 0.5f, 1.0f, 0.95f));
+		GuiDrawUtilities.drawGenericBackground(pose, getMinecraft().screen.width, 28, 108, -4, 500.0f, new Color(0.75f, 0.5f, 1.0f, 0.95f));
 		drawConnectingLines(pose, partialTicks, mouseX, mouseY);
 	}
 
 	protected void drawForegroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
+		Player player = getMinecraft().player;
+
+		String biomeName = getMinecraft().player.getLevel().getBiome(player.getOnPos()).getRegistryName().getPath();
+		GuiDrawUtilities.drawStringLeftAligned(pose, biomeName, 114, 9, 0, 0.75f, Color.EIGHT_BIT_WHITE, true);
+		
+		String dimensionName = getMinecraft().player.getLevel().dimensionType().effectsLocation().getPath();
+		GuiDrawUtilities.drawStringCentered(pose, dimensionName, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 11f, 0, 1, Color.EIGHT_BIT_WHITE, true);
+
+		// Draw the current time.
+		long time = (getMinecraft().player.getLevel().dayTime() + 6000) % 24000;
+		long hour = time / 1000;
+		long minute = time % 1000;
+		minute *= 0.06f;
+
+		String formattedHour = hour < 10 ? "0" + hour : Long.toString(hour);
+		String formattedMinute = minute < 10 ? "0" + minute : Long.toString(minute);
+
+		String formattedTime = String.format("%1$s:%2$s", formattedHour, formattedMinute);
+		GuiDrawUtilities.drawStringCentered(pose, formattedTime, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 18f, 0, 0.5f, Color.EIGHT_BIT_WHITE, true);
 	}
 
 	protected void drawConnectingLines(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
+		// Clip the lines to the scroll box area.
+		Vector4D clipMask = nodeScrollBox.getClipMask(pose);
+		RenderingUtilities.applyScissorMask(clipMask);
+
+		// Draw the lines.
 		for (ResearchNodeWidget outerNode : this.researchNodes) {
 			List<ResearchNodeWidget> preReqWidgets = new ArrayList<ResearchNodeWidget>();
 			for (ResearchNodeWidget node : this.researchNodes) {
@@ -190,8 +217,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Vector3D preReqPosition = node.getScreenSpacePosition().promote();
 				preReqPosition.add(11, 20f, 100);
 
-				Color startLineColor = new Color(0.0f, 0.0f, 0.0f, 0.5f);
-				Color endLineColor = new Color(0.0f, 0.0f, 0.0f, 0.5f);
+				Color startLineColor = new Color(0.0f, 0.0f, 0.0f, 0.85f);
+				Color endLineColor = new Color(0.0f, 0.0f, 0.0f, 0.85f);
 
 				// If no node is expanded, draw the connecting lines behind everything.
 				// If a node is expanded, only draw lines for that node and push them over
@@ -211,5 +238,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				pose.popPose();
 			}
 		}
+
+		// Reset the clip mask.
+		RenderingUtilities.clearScissorMask();
 	}
 }

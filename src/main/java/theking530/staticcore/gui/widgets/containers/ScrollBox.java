@@ -89,7 +89,7 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 		setMaxScroll(maxScroll);
 	}
 
-	protected Vector4D getClipMask(PoseStack matrix) {
+	public Vector4D getClipMask(PoseStack matrix) {
 		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getScreenWidth(), Minecraft.getInstance().getWindow().getScreenHeight());
 		Vector2D screenSpace = getScreenSpacePosition().multiply((float) Minecraft.getInstance().getWindow().getGuiScale());
 		float height = (float) (getSize().getY() * Minecraft.getInstance().getWindow().getGuiScale());

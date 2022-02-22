@@ -276,17 +276,18 @@ public class GuiDrawUtilities {
 			int wordWidth = Minecraft.getInstance().font.width(word);
 			if (wordWidth == 0 || currentLineWidth + wordWidth < maxWidth) {
 				currentLine.append(word + " ");
-				currentLineWidth += wordWidth;
+				currentLineWidth += wordWidth + 1;
 			} else {
 				lines.add(currentLine.toString().trim());
 				currentLine = new StringBuilder();
 				currentLine.append(word + " ");
-				currentLineWidth = 0;
+				currentLineWidth = wordWidth + 1;
 			}
 		}
 
 		if (currentLine.toString().trim().length() > 0) {
 			lines.add(currentLine.toString().trim());
+			currentLineWidth = 0;
 		}
 
 		return lines;

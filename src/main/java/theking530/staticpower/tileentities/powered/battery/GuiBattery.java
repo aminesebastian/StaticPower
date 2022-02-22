@@ -19,9 +19,9 @@ import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileEntityBattery> {

@@ -1,5 +1,7 @@
 package theking530.staticpower.init;
 
+import theking530.staticcore.data.StaticPowerGameDataLoadPacket;
+import theking530.staticcore.data.StaticPowerGameDataSyncPacket;
 import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
@@ -25,7 +27,6 @@ import theking530.staticpower.cables.item.ItemCableRemovedPacket;
 import theking530.staticpower.cables.redstone.network.PacketUpdateRedstoneCableConfiguration;
 import theking530.staticpower.container.PacketCloseCurrentContainer;
 import theking530.staticpower.container.PacketRevertToParentContainer;
-import theking530.staticpower.data.StaticPowerGameDataSyncPacket;
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
@@ -35,16 +36,16 @@ import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidTankComponent;
 import theking530.staticpower.tileentities.components.heat.PacketHeatStorageComponent;
+import theking530.staticpower.tileentities.components.items.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStart;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStop;
 import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
 import theking530.staticpower.tileentities.components.power.PacketEnergyStorageComponent;
 import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
+import theking530.staticpower.tileentities.components.team.PacketSetTeamComponentTeam;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLockDigistore;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
-import theking530.staticpower.tileentities.powered.autocrafter.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.powered.battery.BatteryControlSyncPacket;
-import theking530.staticpower.tileentities.powered.laboratory.PacketSetLaboratoryTeam;
 import theking530.staticpower.tileentities.powered.packager.PacketPackagerSizeChange;
 import theking530.staticpower.tileentities.powered.powermonitor.PacketPowerMonitorSync;
 
@@ -97,7 +98,8 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(TileEntityPowerMetricsSyncPacket.class);
 		
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataSyncPacket.class);
-		StaticPowerMessageHandler.registerMessage(PacketSetLaboratoryTeam.class);
+		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataLoadPacket.class);
+		StaticPowerMessageHandler.registerMessage(PacketSetTeamComponentTeam.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetSelectedResearch.class);
 	}
 }

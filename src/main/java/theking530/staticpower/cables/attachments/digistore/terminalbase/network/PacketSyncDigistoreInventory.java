@@ -10,10 +10,10 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketSyncDigistoreInventory extends NetworkMessage {
 	protected int windowId;

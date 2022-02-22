@@ -1,5 +1,7 @@
 package theking530.staticpower.container;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.entity.player.Player;
@@ -9,10 +11,25 @@ import net.minecraft.world.item.ItemStack;
 
 public class FakeCraftingInventory extends CraftingContainer {
 	private final NonNullList<ItemStack> stackListOverride;
+	private final boolean skipResearchChecks;
+	private final Player player;
 
 	public FakeCraftingInventory(int width, int height) {
 		super(null, width, height);
+		this.skipResearchChecks = true;
+		this.player = null;
 		this.stackListOverride = NonNullList.withSize(width * height, ItemStack.EMPTY);
+	}
+
+	public FakeCraftingInventory(int width, int height, Player player) {
+		super(null, width, height);
+		this.skipResearchChecks = false;
+		this.player = player;
+		this.stackListOverride = NonNullList.withSize(width * height, ItemStack.EMPTY);
+	}
+
+	public boolean shouldSkipResearchChecks() {
+		return skipResearchChecks;
 	}
 
 	/**
@@ -20,6 +37,10 @@ public class FakeCraftingInventory extends CraftingContainer {
 	 */
 	public int getContainerSize() {
 		return this.stackListOverride.size();
+	}
+
+	public @Nullable Player getPlayer() {
+		return player;
 	}
 
 	public boolean isEmpty() {

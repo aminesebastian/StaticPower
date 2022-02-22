@@ -22,6 +22,8 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderAutoCraftingTable;
 import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.data.crafting.researchwrappers.CraftingResearchLockingUtilities;
+import theking530.staticpower.data.crafting.researchwrappers.IResearchBlockedRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -36,8 +38,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoCraftingTable>((type, pos, state) -> new TileEntityAutoCraftingTable(pos, state),
-			ModBlocks.AutoCraftingTable);
+	public static final BlockEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoCraftingTable>(
+			(type, pos, state) -> new TileEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -69,8 +71,8 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(moveComponent = MachineProcessingComponent
 				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
 				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(), this::canProcess,
-				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get()));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(), this::canProcess, this::canProcess,
+				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get()));
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
@@ -224,7 +226,17 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		for (int i = 0; i < inputs.length; i++) {
 			craftingInv.setItem(i, inputs[i]);
 		}
-		return level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, level);
+		Optional<CraftingRecipe> recipe = level.getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, level);
+
+		// Check if this is a blocked recipe that the requirements have been met.
+		if (recipe.isPresent()) {
+			if (recipe.get() instanceof IResearchBlockedRecipe) {
+				if (!CraftingResearchLockingUtilities.canTeamCraftRecipe(getTeamComponent().getOwningTeam(), recipe.get())) {
+					return Optional.empty();
+				}
+			}
+		}
+		return recipe;
 	}
 
 	public boolean hasRequiredItems() {

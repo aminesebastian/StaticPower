@@ -3,10 +3,13 @@ package theking530.staticpower.data.crafting;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -20,6 +23,8 @@ import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
@@ -35,11 +40,16 @@ import net.minecraftforge.registries.RegistryManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.container.FakeCraftingInventory;
+import theking530.staticpower.data.crafting.researchwrappers.ShapedResearchWrapper;
+import theking530.staticpower.data.crafting.researchwrappers.ShapelessResearchWrapper;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
 import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
+import theking530.staticpower.data.research.Research;
+import theking530.staticpower.data.research.ResearchUnlock;
+import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 
 public class StaticPowerRecipeRegistry {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerRecipeRegistry.class);
@@ -48,6 +58,7 @@ public class StaticPowerRecipeRegistry {
 	public static final HashMap<RecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<RecipeType, LinkedList<AbstractStaticPowerRecipe>>();
 	public static final LinkedList<SmeltingRecipe> FURNACE_RECIPES = new LinkedList<SmeltingRecipe>();
 	public static final Map<ResourceLocation, CraftingRecipe> CRAFTING_RECIPES = new HashMap<ResourceLocation, CraftingRecipe>();
+	public static final Map<ResourceLocation, Set<ResourceLocation>> LOCKED_RECIPES = new LinkedHashMap<ResourceLocation, Set<ResourceLocation>>();
 
 	/**
 	 * Attempts to find a recipe of the given type that matches the provided
@@ -190,6 +201,9 @@ public class StaticPowerRecipeRegistry {
 		FURNACE_RECIPES.clear();
 		CRAFTING_RECIPES.clear();
 
+		// Handle research replacements.
+		handleResearchRecipeReplacement(manager);
+
 		// Iterate through all the recipes and cache the Static Power ones.
 		Collection<Recipe<?>> recipes = manager.getRecipes();
 		for (Recipe<?> recipe : recipes) {
@@ -212,7 +226,7 @@ public class StaticPowerRecipeRegistry {
 		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), RECIPES.size() + FURNACE_RECIPES.size() + CRAFTING_RECIPES.size()));
 	}
 
-	public static void cacheDynamicBottlerRecipes(RecipeManager manager, @Nullable Level world) {
+	private static void cacheDynamicBottlerRecipes(RecipeManager manager, @Nullable Level world) {
 		// Capture dynamic recipes.
 		for (Item item : RegistryManager.ACTIVE.getRegistry(Item.class)) {
 			// Create an instance to use.
@@ -269,7 +283,7 @@ public class StaticPowerRecipeRegistry {
 
 				// Add the recipe if is not a duplicate, otherwise, skip it.
 				addRecipe(bucketRecipe);
-				LOGGER.info(String.format("Registering a dynamic bottler recipe for item: %1$s and fluid: %2$s.", emptyContainer.getHoverName().getString(),
+				LOGGER.debug(String.format("Registering a dynamic bottler recipe for item: %1$s and fluid: %2$s.", emptyContainer.getHoverName().getString(),
 						fluid.getAttributes().getDisplayName(fluidStack).getString()));
 			}
 		}
@@ -277,7 +291,7 @@ public class StaticPowerRecipeRegistry {
 		LOGGER.info("Succesfully cached dynamic bottler recipes!");
 	}
 
-	public static void cachePackagerRecipes(RecipeManager manager, @Nullable Level world) {
+	private static void cachePackagerRecipes(RecipeManager manager, @Nullable Level world) {
 		// Iterate through all items.
 		for (Item item : RegistryManager.ACTIVE.getRegistry(Item.class)) {
 			// Create an item stack instance.
@@ -338,5 +352,44 @@ public class StaticPowerRecipeRegistry {
 		}
 		// Log the completion.
 		LOGGER.info("Succesfully cached packager recipes!");
+	}
+
+	private static void handleResearchRecipeReplacement(RecipeManager manager) {
+		// Clear the previously cached lockable recipes.
+		LOCKED_RECIPES.clear();
+		
+		// Get all recipes.
+		List<Recipe<?>> recipes = new ArrayList<>(manager.getRecipes());
+
+		// Capture all the lockable recipes mapped to the set of required research for
+		// them.
+		for (Research research : manager.getAllRecipesFor(Research.RECIPE_TYPE)) {
+			for (ResearchUnlock unlock : research.getUnlocks()) {
+				if (unlock.getType() == ResearchUnlockType.CRAFTING) {
+					if (!LOCKED_RECIPES.containsKey(unlock.getTarget())) {
+						LOCKED_RECIPES.put(unlock.getTarget(), new HashSet<ResourceLocation>());
+					}
+					LOCKED_RECIPES.get(unlock.getTarget()).add(research.getId());
+				}
+			}
+		}
+
+		// Replace any recipes that need to be replaced.
+		for (int i = recipes.size() - 1; i >= 0; i--) {
+			Recipe<?> recipe = recipes.get(i);
+			if (LOCKED_RECIPES.containsKey(recipe.getId())) {
+				if (recipe instanceof ShapedRecipe) {
+					ShapedRecipe craftingRecipe = (ShapedRecipe) recipe;
+					recipes.set(i, new ShapedResearchWrapper(LOCKED_RECIPES.get(recipe.getId()), craftingRecipe));
+				} else if (recipe instanceof ShapelessRecipe) {
+					ShapelessRecipe craftingRecipe = (ShapelessRecipe) recipe;
+					recipes.set(i, new ShapelessResearchWrapper(LOCKED_RECIPES.get(recipe.getId()), craftingRecipe));
+				}
+			}
+		}
+
+		// Replace the recipes.
+		// TODO: This feels so dirty, wish I could replace by ID one by one.
+		manager.replaceRecipes(recipes);
 	}
 }

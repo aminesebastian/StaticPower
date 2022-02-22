@@ -73,12 +73,12 @@ public class FakeSlotButton extends StandardButton {
 			Vector2D size = getSize();
 			int halfSizeX = size.getXi() / 2;
 			int halfSizeY = size.getYi() / 2;
-			GuiDrawUtilities.drawItem(pose, itemIcon, (halfSizeX - 9), (halfSizeY - 9), 100.0f);
+			GuiDrawUtilities.drawItem(pose, itemIcon, (halfSizeX - 9), (halfSizeY - 9), 10.0f);
 		}
 
 		// Render the hover effect.
 		if (isHovered()) {
-			GuiDrawUtilities.drawRectangle(pose, buttonLeft, buttonTop, 16, 16, 200, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+			GuiDrawUtilities.drawRectangle(pose, 16, 16, 0, 0, 250, new Color(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
 }

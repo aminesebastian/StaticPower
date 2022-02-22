@@ -49,16 +49,16 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 
 		if (research != null) {
 			// Split the description into wrapped lines.
-			List<String> lines = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() + 20);
+			List<String> lines = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() * 2 - 35);
 			for (int i = 0; i < lines.size(); i++) {
 				GuiDrawUtilities.drawStringLeftAligned(pose, lines.get(i), 4, 33 + (i * 5.5f), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			}
-			setSize(getSize().getX(), 26 + (lines.size() * 10));
+			setSize(getSize().getX(), 50 + (lines.size() * 5));
 
 			int requirementCount = research.getRequirements().size();
 
 			// Draw icon.
-			GuiDrawUtilities.drawItem(pose, research.getItemIcon(), 2, 2, 100, 1.0f);
+			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 2, 2, 100, 1.0f);
 			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 4, 25, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.
@@ -71,19 +71,19 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 			}
 
 			// Draw requirements.
-			float requirementsBgSize = Math.max(16, requirementCount + requirementCount * 13.35f);
-			GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 16, getSize().getX() - requirementsBgSize - 4, getSize().getY() - 20, -1000, new Color(0.0f, 0.0f, 0.0f, 0.5f));
+			float requirementsBgSize =  getSize().getX() - 8;
+			GuiDrawUtilities.drawRectangle(pose,  requirementsBgSize, 14, getSize().getX() -  requirementsBgSize - 5, getSize().getY() - 18, -1000, new Color(0.0f, 0.0f, 0.0f, 0.35f));
 
 			for (int i = 0; i < requirementCount; i++) {
 				int xOffset = i * 14;
 				StaticPowerIngredient requirement = research.getRequirements().get(i);
-				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 20 - xOffset, getSize().getY() - 19, 100, 0.75f, 0.75f);
+				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 22 - xOffset, getSize().getY() - 18.5f, 100, 0.75f, 0.75f);
 
 				int remainingCount = requirement.getCount();
 				if (researchProgress != null) {
 					remainingCount -= researchProgress.getRequirementFullfillment(i);
 				}
-				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 9 - xOffset, getSize().getY() - 14, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 11 - xOffset, getSize().getY() - 12, 1, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 			}
 		}
 	}

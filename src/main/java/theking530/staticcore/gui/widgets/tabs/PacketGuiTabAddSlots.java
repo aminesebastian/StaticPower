@@ -10,9 +10,9 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 

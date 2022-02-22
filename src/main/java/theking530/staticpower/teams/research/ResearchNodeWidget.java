@@ -14,6 +14,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -59,7 +60,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		}
 
 		// Scale the widget depending on if it is expanded.
-		List<String> description = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() + 10);
+		List<String> description = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() * 2 - 35);
 		float maxWidth = (getFontRenderer().width(title) * .85f) * hoveredAlpha;
 		float maxHeight = 15 + (description.size() * 5);
 		setSize(collapsedSize.getX() + (maxWidth * hoveredAlpha), collapsedSize.getY() + (maxHeight * hoveredAlpha));
@@ -129,7 +130,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Draw the tile and its icon.
 		GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX(), collapsedSize.getY(), 0, 0, 0, tileColor);
-		GuiDrawUtilities.drawItem(pose, research.getItemIcon(), 4, 4, 99 + hoveredAlpha * 100, 1.0f);
+		GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + hoveredAlpha * 100, 1.0f);
 
 		if (expand) {
 			// Draw the title.
@@ -161,7 +162,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 				}
 
 				// Split the description into wrapped lines.
-				List<String> lines = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() + 10);
+				List<String> lines = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() * 2 - 35);
 
 				// Draw the description.
 				for (int i = 0; i < lines.size(); i++) {
@@ -177,10 +178,10 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, hoveredAlpha * 100, 0.5f, 0.5f, 1.0f);
 
 		if (instance != null) {
-			GuiDrawUtilities.drawStringCentered(pose, Integer.toString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)), x + 7.5f, y + 11.5f, 1, 0.5f,
-					Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)).getString(), x + 7.5f,
+					y + 11.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		} else {
-			GuiDrawUtilities.drawStringCentered(pose, Integer.toString(requirement.getCount()), x + 7.5f, y + 11.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 7.5f, y + 11.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 
@@ -218,7 +219,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	}
 
 	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
-		if (isHovered()) {
+		if (isHovered() && button == 0) {
 			boolean isAvailable = manager.isResearchAvailable(research.getId());
 			if (isAvailable) {
 				// Set the selected research on both the client AND the server.

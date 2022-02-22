@@ -3,16 +3,12 @@ package theking530.staticpower.tileentities.powered.laboratory;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
-import java.util.UUID;
-
-import javax.annotation.Nullable;
 
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -27,7 +23,6 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.teams.Team;
-import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -131,7 +126,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canStartProcessing() {
-		if (!getOwningTeam().isPresent()) {
+		if (getTeamComponent().getOwningTeam() == null) {
 			return ProcessingCheckState.error("Missing Team!");
 		}
 
@@ -147,7 +142,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canContinueProcessing() {
-		if (!getOwningTeam().isPresent()) {
+		if (getTeamComponent().getOwningTeam() == null) {
 			return ProcessingCheckState.cancel();
 		}
 		if (!getCurrentResearchInstance().isPresent()) {
@@ -162,7 +157,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState processingCompleted() {
-		if (!getOwningTeam().isPresent()) {
+		if (getTeamComponent().getOwningTeam() == null) {
 			return ProcessingCheckState.cancel();
 		}
 		if (!getCurrentResearchInstance().isPresent()) {
@@ -210,29 +205,8 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		return slotsToConsume;
 	}
 
-	@Override
-	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		if (placer instanceof Player) {
-			Team placerTeam = TeamManager.get().getTeamForPlayer((Player) placer).orElse(null);
-			if (placerTeam != null) {
-				owningTeam = placerTeam.getId().toString();
-			}
-		}
-	}
-
-	public void setTeam(UUID teamId) {
-		this.owningTeam = teamId.toString();
-	}
-
-	public Optional<Team> getOwningTeam() {
-		if (owningTeam == null) {
-			return Optional.empty();
-		}
-		return TeamManager.get().getTeamById(UUID.fromString(owningTeam));
-	}
-
 	public Optional<ResearchInstance> getCurrentResearchInstance() {
-		Team team = getOwningTeam().orElse(null);
+		Team team = getTeamComponent().getOwningTeam();
 		if (team != null) {
 			if (team.getResearchManager().getSelectedResearch() != null) {
 				return Optional.of(team.getResearchManager().getSelectedResearch());

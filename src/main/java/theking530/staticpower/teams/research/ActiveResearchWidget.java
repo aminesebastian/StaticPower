@@ -79,11 +79,11 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 
 			// Draw background.
 			if (drawBackground) {
-				GuiDrawUtilities.drawGenericBackground(pose, width, height, 0, 0, 0, new Color(1.0f, 0.8f, 1.2f, 0.07f));
+				GuiDrawUtilities.drawGenericBackground(pose, width, height, 0, 0, 0, new Color(1.0f, 0.8f, 1.2f, 0.8f));
 			}
 
 			// Draw icon.
-			GuiDrawUtilities.drawItem(pose, research.getItemIcon(), 4, 4, 10, 1.0f);
+			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 10, 1.0f);
 			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 23, 13, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.

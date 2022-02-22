@@ -33,7 +33,6 @@ import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
-import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
@@ -45,9 +44,9 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
+import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.RecipeReloadListener;
@@ -76,7 +75,7 @@ public class StaticPowerForgeEventsCommon {
 		if (!event.world.isClientSide) {
 			if (event.phase == TickEvent.Phase.END) {
 				CableNetworkManager.get(event.world).tick();
-				StaticPowerRegistry.tickGameData();
+				StaticPowerGameDataManager.tickGameData();
 			}
 		}
 	}
@@ -90,25 +89,20 @@ public class StaticPowerForgeEventsCommon {
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
 		StaticPower.LOGGER.info("Server resource reload listener created!");
 
-		StaticPowerRegistry.onServerStarting(serverStarted);
-	}
-
-	@SubscribeEvent
-	public static void onServerAboutToStart(ServerStoppedEvent serverStopped) {
-		StaticPowerRegistry.onServerStopping(serverStopped);
+		StaticPowerGameDataManager.clearAllGameData();
 	}
 
 	@SubscribeEvent
 	public static void onLoad(Load load) {
 		if (!load.getWorld().isClientSide()) {
-			StaticPowerRegistry.onGameLoaded(load);
+			StaticPowerGameDataManager.loadDataFromDisk(load);
 		}
 	}
 
 	@SubscribeEvent
 	public static void onSave(Save save) {
 		if (!save.getWorld().isClientSide()) {
-			StaticPowerRegistry.onGameSave(save);
+			StaticPowerGameDataManager.saveDataToDisk(save);
 		}
 	}
 
@@ -118,7 +112,7 @@ public class StaticPowerForgeEventsCommon {
 		// When called on the client, clear the local data registry.
 		if (!load.getPlayer().getLevel().isClientSide()) {
 			// TODO: Change this back later, for now there will only be one team.
-			if (!TeamManager.get().getTeamForPlayer(load.getPlayer()).isPresent()) {
+			if (TeamManager.get().getTeamForPlayer(load.getPlayer()) == null) {
 				if (TeamManager.get().getTeams().size() == 0) {
 					TeamManager.get().createTeam(load.getPlayer());
 				} else {
@@ -139,7 +133,7 @@ public class StaticPowerForgeEventsCommon {
 			});
 
 			// Also synchronize all the game data.
-			StaticPowerRegistry.syncAllGameDataToClients();
+			StaticPowerGameDataManager.loadDataForClients();
 		}
 	}
 

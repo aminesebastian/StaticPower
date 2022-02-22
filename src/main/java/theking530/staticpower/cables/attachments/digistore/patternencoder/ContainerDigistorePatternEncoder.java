@@ -65,7 +65,6 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			encoderInventory = (ItemStackHandler) handler;
 		});
 
-
 		// Add the crafting input slots.
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
@@ -154,7 +153,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		}
 
 		// Created a simulated crafting inventory.
-		FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
+		FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3, getPlayerInventory().player);
 		for (int i = 0; i < 9; i++) {
 			craftingInv.setItem(i, encoderInventory.getStackInSlot(DigistorePatternEncoder.RECIPE_START_SLOT + i));
 		}

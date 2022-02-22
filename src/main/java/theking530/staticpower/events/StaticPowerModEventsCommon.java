@@ -35,6 +35,7 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
+import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
@@ -98,7 +99,7 @@ public class StaticPowerModEventsCommon {
 		});
 
 		// Register data classes.
-		StaticPowerRegistry.registerDataFactory(TeamManager.ID, () -> {
+		StaticPowerGameDataManager.registerDataFactory(TeamManager.ID, () -> {
 			return new TeamManager();
 		});
 

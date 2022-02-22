@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 
 public class PacketRevertToParentContainer extends NetworkMessage {
 	protected int windowId;

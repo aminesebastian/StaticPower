@@ -31,6 +31,10 @@ public class ResearchManager {
 	}
 
 	public void setSelectedResearch(ResourceLocation name) {
+		if (completedResearch.contains(name)) {
+			return;
+		}
+
 		if (!activeResearch.containsKey(name)) {
 			activeResearch.put(name, new ResearchInstance(name, this));
 		}
@@ -63,6 +67,7 @@ public class ResearchManager {
 
 	public void addProgressToSelectedResearch(int requirementIndex, int amount) {
 		if (hasSelectedResearch() && !getSelectedResearch().isCompleted()) {
+			team.markDirty(true);
 			selectedResearch.requirementFullfillment.set(requirementIndex, selectedResearch.requirementFullfillment.get(requirementIndex) + amount);
 			if (selectedResearch.isCompleted()) {
 				markResearchAsCompleted(selectedResearch.getTrackedResearch().getId());
@@ -130,10 +135,8 @@ public class ResearchManager {
 		team.playLocalSoundForAllPlayers(SoundEvents.FIREWORK_ROCKET_LAUNCH, 1.0f, 1.0f);
 		team.playLocalSoundForAllPlayers(SoundEvents.ENCHANTMENT_TABLE_USE, 1.0f, 1.0f);
 		team.playLocalSoundForAllPlayers(SoundEvents.EXPERIENCE_ORB_PICKUP, 0.5f, 1.0f);
-		StaticPower.LOGGER.info(String.format("Team: %1$s completed research: %2$s!", team, research.toString()));
-
-		// Mark the team as dirty.
 		team.markDirty(true);
+		StaticPower.LOGGER.info(String.format("Team: %1$s completed research: %2$s!", team, research.toString()));
 	}
 
 	public CompoundTag serialize() {
@@ -156,10 +159,12 @@ public class ResearchManager {
 
 	public void deserialize(CompoundTag tag, Team team) {
 		ListTag completedResearchList = tag.getList("completedResearch", Tag.TAG_COMPOUND);
+		completedResearch.clear();
 		completedResearch.addAll(NBTUtilities.deserialize(completedResearchList, (research) -> {
 			return new ResourceLocation(research.getString("name"));
 		}));
 
+		activeResearch.clear();
 		ListTag activeResearchList = tag.getList("activeResearch", Tag.TAG_COMPOUND);
 		NBTUtilities.deserialize(activeResearchList, (research) -> {
 			return ResearchInstance.deserialize(research, this);
@@ -167,6 +172,7 @@ public class ResearchManager {
 			activeResearch.put(active.getResearchName(), active);
 		});
 
+		selectedResearch = null;
 		if (tag.contains("selectedResearch")) {
 			ResourceLocation current = new ResourceLocation(tag.getString("selectedResearch"));
 			if (activeResearch.containsKey(current)) {

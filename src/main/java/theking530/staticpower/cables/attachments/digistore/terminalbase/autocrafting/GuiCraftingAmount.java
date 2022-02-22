@@ -59,7 +59,7 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		missingIngredientDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 
 		craftingStack = new ItemDrawable(getCurrentBundle().getOutput());
-		registerWidget(craftingStackDrawableWidget = new DrawableWidget<ItemDrawable>(75, 16, 16, 16, craftingStack));
+		registerWidget(craftingStackDrawableWidget = new DrawableWidget<ItemDrawable>(75, 16, 1, 1, craftingStack));
 		craftingStackDrawableWidget.setTooltip(getCurrentBundle().getOutput().getHoverName());
 
 		registerWidget(close = new SpriteButton(152, 4, 8, 8, StaticPowerSprites.CLOSE, null, (b, n) -> goBack()));

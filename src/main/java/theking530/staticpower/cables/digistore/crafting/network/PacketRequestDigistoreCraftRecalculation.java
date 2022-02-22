@@ -7,8 +7,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketRequestDigistoreCraftRecalculation extends NetworkMessage {
 	protected int windowId;

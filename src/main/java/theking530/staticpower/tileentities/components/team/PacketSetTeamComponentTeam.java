@@ -1,24 +1,23 @@
-package theking530.staticpower.tileentities.powered.laboratory;
+package theking530.staticpower.tileentities.components.team;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.tileentities.TileEntityBase;
 
-public class PacketSetLaboratoryTeam extends NetworkMessage {
-	protected UUID teamId;
+public class PacketSetTeamComponentTeam extends NetworkMessage {
+	protected String teamId;
 	protected BlockPos tileEntityPosition;
 
-	public PacketSetLaboratoryTeam() {
+	public PacketSetTeamComponentTeam() {
 
 	}
 
-	public PacketSetLaboratoryTeam(TileEntityBase tileEntity, UUID teamId) {
+	public PacketSetTeamComponentTeam(TileEntityBase tileEntity, String teamId) {
 		tileEntityPosition = tileEntity.getBlockPos();
 		this.teamId = teamId;
 	}
@@ -26,13 +25,13 @@ public class PacketSetLaboratoryTeam extends NetworkMessage {
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(tileEntityPosition);
-		buffer.writeUUID(teamId);
+		buffer.writeUtf(teamId);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		tileEntityPosition = buffer.readBlockPos();
-		teamId = buffer.readUUID();
+		teamId = buffer.readUtf();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -41,9 +40,9 @@ public class PacketSetLaboratoryTeam extends NetworkMessage {
 		ctx.get().enqueueWork(() -> {
 			if (ctx.get().getSender().level.isAreaLoaded(tileEntityPosition, 1)) {
 				BlockEntity rawTileEntity = ctx.get().getSender().level.getBlockEntity(tileEntityPosition);
-				if (rawTileEntity != null && rawTileEntity instanceof TileEntityLaboratory) {
-					TileEntityLaboratory laboratory = (TileEntityLaboratory) rawTileEntity;
-					laboratory.setTeam(teamId);
+				if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
+					TileEntityBase base = (TileEntityBase) rawTileEntity;
+					base.getTeamComponent().setTeam(teamId);
 				}
 			}
 		});

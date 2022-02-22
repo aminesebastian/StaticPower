@@ -11,6 +11,7 @@ import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 

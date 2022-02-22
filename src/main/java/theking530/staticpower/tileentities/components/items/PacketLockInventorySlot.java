@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.autocrafter;
+package theking530.staticpower.tileentities.components.items;
 
 import java.util.function.Supplier;
 
@@ -7,9 +7,8 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class PacketLockInventorySlot extends NetworkMessage {
 	private BlockPos position;

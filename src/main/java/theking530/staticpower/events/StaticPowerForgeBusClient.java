@@ -28,9 +28,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
 import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
@@ -102,18 +102,14 @@ public class StaticPowerForgeBusClient {
 
 	@SubscribeEvent(priority = EventPriority.NORMAL)
 	public static void onDrawHUD(RenderGameOverlayEvent.Post event) {
-		for (StaticPowerHUDElement gui : HUD_ELEMENTS) {
-			gui.setCurrentWindow(event.getWindow());
-			gui.tick();
-			gui.renderBackground(event.getMatrixStack());
-			gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
+		if (event.getType() == ElementType.ALL) {
+			for (StaticPowerHUDElement gui : HUD_ELEMENTS) {
+				gui.setCurrentWindow(event.getWindow());
+				gui.tick();
+				gui.renderBackground(event.getMatrixStack());
+				gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
+			}
 		}
-	}
-
-	@SubscribeEvent
-	public static void onClientJoinedServer(ClientPlayerNetworkEvent.LoggedInEvent loggedIn) {
-		// Clear our local copy of the game data when we load.
-		//StaticPowerRegistry.clearAllGameData();
 	}
 
 	/**

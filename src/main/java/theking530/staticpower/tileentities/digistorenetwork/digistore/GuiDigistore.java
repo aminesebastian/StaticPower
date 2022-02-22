@@ -17,9 +17,9 @@ import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.MetricConverter;
 

@@ -46,8 +46,8 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
@@ -56,6 +56,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
+import theking530.staticpower.tileentities.components.team.TeamComponent;
 import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -98,6 +99,10 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	 * Indicates whether or not this tile entity should be marked dirty.
 	 */
 	private boolean shouldMarkDirty;
+	/**
+	 * Keeps track of which team placed this entity.
+	 */
+	private TeamComponent teamComponent;
 
 	public TileEntityBase(BlockEntityTypeAllocator<? extends BlockEntity> allocator, BlockPos pos, BlockState state) {
 		super(allocator.getType(), pos, state);
@@ -107,6 +112,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		hasFirstPlacedMethodRun = false;
 		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
+		registerComponent(teamComponent = new TeamComponent("team"));
 	}
 
 	public static void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
@@ -229,7 +235,9 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-
+		for (AbstractTileEntityComponent comp : components.values()) {
+			comp.onPlaced(state, placer, stack);
+		}
 	}
 
 	public InteractionResult onBlockActivated(BlockState currentState, Player player, InteractionHand hand, BlockHitResult hit) {
@@ -525,6 +533,10 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 			}
 		}
 		return super.getCapability(cap, side);
+	}
+
+	public TeamComponent getTeamComponent() {
+		return teamComponent;
 	}
 
 	@Override

@@ -1,8 +1,7 @@
-package theking530.staticpower.data;
+package theking530.staticcore.data;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.fml.util.thread.SidedThreadGroups;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
@@ -13,7 +12,9 @@ public abstract class StaticPowerGameData {
 		this.id = id;
 	}
 
-	public abstract void load(CompoundTag tag);
+	public abstract void loadFromDisk(CompoundTag tag);
+
+	public abstract void deserialize(CompoundTag tag);
 
 	public abstract CompoundTag serialize(CompoundTag tag);
 
@@ -28,15 +29,11 @@ public abstract class StaticPowerGameData {
 		StaticPower.LOGGER.debug(String.format("Created GameData with name: %1$s.", getId()));
 	}
 
-	public void onSyncedFromServer() {
+	public void onSyncedFromServer(CompoundTag tag) {
 		StaticPower.LOGGER.debug(String.format("Recieved synchronization data for GameData with name: %1$s.", getId()));
 	}
 
 	public void syncToClients() {
-		if (Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER) {
-			StaticPowerMessageHandler.sendToAllPlayers(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new StaticPowerGameDataSyncPacket(this));
-		} else {
-			StaticPower.LOGGER.warn(String.format("Attempted to synchronize data for GameData with name: %1$s to clients while already on the client.", getId()));
-		}
+		StaticPowerMessageHandler.sendToAllPlayers(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new StaticPowerGameDataSyncPacket(this));
 	}
 }

@@ -41,7 +41,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 			int requirementCount = research.getRequirements().size();
 
 			// Draw icon.
-			GuiDrawUtilities.drawItem(pose, research.getItemIcon(), 2, 2, 110, 1.0f);
+			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 2, 2, 110, 1.0f);
 			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 21, 9, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.

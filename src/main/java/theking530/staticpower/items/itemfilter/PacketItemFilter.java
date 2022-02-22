@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 
 public class PacketItemFilter extends NetworkMessage {
 	private boolean whitelist;

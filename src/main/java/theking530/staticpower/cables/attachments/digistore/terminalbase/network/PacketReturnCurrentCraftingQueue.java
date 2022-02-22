@@ -10,10 +10,10 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketReturnCurrentCraftingQueue extends NetworkMessage {
 	protected int windowId;

@@ -17,8 +17,8 @@ public class Research extends AbstractStaticPowerRecipe {
 	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
 	private final String title;
 	private final String description;
-	private final ItemStack itemIcon;
-	private final ResourceLocation textureIcon;
+	private final List<ResearchUnlock> unlocks;
+	private final ResearchIcon icon;
 	private final List<ResourceLocation> prerequisites;
 	private final List<StaticPowerIngredient> requirements;
 	private final List<ItemStack> rewards;
@@ -27,15 +27,15 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final Color color;
 
 	public Research(ResourceLocation name, String title, String description, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements, List<ItemStack> rewards,
-			List<ResourceLocation> advancements, ItemStack itemIcon, ResourceLocation textureIcon, boolean hiddenUntilAvailable, Color color) {
+			List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon, boolean hiddenUntilAvailable, Color color) {
 		super(name);
 		this.title = title;
 		this.description = description;
 		this.prerequisites = prerequisites;
 		this.requirements = requirements;
 		this.rewards = rewards;
-		this.itemIcon = itemIcon;
-		this.textureIcon = textureIcon;
+		this.unlocks = unlocks;
+		this.icon = icon;
 		this.advancements = advancements;
 		this.hiddenUntilAvailable = hiddenUntilAvailable;
 		if (color == null) {
@@ -47,10 +47,6 @@ public class Research extends AbstractStaticPowerRecipe {
 
 	public List<ResourceLocation> getAdvancements() {
 		return advancements;
-	}
-
-	public boolean hasItemStackIcon() {
-		return itemIcon != null;
 	}
 
 	public String getTitle() {
@@ -73,12 +69,12 @@ public class Research extends AbstractStaticPowerRecipe {
 		return rewards;
 	}
 
-	public ItemStack getItemIcon() {
-		return itemIcon;
+	public List<ResearchUnlock> getUnlocks() {
+		return unlocks;
 	}
 
-	public ResourceLocation getTextureIcon() {
-		return textureIcon;
+	public ResearchIcon getIcon() {
+		return icon;
 	}
 
 	public boolean isHiddenUntilAvailable() {

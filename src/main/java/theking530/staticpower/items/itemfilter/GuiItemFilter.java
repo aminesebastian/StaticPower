@@ -15,9 +15,9 @@ import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, ItemFilter> {

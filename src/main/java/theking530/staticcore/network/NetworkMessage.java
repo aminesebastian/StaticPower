@@ -1,4 +1,4 @@
-package theking530.staticpower.network;
+package theking530.staticcore.network;
 
 import java.util.function.Supplier;
 

@@ -17,6 +17,7 @@ import net.minecraftforge.network.NetworkEvent.Context;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.PacketDistributor;
 import net.minecraftforge.network.simple.SimpleChannel;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
 
 /**

@@ -14,7 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
-import theking530.staticpower.network.NetworkMessage;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.TileEntityBase;

@@ -103,7 +103,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget<AutoCraftingStepWi
 			GuiDrawUtilities.drawRectangle(matrix, 35.0f, 0.5f, 21, 14, 1.0f, Color.GREY);
 			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53.5f, 19.5f, 0.0f, 0.5f, new Color(75.0f, 25.0f, 0.0f, 255.0f), false);
 			GuiDrawUtilities.drawString(matrix, "Missing: " + material.getMissingAmount(), 53, 19, 0.0f, 0.5f, new Color(255.0f, 150.0f, 50.0f, 255.0f), false);
-			MISSING_INGREDIENT_RENDERABLE.draw(matrix, 2, 3);
+			MISSING_INGREDIENT_RENDERABLE.draw(matrix, 2, 3, 200);
 		} else if (material.getAmountToCraft() > 0) {
 			GuiDrawUtilities.drawString(matrix, "Required: " + material.getAmountRequired(), 53, 7, 0.0f, 0.5f, textColor, true);
 			GuiDrawUtilities.drawString(matrix, "Stored: " + material.getAmountStored(), 53, 12, 0.0f, 0.5f, textColor, true);
@@ -114,7 +114,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget<AutoCraftingStepWi
 		}
 
 		if (isBlockingStep()) {
-			MISSING_INGREDIENT_RENDERABLE.draw(matrix, 2, 3);
+			MISSING_INGREDIENT_RENDERABLE.draw(matrix, 2, 3, 200);
 		}
 
 		// Draw the bottom divider.

@@ -3,9 +3,13 @@ package theking530.staticpower.tileentities.components;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -74,6 +78,18 @@ public abstract class AbstractTileEntityComponent {
 
 	protected boolean isWorldLoaded() {
 		return worldLoaded;
+	}
+
+	/**
+	 * This method is called when the owning tile entity is first placed in the
+	 * world.
+	 * 
+	 * @param state
+	 * @param placer
+	 * @param stack
+	 */
+	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+
 	}
 
 	/**

@@ -5,8 +5,8 @@ import java.util.function.Supplier;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketPatternEncoderEncode extends NetworkMessage {
 	protected RecipeEncodingType recipeType;

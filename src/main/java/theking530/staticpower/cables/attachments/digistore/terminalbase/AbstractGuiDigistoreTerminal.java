@@ -28,7 +28,6 @@ import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.scrollbar.ScrollBarWidget;
 import theking530.staticcore.gui.widgets.textinput.TextInputWidget;
-import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
@@ -37,13 +36,10 @@ import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTer
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.AutoCraftingStepsWidget;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
-import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.container.slots.DigistoreSlot;
-import theking530.staticpower.container.slots.NoCountRenderSlot;
 import theking530.staticpower.events.StaticPowerModEventsCommon;
 import theking530.staticpower.integration.JEI.PluginJEI;
 import theking530.staticpower.utilities.MetricConverter;
@@ -195,27 +191,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 
 	@Override
 	public void renderSlot(PoseStack matrixStack, Slot slotIn) {
-		if (slotIn instanceof DigistoreSlot && slotIn.hasItem()) {
-			// Draw the slot with no count visible.
-			renderSlot(matrixStack, new NoCountRenderSlot(slotIn));
-
-			ItemStack slotStack = slotIn.getItem();
-			matrixStack.pushPose();
-			matrixStack.translate(0.0, 0.0, 260.0);
-			if (DigistoreInventorySnapshot.getCraftableStateOfItem(slotStack) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
-				// Draw a string that says: "Craft".
-				GuiDrawUtilities.drawString(matrixStack, "Craft", slotIn.x + 16, slotIn.y + 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			} else {
-				// Pass the itemstack count through the metric converter.
-				MetricConverter count = new MetricConverter(slotIn.getItem().getCount());
-
-				// Draw the item count string manually.
-				GuiDrawUtilities.drawString(matrixStack, count.getValueAsString(true), slotIn.x + 16, slotIn.y + 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			}
-			matrixStack.popPose();
-		} else {
-			super.renderSlot(matrixStack, slotIn);
-		}
+		super.renderSlot(matrixStack, slotIn);
 	}
 
 	@Override
@@ -404,10 +380,10 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 	@Override
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_HELMET), leftPos, topPos, -18, 113, 0.3f);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_CHESTPLATE), leftPos, topPos, -18, 131, 0.3f);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_LEGGINGS), leftPos, topPos, -18, 149, 0.3f);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_BOOTS), leftPos, topPos, -18, 167, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_HELMET), -18, 113, 1, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_CHESTPLATE), -18, 131, 1, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_LEGGINGS), -18, 149, 1, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_BOOTS), -18, 167, 1, 0.3f);
 
 		if (viewType == TerminalViewType.CRAFTING) {
 			if (getMenu().getCurrentCraftingQueue().size() > 0) {
