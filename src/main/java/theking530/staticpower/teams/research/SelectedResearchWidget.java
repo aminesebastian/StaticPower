@@ -53,7 +53,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 			for (int i = 0; i < lines.size(); i++) {
 				GuiDrawUtilities.drawStringLeftAligned(pose, lines.get(i), 4, 33 + (i * 5.5f), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			}
-			setSize(getSize().getX(), 50 + (lines.size() * 5));
+			setSize(getSize().getX(), Math.max(65, 50 + (lines.size() * 5)));
 
 			int requirementCount = research.getRequirements().size();
 

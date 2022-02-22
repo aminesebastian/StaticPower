@@ -47,22 +47,22 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		EStateOfDay dayState = getDayState();
 		if (dayState == EStateOfDay.DAY) {
-			day.draw(pose);
+			day.draw(pose, getPosition().getX(), getPosition().getY());
 		} else if (dayState == EStateOfDay.SUNSET) {
-			sunset.draw(pose);
+			sunset.draw(pose, getPosition().getX(), getPosition().getY());
 		} else if (dayState == EStateOfDay.SUNRISE) {
-			sunrise.draw(pose);
+			sunrise.draw(pose, getPosition().getX(), getPosition().getY());
 		} else {
-			night.draw(pose);
+			night.draw(pose, getPosition().getX(), getPosition().getY());
 		}
 
 		if (isRaining()) {
-			rain.draw(pose);
+			rain.draw(pose, getPosition().getX(), getPosition().getY());
 			rainClouds.draw(pose);
 		} else if (isSnowing()) {
-			snow.draw(pose);
+			snow.draw(pose, getPosition().getX(), getPosition().getY());
 		} else {
-			clouds.draw(pose);
+			clouds.draw(pose, getPosition().getX(), getPosition().getY());
 		}
 	}
 

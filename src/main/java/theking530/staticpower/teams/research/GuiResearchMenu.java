@@ -11,13 +11,15 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
 import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticcore.utilities.StringUtilities;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
@@ -32,7 +34,6 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected static final int TIER_LEVEL_HEIGHT = 80;
 	protected static final int HISTORY_HEIGHT = 35;
 
-	protected Team team;
 	protected ResearchInstance currentResearch;
 	protected ResearchNodeWidget expandedNode;
 	protected SelectedResearchWidget selectedResearchWidget;
@@ -55,14 +56,15 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		researchNodes = new ArrayList<ResearchNodeWidget>();
 		tierBoxes = new ArrayList<HorizontalBox>();
 		historyWidgets = new ArrayList<ResearchHistoryWidget>();
-
-		registerWidget(selectedResearchWidget = new SelectedResearchWidget(TeamManager.getLocalTeam().getResearchManager(), 0, 0, 109, 76).setZLevel(500));
+		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 76).setZLevel(500));
 
 		registerWidget(nodeScrollBox = new ScrollBox(105, 20, 10000, 0));
 		initializeResearchNodes();
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 		initializeSideBar();
+
+		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 	}
 
 	protected void initializeResearchNodes() {
@@ -130,8 +132,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		for (HorizontalBox box : tierBoxes) {
 			box.setSize(screenWidth - 105, TIER_LEVEL_HEIGHT);
 		}
-		nodeScrollBox.setPosition(104, 22);
-		nodeScrollBox.setSize(screenWidth - 105, screenHeight - 22);
+		nodeScrollBox.setPosition(104, 25);
+		nodeScrollBox.setSize(screenWidth - 105, screenHeight - 25);
 
 		// Size up the sidebar.
 		sideBarScrollBox.setPosition(0, selectedResearchWidget.getSize().getY());
@@ -175,10 +177,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected void drawForegroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		Player player = getMinecraft().player;
 
-		String biomeName = getMinecraft().player.getLevel().getBiome(player.getOnPos()).getRegistryName().getPath();
-		GuiDrawUtilities.drawStringLeftAligned(pose, biomeName, 114, 9, 0, 0.75f, Color.EIGHT_BIT_WHITE, true);
-		
-		String dimensionName = getMinecraft().player.getLevel().dimensionType().effectsLocation().getPath();
+		String biomeName = StringUtilities.prettyFormatCamelCase(getMinecraft().player.getLevel().getBiome(player.getOnPos()).getRegistryName().getPath());
+		GuiDrawUtilities.drawStringLeftAligned(pose, biomeName, 134, 14f, 0, 0.75f, Color.EIGHT_BIT_WHITE, true);
+
+		String dimensionName = StringUtilities.prettyFormatCamelCase(getMinecraft().player.getLevel().dimensionType().effectsLocation().getPath());
 		GuiDrawUtilities.drawStringCentered(pose, dimensionName, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 11f, 0, 1, Color.EIGHT_BIT_WHITE, true);
 
 		// Draw the current time.
@@ -196,7 +198,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	protected void drawConnectingLines(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		// Clip the lines to the scroll box area.
-		Vector4D clipMask = nodeScrollBox.getClipMask(pose);
+		RectangleBounds clipMask = nodeScrollBox.getClipBounds(pose);
 		RenderingUtilities.applyScissorMask(clipMask);
 
 		// Draw the lines.
@@ -217,29 +219,44 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Vector3D preReqPosition = node.getScreenSpacePosition().promote();
 				preReqPosition.add(11, 20f, 100);
 
-				Color startLineColor = new Color(0.0f, 0.0f, 0.0f, 0.85f);
-				Color endLineColor = new Color(0.0f, 0.0f, 0.0f, 0.85f);
+				Color startLineColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+				Color endLineColor = startLineColor;
+
+				// Draw the line ALWAYS black. We'll color on top of it in the next step if
+				// something is expanded.
+				GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 4.0f);
 
 				// If no node is expanded, draw the connecting lines behind everything.
 				// If a node is expanded, only draw lines for that node and push them over
 				// everything.
-				if (this.expandedNode != null) {
-					if (outerNode == expandedNode) {
-						preReqPosition.add(0, 0, 500);
-						float timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 2)) / 5, 0, 1);
-						startLineColor = new Color(timeHovered, timeHovered, timeHovered, 1);
+				if (expandedNode != null && outerNode == expandedNode) {
+					preReqPosition.add(0, 0, 500);
+					float timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 2)) / 2, 0, 1);
 
-						timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 4)) / 5, 0, 1);
-						endLineColor = new Color(timeHovered, timeHovered, timeHovered, 1);
+					if (!getLocalTeam().getResearchManager().hasCompletedResearch(node.getResearch().getId())) {
+						startLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
+						endLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
+					} else {
+						startLineColor = new Color(0.0f, 1.0f, 0.2f, 1.0f);
+						endLineColor = new Color(0.0f, 1.0f, 0.2f, 1.0f);
 					}
+
+					startLineColor = startLineColor.multiply(timeHovered);
+					timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 3)) / 3, 0, 1);
+					endLineColor = endLineColor.multiply(timeHovered);
+
+					GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 4.0f);
 				}
 
-				GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 4.0f);
 				pose.popPose();
 			}
 		}
 
 		// Reset the clip mask.
 		RenderingUtilities.clearScissorMask();
+	}
+
+	protected Team getLocalTeam() {
+		return TeamManager.getLocalTeam();
 	}
 }

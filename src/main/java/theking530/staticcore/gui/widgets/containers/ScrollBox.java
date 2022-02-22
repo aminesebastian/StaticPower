@@ -6,9 +6,9 @@ import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.client.gui.GuiTextures;
 
 public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
@@ -89,16 +89,14 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 		setMaxScroll(maxScroll);
 	}
 
-	public Vector4D getClipMask(PoseStack matrix) {
-		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getScreenWidth(), Minecraft.getInstance().getWindow().getScreenHeight());
-		Vector2D screenSpace = getScreenSpacePosition().multiply((float) Minecraft.getInstance().getWindow().getGuiScale());
-		float height = (float) (getSize().getY() * Minecraft.getInstance().getWindow().getGuiScale());
-		float width = (float) (getSize().getX() * Minecraft.getInstance().getWindow().getGuiScale());
-		float lowY = resolution.getY() - (screenSpace.getY() + height);
-		float lowX = screenSpace.getX();
-		float hightY = lowY + height;
-		float highX = screenSpace.getX() + width;
-		return new Vector4D(Math.max(0, lowX), Math.max(0, lowY), highX, hightY);
+	public RectangleBounds getClipBounds(PoseStack matrix) {
+		float guiScale = (float) Minecraft.getInstance().getWindow().getGuiScale();
+		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
+		Vector2D screenSpace = getScreenSpacePosition();
+		Vector2D adjustedSize = getSize();
+		RectangleBounds output = new RectangleBounds(screenSpace.getX() * guiScale, resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX() * guiScale,
+				adjustedSize.getY() * guiScale);
+		return output;
 	}
 
 	@Override

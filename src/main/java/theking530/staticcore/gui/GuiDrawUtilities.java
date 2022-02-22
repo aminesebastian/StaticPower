@@ -342,9 +342,9 @@ public class GuiDrawUtilities {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
-		bufferbuilder.vertex(pose.last().pose(), start.getX(), start.getY(), start.getZ()).color(startcolor.getRed(), startcolor.getBlue(), startcolor.getGreen(), startcolor.getAlpha())
+		bufferbuilder.vertex(pose.last().pose(), start.getX(), start.getY(), start.getZ()).color(startcolor.getRed(), startcolor.getGreen(), startcolor.getBlue(), startcolor.getAlpha())
 				.normal(normal.getX(), normal.getY(), 0).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), end.getX(), end.getY(), end.getZ()).color(endColor.getRed(), endColor.getBlue(), endColor.getGreen(), endColor.getAlpha())
+		bufferbuilder.vertex(pose.last().pose(), end.getX(), end.getY(), end.getZ()).color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha())
 				.normal(normal.getX(), normal.getY(), 0).endVertex();
 		tessellator.end();
 		RenderSystem.enableCull();

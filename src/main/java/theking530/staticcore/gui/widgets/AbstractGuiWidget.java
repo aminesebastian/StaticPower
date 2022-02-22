@@ -18,7 +18,6 @@ import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticcore.utilities.Vector4D;
 
 @SuppressWarnings({ "unchecked" })
 public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
@@ -340,7 +339,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
-		Vector4D clip = getClipMask(matrix);
+		RectangleBounds clip = getClipBounds(matrix);
 		if (clip != null) {
 			RenderingUtilities.applyScissorMask(clip);
 		}
@@ -366,7 +365,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
-		Vector4D clip = getClipMask(matrix);
+		RectangleBounds clip = getClipBounds(matrix);
 		if (clip != null) {
 			RenderingUtilities.applyScissorMask(clip);
 		}
@@ -376,14 +375,15 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.popPose();
 
 		if (clip != null) {
-			RenderingUtilities.clearScissorMask();;
+			RenderingUtilities.clearScissorMask();
+			;
 		}
 	}
 
 	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
-		Vector4D clip = getClipMask(matrix);
+		RectangleBounds clip = getClipBounds(matrix);
 		if (clip != null) {
 			RenderingUtilities.applyScissorMask(clip);
 		}
@@ -438,7 +438,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.translate(getPosition().getX(), getPosition().getY(), zLevel);
 	}
 
-	public Vector4D getClipMask(PoseStack matrix) {
+	public RectangleBounds getClipBounds(PoseStack matrix) {
 		return null;
 	}
 
