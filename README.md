@@ -1,9 +1,14 @@
-
 # StaticPower
 
 A high tech Minecraft mod with roots based in science fiction and fantasy. 
 
 https://minecraft.curseforge.com/projects/static-power?gameCategorySlug=mc-mods&projectID=247413
+
+# Environment Setup
+- Ensure you have JDK 17 installed.
+- Pull this code locally and open a terminal pointed to that directory.
+- Follow [these](https://mcforge.readthedocs.io/en/latest/forgedev/#setting-up-the-environment) instructions.
+- Open your IDE (Eclipse or IntelliJ) and try launching!
 
 # License
 All Rights Reserved
