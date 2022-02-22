@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.powered.heatsink;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
@@ -14,7 +14,7 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 public class GuiHeatSink extends StaticPowerTileEntityGui<ContainerHeatSink, TileEntityHeatSink> {
 	protected GuiInfoTab infoTab;
 
-	public GuiHeatSink(ContainerHeatSink container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiHeatSink(ContainerHeatSink container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 146);
 	}
 
@@ -28,7 +28,7 @@ public class GuiHeatSink extends StaticPowerTileEntityGui<ContainerHeatSink, Til
 	}
 
 	@Override
-	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawForegroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(null, partialTicks, mouseX, mouseY);
 
 	}

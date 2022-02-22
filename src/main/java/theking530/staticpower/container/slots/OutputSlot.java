@@ -2,8 +2,8 @@ package theking530.staticpower.container.slots;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 
 public class OutputSlot extends StaticPowerContainerSlot {
@@ -21,7 +21,7 @@ public class OutputSlot extends StaticPowerContainerSlot {
 	}
 
 	@Override
-	public boolean isItemValid(@Nonnull ItemStack stack) {
+	public boolean mayPlace(@Nonnull ItemStack stack) {
 		return false;
 	}
 

@@ -1,11 +1,11 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -16,13 +16,13 @@ import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvapo
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderEvaporator extends StaticPowerTileEntitySpecialRenderer<TileEntityEvaporator> {
 
-	public TileEntityRenderEvaporator(TileEntityRendererDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderEvaporator(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override
-	public void renderTileEntityBase(TileEntityEvaporator tileEntity, BlockPos pos, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		int forwardBlockLightLevel = WorldRenderer.getCombinedLight(tileEntity.getWorld(), tileEntity.getPos().offset(tileEntity.getFacingDirection()));
+	public void renderTileEntityBase(TileEntityEvaporator tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		int forwardBlockLightLevel = LevelRenderer.getLightColor(tileEntity.getLevel(), tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));
 
 		if (!tileEntity.inputTankComponent.isEmpty()) {
 			float filledPercentage = tileEntity.inputTankComponent.getVisualFillLevel();

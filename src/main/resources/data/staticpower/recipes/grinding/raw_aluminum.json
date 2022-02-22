@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:raw_materials/aluminum"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_aluminum",
+			"count": 2
+		}
+	]
+}

@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.poweredfurnace;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -14,7 +14,7 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 
 public class GuiPoweredFurnace extends StaticPowerTileEntityGui<ContainerPoweredFurnace, TileEntityPoweredFurnace> {
 
-	public GuiPoweredFurnace(ContainerPoweredFurnace container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiPoweredFurnace(ContainerPoweredFurnace container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 

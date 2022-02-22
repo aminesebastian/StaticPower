@@ -1,15 +1,13 @@
 package theking530.staticpower.blocks.decorative;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
-import net.minecraftforge.common.ToolType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.material.Material;
 import theking530.staticpower.blocks.StaticPowerBlock;
 
 public class Lamp extends StaticPowerBlock {
 
 	public Lamp(String name) {
-		super(name, Block.Properties.create(Material.REDSTONE_LIGHT).harvestTool(ToolType.PICKAXE)
-				.sound(SoundType.GLASS).setLightLevel((state) -> 15));
+		super(name, Block.Properties.of(Material.BUILDABLE_GLASS).sound(SoundType.GLASS).lightLevel((state) -> 15));
 	}
 }

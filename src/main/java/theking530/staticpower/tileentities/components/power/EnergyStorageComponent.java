@@ -3,7 +3,7 @@ package theking530.staticpower.tileentities.components.power;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -81,7 +81,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Check for upgrades.
 			checkUpgrades();
 		}
@@ -89,7 +89,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Handle sync.
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we
@@ -266,7 +266,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 * clients within a 64 block radius.
 	 */
 	public void syncToClient() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			PacketEnergyStorageComponent syncPacket = new PacketEnergyStorageComponent(this, getPos(), this.getComponentName());
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, syncPacket);
 		} else {

@@ -9,10 +9,10 @@ import java.util.List;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.network.CableNetworkGraph;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.ServerCable;
@@ -28,14 +28,14 @@ public class NetworkPathFinder {
 	private final HashMap<BlockPos, PathEntry> Predecessors;
 	private final ResourceLocation SupportedNetworkType;
 	private final Queue<BlockPos> BFSQueue;
-	private final World world;
+	private final Level world;
 	private final BiFunction<BlockPos, BlockPos, Boolean> filter;
 
-	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType) {
+	public NetworkPathFinder(CableNetworkGraph graph, Level world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType) {
 		this(graph, world, startingCablePosition, targetPosition, supportedNetworkType, null);
 	}
 
-	public NetworkPathFinder(CableNetworkGraph graph, World world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType,
+	public NetworkPathFinder(CableNetworkGraph graph, Level world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType,
 			BiFunction<BlockPos, BlockPos, Boolean> filter) {
 		// Capture all the positions in the network graph.
 		GraphNodes = new HashSet<BlockPos>();
@@ -49,9 +49,9 @@ public class NetworkPathFinder {
 		// the target), if they support the network type.
 		TerminusNodes = new HashSet<BlockPos>();
 		for (Direction dir : Direction.values()) {
-			ServerCable cable = CableNetworkManager.get(world).getCable(targetPosition.offset(dir));
+			ServerCable cable = CableNetworkManager.get(world).getCable(targetPosition.relative(dir));
 			if (cable != null && cable.supportsNetworkModule(supportedNetworkType) && !cable.isDisabledOnSide(dir.getOpposite())) {
-				TerminusNodes.add(targetPosition.offset(dir));
+				TerminusNodes.add(targetPosition.relative(dir));
 			}
 		}
 
@@ -104,7 +104,7 @@ public class NetworkPathFinder {
 				// Get the adjacent and check if we have visited it before. If we have, skip it.
 				// Also, skip it if it's not part of our graph nodes list.
 				// Finally, skip it if the filter fails.
-				BlockPos adjacent = curr.offset(dir);
+				BlockPos adjacent = curr.relative(dir);
 				if (!GraphNodes.contains(adjacent) || VisitedPositions.contains(adjacent) || (filter != null && !filter.apply(curr, adjacent))) {
 					continue;
 				}

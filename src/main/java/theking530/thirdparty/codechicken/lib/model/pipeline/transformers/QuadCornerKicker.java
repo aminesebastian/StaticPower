@@ -18,13 +18,11 @@
 
 package theking530.thirdparty.codechicken.lib.model.pipeline.transformers;
 
-import static net.minecraft.util.Direction.AxisDirection.NEGATIVE;
-import static net.minecraft.util.Direction.AxisDirection.POSITIVE;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.vector.Vector3i;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.phys.AABB;
 import theking530.thirdparty.codechicken.lib.model.Quad.Vertex;
 import theking530.thirdparty.codechicken.lib.model.pipeline.IPipelineElementFactory;
 import theking530.thirdparty.codechicken.lib.model.pipeline.QuadTransformer;
@@ -60,7 +58,7 @@ public class QuadCornerKicker extends QuadTransformer {
 
     private int mySide;
     private int facadeMask;
-    private AxisAlignedBB box;
+    private AABB box;
     private double thickness;
 
     QuadCornerKicker() {
@@ -92,7 +90,7 @@ public class QuadCornerKicker extends QuadTransformer {
      *
      * @param box The BoundingBox.
      */
-    public void setBox(AxisAlignedBB box) {
+    public void setBox(AABB box) {
         this.box = box;
     }
 
@@ -120,7 +118,7 @@ public class QuadCornerKicker extends QuadTransformer {
                             float z = vertex.vec[2];
                             if (epsComp(x, corner.pX(this.box)) && epsComp(y, corner.pY(this.box))
                                     && epsComp(z, corner.pZ(this.box))) {
-                                Vector3i vec = Direction.values()[hoz].getDirectionVec();
+                                Vec3i vec = Direction.values()[hoz].getNormal();
                                 x -= vec.getX() * this.thickness;
                                 y -= vec.getY() * this.thickness;
                                 z -= vec.getZ() * this.thickness;
@@ -139,11 +137,11 @@ public class QuadCornerKicker extends QuadTransformer {
 
     public enum Corner {
 
-        MIN_X_MIN_Y_MIN_Z(NEGATIVE, NEGATIVE, NEGATIVE), MIN_X_MIN_Y_MAX_Z(NEGATIVE, NEGATIVE, POSITIVE),
-        MIN_X_MAX_Y_MIN_Z(NEGATIVE, POSITIVE, NEGATIVE), MIN_X_MAX_Y_MAX_Z(NEGATIVE, POSITIVE, POSITIVE),
+        MIN_X_MIN_Y_MIN_Z(Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.NEGATIVE), MIN_X_MIN_Y_MAX_Z(Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.POSITIVE),
+        MIN_X_MAX_Y_MIN_Z(Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.POSITIVE, Direction.AxisDirection.NEGATIVE), MIN_X_MAX_Y_MAX_Z(Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.POSITIVE, Direction.AxisDirection.POSITIVE),
 
-        MAX_X_MIN_Y_MIN_Z(POSITIVE, NEGATIVE, NEGATIVE), MAX_X_MIN_Y_MAX_Z(POSITIVE, NEGATIVE, POSITIVE),
-        MAX_X_MAX_Y_MIN_Z(POSITIVE, POSITIVE, NEGATIVE), MAX_X_MAX_Y_MAX_Z(POSITIVE, POSITIVE, POSITIVE);
+        MAX_X_MIN_Y_MIN_Z(Direction.AxisDirection.POSITIVE, Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.NEGATIVE), MAX_X_MIN_Y_MAX_Z(Direction.AxisDirection.POSITIVE, Direction.AxisDirection.NEGATIVE, Direction.AxisDirection.POSITIVE),
+        MAX_X_MAX_Y_MIN_Z(Direction.AxisDirection.POSITIVE, Direction.AxisDirection.POSITIVE, Direction.AxisDirection.NEGATIVE), MAX_X_MAX_Y_MAX_Z(Direction.AxisDirection.POSITIVE, Direction.AxisDirection.POSITIVE, Direction.AxisDirection.POSITIVE);
 
         private AxisDirection xAxis;
         private AxisDirection yAxis;
@@ -174,16 +172,16 @@ public class QuadCornerKicker extends QuadTransformer {
             return values()[sideMask[sideA] | sideMask[sideB] | sideMask[sideC]];
         }
 
-        public float pX(AxisAlignedBB box) {
-            return (float) (this.xAxis == NEGATIVE ? box.minX : box.maxX);
+        public float pX(AABB box) {
+            return (float) (this.xAxis == Direction.AxisDirection.NEGATIVE ? box.minX : box.maxX);
         }
 
-        public float pY(AxisAlignedBB box) {
-            return (float) (this.yAxis == NEGATIVE ? box.minY : box.maxY);
+        public float pY(AABB box) {
+            return (float) (this.yAxis == Direction.AxisDirection.NEGATIVE ? box.minY : box.maxY);
         }
 
-        public float pZ(AxisAlignedBB box) {
-            return (float) (this.zAxis == NEGATIVE ? box.minZ : box.maxZ);
+        public float pZ(AABB box) {
+            return (float) (this.zAxis == Direction.AxisDirection.NEGATIVE ? box.minZ : box.maxZ);
         }
     }
 }

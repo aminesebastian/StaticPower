@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,12 +15,12 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
@@ -43,7 +43,7 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 	private static final int SECONDARY_FLUID_INPUT_SLOT = 3;
 	private static final int OUTPUT_SLOT = 4;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -54,9 +54,9 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 	public MixerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Mixer.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Mixer.getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Mixer));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Mixer));
 		mixerPBar = new MixerProgressBar(54, 20);
 		pBar = new FluidProgressBar(100, 23, 24, 8);
 	}
@@ -69,8 +69,8 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -90,9 +90,9 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 	}
 
 	@Override
-	public void draw(MixerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 56, 2, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 56, 38, 16, 16, 0);
+	public void draw(MixerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 56, 2, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 56, 38, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getPrimaryFluidInput(), 0, 0, 32, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
@@ -101,31 +101,31 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
-		// Draw the progress bar as a fluid (can't use the widget here because this is a singleton class).
-		GuiDrawUtilities.drawSlot(matrixStack, 100, 23, 24, 8, 0);
+		// Draw the progress bar as a fluid (can't use the widget here because this is a
+		// singleton class).
+		GuiDrawUtilities.drawSlot(matrixStack, 24, 8, 100, 23, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 24;
 		FluidStack fluid = recipe.getOutput();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 100, 31, 1, progress, 8, false);
-		
-		
+
 		mixerPBar.setCurrentProgress(processingTimer.getValue());
 		mixerPBar.setMaxProgress(processingTimer.getMaxValue());
 		mixerPBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(MixerRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(MixerRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
 		}
@@ -143,8 +143,13 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		// Set the input fluids.
 		List<FluidStack> fluids = new ArrayList<FluidStack>();
-		fluids.add(recipe.getPrimaryFluidInput());
-		fluids.add(recipe.getSecondaryFluidInput());
+		if (!recipe.getPrimaryFluidInput().isEmpty()) {
+			fluids.add(recipe.getPrimaryFluidInput());
+		}
+		if (!recipe.getSecondaryFluidInput().isEmpty()) {
+			fluids.add(recipe.getSecondaryFluidInput());
+		}
+
 		ingredients.setInputs(VanillaTypes.FLUID, fluids);
 
 		// Set the output.
@@ -163,11 +168,16 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		// Add the input fluids.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(PRIMARY_FLUID_INPUT_SLOT, true, 32, 2, 16, 52, getFluidTankDisplaySize(recipe.getPrimaryFluidInput()), false, null);
-		fluids.init(SECONDARY_FLUID_INPUT_SLOT, true, 80, 2, 16, 52, getFluidTankDisplaySize(recipe.getSecondaryFluidInput()), false, null);
+		if (!recipe.getPrimaryFluidInput().isEmpty()) {
+			fluids.init(PRIMARY_FLUID_INPUT_SLOT, true, 32, 2, 16, 52, getFluidTankDisplaySize(recipe.getPrimaryFluidInput()), false, null);
+		}
+		if (!recipe.getSecondaryFluidInput().isEmpty()) {
+			fluids.init(SECONDARY_FLUID_INPUT_SLOT, true, 80, 2, 16, 52, getFluidTankDisplaySize(recipe.getSecondaryFluidInput()), false, null);
+		}
+
 		fluids.init(OUTPUT_SLOT, false, 128, 2, 16, 52, getFluidTankDisplaySize(recipe.getOutput()), false, null);
 		fluids.set(ingredients);
-
+		
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);
 	}

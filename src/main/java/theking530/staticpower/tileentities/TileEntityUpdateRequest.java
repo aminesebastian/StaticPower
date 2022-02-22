@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentities;
 
-import net.minecraftforge.common.util.Constants.BlockFlags;
+import net.minecraft.world.level.block.Block;
 
 public class TileEntityUpdateRequest {
 	private final int flags;
@@ -32,19 +32,19 @@ public class TileEntityUpdateRequest {
 	}
 
 	public static TileEntityUpdateRequest blockUpdate() {
-		return new TileEntityUpdateRequest(BlockFlags.BLOCK_UPDATE);
+		return new TileEntityUpdateRequest(Block.UPDATE_CLIENTS);
 	}
 
 	public static TileEntityUpdateRequest blockUpdateAndNotifyNeighbors() {
-		return new TileEntityUpdateRequest(BlockFlags.DEFAULT);
+		return new TileEntityUpdateRequest(Block.UPDATE_ALL);
 	}
 
 	public static TileEntityUpdateRequest blockUpdateAndNotifyNeighborsAndRender() {
-		return new TileEntityUpdateRequest(BlockFlags.DEFAULT_AND_RERENDER);
+		return new TileEntityUpdateRequest(Block.UPDATE_ALL_IMMEDIATE);
 	}
 
 	public static TileEntityUpdateRequest render() {
-		return new TileEntityUpdateRequest(BlockFlags.RERENDER_MAIN_THREAD);
+		return new TileEntityUpdateRequest(Block.UPDATE_IMMEDIATE);
 	}
 
 	public static TileEntityUpdateRequest syncDataOnly(boolean renderOnDataSync) {

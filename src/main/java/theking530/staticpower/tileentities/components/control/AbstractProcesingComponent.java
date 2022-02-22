@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.components.control;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -94,14 +94,15 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		this.powerMultiplier = 1.0f;
 	}
 
+	@SuppressWarnings("resource")
 	public void preProcessUpdate() {
 		// Check for upgrades on the server.
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			checkUpgrades();
 		}
 
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isRemote) {
+		if (serverOnly && getWorld().isClientSide) {
 			return;
 		}
 
@@ -228,7 +229,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	 */
 	public void startProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isRemote) {
+		if (serverOnly && getWorld().isClientSide) {
 			return;
 		}
 
@@ -248,7 +249,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public void pauseProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isRemote) {
+		if (serverOnly && getWorld().isClientSide) {
 			return;
 		}
 		setIsOnBlockState(false);
@@ -257,7 +258,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public void continueProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isRemote) {
+		if (serverOnly && getWorld().isClientSide) {
 			return;
 		}
 		setIsOnBlockState(true);
@@ -266,7 +267,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public void cancelProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isRemote) {
+		if (serverOnly && getWorld().isClientSide) {
 			return;
 		}
 		currentProcessingTime = 0;
@@ -527,17 +528,17 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	protected ProcessingCheckState checkPowerRequirements() {
 		// Check the processing power cost.
 		if (hasProcessingPowerCost && powerComponent != null && !powerComponent.hasEnoughPower(getPowerUsage())) {
-			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getString());
+			return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
 		}
 		// Check the processing power rate.
 		if (hasProcessingPowerCost && powerComponent != null && powerComponent.getStorage().getMaxDrain() < getPowerUsage()) {
-			return ProcessingCheckState.error(new StringTextComponent("Recipe's power per tick requirement (").append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
-					.appendString(") is larger than the max for this machine!").getString());
+			return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (").append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
+					.append(") is larger than the max for this machine!").getString());
 		}
 
 		// Check the completion power cost.
 		if (hasCompletedPowerCost && powerComponent != null && !powerComponent.hasEnoughPower(getCompletedPowerUsage())) {
-			return ProcessingCheckState.error(new StringTextComponent("Not Enough Power!").getString());
+			return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
 		}
 
 		// If we made it this far, return true.
@@ -547,18 +548,19 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	protected ProcessingCheckState checkRedstoneState() {
 		// Check the redstone control component.
 		if (redstoneControlComponent != null && !redstoneControlComponent.passesRedstoneCheck()) {
-			return ProcessingCheckState.error(new StringTextComponent("Redstone Control Mode Not Satisfied.").getString());
+			return ProcessingCheckState.error(new TextComponent("Redstone Control Mode Not Satisfied.").getString());
 		}
 
 		return ProcessingCheckState.ok();
 	}
 
+	@SuppressWarnings("resource")
 	protected void setIsOnBlockState(boolean on) {
-		if (!getWorld().isRemote && shouldControlOnBlockState) {
+		if (!getWorld().isClientSide && shouldControlOnBlockState) {
 			BlockState currentState = getWorld().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
-				if (currentState.get(StaticPowerMachineBlock.IS_ON) != on) {
-					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, on), 2);
+				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != on) {
+					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
 				}
 			}
 		}
@@ -570,7 +572,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		}
 		BlockState currentState = getWorld().getBlockState(getPos());
 		if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
-			return currentState.get(StaticPowerMachineBlock.IS_ON);
+			return currentState.getValue(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;
 	}

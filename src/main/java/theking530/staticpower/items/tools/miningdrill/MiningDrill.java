@@ -1,47 +1,46 @@
 package theking530.staticpower.items.tools.miningdrill;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nullable;
 
-import com.google.common.collect.ImmutableSet;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.common.ToolType;
+import net.minecraftforge.common.ToolAction;
+import net.minecraftforge.common.ToolActions;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -73,33 +72,12 @@ import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class MiningDrill extends AbstractMultiHarvestTool implements ICustomModelSupplier {
-	private static final Set<Block> FULL_SPEED_BLOCKS = ImmutableSet.of(Blocks.ACTIVATOR_RAIL, Blocks.COAL_ORE, Blocks.COBBLESTONE, Blocks.DETECTOR_RAIL, Blocks.DIAMOND_BLOCK,
-			Blocks.DIAMOND_ORE, Blocks.POWERED_RAIL, Blocks.GOLD_BLOCK, Blocks.GOLD_ORE, Blocks.NETHER_GOLD_ORE, Blocks.ICE, Blocks.IRON_BLOCK, Blocks.IRON_ORE, Blocks.LAPIS_BLOCK,
-			Blocks.LAPIS_ORE, Blocks.MOSSY_COBBLESTONE, Blocks.NETHERRACK, Blocks.PACKED_ICE, Blocks.BLUE_ICE, Blocks.RAIL, Blocks.REDSTONE_ORE, Blocks.SANDSTONE, Blocks.CHISELED_SANDSTONE,
-			Blocks.CUT_SANDSTONE, Blocks.CHISELED_RED_SANDSTONE, Blocks.CUT_RED_SANDSTONE, Blocks.RED_SANDSTONE, Blocks.STONE, Blocks.CRYING_OBSIDIAN, Blocks.OBSIDIAN, Blocks.GRANITE,
-			Blocks.POLISHED_GRANITE, Blocks.DIORITE, Blocks.POLISHED_DIORITE, Blocks.ANDESITE, Blocks.POLISHED_ANDESITE, Blocks.STONE_SLAB, Blocks.SMOOTH_STONE_SLAB, Blocks.SANDSTONE_SLAB,
-			Blocks.PETRIFIED_OAK_SLAB, Blocks.COBBLESTONE_SLAB, Blocks.BRICK_SLAB, Blocks.STONE_BRICK_SLAB, Blocks.NETHER_BRICK_SLAB, Blocks.QUARTZ_SLAB, Blocks.RED_SANDSTONE_SLAB,
-			Blocks.PURPUR_SLAB, Blocks.SMOOTH_QUARTZ, Blocks.SMOOTH_RED_SANDSTONE, Blocks.SMOOTH_SANDSTONE, Blocks.SMOOTH_STONE, Blocks.STONE_BUTTON, Blocks.STONE_PRESSURE_PLATE,
-			Blocks.POLISHED_GRANITE_SLAB, Blocks.SMOOTH_RED_SANDSTONE_SLAB, Blocks.MOSSY_STONE_BRICK_SLAB, Blocks.POLISHED_DIORITE_SLAB, Blocks.MOSSY_COBBLESTONE_SLAB,
-			Blocks.END_STONE_BRICK_SLAB, Blocks.SMOOTH_SANDSTONE_SLAB, Blocks.SMOOTH_QUARTZ_SLAB, Blocks.GRANITE_SLAB, Blocks.ANDESITE_SLAB, Blocks.RED_NETHER_BRICK_SLAB,
-			Blocks.POLISHED_ANDESITE_SLAB, Blocks.DIORITE_SLAB, Blocks.SHULKER_BOX, Blocks.BLACK_SHULKER_BOX, Blocks.BLUE_SHULKER_BOX, Blocks.BROWN_SHULKER_BOX, Blocks.CYAN_SHULKER_BOX,
-			Blocks.GRAY_SHULKER_BOX, Blocks.GREEN_SHULKER_BOX, Blocks.LIGHT_BLUE_SHULKER_BOX, Blocks.LIGHT_GRAY_SHULKER_BOX, Blocks.LIME_SHULKER_BOX, Blocks.MAGENTA_SHULKER_BOX,
-			Blocks.ORANGE_SHULKER_BOX, Blocks.PINK_SHULKER_BOX, Blocks.PURPLE_SHULKER_BOX, Blocks.RED_SHULKER_BOX, Blocks.WHITE_SHULKER_BOX, Blocks.YELLOW_SHULKER_BOX, Blocks.PISTON,
-			Blocks.STICKY_PISTON, Blocks.PISTON_HEAD, Blocks.CLAY, Blocks.DIRT, Blocks.COARSE_DIRT, Blocks.PODZOL, Blocks.FARMLAND, Blocks.GRASS_BLOCK, Blocks.GRAVEL, Blocks.MYCELIUM,
-			Blocks.SAND, Blocks.RED_SAND, Blocks.SNOW_BLOCK, Blocks.SNOW, Blocks.SOUL_SAND, Blocks.GRASS_PATH, Blocks.WHITE_CONCRETE_POWDER, Blocks.ORANGE_CONCRETE_POWDER,
-			Blocks.MAGENTA_CONCRETE_POWDER, Blocks.LIGHT_BLUE_CONCRETE_POWDER, Blocks.YELLOW_CONCRETE_POWDER, Blocks.LIME_CONCRETE_POWDER, Blocks.PINK_CONCRETE_POWDER,
-			Blocks.GRAY_CONCRETE_POWDER, Blocks.LIGHT_GRAY_CONCRETE_POWDER, Blocks.CYAN_CONCRETE_POWDER, Blocks.PURPLE_CONCRETE_POWDER, Blocks.BLUE_CONCRETE_POWDER,
-			Blocks.BROWN_CONCRETE_POWDER, Blocks.GREEN_CONCRETE_POWDER, Blocks.RED_CONCRETE_POWDER, Blocks.BLACK_CONCRETE_POWDER, Blocks.SOUL_SOIL);
-
-	private static final Set<ToolType> TOOL_TYPES = new HashSet<ToolType>();
 	private static final List<AbstractMultiPartSlot> PARTS = new ArrayList<AbstractMultiPartSlot>();
 	public final ResourceLocation tier;
 
 	public MiningDrill(String name, float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
-		super(new Item.Properties().setNoRepair(), name, attackDamageIn, attackSpeedIn);
+		super(new Item.Properties().setNoRepair(), name, attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL));
 		this.tier = tier;
-		TOOL_TYPES.add(ToolType.PICKAXE);
-		TOOL_TYPES.add(ToolType.SHOVEL);
 		PARTS.add(MultiPartSlots.DRILL_BIT);
 	}
 
@@ -130,6 +108,16 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
+	public Tier getMiningTier(ItemStack stack) {
+		ItemStack bitStack = getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
+		if (bitStack.getItem() instanceof DrillBit) {
+			DrillBit bit = (DrillBit) bitStack.getItem();
+			return bit.getMiningTier(bitStack);
+		}
+		return Tiers.WOOD;
+	}
+
+	@Override
 	public boolean isReadyToMine(ItemStack itemstack) {
 		return isComplete(itemstack) && EnergyHandlerItemStackUtilities.getStoredPower(itemstack) > 0;
 	}
@@ -141,7 +129,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		if (isSlotPopulated(itemstack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack drillBitStack = getPartInSlot(itemstack, MultiPartSlots.DRILL_BIT);
 			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
-			efficiency.set(drillBit.getMiningTier(drillBitStack).getEfficiency() * 0.1f);
+			efficiency.set(drillBit.getMiningTier(drillBitStack).getSpeed() * 0.25f);
 			drillBitStack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(HasteAttributeDefenition.ID)) {
 					HasteAttributeDefenition hasteDefenition = (HasteAttributeDefenition) attributable.getAttribute(HasteAttributeDefenition.ID);
@@ -152,32 +140,22 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return efficiency.get();
 	}
 
-	@Override
-	public int getHarvestLevel(ItemStack stack, ToolType tool, @Nullable PlayerEntity player, @Nullable BlockState blockState) {
-		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {
-			ItemStack drillBitStack = getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
-			DrillBit drillBit = (DrillBit) drillBitStack.getItem();
-			return drillBit.getMiningTier(drillBitStack).getHarvestLevel();
-		}
-		return super.getHarvestLevel(stack, tool, player, blockState);
-	}
-
 	/**
 	 * When right clicked, open the drill UI.
 	 */
 	@Override
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
-		if (!world.isRemote && player.isSneaking()) {
-			NetworkGUI.openGui((ServerPlayerEntity) player, new MiningDrillContainerProvider(item), buff -> {
-				buff.writeInt(player.inventory.currentItem);
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+		if (!world.isClientSide && player.isShiftKeyDown()) {
+			NetworkGUI.openGui((ServerPlayer) player, new MiningDrillContainerProvider(item), buff -> {
+				buff.writeInt(player.getInventory().selected);
 			});
-			return ActionResult.resultSuccess(item);
+			return InteractionResultHolder.success(item);
 		}
-		return ActionResult.resultPass(item);
+		return InteractionResultHolder.pass(item);
 	}
 
 	@Override
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		// If the player is in creative, do nothing.
 		if (isCreative) {
 			return;
@@ -187,7 +165,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		IAttributable drillBitAttributes = getPartInSlot(heldItem, MultiPartSlots.DRILL_BIT).getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
 
 		// Allocate a list of the items that would be dropped.
-		List<ItemStack> droppableItems = Block.getDrops(state, player.getServerWorld(), pos, tileEntity, player, heldItem);
+		List<ItemStack> droppableItems = Block.getDrops(state, player.getLevel(), pos, tileEntity, player, heldItem);
 
 		// If we have attributes.
 		if (drillBitAttributes != null) {
@@ -209,20 +187,20 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		// Drop all the droppable stacks.
 		for (ItemStack stack : droppableItems) {
-			WorldUtilities.dropItem(player.getServerWorld(), pos, stack);
+			WorldUtilities.dropItem(player.getLevel(), pos, stack);
 		}
 
 		// Drop the XP.
 		if (experience > 0) {
-			state.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, experience);
+			state.getBlock().popExperience((ServerLevel) player.getCommandSenderWorld(), pos, experience);
 		}
 
 		// Spawn any additional drops.
-		state.spawnAdditionalDrops((ServerWorld) player.getEntityWorld(), pos, heldItem);
+		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem);
 	}
 
-	protected boolean handleGrindingAttribute(GrindingAttributeDefenition grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
-			ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleGrindingAttribute(GrindingAttributeDefenition grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was ground.
 		boolean wasAnythingGround = false;
@@ -265,8 +243,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return wasAnythingGround;
 	}
 
-	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
-			ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
+			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
@@ -278,12 +256,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<FurnaceRecipe> recipe = player.getServerWorld().getRecipeManager().getRecipe(IRecipeType.SMELTING, new Inventory(matchParameters.getItems()[0]),
-						player.getServerWorld());
+				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), player.getLevel());
 
 				// Replace the spot the droppable list with the smelting output if it exists.
 				if (recipe.isPresent()) {
-					droppableItems.set(i, recipe.get().getRecipeOutput());
+					droppableItems.set(i, recipe.get().getResultItem());
 					wasAnythingSmelted = true;
 				}
 			}
@@ -294,19 +271,19 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
-	protected void onStartingBlockMining(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+	protected void onStartingBlockMining(ItemStack stack, List<BlockPos> blocksMined, Player player) {
 		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack bit = getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
 			bit.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).ifPresent(attributable -> {
 				if (attributable.hasAttribute(FortuneAttributeDefenition.ID)) {
 					FortuneAttributeDefenition fortune = (FortuneAttributeDefenition) attributable.getAttribute(FortuneAttributeDefenition.ID);
 					int fLevel = fortune.getFortuneLevelWithChance();
-					stack.addEnchantment(Enchantments.FORTUNE, fLevel);
+					stack.enchant(Enchantments.BLOCK_FORTUNE, fLevel);
 				}
 				if (attributable.hasAttribute(SilkTouchAttributeDefenition.ID)) {
 					SilkTouchAttributeDefenition silkTouch = (SilkTouchAttributeDefenition) attributable.getAttribute(SilkTouchAttributeDefenition.ID);
 					if (silkTouch.getValue()) {
-						stack.addEnchantment(Enchantments.SILK_TOUCH, 1);
+						stack.enchant(Enchantments.SILK_TOUCH, 1);
 					}
 				}
 			});
@@ -317,11 +294,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	 * This method is only raised on the server.
 	 */
 	@Override
-	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, Player player) {
 		// Apply damage to the drill bit.
 		stack.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY).ifPresent(handler -> {
-			handler.getStackInSlot(0).damageItem(blocksMined.size(), player, (entity) -> {
-				entity.sendBreakAnimation(EquipmentSlotType.MAINHAND);
+			handler.getStackInSlot(0).hurtAndBreak(blocksMined.size(), player, (entity) -> {
+				entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
 			});
 		});
 
@@ -331,13 +308,13 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		}
 
 		// Remove the enchantments.
-		removeEnchantment(stack, Enchantments.FORTUNE);
+		removeEnchantment(stack, Enchantments.BLOCK_FORTUNE);
 		removeEnchantment(stack, Enchantments.SILK_TOUCH);
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
 		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
@@ -346,14 +323,14 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 			ItemStack drillBit = this.getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
 			DrillBit drillBitItem = (DrillBit) drillBit.getItem();
 			drillBitItem.getTooltip(drillBit, worldIn, tooltip, isShowingAdvanced);
-			tooltip.add(new TranslationTextComponent("gui.staticpower.mining_speed").appendString(" ").append(GuiTextUtilities.formatUnitRateToString(this.getEfficiency(stack))));
+			tooltip.add(new TranslatableComponent("gui.staticpower.mining_speed").append(" ").append(GuiTextUtilities.formatUnitRateToString(this.getEfficiency(stack))));
 			AttributeUtilities.addTooltipsForAttribute(drillBit, tooltip, isShowingAdvanced);
 		}
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack drillBit = this.getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
 			DrillBit drillBitItem = (DrillBit) drillBit.getItem();
@@ -366,62 +343,23 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
 				.addCapability(new ItemStackStaticVoltCapability("default", stack, getPowerCapacity(), getPowerCapacity(), getPowerCapacity()));
 	}
 
 	@Override
-	protected boolean canHarvestBlockInternal(ItemStack stack, BlockState state) {
-		// Check the tool.
-		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
-			return true;
-		}
-
-		// If we are able to harvest the block full speed, no need to further check.
-		if (FULL_SPEED_BLOCKS.contains(state.getBlock())) {
-			return true;
-		}
-
-		// Then check by harvest level
-		if (state.getHarvestTool() != null) {
-			int i = this.getHarvestLevel(stack, state.getHarvestTool(), null, state);
-			return i >= state.getHarvestLevel();
-		}
-
-		Material material = state.getMaterial();
-		return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL || material == Material.CLAY || material == Material.SAND || material == Material.EARTH;
+	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
+		return ToolActions.DEFAULT_PICKAXE_ACTIONS.contains(toolAction) || ToolActions.DEFAULT_SHOVEL_ACTIONS.contains(toolAction);
 	}
 
 	@Override
-	public boolean canHarvestAtFullSpeed(ItemStack stack, BlockState state) {
-		// If we are able to harvest the block full speed, do so.
-		if (FULL_SPEED_BLOCKS.contains(state.getBlock())) {
-			return true;
-		}
-
-		// Check the tool.
-		if (getToolTypes(stack).stream().anyMatch(e -> state.isToolEffective(e))) {
-			return true;
-		}
-
-		// Finally, check the materials.
-		Material material = state.getMaterial();
-		return material == Material.ROCK || material == Material.IRON || material == Material.ANVIL || material == Material.CLAY || material == Material.SAND || material == Material.EARTH;
-	}
-
-	@Override
-	public Set<ToolType> getToolTypes(ItemStack stack) {
-		return TOOL_TYPES;
-	}
-
-	@Override
-	public int getWidth(ItemStack itemstack) {
+	public int getHorizontalRadius(ItemStack itemstack) {
 		return 1;
 	}
 
 	@Override
-	public int getHeight(ItemStack itemstack) {
+	public int getVerticalRadius(ItemStack itemstack) {
 		return 1;
 	}
 
@@ -432,11 +370,11 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new MiningDrillItemModel(existingModel);
 	}
 
-	public class MiningDrillContainerProvider implements INamedContainerProvider {
+	public class MiningDrillContainerProvider implements MenuProvider {
 		public ItemStack targetItemStack;
 
 		public MiningDrillContainerProvider(ItemStack stack) {
@@ -444,13 +382,14 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 			return new ContainerMiningDrill(windowId, inventory, targetItemStack);
 		}
 
 		@Override
-		public ITextComponent getDisplayName() {
-			return targetItemStack.getDisplayName();
+		public Component getDisplayName() {
+			return targetItemStack.getHoverName();
 		}
 	}
+
 }

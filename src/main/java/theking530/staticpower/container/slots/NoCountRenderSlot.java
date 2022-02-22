@@ -1,20 +1,20 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 
 public class NoCountRenderSlot extends Slot {
 	private Slot encapsulatedSlot;
 
 	public NoCountRenderSlot(Slot slot) {
-		super(slot.inventory, slot.getSlotIndex(), slot.xPos, slot.yPos);
+		super(slot.container, slot.getSlotIndex(), slot.x, slot.y);
 		encapsulatedSlot = slot;
 	}
 
 	@Override
-	public ItemStack getStack() {
+	public ItemStack getItem() {
 		// Get the actual stack.
-		ItemStack parent = encapsulatedSlot.getStack();
+		ItemStack parent = encapsulatedSlot.getItem();
 		// If its empty, just return it.
 		if (parent.isEmpty()) {
 			return parent;

@@ -5,18 +5,18 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.ingredients.IIngredientRenderer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.TooltipFlag;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
@@ -26,55 +26,50 @@ import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 
 public class ProbabilityItemStackRenderer implements IIngredientRenderer<ProbabilityItemStackOutput> {
 
+	private final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+
 	@Override
-	@SuppressWarnings("deprecation")
-	public void render(MatrixStack matrixStack, int xPosition, int yPosition, @Nullable ProbabilityItemStackOutput ingredient) {
+	public void render(PoseStack matrixStack, int xPosition, int yPosition, @Nullable ProbabilityItemStackOutput ingredient) {
 		if (ingredient != null) {
-			RenderSystem.pushMatrix();
-			RenderSystem.multMatrix(matrixStack.getLast().getMatrix());
 			RenderSystem.enableDepthTest();
-			RenderHelper.enableStandardItemLighting();
+			Lighting.setupForFlatItems();
 			Minecraft minecraft = Minecraft.getInstance();
-			FontRenderer font = getFontRenderer(minecraft, ingredient);
-			ItemRenderer itemRenderer = minecraft.getItemRenderer();
-			itemRenderer.renderItemAndEffectIntoGUI(null, ingredient.getItem(), xPosition, yPosition);
-			itemRenderer.renderItemOverlayIntoGUI(font, ingredient.getItem(), xPosition, yPosition, null);
+			Font font = getFontRenderer(minecraft, ingredient);
+			itemRenderer.renderAndDecorateItem(ingredient.getItem(), xPosition, yPosition);
+			itemRenderer.renderGuiItemDecorations(font, ingredient.getItem(), xPosition, yPosition, null);
 
 			// Draw the percentage string manually.
 			if (ingredient.getOutputChance() != 1.0f) {
 				String percentageString = GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
-				int width = Minecraft.getInstance().fontRenderer.getStringWidth(percentageString);
-				GuiDrawUtilities.drawStringWithSize(matrixStack, percentageString, xPosition - 1.5f + (width / 2), yPosition + 2, 0.5f, Color.EIGHT_BIT_YELLOW, true);
+				int width = font.width(percentageString);
+				GuiDrawUtilities.drawString(matrixStack, percentageString, xPosition - 1.5f + (width / 2), yPosition + 2, 0.0f, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 			} else if (ingredient.getAdditionalBonus() > 0) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "*", xPosition + 3, yPosition + 6, 1.0f, Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawString(matrixStack, "*", xPosition + 3, yPosition + 6, 0.0f, 1.0f, Color.EIGHT_BIT_YELLOW, true);
 			}
 
 			RenderSystem.disableBlend();
-			RenderHelper.disableStandardItemLighting();
-			RenderSystem.popMatrix();
 		}
 	}
 
 	@Override
-	public List<ITextComponent> getTooltip(ProbabilityItemStackOutput ingredient, ITooltipFlag tooltipFlag) {
+	public List<Component> getTooltip(ProbabilityItemStackOutput ingredient, TooltipFlag tooltipFlag) {
 		try {
 			// Get the original item tooltip but remove the last line (that should be the
 			// mod name).
-			List<ITextComponent> tooltip = ingredient.getItem().getTooltip(Minecraft.getInstance().player, tooltipFlag);
-			tooltip.remove(tooltip.size() - 1);
+			List<Component> tooltip = ingredient.getItem().getTooltipLines(Minecraft.getInstance().player, tooltipFlag);
 
 			// Formulate the output percentage tooltip and then add it.
 			if (ingredient.getOutputChance() != 1.0f) {
-				ITextComponent outputPercentage = new TranslationTextComponent("gui.staticpower.output_chance").appendString(": ")
-						.appendString(TextFormatting.GREEN.toString() + String.valueOf((int) (ingredient.getOutputChance() * 100)) + "%");
+				Component outputPercentage = new TranslatableComponent("gui.staticpower.output_chance").append(": ")
+						.append(ChatFormatting.GREEN.toString() + String.valueOf((int) (ingredient.getOutputChance() * 100)) + "%");
 				tooltip.add(outputPercentage);
 			}
 
 			// Add the tooltip for the bonus output.
 			if (ingredient.getAdditionalBonus() > 0) {
-				ITextComponent bonus = new TranslationTextComponent("gui.staticpower.bonus_output").mergeStyle(TextFormatting.GREEN).appendString(": ")
-						.appendString(TextFormatting.GOLD.toString() + String.valueOf(ingredient.getAdditionalBonus()) + TextFormatting.GRAY.toString() + TextFormatting.ITALIC.toString()
-								+ " (" + GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100).getString() + "%)");
+				Component bonus = new TranslatableComponent("gui.staticpower.bonus_output").withStyle(ChatFormatting.GREEN).append(": ")
+						.append(ChatFormatting.GOLD.toString() + String.valueOf(ingredient.getAdditionalBonus()) + ChatFormatting.GRAY.toString() + ChatFormatting.ITALIC.toString() + " ("
+								+ GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100).getString() + "%)");
 				tooltip.add(bonus);
 			}
 
@@ -82,18 +77,19 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 		} catch (RuntimeException | LinkageError e) {
 			String itemStackInfo = JEIErrorUtilSnippet.getItemStackInfo(ingredient.getItem());
 			StaticPower.LOGGER.error("Failed to get tooltip: {}", itemStackInfo, e);
-			List<ITextComponent> list = new ArrayList<>();
-			TranslationTextComponent crash = new TranslationTextComponent("jei.tooltip.error.crash");
-			list.add(crash.mergeStyle(TextFormatting.RED));
+			List<Component> list = new ArrayList<>();
+			TranslatableComponent crash = new TranslatableComponent("jei.tooltip.error.crash");
+			list.add(crash.withStyle(ChatFormatting.RED));
 			return list;
 		}
 	}
 
 	@Override
-	public FontRenderer getFontRenderer(Minecraft minecraft, ProbabilityItemStackOutput ingredient) {
-		FontRenderer fontRenderer = ingredient.getItem().getItem().getFontRenderer(ingredient.getItem());
+	public Font getFontRenderer(Minecraft minecraft, ProbabilityItemStackOutput ingredient) {
+		Font fontRenderer = null; // To-DO: =
+		// ingredient.getItem().getItem().getFontRenderer(ingredient.getItem());
 		if (fontRenderer == null) {
-			fontRenderer = minecraft.fontRenderer;
+			fontRenderer = minecraft.font;
 		}
 		return fontRenderer;
 	}

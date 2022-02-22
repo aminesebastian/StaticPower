@@ -1,12 +1,14 @@
 package theking530.staticpower.tileentities.powered.poweredfurnace;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -33,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class TileEntityPoweredFurnace extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPoweredFurnace> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityPoweredFurnace(), ModBlocks.PoweredFurnace);
+	public static final BlockEntityTypeAllocator<TileEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPoweredFurnace(pos, state), ModBlocks.PoweredFurnace);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the
@@ -46,10 +48,10 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final RecipeProcessingComponent<FurnaceRecipe> processingComponent;
+	public final RecipeProcessingComponent<SmeltingRecipe> processingComponent;
 
-	public TileEntityPoweredFurnace() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityPoweredFurnace(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -65,7 +67,7 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FurnaceRecipe>("ProcessingComponent", IRecipeType.SMELTING, 1, this::getMatchParameters, this::moveInputs,
+		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", RecipeType.SMELTING, 1, this::getMatchParameters, this::moveInputs,
 				this::canProcessRecipe, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
@@ -92,8 +94,8 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		}
 	}
 
-	protected ProcessingCheckState moveInputs(FurnaceRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+	protected ProcessingCheckState moveInputs(SmeltingRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
@@ -101,25 +103,25 @@ public class TileEntityPoweredFurnace extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(FurnaceRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getRecipeOutput())) {
+	protected ProcessingCheckState canProcessRecipe(SmeltingRecipe recipe) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState processingCompleted(FurnaceRecipe recipe) {
-		outputInventory.insertItem(0, recipe.getRecipeOutput().copy(), false);
+	protected ProcessingCheckState processingCompleted(SmeltingRecipe recipe) {
+		outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		return ProcessingCheckState.ok();
 	}
 
-	public static int getCookTime(FurnaceRecipe recipe) {
-		return (int) (recipe.getCookTime() / DEFAULT_PROCESSING_TIME_MULT);
+	public static int getCookTime(SmeltingRecipe recipe) {
+		return (int) (recipe.getCookingTime() / DEFAULT_PROCESSING_TIME_MULT);
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerPoweredFurnace(windowId, inventory, this);
 	}
 }

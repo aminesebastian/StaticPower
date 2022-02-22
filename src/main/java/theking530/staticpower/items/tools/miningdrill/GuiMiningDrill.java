@@ -3,9 +3,9 @@ package theking530.staticpower.items.tools.miningdrill;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.api.power.CapabilityStaticVolt;
@@ -21,7 +21,7 @@ public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill
 	@SuppressWarnings("unused")
 	private ItemStackHandler inventory;
 
-	public GuiMiningDrill(ContainerMiningDrill container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiMiningDrill(ContainerMiningDrill container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 142);
 		StaticVoltHandler svHandler = (StaticVoltHandler) getItemStack().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
 		if (svHandler != null) {
@@ -38,7 +38,7 @@ public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill
 
 		// Update the info tab label.
 		getTabManager().registerTab(infoTab = new GuiInfoTab(110));
-		infoTab.addLine("desc", new StringTextComponent("Filter items going into an inventory."));
+		infoTab.addLine("desc", new TextComponent("Filter items going into an inventory."));
 	}
 
 	protected MiningDrill getMiningDrill() {

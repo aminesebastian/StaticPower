@@ -4,23 +4,23 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.IContainerFactory;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.container.StaticPowerContainer;
 
-public class ContainerOpener<T extends StaticPowerContainer> implements INamedContainerProvider {
+public class ContainerOpener<T extends StaticPowerContainer> implements MenuProvider {
 	private final IContainerFactory<T> containerFactory;
-	private final ITextComponent name;
+	private final Component name;
 	private StaticPowerContainer parent;
 
-	public ContainerOpener(ITextComponent name, IContainerFactory<T> containerFactory) {
+	public ContainerOpener(Component name, IContainerFactory<T> containerFactory) {
 		this.containerFactory = containerFactory;
 		this.name = name;
 	}
@@ -35,7 +35,7 @@ public class ContainerOpener<T extends StaticPowerContainer> implements INamedCo
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory playerInv, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory playerInv, Player player) {
 		T output = containerFactory.create(windowId, playerInv);
 		if (parent != null) {
 			output.setOpener(this);
@@ -44,15 +44,15 @@ public class ContainerOpener<T extends StaticPowerContainer> implements INamedCo
 	}
 
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		return name;
 	}
 
-	public void open(ServerPlayerEntity player, Consumer<PacketBuffer> extraDataWriter) {
+	public void open(ServerPlayer player, Consumer<FriendlyByteBuf> extraDataWriter) {
 		NetworkGUI.openGui(player, this, extraDataWriter);
 	}
 
-	public void open(ServerPlayerEntity player) {
+	public void open(ServerPlayer player) {
 		open(player, (buff) -> {
 
 		});

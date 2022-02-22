@@ -1,24 +1,25 @@
 package theking530.staticpower.data.crafting.wrappers.castingbasin;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class CastingRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<CastingRecipe> RECIPE_TYPE = IRecipeType.register("casting");
+	public static final RecipeType<CastingRecipe> RECIPE_TYPE = RecipeType.register("casting");
 
 	private FluidStack inputFluid;
 	private Ingredient requiredMold;
 	private ProbabilityItemStackOutput outputItemStack;
 
-	public CastingRecipe(ResourceLocation name, int processingTime, long powerCost, ProbabilityItemStackOutput output, FluidStack inputFluid, Ingredient mold) {
-		super(name, processingTime, powerCost);
+	public CastingRecipe(ResourceLocation name, ProbabilityItemStackOutput output, FluidStack inputFluid, Ingredient mold, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputFluid = inputFluid;
 		requiredMold = mold;
 		outputItemStack = output;
@@ -62,12 +63,12 @@ public class CastingRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return CastingRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

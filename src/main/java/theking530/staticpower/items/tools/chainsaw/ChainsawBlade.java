@@ -4,15 +4,15 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemTier;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -22,9 +22,9 @@ import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.DiamondHardenedDefenition;
 import theking530.api.attributes.defenitions.EmeraldHardenedDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
+import theking530.api.attributes.defenitions.PromotedAttributeDefenition;
 import theking530.api.attributes.defenitions.RubyHardenedDefenition;
 import theking530.api.attributes.defenitions.SapphireHardenedDefenition;
-import theking530.api.attributes.defenitions.PromotedAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.attributes.rendering.AttributableItemRenderLayers;
 import theking530.api.attributes.rendering.BasicAttributeRenderLayer;
@@ -36,10 +36,10 @@ import theking530.staticpower.client.rendering.items.ChainsawBladeItemModel;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class ChainsawBlade extends AbstractToolPart {
-	public final ItemTier miningTier;
+	public final Tier miningTier;
 
-	public ChainsawBlade(String name, ItemTier miningTier, ResourceLocation tier) {
-		super(name, tier, new Item.Properties().maxStackSize(1).maxDamage(1));
+	public ChainsawBlade(String name, Tier miningTier, ResourceLocation tier) {
+		super(name, tier, new Item.Properties().stacksTo(1).durability(1));
 		this.miningTier = miningTier;
 	}
 
@@ -70,7 +70,7 @@ public class ChainsawBlade extends AbstractToolPart {
 		return StaticPowerConfig.getTier(tier).chainsawBladeUses.get();
 	}
 
-	public ItemTier getMiningTier(ItemStack stack) {
+	public Tier getMiningTier(ItemStack stack) {
 		// Get the drill bit attributes, check if it has the promoted attribute. If it
 		// does, promote the item.
 		IAttributable drillBitAttributes = stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).orElse(null);
@@ -83,19 +83,19 @@ public class ChainsawBlade extends AbstractToolPart {
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		// Add the mining tier.
-		tooltip.add(new TranslationTextComponent("gui.staticpower.mining_tier").appendString(": ").append(ItemTierUtilities.getNameForItemTier(getMiningTier(stack))));
+		tooltip.add(new TranslatableComponent("gui.staticpower.mining_tier").append(": ").append(ItemTierUtilities.getNameForItemTier(getMiningTier(stack))));
 
 		// Add the durability.
 		int remaining = getMaxDamage(stack) - getDamage(stack);
 		String remainingString = new MetricConverter(remaining).getValueAsString(true);
-		tooltip.add(new TranslationTextComponent("gui.staticpower.durability").appendString(" ").appendString(remainingString));
+		tooltip.add(new TranslatableComponent("gui.staticpower.durability").append(" ").append(remainingString));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new ChainsawBladeItemModel(existingModel);
 	}
 

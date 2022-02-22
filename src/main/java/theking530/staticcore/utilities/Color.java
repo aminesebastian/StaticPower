@@ -1,5 +1,12 @@
 package theking530.staticcore.utilities;
 
+import java.util.Arrays;
+import java.util.List;
+
+import com.google.gson.JsonObject;
+
+import net.minecraft.network.FriendlyByteBuf;
+
 /**
  * Basic color class.
  * 
@@ -7,12 +14,19 @@ package theking530.staticcore.utilities;
  *
  */
 public class Color extends Vector4D {
+
+	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green",
+			"red", "black");
+
 	public static final Color EIGHT_BIT_RED = new Color(255.0f, 0.0f, 0.0f, 255.0f);
 	public static final Color EIGHT_BIT_WHITE = new Color(255.0f, 255.0f, 255.0f, 255.0f);
 	public static final Color EIGHT_BIT_GREY = new Color(128.0f, 128.0f, 128.0f, 255.0f);
 	public static final Color EIGHT_BIT_DARK_GREY = new Color(63.0f, 63.0f, 63.0f, 255.0f);
 	public static final Color EIGHT_BIT_YELLOW = new Color(255.0f, 255.0f, 85.0f, 1.0f);
 	public static final Color EIGHT_BIT_LIGHT_PURPLE = new Color(255.0f, 85.0f, 85.0f, 1.0f);
+	public static final Color RED = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+	public static final Color GREEN = new Color(0.0f, 1.0f, 0.0f, 1.0f);
+	public static final Color BLUE = new Color(0.0f, 0.0f, 1.0f, 1.0f);
 	public static final Color WHITE = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 	public static final Color GREY = new Color(0.5f, 0.5f, 0.5f, 1.0f);
 	public static final Color DARK_GREY = new Color(0.24705882352f, 0.24705882352f, 0.24705882352f, 1.0f);
@@ -40,6 +54,16 @@ public class Color extends Vector4D {
 
 	public float getAlpha() {
 		return getW();
+	}
+
+	public Color lighten(float r, float g, float b, float a) {
+		add(new Vector4D(r, g, b, a));
+		return this;
+	}
+
+	public Color darken(float r, float g, float b, float a) {
+		subtract(new Vector4D(r, g, b, a));
+		return this;
 	}
 
 	@Override
@@ -83,8 +107,23 @@ public class Color extends Vector4D {
 	}
 
 	@Override
-	public Color clone() {
+	public Color copy() {
 		return new Color(values.get(0), values.get(1), values.get(2), values.get(3));
+	}
+
+	public void toBuffer(FriendlyByteBuf buff) {
+		buff.writeFloat(getRed());
+		buff.writeFloat(getGreen());
+		buff.writeFloat(getBlue());
+		buff.writeFloat(getAlpha());
+	}
+
+	public static Color fromJson(JsonObject object) {
+		return new Color(object.get("r").getAsFloat(), object.get("g").getAsFloat(), object.get("b").getAsFloat(), object.get("a").getAsFloat());
+	}
+
+	public static Color fromBuffer(FriendlyByteBuf buff) {
+		return new Color(buff.readFloat(), buff.readFloat(), buff.readFloat(), buff.readFloat());
 	}
 
 	public static Color lerp(Color first, Color second, float alpha) {

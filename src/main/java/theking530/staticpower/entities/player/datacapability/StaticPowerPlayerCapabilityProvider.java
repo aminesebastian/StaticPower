@@ -1,12 +1,12 @@
 package theking530.staticpower.entities.player.datacapability;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class StaticPowerPlayerCapabilityProvider implements ICapabilitySerializable<CompoundNBT> {
+public class StaticPowerPlayerCapabilityProvider implements ICapabilitySerializable<CompoundTag> {
 	private final StaticPowerPlayerData playerData;
 
 	public StaticPowerPlayerCapabilityProvider() {
@@ -22,12 +22,12 @@ public class StaticPowerPlayerCapabilityProvider implements ICapabilitySerializa
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
+	public CompoundTag serializeNBT() {
 		return playerData.serializeNBT();
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		playerData.deserializeNBT(nbt);
 	}
 }

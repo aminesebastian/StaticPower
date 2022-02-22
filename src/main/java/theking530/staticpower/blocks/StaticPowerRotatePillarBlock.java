@@ -1,34 +1,30 @@
 package theking530.staticpower.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 
 public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
 	public StaticPowerRotatePillarBlock(String name, Properties properties) {
 		super(name, properties);
-		this.setDefaultState(this.getDefaultState().with(AXIS, Direction.Axis.Y));
+		this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Y));
 	}
 
-	/**
-	 * Returns the blockstate with the given rotation from the passed blockstate. If
-	 * inapplicable, returns the passed blockstate.
-	 * 
-	 * @deprecated call via {@link IBlockState#withRotation(Rotation)} whenever
-	 *             possible. Implementing/overriding is fine.
-	 */
-	public BlockState rotate(BlockState state, Rotation rot) {
-		switch (rot) {
+	@Override
+	public BlockState rotate(BlockState state, LevelAccessor world, BlockPos pos, Rotation direction) {
+		switch (direction) {
 		case COUNTERCLOCKWISE_90:
 		case CLOCKWISE_90:
-			switch ((Direction.Axis) state.get(AXIS)) {
+			switch ((Direction.Axis) state.getValue(AXIS)) {
 			case X:
-				return state.with(AXIS, Direction.Axis.Z);
+				return state.setValue(AXIS, Direction.Axis.Z);
 			case Z:
-				return state.with(AXIS, Direction.Axis.X);
+				return state.setValue(AXIS, Direction.Axis.X);
 			default:
 				return state;
 			}
@@ -37,11 +33,13 @@ public class StaticPowerRotatePillarBlock extends StaticPowerBlock {
 		}
 	}
 
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(AXIS);
 	}
 
-	public BlockState getStateForPlacement(BlockItemUseContext context) {
-		return this.getDefaultState().with(AXIS, context.getFace().getAxis());
+	@Override
+	public BlockState getStateForPlacement(BlockPlaceContext context) {
+		return this.defaultBlockState().setValue(AXIS, context.getClickedFace().getAxis());
 	}
 }

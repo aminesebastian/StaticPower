@@ -1,10 +1,12 @@
 package theking530.staticpower.tileentities.powered.mixer;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
@@ -32,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityMixer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityMixer> TYPE = new TileEntityTypeAllocator<TileEntityMixer>((type) -> new TileEntityMixer(), ModBlocks.Mixer);
+	public static final BlockEntityTypeAllocator<TileEntityMixer> TYPE = new BlockEntityTypeAllocator<TileEntityMixer>((type, pos, state) -> new TileEntityMixer(pos, state), ModBlocks.Mixer);
 
 	public final InventoryComponent input1Inventory;
 	public final InventoryComponent input2Inventory;
@@ -47,8 +49,8 @@ public class TileEntityMixer extends TileEntityMachine {
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final RecipeProcessingComponent<MixerRecipe> processingComponent;
 
-	public TileEntityMixer() {
-		super(TYPE, StaticPowerTiers.ADVANCED);
+	public TileEntityMixer(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
 
 		// Get the tier object.
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED);
@@ -149,7 +151,7 @@ public class TileEntityMixer extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerMixer(windowId, inventory, this);
 	}
 

@@ -3,13 +3,13 @@ package theking530.staticpower;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.tiers.StaticPowerTierAdvanced;
-import theking530.staticpower.data.tiers.StaticPowerTierAluminium;
+import theking530.staticpower.data.tiers.StaticPowerTierAluminum;
 import theking530.staticpower.data.tiers.StaticPowerTierBasic;
 import theking530.staticpower.data.tiers.StaticPowerTierBronze;
 import theking530.staticpower.data.tiers.StaticPowerTierCopper;
@@ -42,43 +42,47 @@ import theking530.staticpower.world.trees.ModTrees;
 public class StaticPower {
 	public static final Logger LOGGER = LogManager.getLogger("Static Power");
 	public static final String MOD_ID = "staticpower";
-	public static final ItemGroup CREATIVE_TAB = new StaticPowerItemGroup();
+	public static final CreativeModeTab CREATIVE_TAB = new StaticPowerItemGroup();
 
 	public StaticPower() {
-		StaticPowerConfig.preInitialize();
+		try {
+			StaticPowerConfig.preInitialize();
 
-		StaticPowerConfig.registerTier(StaticPowerTiers.WOOD, StaticPowerTierWood::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.BASIC, StaticPowerTierBasic::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.ADVANCED, StaticPowerTierAdvanced::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.STATIC, StaticPowerTierStatic::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.ENERGIZED, StaticPowerTierEnergized::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.LUMUM, StaticPowerTierLumum::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.CREATIVE, StaticPowerTierCreative::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.WOOD, StaticPowerTierWood::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.BASIC, StaticPowerTierBasic::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.ADVANCED, StaticPowerTierAdvanced::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.STATIC, StaticPowerTierStatic::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.ENERGIZED, StaticPowerTierEnergized::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.LUMUM, StaticPowerTierLumum::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.CREATIVE, StaticPowerTierCreative::new);
 
-		StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINIUM, StaticPowerTierAluminium::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.ZINC, StaticPowerTierZinc::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.COPPER, StaticPowerTierCopper::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.GOLD, StaticPowerTierGold::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.IRON, StaticPowerTierIron::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.SILVER, StaticPowerTierSilver::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.TIN, StaticPowerTierTin::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.TUNGSTEN, StaticPowerTierTungsten::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.ALUMINUM, StaticPowerTierAluminum::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.ZINC, StaticPowerTierZinc::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.BRONZE, StaticPowerTierBronze::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.COPPER, StaticPowerTierCopper::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.GOLD, StaticPowerTierGold::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.IRON, StaticPowerTierIron::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.SILVER, StaticPowerTierSilver::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.TIN, StaticPowerTierTin::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.TUNGSTEN, StaticPowerTierTungsten::new);
 
-		StaticPowerConfig.registerTier(StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
-		StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.DIAMOND, StaticPowerTierDiamond::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.RUBY, StaticPowerTierRuby::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.SAPPHIRE, StaticPowerTierSapphire::new);
+			StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
 
-		StaticCoreRegistry.preInitialize();
-		ModRecipeSerializers.init();
-		ModBlocks.init();
-		ModItems.init();
-		ModUpgrades.init();
-		ModFluids.init();
-		ModNetworkMessages.init();
-		ModTrees.init();
-		ModEntities.init();
-		StaticCoreRegistry.postInitialize();
+			StaticCoreRegistry.preInitialize();
+			ModRecipeSerializers.init();
+			ModBlocks.init();
+			ModItems.init();
+			ModUpgrades.init();
+			ModFluids.init();
+			ModNetworkMessages.init();
+			ModTrees.init();
+			ModEntities.init();
+			StaticCoreRegistry.postInitialize();
+		} catch (Exception e) {
+			LOGGER.error("An error occured during Static Power initialization.", e);
+		}
 	}
 }

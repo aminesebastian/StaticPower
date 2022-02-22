@@ -2,11 +2,11 @@ package theking530.staticpower.tileentities.powered.powermonitor;
 
 import java.util.function.Supplier;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 
 public class PacketPowerMonitorSync extends NetworkMessage {
 	private long inputPerTick;
@@ -23,14 +23,14 @@ public class PacketPowerMonitorSync extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeLong(inputPerTick);
 		buffer.writeLong(outputPerTick);
 		buffer.writeBlockPos(position);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		inputPerTick = buffer.readLong();
 		outputPerTick = buffer.readLong();
 		position = buffer.readBlockPos();
@@ -39,8 +39,8 @@ public class PacketPowerMonitorSync extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (ctx.get().getSender().getServerWorld().isAreaLoaded(position, 1)) {
-				TileEntity rawTileEntity = ctx.get().getSender().getServerWorld().getTileEntity(position);
+			if (ctx.get().getSender().getLevel().isAreaLoaded(position, 1)) {
+				BlockEntity rawTileEntity = ctx.get().getSender().getLevel().getBlockEntity(position);
 				if (rawTileEntity != null && rawTileEntity instanceof TileEntityPowerMonitor) {
 					TileEntityPowerMonitor battery = (TileEntityPowerMonitor) rawTileEntity;
 					battery.setInputLimit(inputPerTick);

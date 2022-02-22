@@ -2,17 +2,18 @@ package theking530.staticpower.data.crafting.wrappers.condensation;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.nonpowered.condenser.TileEntityCondenser;
 
-public class CondensationRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CondensationRecipe> {
+public class CondensationRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CondensationRecipe> {
 	public static final CondensationRecipeSerializer INSTANCE = new CondensationRecipeSerializer();
 
 	private CondensationRecipeSerializer() {
@@ -20,50 +21,42 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<IRecipeSeri
 	}
 
 	@Override
-	public CondensationRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public CondensationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
-		JsonObject inputFluidObject = JSONUtils.getJsonObject(json, "input_fluid");
+		JsonObject inputFluidObject = GsonHelper.getAsJsonObject(json, "input_fluid");
 		FluidStack inputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluidObject);
 
 		// Capture the output fluid.
-		JsonObject outputFluidObject = JSONUtils.getJsonObject(json, "output_fluid");
+		JsonObject outputFluidObject = GsonHelper.getAsJsonObject(json, "output_fluid");
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
-
-		// Start with the default processing values.
-		int processingTime = TileEntityCondenser.DEFAULT_PROCESSING_TIME;
 
 		// Capture the heat cost.
 		float heatGeneration = TileEntityCondenser.DEFAULT_HEAT_GENERATION;
-		if (JSONUtils.hasField(json, "heat")) {
+		if (GsonHelper.isValidNode(json, "heat")) {
 			heatGeneration = json.get("heat").getAsFloat();
 		}
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-			processingTime = processingElement.get("power").getAsInt();
-		}
-
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(TileEntityCondenser.DEFAULT_PROCESSING_TIME, 0, json);
 		// Create the recipe.
-		return new CondensationRecipe(recipeId, inputFluid, outputFluid, processingTime, heatGeneration);
+		return new CondensationRecipe(recipeId, inputFluid, outputFluid, heatGeneration, processing);
 	}
 
 	@Override
-	public CondensationRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int time = buffer.readInt();
+	public CondensationRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		float heat = buffer.readFloat();
 		FluidStack input = buffer.readFluidStack();
 		FluidStack output = buffer.readFluidStack();
 
 		// Create the recipe.
-		return new CondensationRecipe(recipeId, input, output, time, heat);
+		return new CondensationRecipe(recipeId, input, output, heat, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, CondensationRecipe recipe) {
-		buffer.writeInt(recipe.getProcessingTime());
+	public void toNetwork(FriendlyByteBuf buffer, CondensationRecipe recipe) {
 		buffer.writeFloat(recipe.getHeatGeneration());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

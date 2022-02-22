@@ -1,11 +1,11 @@
 package theking530.staticpower.cables;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
@@ -22,7 +22,7 @@ public class CableRenderingState {
 	public final BlockState[] covers;
 	public final boolean[] disabledSides;
 	public final BlockPos pos;
-	public IBlockDisplayReader world;
+	public BlockAndTintGetter world;
 
 	public CableRenderingState(CableConnectionState[] connectionStates, ResourceLocation[] attachments, ItemStack[] attachmentItems, ItemStack[] covers, boolean[] disabledSides,
 			BlockPos pos) {
@@ -48,7 +48,7 @@ public class CableRenderingState {
 		return covers[side.ordinal()] != null;
 	}
 
-	public void setRenderingWorld(IBlockDisplayReader world) {
+	public void setRenderingWorld(BlockAndTintGetter world) {
 		this.world = world;
 	}
 }

@@ -2,11 +2,11 @@ package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
 import java.util.function.Supplier;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 
 public class PacketLockDigistore extends NetworkMessage {
 	private boolean isLocked;
@@ -21,13 +21,13 @@ public class PacketLockDigistore extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buf) {
+	public void decode(FriendlyByteBuf buf) {
 		isLocked = buf.readBoolean();
 		tePosition = buf.readBlockPos();
 	}
 
 	@Override
-	public void encode(PacketBuffer buf) {
+	public void encode(FriendlyByteBuf buf) {
 		buf.writeBoolean(isLocked);
 		buf.writeBlockPos(tePosition);
 	}
@@ -35,7 +35,7 @@ public class PacketLockDigistore extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			TileEntity rawTileEntity = context.get().getSender().world.getTileEntity(tePosition);
+			BlockEntity rawTileEntity = context.get().getSender().level.getBlockEntity(tePosition);
 
 			if (rawTileEntity != null && rawTileEntity instanceof TileEntityDigistore) {
 				TileEntityDigistore digistore = (TileEntityDigistore) rawTileEntity;

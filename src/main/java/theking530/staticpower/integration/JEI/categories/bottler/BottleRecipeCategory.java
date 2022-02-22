@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,11 +15,11 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -37,7 +37,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -46,9 +46,9 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 
 	public BottleRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Bottler.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Bottler.getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Bottler));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Bottler));
 	}
 
 	@Override
@@ -59,8 +59,8 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -80,27 +80,30 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 	}
 
 	@Override
-	public void draw(BottleRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 109, 12, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 107, 36, 20, 20, 0);
+	public void draw(BottleRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 109, 12, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 107, 36, 0);
 
 		// This doesn't actually draw the fluid, just the bars.
-		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 50, 56, 1.0f, 16, 52,
+				MachineSideMode.Never, true);
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(),
+				powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 72, 18, 28, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 72, 18, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 28;
 		FluidStack fluid = recipe.getFluid();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 72, 23, 1, progress, 5, false);
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(BottleRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(BottleRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ")
-					.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get())));
+			output.add(new TextComponent("Usage: ")
+					.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.bottlerPowerUsage.get()
+							* StaticPowerConfig.SERVER.bottlerProcessingTime.get())));
 		}
 
 		return output;
@@ -134,8 +137,10 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		fluids.set(ingredients);
 
 		powerTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
-				(int) (StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get()), true);
-		processingTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(), (int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
-				false);
+				(int) (StaticPowerConfig.SERVER.bottlerPowerUsage.get()
+						* StaticPowerConfig.SERVER.bottlerProcessingTime.get()),
+				true);
+		processingTimer = guiHelper.createTickTimer((int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(),
+				(int) StaticPowerConfig.SERVER.bottlerPowerUsage.get().longValue(), false);
 	}
 }

@@ -3,10 +3,17 @@ package theking530.staticcore.utilities;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector3f;
+
+import net.minecraft.core.Direction;
 
 public class SDMath {
+	public static final Matrix4f IDENTITY;
+	static {
+		IDENTITY = new Matrix4f();
+		IDENTITY.setIdentity();
+	}
 	private static final Random RANDOM = new Random();
 
 	public static boolean diceRoll(double percentage) {
@@ -76,6 +83,18 @@ public class SDMath {
 		return Math.max(Math.min(value, max), min);
 	}
 
+	public static float lerp(int a, int b, float alpha) {
+		return (b * alpha) + (a * (1 - alpha));
+	}
+
+	public static double lerp(double a, double b, float alpha) {
+		return (b * alpha) + (a * (1 - alpha));
+	}
+
+	public static float lerp(float a, float b, float alpha) {
+		return (b * alpha) + (a * (1 - alpha));
+	}
+
 	public static int multiplyRespectingOverflow(int base, int multiplier) {
 		try {
 			int output = Math.multiplyExact(base, multiplier);
@@ -97,24 +116,32 @@ public class SDMath {
 		Vector3f offset = null;
 		switch (dir) {
 		case DOWN:
-			offset = new Vector3f(vector.getY(), -vector.getZ(), vector.getY());
+			offset = new Vector3f(vector.y(), -vector.z(), vector.y());
 			break;
 		case UP:
-			offset = new Vector3f(vector.getY(), vector.getZ(), vector.getY());
+			offset = new Vector3f(vector.y(), vector.z(), vector.y());
 			break;
 		case EAST:
-			offset = new Vector3f(-vector.getZ(), vector.getY(), -vector.getX());
+			offset = new Vector3f(-vector.z(), vector.y(), -vector.x());
 			break;
 		case WEST:
-			offset = new Vector3f(vector.getZ(), vector.getY(), vector.getX());
+			offset = new Vector3f(vector.z(), vector.y(), vector.x());
 			break;
 		case NORTH:
-			offset = new Vector3f(-vector.getX(), vector.getY(), vector.getZ());
+			offset = new Vector3f(-vector.x(), vector.y(), vector.z());
 			break;
 		case SOUTH:
-			offset = new Vector3f(vector.getX(), vector.getY(), -vector.getZ());
+			offset = new Vector3f(vector.x(), vector.y(), -vector.z());
 			break;
 		}
 		return offset;
+	}
+
+	public static float getAngleBetweenVectors(AbstractVector start, AbstractVector finish) {
+		AbstractVector normStart = start.copy();
+		AbstractVector normEnd = finish.copy();
+		float dot = normStart.dot(normEnd);
+		float magnitudes = start.getLength() * finish.getLength();
+		return (float) Math.acos(dot / magnitudes);
 	}
 }

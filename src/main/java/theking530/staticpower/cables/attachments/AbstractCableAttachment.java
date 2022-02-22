@@ -4,18 +4,18 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.IUpgradeItem;
@@ -39,24 +39,24 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	@Override
-	protected ActionResultType onStaticPowerItemUsedOnBlock(ItemUseContext context, World world, BlockPos pos, Direction face, PlayerEntity player, ItemStack item) {
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		if (world.getBlockState(pos).getBlock() instanceof AbstractCableBlock) {
 			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(world, pos);
 			if (cableComponent != null) {
 				AbstractCableBlock block = (AbstractCableBlock) world.getBlockState(pos).getBlock();
 				CableBoundsHoverResult hoverResult = block.cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 				if (!hoverResult.isEmpty() && hoverResult.type == CableBoundsHoverType.HELD_ATTACHMENT && cableComponent.attachAttachment(item, hoverResult.direction)) {
-					if (!world.isRemote) {
+					if (!world.isClientSide) {
 						cableComponent.setSideDisabledState(hoverResult.direction, false);
 						item.setCount(item.getCount() - 1);
 					} else {
-						world.playSound(player, pos, SoundEvents.ENTITY_CHICKEN_EGG, SoundCategory.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));
+						world.playSound(player, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));
 					}
-					return ActionResultType.SUCCESS;
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
@@ -79,7 +79,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cable) {
 		attachment.getTag().putInt(REDSTONE_MODE_TAG, mode.ordinal());
-		cable.getTileEntity().markDirty();
+		cable.getTileEntity().setChanged();
 	}
 
 	public void getAdditionalDrops(ItemStack attachment, AbstractCableProviderComponent cable, List<ItemStack> drops) {
@@ -165,7 +165,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		return count;
 	}
 
-	protected abstract class AbstractCableAttachmentContainerProvider implements INamedContainerProvider {
+	public abstract class AbstractCableAttachmentContainerProvider implements MenuProvider {
 		public final ItemStack targetItemStack;
 		public final Direction attachmentSide;
 		public final AbstractCableProviderComponent cable;
@@ -177,8 +177,8 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		}
 
 		@Override
-		public ITextComponent getDisplayName() {
-			return targetItemStack.getDisplayName();
+		public Component getDisplayName() {
+			return targetItemStack.getHoverName();
 		}
 	}
 }

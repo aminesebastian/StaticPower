@@ -2,14 +2,16 @@ package theking530.staticpower.tileentities.nonpowered.evaporator;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderEvaporator;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -28,7 +30,8 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityEvaporator extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityEvaporator> TYPE = new TileEntityTypeAllocator<TileEntityEvaporator>((type) -> new TileEntityEvaporator(), ModBlocks.Evaporator);
+	public static final BlockEntityTypeAllocator<TileEntityEvaporator> TYPE = new BlockEntityTypeAllocator<TileEntityEvaporator>(
+			(type, pos, state) -> new TileEntityEvaporator(pos, state), ModBlocks.Evaporator);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -46,27 +49,30 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	public final FluidTankComponent outputTankComponent;
 	public final HeatStorageComponent heatStorage;
 
-	public TileEntityEvaporator() {
-		super(TYPE);
+	public TileEntityEvaporator(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(
-				processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-						.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory)
-						.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
+				DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
+						.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted)
+						.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
 
-		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE, (fluidStack) -> {
-			return isValidInput(fluidStack, true);
-		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(
+				inputTankComponent = new FluidTankComponent("InputFluidTank", DEFAULT_TANK_SIZE, (fluidStack) -> {
+					return isValidInput(fluidStack, true);
+				}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setCanDrain(false);
 		inputTankComponent.setAutoSyncPacketsEnabled(true);
 
-		registerComponent(
-				outputTankComponent = new FluidTankComponent("OutputFluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(outputTankComponent = new FluidTankComponent("OutputFluidTank", DEFAULT_TANK_SIZE)
+				.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
 		outputTankComponent.setCanFill(false);
 
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent,
+				MachineSideMode.Input));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent,
+				MachineSideMode.Output));
 
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 500.0f, 1.0f));
 	}
@@ -77,11 +83,13 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 			// Get the recipe.
 			EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 			// Check if the output fluid matches the already exists fluid if one exists.
-			if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
+			if (!outputTankComponent.getFluid().isEmpty()
+					&& !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
 			}
 			// Check the fluid capacity.
-			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
+			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent
+					.getCapacity()) {
 				return ProcessingCheckState.outputTankCannotTakeFluid();
 			}
 			// Check the heat level.
@@ -128,8 +136,10 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		}
 
 		// If we can't store the filled output in the output slot, return false.
-		if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
-				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
+		if (!(outputTankComponent.getFluid().isEmpty()
+				|| outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
+				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent
+						.getCapacity()) {
 			return ProcessingCheckState.error("Output tank full!");
 		}
 
@@ -157,7 +167,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerEvaporator(windowId, inventory, this);
 	}
 }

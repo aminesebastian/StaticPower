@@ -15,40 +15,39 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants.BlockFlags;
 import net.minecraftforge.common.util.LazyOptional;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
@@ -57,10 +56,11 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
+import theking530.staticpower.tileentities.components.team.TeamComponent;
 import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class TileEntityBase extends TileEntity implements ITickableTileEntity, INamedContainerProvider, IBreakSerializeable {
+public abstract class TileEntityBase extends BlockEntity implements MenuProvider, IBreakSerializeable {
 	public static final Logger LOGGER = LogManager.getLogger(TileEntityBase.class);
 	@UpdateSerialize
 	/**
@@ -99,24 +99,36 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Indicates whether or not this tile entity should be marked dirty.
 	 */
 	private boolean shouldMarkDirty;
+	/**
+	 * Keeps track of which team placed this entity.
+	 */
+	private TeamComponent teamComponent;
 
-	public TileEntityBase(TileEntityTypeAllocator<? extends TileEntity> allocator) {
-		super(allocator.getType());
+	public TileEntityBase(BlockEntityTypeAllocator<? extends BlockEntity> allocator, BlockPos pos, BlockState state) {
+		super(allocator.getType(), pos, state);
 		components = new LinkedHashMap<String, AbstractTileEntityComponent>();
 		updateRequestQueue = new LinkedList<TileEntityUpdateRequest>();
 		isValid = true;
 		hasFirstPlacedMethodRun = false;
 		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
+		registerComponent(teamComponent = new TeamComponent("team"));
 	}
 
-	@Override
+	public static void tick(Level level, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+		if (blockEntity instanceof TileEntityBase) {
+			((TileEntityBase) blockEntity).tick();
+		} else {
+			StaticPower.LOGGER.error("Attempting to call TileEntityBase ticker for block entity that doesn not inherit from TileEntityBase.");
+		}
+	}
+
 	public void tick() {
 		if (!hasPostInitRun) {
 			hasPostInitRun = true;
-			postInit(world, pos, world.getBlockState(pos));
+			postInit(level, worldPosition, level.getBlockState(worldPosition));
 			for (AbstractTileEntityComponent comp : components.values()) {
-				comp.onInitializedInWorld(world, pos, !hasFirstPlacedMethodRun);
+				comp.onInitializedInWorld(level, worldPosition, !hasFirstPlacedMethodRun);
 			}
 			hasFirstPlacedMethodRun = true;
 		}
@@ -129,7 +141,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		// If an update is queued, perform the update.
 		if (updateRequestQueue.size() > 0) {
 			// Debug the update.
-			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getPos().toString(), getWorld().getBlockState(getPos()),
+			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getBlockPos().toString(), getLevel().getBlockState(getBlockPos()),
 					updateRequestQueue.size()));
 
 			// Calculate the flag to use.
@@ -148,25 +160,25 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 			}
 
 			// Update the block rendering state.
-			if (getWorld().isRemote()) {
+			if (getLevel().isClientSide()) {
 				addRenderingUpdateRequest();
 			}
 
 			// Perform the block update.
 			if (flags > 0) {
-				world.markAndNotifyBlock(pos, world.getChunkAt(pos), getBlockState(), getBlockState(), flags, 512);
+				level.markAndNotifyBlock(worldPosition, level.getChunkAt(worldPosition), getBlockState(), getBlockState(), flags, 512);
 			}
 
 			// Perform a data sync if requested.
-			if (shouldSync && !getWorld().isRemote()) {
+			if (shouldSync && !getLevel().isClientSide()) {
 				NetworkMessage msg = new TileEntityBasicSyncPacket(this, renderOnDataSync);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 100, msg);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 64, msg);
 			}
 
 			// If we also want to mark dirty, do so.
 			if (shouldMarkDirty) {
 				shouldMarkDirty = false;
-				markDirty();
+				setChanged();
 			}
 		}
 
@@ -174,37 +186,26 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		postProcessUpdateComponents();
 	}
 
-	protected void postInit(World world, BlockPos pos, BlockState state) {
+	protected void postInit(Level world, BlockPos pos, BlockState state) {
 
 	}
 
 	@Override
-	public void setWorldAndPos(World world, BlockPos pos) {
-		super.setWorldAndPos(world, pos);
-	}
-
-	@Override
-	public void updateContainingBlockInfo() {
-		super.updateContainingBlockInfo();
-
-	}
-
-	@Override
-	public void validate() {
-		super.validate();
+	public void clearRemoved() {
+		super.clearRemoved();
 		for (AbstractTileEntityComponent component : components.values()) {
 			component.onOwningTileEntityValidate(hasFirstPlacedMethodRun);
 		}
 	}
 
 	@Override
-	public void remove() {
+	public void setRemoved() {
 		for (AbstractTileEntityComponent component : components.values()) {
 			component.onOwningTileEntityRemoved();
 		}
 
 		// Call the super AFTER everything has been cleaned up.
-		super.remove();
+		super.setRemoved();
 	}
 
 	/**
@@ -225,23 +226,25 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	public void addRenderingUpdateRequest() {
-		if (getWorld().isRemote()) {
+		if (getLevel().isClientSide()) {
 			requestModelDataUpdate();
-			StaticPower.LOGGER.debug(String.format("Executing rendering state update at position: %1$s.", getPos().toString()));
+			StaticPower.LOGGER.debug(String.format("Executing rendering state update at position: %1$s.", getBlockPos().toString()));
 		} else {
-			StaticPower.LOGGER.warn(String.format("Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.", getPos().toString()));
+			StaticPower.LOGGER.warn(String.format("Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.", getBlockPos().toString()));
 		}
 	}
 
 	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-
+		for (AbstractTileEntityComponent comp : components.values()) {
+			comp.onPlaced(state, placer, stack);
+		}
 	}
 
-	public ActionResultType onBlockActivated(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		return ActionResultType.PASS;
+	public InteractionResult onBlockActivated(BlockState currentState, Player player, InteractionHand hand, BlockHitResult hit) {
+		return InteractionResult.PASS;
 	}
 
-	public void onGuiEntered(BlockState currentState, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public void onGuiEntered(BlockState currentState, Player player, InteractionHand hand, BlockHitResult hit) {
 
 	}
 
@@ -252,8 +255,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		isValid = false;
 
 		// Add all the items that are currently in an inventory.
-		if (pos != null) {
-			TileEntityBase baseTe = world.getTileEntity(pos) instanceof TileEntityBase ? (TileEntityBase) world.getTileEntity(pos) : null;
+		if (worldPosition != null) {
+			TileEntityBase baseTe = level.getBlockEntity(worldPosition) instanceof TileEntityBase ? (TileEntityBase) level.getBlockEntity(worldPosition) : null;
 			if (baseTe != null) {
 				for (InventoryComponent comp : baseTe.getComponents(InventoryComponent.class)) {
 					// Skip components that should not drop their contents.
@@ -264,7 +267,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 					for (int i = 0; i < comp.getSlots(); i++) {
 						ItemStack extracted = comp.extractItem(i, Integer.MAX_VALUE, false);
 						if (!extracted.isEmpty()) {
-							WorldUtilities.dropItem(world, pos, extracted);
+							WorldUtilities.dropItem(level, worldPosition, extracted);
 						}
 					}
 				}
@@ -277,7 +280,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	}
 
-	public void onBlockLeftClicked(BlockState currentState, PlayerEntity player) {
+	public void onBlockLeftClicked(BlockState currentState, Player player) {
 
 	}
 
@@ -309,7 +312,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	@OnlyIn(Dist.CLIENT)
 	private static double getBlockReachDistanceClient() {
-		return Minecraft.getInstance().playerController.getBlockReachDistance();
+		return Minecraft.getInstance().gameMode.getPickRange();
 	}
 
 	public void transferItemInternally(InventoryComponent fromInv, int fromSlot, InventoryComponent toInv, int toSlot) {
@@ -322,21 +325,21 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
-		if (getWorld() == null) {
-			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
-					getDisplayName().getString(), pos);
+		if (getLevel() == null) {
+			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.", getDisplayName().getString(),
+					worldPosition);
 			return Direction.UP;
 		}
 
 		// Attempt to get the block state for horizontal facing.
-		if (getWorld().getBlockState(pos).hasProperty(HorizontalBlock.HORIZONTAL_FACING)) {
-			return getWorld().getBlockState(getPos()).get(HorizontalBlock.HORIZONTAL_FACING);
+		if (getLevel().getBlockState(worldPosition).hasProperty(HorizontalDirectionalBlock.FACING)) {
+			return getLevel().getBlockState(getBlockPos()).getValue(HorizontalDirectionalBlock.FACING);
 		} else {
 			return Direction.UP;
 		}
 	}
 
-	public boolean shouldRefresh(World world, BlockPos pos, BlockState oldState, BlockState newState) {
+	public boolean shouldRefresh(Level world, BlockPos pos, BlockState oldState, BlockState newState) {
 		return oldState.getBlock() != newState.getBlock();
 	}
 
@@ -505,7 +508,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		return inventories;
 	}
 
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getWeakPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		int output = 0;
 		for (AbstractTileEntityComponent comp : components.values()) {
 			output = Math.max(output, comp.getWeakPower(blockState, blockAccess, pos, side));
@@ -513,7 +516,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		return output;
 	}
 
-	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getStrongPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		int output = 0;
 		for (AbstractTileEntityComponent comp : components.values()) {
 			output = Math.max(output, comp.getStrongPower(blockState, blockAccess, pos, side));
@@ -532,14 +535,18 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		return super.getCapability(cap, side);
 	}
 
+	public TeamComponent getTeamComponent() {
+		return teamComponent;
+	}
+
 	@Override
-	public CompoundNBT serializeOnBroken(CompoundNBT nbt) {
+	public CompoundTag serializeOnBroken(CompoundTag nbt) {
 		serializeSaveNbt(nbt);
 		return serializeUpdateNbt(nbt, false);
 	}
 
 	@Override
-	public void deserializeOnPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void deserializeOnPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		deserializeSaveNbt(nbt);
 		deserializeUpdateNbt(nbt, false);
 	}
@@ -550,7 +557,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundNBT nbt, World world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		return false;
 	}
 
@@ -564,12 +571,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @param nbt The {@link CompoundNBT} to serialize to.
 	 * @return The same {@link CompoundNBT} that was provided.
 	 */
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : components.values()) {
-			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
+			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -583,7 +590,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * 
 	 * @param nbt The NBT data to deserialize from from.
 	 */
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
 		for (AbstractTileEntityComponent component : components.values()) {
@@ -606,12 +613,12 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * @param nbt The {@link CompoundNBT} to serialize to.
 	 * @return The same {@link CompoundNBT} that was provided.
 	 */
-	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
+	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
 		for (AbstractTileEntityComponent component : components.values()) {
-			CompoundNBT componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundNBT();
+			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
 		}
@@ -625,7 +632,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * 
 	 * @param nbt The {@link CompoundNBT} to deserialize from.
 	 */
-	public void deserializeSaveNbt(CompoundNBT nbt) {
+	public void deserializeSaveNbt(CompoundTag nbt) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
 		for (AbstractTileEntityComponent component : components.values()) {
@@ -642,8 +649,8 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 */
 	@Override
 	@Nullable
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		CompoundNBT nbtTagCompound = new CompoundNBT();
+	public ClientboundBlockEntityDataPacket getUpdatePacket() {
+		CompoundTag nbtTagCompound = new CompoundTag();
 		// Make sure we only run this AFTER the post init has run.
 		// Otherwise what happens is we send this update packet with data that MAY be
 		// modified
@@ -652,7 +659,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 		if (hasPostInitRun) {
 			serializeUpdateNbt(nbtTagCompound, true);
 		}
-		return new SUpdateTileEntityPacket(this.pos, 0, nbtTagCompound);
+		return ClientboundBlockEntityDataPacket.create(this, (entity) -> nbtTagCompound);
 	}
 
 	/**
@@ -660,16 +667,16 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * {@link TileEntity}. This calls {@link #deserializeUpdateNbt(CompoundNBT)}.
 	 */
 	@Override
-	public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+	public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
 		super.onDataPacket(net, pkt);
 		// Because we wait for post init from the #getUpdatePacket() method, we must
 		// wait here too.
-		if (hasPostInitRun) {
-			deserializeUpdateNbt(pkt.getNbtCompound(), true);
+		if (hasPostInitRun && pkt.getTag() != null) {
+			deserializeUpdateNbt(pkt.getTag(), true);
 		}
 
 		// Call mark and notify locally.
-		getWorld().markAndNotifyBlock(getPos(), getWorld().getChunkAt(getPos()), getBlockState(), getBlockState(), BlockFlags.DEFAULT_AND_RERENDER, 512);
+		getLevel().markAndNotifyBlock(getBlockPos(), getLevel().getChunkAt(getBlockPos()), getBlockState(), getBlockState(), Block.UPDATE_ALL_IMMEDIATE, 512);
 	}
 
 	/**
@@ -680,9 +687,9 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * {@link #write(CompoundNBT)}.
 	 */
 	@Override
-	public CompoundNBT getUpdateTag() {
-		CompoundNBT nbtTagCompound = super.getUpdateTag();
-		write(nbtTagCompound);
+	public CompoundTag getUpdateTag() {
+		CompoundTag nbtTagCompound = super.getUpdateTag();
+		saveAdditional(nbtTagCompound);
 		return nbtTagCompound;
 	}
 
@@ -694,27 +701,27 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * {@link #read(CompoundNBT)}.
 	 */
 	@Override
-	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-		super.handleUpdateTag(state, tag);
-		read(state, tag);
+	public void handleUpdateTag(CompoundTag tag) {
+		super.handleUpdateTag(tag);
+		load(tag);
 	}
 
 	/**
 	 * Serializes this {@link TileEntity} to the provided tag.
 	 */
 	@Override
-	public CompoundNBT write(CompoundNBT parentNBTTagCompound) {
-		super.write(parentNBTTagCompound);
+	public void saveAdditional(CompoundTag parentNBTTagCompound) {
+		super.saveAdditional(parentNBTTagCompound);
 		serializeSaveNbt(parentNBTTagCompound);
-		return serializeUpdateNbt(parentNBTTagCompound, false);
+		serializeUpdateNbt(parentNBTTagCompound, false);
 	}
 
 	/**
 	 * Deserializes this {@link TileEntity} from the provided tag.
 	 */
 	@Override
-	public void read(BlockState state, CompoundNBT parentNBTTagCompound) {
-		super.read(state, parentNBTTagCompound);
+	public void load(CompoundTag parentNBTTagCompound) {
+		super.load(parentNBTTagCompound);
 		deserializeUpdateNbt(parentNBTTagCompound, false);
 		deserializeSaveNbt(parentNBTTagCompound);
 	}
@@ -738,7 +745,7 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Create the container here. Null by default.
 	 */
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		LOGGER.error(String.format("TileEntity: %1$s did not override the method #createMenu. The container for this TE is broken.", getDisplayName().getString()));
 		return null;
 	}
@@ -747,10 +754,10 @@ public abstract class TileEntityBase extends TileEntity implements ITickableTile
 	 * Return the name of this tile entity.
 	 */
 	@Override
-	public ITextComponent getDisplayName() {
+	public Component getDisplayName() {
 		if (getBlockState() != null && getBlockState().getBlock() != null) {
-			return new TranslationTextComponent(getBlockState().getBlock().getTranslationKey());
+			return new TranslatableComponent(getBlockState().getBlock().getDescriptionId());
 		}
-		return new StringTextComponent("**ERROR**");
+		return new TextComponent("**ERROR**");
 	}
 }

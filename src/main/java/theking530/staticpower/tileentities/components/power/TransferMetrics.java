@@ -5,14 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class TransferMetrics implements INBTSerializable<CompoundNBT> {
+public class TransferMetrics implements INBTSerializable<CompoundTag> {
 	public static final int MAX_METRIC_SAMPLES = 60;
 
 	private final Queue<Float> received;
@@ -65,26 +64,26 @@ public class TransferMetrics implements INBTSerializable<CompoundNBT> {
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
+	public CompoundTag serializeNBT() {
 		// Allocate the output.
-		CompoundNBT output = new CompoundNBT();
+		CompoundTag output = new CompoundTag();
 
 		// Convert the queues to lists.
 		List<Float> receivedList = new ArrayList<Float>(received);
 		List<Float> providedList = new ArrayList<Float>(provided);
 
 		// Serialize the recieved list.
-		ListNBT receivedNBTList = new ListNBT();
+		ListTag receivedNBTList = new ListTag();
 		receivedList.forEach(value -> {
-			FloatNBT recievedTag = FloatNBT.valueOf(value);
+			FloatTag recievedTag = FloatTag.valueOf(value);
 			receivedNBTList.add(recievedTag);
 		});
 		output.put("received", receivedNBTList);
 
 		// Serialize the provided list.
-		ListNBT providedNBTList = new ListNBT();
+		ListTag providedNBTList = new ListTag();
 		providedList.forEach(value -> {
-			FloatNBT providedTag = FloatNBT.valueOf(value);
+			FloatTag providedTag = FloatTag.valueOf(value);
 			providedNBTList.add(providedTag);
 		});
 		output.put("provided", providedNBTList);
@@ -94,23 +93,23 @@ public class TransferMetrics implements INBTSerializable<CompoundNBT> {
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		// Clear existing data.
 		received.clear();
 		provided.clear();
 
 		// Read the serialized lists.
-		ListNBT receivedNBT = nbt.getList("received", Constants.NBT.TAG_FLOAT);
-		ListNBT providedNBT = nbt.getList("provided", Constants.NBT.TAG_FLOAT);
+		ListTag receivedNBT = nbt.getList("received", Tag.TAG_FLOAT);
+		ListTag providedNBT = nbt.getList("provided", Tag.TAG_FLOAT);
 
 		// Populate the arrays.
-		for (INBT receivedTag : receivedNBT) {
-			FloatNBT receivedValue = (FloatNBT) receivedTag;
-			received.add(receivedValue.getFloat());
+		for (Tag receivedTag : receivedNBT) {
+			FloatTag receivedValue = (FloatTag) receivedTag;
+			received.add(receivedValue.getAsFloat());
 		}
-		for (INBT providedTag : providedNBT) {
-			FloatNBT providedValue = (FloatNBT) providedTag;
-			provided.add(providedValue.getFloat());
+		for (Tag providedTag : providedNBT) {
+			FloatTag providedValue = (FloatTag) providedTag;
+			provided.add(providedValue.getAsFloat());
 		}
 	}
 }

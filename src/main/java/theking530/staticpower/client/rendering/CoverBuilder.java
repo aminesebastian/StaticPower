@@ -7,19 +7,20 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.ForgeHooksClient;
@@ -53,15 +54,15 @@ public class CoverBuilder {
 	public static final double THICK_THICKNESS = 2D / 16D;
 	public static final double THIN_THICKNESS = 1D / 16D;
 
-	public static final AxisAlignedBB[] THICK_FACADE_BOXES = new AxisAlignedBB[] { new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, THICK_THICKNESS, 1.0),
-			new AxisAlignedBB(0.0, 1.0 - THICK_THICKNESS, 0.0, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, THICK_THICKNESS),
-			new AxisAlignedBB(0.0, 0.0, 1.0 - THICK_THICKNESS, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, THICK_THICKNESS, 1.0, 1.0),
-			new AxisAlignedBB(1.0 - THICK_THICKNESS, 0.0, 0.0, 1.0, 1.0, 1.0) };
+	public static final AABB[] THICK_FACADE_BOXES = new AABB[] { new AABB(0.0, 0.0, 0.0, 1.0, THICK_THICKNESS, 1.0),
+			new AABB(0.0, 1.0 - THICK_THICKNESS, 0.0, 1.0, 1.0, 1.0), new AABB(0.0, 0.0, 0.0, 1.0, 1.0, THICK_THICKNESS),
+			new AABB(0.0, 0.0, 1.0 - THICK_THICKNESS, 1.0, 1.0, 1.0), new AABB(0.0, 0.0, 0.0, THICK_THICKNESS, 1.0, 1.0),
+			new AABB(1.0 - THICK_THICKNESS, 0.0, 0.0, 1.0, 1.0, 1.0) };
 
-	public static final AxisAlignedBB[] THIN_FACADE_BOXES = new AxisAlignedBB[] { new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, THIN_THICKNESS, 1.0),
-			new AxisAlignedBB(0.0, 1.0 - THIN_THICKNESS, 0.0, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, 1.0, 1.0, THIN_THICKNESS),
-			new AxisAlignedBB(0.0, 0.0, 1.0 - THIN_THICKNESS, 1.0, 1.0, 1.0), new AxisAlignedBB(0.0, 0.0, 0.0, THIN_THICKNESS, 1.0, 1.0),
-			new AxisAlignedBB(1.0 - THIN_THICKNESS, 0.0, 0.0, 1.0, 1.0, 1.0) };
+	public static final AABB[] THIN_FACADE_BOXES = new AABB[] { new AABB(0.0, 0.0, 0.0, 1.0, THIN_THICKNESS, 1.0),
+			new AABB(0.0, 1.0 - THIN_THICKNESS, 0.0, 1.0, 1.0, 1.0), new AABB(0.0, 0.0, 0.0, 1.0, 1.0, THIN_THICKNESS),
+			new AABB(0.0, 0.0, 1.0 - THIN_THICKNESS, 1.0, 1.0, 1.0), new AABB(0.0, 0.0, 0.0, THIN_THICKNESS, 1.0, 1.0),
+			new AABB(1.0 - THIN_THICKNESS, 0.0, 0.0, 1.0, 1.0, 1.0) };
 
 	private final ThreadLocal<BakedPipeline> pipelines = ThreadLocal.withInitial(() -> BakedPipeline.builder()
 			// Clamper is responsible for clamping the vertex to the bounds specified.
@@ -79,7 +80,6 @@ public class CoverBuilder {
 	);
 	private final ThreadLocal<Quad> collectors = ThreadLocal.withInitial(Quad::new);
 
-	@SuppressWarnings("deprecation")
 	public void buildFacadeQuads(@Nullable BlockState state, CableRenderingState cableState, RenderType layer, Random rand, List<BakedQuad> quads, Direction dir) {
 		// Get the blockstate for the cover and return early if its empty.
 		BlockState blockState = cableState.covers[dir.ordinal()];
@@ -92,28 +92,28 @@ public class CoverBuilder {
 		BlockColors blockColors = Minecraft.getInstance().getBlockColors();
 
 		int sideIndex = dir.ordinal();
-		AxisAlignedBB fullBounds = THICK_FACADE_BOXES[sideIndex];
-		AxisAlignedBB facadeBox = fullBounds;
+		AABB fullBounds = THICK_FACADE_BOXES[sideIndex];
+		AABB facadeBox = fullBounds;
 
-		BlockRendererDispatcher dispatcher = Minecraft.getInstance().getBlockRendererDispatcher();
-		IBakedModel model = dispatcher.getModelForState(blockState);
+		BlockRenderDispatcher dispatcher = Minecraft.getInstance().getBlockRenderer();
+		BakedModel model = dispatcher.getBlockModel(blockState);
 		IModelData modelData = model.getModelData(cableState.world, cableState.pos, blockState, EmptyModelData.INSTANCE);
 
 		List<BakedQuad> modelQuads = new ArrayList<>();
 		// If we are forcing transparent facades, fake the render layer, and grab all
 		// quads.
 		if (layer == null) {
-			for (RenderType forcedLayer : RenderType.getBlockRenderTypes()) {
+			for (RenderType forcedLayer : RenderType.chunkBufferLayers()) {
 				// Check if the block renders on the layer we want to force.
-				if (RenderTypeLookup.canRenderInLayer(blockState, forcedLayer)) {
+				if (ItemBlockRenderTypes.canRenderInLayer(blockState, forcedLayer)) {
 					// Force the layer and gather quads.
-					ForgeHooksClient.setRenderLayer(forcedLayer);
+					ForgeHooksClient.setRenderType(forcedLayer);
 					modelQuads.addAll(gatherQuads(model, blockState, rand, modelData));
 				}
 			}
 
 			// Reset.
-			ForgeHooksClient.setRenderLayer(layer);
+			ForgeHooksClient.setRenderType(layer);
 		} else {
 			modelQuads.addAll(gatherQuads(model, blockState, rand, modelData));
 		}
@@ -129,7 +129,7 @@ public class CoverBuilder {
 		QuadTinter tinter = pipeline.getElement("tinter", QuadTinter.class);
 		QuadCornerKicker kicker = pipeline.getElement("corner_kicker", QuadCornerKicker.class);
 
-		List<AxisAlignedBB> holeStrips = getBoxes(facadeBox, state, cableState.connectionStates[sideIndex],
+		List<AABB> holeStrips = getBoxes(facadeBox, state, cableState.connectionStates[sideIndex],
 				cableState.attachmentItems[sideIndex].isEmpty() ? null : (AbstractCableAttachment) cableState.attachmentItems[sideIndex].getItem(), dir.getAxis());
 
 		// calculate the side mask.
@@ -154,12 +154,12 @@ public class CoverBuilder {
 
 		for (BakedQuad quad : modelQuads) {
 			// lookup the format in CachedFormat.
-			CachedFormat format = CachedFormat.lookup(DefaultVertexFormats.BLOCK);
+			CachedFormat format = CachedFormat.lookup(DefaultVertexFormat.BLOCK);
 			// If this quad has a tint index, setup the tinter.
-			if (quad.hasTintIndex()) {
+			if (quad.isTinted()) {
 				tinter.setTint(blockColors.getColor(blockState, cableState.world, cableState.pos, quad.getTintIndex()));
 			}
-			for (AxisAlignedBB box : holeStrips) {
+			for (AABB box : holeStrips) {
 				// setup the clamper for this box
 				clamper.setClampBounds(box);
 				// Reset the pipeline, clears all enabled/disabled states.
@@ -167,7 +167,7 @@ public class CoverBuilder {
 				// Reset out collector.
 				collectorQuad.reset(format);
 				// Enable / disable the optional elements
-				pipeline.setElementState("tinter", quad.hasTintIndex());
+				pipeline.setElementState("tinter", quad.isTinted());
 				pipeline.setElementState("transparent", false);
 				// Prepare the pipeline for a quad.
 				pipeline.prepare(collectorQuad);
@@ -189,7 +189,7 @@ public class CoverBuilder {
 	 */
 	public List<BakedQuad> buildFacadeItemQuads(ItemStack textureItem, Direction side) {
 		List<BakedQuad> facadeQuads = new ArrayList<>();
-		IBakedModel model = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(textureItem, null, null);
+		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(textureItem, null, null, 0);
 		List<BakedQuad> modelQuads = gatherQuads(model, null, new Random(), EmptyModelData.INSTANCE);
 
 		BakedPipeline pipeline = this.pipelines.get();
@@ -201,7 +201,7 @@ public class CoverBuilder {
 
 		for (BakedQuad quad : modelQuads) {
 			// Lookup the CachedFormat for this quads format.
-			CachedFormat format = CachedFormat.lookup(DefaultVertexFormats.BLOCK);
+			CachedFormat format = CachedFormat.lookup(DefaultVertexFormat.BLOCK);
 
 			// Reset the pipeline.
 			pipeline.reset(format);
@@ -210,7 +210,7 @@ public class CoverBuilder {
 			collectorQuad.reset(format);
 
 			// If we have a tint index, setup the tinter and enable it.
-			if (quad.hasTintIndex()) {
+			if (quad.isTinted()) {
 				tinter.setTint(Minecraft.getInstance().getItemColors().getColor(textureItem, quad.getTintIndex()));
 				pipeline.enableElement("tinter");
 			}
@@ -246,7 +246,7 @@ public class CoverBuilder {
 	 *
 	 * @return The box segments.
 	 */
-	private static List<AxisAlignedBB> getBoxes(AxisAlignedBB fb, @Nullable BlockState state, CableConnectionState connectionState, AbstractCableAttachment attachment, Axis axis) {
+	private static List<AABB> getBoxes(AABB fb, @Nullable BlockState state, CableConnectionState connectionState, AbstractCableAttachment attachment, Axis axis) {
 		// Setup the bounds.
 		Vector3D bounds = null;
 
@@ -260,36 +260,36 @@ public class CoverBuilder {
 			}
 		} else if (attachment != null) {
 			// If we have an attachment, create a hole the size of the attachment.
-			bounds = attachment.getBounds().clone().divide(16.0f);
+			bounds = attachment.getBounds().copy().divide(16.0f);
 		} else {
 			// Otherwise, return early.
 			return Collections.singletonList(fb);
 		}
 
-		List<AxisAlignedBB> boxes = new ArrayList<>();
+		List<AABB> boxes = new ArrayList<>();
 		switch (axis) {
 		case Y:
-			boxes.add(new AxisAlignedBB(fb.minX, fb.minY, fb.minZ, 0.5f - bounds.getX(), fb.maxY, fb.maxZ));
-			boxes.add(new AxisAlignedBB(0.5f + bounds.getX(), fb.minY, fb.minZ, fb.maxX, fb.maxY, fb.maxZ));
+			boxes.add(new AABB(fb.minX, fb.minY, fb.minZ, 0.5f - bounds.getX(), fb.maxY, fb.maxZ));
+			boxes.add(new AABB(0.5f + bounds.getX(), fb.minY, fb.minZ, fb.maxX, fb.maxY, fb.maxZ));
 
-			boxes.add(new AxisAlignedBB(0.5f - bounds.getX(), fb.minY, fb.minZ, 0.5f + bounds.getX(), fb.maxY, 0.5f - bounds.getY()));
-			boxes.add(new AxisAlignedBB(0.5f - bounds.getX(), fb.minY, 0.5f + bounds.getX(), 0.5f + bounds.getY(), fb.maxY, fb.maxZ));
+			boxes.add(new AABB(0.5f - bounds.getX(), fb.minY, fb.minZ, 0.5f + bounds.getX(), fb.maxY, 0.5f - bounds.getY()));
+			boxes.add(new AABB(0.5f - bounds.getX(), fb.minY, 0.5f + bounds.getX(), 0.5f + bounds.getY(), fb.maxY, fb.maxZ));
 
 			break;
 		case Z:
-			boxes.add(new AxisAlignedBB(fb.minX, fb.minY, fb.minZ, fb.maxX, 0.5f - bounds.getY(), fb.maxZ));
-			boxes.add(new AxisAlignedBB(fb.minX, 0.5f + bounds.getY(), fb.minZ, fb.maxX, fb.maxY, fb.maxZ));
+			boxes.add(new AABB(fb.minX, fb.minY, fb.minZ, fb.maxX, 0.5f - bounds.getY(), fb.maxZ));
+			boxes.add(new AABB(fb.minX, 0.5f + bounds.getY(), fb.minZ, fb.maxX, fb.maxY, fb.maxZ));
 
-			boxes.add(new AxisAlignedBB(fb.minX, 0.5f - bounds.getY(), fb.minZ, 0.5f - bounds.getX(), 0.5f + bounds.getY(), fb.maxZ));
-			boxes.add(new AxisAlignedBB(0.5f + bounds.getX(), 0.5f - bounds.getY(), fb.minZ, fb.maxX, 0.5f + bounds.getY(), fb.maxZ));
+			boxes.add(new AABB(fb.minX, 0.5f - bounds.getY(), fb.minZ, 0.5f - bounds.getX(), 0.5f + bounds.getY(), fb.maxZ));
+			boxes.add(new AABB(0.5f + bounds.getX(), 0.5f - bounds.getY(), fb.minZ, fb.maxX, 0.5f + bounds.getY(), fb.maxZ));
 
 			break;
 		case X:
-			boxes.add(new AxisAlignedBB(fb.minX, fb.minY, fb.minZ, fb.maxX, 0.5f - bounds.getY(), fb.maxZ));
-			boxes.add(new AxisAlignedBB(fb.minX, 0.5f + bounds.getY(), fb.minZ, fb.maxX, fb.maxY, fb.maxZ));
+			boxes.add(new AABB(fb.minX, fb.minY, fb.minZ, fb.maxX, 0.5f - bounds.getY(), fb.maxZ));
+			boxes.add(new AABB(fb.minX, 0.5f + bounds.getY(), fb.minZ, fb.maxX, fb.maxY, fb.maxZ));
 
-			boxes.add(new AxisAlignedBB(fb.minX, 0.5f - bounds.getY(), fb.minZ, fb.maxX, 0.5f + bounds.getY(), 0.5f - bounds.getX()));
-			boxes.add(new AxisAlignedBB(fb.minX, 0.5f - bounds.getY(), 0.5f + bounds.getX(), fb.maxX, 0.5f + bounds.getY(), fb.maxZ));
+			boxes.add(new AABB(fb.minX, 0.5f - bounds.getY(), fb.minZ, fb.maxX, 0.5f + bounds.getY(), 0.5f - bounds.getX()));
+			boxes.add(new AABB(fb.minX, 0.5f - bounds.getY(), 0.5f + bounds.getX(), fb.maxX, 0.5f + bounds.getY(), fb.maxZ));
 			break;
 		}
 
@@ -297,7 +297,7 @@ public class CoverBuilder {
 	}
 
 	// Helper to gather all quads from a model into a list.
-	private static List<BakedQuad> gatherQuads(IBakedModel model, BlockState state, Random rand, IModelData data) {
+	private static List<BakedQuad> gatherQuads(BakedModel model, BlockState state, Random rand, IModelData data) {
 		List<BakedQuad> modelQuads = new ArrayList<>();
 		for (Direction face : Direction.values()) {
 			modelQuads.addAll(model.getQuads(state, face, rand, data));

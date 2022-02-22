@@ -1,0 +1,12 @@
+{
+	"type": "minecraft:crafting_shapeless",
+	"ingredients": [
+		{
+			"item": "staticpower:block_raw_lead"
+		}
+	],
+	"result": {
+		"item": "staticpower:raw_lead",
+		"count": 9
+	}
+}

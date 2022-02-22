@@ -19,7 +19,7 @@
 		},
 		{
 			"type": "crafting",
-			"recipe": "staticpower:crafting/cables/heat/heat_cable_aluminium"
+			"recipe": "staticpower:crafting/cables/heat/heat_cable_aluminum"
 		}
 	]
 }

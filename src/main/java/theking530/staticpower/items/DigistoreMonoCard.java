@@ -2,13 +2,13 @@ package theking530.staticpower.items;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -30,14 +30,14 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	}
 
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		// Get the item name.
-		IFormattableTextComponent cardName = (IFormattableTextComponent) super.getDisplayName(stack);
+		MutableComponent cardName = (MutableComponent) super.getName(stack);
 
 		// If this card contains an item, append it's display name.
 		IDigistoreInventory inventory = DigistoreCard.getInventory(stack);
 		if (!inventory.getDigistoreStack(0).getStoredItem().isEmpty()) {
-			cardName.appendString(" (").append(inventory.getDigistoreStack(0).getStoredItem().getDisplayName()).appendString(")");
+			cardName.append(" (").append(inventory.getDigistoreStack(0).getStoredItem().getHoverName()).append(")");
 		}
 
 		// Return the final name.
@@ -49,7 +49,7 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 	 */
 	@Nullable
 	@Override
-	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundNBT nbt) {
+	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		int capacity = StaticPowerConfig.getTier(tierType).digistoreCardCapacity.get() * (StaticPowerConfig.SERVER.digistoreCardUniqueTypes.get() / 8);
 
 		// Cover in case of integer overflow, we max at int.max.
@@ -63,7 +63,7 @@ public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupp
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new DigistoreMonoCardItemModel(existingModel);
 	}
 }

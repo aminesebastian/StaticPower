@@ -1,8 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"staticpower:ore_aluminium",
-		"staticpower:ore_copper",
+		"staticpower:ore_aluminum",
 		"staticpower:ore_lead",
 		"staticpower:ore_magnesium",
 		"staticpower:ore_platinum",
@@ -12,6 +11,19 @@
 		"staticpower:ore_tin",
 		"staticpower:ore_tungsten",
 		"staticpower:ore_zinc",
-		"staticpower:ore_rusty_iron"
+		"staticpower:ore_rusty_iron",
+		"staticpower:ore_deepslate_aluminum",
+		"staticpower:ore_deepslate_lead",
+		"staticpower:ore_deepslate_magnesium",
+		"staticpower:ore_deepslate_platinum",
+		"staticpower:ore_deepslate_ruby",
+		"staticpower:ore_deepslate_sapphire",
+		"staticpower:ore_deepslate_silver",
+		"staticpower:ore_deepslate_tin",
+		"staticpower:ore_deepslate_tungsten",
+		"staticpower:ore_deepslate_zinc",
+		"staticpower:ore_nether_silver",
+		"staticpower:ore_nether_tungsten",
+		"staticpower:ore_nether_platinum"
 	]
 }

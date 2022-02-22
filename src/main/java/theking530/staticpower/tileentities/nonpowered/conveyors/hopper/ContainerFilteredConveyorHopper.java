@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors.hopper;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -19,11 +19,11 @@ public class ContainerFilteredConveyorHopper extends StaticPowerTileEntityContai
 		}
 	}
 
-	public ContainerFilteredConveyorHopper(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerFilteredConveyorHopper(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityConveyorHopper) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerFilteredConveyorHopper(int windowId, PlayerInventory playerInventory, TileEntityConveyorHopper owner) {
+	public ContainerFilteredConveyorHopper(int windowId, Inventory playerInventory, TileEntityConveyorHopper owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

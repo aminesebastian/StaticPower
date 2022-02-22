@@ -10,12 +10,11 @@ import java.util.List;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.digistore.crafting.AutoCraftingStep;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials;
@@ -55,12 +54,12 @@ public class CraftingStepsBundle {
 		return billOfMaterials;
 	}
 
-	public CompoundNBT serialize() {
+	public CompoundTag serialize() {
 		// Create the output.
-		CompoundNBT outputNbt = new CompoundNBT();
+		CompoundTag outputNbt = new CompoundTag();
 
 		// Store the steps.
-		ListNBT stepNBTList = new ListNBT();
+		ListTag stepNBTList = new ListTag();
 		for (AutoCraftingStep step : steps) {
 			stepNBTList.add(step.serialize());
 		}
@@ -69,12 +68,12 @@ public class CraftingStepsBundle {
 		return outputNbt;
 	}
 
-	public static CraftingStepsBundle read(CompoundNBT nbt) {
+	public static CraftingStepsBundle read(CompoundTag nbt) {
 		// Read the steps.
 		List<AutoCraftingStep> steps = new ArrayList<AutoCraftingStep>();
-		ListNBT stepNBTList = nbt.getList("steps", Constants.NBT.TAG_COMPOUND);
-		for (INBT step : stepNBTList) {
-			CompoundNBT stepTag = (CompoundNBT) step;
+		ListTag stepNBTList = nbt.getList("steps", Tag.TAG_COMPOUND);
+		for (Tag step : stepNBTList) {
+			CompoundTag stepTag = (CompoundTag) step;
 			steps.add(AutoCraftingStep.read(stepTag));
 		}
 
@@ -117,12 +116,12 @@ public class CraftingStepsBundle {
 			return bundles.get(bundleIndex);
 		}
 
-		public CompoundNBT serialize() {
+		public CompoundTag serialize() {
 			// Create the output.
-			CompoundNBT outputNbt = new CompoundNBT();
+			CompoundTag outputNbt = new CompoundTag();
 
 			// Store the steps.
-			ListNBT stepNBTList = new ListNBT();
+			ListTag stepNBTList = new ListTag();
 			for (CraftingStepsBundle bundle : bundles) {
 				stepNBTList.add(bundle.serialize());
 			}
@@ -158,7 +157,7 @@ public class CraftingStepsBundle {
 					output.append(line);
 				}
 				String decompressedString = output.toString();
-				CompoundNBT decompressedNBT = (CompoundNBT) JsonToNBT.getTagFromJson(decompressedString);
+				CompoundTag decompressedNBT = (CompoundTag) TagParser.parseTag(decompressedString);
 				return read(decompressedNBT);
 			} catch (Exception e) {
 				StaticPower.LOGGER.error("An error occured when attempting to decompress auto-crafting step bundles!", e);
@@ -166,12 +165,12 @@ public class CraftingStepsBundle {
 			return null;
 		}
 
-		public static CraftingStepsBundleContainer read(CompoundNBT nbt) {
+		public static CraftingStepsBundleContainer read(CompoundTag nbt) {
 			// Read the steps.
 			List<CraftingStepsBundle> bundles = new ArrayList<CraftingStepsBundle>();
-			ListNBT stepNBTList = nbt.getList("bundles", Constants.NBT.TAG_COMPOUND);
-			for (INBT step : stepNBTList) {
-				CompoundNBT stepTag = (CompoundNBT) step;
+			ListTag stepNBTList = nbt.getList("bundles", Tag.TAG_COMPOUND);
+			for (Tag step : stepNBTList) {
+				CompoundTag stepTag = (CompoundTag) step;
 				bundles.add(CraftingStepsBundle.read(stepTag));
 			}
 

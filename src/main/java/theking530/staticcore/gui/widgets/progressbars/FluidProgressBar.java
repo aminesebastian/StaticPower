@@ -1,19 +1,18 @@
 package theking530.staticcore.gui.widgets.progressbars;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
-public class FluidProgressBar extends AbstractProgressBar {
+public class FluidProgressBar extends AbstractProgressBar<FluidProgressBar> {
 	private FluidStack displayFluidStack;
 
 	public FluidProgressBar(int xPosition, int yPosition, int width, int height) {
@@ -26,14 +25,11 @@ public class FluidProgressBar extends AbstractProgressBar {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-
-		// Get the screen space position.
-		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
+	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBehindItems(pose, mouseX, mouseY, partialTicks);
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(null, screenSpacePosition.getX(), screenSpacePosition.getY(), getSize().getX(), getSize().getY(), 0);
+		GuiDrawUtilities.drawSlot(pose, getSize().getX(), getSize().getY(), 0, 0, 0);
 
 		// Draw the fluid.
 		if (!displayFluidStack.isEmpty()) {
@@ -44,22 +40,23 @@ public class FluidProgressBar extends AbstractProgressBar {
 			if (icon != null) {
 				// Get the fluid color.
 				Color fluidColor = GuiDrawUtilities.getFluidColor(displayFluidStack);
+				fluidColor.setW(1.0f);
 
 				// Calculate the UV difference.
-				float uvDiff = icon.getMaxU() - icon.getMinU();
+				float uvDiff = icon.getU1() - icon.getU0();
 
-				Minecraft.getInstance().getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
-				GuiDrawUtilities.drawTexturedModalRect(PlayerContainer.LOCATION_BLOCKS_TEXTURE, screenSpacePosition.getX(), screenSpacePosition.getY(), visualCurrentProgresPercentage * getSize().getX(), getSize().getY(),
-						icon.getMinU(), icon.getMinV(), icon.getMinU() + (uvDiff * visualCurrentProgresPercentage), icon.getMaxV(), fluidColor);
+				Minecraft.getInstance().getTextureManager().bindForSetup(InventoryMenu.BLOCK_ATLAS);
+				GuiDrawUtilities.drawTexture(pose, InventoryMenu.BLOCK_ATLAS, visualCurrentProgresPercentage * getSize().getX(), getSize().getY(), 0, 0, 0.0f, icon.getU0(), icon.getV0(),
+						icon.getU0() + (uvDiff * visualCurrentProgresPercentage), icon.getV1(), fluidColor);
 			}
 
 			// Draw the leading white line.
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePosition.getX() + (visualCurrentProgresPercentage * getSize().getX()), screenSpacePosition.getY(), 0.75f, getSize().getY(), 1.0f, Color.WHITE);
+			GuiDrawUtilities.drawRectangle(pose, (visualCurrentProgresPercentage * getSize().getX()), 0, 0.75f, getSize().getY(), 1.0f, Color.WHITE);
 		}
-		
+
 		// Draw the error indicator if needed.
-		if (isProcessingErrored) {
-			getErrorDrawable().draw(screenSpacePosition.getX() + (getSize().getX() / 2.0f) - 8.0f, screenSpacePosition.getY() - (16 - getSize().getY()) / 2);
+		if (isProcessingErrored && drawErrorIcons) {
+			getErrorDrawable().draw(pose, (getSize().getX() / 2.0f) - 8.0f, -(16 - getSize().getY()) / 2);
 		}
 	}
 }

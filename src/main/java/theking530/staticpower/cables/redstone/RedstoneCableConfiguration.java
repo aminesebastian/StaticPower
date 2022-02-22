@@ -1,10 +1,10 @@
 package theking530.staticpower.cables.redstone;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class RedstoneCableConfiguration implements INBTSerializable<CompoundNBT> {
+public class RedstoneCableConfiguration implements INBTSerializable<CompoundTag> {
 	public final RedstoneCableSideConfiguration[] sides;
 
 	public RedstoneCableConfiguration() {
@@ -19,8 +19,8 @@ public class RedstoneCableConfiguration implements INBTSerializable<CompoundNBT>
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
 
 		// Serialize the side configs.
 		for (int i = 0; i < 6; i++) {
@@ -31,7 +31,7 @@ public class RedstoneCableConfiguration implements INBTSerializable<CompoundNBT>
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		// Deserialize the side configs.
 		for (int i = 0; i < 6; i++) {
 			RedstoneCableSideConfiguration sideConfig = new RedstoneCableSideConfiguration();

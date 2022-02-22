@@ -4,28 +4,27 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableBlock;
@@ -44,8 +43,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	private final String color;
 
 	public BlockRedstoneCable(String name) {
-		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),
-				name.contains("naked") ? 1.0f : 1.5f);
+		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)), name.contains("naked") ? 1.0f : 1.5f);
 
 		// String the color from the last section of the registry name.
 		this.color = name.substring(name.indexOf("_", name.indexOf("_", name.indexOf("_") + 1) + 1) + 1);
@@ -54,44 +52,42 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, @Nullable IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
 		if (color.equals("naked")) {
-			IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
-			IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
-			IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_STRAIGHT);
+			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_NAKED_EXTENSION);
+			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		} else {
-			IBakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
-			IBakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
-			IBakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
+			BakedModel straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[0]);
+			BakedModel extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC.get(color)[1]);
+			BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_REDSTONE_BASIC_ATTACHMENT_INPUT);
 			return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);
 		}
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
+	public boolean isSignalSource(BlockState state) {
 		return canProvidePower;
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		// If not null, and if we are hovering the default attachment, check to see if
 		// we're connected to a tile entity on that side.
 		// If so, then we have a UI, otherwise we do not.
 		if (component != null) {
-			if (hit.hitInfo instanceof CableBoundsHoverResult) {
-				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
-				if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
-					Direction cableSide = hoverResult.direction;
-					return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
-				}
+			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
+			if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
+				Direction cableSide = hoverResult.direction;
+				return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 			}
 		} else {
 			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));
@@ -114,60 +110,58 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	 * @return
 	 */
 	@Override
-	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (!world.isRemote) {
-			if (hit.hitInfo instanceof CableBoundsHoverResult) {
-				CableBoundsHoverResult hoverResult = (CableBoundsHoverResult) hit.hitInfo;
-				RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getFace());
-				NetworkGUI.openGui((ServerPlayerEntity) player, provider, buf -> {
-					buf.writeBlockPos(pos);
-					buf.writeInt(hoverResult.direction.ordinal());
-				});
-			}
+	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (!world.isClientSide) {
+			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
+			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
+			NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
+				buf.writeBlockPos(pos);
+				buf.writeInt(hoverResult.direction.ordinal());
+			});
 		}
 	}
 
 	@Override
-	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
+	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		switch (color) {
 		case "black":
-			return TileEntityRedstoneCable.TYPE_BASIC_BLACK.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_BLACK.create(pos, state);
 		case "dark_blue":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_BLUE.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_DARK_BLUE.create(pos, state);
 		case "dark_green":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GREEN.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GREEN.create(pos, state);
 		case "dark_aqua":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_AQUA.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_DARK_AQUA.create(pos, state);
 		case "dark_red":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_RED.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_DARK_RED.create(pos, state);
 		case "dark_purple":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_PURPLE.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_DARK_PURPLE.create(pos, state);
 		case "gold":
-			return TileEntityRedstoneCable.TYPE_BASIC_GOLD.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_GOLD.create(pos, state);
 		case "gray":
-			return TileEntityRedstoneCable.TYPE_BASIC_GRAY.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_GRAY.create(pos, state);
 		case "dark_gray":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GRAY.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GRAY.create(pos, state);
 		case "blue":
-			return TileEntityRedstoneCable.TYPE_BASIC_BLUE.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_BLUE.create(pos, state);
 		case "green":
-			return TileEntityRedstoneCable.TYPE_BASIC_GREEN.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_GREEN.create(pos, state);
 		case "aqua":
-			return TileEntityRedstoneCable.TYPE_BASIC_AQUA.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_AQUA.create(pos, state);
 		case "red":
-			return TileEntityRedstoneCable.TYPE_BASIC_RED.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_RED.create(pos, state);
 		case "light_purple":
-			return TileEntityRedstoneCable.TYPE_BASIC_LIGHT_PURPLE.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_LIGHT_PURPLE.create(pos, state);
 		case "yellow":
-			return TileEntityRedstoneCable.TYPE_BASIC_YELLOW.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_YELLOW.create(pos, state);
 		case "white":
-			return TileEntityRedstoneCable.TYPE_BASIC_WHITE.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_WHITE.create(pos, state);
 		default:
-			return TileEntityRedstoneCable.TYPE_BASIC_NAKED.create();
+			return TileEntityRedstoneCable.TYPE_BASIC_NAKED.create(pos, state);
 		}
 	}
 
-	public class RedstoneCableContainerProvider implements INamedContainerProvider {
+	public class RedstoneCableContainerProvider implements MenuProvider {
 		public final Direction side;
 		public final Block owningBlock;
 		public final TileEntityRedstoneCable cable;
@@ -179,13 +173,13 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 		}
 
 		@Override
-		public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+		public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 			return new ContainerBasicRedstoneIO(windowId, inventory, cable, side);
 		}
 
 		@Override
-		public ITextComponent getDisplayName() {
-			return new TranslationTextComponent(owningBlock.getTranslationKey());
+		public Component getDisplayName() {
+			return new TranslatableComponent(owningBlock.getDescriptionId());
 		}
 
 	}

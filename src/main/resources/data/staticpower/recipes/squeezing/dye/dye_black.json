@@ -1,0 +1,12 @@
+{
+	"type": "staticpower:squeezer_recipe",
+	"input": {
+		"item": "minecraft:black_dye"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:dye_black",
+			"volume": 100
+		}
+	}
+}

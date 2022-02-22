@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.components.fluids;
 
 import java.util.function.Predicate;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -32,7 +32,12 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public String getComponentName() {
-		return "Fluid Input Servo";
+		return super.getComponentName();
+	}
+
+	public FluidInputServoComponent setTank(IFluidHandler tank) {
+		this.owningTank = tank;
+		return this;
 	}
 
 	@Override
@@ -41,8 +46,10 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 		if (!isEnabled()) {
 			return;
 		}
-		
-		if (!getTileEntity().getWorld().isRemote) {
+		if (owningTank == null) {
+			return;
+		}
+		if (!getTileEntity().getLevel().isClientSide) {
 			for (Direction dir : Direction.values()) {
 				// If we can't input from the provided side, skip it.
 				if (!canInputFromSide(dir)) {
@@ -55,7 +62,7 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 
 	public void suckFluid(Direction side) {
 		// Check for the tile entity on the provided side. If null, return early.
-		TileEntity te = getWorld().getTileEntity(getPos().offset(side));
+		BlockEntity te = getWorld().getBlockEntity(getPos().relative(side));
 		if (te == null) {
 			return;
 		}

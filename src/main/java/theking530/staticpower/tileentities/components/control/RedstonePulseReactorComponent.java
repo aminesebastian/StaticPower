@@ -2,8 +2,8 @@ package theking530.staticpower.tileentities.components.control;
 
 import java.util.function.Supplier;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
@@ -32,7 +32,7 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 	@SuppressWarnings("deprecation")
 	public void preProcessUpdate() {
 		// Only operate on the server.
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			return;
 		}
 
@@ -45,10 +45,10 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 		// Get the redstone level but skip empty blocks.
 		int redstoneLevel = 0;
 		for (Direction dir : Direction.values()) {
-			if (getWorld().getBlockState(getPos().offset(dir)).isAir()) {
+			if (getWorld().getBlockState(getPos().relative(dir)).isAir()) {
 				continue;
 			}
-			int value = getWorld().getRedstonePowerFromNeighbors(getPos().offset(dir));
+			int value = getWorld().getBestNeighborSignal(getPos().relative(dir));
 			if (value > redstoneLevel) {
 				redstoneLevel = value;
 			}
@@ -92,8 +92,8 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 		if (shouldControlBlockStateOnProperty) {
 			BlockState currentState = getWorld().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
-				if (currentState.get(StaticPowerMachineBlock.IS_ON) != true) {
-					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, true), 2);
+				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != true) {
+					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, true), 2);
 				}
 			}
 		}
@@ -105,8 +105,8 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 		if (shouldControlBlockStateOnProperty) {
 			BlockState currentState = getWorld().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
-				if (currentState.get(StaticPowerMachineBlock.IS_ON) != false) {
-					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, false), 2);
+				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != false) {
+					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, false), 2);
 				}
 			}
 		}

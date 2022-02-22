@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.manager;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -18,11 +18,11 @@ public class ContainerDigistoreManager extends StaticPowerTileEntityContainer<Ti
 		}
 	}
 
-	public ContainerDigistoreManager(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistoreManager(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityDigistoreManager) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerDigistoreManager(int windowId, PlayerInventory playerInventory, TileEntityDigistoreManager owner) {
+	public ContainerDigistoreManager(int windowId, Inventory playerInventory, TileEntityDigistoreManager owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

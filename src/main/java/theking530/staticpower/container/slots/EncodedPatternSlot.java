@@ -2,7 +2,7 @@ package theking530.staticpower.container.slots;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.init.ModItems;
 
@@ -16,7 +16,7 @@ public class EncodedPatternSlot extends StaticPowerContainerSlot {
 	}
 
 	@Override
-	public boolean isItemValid(@Nonnull ItemStack stack) {
+	public boolean mayPlace(@Nonnull ItemStack stack) {
 		if (stack.isEmpty()) {
 			return false;
 		}

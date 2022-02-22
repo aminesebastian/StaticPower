@@ -9,16 +9,16 @@ import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.item.crafting.ShapelessRecipe;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.RegistryKey;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.RegistryManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.init.ModTags;
@@ -87,10 +87,10 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 			if (ModTags.COVER_SAW.contains(coverSourceItem)) {
 				List<T> recipes = new ArrayList<T>();
 				// Get all the registered blocks.
-				for (Entry<RegistryKey<Block>, Block> block : GameRegistry.findRegistry(Block.class).getEntries()) {
+				for (Entry<ResourceKey<Block>, Block> block : RegistryManager.ACTIVE.getRegistry(Block.class).getEntries()) {
 					// If this is a valid cover block, create the recipe.
 					if (CableCover.isValidForCover(block.getValue())) {
-						ItemStack output = cableCover.makeCoverForBlock(block.getValue().getDefaultState());
+						ItemStack output = cableCover.makeCoverForBlock(block.getValue().defaultBlockState());
 						output.setCount(8);
 						recipes.add((T) make(new ItemStack(block.getValue()), output));
 					}
@@ -105,7 +105,7 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 				// If we can make a cover for this block, return that cover. Otherwise, return
 				// an empty itemstack.
 				if (CableCover.isValidForCover(((BlockItem) coverSourceItem).getBlock())) {
-					ItemStack output = cableCover.makeCoverForBlock(((BlockItem) coverSourceItem).getBlock().getDefaultState());
+					ItemStack output = cableCover.makeCoverForBlock(((BlockItem) coverSourceItem).getBlock().defaultBlockState());
 					output.setCount(8);
 					return Collections.singletonList((T) make(coverSourceItemStack, output));
 				} else {
@@ -126,8 +126,8 @@ public class CoverRecipeCategory implements IRecipeManagerPlugin {
 
 		// Popualte the ingredients.
 		NonNullList<Ingredient> ingredients = NonNullList.withSize(2, Ingredient.EMPTY);
-		ingredients.set(0, Ingredient.fromTag(ModTags.COVER_SAW));
-		ingredients.set(1, Ingredient.fromStacks(coverBlockItem));
+		ingredients.set(0, Ingredient.of(ModTags.COVER_SAW));
+		ingredients.set(1, Ingredient.of(coverBlockItem));
 
 		// Wrap this in a shapeless recipe.
 		return new ShapelessRecipe(id, "", result, ingredients);

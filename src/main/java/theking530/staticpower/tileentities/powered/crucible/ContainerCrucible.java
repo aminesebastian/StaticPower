@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.crucible;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -21,11 +21,11 @@ public class ContainerCrucible extends StaticPowerTileEntityContainer<TileEntity
 		}
 	}
 
-	public ContainerCrucible(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerCrucible(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityCrucible) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerCrucible(int windowId, PlayerInventory playerInventory, TileEntityCrucible owner) {
+	public ContainerCrucible(int windowId, Inventory playerInventory, TileEntityCrucible owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

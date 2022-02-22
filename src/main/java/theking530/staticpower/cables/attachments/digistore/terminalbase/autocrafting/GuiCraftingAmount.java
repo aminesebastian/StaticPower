@@ -1,8 +1,8 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.DrawableWidget;
@@ -46,21 +46,21 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	public AutoCraftingStepsWidget stepsWidget;
 	private int bundleIndex;
 
-	public GuiCraftingAmount(ContainerCraftingAmount container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiCraftingAmount(ContainerCraftingAmount container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 165, 198);
 	}
 
 	@Override
 	public void initializeGui() {
 		super.initializeGui();
-		guiTop -= 30;
+		topPos -= 30;
 		bundleIndex = 0;
 
 		missingIngredientDrawable = new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16);
 
 		craftingStack = new ItemDrawable(getCurrentBundle().getOutput());
-		registerWidget(craftingStackDrawableWidget = new DrawableWidget<ItemDrawable>(75, 16, 16, 16, craftingStack));
-		craftingStackDrawableWidget.setTooltip(getCurrentBundle().getOutput().getDisplayName());
+		registerWidget(craftingStackDrawableWidget = new DrawableWidget<ItemDrawable>(75, 16, 1, 1, craftingStack));
+		craftingStackDrawableWidget.setTooltip(getCurrentBundle().getOutput().getHoverName());
 
 		registerWidget(close = new SpriteButton(152, 4, 8, 8, StaticPowerSprites.CLOSE, null, (b, n) -> goBack()));
 		registerWidget(minusTen = new TextButton(28, 176, 25, 16, "-10", (b, n) -> modifyCraftingAmmount(-10)));
@@ -70,12 +70,12 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		registerWidget(confirm = new TextButton(61, 176, 45, 16, "Confirm", (b, n) -> confirmCraft()));
 
 		registerWidget(
-				leftRecipe = (TextButton) new TextButton(60, 18, 14, 14, "<", (b, n) -> modifyBundleIndex(-1)).setTooltip(new TranslationTextComponent("gui.staticpower.previous_recipe")));
+				leftRecipe = (TextButton) new TextButton(60, 18, 14, 14, "<", (b, n) -> modifyBundleIndex(-1)).setTooltip(new TranslatableComponent("gui.staticpower.previous_recipe")));
 		registerWidget(
-				rightRecipe = (TextButton) new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)).setTooltip(new TranslationTextComponent("gui.staticpower.next_recipe")));
+				rightRecipe = (TextButton) new TextButton(92, 18, 14, 14, ">", (b, n) -> modifyBundleIndex(1)).setTooltip(new TranslatableComponent("gui.staticpower.next_recipe")));
 
 		registerWidget(scrollBar = new ScrollBarWidget(146, 53, 119));
-		registerWidget(stepsWidget = new AutoCraftingStepsWidget(8, 53, 136, 95, MAX_ROWS, COLUMNS));
+		registerWidget(stepsWidget = new AutoCraftingStepsWidget(7, 53, 136, 95, MAX_ROWS, COLUMNS));
 
 		// Since we start at 1 item, disable the ability to decrement until we have gone
 		// up at least once.
@@ -85,9 +85,9 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 		// Since we start on bundle 0, we can't go left. That should be disabled. If
 		// there are more than one recipe, then the right button can be enabled. If
 		// there is only one recipe, hide both buttons.
-		if (getContainer().getBundleContainer().getBundles().size() > 1) {
+		if (getMenu().getBundleContainer().getBundles().size() > 1) {
 			leftRecipe.setEnabled(false);
-			rightRecipe.setEnabled(getContainer().getBundleContainer().getBundles().size() > 1);
+			rightRecipe.setEnabled(getMenu().getBundleContainer().getBundles().size() > 1);
 		} else {
 			leftRecipe.setVisible(false);
 			rightRecipe.setVisible(false);
@@ -109,13 +109,14 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 				}
 
 				// Recalculate the crafting response.
-				getContainer().updateCraftingResponse(getCurrentBundle().getOutput(), Integer.parseInt(text));
+				getMenu().updateCraftingResponse(getCurrentBundle().getOutput(), Integer.parseInt(text));
 			}
 		}));
+		
 	}
 
 	private CraftingStepsBundle getCurrentBundle() {
-		return getContainer().getBundleContainer().getBundle(bundleIndex);
+		return getMenu().getBundleContainer().getBundle(bundleIndex);
 	}
 
 	@Override
@@ -134,14 +135,14 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	}
 
 	protected void confirmCraft() {
-		PacketMakeDigistoreCraftingRequest request = new PacketMakeDigistoreCraftingRequest(getContainer().windowId, getCurrentBundle());
+		PacketMakeDigistoreCraftingRequest request = new PacketMakeDigistoreCraftingRequest(getMenu().containerId, getCurrentBundle());
 		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, request);
 	}
 
 	protected void modifyBundleIndex(int delta) {
-		bundleIndex = SDMath.clamp(bundleIndex + delta, 0, getContainer().getBundleContainer().getBundles().size() - 1);
+		bundleIndex = SDMath.clamp(bundleIndex + delta, 0, getMenu().getBundleContainer().getBundles().size() - 1);
 		leftRecipe.setEnabled(bundleIndex > 0);
-		rightRecipe.setEnabled(bundleIndex < getContainer().getBundleContainer().getBundles().size() - 1);
+		rightRecipe.setEnabled(bundleIndex < getMenu().getBundleContainer().getBundles().size() - 1);
 	}
 
 	protected void modifyCraftingAmmount(int delta) {
@@ -157,14 +158,14 @@ public class GuiCraftingAmount extends StaticPowerContainerGui<ContainerCrafting
 	}
 
 	protected void goBack() {
-		PacketRevertToParentContainer request = new PacketRevertToParentContainer(getContainer().windowId);
+		PacketRevertToParentContainer request = new PacketRevertToParentContainer(getMenu().containerId);
 		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, request);
 	}
 
 	@Override
 	protected void onScreenSizeChanged(Vector2D alpha) {
 		super.onScreenSizeChanged(alpha);
-		confirm.setPosition(61 - (alpha.getY() * 30), ySize - 22);
+		confirm.setPosition(61 - (alpha.getY() * 30), imageHeight - 22);
 	}
 
 	@Override

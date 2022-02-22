@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.fluidinfuser;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -21,11 +21,11 @@ public class ContainerFluidInfuser extends StaticPowerTileEntityContainer<TileEn
 		}
 	}
 
-	public ContainerFluidInfuser(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerFluidInfuser(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityFluidInfuser) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerFluidInfuser(int windowId, PlayerInventory playerInventory, TileEntityFluidInfuser owner) {
+	public ContainerFluidInfuser(int windowId, Inventory playerInventory, TileEntityFluidInfuser owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

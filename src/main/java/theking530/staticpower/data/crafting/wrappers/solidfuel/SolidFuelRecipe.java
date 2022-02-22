@@ -1,16 +1,16 @@
 package theking530.staticpower.data.crafting.wrappers.solidfuel;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class SolidFuelRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<SolidFuelRecipe> RECIPE_TYPE = IRecipeType.register("solid_fuel");
+	public static final RecipeType<SolidFuelRecipe> RECIPE_TYPE = RecipeType.register("solid_fuel");
 
 	private final ItemStack item;
 	private final int fuelAmount;
@@ -18,7 +18,7 @@ public class SolidFuelRecipe extends AbstractStaticPowerRecipe {
 	public SolidFuelRecipe(ResourceLocation name, ItemStack item) {
 		super(name);
 		this.item = item;
-		this.fuelAmount = ForgeHooks.getBurnTime(item);
+		this.fuelAmount = ForgeHooks.getBurnTime(item, RECIPE_TYPE);
 	}
 
 	public ItemStack getFuel() {
@@ -35,12 +35,12 @@ public class SolidFuelRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return null;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

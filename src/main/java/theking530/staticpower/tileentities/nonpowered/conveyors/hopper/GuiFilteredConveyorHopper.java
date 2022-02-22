@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors.hopper;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
@@ -9,7 +9,7 @@ public class GuiFilteredConveyorHopper extends StaticPowerTileEntityGui<Containe
 	@SuppressWarnings("unused")
 	private GuiInfoTab infoTab;
 
-	public GuiFilteredConveyorHopper(ContainerFilteredConveyorHopper container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiFilteredConveyorHopper(ContainerFilteredConveyorHopper container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 125);
 	}
 

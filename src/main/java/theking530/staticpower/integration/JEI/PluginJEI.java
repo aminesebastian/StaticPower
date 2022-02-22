@@ -20,8 +20,9 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
@@ -36,6 +37,7 @@ import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRe
 import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.data.crafting.wrappers.evaporation.EvaporatorRecipe;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
+import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
 import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusionRecipe;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
@@ -46,6 +48,7 @@ import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.data.crafting.wrappers.mixer.MixerRecipe;
 import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
+import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
@@ -62,6 +65,7 @@ import theking530.staticpower.integration.JEI.categories.covers.CoverRecipeCateg
 import theking530.staticpower.integration.JEI.categories.crucible.CrucibleRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.evaporator.EvaporatorRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.fermenter.FermenterRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.fertilization.FertilizerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.fluidgenerator.FluidGeneratorRecipeCateogry;
 import theking530.staticpower.integration.JEI.categories.fluidinfuser.FluidInfuserRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.former.FormerRecipeCategory;
@@ -73,6 +77,7 @@ import theking530.staticpower.integration.JEI.categories.mixer.MixerRecipeCatego
 import theking530.staticpower.integration.JEI.categories.packager.PackagerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.poweredfurnace.PoweredFurnaceRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.poweredgrinder.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.refinery.RefineryRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeProvider;
 import theking530.staticpower.integration.JEI.categories.solderingtable.SolderingTableRecipeCategory;
@@ -146,6 +151,10 @@ public class PluginJEI implements IModPlugin {
 	private HammerRecipeCategory hammerRecipeCategory;
 	@Nullable
 	private CauldronRecipeCategory cauldronRecipeCategory;
+	@Nullable
+	private FertilizerRecipeCategory fertilizerRecipeCategory;
+	@Nullable
+	private RefineryRecipeCategory refineryRecipeCategory;
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
@@ -270,6 +279,14 @@ public class PluginJEI implements IModPlugin {
 		// Cauldron
 		cauldronRecipeCategory = new CauldronRecipeCategory(guiHelper);
 		registration.addRecipeCategories(cauldronRecipeCategory);
+
+		// Fertilization
+		fertilizerRecipeCategory = new FertilizerRecipeCategory(guiHelper);
+		registration.addRecipeCategories(fertilizerRecipeCategory);
+		
+		// Refinery
+		refineryRecipeCategory = new RefineryRecipeCategory(guiHelper);
+		registration.addRecipeCategories(refineryRecipeCategory);
 	}
 
 	@Override
@@ -351,6 +368,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(PackagerRecipe.RECIPE_TYPE), PackagerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(HammerRecipe.RECIPE_TYPE), HammerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CauldronRecipe.RECIPE_TYPE), CauldronRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FertalizerRecipe.RECIPE_TYPE), FertilizerRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(RefineryRecipe.RECIPE_TYPE), RefineryRecipeCategory.UID);
 	}
 
 	@Override
@@ -381,8 +400,8 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler), TumblerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Packager), PackagerRecipeCategory.UID);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatCable), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminiumHeatSink), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatCable), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink), ThermalConductivityRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable), ThermalConductivityRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink), ThermalConductivityRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable), ThermalConductivityRecipeCategory.UID);
@@ -402,6 +421,11 @@ public class PluginJEI implements IModPlugin {
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RustyCauldron), CauldronRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CleanCauldron), CauldronRecipeCategory.UID);
+
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer), FertilizerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment), FertilizerRecipeCategory.UID);
+		
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Refinery), RefineryRecipeCategory.UID);
 	}
 
 	@Override
@@ -413,11 +437,16 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistoreCraftingTerminal.class, 9), VanillaRecipeCategoryUid.CRAFTING);
-		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoCraftingTable.class, 9), VanillaRecipeCategoryUid.CRAFTING);
-		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerDigistorePatternEncoder.class, 9), VanillaRecipeCategoryUid.CRAFTING);
-		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerSolderingTable.class, 9), SolderingTableRecipeCategory.UID);
-		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<>(ContainerAutoSolderingTable.class, 9), SolderingTableRecipeCategory.UID);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<ContainerDigistoreCraftingTerminal, CraftingRecipe>(ContainerDigistoreCraftingTerminal.class, CraftingRecipe.class, 9),
+				VanillaRecipeCategoryUid.CRAFTING);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<ContainerAutoCraftingTable, CraftingRecipe>(ContainerAutoCraftingTable.class, CraftingRecipe.class, 9),
+				VanillaRecipeCategoryUid.CRAFTING);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<ContainerDigistorePatternEncoder, CraftingRecipe>(ContainerDigistorePatternEncoder.class, CraftingRecipe.class, 9),
+				VanillaRecipeCategoryUid.CRAFTING);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<ContainerSolderingTable, SolderingRecipe>(ContainerSolderingTable.class, SolderingRecipe.class, 9),
+				SolderingTableRecipeCategory.UID);
+		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<ContainerAutoSolderingTable, SolderingRecipe>(ContainerAutoSolderingTable.class, SolderingRecipe.class, 9),
+				SolderingTableRecipeCategory.UID);
 	}
 
 	@Override

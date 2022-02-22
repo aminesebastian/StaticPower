@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.nonpowered.evaporator;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -23,11 +23,11 @@ public class ContainerEvaporator extends StaticPowerTileEntityContainer<TileEnti
 		}
 	}
 
-	public ContainerEvaporator(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerEvaporator(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityEvaporator) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerEvaporator(int windowId, PlayerInventory playerInventory, TileEntityEvaporator owner) {
+	public ContainerEvaporator(int windowId, Inventory playerInventory, TileEntityEvaporator owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -43,11 +43,11 @@ public class ContainerEvaporator extends StaticPowerTileEntityContainer<TileEnti
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !mergeItemStack(stack, 5, 6, false)) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
+		if (EnergyHandlerItemStackUtilities.isEnergyContainer(stack) && !moveItemStackTo(stack, 5, 6, false)) {
 			return true;
 		}
-		if (stack.getItem() instanceof BaseUpgrade && !mergeItemStack(stack, 2, 5, false)) {
+		if (stack.getItem() instanceof BaseUpgrade && !moveItemStackTo(stack, 2, 5, false)) {
 			return true;
 		}
 		return false;

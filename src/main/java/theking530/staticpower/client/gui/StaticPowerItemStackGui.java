@@ -1,15 +1,15 @@
 package theking530.staticpower.client.gui;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.container.StaticPowerItemContainer;
 
 public abstract class StaticPowerItemStackGui<T extends StaticPowerItemContainer<K>, K extends Item> extends StaticPowerContainerGui<T> {
 	private final ItemStack owningItemStack;
 
-	public StaticPowerItemStackGui(T container, PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
+	public StaticPowerItemStackGui(T container, Inventory playerInventory, Component title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title, guiXSize, guiYSize);
 		owningItemStack = container.getItemStack();
 	}

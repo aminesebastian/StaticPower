@@ -4,12 +4,12 @@ import javax.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
@@ -17,11 +17,12 @@ import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
 import theking530.api.attributes.registration.AttributeModifierRegistry;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class AutoSmithRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<AutoSmithRecipe> RECIPE_TYPE = IRecipeType.register("auto_smith");
+	public static final RecipeType<AutoSmithRecipe> RECIPE_TYPE = RecipeType.register("auto_smith");
 
 	@Nullable
 	private final StaticPowerIngredient smithTarget;
@@ -31,8 +32,8 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	private final int repairAmount;
 
 	public AutoSmithRecipe(ResourceLocation name, @Nullable StaticPowerIngredient smithTarget, StaticPowerIngredient modifierMaterial, FluidStack modifierFluid,
-			RecipeModifierWrapper[] modifiers, int repairAmount, long powerCost, int processingTime) {
-		super(name, processingTime, powerCost);
+			RecipeModifierWrapper[] modifiers, int repairAmount, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.modifierMaterial = modifierMaterial;
 		this.smithTarget = smithTarget;
 		this.modifierFluid = modifierFluid;
@@ -97,7 +98,7 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			// Check if this recipe performs a repair.
 			if (performsRepair()) {
 				// See if the item input is repairable and if it has any damage.
-				boolean canRepair = matchParams.getItems()[0].getDamage() < matchParams.getItems()[0].getMaxDamage();
+				boolean canRepair = matchParams.getItems()[0].getDamageValue() < matchParams.getItems()[0].getMaxDamage();
 
 				// If it is not repairable AND no modifiers can be applied, then this recipe can
 				// do nothing. Return false.
@@ -157,12 +158,12 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return AutoSmithRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 
@@ -202,9 +203,9 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 
 		// Attempt a repair if this recipe can perform one.
 		if (performsRepair()) {
-			if (stack.isRepairable() && stack.getDamage() > 0) {
+			if (stack.isRepairable() && stack.getDamageValue() > 0) {
 				// NO need to zero check here, the #setDamage method already does so.
-				stack.setDamage(stack.getDamage() - this.getRepairAmount());
+				stack.setDamageValue(stack.getDamageValue() - this.getRepairAmount());
 				applied = true;
 			}
 		}
@@ -239,14 +240,14 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			this.modifier = AttributeModifierRegistry.createInstance(json.get("modifier").getAsJsonObject());
 		}
 
-		public RecipeModifierWrapper(PacketBuffer buffer) {
-			CompoundNBT data = buffer.readCompoundTag();
+		public RecipeModifierWrapper(FriendlyByteBuf buffer) {
+			CompoundTag data = buffer.readNbt();
 			this.attributeId = new ResourceLocation(data.getString("attribute_id"));
 			this.modifier = AttributeModifierRegistry.createInstance(data.getCompound("modifier"));
 		}
 
-		public CompoundNBT serialize() {
-			CompoundNBT output = new CompoundNBT();
+		public CompoundTag serialize() {
+			CompoundTag output = new CompoundTag();
 			output.putString("attribute_id", attributeId.toString());
 			output.put("modifier", modifier.serialize());
 			return output;

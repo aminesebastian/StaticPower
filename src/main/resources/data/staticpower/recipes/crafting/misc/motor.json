@@ -2,7 +2,7 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
 		"tt ",
-		"mci",
+		"mct",
 		"ii "
 	],
 	"key": {
@@ -16,7 +16,7 @@
 			"tag": "forge:ingots/tin"
 		},
 		"m": {
-			"item": "staticpower:portable_battery_basic"
+			"item": "staticpower:magnet_weak"
 		}
 	},
 	"result": {

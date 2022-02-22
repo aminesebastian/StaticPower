@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_hamering",
+	"description": "It's Hammer Time!",
+	"prerequisites": [
+		"staticpower:research/basic_research"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 10
+		}
+	],
+	"icon": {
+		"item": "staticpower:hammer_iron"
+	}
+}

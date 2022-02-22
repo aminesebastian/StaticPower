@@ -2,12 +2,14 @@ package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
 import java.util.Optional;
 
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.api.ISolderingIron;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -17,21 +19,24 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 
-public abstract class AbstractSolderingTable extends TileEntityMachine implements INamedContainerProvider {
+public abstract class AbstractSolderingTable extends TileEntityMachine implements MenuProvider {
 	public final InventoryComponent patternInventory;
 	public final InventoryComponent solderingIronInventory;
 	public final InventoryComponent inventory;
 
-	public AbstractSolderingTable(TileEntityTypeAllocator<? extends AbstractSolderingTable> allocator) {
-		super(allocator, StaticPowerTiers.BASIC);
+	public AbstractSolderingTable(BlockEntityTypeAllocator<? extends AbstractSolderingTable> allocator, BlockPos pos,
+			BlockState state) {
+		super(allocator, pos, state, StaticPowerTiers.BASIC);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
-		registerComponent(inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
-		registerComponent(solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setShiftClickPriority(100)
-				.setFilter(new ItemStackHandlerFilter() {
-					public boolean canInsertItem(int slot, ItemStack stack) {
-						return stack.getItem() instanceof ISolderingIron;
-					}
-				}));
+		registerComponent(
+				inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));
+		registerComponent(
+				solderingIronInventory = new InventoryComponent("SolderingIronInventory", 1, MachineSideMode.Never)
+						.setShiftClickEnabled(true).setShiftClickPriority(100).setFilter(new ItemStackHandlerFilter() {
+							public boolean canInsertItem(int slot, ItemStack stack) {
+								return stack.getItem() instanceof ISolderingIron;
+							}
+						}));
 
 		// Don't drop the pattern or output slots.
 		patternInventory.setShouldDropContentsOnBreak(false);
@@ -118,7 +123,7 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 		// Check the pattern.
 		for (int k = 0; k < amount; k++) {
 			// If we can't craft anymore, stop.
-			if (output.getCount() + recipe.getRecipeOutput().getCount() > recipe.getRecipeOutput().getMaxStackSize()) {
+			if (output.getCount() + recipe.getResultItem().getCount() > recipe.getResultItem().getMaxStackSize()) {
 				break;
 			}
 
@@ -152,9 +157,9 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 
 			// Grow the output.
 			if (output.isEmpty()) {
-				output = recipe.getRecipeOutput().copy();
+				output = recipe.getResultItem().copy();
 			} else {
-				output.grow(recipe.getRecipeOutput().copy().getCount());
+				output.grow(recipe.getResultItem().copy().getCount());
 			}
 		}
 

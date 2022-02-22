@@ -2,9 +2,9 @@ package theking530.staticpower.tileentities.components.power;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
@@ -32,7 +32,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			return;
 		}
 		if (energyStorage != null && getTileEntity() != null) {
@@ -48,7 +48,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 	}
 
 	public long providePower(Direction facing, long amount) {
-		return providePower(getTileEntity().getPos().offset(facing), facing, amount);
+		return providePower(getTileEntity().getBlockPos().relative(facing), facing, amount);
 	}
 
 	/**
@@ -72,7 +72,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 	@Nullable
 	public PowerEnergyInterface getInterfaceForDesination(BlockPos pos, Direction facing) {
 		// Get the tile entity.
-		TileEntity te = getTileEntity().getWorld().getTileEntity(pos);
+		BlockEntity te = getTileEntity().getLevel().getBlockEntity(pos);
 
 		// If it does not exist, return null.
 		if (te == null) {

@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,12 +15,12 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -39,7 +39,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	private static final int INTPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -48,9 +48,9 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 	public FermenterRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Fermenter.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Fermenter.getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Fermenter));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Fermenter));
 	}
 
 	@Override
@@ -61,8 +61,8 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -82,15 +82,15 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 	}
 
 	@Override
-	public void draw(FermenterRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
+	public void draw(FermenterRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		// Draw the slots.
 		for (int i = 0; i < 3; ++i) {
 			for (int j = 0; j < 3; ++j) {
-				GuiDrawUtilities.drawSlot(matrixStack, 40 + j * 18, 4 + i * 18, 16, 16, 0);
+				GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 40 + j * 18, 4 + i * 18, 0);
 			}
 		}
 
-		GuiDrawUtilities.drawSlot(matrixStack, 112, 34, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 112, 34, 0);
 
 		// Draw the power bar.
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
@@ -99,19 +99,19 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluidStack(), 0, 0, 153, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
 
 		// Draw the progress bar as a fluid.
-		GuiDrawUtilities.drawSlot(matrixStack, 97, 24, 48, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 48, 5, 97, 24, 0);
 		float progress = ((float) processingTimer.getValue() / processingTimer.getMaxValue()) * 45;
 		FluidStack fluid = recipe.getOutputFluidStack();
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1000, 1000, 97, 29, 1, progress, 5, false);
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(FermenterRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(FermenterRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ")
+			output.add(new TextComponent("Usage: ")
 					.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get())));
 
 		}

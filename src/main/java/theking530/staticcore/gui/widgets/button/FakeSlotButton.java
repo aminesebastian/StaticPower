@@ -3,14 +3,13 @@ package theking530.staticcore.gui.widgets.button;
 import java.util.List;
 import java.util.function.BiConsumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.util.ITooltipFlag.TooltipFlags;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag.Default;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -20,7 +19,6 @@ import theking530.staticcore.utilities.Vector2D;
 @OnlyIn(Dist.CLIENT)
 public class FakeSlotButton extends StandardButton {
 	protected ItemStack itemIcon;
-	protected final ItemRenderer customRenderer;
 
 	/**
 	 * Creates an item button using an item stack as the icon.
@@ -32,7 +30,6 @@ public class FakeSlotButton extends StandardButton {
 	public FakeSlotButton(ItemStack icon, int xPos, int yPos, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, 18, 18, onClicked);
 		itemIcon = icon;
-		customRenderer = Minecraft.getInstance().getItemRenderer();
 	}
 
 	/**
@@ -55,33 +52,33 @@ public class FakeSlotButton extends StandardButton {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
-		if(!itemIcon.isEmpty()) {
-			tooltips.addAll(itemIcon.getTooltip(Minecraft.getInstance().player, showAdvanced ? TooltipFlags.ADVANCED : TooltipFlags.NORMAL));	
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+		if (!itemIcon.isEmpty()) {
+			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, showAdvanced ? Default.ADVANCED : Default.NORMAL));
 		}
 	}
 
-	protected void drawButton(MatrixStack stack, int transformedButtonLeft, int transformedButtonTop) {
-		Vector2D position = this.getPosition();
-		GuiDrawUtilities.drawSlot(stack, position.getX(), position.getY(), 16, 16, 0);
+	@Override
+	protected void drawButton(PoseStack stack) {
+		GuiDrawUtilities.drawSlot(stack, 16, 16, 0, 0, 0);
 	}
 
 	/**
 	 * Draws the button at the location defined at construction time.
 	 */
 	@Override
-	protected void drawButtonOverlay(MatrixStack stack, int buttonLeft, int buttonTop) {
+	protected void drawButtonOverlay(PoseStack pose, int buttonLeft, int buttonTop) {
 		// If the item is not empty, render it.
 		if (!itemIcon.isEmpty()) {
 			Vector2D size = getSize();
 			int halfSizeX = size.getXi() / 2;
 			int halfSizeY = size.getYi() / 2;
-			customRenderer.renderItemIntoGUI(itemIcon, (int) buttonLeft + (halfSizeX - 9), (int) buttonTop + (halfSizeY - 9));
+			GuiDrawUtilities.drawItem(pose, itemIcon, (halfSizeX - 9), (halfSizeY - 9), 10.0f);
 		}
 
 		// Render the hover effect.
 		if (isHovered()) {
-			GuiDrawUtilities.drawColoredRectangle(buttonLeft, buttonTop, 16, 16, 200, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+			GuiDrawUtilities.drawRectangle(pose, 16, 16, 0, 0, 250, new Color(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
 }

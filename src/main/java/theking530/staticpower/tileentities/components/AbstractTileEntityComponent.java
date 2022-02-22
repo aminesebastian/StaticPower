@@ -3,13 +3,16 @@ package theking530.staticpower.tileentities.components;
 import java.lang.reflect.Field;
 import java.util.List;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import javax.annotation.Nullable;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -69,12 +72,24 @@ public abstract class AbstractTileEntityComponent {
 	public void postProcessUpdate() {
 	}
 
-	public void onInitializedInWorld(World world, BlockPos pos, boolean firstTimePlaced) {
+	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
 		worldLoaded = true;
 	}
 
 	protected boolean isWorldLoaded() {
 		return worldLoaded;
+	}
+
+	/**
+	 * This method is called when the owning tile entity is first placed in the
+	 * world.
+	 * 
+	 * @param state
+	 * @param placer
+	 * @param stack
+	 */
+	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+
 	}
 
 	/**
@@ -120,29 +135,29 @@ public abstract class AbstractTileEntityComponent {
 
 	}
 
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getWeakPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return 0;
 	}
 
-	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getStrongPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		return 0;
 	}
 
-	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
+	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
 		SerializationUtilities.serializeFieldsToNbt(nbt, saveSerializeableFields, this);
 		return nbt;
 	}
 
-	public void deserializeSaveNbt(CompoundNBT nbt) {
+	public void deserializeSaveNbt(CompoundTag nbt) {
 		SerializationUtilities.deserializeFieldsToNbt(nbt, saveSerializeableFields, this);
 	}
 
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		SerializationUtilities.serializeFieldsToNbt(nbt, updateSerializeableFields, this);
 		return nbt;
 	}
 
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		SerializationUtilities.deserializeFieldsToNbt(nbt, updateSerializeableFields, this);
 	}
 
@@ -162,7 +177,7 @@ public abstract class AbstractTileEntityComponent {
 		if (this.isEnabled != isEnabled) {
 			this.isEnabled = isEnabled;
 			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), true);
-			getTileEntity().markDirty();
+			getTileEntity().setChanged();
 		}
 	}
 
@@ -171,10 +186,10 @@ public abstract class AbstractTileEntityComponent {
 	}
 
 	public BlockPos getPos() {
-		return getTileEntity().getPos();
+		return getTileEntity().getBlockPos();
 	}
 
-	public World getWorld() {
-		return getTileEntity().getWorld();
+	public Level getWorld() {
+		return getTileEntity().getLevel();
 	}
 }

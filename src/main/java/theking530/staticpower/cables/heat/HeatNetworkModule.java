@@ -4,15 +4,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.World;
-import net.minecraft.world.chunk.Chunk;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorage;
 import theking530.api.heat.HeatStorageUtilities;
@@ -42,28 +42,28 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<ITextComponent> components) {
+	public void getReaderOutput(List<Component> components) {
 		float averageThermalConductivity = 0.0f;
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
 			averageThermalConductivity += cable.getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 		}
 		averageThermalConductivity /= Network.getGraph().getCables().size();
 
-		ITextComponent currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat());
-		ITextComponent cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick());
-		ITextComponent heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick());
-		ITextComponent averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
+		Component currentHeat = GuiTextUtilities.formatHeatToString(heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat());
+		Component cooling = GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick());
+		Component heating = GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick());
+		Component averageConductivity = GuiTextUtilities.formatHeatRateToString(averageThermalConductivity);
 
 		components
-				.add(new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent("Contains: ")).appendString(TextFormatting.GRAY.toString()).append(currentHeat));
-		components.add(new StringTextComponent(TextFormatting.RED.toString()).append(new StringTextComponent("Heating: ")).appendString(TextFormatting.GRAY.toString()).append(heating));
-		components.add(new StringTextComponent(TextFormatting.BLUE.toString()).append(new StringTextComponent("Cooling: ")).appendString(TextFormatting.GRAY.toString()).append(cooling));
-		components.add(new StringTextComponent(TextFormatting.AQUA.toString()).append(new StringTextComponent("Average Conductivity: ")).appendString(TextFormatting.GRAY.toString())
+				.add(new TextComponent(ChatFormatting.WHITE.toString()).append(new TextComponent("Contains: ")).append(ChatFormatting.GRAY.toString()).append(currentHeat));
+		components.add(new TextComponent(ChatFormatting.RED.toString()).append(new TextComponent("Heating: ")).append(ChatFormatting.GRAY.toString()).append(heating));
+		components.add(new TextComponent(ChatFormatting.BLUE.toString()).append(new TextComponent("Cooling: ")).append(ChatFormatting.GRAY.toString()).append(cooling));
+		components.add(new TextComponent(ChatFormatting.AQUA.toString()).append(new TextComponent("Average Conductivity: ")).append(ChatFormatting.GRAY.toString())
 				.append(averageConductivity));
 	}
 
 	@Override
-	public void tick(World world) {
+	public void tick(Level world) {
 		// Capture the transfer metrics.
 		heatStorage.captureHeatTransferMetric();
 
@@ -136,7 +136,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		if (!heatStorage.isAtMaxHeat()) {
 			for (ServerCable cable : Network.getGraph().getCables().values()) {
 				// Generate heat if required to.
-				TileEntity te = world.getChunkAt(cable.getPos()).getTileEntity(cable.getPos(), Chunk.CreateEntityType.QUEUED);
+				BlockEntity te = world.getChunkAt(cable.getPos()).getBlockEntity(cable.getPos(), LevelChunk.EntityCreationType.QUEUED);
 				Optional<HeatCableComponent> heatComponent = ComponentUtilities.getComponent(HeatCableComponent.class, te);
 				if (heatComponent.isPresent()) {
 					heatComponent.get().generateHeat(this);
@@ -192,12 +192,12 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void readFromNbt(CompoundNBT tag) {
+	public void readFromNbt(CompoundTag tag) {
 		heatStorage.deserializeNBT(tag.getCompound("heat_storage"));
 	}
 
 	@Override
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		tag.put("heat_storage", heatStorage.serializeNBT());
 		return tag;
 	}

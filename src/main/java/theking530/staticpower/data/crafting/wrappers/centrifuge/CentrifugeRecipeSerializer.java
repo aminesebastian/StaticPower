@@ -3,17 +3,18 @@ package theking530.staticpower.data.crafting.wrappers.centrifuge;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
-public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CentrifugeRecipe> {
+public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CentrifugeRecipe> {
 	public static final CentrifugeRecipeSerializer INSTANCE = new CentrifugeRecipeSerializer();
 
 	private CentrifugeRecipeSerializer() {
@@ -21,24 +22,17 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public CentrifugeRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public CentrifugeRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Get the minimum speed.
 		int minimumSpeed = json.get("minimum_speed").getAsInt();
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.centrifugePowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.centrifugeProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.centrifugeProcessingTime.get(),
+				StaticPowerConfig.SERVER.centrifugePowerUsage.get(), json);
 
 		// Get the outputs.
 		JsonArray outputs = json.getAsJsonArray("outputs");
@@ -59,13 +53,11 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		}
 
 		// Create the recipe.
-		return new CentrifugeRecipe(recipeId, processingTime, powerCost, input, firstOutput, secondOutput, thirdOutput, minimumSpeed);
+		return new CentrifugeRecipe(recipeId, input, firstOutput, secondOutput, thirdOutput, minimumSpeed, processing);
 	}
 
 	@Override
-	public CentrifugeRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
+	public CentrifugeRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int speed = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		ProbabilityItemStackOutput output1 = ProbabilityItemStackOutput.readFromBuffer(buffer);
@@ -73,18 +65,16 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		ProbabilityItemStackOutput output3 = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new CentrifugeRecipe(recipeId, time, power, input, output1, output2, output3, speed);
+		return new CentrifugeRecipe(recipeId, input, output1, output2, output3, speed, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, CentrifugeRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
+	public void toNetwork(FriendlyByteBuf buffer, CentrifugeRecipe recipe) {
 		buffer.writeInt(recipe.getMinimumSpeed());
 		recipe.getInput().write(buffer);
 		recipe.getOutput1().writeToBuffer(buffer);
 		recipe.getOutput2().writeToBuffer(buffer);
 		recipe.getOutput3().writeToBuffer(buffer);
-
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

@@ -2,20 +2,20 @@ package theking530.api.digistore;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
+public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 	protected final ItemStack owningItemStack;
-	protected final CompoundNBT initialNbt;
+	protected final CompoundTag initialNbt;
 	protected final DigistoreInventory inventory;
 
-	public DigistoreInventoryCapabilityProvider(ItemStack owner, int uniqueItemTypes, int maxStoredItems, @Nullable CompoundNBT nbt) {
+	public DigistoreInventoryCapabilityProvider(ItemStack owner, int uniqueItemTypes, int maxStoredItems, @Nullable CompoundTag nbt) {
 		owningItemStack = owner;
 		initialNbt = nbt;
 		inventory = new DigistoreInventory(uniqueItemTypes, maxStoredItems);
@@ -34,12 +34,12 @@ public class DigistoreInventoryCapabilityProvider implements ICapabilityProvider
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
+	public CompoundTag serializeNBT() {
 		return inventory.serializeNBT();
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		inventory.deserializeNBT(nbt);
 	}
 }

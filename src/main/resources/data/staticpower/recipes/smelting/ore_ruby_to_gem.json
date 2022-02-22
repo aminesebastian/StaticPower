@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:ore_ruby"
+  },
+  "result": "staticpower:gem_ruby",
+  "experience": 0.5,
+  "cookingtime": 200
+}

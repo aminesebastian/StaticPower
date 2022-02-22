@@ -1,11 +1,11 @@
 package theking530.staticpower.tileentities.nonpowered.placer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiAutomaticPlacer extends StaticPowerTileEntityGui<ContainerAutomaticPlacer, TileEntityAutomaticPlacer> {
-	public GuiAutomaticPlacer(ContainerAutomaticPlacer container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiAutomaticPlacer(ContainerAutomaticPlacer container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 

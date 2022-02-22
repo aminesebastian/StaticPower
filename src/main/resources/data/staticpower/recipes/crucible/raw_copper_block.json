@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:storage_blocks/raw_copper"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_copper",
+			"volume": 1296
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 9
+		}
+	}
+}

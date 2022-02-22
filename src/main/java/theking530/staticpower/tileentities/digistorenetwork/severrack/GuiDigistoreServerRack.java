@@ -1,12 +1,12 @@
 package theking530.staticpower.tileentities.digistorenetwork.severrack;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiDigistoreServerRack extends StaticPowerTileEntityGui<ContainerDigistoreServerRack, TileEntityDigistoreServerRack> {
 
-	public GuiDigistoreServerRack(ContainerDigistoreServerRack container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiDigistoreServerRack(ContainerDigistoreServerRack container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 185);
 	}
 

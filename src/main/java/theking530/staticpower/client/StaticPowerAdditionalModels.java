@@ -4,11 +4,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerAdditionalModels {
@@ -150,9 +150,9 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_HEAT_PLATINUM_EXTENSION = registerModel("block/cables/heat/platinum/extension");
 	public static final ResourceLocation CABLE_HEAT_PLATINUM_ATTACHMENT = registerModel("block/cables/heat/platinum/attachment");
 
-	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_STRAIGHT = registerModel("block/cables/heat/aluminium/straight");
-	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_EXTENSION = registerModel("block/cables/heat/aluminium/extension");
-	public static final ResourceLocation CABLE_HEAT_ALUMINIUM_ATTACHMENT = registerModel("block/cables/heat/aluminium/attachment");
+	public static final ResourceLocation CABLE_HEAT_ALUMINUM_STRAIGHT = registerModel("block/cables/heat/aluminum/straight");
+	public static final ResourceLocation CABLE_HEAT_ALUMINUM_EXTENSION = registerModel("block/cables/heat/aluminum/extension");
+	public static final ResourceLocation CABLE_HEAT_ALUMINUM_ATTACHMENT = registerModel("block/cables/heat/aluminum/attachment");
 
 	public static final ResourceLocation CABLE_SCAFFOLD_STRAIGHT = registerModel("block/cables/scaffold/straight");
 	public static final ResourceLocation CABLE_SCAFFOLD_EXTENSION = registerModel("block/cables/scaffold/extension");
@@ -258,7 +258,7 @@ public class StaticPowerAdditionalModels {
 	static {
 		CABLE_REDSTONE_BASIC = new HashMap<>();
 		for (int i = 0; i < 16; i++) {
-			TextFormatting formatting = TextFormatting.values()[i];
+			ChatFormatting formatting = ChatFormatting.values()[i];
 			String name = formatting.name().toLowerCase();
 			CABLE_REDSTONE_BASIC.put(name,
 					new ResourceLocation[] { registerModel("block/cables/redstone/basic/" + name + "/straight"), registerModel("block/cables/redstone/basic/" + name + "/extension") });
@@ -266,9 +266,9 @@ public class StaticPowerAdditionalModels {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void regsiterModels() {
+	public static void registerModels() {
 		for (ResourceLocation model : MODELS) {
-			ModelLoader.addSpecialModel(model);
+			ForgeModelBakery.addSpecialModel(model);
 			StaticPower.LOGGER.info(String.format("Loading additional model: %1$s.", model.toString()));
 		}
 	}

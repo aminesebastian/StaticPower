@@ -2,12 +2,12 @@ package theking530.staticpower.cables.attachments.digistore.terminalbase.network
 
 import java.util.function.Supplier;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketDigistoreFakeSlotClicked extends NetworkMessage {
 	protected int windowId;
@@ -31,7 +31,7 @@ public class PacketDigistoreFakeSlotClicked extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(windowId);
 		buffer.writeBoolean(shiftHeld);
 		buffer.writeBoolean(controlHeld);
@@ -41,7 +41,7 @@ public class PacketDigistoreFakeSlotClicked extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		windowId = buffer.readInt();
 		shiftHeld = buffer.readBoolean();
 		controlHeld = buffer.readBoolean();
@@ -54,9 +54,9 @@ public class PacketDigistoreFakeSlotClicked extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			PlayerEntity player = ctx.get().getSender();
-			if (player.openContainer.windowId == windowId && player.openContainer instanceof AbstractContainerDigistoreTerminal) {
-				((AbstractContainerDigistoreTerminal) player.openContainer).digistoreFakeSlotClickedOnServer(slot, button, shiftHeld, controlHeld, altHeld);
+			Player player = ctx.get().getSender();
+			if (player.containerMenu.containerId == windowId && player.containerMenu instanceof AbstractContainerDigistoreTerminal) {
+				((AbstractContainerDigistoreTerminal) player.containerMenu).digistoreFakeSlotClickedOnServer(slot, button, shiftHeld, controlHeld, altHeld);
 			}
 		});
 	}

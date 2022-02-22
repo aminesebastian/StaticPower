@@ -4,12 +4,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.items.StaticPowerItem;
@@ -17,11 +17,11 @@ import theking530.staticpower.items.StaticPowerItem;
 public class CoverSaw extends StaticPowerItem {
 
 	public CoverSaw(String name, int maxUses) {
-		super(name, new Item.Properties().maxStackSize(1).maxDamage(maxUses).setNoRepair());
+		super(name, new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair());
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
 		if (repair.getItem() == Items.IRON_INGOT) {
 			return true;
 		}
@@ -31,24 +31,24 @@ public class CoverSaw extends StaticPowerItem {
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
 		ItemStack stackCopy = stack.copy();
-		if (stackCopy.attemptDamageItem(1, random, null)) {
+		if (stackCopy.hurt(1, RANDOM, null)) {
 			stackCopy.shrink(1);
-			stackCopy.setDamage(0);
+			stackCopy.setDamageValue(0);
 		}
 		return stackCopy;
 	}
 
 	@Override
-	public boolean hasContainerItem() {
+	public boolean hasCraftingRemainingItem() {
 		return true;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
-			tooltip.add(new StringTextComponent("Max Uses: " + getMaxDamage(stack)));
-			tooltip.add(new StringTextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
+			tooltip.add(new TextComponent("Max Uses: " + getMaxDamage(stack)));
+			tooltip.add(new TextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
 		}
 	}
 }

@@ -6,7 +6,7 @@
 	"minimum_speed": 500,
 	"outputs": [
 		{
-			"item": "staticpower:nugget_copper"
+			"item": "minecraft:copper_ingot"
 		},
 		{
 			"item": "minecraft:bucket"

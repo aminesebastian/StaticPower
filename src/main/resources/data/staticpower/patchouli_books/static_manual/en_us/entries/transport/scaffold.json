@@ -1,0 +1,15 @@
+{
+	"name": "Scaffold",
+	"icon": "staticpower:cable_scaffold",
+	"category": "staticpower:transport",
+	"pages": [
+		{
+			"type": "text",
+			"text": "Want to use our fancy cover technology but don't have any cables in the area? Fret not! For now you can use our patented scaffolding cable technology to anchor covers everywhere and anywhere you want!"
+		},
+		{
+			"type": "crafting",
+			"recipe": "staticpower:crafting/cables/scaffold_cable"
+		}
+	]
+}

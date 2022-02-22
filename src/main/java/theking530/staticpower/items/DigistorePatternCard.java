@@ -4,14 +4,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -28,13 +28,13 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 	}
 
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		// Get the item name.
-		IFormattableTextComponent cardName = (IFormattableTextComponent) super.getDisplayName(stack);
+		MutableComponent cardName = (MutableComponent) super.getName(stack);
 
 		// If we have a pattern, mark this card as encoded.
 		if (stack.hasTag() && stack.getTag().contains(ENCODED_PATTERN_TAG)) {
-			cardName.append(new StringTextComponent(" (Encoded)"));
+			cardName.append(new TextComponent(" (Encoded)"));
 		}
 
 		// Return the final name.
@@ -43,7 +43,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		if (showAdvanced) {
 			// Try to get the pattern.
 			EncodedDigistorePattern pattern = EncodedDigistorePattern.readFromPatternCard(stack);
@@ -54,19 +54,19 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 			}
 
 			// Add inputs.
-			tooltip.add(new StringTextComponent("Inputs: "));
+			tooltip.add(new TextComponent("Inputs: "));
 			for (ItemStack input : pattern.getInputs()) {
 				if (!input.isEmpty()) {
-					tooltip.add(new StringTextComponent("  •").append(input.getDisplayName()));
+					tooltip.add(new TextComponent("  •").append(input.getHoverName()));
 				}
 			}
 
 			// Add outputs.
-			tooltip.add(new StringTextComponent("Output: "));
+			tooltip.add(new TextComponent("Output: "));
 			if (!pattern.getOutput().isEmpty()) {
-				IFormattableTextComponent outputTooltip = new StringTextComponent("  •").append(pattern.getOutput().getDisplayName());
+				MutableComponent outputTooltip = new TextComponent("  •").append(pattern.getOutput().getHoverName());
 				if (pattern.getOutput().getCount() > 1) {
-					outputTooltip.append(new StringTextComponent(" x" + pattern.getOutput().getCount()));
+					outputTooltip.append(new TextComponent(" x" + pattern.getOutput().getCount()));
 				}
 				tooltip.add(outputTooltip);
 			}
@@ -75,8 +75,8 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	public ItemStack getBlankEncodedCardForPreview() {
 		ItemStack output = new ItemStack(this);
-		output.setTag(new CompoundNBT());
-		output.getTag().put(ENCODED_PATTERN_TAG, new CompoundNBT());
+		output.setTag(new CompoundTag());
+		output.getTag().put(ENCODED_PATTERN_TAG, new CompoundTag());
 		return output;
 	}
 
@@ -89,7 +89,7 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 		}
 
 		// Give it a tag.
-		output.setTag(new CompoundNBT());
+		output.setTag(new CompoundTag());
 
 		// Put the pattern on the itemstack.
 		output.getTag().put(ENCODED_PATTERN_TAG, recipe.serialize());
@@ -109,8 +109,8 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
-		IBakedModel encodedModel = event.getModelRegistry().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
+		BakedModel encodedModel = event.getModelRegistry().get(StaticPowerAdditionalModels.DIGISTORE_PATTERN_CARD_ENCODED);
 		return new PatternCardItemModel(existingModel, encodedModel);
 	}
 

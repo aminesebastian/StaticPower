@@ -1,7 +1,7 @@
 package theking530.staticpower.integration.JEI;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Taking some design cues from Applied Energistics 2!
@@ -10,5 +10,5 @@ import net.minecraft.item.ItemStack;
  *
  */
 public interface IJEIReipceTransferHandler {
-	public void consumeJEITransferRecipe(PlayerEntity playerIn, ItemStack[][] recipe);
+	public void consumeJEITransferRecipe(Player playerIn, ItemStack[][] recipe);
 }

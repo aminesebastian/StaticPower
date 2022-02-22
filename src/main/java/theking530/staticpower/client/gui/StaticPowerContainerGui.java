@@ -5,26 +5,26 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.renderer.Rectangle2d;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.Rect2i;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
+import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.GuiDrawItem;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.StaticPowerContainer;
@@ -32,6 +32,7 @@ import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.DigistoreCraftingOutputSlot;
 import theking530.staticpower.container.slots.OutputSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -44,7 +45,7 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
  *
  * @param <T> The container type.
  */
-public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> extends ContainerScreen<T> {
+public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> extends AbstractContainerScreen<T> {
 	/** The default location to render the inventory label. */
 	public static final Vector2D DEFAULT_INVENTORY_LABEL_LOCATION = new Vector2D(8, 97);
 
@@ -52,8 +53,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	protected final WidgetContainer widgetContainer;
 	/** The tab manager widget. */
 	protected final GuiTabManager tabManager;
-	/** The item renderer. */
-	protected final GuiDrawItem itemRenderer;
+	protected final Inventory inventory;
 
 	protected Vector2D sizeTarget;
 	protected Vector2D previousSizeTarget;
@@ -62,7 +62,6 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 	protected boolean isInitialized;
-	protected float partialTicks;
 
 	private final SpriteDrawable lockedSprite;
 
@@ -75,20 +74,19 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param guiXSize        The gui's xSize.
 	 * @param guiYSize        The gui's ySize;
 	 */
-	public StaticPowerContainerGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
+	public StaticPowerContainerGui(T container, final Inventory playerInventory, Component title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
-		widgetContainer = new WidgetContainer(this);
-		xSize = guiXSize;
-		ySize = guiYSize;
-		sizeTarget = new Vector2D(xSize, ySize);
+		inventory = playerInventory;
+		widgetContainer = new WidgetContainer(WidgetParent.fromScreen(this));
+		imageWidth = guiXSize;
+		imageHeight = guiYSize;
+		sizeTarget = new Vector2D(imageWidth, imageHeight);
 		outputSlotSize = 24;
 		inputSlotSize = 16;
-		itemRenderer = new GuiDrawItem();
 		isScreenSizeChanging = false;
-		partialTicks = 0.0f;
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
 		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
-		registerWidget(tabManager = new GuiTabManager(this));
+		registerWidget(tabManager = new GuiTabManager());
 		container.setName(title);
 	}
 
@@ -102,8 +100,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	}
 
 	@Override
-	public void tick() {
-		super.tick();
+	public void containerTick() {
+		super.containerTick();
 		updateData();
 		widgetContainer.tick();
 	}
@@ -131,25 +129,25 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * draw the title at a custom location.
 	 */
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack stack, int mouseX, int mouseY) {
+	protected void renderLabels(PoseStack stack, int mouseX, int mouseY) {
 		// Draw the title.
 		drawContainerTitle(stack, mouseX, mouseY);
 
 		// Draw the locks for lock slots. We do this in a single pass to avoid having
 		// the flip the GL states a lot.
-		GlStateManager.disableDepthTest();
-		for (Slot slot : getContainer().inventorySlots) {
+		GlStateManager._disableDepthTest();
+		for (Slot slot : getMenu().slots) {
 			if (slot instanceof SlotItemHandler) {
 				SlotItemHandler itemHandlerSlot = (SlotItemHandler) slot;
 				if (itemHandlerSlot.getItemHandler() instanceof InventoryComponent) {
 					InventoryComponent component = (InventoryComponent) itemHandlerSlot.getItemHandler();
 					if (component.isSlotLocked(slot.getSlotIndex())) {
-						lockedSprite.draw(slot.xPos + 4, slot.yPos + 4);
+						lockedSprite.draw(stack, slot.x + 4, slot.y + 4);
 					}
 				}
 			}
 		}
-		GlStateManager.enableDepthTest();
+		GlStateManager._enableDepthTest();
 	}
 
 	/**
@@ -157,38 +155,37 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * the widget backgrounds, the tabs, and buttons.
 	 */
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void renderBg(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		// Renders the dark background.
 		renderBackground(stack);
 
+		// Draw any extras.
+		stack.pushPose();
+		stack.translate(leftPos, topPos, 0);
+
 		// Update the widgets and then draw the background.
-		widgetContainer.update(stack, new Vector2D(guiLeft, guiTop), new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
+		widgetContainer.update(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
 		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks);
 
 		// Draw the container background.
-		drawGenericBackground();
+		drawGenericBackground(stack);
 
-		// Draw any extras.
-		stack.push();
-		stack.translate(guiLeft, guiTop, 0);
 		drawBackgroundExtras(stack, partialTicks, mouseX, mouseY);
-		stack.pop();
 
 		// Draw the slots.
-		if (container instanceof StaticPowerTileEntityContainer) {
-			drawContainerSlots(stack, container.inventorySlots, ((StaticPowerTileEntityContainer<?>) container).getTileEntity().getComponent(SideConfigurationComponent.class));
+		if (menu instanceof StaticPowerTileEntityContainer) {
+			drawContainerSlots(stack, menu.slots, ((StaticPowerTileEntityContainer<?>) menu).getTileEntity().getComponent(SideConfigurationComponent.class));
 		} else {
-			drawContainerSlots(stack, container.inventorySlots);
+			drawContainerSlots(stack, menu.slots);
 		}
 
 		// Draw any widgets that need to appear above slots/items.
 		widgetContainer.renderBehindItems(stack, mouseX, mouseY, partialTicks);
 
 		// Draw anything infront of the background but behind the items.
-		stack.push();
-		stack.translate(guiLeft, guiTop, 0);
+
 		drawBehindItems(stack, partialTicks, mouseX, mouseY);
-		stack.pop();
+		stack.popPose();
 
 		// Animations the screensize if the target sizes have changed.
 		animateScreenSize();
@@ -198,37 +195,34 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Renders the UI.
 	 */
 	@Override
-	public void render(MatrixStack stack, int mouseX, int mouseY, float partialTicks) {
+	public void render(PoseStack stack, int mouseX, int mouseY, float partialTicks) {
 		super.render(stack, mouseX, mouseY, partialTicks);
-
-		// Cache the partial ticks.
-		this.partialTicks = partialTicks;
-
+		// Draw any additional foreground elements.
+		stack.pushPose();
+		stack.translate(leftPos, topPos, 0);
+		
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
 		widgetContainer.renderForegound(stack, mouseX, mouseY, partialTicks);
 
-		drawSlotOverlays(container.inventorySlots);
+		drawSlotOverlays(menu.slots);
 
-		// Draw any additional foreground elements.
-		stack.push();
-		stack.translate(guiLeft, guiTop, 0);
 		drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
-		stack.pop();
+		stack.popPose();
 
 		// Renders any hovered tooltips.
-		renderHoveredTooltip(stack, mouseX, mouseY);
+		renderTooltip(stack, mouseX, mouseY);
 
 		// Render the widget tooltips as needed.
 		widgetContainer.renderTooltips(stack, mouseX, mouseY);
 
 		// Render any extra tooltips.
-		List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+		List<Component> tooltips = new ArrayList<Component>();
 		getExtraTooltips(tooltips, stack, mouseX, mouseY);
 		if (tooltips.size() > 0) {
-			func_243308_b(stack, tooltips, mouseX, mouseY);
+			renderComponentTooltip(stack, tooltips, mouseX, mouseY);
 		}
 	}
 
@@ -236,9 +230,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		// If we clicked on an input container slot and we held control, don't raise the
 		// regular clicked chain. Use the SWAP just as a placeholder.
-		if (Screen.hasControlDown()) {
+		if (ModKeyBindings.SLOT_LOCK.isDown()) {
 			if (hoveredSlot != null) {
-				handleMouseClick(hoveredSlot, hoveredSlot.slotNumber, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
+				slotClicked(hoveredSlot, hoveredSlot.index, StaticPowerContainer.INVENTORY_COMPONENT_LOCK_MOUSE_BUTTON, ClickType.SWAP);
 				return true;
 			}
 		}
@@ -284,8 +278,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		return true;
 	}
 
-	public List<Rectangle2d> getGuiBounds() {
-		List<Rectangle2d> tabBoxes = new ArrayList<>();
+	public List<Rect2i> getGuiBounds() {
+		List<Rect2i> tabBoxes = new ArrayList<>();
 
 		for (BaseGuiTab tab : getTabManager().getRegisteredTabs()) {
 			tabBoxes.add(tab.getBounds().toRectange2d());
@@ -304,19 +298,19 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param mouseX The mouse's x position.
 	 * @param mouseY The mouse's y position.
 	 */
-	protected void drawContainerTitle(MatrixStack stack, int mouseX, int mouseY) {
+	protected void drawContainerTitle(PoseStack stack, int mouseX, int mouseY) {
 		// Draw the container title if requested at the designated location.
 		if (shouldDrawContainerLabel()) {
 			Vector2D containerLabelLocation = getContainerLabelDrawLocation();
-			ITextComponent containerName = getTitle();
+			Component containerName = getTitle();
 			String containerString = containerName.getString();
-			font.drawString(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 4210752);
+			font.draw(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 4210752);
 		}
 
 		// Draw the inventory label if requested at the designated location.
 		if (shouldDrawInventoryLabel()) {
 			Vector2D inventoryLabelLocation = getInventoryLabelDrawLocation();
-			font.drawString(stack, playerInventory.getDisplayName().getString(), inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
+			font.draw(stack, inventory.getDisplayName().getString(), inventoryLabelLocation.getX(), inventoryLabelLocation.getY(), 4210752);
 		}
 	}
 
@@ -350,9 +344,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 *         render.
 	 */
 	protected Vector2D getContainerLabelDrawLocation() {
-		ITextComponent containerName = getTitle();
+		Component containerName = getTitle();
 		String containerString = containerName.getString();
-		return new Vector2D(xSize / 2 - font.getStringWidth(containerString) / 2, 6);
+		return new Vector2D(imageWidth / 2 - font.width(containerString) / 2, 6);
 	}
 
 	/**
@@ -368,12 +362,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional background features (features
 	 * that should appear behind items).
 	 * 
-	 * @param stack        TODO
+	 * @param stack
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
 	 */
-	protected void drawBackgroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 
 	}
 
@@ -381,12 +375,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional background features (features
 	 * that should appear infront of the background, but behind items.).
 	 * 
-	 * @param stack        TODO
+	 * @param stack
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
 	 */
-	protected void drawBehindItems(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 
 	}
 
@@ -394,12 +388,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Override this method to draw any additional foreground features (features
 	 * that should appear in front of items).
 	 * 
-	 * @param stack        TODO
+	 * @param stack
 	 * @param partialTicks The delta time.
 	 * @param mouseX       The mouse's x position.
 	 * @param mouseY       The mouse's y position.
 	 */
-	protected void drawForegroundExtras(MatrixStack stack, float partialTicks, int mouseX, int mouseY) {
+	protected void drawForegroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 	}
 
 	/**
@@ -410,7 +404,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param mouseX
 	 * @param mouseY
 	 */
-	protected void getExtraTooltips(List<ITextComponent> tooltips, MatrixStack stack, int mouseX, int mouseY) {
+	protected void getExtraTooltips(List<Component> tooltips, PoseStack stack, int mouseX, int mouseY) {
 
 	}
 
@@ -418,8 +412,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * Draws the default Minecraft UI background using the xSize and ySize of the UI
 	 * and screen center for the position.
 	 */
-	public void drawGenericBackground() {
-		drawGenericBackground(xSize, ySize);
+	public void drawGenericBackground(PoseStack stack) {
+		drawGenericBackground(stack, imageWidth, imageHeight);
 	}
 
 	/**
@@ -429,8 +423,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param width  The width of the background.
 	 * @param height The height of the background.
 	 */
-	public void drawGenericBackground(int width, int height) {
-		GuiDrawUtilities.drawGenericBackground(width, height, guiLeft, guiTop);
+	public void drawGenericBackground(PoseStack stack, int width, int height) {
+		GuiDrawUtilities.drawGenericBackground(stack, width, height, 0, 0);
 	}
 
 	/**
@@ -442,8 +436,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param width  The width of the background.
 	 * @param height The height of the background.
 	 */
-	public void drawGenericBackground(int xPos, int yPos, int width, int height) {
-		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop);
+	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height) {
+		GuiDrawUtilities.drawGenericBackground(stack, width, height, xPos, yPos);
 	}
 
 	/**
@@ -459,15 +453,15 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param borderTint      The tint to apply to the border (the two pixel rounded
 	 *                        corner border).
 	 */
-	public void drawGenericBackground(int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
-		GuiDrawUtilities.drawGenericBackground(width, height, xPos + guiLeft, yPos + guiTop, 0.0f, backgroundColor, borderTint, true, true, true, true);
+	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
+		GuiDrawUtilities.drawGenericBackground(stack, width, height, xPos + leftPos, yPos + topPos, 0.0f, backgroundColor);
 	}
 
 	/**
 	 * Draws the player's inventory slots in the default location.
 	 */
 	public void drawPlayerInventorySlots() {
-		drawPlayerInventorySlots(guiLeft + (xSize - 162) / 2 + 1, guiTop + ySize - 83);
+		drawPlayerInventorySlots(leftPos + (imageWidth - 162) / 2 + 1, topPos + imageHeight - 83);
 	}
 
 	/**
@@ -481,8 +475,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	}
 
 	@Override
-	public void moveItems(MatrixStack stack, Slot slotIn) {
-		super.moveItems(stack, slotIn);
+	public void renderSlot(PoseStack stack, Slot slotIn) {
+		super.renderSlot(stack, slotIn);
 	}
 
 	/**
@@ -498,11 +492,11 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param slotMode The mode of the slot (this dictates the potential color
 	 *                 border).
 	 */
-	public void drawEmptySlot(MatrixStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
+	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
 		if (slotMode == MachineSideMode.Regular) {
-			GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, 0);
+			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 0);
 		} else {
-			GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, 0, slotMode.getColor());
+			GuiDrawUtilities.drawSlotWithBorder(matrixStack, width, height, xPos, yPos, 0, slotMode.getColor());
 		}
 	}
 
@@ -517,8 +511,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param width  The width of the slot.
 	 * @param height The height of the slot.
 	 */
-	public void drawEmptySlot(MatrixStack matrixStack, int xPos, int yPos, int width, int height) {
-		GuiDrawUtilities.drawSlot(matrixStack, xPos, yPos, width, height, 0);
+	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height) {
+		GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 0);
 	}
 
 	public void drawSlotOverlays(List<Slot> slots) {
@@ -527,16 +521,16 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 				StaticPowerContainerSlot handlerSlot = (StaticPowerContainerSlot) slot;
 				int slotSize = handlerSlot.getMode().isOutputMode() ? outputSlotSize : handlerSlot.getMode().isInputMode() ? inputSlotSize : 16;
 				int sizePosOffset = (slotSize - 16) / 2;
-				handlerSlot.drawSlotOverlay(itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
+				handlerSlot.drawSlotOverlay(leftPos, topPos, slotSize, sizePosOffset);
 			}
 		}
 	}
 
-	public void drawContainerSlots(MatrixStack matrixStack, List<Slot> slots) {
+	public void drawContainerSlots(PoseStack matrixStack, List<Slot> slots) {
 		drawContainerSlots(matrixStack, slots, null);
 	}
 
-	public void drawContainerSlots(MatrixStack matrixStack, List<Slot> slots, @Nullable SideConfigurationComponent sideConfiguration) {
+	public void drawContainerSlots(PoseStack matrixStack, List<Slot> slots, @Nullable SideConfigurationComponent sideConfiguration) {
 		for (Slot slot : slots) {
 			// Skip null slots
 			if (slot == null) {
@@ -544,7 +538,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			}
 
 			// Skip disabled slots.
-			if (!slot.isEnabled()) {
+			if (!slot.isActive()) {
 				continue;
 			}
 
@@ -580,12 +574,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 							}
 						}
 
-						drawEmptySlot(matrixStack, slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize, drawnSideMode);
+						drawEmptySlot(matrixStack, slot.x - sizePosOffset, slot.y - sizePosOffset, slotSize, slotSize, drawnSideMode);
 					} else {
-						drawEmptySlot(matrixStack, slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
+						drawEmptySlot(matrixStack, slot.x - sizePosOffset, slot.y - sizePosOffset, slotSize, slotSize);
 					}
 				} else {
-					drawEmptySlot(matrixStack, slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset, slotSize, slotSize);
+					drawEmptySlot(matrixStack, slot.x - sizePosOffset, slot.y - sizePosOffset, slotSize, slotSize);
 				}
 
 				// Check if this slot's inventory is an InventoryComponent
@@ -595,22 +589,21 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 					if (component.areSlotsLockable()) {
 						// If the slot is locked, render the phantom item & the lock indicator.
 						if (component.isSlotLocked(slot.getSlotIndex())) {
-							itemRenderer.drawItem(component.getLockedSlotFilter(slot.getSlotIndex()), guiLeft, guiTop, slot.xPos, slot.yPos, 0.5f);
-							GlStateManager.enableDepthTest();
+							GuiDrawUtilities.drawItem(matrixStack, component.getLockedSlotFilter(slot.getSlotIndex()), slot.x, slot.y, 0.5f);
+							RenderSystem.enableDepthTest();
 						}
 
 						// Draw the yellow line lockable indicator.
-						GuiDrawUtilities.drawColoredRectangle(slot.xPos + guiLeft - sizePosOffset, slot.yPos + guiTop - sizePosOffset + slotSize, slotSize, 1.0f, 1.0f,
-								new Color(0.9f, 0.8f, 0));
+						GuiDrawUtilities.drawRectangle(matrixStack, slotSize, 1.0f, slot.x - sizePosOffset, slot.y - sizePosOffset + slotSize, 1.0f, new Color(0.9f, 0.8f, 0));
 					}
 				}
 
 				// Draw the item.
-				handlerSlot.drawBeforeItem(matrixStack, itemRenderer, guiLeft, guiTop, slotSize, sizePosOffset);
+				handlerSlot.drawBeforeItem(matrixStack, 0, 0, slotSize, sizePosOffset);
 			} else if (slot instanceof DigistoreCraftingOutputSlot) {
-				drawEmptySlot(matrixStack, slot.xPos + guiLeft - 4, slot.yPos - 4 + guiTop, 24, 24);
+				drawEmptySlot(matrixStack, slot.x - 4, slot.y - 4, 24, 24);
 			} else {
-				drawEmptySlot(matrixStack, slot.xPos + guiLeft, slot.yPos + guiTop, 16, 16);
+				drawEmptySlot(matrixStack, slot.x, slot.y, 16, 16);
 			}
 		}
 	}
@@ -624,13 +617,13 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	}
 
 	public void setGuiSizeTarget(int xSizeTarget, int ySizeTarget) {
-		previousSizeTarget = new Vector2D(xSize, ySize);
+		previousSizeTarget = new Vector2D(imageWidth, imageHeight);
 		sizeTarget = new Vector2D(xSizeTarget, ySizeTarget);
 	}
 
 	public void setDesieredGuiSize(int xSize, int ySize) {
-		this.xSize = xSize;
-		this.ySize = ySize;
+		this.imageWidth = xSize;
+		this.imageHeight = ySize;
 		previousSizeTarget = new Vector2D(xSize, ySize);
 		sizeTarget = previousSizeTarget;
 	}
@@ -644,24 +637,24 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		boolean changeOccured = false;
 
 		// Process the xSize.
-		if (Math.abs(xSize - sizeTarget.getXi()) > 0) {
-			int minimumAnimationVal = sizeTarget.getXi() - xSize > 0 ? 1 : -1;
+		if (Math.abs(imageWidth - sizeTarget.getXi()) > 0) {
+			int minimumAnimationVal = sizeTarget.getXi() - imageWidth > 0 ? 1 : -1;
 			if (minimumAnimationVal == 1) {
-				xSize = xSize + Math.max(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 10);
+				imageWidth = imageWidth + Math.max(minimumAnimationVal, (sizeTarget.getXi() - imageWidth) / 10);
 			} else {
-				xSize = xSize + Math.min(minimumAnimationVal, (sizeTarget.getXi() - xSize) / 10);
+				imageWidth = imageWidth + Math.min(minimumAnimationVal, (sizeTarget.getXi() - imageWidth) / 10);
 			}
 			isScreenSizeChanging = true;
 			changeOccured = true;
 		}
 
 		// Process the ySize.
-		if (Math.abs(ySize - sizeTarget.getYi()) > 0) {
-			int minimumAnimationVal = sizeTarget.getYi() - ySize > 0 ? 1 : -1;
+		if (Math.abs(imageHeight - sizeTarget.getYi()) > 0) {
+			int minimumAnimationVal = sizeTarget.getYi() - imageHeight > 0 ? 1 : -1;
 			if (minimumAnimationVal == 1) {
-				ySize = ySize + Math.max(minimumAnimationVal, (sizeTarget.getYi() - ySize) / 15);
+				imageHeight = imageHeight + Math.max(minimumAnimationVal, (sizeTarget.getYi() - imageHeight) / 15);
 			} else {
-				ySize = ySize + Math.min(minimumAnimationVal, (sizeTarget.getYi() - ySize) / 15);
+				imageHeight = imageHeight + Math.min(minimumAnimationVal, (sizeTarget.getYi() - imageHeight) / 15);
 			}
 			isScreenSizeChanging = true;
 			changeOccured = true;
@@ -671,9 +664,9 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// changing, raise the change completed method and mark changing as false. THIS
 		// CAN BE DONE WAY BETTER - TO DO.
 		if (changeOccured) {
-			Vector2D expectedDifference = previousSizeTarget.clone().subtract(sizeTarget);
-			Vector2D currentDifference = new Vector2D(xSize - sizeTarget.getXi(), ySize - sizeTarget.getYi());
-			Vector2D alpha = currentDifference.clone().divide(expectedDifference);
+			Vector2D expectedDifference = previousSizeTarget.copy().subtract(sizeTarget);
+			Vector2D currentDifference = new Vector2D(imageWidth - sizeTarget.getXi(), imageHeight - sizeTarget.getYi());
+			Vector2D alpha = currentDifference.copy().divide(expectedDifference);
 			alpha = new Vector2D(1.0f, 1.0f).subtract(alpha);
 			if (Float.isNaN(alpha.getX())) {
 				alpha.setX(0.0f);
@@ -702,7 +695,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	}
 
 	@Override
-	public void closeScreen() {
-		super.closeScreen();
+	public void onClose() {
+		super.onClose();
 	}
 }

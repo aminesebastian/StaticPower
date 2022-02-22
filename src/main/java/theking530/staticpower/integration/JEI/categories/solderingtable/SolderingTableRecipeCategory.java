@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -13,10 +13,11 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
@@ -28,15 +29,15 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	private static final int OUTPUT_SLOT = 10;
 	private static final int SOLDERING_IRON_SLOT = 11;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
 	public SolderingTableRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.SolderingTable.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.SolderingTable.getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.SolderingTable));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.SolderingTable));
 	}
 
 	@Override
@@ -47,8 +48,8 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -68,13 +69,13 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 	}
 
 	@Override
-	public void draw(SolderingRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 110, 21, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 8, 5, 16, 16, 0);
+	public void draw(SolderingRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 110, 21, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 8, 5, 0);
 
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				GuiDrawUtilities.drawSlot(matrixStack, 44 + x * 18, 5 + y * 18, 16, 16, 0);
+				GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 44 + x * 18, 5 + y * 18, 0);
 			}
 		}
 
@@ -91,7 +92,7 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 		ingredients.setInputIngredients(input);
 
 		// Set the output.
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 	}
 
 	@Override

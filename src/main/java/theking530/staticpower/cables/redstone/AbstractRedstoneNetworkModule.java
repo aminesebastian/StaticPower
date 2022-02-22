@@ -8,12 +8,12 @@ import java.util.Set;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.NetworkMapper;
@@ -40,7 +40,7 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 	}
 
 	@Override
-	public void tick(World world) {
+	public void tick(Level world) {
 		if (shouldRescanConnections) {
 			captureInputOutputCables(world, lastNetworkMap);
 			updateNetworkValues(world, lastNetworkMap);
@@ -77,10 +77,10 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 		this.lastRescanSource = cause;
 	}
 
-	public abstract void updateNetworkValues(World world, NetworkMapper mapper);
+	public abstract void updateNetworkValues(Level world, NetworkMapper mapper);
 
 	@Override
-	public void getReaderOutput(List<ITextComponent> components) {
+	public void getReaderOutput(List<Component> components) {
 
 	}
 
@@ -90,7 +90,7 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 		//System.out.println("Updating graph of type: " + getType() + " from position: " + startingPosition);
 	}
 
-	protected static boolean neighborNotifyEvent(World world, @Nonnull BlockPos pos, @Nullable BlockState state) {
+	protected static boolean neighborNotifyEvent(Level world, @Nonnull BlockPos pos, @Nullable BlockState state) {
 		return !net.minecraftforge.event.ForgeEventFactory.onNeighborNotify(world, pos, state, java.util.EnumSet.allOf(Direction.class), false).isCanceled();
 	}
 
@@ -110,20 +110,20 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 		return configuration;
 	}
 
-	protected void updateAllCables(World world, NetworkMapper mapper) {
+	protected void updateAllCables(Level world, NetworkMapper mapper) {
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			updateAroundCable(world, cable);
 		}
 	}
 
 	@SuppressWarnings("deprecation")
-	protected void updateAroundCable(World world, ServerCable cable) {
+	protected void updateAroundCable(Level world, ServerCable cable) {
 		CableNetworkManager manager = CableNetworkManager.get(world);
 		try {
 			// Skip cables in this network.
 			if (neighborNotifyEvent(world, cable.getPos(), world.getBlockState(cable.getPos()))) {
 				for (Direction dir : Direction.values()) {
-					BlockPos updatePos = cable.getPos().offset(dir);
+					BlockPos updatePos = cable.getPos().relative(dir);
 
 					// Skip cables part of networks we already updated.
 					if (manager.isTrackingCable(updatePos)) {
@@ -137,7 +137,7 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 						// We must also notify all blocks that are touching any blocks we're touching.
 						if (!neighborNotifyEvent(world, updatePos, world.getBlockState(updatePos))) {
 							for (Direction dir2 : Direction.values()) {
-								BlockPos updatePos2 = updatePos.offset(dir2);
+								BlockPos updatePos2 = updatePos.relative(dir2);
 								// Skip cables part of networks we already updated.
 								if (manager.isTrackingCable(updatePos2)) {
 									manager.getCable(updatePos).getNetwork().recieveCrossNetworkUpdate(getNetwork(), null);
@@ -157,14 +157,14 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 		}
 	}
 
-	protected void updateBlock(World world, BlockPos sourcePos, BlockPos targetPos) {
+	protected void updateBlock(Level world, BlockPos sourcePos, BlockPos targetPos) {
 		// Skip cables in this network.
 		if (!getNetwork().getGraph().getCables().containsKey(targetPos)) {
 			world.neighborChanged(targetPos, world.getBlockState(sourcePos).getBlock(), sourcePos);
 		}
 	}
 
-	protected void captureInputOutputCables(World world, NetworkMapper mapper) {
+	protected void captureInputOutputCables(Level world, NetworkMapper mapper) {
 		outputCables.clear();
 		inputCables.clear();
 

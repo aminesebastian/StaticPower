@@ -7,13 +7,13 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.ITooltipProvider;
@@ -34,13 +34,13 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 	}
 
 	public StaticPowerItemBlock(Block block, Item.Properties properties) {
-		super(block, properties.maxStackSize(64).group(StaticPower.CREATIVE_TAB));
+		super(block, properties.stacksTo(64).tab(StaticPower.CREATIVE_TAB));
 		OWNING_BLOCK = block;
 		setRegistryName(block.getRegistryName());
 	}
 
 	@Override
-	public ITextComponent getDisplayName(ItemStack stack) {
+	public Component getName(ItemStack stack) {
 		// Return early if an invalid owner is encountered.
 		if (OWNING_BLOCK == null) {
 			throw new RuntimeException("Invalid owning block encountered when getting the display name for a StaticPowerItemBlock.");
@@ -48,7 +48,7 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 
 		// Return early if the owning block is not an instance of a static power block.
 		if (!(OWNING_BLOCK instanceof StaticPowerBlock)) {
-			return new TranslationTextComponent(OWNING_BLOCK.getTranslationKey());
+			return new TranslatableComponent(OWNING_BLOCK.getDescriptionId());
 		}
 
 		// Get the display name from the block.
@@ -56,7 +56,7 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		// Return early if an invalid owner is encountered.
 		if (OWNING_BLOCK == null) {
 			throw new RuntimeException("Invalid owning block encountered when attempting to generate tooltips for StaticPowerItemBlock.");
@@ -73,7 +73,7 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		// Return early if an invalid owner is encountered.
 		if (OWNING_BLOCK == null) {
 			throw new RuntimeException("Invalid owning block encountered when attempting to generate tooltips for StaticPowerItemBlock.");

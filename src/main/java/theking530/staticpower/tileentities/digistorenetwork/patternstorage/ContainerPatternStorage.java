@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.patternstorage;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -18,11 +18,11 @@ public class ContainerPatternStorage extends StaticPowerTileEntityContainer<Tile
 		}
 	}
 
-	public ContainerPatternStorage(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerPatternStorage(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityPatternStorage) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPatternStorage(int windowId, PlayerInventory playerInventory, TileEntityPatternStorage owner) {
+	public ContainerPatternStorage(int windowId, Inventory playerInventory, TileEntityPatternStorage owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

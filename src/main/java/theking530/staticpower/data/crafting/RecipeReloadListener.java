@@ -5,13 +5,13 @@ import java.util.Map;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 
-import net.minecraft.client.resources.JsonReloadListener;
-import net.minecraft.item.crafting.RecipeManager;
-import net.minecraft.profiler.IProfiler;
-import net.minecraft.resources.IResourceManager;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.SimpleJsonResourceReloadListener;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.item.crafting.RecipeManager;
 
-public class RecipeReloadListener extends JsonReloadListener {
+public class RecipeReloadListener extends SimpleJsonResourceReloadListener {
 	private static final Gson GSON_INSTANCE = new Gson();
 	public final RecipeManager manager;
 
@@ -21,7 +21,7 @@ public class RecipeReloadListener extends JsonReloadListener {
 	}
 
 	@Override
-	protected void apply(Map<ResourceLocation, JsonElement> objectMap, IResourceManager manager, IProfiler profiler) {
+	protected void apply(Map<ResourceLocation, JsonElement> objectMap, ResourceManager manager, ProfilerFiller profiler) {
 		StaticPowerRecipeRegistry.onResourcesReloaded(this.manager);
 	}
 }

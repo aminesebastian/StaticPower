@@ -9,27 +9,27 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPowerConfig;
@@ -45,13 +45,13 @@ public class Hammer extends StaticPowerItem {
 	private final Item repairItem;
 
 	public Hammer(String name, ResourceLocation tier, Item repairItem) {
-		super(name, new Item.Properties().maxStackSize(1));
+		super(name, new Item.Properties().stacksTo(1));
 		this.tier = tier;
 		this.repairItem = repairItem;
 	}
 
 	@Override
-	public boolean getIsRepairable(ItemStack toRepair, ItemStack repair) {
+	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
 		if (repair.getItem() == repairItem) {
 			return true;
 		}
@@ -61,16 +61,16 @@ public class Hammer extends StaticPowerItem {
 	@Override
 	public ItemStack getContainerItem(ItemStack stack) {
 		ItemStack stackCopy = stack.copy();
-		if (stackCopy.attemptDamageItem(1, random, null)) {
+		if (stackCopy.hurt(1, RANDOM, null)) {
 			stackCopy.shrink(1);
-			stackCopy.setDamage(0);
+			stackCopy.setDamageValue(0);
 		}
 		return stackCopy;
 	}
 
 	@Override
-	public boolean showDurabilityBar(ItemStack stack) {
-		return true;
+	public boolean isBarVisible(ItemStack stack) {
+		return stack.getDamageValue() < stack.getMaxDamage();
 	}
 
 	@Override
@@ -85,26 +85,26 @@ public class Hammer extends StaticPowerItem {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
 		// Get the tier.
 		StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
 
 		// Add the swinging speed modifier.
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", tier.hammerDamage.get(), AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", tier.hammerSwingSpeed.get(), AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", tier.hammerDamage.get(), AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", tier.hammerSwingSpeed.get(), AttributeModifier.Operation.ADDITION));
 
-		return equipmentSlot == EquipmentSlotType.MAINHAND ? builder.build() : super.getAttributeModifiers(equipmentSlot);
+		return equipmentSlot == EquipmentSlot.MAINHAND ? builder.build() : super.getDefaultAttributeModifiers(equipmentSlot);
 	}
 
-	public boolean onHitBlockLeftClick(ItemStack stack, PlayerEntity player, BlockPos pos, Direction face) {
+	public boolean onHitBlockLeftClick(ItemStack stack, Player player, BlockPos pos, Direction face) {
 		// Only craft if on an anvil.
-		if (player.getEntityWorld().getBlockState(pos).isIn(Blocks.ANVIL) || player.getEntityWorld().getBlockState(pos).isIn(Blocks.CHIPPED_ANVIL)
-				|| player.getEntityWorld().getBlockState(pos).isIn(Blocks.DAMAGED_ANVIL)) {
+		if (player.getCommandSenderWorld().getBlockState(pos).is(Blocks.ANVIL) || player.getCommandSenderWorld().getBlockState(pos).is(Blocks.CHIPPED_ANVIL)
+				|| player.getCommandSenderWorld().getBlockState(pos).is(Blocks.DAMAGED_ANVIL)) {
 			// Check for all items on the block above the one we hit.
 			boolean crafted = false;
-			AxisAlignedBB bounds = new AxisAlignedBB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1);
-			List<ItemEntity> droppedItems = player.getEntityWorld().getEntitiesWithinAABB(ItemEntity.class, bounds, (ItemEntity entity) -> true);
+			AABB bounds = new AABB(pos.getX(), pos.getY() + 1, pos.getZ(), pos.getX() + 1, pos.getY() + 2, pos.getZ() + 1);
+			List<ItemEntity> droppedItems = player.getCommandSenderWorld().getEntitiesOfClass(ItemEntity.class, bounds, (ItemEntity entity) -> true);
 			for (int i = droppedItems.size() - 1; i >= 0; i--) {
 				// Get the item entity.
 				ItemEntity entity = droppedItems.get(i);
@@ -120,14 +120,14 @@ public class Hammer extends StaticPowerItem {
 				if (recipe.isPresent() && !recipe.get().isBlockType()) {
 
 					// Perform the crafting only on the server.
-					if (!player.getEntityWorld().isRemote) {
-						if (craftRecipe(stack, (PlayerEntity) player, pos, recipe.get())) {
+					if (!player.getCommandSenderWorld().isClientSide) {
+						if (craftRecipe(stack, (Player) player, pos, recipe.get())) {
 							entity.getItem().shrink(recipe.get().getInputItem().getCount());
-							entity.getEntityWorld().playSound(null, pos, SoundEvents.BLOCK_ANVIL_USE, SoundCategory.BLOCKS, 0.5F, (float) (0.8F + Math.random() * 0.3));
-							((ServerWorld) entity.getEntityWorld()).spawnParticle(ParticleTypes.CRIT, entity.getPosX(), entity.getPosY() + 0.1, entity.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
-							((ServerWorld) entity.getEntityWorld()).spawnParticle(ParticleTypes.SMOKE, entity.getPosX(), entity.getPosY() + 0.1, entity.getPosZ(), 1, 0.0D, 0.0D, 0.0D,
+							entity.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.5F, (float) (0.8F + Math.random() * 0.3));
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
 									0.00D);
-							((ServerWorld) entity.getEntityWorld()).spawnParticle(ParticleTypes.LAVA, entity.getPosX(), entity.getPosY() + 0.1, entity.getPosZ(), 1, 0.0D, 0.0D, 0.0D, 0.1D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.1D);
 							crafted = true;
 							break;
 						}
@@ -136,16 +136,16 @@ public class Hammer extends StaticPowerItem {
 			}
 
 			// If we haven't crafted, still play a sound on the server.
-			if (!player.getEntityWorld().isRemote) {
+			if (!player.getCommandSenderWorld().isClientSide) {
 				if (crafted) {
 					// Get the tier.
 					StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
 
 					// Set the cooldown before the player can hammer again.
-					player.getCooldownTracker().setCooldown(stack.getItem(), tier.hammerCooldown.get());
+					player.getCooldowns().addCooldown(stack.getItem(), tier.hammerCooldown.get());
 				} else {
-					player.getEntityWorld().playSound(null, pos, SoundEvents.BLOCK_ANVIL_PLACE, SoundCategory.BLOCKS, 0.5F, (float) (1.2F + Math.random() * 0.3));
-					player.getCooldownTracker().setCooldown(stack.getItem(), 5);
+					player.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.5F, (float) (1.2F + Math.random() * 0.3));
+					player.getCooldowns().addCooldown(stack.getItem(), 5);
 				}
 			}
 		}
@@ -154,14 +154,14 @@ public class Hammer extends StaticPowerItem {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
 		// Only perform on server.
-		if (player.getEntityWorld().isRemote) {
+		if (player.getCommandSenderWorld().isClientSide) {
 			return super.onBlockStartBreak(itemstack, pos, player);
 		}
 
 		// Get the block state of the block we're trying to break.
-		BlockState blockToBreak = player.getEntityWorld().getBlockState(pos);
+		BlockState blockToBreak = player.getCommandSenderWorld().getBlockState(pos);
 
 		// If the block is not air, attempt to get the hammer recipe for it.
 		if (!blockToBreak.isAir()) {
@@ -181,32 +181,32 @@ public class Hammer extends StaticPowerItem {
 	}
 
 	@Override
-	public boolean hasContainerItem() {
+	public boolean hasCraftingRemainingItem() {
 		return true;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
-		tooltip.add(new StringTextComponent("Max Uses: " + getMaxDamage(stack)));
-		tooltip.add(new StringTextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+		tooltip.add(new TextComponent("Max Uses: " + getMaxDamage(stack)));
+		tooltip.add(new TextComponent("Uses Remaining: " + (getMaxDamage(stack) - getDamage(stack))));
 	}
 
-	protected boolean craftRecipe(ItemStack hammer, PlayerEntity player, BlockPos pos, HammerRecipe recipe) {
+	protected boolean craftRecipe(ItemStack hammer, Player player, BlockPos pos, HammerRecipe recipe) {
 		ItemStack output = recipe.getOutput().calculateOutput();
 		if (!output.isEmpty()) {
 			// Drop the item.
-			WorldUtilities.dropItem(player.getEntityWorld(), pos, output);
+			WorldUtilities.dropItem(player.getCommandSenderWorld(), pos, output);
 
 			// Check if this is a block type recipe.
 			if (recipe.isBlockType()) {
-				player.getEntityWorld().setBlockState(pos, net.minecraft.block.Blocks.AIR.getDefaultState());
+				player.getCommandSenderWorld().setBlockAndUpdate(pos, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
 			}
 
 			// Damage the item.
-			if (hammer.attemptDamageItem(1, random, null)) {
+			if (hammer.hurt(1, RANDOM, null)) {
 				hammer.shrink(1);
-				hammer.setDamage(0);
+				hammer.setDamageValue(0);
 			}
 
 			// Return early.

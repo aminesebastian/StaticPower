@@ -10,9 +10,9 @@ import java.util.Map;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -94,7 +94,7 @@ public class SerializationUtilities {
 	 * @param fields
 	 * @param object
 	 */
-	public static void serializeFieldsToNbt(CompoundNBT nbt, List<Field> fields, Object object) {
+	public static void serializeFieldsToNbt(CompoundTag nbt, List<Field> fields, Object object) {
 		// Iterate through all the fields.
 		for (Field field : fields) {
 			// Check if the field is accessible.
@@ -123,19 +123,19 @@ public class SerializationUtilities {
 					nbt.putString(field.getName(), (String) field.get(object));
 				} else if (t == BlockPos.class) {
 					BlockPos pos = (BlockPos) field.get(object);
-					nbt.putLong(field.getName(), pos.toLong());
+					nbt.putLong(field.getName(), pos.asLong());
 				} else if (t == ResourceLocation.class) {
 					ResourceLocation loc = (ResourceLocation) field.get(object);
 					nbt.putString(field.getName(), loc.toString());
 				} else if (t == FluidStack.class) {
 					FluidStack fluid = (FluidStack) field.get(object);
-					CompoundNBT tag = new CompoundNBT();
+					CompoundTag tag = new CompoundTag();
 					fluid.writeToNBT(tag);
 					nbt.put(field.getName(), tag);
 				} else if (INBTSerializable.class.isAssignableFrom(t)) {
 					@SuppressWarnings("unchecked")
-					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
-					CompoundNBT serialized = serializeable.serializeNBT();
+					INBTSerializable<CompoundTag> serializeable = (INBTSerializable<CompoundTag>) field.get(object);
+					CompoundTag serialized = serializeable.serializeNBT();
 					nbt.put(field.getName(), serialized);
 				} else {
 					LOGGER.error(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
@@ -159,7 +159,7 @@ public class SerializationUtilities {
 	 * @param fields
 	 * @param object
 	 */
-	public static void deserializeFieldsToNbt(CompoundNBT nbt, List<Field> fields, Object object) {
+	public static void deserializeFieldsToNbt(CompoundTag nbt, List<Field> fields, Object object) {
 		// Iterate through all the fields.
 		for (Field field : fields) {
 			// Skip any fields that we have not had serialized yet.
@@ -193,7 +193,7 @@ public class SerializationUtilities {
 				} else if (t == String.class) {
 					field.set(object, nbt.getString(field.getName()));
 				} else if (t == BlockPos.class) {
-					BlockPos pos = BlockPos.fromLong(nbt.getLong(field.getName()));
+					BlockPos pos = BlockPos.of(nbt.getLong(field.getName()));
 					field.set(object, pos);
 				} else if (t == ResourceLocation.class) {
 					ResourceLocation loc = new ResourceLocation(nbt.getString(field.getName()));
@@ -203,7 +203,7 @@ public class SerializationUtilities {
 					field.set(object, stack);
 				} else if (INBTSerializable.class.isAssignableFrom(t)) {
 					@SuppressWarnings("unchecked")
-					INBTSerializable<CompoundNBT> serializeable = (INBTSerializable<CompoundNBT>) field.get(object);
+					INBTSerializable<CompoundTag> serializeable = (INBTSerializable<CompoundTag>) field.get(object);
 					serializeable.deserializeNBT(nbt.getCompound(field.getName()));
 				} else {
 					LOGGER.error(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));

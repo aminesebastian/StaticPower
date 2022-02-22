@@ -2,14 +2,15 @@ package theking530.staticpower.data.crafting;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ShapedRecipe;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import theking530.staticcore.utilities.SDMath;
 
 public class ProbabilityItemStackOutput {
-	public static final ProbabilityItemStackOutput EMPTY = new ProbabilityItemStackOutput(ItemStack.EMPTY, 0.0f, 0, 0.0f);
+	public static final ProbabilityItemStackOutput EMPTY = new ProbabilityItemStackOutput(ItemStack.EMPTY, 0.0f, 0,
+			0.0f);
 
 	private final ItemStack item;
 	private final float percentChance;
@@ -103,38 +104,40 @@ public class ProbabilityItemStackOutput {
 	public static ProbabilityItemStackOutput parseFromJSON(JsonObject json) {
 		try {
 			// Capture the output item.
-			ItemStack output = ShapedRecipe.deserializeItem(json);
+			ItemStack output = ShapedRecipe.itemStackFromJson(json);
 			float percentChance = 1.0f;
 			float additionalBonusChance = 0.0f;
 			int additionalBonus = 0;
 
 			// If the chance value is provided, use it.
-			if (JSONUtils.hasField(json, "chance")) {
-				percentChance = JSONUtils.getFloat(json, "chance");
+			if (GsonHelper.isValidNode(json, "chance")) {
+				percentChance = GsonHelper.getAsFloat(json, "chance");
 			}
 
 			// If the bonus value is provided, use it.
-			if (JSONUtils.hasField(json, "bonus")) {
-				additionalBonus = JSONUtils.getJsonObject(json, "bonus").get("count").getAsInt();
-				additionalBonusChance = JSONUtils.getJsonObject(json, "bonus").get("chance").getAsFloat();
+			if (GsonHelper.isValidNode(json, "bonus")) {
+				additionalBonus = GsonHelper.getAsJsonObject(json, "bonus").get("count").getAsInt();
+				additionalBonusChance = GsonHelper.getAsJsonObject(json, "bonus").get("chance").getAsFloat();
 			}
 
 			return new ProbabilityItemStackOutput(output, percentChance, additionalBonus, additionalBonusChance);
 		} catch (Exception e) {
-			throw new RuntimeException(String.format("An error occured when attempting to deserialize json object: %1$s to a ProbabilityItemStack.", json), e);
+			throw new RuntimeException(String.format(
+					"An error occured when attempting to deserialize json object: %1$s to a ProbabilityItemStack.",
+					json), e);
 		}
 	}
 
-	public static ProbabilityItemStackOutput readFromBuffer(PacketBuffer buffer) {
-		ItemStack item = buffer.readItemStack();
+	public static ProbabilityItemStackOutput readFromBuffer(FriendlyByteBuf buffer) {
+		ItemStack item = buffer.readItem();
 		float percent = buffer.readFloat();
 		int bonus = buffer.readInt();
 		float bonusChance = buffer.readFloat();
 		return new ProbabilityItemStackOutput(item, percent, bonus, bonusChance);
 	}
 
-	public void writeToBuffer(PacketBuffer buffer) {
-		buffer.writeItemStack(item);
+	public void writeToBuffer(FriendlyByteBuf buffer) {
+		buffer.writeItem(item);
 		buffer.writeFloat(percentChance);
 		buffer.writeInt(additionalBonus);
 		buffer.writeFloat(bonusChance);

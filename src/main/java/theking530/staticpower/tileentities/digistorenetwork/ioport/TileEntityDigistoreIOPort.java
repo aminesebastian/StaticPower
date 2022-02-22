@@ -1,14 +1,15 @@
 package theking530.staticpower.tileentities.digistorenetwork.ioport;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockRayTraceResult;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -17,58 +18,63 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityDigistoreIOPort(), ModBlocks.DigistoreIOPort);
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityDigistoreIOPort(pos, state), ModBlocks.DigistoreIOPort);
 
-	public TileEntityDigistoreIOPort() {
-		super(TYPE, 5000);
+	public TileEntityDigistoreIOPort(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, 5000);
 		registerComponent(new DigitstoreIOPortInventoryComponent("IONetwork"));
 	}
 
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
-		if (getWorld().isRemote) {
-			return ActionResultType.CONSUME;
+	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand,
+			BlockHitResult hit) {
+		if (getLevel().isClientSide) {
+			return InteractionResult.CONSUME;
 		}
 
-		digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
-			// Do nothing if there is no manager.
-			if (!module.isManagerPresent()) {
-				return;
-			}
+		digistoreCableProvider
+				.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)
+				.ifPresent(module -> {
+					// Do nothing if there is no manager.
+					if (!module.isManagerPresent()) {
+						return;
+					}
 
-			// Keep track of if any items changed.
-			boolean itemInserted = false;
+					// Keep track of if any items changed.
+					boolean itemInserted = false;
 
-			// Loop through the whole inventory.
-			for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-				// Skip empty slots.
-				if (player.inventory.getStackInSlot(i).isEmpty()) {
-					continue;
-				}
-				// Get the item in the slot.
-				ItemStack currentItem = player.inventory.getStackInSlot(i).copy();
+					// Loop through the whole inventory.
+					for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+						// Skip empty slots.
+						if (player.getInventory().getItem(i).isEmpty()) {
+							continue;
+						}
+						// Get the item in the slot.
+						ItemStack currentItem = player.getInventory().getItem(i).copy();
 
-				// Skip any items that are not currently in the digistore system.
-				if (!module.containsItem(currentItem)) {
-					continue;
-				}
+						// Skip any items that are not currently in the digistore system.
+						if (!module.containsItem(currentItem)) {
+							continue;
+						}
 
-				// Insert it into the network.
-				ItemStack remaining = module.insertItem(currentItem, false);
+						// Insert it into the network.
+						ItemStack remaining = module.insertItem(currentItem, false);
 
-				// Update the slot contents.
-				if (currentItem.getCount() != remaining.getCount()) {
-					itemInserted = true;
-					player.inventory.setInventorySlotContents(i, remaining);
-				}
-			}
+						// Update the slot contents.
+						if (currentItem.getCount() != remaining.getCount()) {
+							itemInserted = true;
+							player.getInventory().setItem(i, remaining);
+						}
+					}
 
-			// IF an item was inserted and the world is remote, play a sound.
-			if (world.isRemote && itemInserted) {
-				world.playSound(player, pos, SoundEvents.ITEM_ARMOR_EQUIP_LEATHER, SoundCategory.PLAYERS, 1.0f, 1.0f);
-			}
-		});
+					// IF an item was inserted and the world is remote, play a sound.
+					if (level.isClientSide && itemInserted) {
+						level.playSound(player, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS,
+								1.0f, 1.0f);
+					}
+				});
 
-		return ActionResultType.SUCCESS;
+		return InteractionResult.SUCCESS;
 	}
 }

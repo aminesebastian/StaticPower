@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.battery;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -21,11 +21,11 @@ public class ContainerBattery extends StaticPowerTileEntityContainer<TileEntityB
 		}
 	}
 
-	public ContainerBattery(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerBattery(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityBattery) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerBattery(int windowId, PlayerInventory playerInventory, TileEntityBattery owner) {
+	public ContainerBattery(int windowId, Inventory playerInventory, TileEntityBattery owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

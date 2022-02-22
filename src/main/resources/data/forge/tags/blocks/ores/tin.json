@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-	"staticpower:ore_tin"
+	"staticpower:ore_tin",
+	"staticpower:ore_deepslate_tin"
   ]
 }

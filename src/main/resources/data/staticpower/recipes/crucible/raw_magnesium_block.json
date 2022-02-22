@@ -1,0 +1,16 @@
+{
+	"type": "staticpower:crucible_recipe",
+	"input": {
+		"tag": "forge:storage_blocks/raw_magnesium"
+	},
+	"outputs": {
+		"fluid": {
+			"fluid": "staticpower:molten_magnesium",
+			"volume": 1296
+		},
+		"item": {
+			"item": "staticpower:slag",
+			"count": 9
+		}
+	}
+}

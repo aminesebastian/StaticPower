@@ -3,12 +3,12 @@ package theking530.staticcore.gui.widgets.tabs.slottabs;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
@@ -59,12 +59,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(2, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
-			fillDirectionButton.setTooltip(new StringTextComponent("Fill Machine with Container Contents"));
+			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
 		} else {
 			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(2, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = emptyBucketPreview;
 			this.bottomSlotPreview = filledBucketPreview;
-			fillDirectionButton.setTooltip(new StringTextComponent("Fill Container with Machine Contents"));
+			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
 		}
 
 		// Disable the default button background rendering.
@@ -75,12 +75,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	protected void initialized(int tabXPosition, int tabYPosition) {
 		// Add the slots.
 		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, 4 + xPosition, 0));
-		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
+		fluidConatinerInventoryIndecies.add(container.slots.size() - 1);
 
 		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, 4 + xPosition, 0));
-		fluidConatinerInventoryIndecies.add(container.inventorySlots.size() - 1);
+		fluidConatinerInventoryIndecies.add(container.slots.size() - 1);
 
-		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
+		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.containerId);
 		msg.addSlot((InventoryComponent) fluidContainerComponent, 0, 0, 0);
 		msg.addSlot((InventoryComponent) fluidContainerComponent, 1, 0, 0);
 
@@ -92,18 +92,18 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	@Override
-	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	protected void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-		topSlot.yPos = this.yPosition + 24;
-		bottomSlot.yPos = this.yPosition + 60;
+		topSlot.y = this.yPosition + 24;
+		bottomSlot.y = this.yPosition + 60;
 	}
 
 	@Override
 	protected void onTabOpened() {
 		for (int index : fluidConatinerInventoryIndecies) {
-			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(index);
-			topSlot.yPos = this.yPosition + 24;
-			bottomSlot.yPos = this.yPosition + 60;
+			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.slots.get(index);
+			topSlot.y = this.yPosition + 24;
+			bottomSlot.y = this.yPosition + 60;
 			slot.setEnabledState(true);
 		}
 	}
@@ -111,7 +111,7 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	@Override
 	protected void onTabClosing() {
 		for (int index : fluidConatinerInventoryIndecies) {
-			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.inventorySlots.get(index);
+			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.slots.get(index);
 			slot.setEnabledState(false);
 		}
 	}
@@ -128,13 +128,13 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
 			fillDirectionButton.setRegularTexture(StaticPowerSprites.EMPTY_BUCKET);
 			fillDirectionButton.setHoveredTexture(StaticPowerSprites.EMPTY_BUCKET_HOVERED);
-			fillDirectionButton.setTooltip(new StringTextComponent("Fill Machine with Container Contents"));
+			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
 			topSlot.setPreviewItem(new ItemStack(filledBucketPreview));
 			bottomSlot.setPreviewItem(new ItemStack(emptyBucketPreview));
 		} else {
 			fillDirectionButton.setRegularTexture(StaticPowerSprites.FILL_BUCKET);
 			fillDirectionButton.setHoveredTexture(StaticPowerSprites.FILL_BUCKET_HOVERED);
-			fillDirectionButton.setTooltip(new StringTextComponent("Fill Container with Machine Contents"));
+			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
 			topSlot.setPreviewItem(new ItemStack(emptyBucketPreview));
 			bottomSlot.setPreviewItem(new ItemStack(filledBucketPreview));
 		}

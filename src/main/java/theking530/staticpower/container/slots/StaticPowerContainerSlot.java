@@ -3,10 +3,10 @@ package theking530.staticpower.container.slots;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
@@ -14,8 +14,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.utilities.GuiDrawItem;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
@@ -27,8 +27,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	private boolean drawFluidContainerAsFluid;
 	private boolean isEnabled;
 
-	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition,
-			@Nonnull MachineSideMode mode) {
+	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, float previewAlpha, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {
 		super(itemHandler, index, xPosition, yPosition);
 		this.previewItem = previewItem;
 		this.previewAlpha = previewAlpha;
@@ -46,7 +45,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	}
 
 	public StaticPowerContainerSlot(@Nonnull ItemStack previewItem, @Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-		this(previewItem, 0.3f, itemHandler, index, xPosition, yPosition, MachineSideMode.Never);
+		this(previewItem, 0.5f, itemHandler, index, xPosition, yPosition, MachineSideMode.Never);
 	}
 
 	public StaticPowerContainerSlot(@Nonnull IItemHandler itemHandler, int index, int xPosition, int yPosition, @Nonnull MachineSideMode mode) {
@@ -84,7 +83,7 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 		return inventoryComponent != null ? inventoryComponent.getMode() : mode;
 	}
 
-	public void drawSlotOverlay(GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
+	public void drawSlotOverlay(int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 
 	}
 
@@ -94,21 +93,21 @@ public class StaticPowerContainerSlot extends SlotItemHandler {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public boolean isEnabled() {
+	public boolean isActive() {
 		return isEnabled;
 	}
 
-	public void drawBeforeItem(MatrixStack matrixStack, GuiDrawItem itemRenderer, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
+	public void drawBeforeItem(PoseStack matrixStack, int guiLeft, int guiTop, int slotSize, int slotPosOffset) {
 		if (!getPreviewItem().isEmpty()) {
-			itemRenderer.drawItem(getPreviewItem(), guiLeft, guiTop, xPos, yPos, getPreviewAlpha());
+			GuiDrawUtilities.drawItem(matrixStack, getPreviewItem(), x, y, 0.0f, getPreviewAlpha());
 		}
 		if (drawFluidContainerAsFluid) {
-			IFluidHandlerItem fluidItem = getStack().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
+			IFluidHandlerItem fluidItem = getItem().getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY).orElse(null);
 			if (fluidItem != null) {
 				if (fluidItem.getTanks() > 0) {
 					RenderSystem.enableDepthTest();
 					FluidStack fluid = fluidItem.getFluidInTank(0);
-					GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1, 1, guiLeft + xPos, guiTop + yPos + 16.0f, 500.0f, 16.0f, 16.0f, false);
+					GuiFluidBarUtilities.drawFluidBar(matrixStack, fluid, 1, 1, guiLeft + x, guiTop + y + 16.0f, 500.0f, 16.0f, 16.0f, false);
 					RenderSystem.disableDepthTest();
 				}
 			}

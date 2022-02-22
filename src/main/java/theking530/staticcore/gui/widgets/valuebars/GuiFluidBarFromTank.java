@@ -2,9 +2,9 @@ package theking530.staticcore.gui.widgets.valuebars;
 
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -15,7 +15,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiFluidBarFromTank extends AbstractGuiWidget {
+public class GuiFluidBarFromTank extends AbstractGuiWidget<GuiFluidBarFromTank> {
 
 	private FluidTankComponent tank;
 	private MachineSideMode mode;
@@ -33,7 +33,7 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		tank.updateBeforeRendering(partialTicks);
 
 		if (owningTileEntity != null) {
@@ -44,21 +44,21 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget {
 
 			if (sideComp != null && mode != null) {
 				if (sideComp.getCountOfSidesWithMode(mode) > 0) {
-					GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), getPosition().getX(), getPosition().getY() + getSize().getY(),
-							0.0f, getSize().getX(), getSize().getY(), mode, true);
+					GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), 0, getSize().getY(), 0.0f, getSize().getX(),
+							getSize().getY(), mode, true);
 				} else {
-					GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), getPosition().getX(), getPosition().getY() + getSize().getY(),
-							0.0f, getSize().getX(), getSize().getY(), true);
+					GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), 0, getSize().getY(), 0.0f, getSize().getX(),
+							getSize().getY(), true);
 				}
 			}
 		} else {
-			GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), getPosition().getX(), getPosition().getY() + getSize().getY(), 0.0f,
-					getSize().getX(), getSize().getY(), true);
+			GuiFluidBarUtilities.drawFluidBar(matrix, tank.getFluid(), tank.getCapacity(), (int) (tank.getVisualFillLevel() * tank.getCapacity()), 0, getSize().getY(), 0.0f, getSize().getX(),
+					getSize().getY(), true);
 		}
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		tooltips.addAll(GuiFluidBarUtilities.getTooltip(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid()));
 	}
 }

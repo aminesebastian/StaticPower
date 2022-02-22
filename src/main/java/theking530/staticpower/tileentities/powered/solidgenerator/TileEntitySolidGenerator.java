@@ -1,16 +1,19 @@
 package theking530.staticpower.tileentities.powered.solidgenerator;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.math.Vector3f;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -33,7 +36,7 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntitySolidGenerator(), ModBlocks.SolidGenerator);
+	public static final BlockEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntitySolidGenerator(pos, state), ModBlocks.SolidGenerator);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -44,15 +47,15 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	public long powerGenerationPerTick;
 
-	public TileEntitySolidGenerator() {
-		super(TYPE, StaticPowerTiers.IRON);
+	public TileEntitySolidGenerator(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.IRON);
 		disableFaceInteraction();
 
 		// Register the input inventory and only let it receive items if they are
 		// burnable.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return ForgeHooks.getBurnTime(stack) > 0;
+				return ForgeHooks.getBurnTime(stack, null) > 0;
 			}
 		}));
 
@@ -126,9 +129,9 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			if (processingComponent.getIsOnBlockState()) {
-				generatingSoundComponent.startPlayingSound(SoundEvents.BLOCK_BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundCategory.BLOCKS, 1.0f, 1.0f, getPos(), 32);
+				generatingSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundSource.BLOCKS, 1.0f, 1.0f, getBlockPos(), 32);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
 			}
@@ -137,25 +140,25 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
 			if (SDMath.diceRoll(0.25f)) {
-				float randomOffset = (2 * getWorld().rand.nextFloat()) - 1.0f;
+				float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 				randomOffset /= 3.5f;
 				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
 				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getWorld().addParticle(ParticleTypes.SMOKE, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f,
+				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f,
 						0.01f, 0.0f);
-				getWorld().addParticle(ParticleTypes.FLAME, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f,
+				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f,
 						0.01f, 0.0f);
 			}
 		}
 
 		// If we're processing, generate power. Otherwise, pause.
-		if (!getWorld().isRemote && processingComponent.isPerformingWork()) {
+		if (!getLevel().isClientSide && processingComponent.isPerformingWork()) {
 			energyStorage.addPower((int) (powerGenerationPerTick));
 		}
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerSolidGenerator(windowId, inventory, this);
 	}
 }

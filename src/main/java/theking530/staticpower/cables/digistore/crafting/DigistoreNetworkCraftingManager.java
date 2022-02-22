@@ -10,12 +10,12 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
@@ -167,7 +167,7 @@ public class DigistoreNetworkCraftingManager {
 			for (EncodedIngredient requiredItem : request.peekTopStep().getCraftingPattern().getRequiredItems()) {
 				int simulatedExtract = snapshot.extractWithIngredient(requiredItem.getIngredient(), requiredItem.getCount(), false);
 				if (simulatedExtract != requiredItem.getCount()) {
-					request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_missing_items"));
+					request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_missing_items"));
 					return false;
 				}
 			}
@@ -176,7 +176,7 @@ public class DigistoreNetworkCraftingManager {
 			// the recipe. If there is no crafting interface for this recipe, return false.
 			if (step.getCraftingPattern().getRecipeType() == RecipeEncodingType.MACHINE) {
 				if (getCraftingInterfaceForIngredient(step.getIngredientToCraft()) == null) {
-					request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_missing_interface"));
+					request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_missing_interface"));
 					return false;
 				}
 			}
@@ -184,7 +184,7 @@ public class DigistoreNetworkCraftingManager {
 			// Check to see if we have space to insert the crafted item.
 			ItemStack remaining = module.insertItem(request.peekTopStep().getCraftingPattern().getOutput().copy(), true);
 			if (!remaining.isEmpty()) {
-				request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_out_of_storage"));
+				request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_out_of_storage"));
 				return false;
 			}
 
@@ -203,7 +203,7 @@ public class DigistoreNetworkCraftingManager {
 				// Only do this ONCE per step though.
 				if (!step.isAttemptingResolve()) {
 					// See which of the ingredients we can craft.
-					for (ItemStack potentialResolver : step.getIngredientToCraft().getMatchingStacks()) {
+					for (ItemStack potentialResolver : step.getIngredientToCraft().getItems()) {
 						// Add the request.
 						if (addAutomationCraftingRequest(potentialResolver, step.getTotalRequiredAmount() - simulatedExtract).getCraftableAmount() > 0) {
 							// Mark this step as having been attempted to resolve.
@@ -212,7 +212,7 @@ public class DigistoreNetworkCraftingManager {
 						}
 					}
 				}
-				request.setBlocker(new TranslationTextComponent("gui.staticpower.digistore_crafting_missing_items"));
+				request.setBlocker(new TranslatableComponent("gui.staticpower.digistore_crafting_missing_items"));
 				return false;
 			} else {
 				return true;
@@ -330,35 +330,35 @@ public class DigistoreNetworkCraftingManager {
 		otherCraftingManager.craftingRequests.putAll(craftingRequests);
 	}
 
-	public ListNBT serializeCraftingQueue() {
+	public ListTag serializeCraftingQueue() {
 		// Serialize the requests to the list.
-		ListNBT requestNBTList = new ListNBT();
+		ListTag requestNBTList = new ListTag();
 		craftingRequests.values().forEach(request -> {
 			requestNBTList.add(request.serialize());
 		});
 		return requestNBTList;
 	}
 
-	public static List<CraftingRequestResponse> deserializeCraftingQueue(ListNBT queueNbt) {
+	public static List<CraftingRequestResponse> deserializeCraftingQueue(ListTag queueNbt) {
 		List<CraftingRequestResponse> output = new ArrayList<CraftingRequestResponse>();
 		queueNbt.forEach(requestTag -> {
-			CompoundNBT requestNbtTag = (CompoundNBT) requestTag;
+			CompoundTag requestNbtTag = (CompoundTag) requestTag;
 			output.add(CraftingRequestResponse.read(requestNbtTag));
 		});
 		return output;
 	}
 
-	public void readFromNbt(CompoundNBT tag) {
+	public void readFromNbt(CompoundTag tag) {
 		// Get the request NBT list and add the parcels.
-		ListNBT requestNBTList = tag.getList("requests", Constants.NBT.TAG_COMPOUND);
+		ListTag requestNBTList = tag.getList("requests", Tag.TAG_COMPOUND);
 		requestNBTList.forEach(requestTag -> {
-			CompoundNBT requestNbtTag = (CompoundNBT) requestTag;
+			CompoundTag requestNbtTag = (CompoundTag) requestTag;
 			CraftingRequestResponse request = CraftingRequestResponse.read(requestNbtTag);
 			craftingRequests.put(request.getId(), request);
 		});
 	}
 
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		// Serialize the requests to the list.
 		tag.put("requests", serializeCraftingQueue());
 

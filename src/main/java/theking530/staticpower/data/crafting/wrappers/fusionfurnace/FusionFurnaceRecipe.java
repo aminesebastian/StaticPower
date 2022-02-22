@@ -3,23 +3,24 @@ package theking530.staticpower.data.crafting.wrappers.fusionfurnace;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class FusionFurnaceRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<FusionFurnaceRecipe> RECIPE_TYPE = IRecipeType.register("fusion_furnace");
+	public static final RecipeType<FusionFurnaceRecipe> RECIPE_TYPE = RecipeType.register("fusion_furnace");
 
 	private final List<StaticPowerIngredient> inputs;
 	private final ProbabilityItemStackOutput output;
 
-	public FusionFurnaceRecipe(ResourceLocation name, int processingTime, long powerCost, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output) {
-		super(name, processingTime, powerCost);
+	public FusionFurnaceRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputs = inputs;
 		this.output = output;
 	}
@@ -79,12 +80,12 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return FusionFurnaceRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

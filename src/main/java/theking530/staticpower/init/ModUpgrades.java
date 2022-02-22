@@ -12,16 +12,16 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
 import theking530.staticpower.items.upgrades.CraftingUpgrade;
-import theking530.staticpower.items.upgrades.DigistoreVoidUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
+import theking530.staticpower.items.upgrades.VoidUpgrade;
 
 public class ModUpgrades {
 	// Upgrades
 	public static TeleportUpgrade TeleportUpgrade;
 	public static ExperienceVacuumUpgrade ExperienceVacuumUpgrade;
-	public static DigistoreVoidUpgrade DigistoreVoidUpgrade;
+	public static VoidUpgrade VoidUpgrade;
 	public static StackUpgrade StackUpgrade;
 	public static AcceleratorUpgrade AcceleratorUpgrade;
 	public static CraftingUpgrade CraftingUpgrade;
@@ -69,7 +69,7 @@ public class ModUpgrades {
 	public static void init() {
 		StaticPowerRegistry.preRegisterItem(TeleportUpgrade = new TeleportUpgrade("upgrade_teleport"));
 		StaticPowerRegistry.preRegisterItem(ExperienceVacuumUpgrade = new ExperienceVacuumUpgrade("upgrade_experience_vacuum"));
-		StaticPowerRegistry.preRegisterItem(DigistoreVoidUpgrade = new DigistoreVoidUpgrade("upgrade_digistore_void"));
+		StaticPowerRegistry.preRegisterItem(VoidUpgrade = new VoidUpgrade("upgrade_void"));
 		StaticPowerRegistry.preRegisterItem(StackUpgrade = new StackUpgrade("upgrade_stack"));
 		StaticPowerRegistry.preRegisterItem(AcceleratorUpgrade = new AcceleratorUpgrade("upgrade_accelerator"));
 		StaticPowerRegistry.preRegisterItem(CraftingUpgrade = new CraftingUpgrade("upgrade_crafting"));

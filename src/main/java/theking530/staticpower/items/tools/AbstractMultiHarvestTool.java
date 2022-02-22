@@ -8,88 +8,130 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.ImmutableMultimap.Builder;
 import com.google.common.collect.Multimap;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CommandBlockBlock;
-import net.minecraft.block.JigsawBlock;
-import net.minecraft.block.StructureBlock;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.Attributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Direction.Axis;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.RayTraceContext;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Direction.Axis;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.CommandBlock;
+import net.minecraft.world.level.block.JigsawBlock;
+import net.minecraft.world.level.block.StructureBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import theking530.api.multipartitem.AbstractMultiPartItem;
 import theking530.staticpower.StaticPower;
 
 public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected float attackDamage;
 	protected Multimap<Attribute, AttributeModifier> toolAttributes;
+	protected List<Tag<Block>> mineableTags;
 
-	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn) {
-		super(name, properties.maxStackSize(1));
+	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn, List<Tag<Block>> tags) {
+		super(name, properties.stacksTo(1));
 		this.attackDamage = attackDamageIn + 2.0f;
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(ATTACK_DAMAGE_MODIFIER, "Tool modifier", (double) this.attackDamage, AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_MODIFIER, "Tool modifier", (double) attackSpeedIn, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", (double) this.attackDamage, AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", (double) attackSpeedIn, AttributeModifier.Operation.ADDITION));
 		this.toolAttributes = builder.build();
-
+		mineableTags = tags;
 	}
 
-	public abstract boolean canHarvestAtFullSpeed(ItemStack stack, BlockState state);
+	/**
+	 * How many blocks to the left and right of the targeted block should this tool
+	 * mine?
+	 * 
+	 * @param stack
+	 * @return
+	 */
+	public abstract int getHorizontalRadius(ItemStack stack);
 
-	protected abstract boolean canHarvestBlockInternal(ItemStack stack, BlockState state);
+	/**
+	 * How many blocks to the top and bottom of the targeted block should this tool
+	 * mine?
+	 * 
+	 * @param stack
+	 * @return
+	 */
+	public abstract int getVerticalRadius(ItemStack stack);
 
-	public abstract int getWidth(ItemStack stack);
-
-	public abstract int getHeight(ItemStack stack);
+	/**
+	 * How many blocks deep should this tool mine?
+	 * 
+	 * @param stack
+	 * @return
+	 */
+	public int getDepth(ItemStack stack) {
+		return 1;
+	}
 
 	protected abstract float getEfficiency(ItemStack itemstack);
+
+	public abstract Tier getMiningTier(ItemStack stack);
 
 	public boolean isReadyToMine(ItemStack stack) {
 		return true;
 	}
 
 	@Override
-	public boolean canHarvestBlock(ItemStack stack, BlockState state) {
-		if (!isReadyToMine(stack)) {
+	public boolean canAttackBlock(BlockState state, Level world, BlockPos pos, Player player) {
+		if (player == null) {
 			return false;
 		}
-		return canHarvestBlockInternal(stack, state);
+
+		ItemStack thisStack = player.getMainHandItem();
+		if (thisStack.isEmpty()) {
+			return false;
+		}
+
+		if (!isReadyToMine(thisStack)) {
+			return false;
+		}
+		return true;
 	}
 
 	/**
 	 * This method is only raised on the server.
 	 */
-	protected void onStartingBlockMining(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+	protected void onStartingBlockMining(ItemStack stack, List<BlockPos> blocksMined, Player player) {
 
 	}
 
 	/**
 	 * This method is only raised on the server.
 	 */
-	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, PlayerEntity player) {
+	protected void onAllBlocksMined(ItemStack stack, List<BlockPos> blocksMined, Player player) {
 
 	}
 
-	public List<BlockPos> getMineableExtraBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+	public List<BlockPos> getMineableExtraBlocks(ItemStack itemstack, BlockPos pos, Player player) {
 		// Capture the list of all the blocks to mine.
 		List<BlockPos> minableBlocks = new ArrayList<BlockPos>();
 
 		// If we can't mine, just return the single block.
 		if (!isReadyToMine(itemstack)) {
+			minableBlocks.add(pos);
+			return minableBlocks;
+		}
+
+		// If we can't harvest the targeted block at full speed, don't apply the bonus
+		// radius.
+		if (!isCorrectToolForDrops(itemstack, player.level.getBlockState(pos))) {
 			minableBlocks.add(pos);
 			return minableBlocks;
 		}
@@ -104,30 +146,33 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 
 		// If sneaking, only mine the targeted block. Otherwise get all the blocks in
 		// the width and height.
-		if (player.isSneaking()) {
+		if (player.isShiftKeyDown()) {
 			minableBlocks.add(pos);
 		} else {
-			for (int x = -getWidth(itemstack); x <= getWidth(itemstack); x++) {
-				for (int y = -getHeight(itemstack); y <= getHeight(itemstack); y++) {
-					// Offset in both directions.
-					BlockPos offsetPos = pos.offset(harvestDirections.getHeightDirection(), y);
-					offsetPos = offsetPos.offset(harvestDirections.getWidthDirection(), x);
+			for (int x = -harvestDirections.getHorizontalRadius(); x <= harvestDirections.getHorizontalRadius(); x++) {
+				for (int y = -harvestDirections.getVerticalRadius(); y <= harvestDirections.getVerticalRadius(); y++) {
+					for (int z = 0; z < harvestDirections.getDepth(); z++) {
+						// Offset in both directions.
+						BlockPos offsetPos = pos.relative(harvestDirections.getHeightDirection(), y);
+						offsetPos = offsetPos.relative(harvestDirections.getWidthDirection(), x);
+						offsetPos = offsetPos.relative(harvestDirections.getDeptDDirection(), z);
 
-					try {
-						// Get the state.
-						BlockState state = player.getEntityWorld().getBlockState(offsetPos);
+						try {
+							// Get the state.
+							BlockState state = player.getCommandSenderWorld().getBlockState(offsetPos);
 
-						// Check the hardness.
-						if (state.getPlayerRelativeBlockHardness(player, player.getEntityWorld(), pos) <= 0.0f) {
-							continue;
+							// Check the hardness.
+							if (state.getDestroyProgress(player, player.getCommandSenderWorld(), pos) <= 0.0f) {
+								continue;
+							}
+
+							// Check if we can harvest this block.
+							if (canAttackBlock(state, player.getCommandSenderWorld(), offsetPos, player)) {
+								minableBlocks.add(offsetPos);
+							}
+						} catch (Exception e) {
+							StaticPower.LOGGER.warn(String.format("Unable to mine block at position: %1$s.", offsetPos.toString()), e);
 						}
-
-						// Check if we can harvest this block.
-						if (canHarvestBlock(itemstack, player.getEntityWorld().getBlockState(offsetPos))) {
-							minableBlocks.add(offsetPos);
-						}
-					} catch (Exception e) {
-						StaticPower.LOGGER.warn(String.format("Unable to mine block at position: %1$s.", offsetPos.toString()), e);
 					}
 				}
 			}
@@ -137,11 +182,11 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 		return minableBlocks;
 	}
 
-	public MultiBlockHarvestDirections getHarvestDirections(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
-		return new MultiBlockHarvestDirections(getWidth(itemstack), getHeight(itemstack), itemstack, pos, player);
+	public MultiBlockHarvestDirections getHarvestDirections(ItemStack itemstack, BlockPos pos, Player player) {
+		return new MultiBlockHarvestDirections(getHorizontalRadius(itemstack), getVerticalRadius(itemstack), getDepth(itemstack), itemstack, pos, player);
 	}
 
-	protected boolean breakAllMultiHarvestBlocks(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+	protected boolean breakAllMultiHarvestBlocks(ItemStack itemstack, BlockPos pos, Player player) {
 		// If we can't mine, do nothing.
 		if (!isReadyToMine(itemstack)) {
 			return false;
@@ -149,7 +194,7 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 
 		// Quick check to see if we're on the client. If we are, then just perform the
 		// default behaviour.
-		if (!(player instanceof ServerPlayerEntity)) {
+		if (!(player instanceof ServerPlayer)) {
 			return super.onBlockStartBreak(itemstack, pos, player);
 		}
 
@@ -161,7 +206,7 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 			onStartingBlockMining(itemstack, minableBlocks, player);
 
 			for (BlockPos extraPos : minableBlocks) {
-				breakAndHarvestBlock(extraPos, (ServerPlayerEntity) player);
+				breakAndHarvestBlock(extraPos, (ServerPlayer) player);
 			}
 
 			// Raise on the harvested method.
@@ -172,36 +217,36 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 		}
 	}
 
-	protected boolean breakAndHarvestBlock(BlockPos pos, ServerPlayerEntity player) {
-		BlockState blockstate = player.getEntityWorld().getBlockState(pos);
-		int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(player.getEntityWorld(), player.interactionManager.getGameType(), player, pos);
+	protected boolean breakAndHarvestBlock(BlockPos pos, ServerPlayer player) {
+		BlockState blockstate = player.getCommandSenderWorld().getBlockState(pos);
+		int exp = net.minecraftforge.common.ForgeHooks.onBlockBreakEvent(player.getCommandSenderWorld(), player.gameMode.getGameModeForPlayer(), player, pos);
 		if (exp == -1) {
 			return false;
 		} else {
-			TileEntity tileentity = player.getEntityWorld().getTileEntity(pos);
+			BlockEntity tileentity = player.getCommandSenderWorld().getBlockEntity(pos);
 			Block block = blockstate.getBlock();
-			if ((block instanceof CommandBlockBlock || block instanceof StructureBlock || block instanceof JigsawBlock) && !player.canUseCommandBlock()) {
-				player.getEntityWorld().notifyBlockUpdate(pos, blockstate, blockstate, 3);
+			if ((block instanceof CommandBlock || block instanceof StructureBlock || block instanceof JigsawBlock) && !player.canUseGameMasterBlocks()) {
+				player.getCommandSenderWorld().sendBlockUpdated(pos, blockstate, blockstate, 3);
 				return false;
-			} else if (player.blockActionRestricted(player.getEntityWorld(), pos, player.interactionManager.getGameType())) {
+			} else if (player.blockActionRestricted(player.getCommandSenderWorld(), pos, player.gameMode.getGameModeForPlayer())) {
 				return false;
 			} else if (player.isCreative()) {
-				if (breakBlock(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, true)) {
-					harvestBlockDrops(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, true);
+				if (breakBlock(blockstate, block, pos, player, tileentity, player.getMainHandItem(), exp, true)) {
+					harvestBlockDrops(blockstate, block, pos, player, tileentity, player.getMainHandItem(), exp, true);
 				}
 				return true;
 			} else {
-				if (breakBlock(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, false)) {
-					harvestBlockDrops(blockstate, block, pos, player, tileentity, player.getHeldItemMainhand(), exp, false);
+				if (breakBlock(blockstate, block, pos, player, tileentity, player.getMainHandItem(), exp, false)) {
+					harvestBlockDrops(blockstate, block, pos, player, tileentity, player.getMainHandItem(), exp, false);
 				}
 				return true;
 			}
 		}
 	}
 
-	protected boolean breakBlock(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean breakBlock(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 		// Indicate to the held item that a block was destroyed using it.
-		heldItem.onBlockDestroyed(player.getEntityWorld(), state, pos, player);
+		heldItem.mineBlock(player.getCommandSenderWorld(), state, pos, player);
 
 		// If we are in survival mode, lets see if the item mining was destroyed.
 		if (!isCreative) {
@@ -211,34 +256,34 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 			// If the held item is now empty but the copy is not, that means the held item
 			// was made empty and has therefore broken.
 			if (heldItem.isEmpty() && !heldItemCopy.isEmpty()) {
-				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItemCopy, Hand.MAIN_HAND);
+				net.minecraftforge.event.ForgeEventFactory.onPlayerDestroyItem(player, heldItemCopy, InteractionHand.MAIN_HAND);
 			}
 		}
 
 		// Check if we can harvest.
-		boolean canHarvestWithDrops = state.canHarvestBlock(player.getEntityWorld(), pos, player);
+		boolean canHarvestWithDrops = state.canHarvestBlock(player.getCommandSenderWorld(), pos, player);
 
 		// Remove the block.
-		boolean removed = state.removedByPlayer(player.getEntityWorld(), pos, player, canHarvestWithDrops, player.getEntityWorld().getFluidState(pos));
+		boolean removed = player.getCommandSenderWorld().removeBlock(pos, canHarvestWithDrops);
 		if (removed) {
 			// Indicate that the player is destroying the block.
-			state.getBlock().onPlayerDestroy(player.getEntityWorld(), pos, state);
+			state.getBlock().destroy(player.getCommandSenderWorld(), pos, state);
 		}
 
 		// Return if we broke the block and should drop the contents.
 		return removed && canHarvestWithDrops;
 	}
 
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayerEntity player, TileEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
-		block.harvestBlock(player.getEntityWorld(), player, pos, state, tileEntity, heldItem);
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+		block.playerDestroy(player.getCommandSenderWorld(), player, pos, state, tileEntity, heldItem);
 		if (experience > 0) {
-			state.getBlock().dropXpOnBlockBreak((ServerWorld) player.getEntityWorld(), pos, experience);
+			state.getBlock().popExperience((ServerLevel) player.getCommandSenderWorld(), pos, experience);
 		}
 	}
 
 	@Override
 	public float getDestroySpeed(ItemStack stack, BlockState state) {
-		return canHarvestAtFullSpeed(stack, state) ? this.getEfficiency(stack) : isReadyToMine(stack) ? 1.0f : 0.0f;
+		return isCorrectToolForDrops(stack, state) ? getEfficiency(stack) : isReadyToMine(stack) ? 1.0f : 0.0f;
 	}
 
 	/**
@@ -246,12 +291,12 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	 * argument beside ev. They just raise the damage on the stack.
 	 */
 	@Override
-	public boolean hitEntity(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
 		return true;
 	}
 
 	@Override
-	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+	public boolean onBlockStartBreak(ItemStack itemstack, BlockPos pos, Player player) {
 		return breakAllMultiHarvestBlocks(itemstack, pos, player);
 	}
 
@@ -260,19 +305,40 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	 * damage.
 	 */
 	@SuppressWarnings("deprecation")
-	public Multimap<Attribute, AttributeModifier> getAttributeModifiers(EquipmentSlotType equipmentSlot) {
-		return equipmentSlot == EquipmentSlotType.MAINHAND ? this.toolAttributes : super.getAttributeModifiers(equipmentSlot);
+	public Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
+		return equipmentSlot == EquipmentSlot.MAINHAND ? this.toolAttributes : super.getDefaultAttributeModifiers(equipmentSlot);
 	}
 
 	public float getAttackDamage() {
 		return this.attackDamage;
 	}
 
+	@Override
+	public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
+		// Check to make sure one of the tags contains this.
+		boolean mineable = false;
+		for (Tag<Block> tag : mineableTags) {
+			if (state.is(tag)) {
+				mineable = true;
+				break;
+			}
+		}
+
+		if (!mineable) {
+			return false;
+		}
+
+		// Check the tier.
+		return net.minecraftforge.common.TierSortingRegistry.isCorrectTierForDrops(getMiningTier(stack), state);
+	}
+
 	protected class MultiBlockHarvestDirections {
 		private final Direction widthDirection;
 		private final Direction heightDirection;
+		private final Direction depthDirection;
 		private final int width;
 		private final int height;
+		private final int depth;
 		private final boolean isValid;
 
 		public Direction getWidthDirection() {
@@ -283,39 +349,50 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 			return heightDirection;
 		}
 
+		public Direction getDeptDDirection() {
+			return depthDirection;
+		}
+
 		public boolean isValid() {
 			return isValid;
 		}
 
-		public int getWidth() {
+		public int getHorizontalRadius() {
 			return width;
 		}
 
-		public int getHeight() {
+		public int getVerticalRadius() {
 			return height;
 		}
 
-		private MultiBlockHarvestDirections(int width, int height, ItemStack itemstack, BlockPos pos, PlayerEntity player) {
+		public int getDepth() {
+			return depth;
+		}
+
+		private MultiBlockHarvestDirections(int width, int height, int depth, ItemStack itemstack, BlockPos pos, Player player) {
 			this.width = width;
 			this.height = height;
+			this.depth = depth;
 
-			BlockRayTraceResult traceResult = Item.rayTrace(player.getEntityWorld(), player, RayTraceContext.FluidMode.ANY);
-			if (traceResult == null || traceResult.getType() != RayTraceResult.Type.BLOCK) {
+			BlockHitResult traceResult = Item.getPlayerPOVHitResult(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
+			if (traceResult == null || traceResult.getType() != HitResult.Type.BLOCK) {
 				widthDirection = null;
 				heightDirection = null;
+				depthDirection = null;
 				isValid = false;
 				return;
 			}
 
 			isValid = true;
-			if (traceResult.getFace().getAxis() == Axis.X) {
+			depthDirection = traceResult.getDirection().getOpposite();
+			if (traceResult.getDirection().getAxis() == Axis.X) {
 				heightDirection = Direction.UP;
 				widthDirection = Direction.NORTH;
-			} else if (traceResult.getFace().getAxis() == Axis.Z) {
+			} else if (traceResult.getDirection().getAxis() == Axis.Z) {
 				heightDirection = Direction.UP;
 				widthDirection = Direction.EAST;
 			} else {
-				heightDirection = player.getAdjustedHorizontalFacing();
+				heightDirection = player.getMotionDirection();
 				widthDirection = heightDirection.getAxis() == Axis.X ? Direction.NORTH : Direction.EAST;
 			}
 		}

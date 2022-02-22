@@ -3,11 +3,11 @@ package theking530.staticpower.tileentities.components.power;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 
 public class TileEntityPowerMetricsSyncPacket extends NetworkMessage {
 	private BlockPos pos;
@@ -23,24 +23,24 @@ public class TileEntityPowerMetricsSyncPacket extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
-		buffer.writeLong(pos.toLong());
-		buffer.writeCompoundTag(metrics.serializeNBT());
+	public void encode(FriendlyByteBuf buffer) {
+		buffer.writeLong(pos.asLong());
+		buffer.writeNbt(metrics.serializeNBT());
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
-		pos = BlockPos.fromLong(buffer.readLong());
+	public void decode(FriendlyByteBuf buffer) {
+		pos = BlockPos.of(buffer.readLong());
 		metrics = new PowerTransferMetrics();
-		metrics.deserializeNBT(buffer.readCompoundTag());
+		metrics.deserializeNBT(buffer.readNbt());
 	}
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			World world = Minecraft.getInstance().player.getEntityWorld();
-			if (world.getTileEntity(pos) instanceof IPowerMetricsSyncConsumer) {
-				IPowerMetricsSyncConsumer consumer = (IPowerMetricsSyncConsumer) world.getTileEntity(pos);
+			Level world = Minecraft.getInstance().player.getCommandSenderWorld();
+			if (world.getBlockEntity(pos) instanceof IPowerMetricsSyncConsumer) {
+				IPowerMetricsSyncConsumer consumer = (IPowerMetricsSyncConsumer) world.getBlockEntity(pos);
 				consumer.recieveMetrics(metrics);
 			}
 		});

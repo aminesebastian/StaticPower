@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class DigistoreRenderingState {
 	public final ItemStack card;

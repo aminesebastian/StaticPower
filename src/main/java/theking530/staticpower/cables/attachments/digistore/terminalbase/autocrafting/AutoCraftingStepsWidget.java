@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
@@ -16,7 +16,7 @@ import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials;
 import theking530.staticpower.cables.digistore.crafting.RequiredAutoCraftingMaterials.RequiredAutoCraftingMaterial;
 
-public class AutoCraftingStepsWidget extends AbstractGuiWidget {
+public class AutoCraftingStepsWidget extends AbstractGuiWidget<AutoCraftingStepsWidget> {
 	private CraftingRequestResponse request;
 	private int rows;
 	private int columns;
@@ -66,7 +66,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<ITextComponent> tooltips, boolean showAdvanced) {
+	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		// If there is no request, do nothing.
 		if (request == null) {
 			return;
@@ -79,21 +79,15 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 	}
 
 	@Override
-	public void renderForeground(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
-		// Get the screen space position.
-		Vector2D screenSpacePos = GuiDrawUtilities.translatePositionByMatrix(matrix, getPosition());
+	public void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 
 		// Draw the background.
-		GuiDrawUtilities.drawSlot(null, screenSpacePos.getX(), screenSpacePos.getY(), getSize().getX(), (rows * 24) - 1, 0);
+		GuiDrawUtilities.drawSlot(matrix, getSize().getX(), (rows * 24) - 1, 0, 0, 0);
 
 		// If there is no request, do nothing else.
 		if (request == null) {
 			return;
 		}
-
-		// Translate the matrix to the space of this widget.
-		matrix.push();
-		matrix.translate(getPosition().getX(), getPosition().getY(), 0);
 
 		// Render the widgets.
 		List<RequiredAutoCraftingMaterial> materials = getMaterialsForScrollPosition();
@@ -111,13 +105,10 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget {
 			}
 		}
 
-		// Pop the previous translation.
-		matrix.pop();
-
 		// Render the vertical dividers.
 		int divisionDistance = this.getSize().getXi() / columns;
 		for (int i = 1; i < columns; i++) {
-			GuiDrawUtilities.drawColoredRectangle(screenSpacePos.getX() + (divisionDistance * i) - 1, screenSpacePos.getY(), 1.0f, (rows * 24) - 1, 1.0f, Color.GREY);
+			GuiDrawUtilities.drawRectangle(matrix, 1.0f, (rows * 24) - 1, divisionDistance, 0, 0, Color.GREY);
 		}
 	}
 

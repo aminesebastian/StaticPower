@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:tumbler_recipe",
 	"input": {
-		"tag": "forge:ores/zinc"
+		"tag": "forge:raw_materials/zinc"
 	},
 	"output": {
 		"item": "staticpower:chunks_zinc",

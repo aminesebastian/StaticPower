@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.components.fluids;
 
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -23,16 +23,24 @@ public class FluidOutputServoComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public String getComponentName() {
-		return "Fluid Output Servo";
+		return super.getComponentName();
+	}
+
+	public FluidOutputServoComponent setTank(IFluidHandler tank) {
+		this.owningTank = tank;
+		return this;
 	}
 
 	@Override
 	public void preProcessUpdate() {
 		// Do nothing if not enabled.
-		if(!isEnabled()) {
+		if (!isEnabled()) {
 			return;
 		}
-		if (!getTileEntity().getWorld().isRemote) {
+		if (owningTank == null) {
+			return;
+		}
+		if (!getTileEntity().getLevel().isClientSide) {
 			for (Direction dir : Direction.values()) {
 				// If we can't output from the provided side, skip it.
 				if (!canOutputFromSide(dir)) {
@@ -45,7 +53,7 @@ public class FluidOutputServoComponent extends AbstractTileEntityComponent {
 
 	public void pushFluid(Direction side) {
 		// Check for the tile entity on the provided side. If null, return early.
-		TileEntity te = getWorld().getTileEntity(getPos().offset(side));
+		BlockEntity te = getWorld().getBlockEntity(getPos().relative(side));
 		if (te == null) {
 			return;
 		}

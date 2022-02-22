@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.components.items;
 
-import net.minecraft.fluid.Fluids;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -68,7 +68,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 		}
 
 		// Only do work on the server.
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			return;
 		}
 
@@ -114,7 +114,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
 					float maxSound = minSound + 0.1f;
 					// Play the sound.
-					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL, SoundCategory.BLOCKS, 0.35f,
+					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.35f,
 							SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
 				}
 
@@ -151,7 +151,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
 					float maxSound = minSound + 0.1f;
 					// Play the sound.
-					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 0.35f,
+					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.35f,
 							SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
 				}
 

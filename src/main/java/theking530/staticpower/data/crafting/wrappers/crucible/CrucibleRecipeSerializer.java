@@ -5,19 +5,20 @@ import org.apache.logging.log4j.Logger;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CrucibleRecipe> {
+public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrucibleRecipe> {
 	public static final CrucibleRecipeSerializer INSTANCE = new CrucibleRecipeSerializer();
 	private static final Logger LOGGER = LogManager.getLogger(CrucibleRecipeSerializer.class);
 
@@ -26,9 +27,9 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public CrucibleRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public CrucibleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Return null if the input is empty.
@@ -37,30 +38,23 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 			return null;
 		}
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.cruciblePowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.crucibleProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.crucibleProcessingTime.get(), StaticPowerConfig.SERVER.cruciblePowerUsage.get(),
+				json);
 
 		// Get the outputs object.
-		JsonObject outputs = JSONUtils.getJsonObject(json, "outputs");
+		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
 
 		// Get the item output if one is defined.
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.EMPTY;
-		if (JSONUtils.hasField(outputs, "item")) {
-			itemOutput = ProbabilityItemStackOutput.parseFromJSON(JSONUtils.getJsonObject(outputs, "item"));
+		if (GsonHelper.isValidNode(outputs, "item")) {
+			itemOutput = ProbabilityItemStackOutput.parseFromJSON(GsonHelper.getAsJsonObject(outputs, "item"));
 		}
 
 		// Deserialize the fluid output if it exists.
 		FluidStack fluidOutput = FluidStack.EMPTY;
-		if (JSONUtils.hasField(outputs, "fluid")) {
-			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(JSONUtils.getJsonObject(outputs, "fluid"));
+		if (GsonHelper.isValidNode(outputs, "fluid")) {
+			fluidOutput = StaticPowerJsonParsingUtilities.parseFluidStack(GsonHelper.getAsJsonObject(outputs, "fluid"));
 		}
 
 		// Get the minimum temperature.
@@ -78,28 +72,25 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		}
 
 		// Create the recipe.
-		return new CrucibleRecipe(recipeId, input, itemOutput, fluidOutput, minimumTemperature, processingTime, powerCost);
+		return new CrucibleRecipe(recipeId, input, itemOutput, fluidOutput, minimumTemperature, processing);
 	}
 
 	@Override
-	public CrucibleRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
+	public CrucibleRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int minimumTemperature = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 		FluidStack fluid = buffer.readFluidStack();
 
-		return new CrucibleRecipe(recipeId, input, output, fluid, minimumTemperature, time, power);
+		return new CrucibleRecipe(recipeId, input, output, fluid, minimumTemperature, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, CrucibleRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
+	public void toNetwork(FriendlyByteBuf buffer, CrucibleRecipe recipe) {
 		buffer.writeInt(recipe.getMinimumTemperature());
 		recipe.getInput().write(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

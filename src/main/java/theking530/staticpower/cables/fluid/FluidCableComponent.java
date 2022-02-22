@@ -7,10 +7,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -54,7 +54,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				boolean shouldUpdate = !network.getFluidStorage().getFluid().isFluidEqual(lastUpdateFluidStack);
 				shouldUpdate |= Math.abs(lastUpdateFilledPercentage - getFilledPercentage()) > UPDATE_THRESHOLD;
@@ -76,7 +76,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	public void updateClientRenderValues() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				lastUpdateFluidStack = network.getFluidStorage().getFluid();
 				lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
@@ -84,20 +84,20 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
 				FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 128, packet);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, packet);
 			});
 		}
 	}
 
 	public void recieveUpdateRenderValues(FluidStack stack, float fluidAmount) {
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			lastUpdateFluidStack = stack;
 			lastUpdateFilledPercentage = Math.min(1.0f, fluidAmount);
 		}
 	}
 
 	public float getFilledPercentage() {
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			return lastUpdateFilledPercentage;
 		} else {
 			AtomicReference<Float> output = new AtomicReference<Float>(0.0f);
@@ -118,7 +118,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int getTanks() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicInteger recieve = new AtomicInteger(0);
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().getTanks());
@@ -131,7 +131,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public FluidStack getFluidInTank(int tank) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicReference<FluidStack> fluid = new AtomicReference<FluidStack>(FluidStack.EMPTY);
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				fluid.set(network.getFluidStorage().getFluidInTank(tank));
@@ -144,7 +144,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int getTankCapacity(int tank) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicInteger recieve = new AtomicInteger(0);
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().getTankCapacity(tank));
@@ -157,7 +157,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public boolean isFluidValid(int tank, FluidStack stack) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicBoolean recieve = new AtomicBoolean(false);
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().isFluidValid(tank, stack));
@@ -170,7 +170,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicInteger recieve = new AtomicInteger(0);
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				recieve.set(network.getFluidStorage().fill(resource, action));
@@ -197,7 +197,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isRemote) {
+				if (getWorld().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
@@ -223,7 +223,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
@@ -237,24 +237,24 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		return CableConnectionState.NONE;
 	}
 
-	public CompoundNBT serializeSaveNbt(CompoundNBT nbt) {
+	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
 		super.serializeSaveNbt(nbt);
 		// Save the filled percent.
 		nbt.putFloat("filled_percentage", lastUpdateFilledPercentage);
 
 		// Put the fluid stack.
-		CompoundNBT fluidNbt = new CompoundNBT();
+		CompoundTag fluidNbt = new CompoundTag();
 		lastUpdateFluidStack.writeToNBT(fluidNbt);
 		nbt.put("fluid", fluidNbt);
 		return nbt;
 	}
 
-	public void deserializeSaveNbt(CompoundNBT nbt) {
+	public void deserializeSaveNbt(CompoundTag nbt) {
 		super.deserializeSaveNbt(nbt);
 		// Load the filled percent.
 		lastUpdateFilledPercentage = nbt.getFloat("filled_percentage");
 
 		// Load the last update fluidstack.
-		lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT((CompoundNBT) nbt.get("fluid"));
+		lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) nbt.get("fluid"));
 	}
 }

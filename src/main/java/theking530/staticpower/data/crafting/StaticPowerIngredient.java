@@ -3,9 +3,9 @@ package theking530.staticpower.data.crafting;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 public class StaticPowerIngredient {
 	public static final StaticPowerIngredient EMPTY = new StaticPowerIngredient(Ingredient.EMPTY, 0);
@@ -15,17 +15,17 @@ public class StaticPowerIngredient {
 	public StaticPowerIngredient(Ingredient ingredient, int count) {
 		this.ingredient = ingredient;
 		this.count = count;
-		for (ItemStack stack : ingredient.getMatchingStacks()) {
+		for (ItemStack stack : ingredient.getItems()) {
 			stack.setCount(count);
 		}
 	}
 
 	public StaticPowerIngredient(ItemStack stack, int count) {
-		this(Ingredient.fromStacks(stack), count);
+		this(Ingredient.of(stack), count);
 	}
 
 	public StaticPowerIngredient(ItemStack stack) {
-		this(Ingredient.fromStacks(stack), stack.getCount());
+		this(Ingredient.of(stack), stack.getCount());
 	}
 
 	public boolean isEmpty() {
@@ -66,7 +66,7 @@ public class StaticPowerIngredient {
 		}
 
 		// Get the input ingredient.
-		Ingredient input = Ingredient.deserialize(json);
+		Ingredient input = Ingredient.fromJson(json);
 
 		// Get the input count.
 		int inputCount = 1;
@@ -81,13 +81,13 @@ public class StaticPowerIngredient {
 		return new StaticPowerIngredient(input, inputCount);
 	}
 
-	public void write(PacketBuffer buffer) {
-		ingredient.write(buffer);
+	public void write(FriendlyByteBuf buffer) {
+		ingredient.toNetwork(buffer);
 		buffer.writeInt(count);
 	}
 
-	public static StaticPowerIngredient read(PacketBuffer buffer) {
-		Ingredient ingredient = Ingredient.read(buffer);
+	public static StaticPowerIngredient read(FriendlyByteBuf buffer) {
+		Ingredient ingredient = Ingredient.fromNetwork(buffer);
 		int count = buffer.readInt();
 		return new StaticPowerIngredient(ingredient, count);
 	}

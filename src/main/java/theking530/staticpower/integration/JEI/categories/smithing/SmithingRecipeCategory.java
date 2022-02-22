@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,15 +15,15 @@ import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
@@ -48,7 +48,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	private static final int FLUID_MODIFIER_SLOT = 2;
 	private static final int OUTPUT_SLOT = 3;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
@@ -58,9 +58,9 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 
 	public SmithingRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.AutoSmith.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.AutoSmith.getDescriptionId());
 		background = guiHelper.createBlankDrawable(170, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.AutoSmith));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.AutoSmith));
 		pBar = new AutoSmithProgressBar(49, 19);
 	}
 
@@ -72,8 +72,8 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -93,13 +93,13 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	}
 
 	@Override
-	public void draw(AutoSmithRecipeJEIWrapper recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 50, 0, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 80, 20, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 48, 40, 20, 20, 0);
+	public void draw(AutoSmithRecipeJEIWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 50, 0, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 80, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 48, 40, 0);
 
-		GuiDrawUtilities.drawSlot(matrixStack, 102, 0, 68, 60, 0);
-		GuiDrawUtilities.drawColoredRectangle(matrixStack, 102, 0, 68, 60, 0.0f, Color.DARK_GREY);
+		GuiDrawUtilities.drawSlot(matrixStack, 68, 60, 102, 0, 0);
+		GuiDrawUtilities.drawRectangle(matrixStack, 68, 60, 102, 0, 0.0f, Color.DARK_GREY);
 
 		// This doesn't actually draw the fluid, just the bars.
 		if (!recipe.getRecipe().getModifierFluid().isEmpty()) {
@@ -115,7 +115,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
 		// Draw the attribute title.
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, new TranslationTextComponent("gui.staticpower.attributes").appendString(": ").getString(), 104.5f, 2,
+		Minecraft.getInstance().font.drawShadow(matrixStack, new TranslatableComponent("gui.staticpower.attributes").append(": ").getString(), 104.5f, 2,
 				Color.EIGHT_BIT_WHITE.encodeInInteger());
 
 		// Create a copy of the input.
@@ -133,15 +133,15 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 			float yOffset = 13;
 
 			// Shrink the font.
-			matrixStack.push();
+			matrixStack.pushPose();
 			matrixStack.scale(0.9f, 0.9f, 0.9f);
 
 			// If this recipe repairs, list the repair amount as well.
 			if (recipe.getRecipe().performsRepair()) {
 				MetricConverter repairMetric = new MetricConverter(recipe.getRecipe().getRepairAmount());
 				String repairString = "+" + repairMetric.getValueAsString(true);
-				Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, "Repair", 116, yOffset, TextFormatting.WHITE.getColor());
-				Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, repairString, 151, yOffset, TextFormatting.GREEN.getColor());
+				Minecraft.getInstance().font.drawShadow(matrixStack, "Repair", 116, yOffset, ChatFormatting.WHITE.getColor());
+				Minecraft.getInstance().font.drawShadow(matrixStack, repairString, 151, yOffset, ChatFormatting.GREEN.getColor());
 				yOffset += 9.5f;
 			}
 
@@ -149,30 +149,30 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 			for (ResourceLocation attribId : copyAttributable.getAllAttributes()) {
 				AbstractAttributeDefenition<?, ?> originalAttribute = originalAttributable.getAttribute(attribId);
 				AbstractAttributeDefenition<?, ?> copyAttribute = copyAttributable.getAttribute(attribId);
-				IFormattableTextComponent differenceLabel = copyAttribute.getDifferenceLabel(originalAttribute);
+				MutableComponent differenceLabel = copyAttribute.getDifferenceLabel(originalAttribute);
 
 				if (differenceLabel != null) {
-					Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, differenceLabel.getString(), 116, yOffset, originalAttribute.getColor().getColor());
+					Minecraft.getInstance().font.drawShadow(matrixStack, differenceLabel.getString(), 116, yOffset, originalAttribute.getColor().getColor());
 					yOffset += 9.5f;
 				}
 			}
-			matrixStack.pop();
+			matrixStack.popPose();
 		}
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(AutoSmithRecipeJEIWrapper recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(AutoSmithRecipeJEIWrapper recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getRecipe().getPowerCost() * recipe.getRecipe().getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getRecipe().getPowerCost() * recipe.getRecipe().getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
 		}
@@ -189,7 +189,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 		ingredients.setInputIngredients(input);
 
 		// Set the filled bottle output itemstack.
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getRecipeOutput());
+		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
 
 		// Set the input fluid.
 		ingredients.setInput(VanillaTypes.FLUID, recipe.getRecipe().getModifierFluid());

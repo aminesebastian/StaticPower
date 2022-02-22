@@ -8,11 +8,11 @@ import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
@@ -49,7 +49,7 @@ public class PacketGuiTabAddSlots extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buf) {
+	public void decode(FriendlyByteBuf buf) {
 		windowId = buf.readInt();
 		slotCount = buf.readInt();
 		slotIndecies = buf.readVarIntArray();
@@ -61,7 +61,7 @@ public class PacketGuiTabAddSlots extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buf) {
+	public void encode(FriendlyByteBuf buf) {
 		buf.writeInt(windowId);
 		buf.writeInt(slotCount);
 
@@ -79,9 +79,9 @@ public class PacketGuiTabAddSlots extends NetworkMessage {
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
 			// Make sure the server has them in the same conatiner.
-			if (context.get().getSender().openContainer.windowId == windowId && context.get().getSender().openContainer instanceof StaticPowerTileEntityContainer) {
+			if (context.get().getSender().containerMenu.containerId == windowId && context.get().getSender().containerMenu instanceof StaticPowerTileEntityContainer) {
 				// Get the container.
-				StaticPowerTileEntityContainer<?> container = (StaticPowerTileEntityContainer<?>) context.get().getSender().openContainer;
+				StaticPowerTileEntityContainer<?> container = (StaticPowerTileEntityContainer<?>) context.get().getSender().containerMenu;
 
 				// Get the inventory component. If valid, add the slots.
 				for (int i = 0; i < inventoryComponentNames.length; i++) {

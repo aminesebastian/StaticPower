@@ -1,73 +1,77 @@
 package theking530.staticpower.entities.smeep;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.entity.IEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.LayerRenderer;
-import net.minecraft.client.renderer.entity.model.QuadrupedModel;
-import net.minecraft.client.renderer.model.ModelRenderer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.RenderLayerParent;
+import net.minecraft.client.renderer.entity.layers.RenderLayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.animal.Sheep;
+import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPower;
 
 @OnlyIn(Dist.CLIENT)
-public class WoolLayerSmeep extends LayerRenderer<EntitySmeep, ModelSmeep> {
-	private static final ResourceLocation TEXTURE = new ResourceLocation(StaticPower.MOD_ID, "textures/entity/smeep/smeep_fur.png");
-	private final SmeepWoolModel smeepModel = new SmeepWoolModel();
+public class WoolLayerSmeep extends RenderLayer<EntitySmeep, ModelSmeep> {
+	private static final ResourceLocation TEXTURE = new ResourceLocation(StaticPower.MOD_ID,
+			"textures/entity/smeep/smeep_fur.png");
+	private final ModelSmeepFur model;
 
-	public WoolLayerSmeep(IEntityRenderer<EntitySmeep, ModelSmeep> rendererIn) {
-		super(rendererIn);
+	public WoolLayerSmeep(RenderLayerParent<EntitySmeep, ModelSmeep> p_174533_, EntityModelSet p_174534_) {
+		super(p_174533_);
+		this.model = new ModelSmeepFur(p_174534_.bakeLayer(ModelLayers.SHEEP_FUR));
 	}
 
-	public void render(MatrixStack matrixStackIn, IRenderTypeBuffer bufferIn, int packedLightIn, EntitySmeep entitylivingbaseIn, float limbSwing, float limbSwingAmount, float partialTicks,
-			float ageInTicks, float netHeadYaw, float headPitch) {
-		if (!entitylivingbaseIn.getSheared() && !entitylivingbaseIn.isInvisible()) {
-			renderCopyCutoutModel(this.getEntityModel(), this.smeepModel, TEXTURE, matrixStackIn, bufferIn, packedLightIn, entitylivingbaseIn, limbSwing, limbSwingAmount, ageInTicks,
-					netHeadYaw, headPitch, partialTicks, 1.0f, 1.0f, 1.0f);
+	@Override
+	public void render(PoseStack p_117421_, MultiBufferSource p_117422_, int p_117423_, EntitySmeep p_117424_,
+			float p_117425_, float p_117426_, float p_117427_, float p_117428_, float p_117429_, float p_117430_) {
+		if (!p_117424_.isSheared()) {
+			if (p_117424_.isInvisible()) {
+				Minecraft minecraft = Minecraft.getInstance();
+				boolean flag = minecraft.shouldEntityAppearGlowing(p_117424_);
+				if (flag) {
+					this.getParentModel().copyPropertiesTo(this.model);
+					this.model.prepareMobModel(p_117424_, p_117425_, p_117426_, p_117427_);
+					this.model.setupAnim(p_117424_, p_117425_, p_117426_, p_117428_, p_117429_, p_117430_);
+					VertexConsumer vertexconsumer = p_117422_.getBuffer(RenderType.outline(TEXTURE));
+					this.model.renderToBuffer(p_117421_, vertexconsumer, p_117423_,
+							LivingEntityRenderer.getOverlayCoords(p_117424_, 0.0F), 0.0F, 0.0F, 0.0F, 1.0F);
+				}
+
+			} else {
+				float f;
+				float f1;
+				float f2;
+				if (p_117424_.hasCustomName() && "jeb_".equals(p_117424_.getName().getContents())) {
+					int i1 = 25;
+					int i = p_117424_.tickCount / 25 + p_117424_.getId();
+					int j = DyeColor.values().length;
+					int k = i % j;
+					int l = (i + 1) % j;
+					float f3 = ((float) (p_117424_.tickCount % 25) + p_117427_) / 25.0F;
+					float[] afloat1 = Sheep.getColorArray(DyeColor.byId(k));
+					float[] afloat2 = Sheep.getColorArray(DyeColor.byId(l));
+					f = afloat1[0] * (1.0F - f3) + afloat2[0] * f3;
+					f1 = afloat1[1] * (1.0F - f3) + afloat2[1] * f3;
+					f2 = afloat1[2] * (1.0F - f3) + afloat2[2] * f3;
+				} else {
+					float[] afloat = Sheep.getColorArray(p_117424_.getColor());
+					f = afloat[0];
+					f1 = afloat[1];
+					f2 = afloat[2];
+				}
+
+				coloredCutoutModelCopyLayerRender(this.getParentModel(), this.model, TEXTURE, p_117421_, p_117422_,
+						p_117423_, p_117424_, p_117425_, p_117426_, p_117428_, p_117429_, p_117430_, p_117427_, f, f1,
+						f2);
+			}
 		}
 	}
-
-	@OnlyIn(Dist.CLIENT)
-	public class SmeepWoolModel extends QuadrupedModel<EntitySmeep> {
-		private float headRotationAngleX;
-
-		public SmeepWoolModel() {
-			super(12, 0.0F, false, 8.0F, 4.0F, 2.0F, 2.0F, 24);
-			this.headModel = new ModelRenderer(this, 0, 0);
-			this.headModel.addBox(-3.0F, -4.0F, -4.0F, 6.0F, 6.0F, 6.0F, 0.6F);
-			this.headModel.setRotationPoint(0.0F, 6.0F, -8.0F);
-			this.body = new ModelRenderer(this, 28, 8);
-			this.body.addBox(-4.0F, -10.0F, -7.0F, 8.0F, 16.0F, 6.0F, 1.75F);
-			this.body.setRotationPoint(0.0F, 5.0F, 2.0F);
-			this.legBackRight = new ModelRenderer(this, 0, 16);
-			this.legBackRight.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, 0.5F);
-			this.legBackRight.setRotationPoint(-3.0F, 12.0F, 7.0F);
-			this.legBackLeft = new ModelRenderer(this, 0, 16);
-			this.legBackLeft.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, 0.5F);
-			this.legBackLeft.setRotationPoint(3.0F, 12.0F, 7.0F);
-			this.legFrontRight = new ModelRenderer(this, 0, 16);
-			this.legFrontRight.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, 0.5F);
-			this.legFrontRight.setRotationPoint(-3.0F, 12.0F, -5.0F);
-			this.legFrontLeft = new ModelRenderer(this, 0, 16);
-			this.legFrontLeft.addBox(-2.0F, 0.0F, -2.0F, 4.0F, 6.0F, 4.0F, 0.5F);
-			this.legFrontLeft.setRotationPoint(3.0F, 12.0F, -5.0F);
-		}
-
-		public void setLivingAnimations(EntitySmeep entityIn, float limbSwing, float limbSwingAmount, float partialTick) {
-			super.setLivingAnimations(entityIn, limbSwing, limbSwingAmount, partialTick);
-			this.headModel.rotationPointY = 6.0F + entityIn.getHeadRotationPointY(partialTick) * 9.0F;
-			this.headRotationAngleX = entityIn.getHeadRotationAngleX(partialTick);
-		}
-
-		/**
-		 * Sets this entity's model rotation angles
-		 */
-		public void setRotationAngles(EntitySmeep entityIn, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-			super.setRotationAngles(entityIn, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-			this.headModel.rotateAngleX = this.headRotationAngleX;
-		}
-	}
-
 }

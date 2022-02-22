@@ -1,0 +1,12 @@
+{
+    "variants": {
+		"facing=north,is_on=false": { "model": "staticpower:block/machines/machine_enchanter" },
+        "facing=south,is_on=false": { "model": "staticpower:block/machines/machine_enchanter", "y": 180 },
+        "facing=west,is_on=false":  { "model": "staticpower:block/machines/machine_enchanter", "y": 270 },
+        "facing=east,is_on=false":  { "model": "staticpower:block/machines/machine_enchanter", "y": 90 },
+		"facing=north,is_on=true": { "model": "staticpower:block/machines/machine_enchanter_on" },
+        "facing=south,is_on=true": { "model": "staticpower:block/machines/machine_enchanter_on", "y": 180 },
+        "facing=west,is_on=true":  { "model": "staticpower:block/machines/machine_enchanter_on", "y": 270 },
+        "facing=east,is_on=true":  { "model": "staticpower:block/machines/machine_enchanter_on", "y": 90 }
+    }
+}

@@ -1,19 +1,21 @@
 package theking530.staticpower.tileentities.nonpowered.tank;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
+import theking530.staticpower.init.ModUpgrades;
 
 public class GuiTank extends StaticPowerTileEntityGui<ContainerTank, TileEntityTank> {
 	@SuppressWarnings("unused")
 	private GuiInfoTab infoTab;
 
-	public GuiTank(ContainerTank container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiTank(ContainerTank container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 185);
 	}
 
@@ -24,5 +26,6 @@ public class GuiTank extends StaticPowerTileEntityGui<ContainerTank, TileEntityT
 
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().voidUpgradeInventory, ModUpgrades.VoidUpgrade).setTabSide(TabSide.LEFT));
 	}
 }

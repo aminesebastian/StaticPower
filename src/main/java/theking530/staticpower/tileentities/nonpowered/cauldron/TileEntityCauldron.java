@@ -3,17 +3,20 @@ package theking530.staticpower.tileentities.nonpowered.cauldron;
 import java.util.List;
 import java.util.Optional;
 
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity.RemovalReason;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
@@ -31,9 +34,11 @@ import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.
 
 public class TileEntityCauldron extends TileEntityBase {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityCauldron> RUSTY = new TileEntityTypeAllocator<>((type) -> new TileEntityCauldron(type), ModBlocks.RustyCauldron);
+	public static final BlockEntityTypeAllocator<TileEntityCauldron> RUSTY = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityCauldron(type, pos, state), ModBlocks.RustyCauldron);
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityCauldron> CLEAN = new TileEntityTypeAllocator<>((type) -> new TileEntityCauldron(type), ModBlocks.CleanCauldron);
+	public static final BlockEntityTypeAllocator<TileEntityCauldron> CLEAN = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityCauldron(type, pos, state), ModBlocks.CleanCauldron);
 	public static final int BOILING_TEMP = 100;
 
 	static {
@@ -46,42 +51,51 @@ public class TileEntityCauldron extends TileEntityBase {
 	public final FluidTankComponent internalTank;
 	public final HeatStorageComponent heatStorage;
 
-	public TileEntityCauldron(TileEntityTypeAllocator<TileEntityCauldron> allocator) {
-		super(allocator);
-		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000).setCanFill(true).setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
-		
+	public TileEntityCauldron(BlockEntityTypeAllocator<TileEntityCauldron> allocator, BlockPos pos, BlockState state) {
+		super(allocator, pos, state);
+		registerComponent(internalTank = new FluidTankComponent("InputFluidTank", 1000).setCanFill(true)
+				.setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
+
 		// Only allow this to be heated by other sources.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 200.0f, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 200.0f, 1.0f)
+				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
 	}
 
 	@Override
 	public void process() {
 		// Handle the upgrade tick on the server.
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			// If boiling, handle recipes.
 			if (isBoiling()) {
 				// Create the AABB to search within.
-				AxisAlignedBB aabb = new AxisAlignedBB(pos.getX() + 0.125, pos.getY() + 0.1875, pos.getZ() + 0.125, pos.getX() + 0.875, pos.getY() + 1.0, pos.getZ() + 0.875);
+				AABB aabb = new AABB(worldPosition.getX() + 0.125, worldPosition.getY() + 0.1875,
+						worldPosition.getZ() + 0.125, worldPosition.getX() + 0.875, worldPosition.getY() + 1.0,
+						worldPosition.getZ() + 0.875);
 				handleRecipes(aabb);
 
 				// Render effects.
 				if (SDMath.diceRoll(0.5) && internalTank.isFull()) {
 					// Generate a random XZ Pos.
-					Vector2D offset = new Vector2D(getWorld().getRandom().nextFloat(), getWorld().getRandom().nextFloat());
+					Vector2D offset = new Vector2D(getLevel().getRandom().nextFloat(),
+							getLevel().getRandom().nextFloat());
 					offset.multiply(2.0f);
 					offset.subtract(new Vector2D(1, 1));
 					offset.multiply(0.35f);
 
 					// Render boiling bubbles.
-					BasicParticleType bubbleParticle = internalTank.getFluid().getFluid().getAttributes().getTemperature() > 500 ? ParticleTypes.FALLING_LAVA : ParticleTypes.BUBBLE_POP;
-					((ServerWorld) getWorld()).spawnParticle(bubbleParticle, getPos().getX() + 0.5f + offset.getX(), getPos().getY() + 0.87, getPos().getZ() + 0.5f + offset.getY(), 1, 0.0D,
-							0.0D, 0.0D, 0.01D);
+					SimpleParticleType bubbleParticle = internalTank.getFluid().getFluid().getAttributes()
+							.getTemperature() > 500 ? ParticleTypes.FALLING_LAVA : ParticleTypes.BUBBLE_POP;
+					((ServerLevel) getLevel()).sendParticles(bubbleParticle,
+							getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.87,
+							getBlockPos().getZ() + 0.5f + offset.getY(), 1, 0.0D, 0.0D, 0.0D, 0.01D);
 
 					// Render a splash half of the time.
-					BasicParticleType splashParticle = internalTank.getFluid().getFluid().getAttributes().getTemperature() > 500 ? ParticleTypes.LAVA : ParticleTypes.SPLASH;
+					SimpleParticleType splashParticle = internalTank.getFluid().getFluid().getAttributes()
+							.getTemperature() > 500 ? ParticleTypes.LAVA : ParticleTypes.SPLASH;
 					if (SDMath.diceRoll(0.5)) {
-						((ServerWorld) getWorld()).spawnParticle(splashParticle, getPos().getX() + 0.5f + offset.getX(), getPos().getY() + 0.5, getPos().getZ() + 0.5f + offset.getY(), 1,
-								0.0D, 0.0D, 0.0D, 0.5D);
+						((ServerLevel) getLevel()).sendParticles(splashParticle,
+								getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.5,
+								getBlockPos().getZ() + 0.5f + offset.getY(), 1, 0.0D, 0.0D, 0.0D, 0.5D);
 					}
 				}
 			}
@@ -91,6 +105,7 @@ public class TileEntityCauldron extends TileEntityBase {
 	public boolean isBoiling() {
 		return heatStorage.getStorage().getCurrentHeat() >= BOILING_TEMP;
 	}
+
 	/**
 	 * Attempts to complete the crafting from a cauldron. Returns the amount of
 	 * items that were crafted.
@@ -126,9 +141,10 @@ public class TileEntityCauldron extends TileEntityBase {
 			outputItem.setCount(outputItem.getCount() * maxCraftable);
 
 			// Create the entity and make it bounce up.
-			ItemEntity outputItemEntity = new ItemEntity(getWorld(), entity.getPosX(), entity.getPosY(), entity.getPosZ(), outputItem);
-			outputItemEntity.setMotion(0, 0.275, 0);
-			getWorld().addEntity(outputItemEntity);
+			ItemEntity outputItemEntity = new ItemEntity(getLevel(), entity.getX(), entity.getY(), entity.getZ(),
+					outputItem);
+			outputItemEntity.setDeltaMovement(0, 0.275, 0);
+			getLevel().addFreshEntity(outputItemEntity);
 		}
 
 		// Drain the cauldron if we should.
@@ -148,8 +164,8 @@ public class TileEntityCauldron extends TileEntityBase {
 		return maxCraftable;
 	}
 
-	protected void handleRecipes(AxisAlignedBB bounds) {
-		List<ItemEntity> items = getWorld().getEntitiesWithinAABB(ItemEntity.class, bounds);
+	protected void handleRecipes(AABB bounds) {
+		List<ItemEntity> items = getLevel().getEntitiesOfClass(ItemEntity.class, bounds);
 		for (ItemEntity item : items) {
 			// Since RubberWoodBarkEntity inherits from ItemEntity, we must check in order
 			// to avoid a loop.
@@ -169,23 +185,25 @@ public class TileEntityCauldron extends TileEntityBase {
 
 				// Double time for clean cauldron.
 				int procesingTime = recipe.getRequiredTimeInCauldron();
-				if(getType() == CLEAN.getType()) {
+				if (getType() == CLEAN.getType()) {
 					Math.max(1, procesingTime /= 2);
 				}
-				
-				// Create the new entity and add it to the world. Remove the incoming item stack.
-				CauldronContainedEntity entity = new CauldronContainedEntity(this.getWorld(), item.getPosX(), item.getPosY(), item.getPosZ(), item.getItem().copy(),
-						procesingTime);
-				entity.setMotion(item.getMotion());
-				entity.setPickupDelay(80); // Set this value initially a little high!
-				getWorld().addEntity(entity);
 
-				item.remove();
+				// Create the new entity and add it to the world. Remove the incoming item
+				// stack.
+				CauldronContainedEntity entity = new CauldronContainedEntity(this.getLevel(), item.getX(), item.getY(),
+						item.getZ(), item.getItem().copy(), procesingTime);
+				entity.setDeltaMovement(item.getDeltaMovement());
+				entity.setPickUpDelay(80); // Set this value initially a little high!
+				getLevel().addFreshEntity(entity);
+
+				item.remove(RemovalReason.DISCARDED);
 			});
 		}
 	}
 
 	public Optional<CauldronRecipe> getRecipe(ItemStack input) {
-		return StaticPowerRecipeRegistry.getRecipe(CauldronRecipe.RECIPE_TYPE, new RecipeMatchParameters(input).setFluids(internalTank.getFluid()));
+		return StaticPowerRecipeRegistry.getRecipe(CauldronRecipe.RECIPE_TYPE,
+				new RecipeMatchParameters(input).setFluids(internalTank.getFluid()));
 	}
 }

@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.tumbler;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -21,11 +21,11 @@ public class ContainerTumbler extends StaticPowerTileEntityContainer<TileEntityT
 		}
 	}
 
-	public ContainerTumbler(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerTumbler(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityTumbler) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerTumbler(int windowId, PlayerInventory playerInventory, TileEntityTumbler owner) {
+	public ContainerTumbler(int windowId, Inventory playerInventory, TileEntityTumbler owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

@@ -6,12 +6,12 @@ import java.util.function.Predicate;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
-public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<CompoundNBT> {
+public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 20;
 	protected Queue<Float> ioCaptureFrames;
 	protected Queue<Float> filledCaptureFrames;
@@ -20,6 +20,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 	protected float currentFrameDrained;
 	protected float averageFilled;
 	protected float averageDrained;
+	protected boolean voidExcess;
 
 	public StaticPowerFluidTank(int capacity) {
 		this(capacity, fluid -> true);
@@ -30,6 +31,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 		ioCaptureFrames = new LinkedList<Float>();
 		filledCaptureFrames = new LinkedList<Float>();
 		drainedCaptureFrames = new LinkedList<Float>();
+		voidExcess = false;
 	}
 
 	@Override
@@ -38,10 +40,11 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 			return 0;
 		}
 		if (action.simulate()) {
-			if (fluid.isEmpty()) {
+			if (voidExcess) {
+				return resource.getAmount();
+			} else if (fluid.isEmpty()) {
 				return Math.min(capacity, resource.getAmount());
-			}
-			if (!fluid.isFluidEqual(resource)) {
+			} else if (!fluid.isFluidEqual(resource)) {
 				return 0;
 			}
 			return Math.min(capacity - fluid.getAmount(), resource.getAmount());
@@ -50,9 +53,8 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 			fluid = new FluidStack(resource, Math.min(capacity, resource.getAmount()));
 			onContentsChanged();
 			currentFrameFilled += fluid.getAmount();
-			return fluid.getAmount();
-		}
-		if (!fluid.isFluidEqual(resource)) {
+			return voidExcess ? resource.getAmount() : fluid.getAmount();
+		} else if (!fluid.isFluidEqual(resource)) {
 			return 0;
 		}
 		int filled = capacity - fluid.getAmount();
@@ -67,7 +69,7 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 			currentFrameFilled += filled;
 			onContentsChanged();
 		}
-		return filled;
+		return voidExcess ? resource.getAmount() : filled;
 	}
 
 	@Override
@@ -177,21 +179,25 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 		return averageDrained;
 	}
 
+	public void setVoidExcess(boolean voidExcess) {
+		this.voidExcess = voidExcess;
+	}
+
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT nbt = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag nbt = new CompoundTag();
 		nbt.putFloat("recieved", averageFilled);
 		nbt.putFloat("extracted", averageDrained);
 		nbt.putInt("capacity", capacity);
 
-		CompoundNBT tankNbt = new CompoundNBT();
+		CompoundTag tankNbt = new CompoundTag();
 		this.writeToNBT(tankNbt);
 		nbt.put("tank", tankNbt);
 		return nbt;
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		averageFilled = nbt.getFloat("recieved");
 		averageDrained = nbt.getFloat("extracted");
 		capacity = nbt.getInt("capacity");

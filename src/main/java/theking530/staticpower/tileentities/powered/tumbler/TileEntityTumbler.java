@@ -1,11 +1,13 @@
 package theking530.staticpower.tileentities.powered.tumbler;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.IUpgradeItem.UpgradeType;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -31,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityTumbler extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityTumbler> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityTumbler(), ModBlocks.Tumbler);
+	public static final BlockEntityTypeAllocator<TileEntityTumbler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTumbler(pos, state), ModBlocks.Tumbler);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -45,8 +47,8 @@ public class TileEntityTumbler extends TileEntityMachine {
 	@UpdateSerialize
 	private int currentSpeed;
 
-	public TileEntityTumbler() {
-		super(TYPE, StaticPowerTiers.ENERGIZED);
+	public TileEntityTumbler(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ENERGIZED);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -164,7 +166,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 	@Override
 	public void process() {
 		// Maintain the spin.
-		if (!getWorld().isRemote) {
+		if (!getLevel().isClientSide) {
 			// If we're spinning faster than the current max, start slowing down. Otherwise,
 			// either spin up or maintain speed.
 			if (currentSpeed > StaticPowerConfig.SERVER.tumblerRequiredSpeed.get()) {
@@ -189,7 +191,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerTumbler(windowId, inventory, this);
 	}
 }

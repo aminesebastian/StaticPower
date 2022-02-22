@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:tumbler_recipe",
 	"input": {
-		"tag": "forge:ores/platinum"
+		"tag": "forge:raw_materials/platinum"
 	},
 	"output": {
 		"item": "staticpower:chunks_platinum",

@@ -4,7 +4,7 @@
 		"item": "staticpower:mold_blank"
 	},
 	"mold": {
-		"tag": "forge:gear"
+		"tag": "forge:gears"
 	},
 	"output": {
 		"item": "staticpower:mold_gear"

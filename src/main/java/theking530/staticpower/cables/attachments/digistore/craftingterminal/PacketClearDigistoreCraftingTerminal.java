@@ -2,10 +2,10 @@ package theking530.staticpower.cables.attachments.digistore.craftingterminal;
 
 import java.util.function.Supplier;
 
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 
 public class PacketClearDigistoreCraftingTerminal extends NetworkMessage {
 	protected int windowId;
@@ -19,20 +19,20 @@ public class PacketClearDigistoreCraftingTerminal extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(windowId);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		windowId = buffer.readInt();
 	}
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			Container container = ctx.get().getSender().openContainer;
-			if (container instanceof ContainerDigistoreCraftingTerminal && container.windowId == windowId) {
+			AbstractContainerMenu container = ctx.get().getSender().containerMenu;
+			if (container instanceof ContainerDigistoreCraftingTerminal && container.containerId == windowId) {
 				ContainerDigistoreCraftingTerminal digistoreContainer = (ContainerDigistoreCraftingTerminal) container;
 				digistoreContainer.clearCraftingSlots(ctx.get().getSender());
 			}

@@ -3,10 +3,10 @@ package theking530.staticpower.cables.redstone.basic;
 import java.util.Map;
 import java.util.Set;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -34,7 +34,7 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 	}
 
 	@Override
-	public void updateNetworkValues(World world, NetworkMapper mapper) {
+	public void updateNetworkValues(Level world, NetworkMapper mapper) {
 		// Clear any existing signals.
 		resetSignals();
 
@@ -62,12 +62,12 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 		}
 	}
 
-	protected int getSignal(World world, CableConfigurationWrapper wrapper, Direction side) {
+	protected int getSignal(Level world, CableConfigurationWrapper wrapper, Direction side) {
 		stopProvidingPower();
 		// updateBlock(world, cable.getPos(), cable.getPos().offset(side));
 
 		// Get the target position.
-		BlockPos targetPos = wrapper.cable.getPos().offset(side);
+		BlockPos targetPos = wrapper.cable.getPos().relative(side);
 		String selector = wrapper.configuration.getSideConfig(side).getSelector();
 		int power = 0;
 		boolean checkWorld = true;
@@ -95,7 +95,7 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 
 		// Get the redstone power in the world if requested.
 		if (checkWorld) {
-			power = world.getRedstonePower(targetPos, side);
+			power = world.getSignal(targetPos, side);
 		}
 
 		startProvidingPower();

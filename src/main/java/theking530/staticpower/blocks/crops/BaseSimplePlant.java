@@ -6,33 +6,33 @@ import java.util.function.Supplier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.CropsBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.block.SoundType;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.monster.RavagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.CropBlock;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IPlantable;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
@@ -42,7 +42,7 @@ import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
  * @author Amine Sebastian
  *
  */
-public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable, IRenderLayerProvider {
+public class BaseSimplePlant extends CropBlock implements IPlantable, BonemealableBlock, IRenderLayerProvider {
 	public static final Logger LOGGER = LogManager.getLogger(BaseSimplePlant.class);
 
 	/**
@@ -57,7 +57,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * @param name The registry name for this block sans namespace.
 	 */
 	public BaseSimplePlant(String name, Supplier<Item> seedSupplier) {
-		super(Block.Properties.create(Material.PLANTS).doesNotBlockMovement().tickRandomly().hardnessAndResistance(0.0f).sound(SoundType.CROP));
+		super(Block.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0.0f).sound(SoundType.CROP));
 		setRegistryName(name);
 		SHAPES = getShapesByAge();
 		this.seedSupplier = seedSupplier;
@@ -68,17 +68,17 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 */
 	@SuppressWarnings("deprecation")
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
 		super.tick(state, worldIn, pos, rand);
 		if (!worldIn.isAreaLoaded(pos, 1)) {
 			return; // Forge: prevent loading unloaded chunks when checking neighbor's light
 		}
-		if (worldIn.getLightSubtracted(pos, 0) >= 9) {
+		if (worldIn.getRawBrightness(pos, 0) >= 9) {
 			int i = this.getAge(state);
 			if (i < this.getMaxAge()) {
 				float f = getGrowthChance(this, worldIn, pos);
 				if (net.minecraftforge.common.ForgeHooks.onCropsGrowPre(worldIn, pos, state, rand.nextInt((int) (25.0F / f) + 1) == 0)) {
-					worldIn.setBlockState(pos, this.withAge(i + 1), 2);
+					worldIn.setBlock(pos, this.getStateForAge(i + 1), 2);
 					net.minecraftforge.common.ForgeHooks.onCropsGrowPost(worldIn, pos, state);
 				}
 			}
@@ -87,24 +87,24 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	}
 
 	@Override
-	public ItemStack getPickBlock(BlockState state, RayTraceResult target, IBlockReader world, BlockPos pos, PlayerEntity player) {
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
 		if (seedSupplier != null) {
 			return new ItemStack(seedSupplier.get(), 1);
 		}
 
-		return super.getPickBlock(state, target, world, pos, player);
+		return super.getCloneItemStack(state, target, world, pos, player);
 	}
 
 	/**
 	 * Gets the bounding boxes for this crop at the provided age.
 	 */
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-		if (state.get(getAgeProperty()) > getMaxAge()) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+		if (state.getValue(getAgeProperty()) > getMaxAge()) {
 			LOGGER.error(String.format("Plant at position: %1$s was found with an invalid value for Age.", pos.toString()));
 			return SHAPES[getMaxAge()];
 		}
-		return SHAPES[state.get(getAgeProperty())];
+		return SHAPES[state.getValue(getAgeProperty())];
 	}
 
 	/**
@@ -113,13 +113,13 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * harvested.
 	 */
 	@Override
-	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		if (isMaxAge(state)) {
-			Block.spawnDrops(state, worldIn, pos);
-			worldIn.setBlockState(pos, withAge(0), 2);
-			return ActionResultType.SUCCESS;
+			Block.dropResources(state, worldIn, pos);
+			worldIn.setBlock(pos, getStateForAge(0), 2);
+			return InteractionResult.SUCCESS;
 		}
-		return ActionResultType.PASS;
+		return InteractionResult.PASS;
 	}
 
 	/**
@@ -128,7 +128,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 */
 	@Override
 	public int getMaxAge() {
-		Object[] values = getAgeProperty().getAllowedValues().toArray();
+		Object[] values = getAgeProperty().getPossibleValues().toArray();
 		return (int) values[values.length - 1];
 	}
 
@@ -140,7 +140,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 */
 	@Override
 	public IntegerProperty getAgeProperty() {
-		return BlockStateProperties.AGE_0_7;
+		return BlockStateProperties.AGE_7;
 	}
 
 	/**
@@ -151,7 +151,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 */
 	@Override
 	protected int getAge(BlockState state) {
-		return state.get(getAgeProperty());
+		return state.getValue(getAgeProperty());
 	}
 
 	/**
@@ -161,8 +161,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * @return The blockstate at the given age.
 	 */
 	@Override
-	public BlockState withAge(int age) {
-		return this.getDefaultState().with(getAgeProperty(), Integer.valueOf(age));
+	public BlockState getStateForAge(int age) {
+		return this.defaultBlockState().setValue(getAgeProperty(), Integer.valueOf(age));
 	}
 
 	/**
@@ -173,7 +173,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 */
 	@Override
 	public boolean isMaxAge(BlockState state) {
-		return state.get(getAgeProperty()) >= this.getMaxAge();
+		return state.getValue(getAgeProperty()) >= this.getMaxAge();
 	}
 
 	/**
@@ -185,7 +185,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * @return True if the plant should continue to grow, false otherwise.
 	 */
 	@Override
-	protected boolean isValidGround(BlockState state, IBlockReader worldIn, BlockPos pos) {
+	protected boolean mayPlaceOn(BlockState state, BlockGetter worldIn, BlockPos pos) {
 		return true;
 	}
 
@@ -196,14 +196,14 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * @param pos     The position of the plant.
 	 * @param state   The current state of the plant.
 	 */
-	public void growUsingBonemeal(World worldIn, BlockPos pos, BlockState state) {
+	public void growUsingBonemeal(Level worldIn, BlockPos pos, BlockState state) {
 		int i = this.getAge(state) + this.getBonemealAgeIncrease(worldIn);
 		int j = this.getMaxAge();
 		if (i > j) {
 			i = j;
 		}
 
-		worldIn.setBlockState(pos, this.withAge(i), 2);
+		worldIn.setBlock(pos, this.getStateForAge(i), 2);
 	}
 
 	/**
@@ -213,8 +213,8 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * @return The amount of stages to advance when bonemeal is used on this plant.
 	 */
 	@Override
-	protected int getBonemealAgeIncrease(World worldIn) {
-		return MathHelper.nextInt(worldIn.rand, 2, 5);
+	protected int getBonemealAgeIncrease(Level worldIn) {
+		return Mth.nextInt(worldIn.random, 2, 5);
 	}
 
 	/**
@@ -225,17 +225,17 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * @param pos     The current position of the plant.
 	 * @return The probability that this plant will grow.
 	 */
-	protected static float getGrowthChance(Block blockIn, IBlockReader worldIn, BlockPos pos) {
+	protected static float getGrowthChance(Block blockIn, BlockGetter worldIn, BlockPos pos) {
 		float f = 1.0F;
-		BlockPos blockpos = pos.down();
+		BlockPos blockpos = pos.below();
 
 		for (int i = -1; i <= 1; ++i) {
 			for (int j = -1; j <= 1; ++j) {
 				float f1 = 0.0F;
-				BlockState blockstate = worldIn.getBlockState(blockpos.add(i, 0, j));
-				if (blockstate.canSustainPlant(worldIn, blockpos.add(i, 0, j), net.minecraft.util.Direction.UP, (IPlantable) blockIn)) {
+				BlockState blockstate = worldIn.getBlockState(blockpos.offset(i, 0, j));
+				if (blockstate.canSustainPlant(worldIn, blockpos.offset(i, 0, j), net.minecraft.core.Direction.UP, (IPlantable) blockIn)) {
 					f1 = 1.0F;
-					if (blockstate.isFertile(worldIn, blockpos.add(i, 0, j))) {
+					if (blockstate.isFertile(worldIn, blockpos.offset(i, 0, j))) {
 						f1 = 3.0F;
 					}
 				}
@@ -271,7 +271,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * Indicates if this plant is growing on a valid position.
 	 */
 	@Override
-	public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos) {
+	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
 		return true;
 	}
 
@@ -279,19 +279,19 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * When colided with a ravager, break the block.
 	 */
 	@Override
-	public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-		if (entityIn instanceof RavagerEntity && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entityIn)) {
+	public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+		if (entityIn instanceof Ravager && net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entityIn)) {
 			worldIn.destroyBlock(pos, true, entityIn);
 		}
 
-		super.onEntityCollision(state, worldIn, pos, entityIn);
+		super.entityInside(state, worldIn, pos, entityIn);
 	}
 
 	/**
 	 * Whether this IGrowable can grow.
 	 */
 	@Override
-	public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+	public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
 		return !this.isMaxAge(state);
 	}
 
@@ -299,7 +299,7 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * Indicates that this plant can be bonemealed.
 	 */
 	@Override
-	public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
+	public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
 		return true;
 	}
 
@@ -307,12 +307,12 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 * This method is called when an external item/block wants to grow this item.
 	 */
 	@Override
-	public void grow(ServerWorld worldIn, Random rand, BlockPos pos, BlockState state) {
+	public void performBonemeal(ServerLevel worldIn, Random rand, BlockPos pos, BlockState state) {
 		this.growUsingBonemeal(worldIn, pos, state);
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
 		builder.add(getAgeProperty());
 	}
 
@@ -324,22 +324,21 @@ public class BaseSimplePlant extends CropsBlock implements IPlantable, IGrowable
 	 *         of the plant.
 	 */
 	public VoxelShape[] getShapesByAge() {
-		return new VoxelShape[] { Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
-				Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D), Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D) };
+		return new VoxelShape[] { Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 2.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D),
+				Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 6.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D),
+				Block.box(0.0D, 0.0D, 0.0D, 16.0D, 10.0D, 16.0D), Block.box(0.0D, 0.0D, 0.0D, 16.0D, 16.0D, 16.0D) };
 	}
 
 	@Override
 	public RenderType getRenderType() {
-		return RenderType.getCutout();
+		return RenderType.cutout();
 	}
 
 	@Override
-	public BlockState getPlant(IBlockReader world, BlockPos pos) {
+	public BlockState getPlant(BlockGetter world, BlockPos pos) {
 		BlockState state = world.getBlockState(pos);
 		if (state.getBlock() != this) {
-			return getDefaultState();
+			return defaultBlockState();
 		}
 		return state;
 	}

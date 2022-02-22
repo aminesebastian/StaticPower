@@ -1,9 +1,9 @@
 package theking530.staticpower.cables.attachments.digistore.terminal;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -20,11 +20,11 @@ public class ContainerDigistoreTerminal extends AbstractContainerDigistoreTermin
 		}
 	}
 
-	public ContainerDigistoreTerminal(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistoreTerminal(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerDigistoreTerminal(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public ContainerDigistoreTerminal(int windowId, Inventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 }

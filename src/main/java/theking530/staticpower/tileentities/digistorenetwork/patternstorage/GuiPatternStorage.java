@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.digistorenetwork.patternstorage;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.utilities.MetricConverter;
@@ -12,7 +12,7 @@ public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPattern
 
 	private GuiInfoTab infoTab;
 
-	public GuiPatternStorage(ContainerPatternStorage container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiPatternStorage(ContainerPatternStorage container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 150);
 	}
 
@@ -25,12 +25,12 @@ public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPattern
 	public void updateData() {
 		// Update the info tab.
 		infoTab.clear();
-		infoTab.addLine("desc", new StringTextComponent("Stores crafting patterns that can be atomically reconstructed into items and blocks!."));
+		infoTab.addLine("desc", new TextComponent("Stores crafting patterns that can be atomically reconstructed into items and blocks!."));
 		infoTab.addLineBreak();
 
 		// Pass the itemstack count through the metric converter.
 		MetricConverter count = new MetricConverter(getTileEntity().patternInventory.getSlots());
-		infoTab.addKeyValueLine("max", new StringTextComponent("Max Patterns"),
-				new StringTextComponent(TextFormatting.WHITE.toString()).append(new StringTextComponent(count.getValueAsString(true))), TextFormatting.RED);
+		infoTab.addKeyValueLine("max", new TextComponent("Max Patterns"),
+				new TextComponent(ChatFormatting.WHITE.toString()).append(new TextComponent(count.getValueAsString(true))), ChatFormatting.RED);
 	}
 }

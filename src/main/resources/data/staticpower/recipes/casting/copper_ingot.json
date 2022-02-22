@@ -8,6 +8,6 @@
 		"item": "staticpower:mold_ingot"
 	},
 	"output": {
-		"item": "staticpower:ingot_copper"
+		"item": "minecraft:copper_ingot"
 	}
 }

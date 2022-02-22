@@ -4,19 +4,19 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.TagParser;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 
-public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<ThermalConductivityRecipe> {
+public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ThermalConductivityRecipe> {
 	public static final ThermalConductivityRecipeSerializer INSTANCE = new ThermalConductivityRecipeSerializer();
 
 	private ThermalConductivityRecipeSerializer() {
@@ -24,7 +24,7 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 	}
 
 	@Override
-	public ThermalConductivityRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public ThermalConductivityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Allocate the blocks.
 		ResourceLocation[] blocks = new ResourceLocation[0];
 
@@ -66,7 +66,7 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 		}
 
 		// Allocate the overheating values.
-		BlockState overheatedBlock = Blocks.VOID_AIR.getDefaultState();
+		BlockState overheatedBlock = Blocks.VOID_AIR.defaultBlockState();
 		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.EMPTY;
 		float overheatTemperature = Integer.MAX_VALUE;
 
@@ -77,10 +77,10 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 
 			// Handle the block.
 			if (overheatingElement.has("block")) {
-				CompoundNBT blockNBT = null;
+				CompoundTag blockNBT = null;
 				try {
-					blockNBT = JsonToNBT.getTagFromJson(overheatingElement.get("block").toString());
-					overheatedBlock = NBTUtil.readBlockState(blockNBT);
+					blockNBT = TagParser.parseTag(overheatingElement.get("block").toString());
+					overheatedBlock = NbtUtils.readBlockState(blockNBT);
 				} catch (CommandSyntaxException e) {
 					StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize the value: %1$s into a BlockState.", overheatingElement.get("block").toString()),
 							e);
@@ -101,34 +101,34 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 	}
 
 	@Override
-	public ThermalConductivityRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public ThermalConductivityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		// Read the float values.
 		float conductivity = buffer.readFloat();
 		float supply = buffer.readFloat();
 		// Read the over heat values.
 		float overheatTemp = buffer.readFloat();
 		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
-		BlockState overheatedBlock = NBTUtil.readBlockState(buffer.readCompoundTag());
+		BlockState overheatedBlock = NbtUtils.readBlockState(buffer.readNbt());
 
 		// Read Blocks
 		byte blockTagCount = buffer.readByte();
 		ResourceLocation[] blocks = new ResourceLocation[blockTagCount];
 		for (int i = 0; i < blockTagCount; i++) {
-			blocks[i] = new ResourceLocation(buffer.readString());
+			blocks[i] = new ResourceLocation(buffer.readUtf());
 		}
 
 		// Read Fluids
 		byte fluidTagCount = buffer.readByte();
 		ResourceLocation[] fluids = new ResourceLocation[fluidTagCount];
 		for (int i = 0; i < fluidTagCount; i++) {
-			fluids[i] = new ResourceLocation(buffer.readString());
+			fluids[i] = new ResourceLocation(buffer.readUtf());
 		}
 
 		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatedBlock, overheatedItemStack, overheatTemp, conductivity, supply);
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, ThermalConductivityRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, ThermalConductivityRecipe recipe) {
 		// Write the float values.
 		buffer.writeFloat(recipe.getThermalConductivity());
 		buffer.writeFloat(recipe.getHeatAmount());
@@ -136,18 +136,18 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<IRec
 		// Write the over heat values.
 		buffer.writeFloat(recipe.getOverheatedTemperature());
 		recipe.getOverheatedItem().writeToBuffer(buffer);
-		buffer.writeCompoundTag(NBTUtil.writeBlockState(recipe.getOverheatedBlock()));
+		buffer.writeNbt(NbtUtils.writeBlockState(recipe.getOverheatedBlock()));
 
 		// Write Blocks
 		buffer.writeByte(recipe.getBlockTags().length);
 		for (ResourceLocation tag : recipe.getBlockTags()) {
-			buffer.writeString(tag.toString());
+			buffer.writeUtf(tag.toString());
 		}
 
 		// Write Fluids
 		buffer.writeByte(recipe.getFluidTags().length);
 		for (ResourceLocation tag : recipe.getFluidTags()) {
-			buffer.writeString(tag.toString());
+			buffer.writeUtf(tag.toString());
 		}
 	}
 }

@@ -3,10 +3,10 @@ package theking530.staticpower.tileentities.components.power;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 
 public class ContainerPowerMetricsSyncPacket extends NetworkMessage {
 	private int windowId;
@@ -22,23 +22,23 @@ public class ContainerPowerMetricsSyncPacket extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(windowId);
-		buffer.writeCompoundTag(metrics.serializeNBT());
+		buffer.writeNbt(metrics.serializeNBT());
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		windowId = buffer.readInt();
 		metrics = new PowerTransferMetrics();
-		metrics.deserializeNBT(buffer.readCompoundTag());
+		metrics.deserializeNBT(buffer.readNbt());
 	}
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			Container container = Minecraft.getInstance().player.openContainer;
-			if (container instanceof IPowerMetricsSyncConsumer && container.windowId == windowId) {
+			AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
+			if (container instanceof IPowerMetricsSyncConsumer && container.containerId == windowId) {
 				IPowerMetricsSyncConsumer powerCableContainer = (IPowerMetricsSyncConsumer) container;
 				powerCableContainer.recieveMetrics(metrics);
 			}

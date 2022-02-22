@@ -1,11 +1,11 @@
 package theking530.api.wrench;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 /**
  * <p>
@@ -30,7 +30,7 @@ public interface IWrenchable {
 	 * @param facing      The facing direction f the block.
 	 * @param returnDrops True if this block should return drops, false otherwise.
 	 */
-	public ActionResultType wrenchBlock(PlayerEntity player, RegularWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops);
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops);
 
 	/**
 	 * This method is raised when an item implementing {@link IWrenchTool} sneak
@@ -44,5 +44,5 @@ public interface IWrenchable {
 	 * @param facing      The facing direction f the block.
 	 * @param returnDrops True if this block should return drops, false otherwise.
 	 */
-	public ActionResultType sneakWrenchBlock(PlayerEntity player, SneakWrenchMode mode, ItemStack wrench, World world, BlockPos pos, Direction facing, boolean returnDrops);
+	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops);
 }

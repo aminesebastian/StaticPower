@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentities.components.control;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
@@ -52,7 +52,7 @@ public class RedstoneControlComponent extends AbstractTileEntityComponent {
 	 * @param tag
 	 * @return
 	 */
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		nbt.putInt("redstone_mode", getRedstoneMode().ordinal());
 		return nbt;
 	}
@@ -62,7 +62,7 @@ public class RedstoneControlComponent extends AbstractTileEntityComponent {
 	 * 
 	 * @param tag
 	 */
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		setRedstoneMode(RedstoneMode.values()[nbt.getInt("redstone_mode")]);
 	}
 }

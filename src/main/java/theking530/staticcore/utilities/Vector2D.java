@@ -36,8 +36,23 @@ public class Vector2D extends AbstractVector {
 		values.set(1, y);
 	}
 
+	public Vector3D promote() {
+		return new Vector3D(getX(), getY(), 0.0f);
+	}
+
+	public Vector2D add(float x, float y) {
+		add(new Vector2D(x, y));
+		return this;
+	}
+
+	public Vector2D substract(float x, float y) {
+		subtract(new Vector2D(x, y));
+		return this;
+	}
+
+	@SuppressWarnings("unchecked")
 	@Override
-	public Vector2D clone() {
+	public Vector2D copy() {
 		return new Vector2D(values.get(0), values.get(1));
 	}
 }

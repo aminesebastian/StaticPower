@@ -6,12 +6,13 @@ import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -63,8 +64,13 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void onInitializedInWorld(World world, BlockPos pos, boolean firstTimePlaced) {
-		super.onInitializedInWorld(world, pos, firstTimePlaced);
+	public void onRegistered(TileEntityBase owner) {
+		super.onRegistered(owner);
+
+	}
+
+	@Override
+	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
 		if (firstTimePlaced) {
 			setToDefault(true);
 		}
@@ -101,7 +107,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		// Get the block state and update the configuration.
 		BlockState currentBlockState = getTileEntity().getBlockState();
 		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
-			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			Direction currentFacingDirection = currentBlockState.getValue(StaticPowerTileEntityBlock.FACING);
 			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, currentFacingDirection);
 			return getWorldSpaceEnabledState(worldSpaceSide);
 		}
@@ -117,7 +123,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		// Get the block state and update the configuration.
 		BlockState currentBlockState = getTileEntity().getBlockState();
 		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
-			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			Direction currentFacingDirection = currentBlockState.getValue(StaticPowerTileEntityBlock.FACING);
 			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, currentFacingDirection);
 			setWorldSpaceEnabledState(worldSpaceSide, enabled);
 		}
@@ -146,7 +152,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		// Get the block state and update the configuration.
 		BlockState currentBlockState = getTileEntity().getBlockState();
 		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
-			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			Direction currentFacingDirection = currentBlockState.getValue(StaticPowerTileEntityBlock.FACING);
 			Direction worldSpaceSide = SideConfigurationUtilities.getDirectionFromSide(side, currentFacingDirection);
 			setWorldSpaceDirectionConfiguration(worldSpaceSide, newMode);
 		}
@@ -216,14 +222,14 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
-		//setToDefault(true);
+		// setToDefault(true);
 	}
 
 	private void setToDefault(boolean suppressEvent) {
 		// Get the block state and update the configuration.
 		BlockState currentBlockState = getTileEntity().getBlockState();
 		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
-			Direction currentFacingDirection = currentBlockState.get(StaticPowerTileEntityBlock.FACING);
+			Direction currentFacingDirection = currentBlockState.getValue(StaticPowerTileEntityBlock.FACING);
 			for (Direction dir : Direction.values()) {
 				BlockSide side = SideConfigurationUtilities.getBlockSide(dir, currentFacingDirection);
 				configuration[dir.ordinal()] = defaultConfiguration.getSideDefaultMode(side);
@@ -259,7 +265,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 		for (int i = 0; i < 6; i++) {
 			nbt.putInt("mode" + i, configuration[i].ordinal());
@@ -271,7 +277,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 		for (int i = 0; i < 6; i++) {
 			configuration[i] = MachineSideMode.values()[nbt.getInt("mode" + i)];

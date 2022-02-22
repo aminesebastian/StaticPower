@@ -5,7 +5,8 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -15,19 +16,18 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
@@ -41,15 +41,15 @@ import theking530.staticpower.integration.JEI.categories.thermalconductivity.The
 public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<ThermalConductivityJEIRecipeWrapper> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity");
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 
 	public ThermalConductivityRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent("gui.staticpower.heat");
+		locTitle = new TranslatableComponent("gui.staticpower.heat");
 		background = guiHelper.createBlankDrawable(170, 65);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.CopperHeatSink));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.CopperHeatSink));
 	}
 
 	@Override
@@ -60,10 +60,10 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
-
+	
 	@Override
 	@Nonnull
 	public IDrawable getBackground() {
@@ -82,83 +82,83 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void draw(ThermalConductivityJEIRecipeWrapper recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 5, 5, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 30, 5, 135, 55, 0);
+	public void draw(ThermalConductivityJEIRecipeWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 5, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 135, 55, 30, 5, 0);
 
-		String conductivity = new StringTextComponent("Heat Conductivity: ").appendString(TextFormatting.BLUE.toString())
+		String conductivity = new TextComponent("Heat Conductivity: ").append(ChatFormatting.BLUE.toString())
 				.append(GuiTextUtilities.formatConductivityToString(recipe.getRecipe().getThermalConductivity())).getString();
 
-		String heat = new StringTextComponent("Heat Generation: ").appendString(TextFormatting.GOLD.toString())
+		String heat = new TextComponent("Heat Generation: ").append(ChatFormatting.GOLD.toString())
 				.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getHeatAmount())).getString();
 
-		String overheatTemp = new StringTextComponent("<- Overheat: ").appendString(TextFormatting.RED.toString())
+		String overheatTemp = new TextComponent("<- Overheat: ").append(ChatFormatting.RED.toString())
 				.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
 
 		int yPos = 15;
 		int xPos = 160;
 
 		if (recipe.getRecipe().getThermalConductivity() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrixStack, conductivity, xPos, yPos, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, conductivity, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 			yPos += 10;
 		}
 
 		if (recipe.getRecipe().getHeatAmount() > 0) {
-			GuiDrawUtilities.drawStringWithSize(matrixStack, heat, xPos, yPos, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, heat, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 35, 32, 20, 20, 0);
-			GuiDrawUtilities.drawStringWithSize(matrixStack, overheatTemp, xPos, 44f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 32, 0);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, 44f, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
 		if (!recipe.getFluidInput().isEmpty()) {
 			if (recipe.getFluidInput().getFluid().getRegistryName().toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.5f, TextFormatting.BLUE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 26f, 31, 0.0f, 0.5f, ChatFormatting.BLUE, false);
 			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.5f, TextFormatting.BLUE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 21.5f, 31, 0.0f, 0.5f, ChatFormatting.BLUE, false);
 			}
 		}
 
 		if (!recipe.getOutputFluid().isEmpty()) {
 			if (recipe.getOutputFluid().getFluid().getRegistryName().toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 58, 0.5f, TextFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 58, 0.0f, 0.5f, ChatFormatting.WHITE, false);
 			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 58, 0.5f, TextFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 58, 0.0f, 0.5f, ChatFormatting.WHITE, false);
 			}
 		}
 
 		// If the input or output is fire, manually render it.
 		if (recipe.getIsFireInput() || recipe.getHasFireOutput()) {
 			Minecraft mc = Minecraft.getInstance();
-			BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
-			MatrixStack blockStack = new MatrixStack();
+			BlockRenderDispatcher blockRenderer = mc.getBlockRenderer();
+			PoseStack blockStack = new PoseStack();
 
 			if (recipe.getIsFireInput()) {
-				blockStack.push();
+				blockStack.pushPose();
 				blockStack.translate(-0.5, 4.7f, 0.0f);
 				blockStack.scale(0.7f, 0.7f, 0.7f);
-				blockStack.rotate(new Quaternion(32, 45, 0, true));
+				blockStack.mulPose(new Quaternion(32, 45, 0, true));
 
-				BlockState fireState = Blocks.FIRE.getDefaultState();
-				blockRenderer.renderBlock(fireState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
-				blockStack.pop();
+				BlockState fireState = Blocks.FIRE.defaultBlockState();
+				blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+				blockStack.popPose();
 			} else if (recipe.getHasFireOutput()) {
-				blockStack.push();
+				blockStack.pushPose();
 				blockStack.translate(1.4, -2.0f, -1.0f);
 				blockStack.scale(0.7f, 0.7f, 0.7f);
-				blockStack.rotate(new Quaternion(32, 45, 0, true));
+				blockStack.mulPose(new Quaternion(32, 45, 0, true));
 
-				BlockState fireState = Blocks.FIRE.getDefaultState();
-				blockRenderer.renderBlock(fireState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
-				blockStack.pop();
+				BlockState fireState = Blocks.FIRE.defaultBlockState();
+				blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+				blockStack.popPose();
 			}
 		}
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(ThermalConductivityJEIRecipeWrapper recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(ThermalConductivityJEIRecipeWrapper recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		return output;
 	}
 

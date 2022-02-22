@@ -1,12 +1,12 @@
 package theking530.staticpower.blocks.tileentity;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -22,17 +22,17 @@ public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock
 
 	protected StaticPowerMachineBlock(String name) {
 		super(name);
-		this.setDefaultState(stateContainer.getBaseState().with(IS_ON, false));
+		this.registerDefaultState(stateDefinition.any().setValue(IS_ON, false));
 	}
 
 	protected StaticPowerMachineBlock(String name, Properties properies) {
 		super(name, properies);
-		this.setDefaultState(stateContainer.getBaseState().with(IS_ON, false));
+		this.registerDefaultState(stateDefinition.any().setValue(IS_ON, false));
 	}
 
 	@Override
-	protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
-		super.fillStateContainer(builder);
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
 		builder.add(IS_ON);
 	}
 
@@ -43,17 +43,16 @@ public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new DefaultMachineBakedModel(existingModel);
 	}
 
 	@Override
-	public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
 		// Check to see if we have the IS_ON property and it is true. If so, light up.
-		if (state.hasProperty(IS_ON) && state.get(IS_ON)) {
+		if (state.hasProperty(IS_ON) && state.getValue(IS_ON)) {
 			return 15;
 		}
-		return super.getLightValue(state, world, pos);
+		return super.getLightEmission(state, world, pos);
 	}
-
 }

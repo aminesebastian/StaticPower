@@ -1,0 +1,20 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:ingot_tin",
+	"staticpower:ingot_zinc",
+	"staticpower:ingot_silver",
+	"staticpower:ingot_lead",
+	"staticpower:ingot_tungsten",
+	"staticpower:ingot_magnesium",
+	"staticpower:ingot_platinum",
+	"staticpower:ingot_aluminum",
+	"staticpower:ingot_static",
+	"staticpower:ingot_energized",
+	"staticpower:ingot_lumum",
+	"staticpower:ingot_inert_infusion",
+	"staticpower:ingot_redstone_alloy",     
+	"staticpower:ingot_brass",
+	"staticpower:ingot_bronze"
+  ]
+}

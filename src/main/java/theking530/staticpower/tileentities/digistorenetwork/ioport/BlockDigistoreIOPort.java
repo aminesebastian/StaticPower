@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.digistorenetwork.ioport;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistoreIOPort extends BaseDigistoreBlock {
@@ -12,7 +12,7 @@ public class BlockDigistoreIOPort extends BaseDigistoreBlock {
 	}
 
 	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
-		return TileEntityDigistoreIOPort.TYPE.create();
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
+		return TileEntityDigistoreIOPort.TYPE.create(pos, state);
 	}
 }

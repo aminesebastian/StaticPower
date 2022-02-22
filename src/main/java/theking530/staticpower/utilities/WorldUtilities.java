@@ -6,31 +6,32 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.fluids.FluidActionResult;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
@@ -42,11 +43,11 @@ import net.minecraftforge.fluids.capability.wrappers.BlockWrapper;
 
 public class WorldUtilities {
 
-	public static TileEntity[] getAdjacentEntities(World world, BlockPos pos) {
-		TileEntity[] tempArray = new TileEntity[6];
+	public static BlockEntity[] getAdjacentEntities(Level world, BlockPos pos) {
+		BlockEntity[] tempArray = new BlockEntity[6];
 		for (int i = 0; i < 6; i++) {
 			Direction facing = Direction.values()[i];
-			tempArray[i] = world.getTileEntity(pos.offset(facing));
+			tempArray[i] = world.getBlockEntity(pos.relative(facing));
 		}
 		return tempArray;
 	}
@@ -102,13 +103,13 @@ public class WorldUtilities {
 		return Direction.UP;
 	}
 
-	public static void writeBlockPosToNBT(CompoundNBT nbt, BlockPos pos, String name) {
+	public static void writeBlockPosToNBT(CompoundTag nbt, BlockPos pos, String name) {
 		nbt.putInt(name + "X", pos.getX());
 		nbt.putInt(name + "Y", pos.getY());
 		nbt.putInt(name + "Z", pos.getZ());
 	}
 
-	public static BlockPos readBlockPosFromNBT(CompoundNBT nbt, String name) {
+	public static BlockPos readBlockPosFromNBT(CompoundTag nbt, String name) {
 		return new BlockPos(nbt.getInt(name + "X"), nbt.getInt(name + "Y"), nbt.getInt(name + "Z"));
 	}
 
@@ -144,7 +145,7 @@ public class WorldUtilities {
 	 *         container.
 	 */
 	@Nonnull
-	public static FluidActionResult tryPickUpFluid(@Nonnull ItemStack container, @Nullable PlayerEntity playerIn, World worldIn, BlockPos pos, Direction side) {
+	public static FluidActionResult tryPickUpFluid(@Nonnull ItemStack container, @Nullable Player playerIn, Level worldIn, BlockPos pos, Direction side) {
 		// If any required inputs are null or empty, return fail.
 		if (container.isEmpty() || worldIn == null || pos == null) {
 			return FluidActionResult.FAILURE;
@@ -163,7 +164,7 @@ public class WorldUtilities {
 		}
 
 		// Get the stack we want to fill into the container.
-		FluidStack fillableStack = new FluidStack(state.getFluid(), FluidAttributes.BUCKET_VOLUME);
+		FluidStack fillableStack = new FluidStack(state.getType(), FluidAttributes.BUCKET_VOLUME);
 
 		// Simulate a fill. If it is not the total fluid stack, return a fail.
 		int filledAmount = handler.fill(fillableStack, FluidAction.SIMULATE);
@@ -173,15 +174,15 @@ public class WorldUtilities {
 
 		// Execute the fill. Remove the fluid from the world.
 		handler.fill(fillableStack, FluidAction.EXECUTE);
-		worldIn.setBlockState(pos, Blocks.AIR.getDefaultState(), 1 | 2);
-
+		worldIn.setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
+		worldIn.gameEvent(playerIn, GameEvent.FLUID_PICKUP, pos);
 		// If the player is not null, play the pickup sound.
 		if (playerIn != null) {
 			SoundEvent soundevent = fillableStack.getFluid().getAttributes().getFillSound(fillableStack);
 			if (soundevent == null) {
-				soundevent = fillableStack.getFluid().isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_FILL_LAVA : SoundEvents.ITEM_BUCKET_FILL;
+				soundevent = fillableStack.getFluid().is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL;
 			}
-			playerIn.world.playSound(null, playerIn.getPosX(), playerIn.getPosY() + 0.5, playerIn.getPosZ(), soundevent, SoundCategory.BLOCKS, 1.0F, 1.0F);
+			playerIn.level.playSound(null, playerIn.getX(), playerIn.getY() + 0.5, playerIn.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
 		}
 
 		return new FluidActionResult(container);
@@ -205,7 +206,7 @@ public class WorldUtilities {
 	 * @param resource    The fluidStack to place.
 	 * @return true if the placement was successful, false otherwise
 	 */
-	public static boolean tryPlaceFluid(@Nullable PlayerEntity player, World world, Hand hand, BlockPos pos, IFluidHandler fluidSource, FluidStack resource) {
+	public static boolean tryPlaceFluid(@Nullable Player player, Level world, InteractionHand hand, BlockPos pos, IFluidHandler fluidSource, FluidStack resource) {
 		if (world == null || pos == null) {
 			return false;
 		}
@@ -219,19 +220,18 @@ public class WorldUtilities {
 			return false;
 		}
 
-		BlockItemUseContext context = new BlockItemUseContext(new ItemUseContext(player, hand, new BlockRayTraceResult(Vector3d.ZERO, Direction.UP, pos, false))); // TODO: This neds proper
+		BlockPlaceContext context = new BlockPlaceContext(new UseOnContext(player, hand, new BlockHitResult(Vec3.ZERO, Direction.UP, pos, false))); // TODO: This nreds proper
 																																									// context...
-
 		// check that we can place the fluid at the destination
 		BlockState destBlockState = world.getBlockState(pos);
 		Material destMaterial = destBlockState.getMaterial();
 		boolean isDestNonSolid = !destMaterial.isSolid();
-		boolean isDestReplaceable = destBlockState.isReplaceable(context);
-		if (!world.isAirBlock(pos) && !isDestNonSolid && !isDestReplaceable) {
+		boolean isDestReplaceable = destBlockState.canBeReplaced(context);
+		if (!world.isEmptyBlock(pos) && !isDestNonSolid && !isDestReplaceable) {
 			return false; // Non-air, solid, unreplacable block. We can't put fluid here.
 		}
 
-		if (world.getDimensionType().isUltrawarm() && fluid.getAttributes().doesVaporize(world, pos, resource)) {
+		if (world.dimensionType().ultraWarm() && fluid.getAttributes().doesVaporize(world, pos, resource)) {
 			FluidStack result = fluidSource.drain(resource, IFluidHandler.FluidAction.EXECUTE);
 			if (!result.isEmpty()) {
 				result.getFluid().getAttributes().vaporize(player, world, pos, result);
@@ -239,32 +239,35 @@ public class WorldUtilities {
 			}
 		} else {
 			// This fluid handler places the fluid block when filled
-			BlockState state = fluid.getAttributes().getBlock(world, pos, fluid.getDefaultState());
+			BlockState state = fluid.getAttributes().getBlock(world, pos, fluid.defaultFluidState());
 			IFluidHandler handler = new BlockWrapper(state, world, pos);
 			FluidStack result = FluidUtil.tryFluidTransfer(handler, fluidSource, resource, true);
 			if (!result.isEmpty()) {
 				if (player != null) {
 					SoundEvent soundevent = result.getFluid().getAttributes().getEmptySound(result);
 					if (soundevent == null) {
-						soundevent = result.getFluid().isIn(FluidTags.LAVA) ? SoundEvents.ITEM_BUCKET_EMPTY_LAVA : SoundEvents.ITEM_BUCKET_EMPTY;
+						soundevent = result.getFluid().is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
 					}
-					player.world.playSound(null, player.getPosX(), player.getPosY() + 0.5, player.getPosZ(), soundevent, SoundCategory.BLOCKS, 1.0F, 1.0F);
+					player.level.playSound(null, player.getX(), player.getY() + 0.5, player.getZ(), soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
 				}
+	
+
+				world.gameEvent(player, GameEvent.FLUID_PLACE, pos);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public static ItemEntity dropItem(World worldIn, double x, double y, double z, ItemStack stack, int count) {
+	public static ItemEntity dropItem(Level worldIn, double x, double y, double z, ItemStack stack, int count) {
 		ItemStack droppedStack = stack.copy();
 		droppedStack.setCount(count);
 		ItemEntity itemEntity = new ItemEntity(worldIn, x + 0.5, y + 0.5, z + 0.5, droppedStack);
-		worldIn.addEntity(itemEntity);
+		worldIn.addFreshEntity(itemEntity);
 		return itemEntity;
 	}
 
-	public static ItemEntity dropItem(World worldIn, Direction direction, double x, double y, double z, ItemStack stack, int count) {
+	public static ItemEntity dropItem(Level worldIn, Direction direction, double x, double y, double z, ItemStack stack, int count) {
 		ItemEntity item = null;
 		if (direction == Direction.EAST) {
 			item = dropItem(worldIn, x, y, z, stack, count);
@@ -283,15 +286,15 @@ public class WorldUtilities {
 		return item;
 	}
 
-	public static ItemEntity dropItem(World worldIn, BlockPos pos, ItemStack stack, int count) {
+	public static ItemEntity dropItem(Level worldIn, BlockPos pos, ItemStack stack, int count) {
 		return dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack, count);
 	}
 
-	public static ItemEntity dropItem(World worldIn, BlockPos pos, ItemStack stack) {
+	public static ItemEntity dropItem(Level worldIn, BlockPos pos, ItemStack stack) {
 		return dropItem(worldIn, pos.getX(), pos.getY(), pos.getZ(), stack, stack.getCount());
 	}
 
-	public static ItemEntity dropItem(World worldIn, Direction facing, BlockPos pos, ItemStack stack, int count) {
+	public static ItemEntity dropItem(Level worldIn, Direction facing, BlockPos pos, ItemStack stack, int count) {
 		return dropItem(worldIn, facing, pos.getX(), pos.getY(), pos.getZ(), stack, count);
 	}
 
@@ -303,13 +306,13 @@ public class WorldUtilities {
 	 * @param pos
 	 * @return
 	 */
-	public static List<ItemStack> getBlockDrops(World world, BlockPos pos) {
-		if (world.isRemote) {
+	public static List<ItemStack> getBlockDrops(Level world, BlockPos pos) {
+		if (world.isClientSide) {
 			throw new RuntimeException("The #getBlockDrops method was excuted on the client. This should only be excuted on the server.");
 		}
-		if (!world.isRemote) {
+		if (!world.isClientSide) {
 			NonNullList<ItemStack> output = NonNullList.create();
-			output.addAll(Block.getDrops(world.getBlockState(pos), (ServerWorld) world, pos, null));
+			output.addAll(Block.getDrops(world.getBlockState(pos), (ServerLevel) world, pos, null));
 			return output;
 		}
 		return Collections.emptyList();

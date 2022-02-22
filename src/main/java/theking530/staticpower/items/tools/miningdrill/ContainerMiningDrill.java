@@ -1,12 +1,12 @@
 package theking530.staticpower.items.tools.miningdrill;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.ClickType;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,11 +29,11 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 
 	public ItemStackHandler inventory;
 
-	public ContainerMiningDrill(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerMiningDrill(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getHeldItemstack(inv, data));
 	}
 
-	public ContainerMiningDrill(int windowId, PlayerInventory playerInventory, ItemStack owner) {
+	public ContainerMiningDrill(int windowId, Inventory playerInventory, ItemStack owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -47,21 +47,21 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 		// Drill Bit
 		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit), 0.3f, inventory, 0, 80, 24) {
 			@Override
-			public void onSlotChanged() {
-				super.onSlotChanged();
+			public void setChanged() {
+				super.setChanged();
 
 				// Update the drill.
-				int drillSlot = getPlayerInventory().player.inventory.currentItem;
+				int drillSlot = getPlayerInventory().player.getInventory().selected;
 				if (drillSlot >= 0) {
-					if (!getPlayerInventory().player.world.isRemote) {
-						ServerPlayerEntity serverPlayer = (ServerPlayerEntity) getPlayerInventory().player;
-						serverPlayer.sendSlotContents(ContainerMiningDrill.this, playerHotbarStart + drillSlot, getItemStack());
+					if (!getPlayerInventory().player.level.isClientSide) {
+						ServerPlayer serverPlayer = (ServerPlayer) getPlayerInventory().player;
+						serverPlayer.containerMenu.broadcastFullState();
 					}
 				}
 			}
 
 			@Override
-			public boolean isItemValid(ItemStack stack) {
+			public boolean mayPlace(ItemStack stack) {
 				return stack.getItem() instanceof DrillBit;
 			}
 		});
@@ -76,12 +76,12 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 	}
 
 	@Override
-	public boolean canDragIntoSlot(Slot slot) {
+	public boolean canDragTo(Slot slot) {
 		return false;
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		boolean alreadyExists = false;
 		int firstEmptySlot = -1;
 
@@ -93,17 +93,17 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 				alreadyExists = true;
 			}
 		}
-		if (!alreadyExists && !mergeItemStack(stack, firstEmptySlot, firstEmptySlot + 1, false)) {
+		if (!alreadyExists && !moveItemStackTo(stack, firstEmptySlot, firstEmptySlot + 1, false)) {
 			return true;
 		}
 		return false;
 	}
 
 	@Override
-	public ItemStack slotClick(int slot, int dragType, ClickType clickTypeIn, PlayerEntity player) {
-		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getStack() == player.getHeldItemMainhand()) {
-			return ItemStack.EMPTY;
+	public void clicked(int slot, int dragType, ClickType clickTypeIn, Player player) {
+		if (slot >= 0 && getSlot(slot) != null && getSlot(slot).getItem() == player.getMainHandItem()) {
+			return;
 		}
-		return super.slotClick(slot, dragType, clickTypeIn, player);
+		super.clicked(slot, dragType, clickTypeIn, player);
 	}
 }

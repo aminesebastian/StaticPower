@@ -2,11 +2,11 @@ package theking530.staticpower.cables.digistore;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -75,7 +75,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		// Check to see if the manager is present. If not, update the tile entity.
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
@@ -112,7 +112,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		boolean superResult = super.attachAttachment(attachment, side);
 
 		// Update the power usage on the server.
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			updatePowerUsage();
 		}
 
@@ -122,7 +122,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@Override
 	public ItemStack removeAttachment(Direction side) {
 		ItemStack superResult = super.removeAttachment(side);
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			updatePowerUsage();
 		}
 		return superResult;
@@ -130,7 +130,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	public void updatePowerUsage() {
 		// Update the power usage on the server.
-		if (!getWorld().isRemote()) {
+		if (!getWorld().isClientSide()) {
 			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
 				updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
 			}
@@ -186,7 +186,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 
 		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.areCableCompatible(this, side)) {
@@ -203,11 +203,11 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	protected void setIsOnBlockState(boolean on) {
-		if (!getWorld().isRemote && shouldControlOnBlockState) {
+		if (!getWorld().isClientSide && shouldControlOnBlockState) {
 			BlockState currentState = getWorld().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
-				if (currentState.get(StaticPowerMachineBlock.IS_ON) != on) {
-					getWorld().setBlockState(getPos(), currentState.with(StaticPowerMachineBlock.IS_ON, on), 2);
+				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != on) {
+					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
 				}
 			}
 		}
@@ -219,7 +219,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		}
 		BlockState currentState = getWorld().getBlockState(getPos());
 		if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
-			return currentState.get(StaticPowerMachineBlock.IS_ON);
+			return currentState.getValue(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;
 	}

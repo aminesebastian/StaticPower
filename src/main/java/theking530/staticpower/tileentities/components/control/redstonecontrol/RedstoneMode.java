@@ -1,14 +1,14 @@
 package theking530.staticpower.tileentities.components.control.redstonecontrol;
 
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public enum RedstoneMode {
 	Ignore, Low, High;
 
-	public static boolean evaluateRedstoneMode(RedstoneMode mode, World world, BlockPos pos) {
+	public static boolean evaluateRedstoneMode(RedstoneMode mode, Level world, BlockPos pos) {
 		// Get the redstone signal at the block.
-		int redstoneSignal = world.getRedstonePowerFromNeighbors(pos);
+		int redstoneSignal = world.getBestNeighborSignal(pos);
 
 		// If we're ignoring, just return true.
 		if (mode == RedstoneMode.Ignore) {

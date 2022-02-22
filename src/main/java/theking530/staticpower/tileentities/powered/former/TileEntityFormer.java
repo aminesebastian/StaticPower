@@ -1,10 +1,12 @@
 package theking530.staticpower.tileentities.powered.former;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -26,7 +28,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFormer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityFormer> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFormer(), ModBlocks.Former);
+	public static final BlockEntityTypeAllocator<TileEntityFormer> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFormer(pos, state), ModBlocks.Former);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent moldInventory;
@@ -36,8 +38,8 @@ public class TileEntityFormer extends TileEntityMachine {
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final RecipeProcessingComponent<FormerRecipe> processingComponent;
 
-	public TileEntityFormer() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityFormer(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Setup the input inventories to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -117,7 +119,7 @@ public class TileEntityFormer extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFormer(windowId, inventory, this);
 	}
 }

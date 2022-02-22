@@ -9,19 +9,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.math.Vector3f;
 
-import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.world.IBlockDisplayReader;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
@@ -43,7 +43,7 @@ import theking530.thirdparty.codechicken.lib.model.pipeline.transformers.QuadReI
 
 @OnlyIn(Dist.CLIENT)
 public class ServerRackModel extends AbstractBakedModel {
-	private static final CachedFormat BAR_FORMAT = CachedFormat.lookup(DefaultVertexFormats.BLOCK);
+	private static final CachedFormat BAR_FORMAT = CachedFormat.lookup(DefaultVertexFormat.BLOCK);
 	private final ThreadLocal<BakedPipeline> pipelines = ThreadLocal.withInitial(() -> BakedPipeline.builder()
 			// Clamper is responsible for clamping the vertex to the bounds specified.
 			.addElement("clamper", QuadClamper.FACTORY)
@@ -52,13 +52,13 @@ public class ServerRackModel extends AbstractBakedModel {
 	);
 	private final ThreadLocal<Quad> collectors = ThreadLocal.withInitial(Quad::new);
 
-	public ServerRackModel(IBakedModel baseModel) {
+	public ServerRackModel(BakedModel baseModel) {
 		super(baseModel);
 	}
 
 	@Override
 	@Nonnull
-	public IModelData getModelData(@Nonnull IBlockDisplayReader world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
+	public IModelData getModelData(@Nonnull BlockAndTintGetter world, @Nonnull BlockPos pos, @Nonnull BlockState state, @Nonnull IModelData tileData) {
 		return tileData;
 	}
 
@@ -70,7 +70,7 @@ public class ServerRackModel extends AbstractBakedModel {
 		}
 
 		// Get the data used in rendering.
-		Direction facing = state.get(StaticPowerTileEntityBlock.FACING);
+		Direction facing = state.getValue(StaticPowerTileEntityBlock.FACING);
 		ItemStack[] cards = data.getData(TileEntityDigistoreServerRack.CARD_RENDERING_STATE).cards;
 
 		// Create the output array.
@@ -86,7 +86,7 @@ public class ServerRackModel extends AbstractBakedModel {
 			}
 
 			// Get the model of the card.
-			IBakedModel model = Minecraft.getInstance().getModelManager().getModel(((DigistoreCard) cards[i].getItem()).model);
+			BakedModel model = Minecraft.getInstance().getModelManager().getModel(((DigistoreCard) cards[i].getItem()).model);
 
 			// Calculate the offset for the current card's model.
 			float xOffset = ((i / 4) * UNIT * 6.5f) - (UNIT * 3.25f);
@@ -118,7 +118,7 @@ public class ServerRackModel extends AbstractBakedModel {
 				float filledPercentage = (float) inv.getTotalContainedCount() / inv.getItemCapacity();
 
 				// Get the model of the card bar.
-				IBakedModel barModel;
+				BakedModel barModel;
 				if (filledPercentage < 1.0f) {
 					barModel = Minecraft.getInstance().getModelManager().getModel(StaticPowerAdditionalModels.DIGISTORE_SINGULAR_CARD_BAR);
 				} else {
@@ -141,7 +141,7 @@ public class ServerRackModel extends AbstractBakedModel {
 					Quad collectorQuad = this.collectors.get();
 
 					QuadClamper clamper = pipeline.getElement("clamper", QuadClamper.class);
-					AxisAlignedBB barBounds = new AxisAlignedBB(new Vector3d((10.25f / 16.0f) - filledPercentage, 0.0f, 0.0f), new Vector3d((10.25f / 16.0f), 1.0f, 1.0f));
+					AABB barBounds = new AABB(new Vec3((10.25f / 16.0f) - filledPercentage, 0.0f, 0.0f), new Vec3((10.25f / 16.0f), 1.0f, 1.0f));
 					clamper.setClampBounds(barBounds);
 
 					// Reset the pipeline, clears all enabled/disabled states.
@@ -177,7 +177,7 @@ public class ServerRackModel extends AbstractBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return BaseModel.isSideLit();
+	public boolean usesBlockLight() {
+		return BaseModel.usesBlockLight();
 	}
 }

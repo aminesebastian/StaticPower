@@ -1,6 +1,6 @@
 package theking530.staticpower.client.gui;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
 
 public class GuiTextures {
@@ -47,5 +47,7 @@ public class GuiTextures {
 	public static final ResourceLocation SUNSET_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/sunset_indicator.png");
 	public static final ResourceLocation SUNRISE_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/sunrise_indicator.png");
 	public static final ResourceLocation SNOW_INDICATOR = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/snow_indicator.png");
-
+	
+	public static final ResourceLocation SCROLL_HANDLE = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/scroll_handle.png");
+	public static final ResourceLocation SCROLL_HANDLE_DISABLED = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/scroll_handle_disabled.png");
 }

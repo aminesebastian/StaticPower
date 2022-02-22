@@ -1,33 +1,27 @@
 package theking530.staticpower.entities.logitisticstrain;
 
-import net.minecraft.client.renderer.entity.EntityRendererManager;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.MinecartRenderer;
-import net.minecraft.entity.EntityClassification;
-import net.minecraft.entity.EntityType;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.event.RegistryEvent.Register;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.client.event.EntityRenderersEvent;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.init.ModEntities;
 
 public class TestTrainEntityType extends AbstractEntityType<TestTrainEntity> {
 
 	public TestTrainEntityType(String name) {
-		super(name, EntityType.Builder.<TestTrainEntity>create(TestTrainEntity::new, EntityClassification.MISC).size(0.25F, 0.25F).trackingRange(6).func_233608_b_(20));
-	}
-
-	@Override
-	public void registerAttributes(Register<EntityType<?>> event) {
-
+		super(name, EntityType.Builder.<TestTrainEntity>of(TestTrainEntity::new, MobCategory.MISC).sized(0.25F, 0.25F).clientTrackingRange(6).updateInterval(20));
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void registerRenderers(FMLClientSetupEvent event) {
-		RenderingRegistry.registerEntityRenderingHandler(ModEntities.TestTrainEntity.getType(), (EntityRendererManager manager) -> {
-			return new MinecartRenderer<TestTrainEntity>(manager);
+	public void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
+		event.registerEntityRenderer(ModEntities.TestTrainEntity.getType(), (Context ctx) -> {
+			return new MinecartRenderer<TestTrainEntity>(ctx, ModelLayers.MINECART);
 		});
 	}
 }

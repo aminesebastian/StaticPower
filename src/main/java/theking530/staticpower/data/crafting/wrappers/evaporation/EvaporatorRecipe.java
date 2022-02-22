@@ -1,21 +1,22 @@
 package theking530.staticpower.data.crafting.wrappers.evaporation;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class EvaporatorRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<EvaporatorRecipe> RECIPE_TYPE = IRecipeType.register("evaporation");
+	public static final RecipeType<EvaporatorRecipe> RECIPE_TYPE = RecipeType.register("evaporation");
 
 	private final FluidStack inputFluid;
 	private final FluidStack outputFluid;
 	private final float requiredHeat;
 
-	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, int processingTime) {
-		super(name, processingTime, 0);
+	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
 		this.requiredHeat = requiredHeat;
@@ -34,12 +35,12 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return EvaporatorRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 

@@ -1,6 +1,6 @@
 package theking530.api.wrench;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public interface IWrenchTool {
 	public RegularWrenchMode getWrenchMode(ItemStack stack);

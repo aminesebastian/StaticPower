@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_farming",
+	"description": "Get yourself a green thumb.",
+	"prerequisites": [
+		"staticpower:research/basic_research"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 20
+		}
+	],
+	"icon": {
+		"item": "staticpower:seed_static"
+	}
+}

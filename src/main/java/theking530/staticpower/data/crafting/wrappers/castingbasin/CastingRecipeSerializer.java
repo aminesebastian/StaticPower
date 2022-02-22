@@ -2,19 +2,20 @@ package theking530.staticpower.data.crafting.wrappers.castingbasin;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class CastingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<CastingRecipe> {
+public class CastingRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CastingRecipe> {
 	public static final CastingRecipeSerializer INSTANCE = new CastingRecipeSerializer();
 
 	private CastingRecipeSerializer() {
@@ -22,51 +23,40 @@ public class CastingRecipeSerializer extends ForgeRegistryEntry<IRecipeSerialize
 	}
 
 	@Override
-	public CastingRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public CastingRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
 		FluidStack fluidInput = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("input"));
 
 		// Capture the input mold.
-		JsonObject moldElement = JSONUtils.getJsonObject(json, "mold");
-		Ingredient mold = Ingredient.deserialize(moldElement);
+		JsonObject moldElement = GsonHelper.getAsJsonObject(json, "mold");
+		Ingredient mold = Ingredient.fromJson(moldElement);
 
 		// Get the output item.
-		JsonObject outputElement = JSONUtils.getJsonObject(json, "output");
+		JsonObject outputElement = GsonHelper.getAsJsonObject(json, "output");
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(outputElement);
 
-		// Start with the default processing values.
-		long powerCost = StaticPowerConfig.SERVER.casterPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.casterProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.casterProcessingTime.get(), StaticPowerConfig.SERVER.casterPowerUsage.get(), json);
 
 		// Create the recipe.
-		return new CastingRecipe(recipeId, processingTime, powerCost, output, fluidInput, mold);
+		return new CastingRecipe(recipeId, output, fluidInput, mold, processing);
 	}
 
 	@Override
-	public CastingRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
+	public CastingRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		FluidStack fluidInput = buffer.readFluidStack();
-		Ingredient mold = Ingredient.read(buffer);
+		Ingredient mold = Ingredient.fromNetwork(buffer);
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new CastingRecipe(recipeId, time, power, output, fluidInput, mold);
+		return new CastingRecipe(recipeId, output, fluidInput, mold, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, CastingRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
+	public void toNetwork(FriendlyByteBuf buffer, CastingRecipe recipe) {
 		buffer.writeFluidStack(recipe.getInputFluid());
-		recipe.getRequiredMold().write(buffer);
+		recipe.getRequiredMold().toNetwork(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

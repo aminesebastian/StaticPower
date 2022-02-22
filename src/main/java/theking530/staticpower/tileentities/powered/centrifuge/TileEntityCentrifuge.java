@@ -1,11 +1,13 @@
 package theking530.staticpower.tileentities.powered.centrifuge;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.IUpgradeItem.UpgradeType;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -32,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCentrifuge extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityCentrifuge> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityCentrifuge(), ModBlocks.Centrifuge);
+	public static final BlockEntityTypeAllocator<TileEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCentrifuge(pos, state), ModBlocks.Centrifuge);
 
 	public final InventoryComponent inputInventory;
 
@@ -52,8 +54,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@UpdateSerialize
 	private long centrifugeMotorPowerCost;
 
-	public TileEntityCentrifuge() {
-		super(TYPE, StaticPowerTiers.ADVANCED);
+	public TileEntityCentrifuge(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
 		// Initialize the current speed.
 		currentSpeed = 0;
 
@@ -167,7 +169,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@Override
 	public void process() {
 		// Maintain the spin.
-		if (!getWorld().isRemote && redstoneControlComponent.passesRedstoneCheck()) {
+		if (!getLevel().isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
 			// If we're spinning faster than the current max, start slowing down. Otherwise,
 			// either spin up or maintain speed.
 			if (currentSpeed > maxSpeed) {
@@ -226,7 +228,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerCentrifuge(windowId, inventory, this);
 	}
 }

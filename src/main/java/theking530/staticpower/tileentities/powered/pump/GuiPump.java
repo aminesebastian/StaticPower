@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.pump;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -17,7 +17,7 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 	@SuppressWarnings("unused")
 	private GuiInfoTab infoTab;
 
-	public GuiPump(ContainerPump container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiPump(ContainerPump container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 160);
 	}
 

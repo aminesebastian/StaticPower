@@ -6,5 +6,8 @@
 	"output": {
 		"fluid": "staticpower:mash",
 		"volume": 75
+	},
+	"residual": {
+		"item": "staticpower:distillery_grain"
 	}
 }

@@ -1,26 +1,27 @@
 package theking530.staticcore.initialization.container;
 
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.gui.ScreenManager.IScreenFactory;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.gui.screens.MenuScreens.ScreenConstructor;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.network.IContainerFactory;
+import net.minecraftforge.network.IContainerFactory;
 
 /**
  * Pre-registers a {@link Container} for registration through the registration
  * event. Returns an instance of the {@link ContainerType} for this
  * {@link Container}.
  */
-public class ContainerTypeAllocator<T extends Container, K extends ContainerScreen<T>> {
+public class ContainerTypeAllocator<T extends AbstractContainerMenu, K extends AbstractContainerScreen<T>> {
 	protected final String name;
 	protected final IContainerFactory<T> containerFactory;
-	protected IScreenFactory<T, K> screenFactory;
-	protected ContainerType<T> type;
+	protected ScreenConstructor<T, K> screenFactory;
+	protected MenuType<T> type;
 	private boolean containerRegistered;
 	private boolean screenRegistered;
 
@@ -31,11 +32,11 @@ public class ContainerTypeAllocator<T extends Container, K extends ContainerScre
 		this.screenRegistered = false;
 	}
 
-	public void registerContainer(RegistryEvent.Register<ContainerType<?>> event) {
+	public void registerContainer(RegistryEvent.Register<MenuType<?>> event) {
 		if (containerRegistered) {
 			throw new RuntimeException("Attempted to register an already registered TileEntityTypeAllocator!");
 		} else {
-			type = IForgeContainerType.create(containerFactory);
+			type = IForgeMenuType.create(containerFactory);
 			type.setRegistryName(name);
 			event.getRegistry().register(type);
 			containerRegistered = true;
@@ -47,7 +48,7 @@ public class ContainerTypeAllocator<T extends Container, K extends ContainerScre
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public void setScreenFactory(IScreenFactory<T, K> screenFactory) {
+	public void setScreenFactory(ScreenConstructor<T, K> screenFactory) {
 		this.screenFactory = screenFactory;
 	}
 
@@ -56,12 +57,12 @@ public class ContainerTypeAllocator<T extends Container, K extends ContainerScre
 		if (screenRegistered) {
 			throw new RuntimeException("Attempted to register an already registered TileEntityTypeAllocator!");
 		} else {
-			ScreenManager.registerFactory(type, screenFactory);
+			MenuScreens.register(type, screenFactory);
 			screenRegistered = true;
 		}
 	}
 
-	public ContainerType<T> getType() {
+	public MenuType<T> getType() {
 		return type;
 	}
 }

@@ -20,9 +20,10 @@ package theking530.thirdparty.codechicken.lib.model.pipeline;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 
+import com.mojang.blaze3d.vertex.VertexFormat;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import theking530.thirdparty.codechicken.lib.model.CachedFormat;
 import theking530.thirdparty.codechicken.lib.model.ISmartVertexConsumer;

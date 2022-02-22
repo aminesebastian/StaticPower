@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:tumbler_recipe",
 	"input": {
-		"tag": "forge:ores/iron"
+		"tag": "forge:raw_materials/iron"
 	},
 	"output": {
 		"item": "staticpower:chunks_iron",

@@ -18,9 +18,10 @@
 
 package theking530.thirdparty.codechicken.lib.model.pipeline.transformers;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Matrix4f;
-import net.minecraft.util.math.vector.Vector4f;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Vector4f;
+
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import theking530.thirdparty.codechicken.lib.model.Quad;
 import theking530.thirdparty.codechicken.lib.model.pipeline.IPipelineElementFactory;
@@ -65,19 +66,19 @@ public class QuadMatrixTransformer extends QuadTransformer {
         for (Quad.Vertex vertex : this.quad.vertices) {
             storage.set(vertex.vec[0], vertex.vec[1], vertex.vec[2], 1);
             storage.transform(matrix);
-            vertex.vec[0] = storage.getX();
-            vertex.vec[1] = storage.getY();
-            vertex.vec[2] = storage.getZ();
+            vertex.vec[0] = storage.x();
+            vertex.vec[1] = storage.y();
+            vertex.vec[2] = storage.z();
 
             storage.set(vertex.normal[0], vertex.normal[1], vertex.normal[2], 0);
             storage.transform(matrix);
             storage.normalize();
-            vertex.normal[0] = storage.getX();
-            vertex.normal[1] = storage.getY();
-            vertex.normal[2] = storage.getZ();
+            vertex.normal[0] = storage.x();
+            vertex.normal[1] = storage.y();
+            vertex.normal[2] = storage.z();
         }
         Quad.Vertex v0 = quad.vertices[0];
-        quad.orientation = Direction.getFacingFromVector(v0.normal[0], v0.normal[1], v0.normal[2]);
+        quad.orientation = Direction.getNearest(v0.normal[0], v0.normal[1], v0.normal[2]);
         return true;
     }
 }

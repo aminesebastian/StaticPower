@@ -16,4 +16,20 @@ public class StringUtilities {
 			return false;
 		}
 	}
+
+	public static String prettyFormatCamelCase(String camelCase) {
+		// Regular Expression
+		String regex = "([a-z]|[A-Z])([A-Z])";
+
+		// Replacement string
+		String replacement = "$1 $2";
+
+		// Replace the given regex
+		// with replacement string
+		// and convert it to lower case.
+		camelCase = camelCase.replaceAll(regex, replacement);
+
+		// Return string with first character capitalized.
+		return camelCase.substring(0, 1).toUpperCase() + camelCase.substring(1);
+	}
 }

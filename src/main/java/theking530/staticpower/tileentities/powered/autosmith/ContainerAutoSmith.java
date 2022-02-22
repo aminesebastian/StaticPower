@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.powered.autosmith;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -23,11 +23,11 @@ public class ContainerAutoSmith extends StaticPowerTileEntityContainer<TileEntit
 		}
 	}
 
-	public ContainerAutoSmith(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerAutoSmith(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityAutoSmith) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerAutoSmith(int windowId, PlayerInventory playerInventory, TileEntityAutoSmith owner) {
+	public ContainerAutoSmith(int windowId, Inventory playerInventory, TileEntityAutoSmith owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -53,7 +53,7 @@ public class ContainerAutoSmith extends StaticPowerTileEntityContainer<TileEntit
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
 		return super.playerItemShiftClicked(stack, player, slot, slotIndex);
 	}
 }

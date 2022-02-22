@@ -1,22 +1,23 @@
 package theking530.staticpower.data.crafting.wrappers.tumbler;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class TumblerRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<TumblerRecipe> RECIPE_TYPE = IRecipeType.register("tumbler");
+	public static final RecipeType<TumblerRecipe> RECIPE_TYPE = RecipeType.register("tumbler");
 
 	private final ProbabilityItemStackOutput output;
 	private final StaticPowerIngredient inputItem;
 
-	public TumblerRecipe(ResourceLocation name, int processingTime, long powerCost, StaticPowerIngredient input, ProbabilityItemStackOutput output) {
-		super(name, processingTime, powerCost);
+	public TumblerRecipe(ResourceLocation name, StaticPowerIngredient input, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 		this.inputItem = input;
 		this.output = output;
 	}
@@ -50,12 +51,12 @@ public class TumblerRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return TumblerRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

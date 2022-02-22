@@ -6,12 +6,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.api.power.CapabilityStaticVolt;
@@ -49,7 +49,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void tick(World world) {
+	public void tick(Level world) {
 		// Check to make sure we have power and valid desinations.
 		if (storage.getStoredPower() > 0 && Network.getGraph().getDestinations().size() > 0) {
 			// Get a map of all the applicable destination that support recieveing power.
@@ -148,7 +148,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void readFromNbt(CompoundNBT tag) {
+	public void readFromNbt(CompoundTag tag) {
 		storage.deserializeNBT(tag.getCompound("energy_storage"));
 
 		metrics = new PowerTransferMetrics();
@@ -156,7 +156,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public CompoundNBT writeToNbt(CompoundNBT tag) {
+	public CompoundTag writeToNbt(CompoundTag tag) {
 		tag.put("energy_storage", storage.serializeNBT());
 		tag.put("metrics", metrics.serializeNBT());
 		return tag;
@@ -202,10 +202,10 @@ public class PowerNetworkModule extends AbstractCableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<ITextComponent> output) {
+	public void getReaderOutput(List<Component> output) {
 		String storedEnergy = new MetricConverter(getEnergyAutoConverter().getStoredPower()).getValueAsString(true);
 		String maximumEnergy = new MetricConverter(getEnergyAutoConverter().getCapacity()).getValueAsString(true);
-		output.add(new StringTextComponent(String.format("Contains: %1$sRF out of a maximum of %2$sRF.", storedEnergy, maximumEnergy)));
+		output.add(new TextComponent(String.format("Contains: %1$sRF out of a maximum of %2$sRF.", storedEnergy, maximumEnergy)));
 	}
 
 	protected class PowerEnergyInterfaceWrapper {

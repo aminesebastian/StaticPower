@@ -2,11 +2,11 @@ package theking530.staticpower.cables.attachments.digistore.patternencoder;
 
 import java.util.function.Supplier;
 
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder.RecipeEncodingType;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketPatternEncoderRecipeTypeChange extends NetworkMessage {
 	protected RecipeEncodingType recipeType;
@@ -22,13 +22,13 @@ public class PacketPatternEncoderRecipeTypeChange extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(recipeType.ordinal());
 		buffer.writeInt(windowId);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		recipeType = RecipeEncodingType.values()[buffer.readInt()];
 		windowId = buffer.readInt();
 	}
@@ -36,8 +36,8 @@ public class PacketPatternEncoderRecipeTypeChange extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			Container openContainer = ctx.get().getSender().openContainer;
-			if (openContainer != null && openContainer instanceof ContainerDigistorePatternEncoder && openContainer.windowId == windowId) {
+			AbstractContainerMenu openContainer = ctx.get().getSender().containerMenu;
+			if (openContainer != null && openContainer instanceof ContainerDigistorePatternEncoder && openContainer.containerId == windowId) {
 				ContainerDigistorePatternEncoder encoderContainer = (ContainerDigistorePatternEncoder) openContainer;
 				encoderContainer.setCurrentRecipeType(recipeType);
 			}

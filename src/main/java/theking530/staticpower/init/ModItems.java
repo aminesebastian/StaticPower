@@ -1,8 +1,9 @@
 package theking530.staticpower.init;
 
-import net.minecraft.item.Foods;
-import net.minecraft.item.ItemTier;
-import net.minecraft.item.Items;
+import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Tiers;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
@@ -30,6 +31,7 @@ import theking530.staticpower.items.GearBox;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
+import theking530.staticpower.items.ResearchItem;
 import theking530.staticpower.items.StaticPowerBurnableItem;
 import theking530.staticpower.items.StaticPowerFood;
 import theking530.staticpower.items.StaticPowerItem;
@@ -82,7 +84,19 @@ public class ModItems {
 	public static StaticPowerItem MoldDrillBit;
 	public static StaticPowerItem MoldRod;
 
-	public static StaticPowerItem IngotCopper;
+	public static StaticPowerItem RawRustyIron;
+	public static StaticPowerItem RawTin;
+	public static StaticPowerItem RawZinc;
+	public static StaticPowerItem RawSilver;
+	public static StaticPowerItem RawLead;
+	public static StaticPowerItem RawTungsten;
+	public static StaticPowerItem RawMagnesium;
+	public static StaticPowerItem RawPlatinum;
+	public static StaticPowerItem RawAluminum;
+	public static StaticPowerItem RawStatic;
+	public static StaticPowerItem RawEnergized;
+	public static StaticPowerItem RawLumum;
+
 	public static StaticPowerItem IngotTin;
 	public static StaticPowerItem IngotZinc;
 	public static StaticPowerItem IngotSilver;
@@ -90,7 +104,7 @@ public class ModItems {
 	public static StaticPowerItem IngotTungsten;
 	public static StaticPowerItem IngotMagnesium;
 	public static StaticPowerItem IngotPlatinum;
-	public static StaticPowerItem IngotAluminium;
+	public static StaticPowerItem IngotAluminum;
 	public static StaticPowerItem IngotStatic;
 	public static StaticPowerItem IngotEnergized;
 	public static StaticPowerItem IngotLumum;
@@ -107,7 +121,7 @@ public class ModItems {
 	public static StaticPowerItem NuggetTungsten;
 	public static StaticPowerItem NuggetMagnesium;
 	public static StaticPowerItem NuggetPlatinum;
-	public static StaticPowerItem NuggetAluminium;
+	public static StaticPowerItem NuggetAluminum;
 	public static StaticPowerItem NuggetStatic;
 	public static StaticPowerItem NuggetEnergized;
 	public static StaticPowerItem NuggetLumum;
@@ -126,7 +140,7 @@ public class ModItems {
 	public static StaticPowerItem PlateTungsten;
 	public static StaticPowerItem PlateMagnesium;
 	public static StaticPowerItem PlatePlatinum;
-	public static StaticPowerItem PlateAluminium;
+	public static StaticPowerItem PlateAluminum;
 	public static StaticPowerItem PlateStatic;
 	public static StaticPowerItem PlateEnergized;
 	public static StaticPowerItem PlateLumum;
@@ -144,7 +158,7 @@ public class ModItems {
 	public static StaticPowerItem GearTungsten;
 	public static StaticPowerItem GearMagnesium;
 	public static StaticPowerItem GearPlatinum;
-	public static StaticPowerItem GearAluminium;
+	public static StaticPowerItem GearAluminum;
 	public static StaticPowerItem GearStatic;
 	public static StaticPowerItem GearEnergized;
 	public static StaticPowerItem GearLumum;
@@ -163,7 +177,7 @@ public class ModItems {
 	public static StaticPowerItem GearBoxTungsten;
 	public static StaticPowerItem GearBoxMagnesium;
 	public static StaticPowerItem GearBoxPlatinum;
-	public static StaticPowerItem GearBoxAluminium;
+	public static StaticPowerItem GearBoxAluminum;
 	public static StaticPowerItem GearBoxStatic;
 	public static StaticPowerItem GearBoxEnergized;
 	public static StaticPowerItem GearBoxLumum;
@@ -182,7 +196,7 @@ public class ModItems {
 	public static StaticPowerItem DustTungsten;
 	public static StaticPowerItem DustMagnesium;
 	public static StaticPowerItem DustPlatinum;
-	public static StaticPowerItem DustAluminium;
+	public static StaticPowerItem DustAluminum;
 	public static StaticPowerItem DustStatic;
 	public static StaticPowerItem DustEnergized;
 	public static StaticPowerItem DustLumum;
@@ -211,7 +225,7 @@ public class ModItems {
 	public static StaticPowerItem ChunksTungsten;
 	public static StaticPowerItem ChunksMagnesium;
 	public static StaticPowerItem ChunksPlatinum;
-	public static StaticPowerItem ChunksAluminium;
+	public static StaticPowerItem ChunksAluminum;
 	public static StaticPowerItem ChunksCoal;
 	public static StaticPowerItem ChunksGold;
 	public static StaticPowerItem ChunksIron;
@@ -231,7 +245,7 @@ public class ModItems {
 	public static StaticPowerItem RodTungsten;
 	public static StaticPowerItem RodMagnesium;
 	public static StaticPowerItem RodPlatinum;
-	public static StaticPowerItem RodAluminium;
+	public static StaticPowerItem RodAluminum;
 	public static StaticPowerItem RodStatic;
 	public static StaticPowerItem RodEnergized;
 	public static StaticPowerItem RodLumum;
@@ -295,12 +309,12 @@ public class ModItems {
 	public static StaticPowerItem WireSilver;
 	public static StaticPowerItem WireGold;
 	public static StaticPowerItem WirePlatinum;
-	public static StaticPowerItem WireAluminium;
+	public static StaticPowerItem WireAluminum;
 	public static StaticPowerItem CoilCopper;
 	public static StaticPowerItem CoilSilver;
 	public static StaticPowerItem CoilGold;
 	public static StaticPowerItem CoilPlatinum;
-	public static StaticPowerItem CoilAluminium;
+	public static StaticPowerItem CoilAluminum;
 	public static StaticPowerItem CoilTin;
 
 	public static DrillBit IronDrillBit;
@@ -413,6 +427,7 @@ public class ModItems {
 	public static StaticWrench EnergizedWrench;
 	public static StaticWrench LumumWrench;
 
+	public static StaticPowerItem WeakMagnet;
 	public static Magnet BasicMagnet;
 	public static Magnet AdvancedMagnet;
 	public static Magnet StaticMagnet;
@@ -497,13 +512,20 @@ public class ModItems {
 	public static JuiceBottleItem BeetJuiceBottle;
 	public static JuiceBottleItem BerryJuiceBottle;
 
+	public static StaticPowerItem ResearchTier1;
+	public static StaticPowerItem ResearchTier2;
+	public static StaticPowerItem ResearchTier3;
+	public static StaticPowerItem ResearchTier4;
+	public static StaticPowerItem ResearchTier5;
+	public static StaticPowerItem ResearchTier6;
+	public static StaticPowerItem ResearchTier7;
+
 	public static void init() {
 		// Misc.
 		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
 		StaticPowerRegistry.preRegisterItem(BedFrame = new StaticPowerItem("bed_frame"));
 
 		// Ingots
-		StaticPowerRegistry.preRegisterItem(IngotCopper = new StaticPowerItem("ingot_copper"));
 		StaticPowerRegistry.preRegisterItem(IngotTin = new StaticPowerItem("ingot_tin"));
 		StaticPowerRegistry.preRegisterItem(IngotZinc = new StaticPowerItem("ingot_zinc"));
 		StaticPowerRegistry.preRegisterItem(IngotSilver = new StaticPowerItem("ingot_silver"));
@@ -513,12 +535,26 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(IngotPlatinum = new StaticPowerItem("ingot_platinum"));
 		StaticPowerRegistry.preRegisterItem(IngotBrass = new StaticPowerItem("ingot_brass"));
 		StaticPowerRegistry.preRegisterItem(IngotBronze = new StaticPowerItem("ingot_bronze"));
-		StaticPowerRegistry.preRegisterItem(IngotAluminium = new StaticPowerItem("ingot_aluminium"));
+		StaticPowerRegistry.preRegisterItem(IngotAluminum = new StaticPowerItem("ingot_aluminum"));
 		StaticPowerRegistry.preRegisterItem(IngotStatic = new StaticPowerItem("ingot_static"));
 		StaticPowerRegistry.preRegisterItem(IngotEnergized = new StaticPowerItem("ingot_energized"));
 		StaticPowerRegistry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
 		StaticPowerRegistry.preRegisterItem(IngotInertInfusion = new StaticPowerItem("ingot_inert_infusion"));
 		StaticPowerRegistry.preRegisterItem(IngotRedstoneAlloy = new StaticPowerItem("ingot_redstone_alloy"));
+
+		// Raw Ores
+		StaticPowerRegistry.preRegisterItem(RawRustyIron = new StaticPowerItem("raw_rusty_iron"));
+		StaticPowerRegistry.preRegisterItem(RawTin = new StaticPowerItem("raw_tin"));
+		StaticPowerRegistry.preRegisterItem(RawZinc = new StaticPowerItem("raw_zinc"));
+		StaticPowerRegistry.preRegisterItem(RawSilver = new StaticPowerItem("raw_silver"));
+		StaticPowerRegistry.preRegisterItem(RawLead = new StaticPowerItem("raw_lead"));
+		StaticPowerRegistry.preRegisterItem(RawMagnesium = new StaticPowerItem("raw_magnesium"));
+		StaticPowerRegistry.preRegisterItem(RawTungsten = new StaticPowerItem("raw_tungsten"));
+		StaticPowerRegistry.preRegisterItem(RawPlatinum = new StaticPowerItem("raw_platinum"));
+		StaticPowerRegistry.preRegisterItem(RawAluminum = new StaticPowerItem("raw_aluminum"));
+		StaticPowerRegistry.preRegisterItem(RawStatic = new StaticPowerItem("raw_static"));
+		StaticPowerRegistry.preRegisterItem(RawEnergized = new StaticPowerItem("raw_energized"));
+		StaticPowerRegistry.preRegisterItem(RawLumum = new StaticPowerItem("raw_lumum"));
 
 		// Nuggets
 		StaticPowerRegistry.preRegisterItem(NuggetCopper = new StaticPowerItem("nugget_copper"));
@@ -529,7 +565,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(NuggetMagnesium = new StaticPowerItem("nugget_magnesium"));
 		StaticPowerRegistry.preRegisterItem(NuggetTungsten = new StaticPowerItem("nugget_tungsten"));
 		StaticPowerRegistry.preRegisterItem(NuggetPlatinum = new StaticPowerItem("nugget_platinum"));
-		StaticPowerRegistry.preRegisterItem(NuggetAluminium = new StaticPowerItem("nugget_aluminium"));
+		StaticPowerRegistry.preRegisterItem(NuggetAluminum = new StaticPowerItem("nugget_aluminum"));
 		StaticPowerRegistry.preRegisterItem(NuggetStatic = new StaticPowerItem("nugget_static"));
 		StaticPowerRegistry.preRegisterItem(NuggetEnergized = new StaticPowerItem("nugget_energized"));
 		StaticPowerRegistry.preRegisterItem(NuggetLumum = new StaticPowerItem("nugget_lumum"));
@@ -584,14 +620,11 @@ public class ModItems {
 		// Turbine Blades
 		StaticPowerRegistry.preRegisterItem(WoodTurbineBlades = new TurbineBlades("turbine_blades_wood", StaticPowerTiers.WOOD, StaticPowerAdditionalModels.TURBINE_BLADES_WOOD));
 		StaticPowerRegistry.preRegisterItem(BasicTurbineBlades = new TurbineBlades("turbine_blades_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.TURBINE_BLADES_BASIC));
-		StaticPowerRegistry
-				.preRegisterItem(AdvancedTurbineBlades = new TurbineBlades("turbine_blades_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
+		StaticPowerRegistry.preRegisterItem(AdvancedTurbineBlades = new TurbineBlades("turbine_blades_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
 		StaticPowerRegistry.preRegisterItem(StaticTurbineBlades = new TurbineBlades("turbine_blades_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.TURBINE_BLADES_STATIC));
-		StaticPowerRegistry
-				.preRegisterItem(EnergizedTurbineBlades = new TurbineBlades("turbine_blades_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(EnergizedTurbineBlades = new TurbineBlades("turbine_blades_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
 		StaticPowerRegistry.preRegisterItem(LumumTurbineBlades = new TurbineBlades("turbine_blades_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.TURBINE_BLADES_LUMUM));
-		StaticPowerRegistry
-				.preRegisterItem(CreativeTurbineBlades = new TurbineBlades("turbine_blades_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
+		StaticPowerRegistry.preRegisterItem(CreativeTurbineBlades = new TurbineBlades("turbine_blades_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
 
 		// Processors
 		StaticPowerRegistry.preRegisterItem(BasicCard = new StaticPowerItem("card_basic"));
@@ -619,7 +652,7 @@ public class ModItems {
 		// Tools
 		StaticPowerRegistry.preRegisterItem(IronMetalHammer = new Hammer("hammer_iron", StaticPowerTiers.IRON, Items.IRON_INGOT));
 		StaticPowerRegistry.preRegisterItem(ZincMetalHammer = new Hammer("hammer_zinc", StaticPowerTiers.ZINC, ModItems.IngotZinc));
-		StaticPowerRegistry.preRegisterItem(CopperMetalHammer = new Hammer("hammer_copper", StaticPowerTiers.COPPER, ModItems.IngotCopper));
+		StaticPowerRegistry.preRegisterItem(CopperMetalHammer = new Hammer("hammer_copper", StaticPowerTiers.COPPER, Items.COPPER_INGOT));
 		StaticPowerRegistry.preRegisterItem(TinMetalHammer = new Hammer("hammer_tin", StaticPowerTiers.TIN, ModItems.IngotTin));
 		StaticPowerRegistry.preRegisterItem(BronzeMetalHammer = new Hammer("hammer_bronze", StaticPowerTiers.BRONZE, ModItems.IngotBronze));
 		StaticPowerRegistry.preRegisterItem(TungstenMetalHammer = new Hammer("hammer_tungsten", StaticPowerTiers.TUNGSTEN, ModItems.IngotTungsten));
@@ -651,6 +684,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(EnergizedWrench = new StaticWrench("wrench_energized"));
 		StaticPowerRegistry.preRegisterItem(LumumWrench = new StaticWrench("wrench_lumum"));
 
+		StaticPowerRegistry.preRegisterItem(WeakMagnet = new StaticPowerItem("magnet_weak"));
 		StaticPowerRegistry.preRegisterItem(BasicMagnet = new Magnet("magnet_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterItem(AdvancedMagnet = new Magnet("magnet_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterItem(StaticMagnet = new Magnet("magnet_static", StaticPowerTiers.STATIC));
@@ -701,12 +735,12 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(WireSilver = new StaticPowerItem("wire_silver"));
 		StaticPowerRegistry.preRegisterItem(WireGold = new StaticPowerItem("wire_gold"));
 		StaticPowerRegistry.preRegisterItem(WirePlatinum = new StaticPowerItem("wire_platinum"));
-		StaticPowerRegistry.preRegisterItem(WireAluminium = new StaticPowerItem("wire_aluminium"));
+		StaticPowerRegistry.preRegisterItem(WireAluminum = new StaticPowerItem("wire_aluminum"));
 		StaticPowerRegistry.preRegisterItem(CoilCopper = new StaticPowerItem("coil_copper"));
 		StaticPowerRegistry.preRegisterItem(CoilSilver = new StaticPowerItem("coil_silver"));
 		StaticPowerRegistry.preRegisterItem(CoilGold = new StaticPowerItem("coil_gold"));
 		StaticPowerRegistry.preRegisterItem(CoilPlatinum = new StaticPowerItem("coil_platinum"));
-		StaticPowerRegistry.preRegisterItem(CoilAluminium = new StaticPowerItem("coil_aluminium"));
+		StaticPowerRegistry.preRegisterItem(CoilAluminum = new StaticPowerItem("coil_aluminum"));
 		StaticPowerRegistry.preRegisterItem(CoilTin = new StaticPowerItem("coil_tin"));
 
 		// Materials
@@ -736,7 +770,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(PlateTungsten = new StaticPowerItem("plate_tungsten"));
 		StaticPowerRegistry.preRegisterItem(PlateMagnesium = new StaticPowerItem("plate_magnesium"));
 		StaticPowerRegistry.preRegisterItem(PlatePlatinum = new StaticPowerItem("plate_platinum"));
-		StaticPowerRegistry.preRegisterItem(PlateAluminium = new StaticPowerItem("plate_aluminium"));
+		StaticPowerRegistry.preRegisterItem(PlateAluminum = new StaticPowerItem("plate_aluminum"));
 		StaticPowerRegistry.preRegisterItem(PlateStatic = new StaticPowerItem("plate_static"));
 		StaticPowerRegistry.preRegisterItem(PlateEnergized = new StaticPowerItem("plate_energized"));
 		StaticPowerRegistry.preRegisterItem(PlateLumum = new StaticPowerItem("plate_lumum"));
@@ -755,7 +789,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GearTungsten = new StaticPowerItem("gear_tungsten"));
 		StaticPowerRegistry.preRegisterItem(GearMagnesium = new StaticPowerItem("gear_magnesium"));
 		StaticPowerRegistry.preRegisterItem(GearPlatinum = new StaticPowerItem("gear_platinum"));
-		StaticPowerRegistry.preRegisterItem(GearAluminium = new StaticPowerItem("gear_aluminium"));
+		StaticPowerRegistry.preRegisterItem(GearAluminum = new StaticPowerItem("gear_aluminum"));
 		StaticPowerRegistry.preRegisterItem(GearStatic = new StaticPowerItem("gear_static"));
 		StaticPowerRegistry.preRegisterItem(GearEnergized = new StaticPowerItem("gear_energized"));
 		StaticPowerRegistry.preRegisterItem(GearLumum = new StaticPowerItem("gear_lumum"));
@@ -775,7 +809,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(GearBoxTungsten = new GearBox("gear_box_tungsten", GearTungsten));
 		StaticPowerRegistry.preRegisterItem(GearBoxMagnesium = new GearBox("gear_box_magnesium", GearMagnesium));
 		StaticPowerRegistry.preRegisterItem(GearBoxPlatinum = new GearBox("gear_box_platinum", GearPlatinum));
-		StaticPowerRegistry.preRegisterItem(GearBoxAluminium = new GearBox("gear_box_aluminium", GearAluminium));
+		StaticPowerRegistry.preRegisterItem(GearBoxAluminum = new GearBox("gear_box_aluminum", GearAluminum));
 		StaticPowerRegistry.preRegisterItem(GearBoxStatic = new GearBox("gear_box_static", GearStatic));
 		StaticPowerRegistry.preRegisterItem(GearBoxEnergized = new GearBox("gear_box_energized", GearEnergized));
 		StaticPowerRegistry.preRegisterItem(GearBoxLumum = new GearBox("gear_box_lumum", GearLumum));
@@ -796,7 +830,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DustTungsten = new StaticPowerItem("dust_tungsten"));
 		StaticPowerRegistry.preRegisterItem(DustMagnesium = new StaticPowerItem("dust_magnesium"));
 		StaticPowerRegistry.preRegisterItem(DustPlatinum = new StaticPowerItem("dust_platinum"));
-		StaticPowerRegistry.preRegisterItem(DustAluminium = new StaticPowerItem("dust_aluminium"));
+		StaticPowerRegistry.preRegisterItem(DustAluminum = new StaticPowerItem("dust_aluminum"));
 		StaticPowerRegistry.preRegisterItem(DustStatic = new StaticPowerItem("dust_static"));
 		StaticPowerRegistry.preRegisterItem(DustEnergized = new StaticPowerItem("dust_energized"));
 		StaticPowerRegistry.preRegisterItem(DustLumum = new StaticPowerItem("dust_lumum"));
@@ -825,7 +859,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(RodTungsten = new StaticPowerItem("rod_tungsten"));
 		StaticPowerRegistry.preRegisterItem(RodMagnesium = new StaticPowerItem("rod_magnesium"));
 		StaticPowerRegistry.preRegisterItem(RodPlatinum = new StaticPowerItem("rod_platinum"));
-		StaticPowerRegistry.preRegisterItem(RodAluminium = new StaticPowerItem("rod_aluminium"));
+		StaticPowerRegistry.preRegisterItem(RodAluminum = new StaticPowerItem("rod_aluminum"));
 		StaticPowerRegistry.preRegisterItem(RodStatic = new StaticPowerItem("rod_static"));
 		StaticPowerRegistry.preRegisterItem(RodEnergized = new StaticPowerItem("rod_energized"));
 		StaticPowerRegistry.preRegisterItem(RodLumum = new StaticPowerItem("rod_lumum"));
@@ -853,7 +887,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(ChunksTungsten = new StaticPowerItem("chunks_tungsten"));
 		StaticPowerRegistry.preRegisterItem(ChunksMagnesium = new StaticPowerItem("chunks_magnesium"));
 		StaticPowerRegistry.preRegisterItem(ChunksPlatinum = new StaticPowerItem("chunks_platinum"));
-		StaticPowerRegistry.preRegisterItem(ChunksAluminium = new StaticPowerItem("chunks_aluminium"));
+		StaticPowerRegistry.preRegisterItem(ChunksAluminum = new StaticPowerItem("chunks_aluminum"));
 		StaticPowerRegistry.preRegisterItem(ChunksCoal = new StaticPowerItem("chunks_coal"));
 		StaticPowerRegistry.preRegisterItem(ChunksGold = new StaticPowerItem("chunks_gold"));
 		StaticPowerRegistry.preRegisterItem(ChunksIron = new StaticPowerItem("chunks_iron"));
@@ -873,63 +907,63 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumUpgradePlate = new StaticPowerItem("upgrade_plate_lumum"));
 
 		// Drill Bits
-		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron", ItemTier.IRON, StaticPowerTiers.IRON));
-		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
-		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterItem(TungstenDrillBit = new DrillBit("drill_bit_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));
-		StaticPowerRegistry.preRegisterItem(StaticDrillBit = new DrillBit("drill_bit_static", ItemTier.DIAMOND, StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedDrillBit = new DrillBit("drill_bit_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterItem(CreativeDrillBit = new DrillBit("drill_bit_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry.preRegisterItem(IronDrillBit = new DrillBit("drill_bit_iron", Tiers.IRON, StaticPowerTiers.IRON));
+		StaticPowerRegistry.preRegisterItem(BronzeDrillBit = new DrillBit("drill_bit_bronze", Tiers.IRON, StaticPowerTiers.BRONZE));
+		StaticPowerRegistry.preRegisterItem(AdvancedDrillBit = new DrillBit("drill_bit_advanced", Tiers.IRON, StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(TungstenDrillBit = new DrillBit("drill_bit_tungsten", Tiers.NETHERITE, StaticPowerTiers.TUNGSTEN));
+		StaticPowerRegistry.preRegisterItem(StaticDrillBit = new DrillBit("drill_bit_static", Tiers.DIAMOND, StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedDrillBit = new DrillBit("drill_bit_energized", Tiers.DIAMOND, StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumDrillBit = new DrillBit("drill_bit_lumum", Tiers.NETHERITE, StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeDrillBit = new DrillBit("drill_bit_creative", Tiers.NETHERITE, StaticPowerTiers.CREATIVE));
 
 		// Blades
-		StaticPowerRegistry.preRegisterItem(IronBlade = new Blade("blade_iron", ItemTier.IRON, StaticPowerTiers.IRON));
-		StaticPowerRegistry.preRegisterItem(BronzeBlade = new Blade("blade_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
-		StaticPowerRegistry.preRegisterItem(AdvancedBlade = new Blade("blade_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterItem(TungstenBlade = new Blade("blade_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));
-		StaticPowerRegistry.preRegisterItem(StaticBlade = new Blade("blade_static", ItemTier.DIAMOND, StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedBlade = new Blade("blade_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumBlade = new Blade("blade_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterItem(CreativeBlade = new Blade("blade_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry.preRegisterItem(IronBlade = new Blade("blade_iron", Tiers.IRON, StaticPowerTiers.IRON));
+		StaticPowerRegistry.preRegisterItem(BronzeBlade = new Blade("blade_bronze", Tiers.IRON, StaticPowerTiers.BRONZE));
+		StaticPowerRegistry.preRegisterItem(AdvancedBlade = new Blade("blade_advanced", Tiers.IRON, StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(TungstenBlade = new Blade("blade_tungsten", Tiers.NETHERITE, StaticPowerTiers.TUNGSTEN));
+		StaticPowerRegistry.preRegisterItem(StaticBlade = new Blade("blade_static", Tiers.DIAMOND, StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedBlade = new Blade("blade_energized", Tiers.DIAMOND, StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumBlade = new Blade("blade_lumum", Tiers.NETHERITE, StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeBlade = new Blade("blade_creative", Tiers.NETHERITE, StaticPowerTiers.CREATIVE));
 
 		// Chainsaw Blades
-		StaticPowerRegistry.preRegisterItem(IronChainsawBlade = new ChainsawBlade("chainsaw_blade_iron", ItemTier.IRON, StaticPowerTiers.IRON));
-		StaticPowerRegistry.preRegisterItem(BronzeChainsawBlade = new ChainsawBlade("chainsaw_blade_bronze", ItemTier.IRON, StaticPowerTiers.BRONZE));
-		StaticPowerRegistry.preRegisterItem(AdvancedChainsawBlade = new ChainsawBlade("chainsaw_blade_advanced", ItemTier.IRON, StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterItem(TungstenChainsawBlade = new ChainsawBlade("chainsaw_blade_tungsten", ItemTier.NETHERITE, StaticPowerTiers.TUNGSTEN));
-		StaticPowerRegistry.preRegisterItem(StaticChainsawBlade = new ChainsawBlade("chainsaw_blade_static", ItemTier.DIAMOND, StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedChainsawBlade = new ChainsawBlade("chainsaw_blade_energized", ItemTier.DIAMOND, StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumChainsawBlade = new ChainsawBlade("chainsaw_blade_lumum", ItemTier.NETHERITE, StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterItem(CreativeChainsawBlade = new ChainsawBlade("chainsaw_blade_creative", ItemTier.NETHERITE, StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry.preRegisterItem(IronChainsawBlade = new ChainsawBlade("chainsaw_blade_iron", Tiers.IRON, StaticPowerTiers.IRON));
+		StaticPowerRegistry.preRegisterItem(BronzeChainsawBlade = new ChainsawBlade("chainsaw_blade_bronze", Tiers.IRON, StaticPowerTiers.BRONZE));
+		StaticPowerRegistry.preRegisterItem(AdvancedChainsawBlade = new ChainsawBlade("chainsaw_blade_advanced", Tiers.IRON, StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterItem(TungstenChainsawBlade = new ChainsawBlade("chainsaw_blade_tungsten", Tiers.NETHERITE, StaticPowerTiers.TUNGSTEN));
+		StaticPowerRegistry.preRegisterItem(StaticChainsawBlade = new ChainsawBlade("chainsaw_blade_static", Tiers.DIAMOND, StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterItem(EnergizedChainsawBlade = new ChainsawBlade("chainsaw_blade_energized", Tiers.DIAMOND, StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterItem(LumumChainsawBlade = new ChainsawBlade("chainsaw_blade_lumum", Tiers.NETHERITE, StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterItem(CreativeChainsawBlade = new ChainsawBlade("chainsaw_blade_creative", Tiers.NETHERITE, StaticPowerTiers.CREATIVE));
 
 		StaticPowerRegistry.preRegisterItem(
 				BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(AdvancedExtractorAttachment = new ExtractorAttachment("cable_attachment_advanced_extractor", StaticPowerTiers.ADVANCED,
 				StaticPowerAdditionalModels.CABLE_ADVANCED_EXTRACTOR_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(StaticExtractorAttachment = new ExtractorAttachment("cable_attachment_static_extractor", StaticPowerTiers.STATIC,
-				StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				StaticExtractorAttachment = new ExtractorAttachment("cable_attachment_static_extractor", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(EnergizedExtractorAttachment = new ExtractorAttachment("cable_attachment_energized_extractor", StaticPowerTiers.ENERGIZED,
 				StaticPowerAdditionalModels.CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(
 				LumumExtractorAttachment = new ExtractorAttachment("cable_attachment_lumum_extractor", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
 
-		StaticPowerRegistry.preRegisterItem(
-				BasicFilterAttachment = new FilterAttachment("cable_attachment_basic_filter", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(BasicFilterAttachment = new FilterAttachment("cable_attachment_basic_filter", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(
 				AdvancedFilterAttachment = new FilterAttachment("cable_attachment_advanced_filter", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.CABLE_ADVANCED_FILTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(StaticFilterAttachment = new FilterAttachment("cable_attachment_static_filter", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(
-				StaticFilterAttachment = new FilterAttachment("cable_attachment_static_filter", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(EnergizedFilterAttachment = new FilterAttachment("cable_attachment_energized_filter", StaticPowerTiers.ENERGIZED,
-				StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(
-				LumumFilterAttachment = new FilterAttachment("cable_attachment_lumum_filter", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
+				EnergizedFilterAttachment = new FilterAttachment("cable_attachment_energized_filter", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
+		StaticPowerRegistry
+				.preRegisterItem(LumumFilterAttachment = new FilterAttachment("cable_attachment_lumum_filter", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
 
 		StaticPowerRegistry.preRegisterItem(
 				BasicRetrieverAttachment = new RetrieverAttachment("cable_attachment_basic_retriever", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(AdvancedRetrieverAttachment = new RetrieverAttachment("cable_attachment_advanced_retriever", StaticPowerTiers.ADVANCED,
 				StaticPowerAdditionalModels.CABLE_ADVANCED_RETRIEVER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(StaticRetrieverAttachment = new RetrieverAttachment("cable_attachment_static_retriever", StaticPowerTiers.STATIC,
-				StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				StaticRetrieverAttachment = new RetrieverAttachment("cable_attachment_static_retriever", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(EnergizedRetrieverAttachment = new RetrieverAttachment("cable_attachment_energized_retriever", StaticPowerTiers.ENERGIZED,
 				StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(
@@ -954,36 +988,33 @@ public class ModItems {
 
 		// Digistore Cards
 		StaticPowerRegistry.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
-		StaticPowerRegistry
-				.preRegisterItem(AdvancedDigistoreCard = new DigistoreCard("digistore_card_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(AdvancedDigistoreCard = new DigistoreCard("digistore_card_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(StaticDigistoreCard = new DigistoreCard("digistore_card_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
-		StaticPowerRegistry
-				.preRegisterItem(EnergizedDigistoreCard = new DigistoreCard("digistore_card_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(EnergizedDigistoreCard = new DigistoreCard("digistore_card_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
-		StaticPowerRegistry
-				.preRegisterItem(CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
+		StaticPowerRegistry.preRegisterItem(CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
-		StaticPowerRegistry.preRegisterItem(
-				BasicStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
+		StaticPowerRegistry
+				.preRegisterItem(BasicStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
 				AdvancedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
+		StaticPowerRegistry
+				.preRegisterItem(StaticStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
-				StaticStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
-		StaticPowerRegistry.preRegisterItem(EnergizedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_energized", StaticPowerTiers.ENERGIZED,
-				StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
+				EnergizedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
+		StaticPowerRegistry
+				.preRegisterItem(LumumStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
-				LumumStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
-		StaticPowerRegistry.preRegisterItem(CreativeStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_creative", StaticPowerTiers.CREATIVE,
-				StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
+				CreativeStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
 		StaticPowerRegistry.preRegisterItem(
 				BasicSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(AdvancedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_advanced", StaticPowerTiers.ADVANCED,
-				StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				AdvancedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
 		StaticPowerRegistry.preRegisterItem(
 				StaticSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(EnergizedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED,
-				StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(
+				EnergizedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
 		StaticPowerRegistry.preRegisterItem(
 				LumumSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
 		StaticPowerRegistry.preRegisterItem(CreativeSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_creative", StaticPowerTiers.CREATIVE,
@@ -998,5 +1029,14 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(MelonJuiceBottle = new JuiceBottleItem("bottle_juice_melon", 40, 6, 8.0f));
 		StaticPowerRegistry.preRegisterItem(BeetJuiceBottle = new JuiceBottleItem("bottle_juice_beetroot", 40, 4, 6.0f));
 		StaticPowerRegistry.preRegisterItem(BerryJuiceBottle = new JuiceBottleItem("bottle_juice_berry", 40, 8, 10.0f));
+
+		// Research
+		StaticPowerRegistry.preRegisterItem(ResearchTier1 = new ResearchItem("research_tier_1", MinecraftColor.RED.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier2 = new ResearchItem("research_tier_2", MinecraftColor.LIME.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier3 = new ResearchItem("research_tier_3", MinecraftColor.BLACK.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier4 = new ResearchItem("research_tier_4", MinecraftColor.CYAN.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier5 = new ResearchItem("research_tier_5", MinecraftColor.MAGENTA.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier6 = new ResearchItem("research_tier_6", MinecraftColor.YELLOW.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier7 = new ResearchItem("research_tier_7", MinecraftColor.WHITE.getColor(), 1));
 	}
 }

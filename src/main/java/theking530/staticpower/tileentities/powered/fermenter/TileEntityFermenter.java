@@ -1,12 +1,14 @@
 package theking530.staticpower.tileentities.powered.fermenter;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -14,7 +16,6 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModItems;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
@@ -34,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFermenter extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityFermenter> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFermenter(), ModBlocks.Fermenter);
+	public static final BlockEntityTypeAllocator<TileEntityFermenter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFermenter(pos, state), ModBlocks.Fermenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -46,8 +47,8 @@ public class TileEntityFermenter extends TileEntityMachine {
 	public final RecipeProcessingComponent<FermenterRecipe> processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
-	public TileEntityFermenter() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityFermenter(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -107,7 +108,10 @@ public class TileEntityFermenter extends TileEntityMachine {
 
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRecipeOutput())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResultItem())) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
@@ -123,7 +127,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canProcessRecipe(FermenterRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain))) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
@@ -136,8 +140,11 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState processingCompleted(FermenterRecipe recipe) {
+		// Add the residual.
+		if (!recipe.getResidualOutput().isEmpty()) {
+			outputInventory.insertItem(0, recipe.getResidualOutput().calculateOutput(), false);
+		}
 		fluidTankComponent.fill(recipe.getOutputFluidStack(), FluidAction.EXECUTE);
-		outputInventory.insertItem(0, new ItemStack(ModItems.DistilleryGrain), false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
 		return ProcessingCheckState.ok();
 	}
@@ -148,7 +155,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 			if (recipe != null) {
 				FluidStack fermentingResult = recipe.getOutputFluidStack();
 				if (fluidTankComponent.fill(fermentingResult, FluidAction.SIMULATE) == fermentingResult.getAmount()) {
-					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, new ItemStack(ModItems.DistilleryGrain))) {
+					if (InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
 						return i;
 					}
 				}
@@ -158,7 +165,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFermenter(windowId, inventory, this);
 	}
 }

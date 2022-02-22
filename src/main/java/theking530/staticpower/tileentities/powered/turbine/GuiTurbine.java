@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.turbine;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
@@ -20,7 +20,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiTurbine extends StaticPowerTileEntityGui<ContainerTurbine, TileEntityTurbine> {
 	private FireProgressBar progressBar;
 
-	public GuiTurbine(ContainerTurbine container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiTurbine(ContainerTurbine container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -37,7 +37,7 @@ public class GuiTurbine extends StaticPowerTileEntityGui<ContainerTurbine, TileE
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().inputFluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiUpgradeTab(container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setInputSlotSize(24);
 	}

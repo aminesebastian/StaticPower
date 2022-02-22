@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.powered.basicfarmer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.ProcessingComponentStateWidget;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -28,7 +28,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 	private GuiInfoTab infoTab;
 	private SpriteButton drawPreviewButton;
 
-	public GuiBasicFarmer(ContainerBasicFarmer container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiBasicFarmer(ContainerBasicFarmer container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -39,7 +39,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		registerWidget(new ProcessingComponentStateWidget(getTileEntity().processingComponent, 48, 38));
 
 		registerWidget(drawPreviewButton = new SpriteButton(132, 61, 12, 12, StaticPowerSprites.RANGE_ICON, null, this::buttonPressed));
-		drawPreviewButton.setTooltip(new StringTextComponent("Preview Range"));
+		drawPreviewButton.setTooltip(new TextComponent("Preview Range"));
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
@@ -49,8 +49,8 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(16);
 	}
@@ -65,11 +65,11 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 	public void updateData() {
 		super.updateData();
 		infoTab.clear();
-		infoTab.addLine("desc1", new StringTextComponent("Harvests crops in a " + TextFormatting.YELLOW + getTileEntity().getRadius() + " block radius."));
+		infoTab.addLine("desc1", new TextComponent("Harvests crops in a " + ChatFormatting.YELLOW + getTileEntity().getRadius() + " block radius."));
 		infoTab.addLineBreak();
 		infoTab.addLine("desc2",
-				new StringTextComponent("Requires " + TextFormatting.DARK_AQUA + "water" + TextFormatting.RESET + " to operate but other fluids may yield better growth results..."));
+				new TextComponent("Requires " + ChatFormatting.DARK_AQUA + "water" + ChatFormatting.RESET + " to operate but other fluids may yield better growth results..."));
 		infoTab.addLineBreak();
-		infoTab.addLine("desc3", new StringTextComponent("Current Growth Factor: " + TextFormatting.GOLD + getTileEntity().getGrowthBonus() * 100.0f + "%"));
+		infoTab.addLine("desc3", new TextComponent("Current Growth Factor: " + ChatFormatting.GOLD + getTileEntity().getGrowthBonus() * 100.0f + "%"));
 	}
 }

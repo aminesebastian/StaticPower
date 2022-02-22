@@ -3,21 +3,21 @@ package theking530.staticpower;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryManager;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.init.ModItems;
 
-public class StaticPowerItemGroup extends ItemGroup {
+public class StaticPowerItemGroup extends CreativeModeTab {
 	private List<ItemStack> subTypes = null;
 
 	public StaticPowerItemGroup() {
@@ -25,16 +25,16 @@ public class StaticPowerItemGroup extends ItemGroup {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public ItemStack createIcon() {
+	public ItemStack makeIcon() {
 		calculateSubTypes();
 		return new ItemStack(ModItems.StaticCrop);
 	}
 
 	@Override
-	public void fill(NonNullList<ItemStack> items) {
+	public void fillItemList(NonNullList<ItemStack> items) {
 		this.calculateSubTypes();
 		for (final Item item : ForgeRegistries.ITEMS) {
-			if (item.getGroup() == this) {
+			if (item.getItemCategory() == this) {
 				items.add(new ItemStack(item));
 			}
 		}
@@ -61,8 +61,8 @@ public class StaticPowerItemGroup extends ItemGroup {
 				}
 
 				Item blockItem = block.asItem();
-				if (blockItem != Items.AIR && blockItem.getGroup() != null) {
-					final ItemStack facade = ModItems.CableCover.makeCoverForBlock(block.getDefaultState());
+				if (blockItem != Items.AIR && blockItem.getItemCategory() != null) {
+					final ItemStack facade = ModItems.CableCover.makeCoverForBlock(block.defaultBlockState());
 					if (!facade.isEmpty()) {
 						this.subTypes.add(facade);
 					}
@@ -114,9 +114,9 @@ public class StaticPowerItemGroup extends ItemGroup {
 		subTypes.add(ModItems.LumumMagnet.getFilledVariant());
 
 		// Add all the capsules for all fluids.
-		for (Fluid fluid : GameRegistry.findRegistry(Fluid.class)) {
+		for (Fluid fluid : RegistryManager.ACTIVE.getRegistry(Fluid.class)) {
 			// Skip the flowing fluids.
-			if (fluid.getDefaultState().getLevel() != 8) {
+			if (fluid.defaultFluidState().getAmount() != 8) {
 				continue;
 			}
 

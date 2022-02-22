@@ -2,10 +2,10 @@ package theking530.staticcore.rendering;
 
 import java.util.HashMap;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import theking530.staticcore.gui.widgets.DataGraphWidget.IGraphDataSet;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
@@ -35,7 +35,7 @@ public class WorldLineGraphRenderer {
 		this.dataSets = new HashMap<String, IGraphDataSet>();
 	}
 
-	public void render(float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight) {
+	public void render(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
 		this.renderLineGraphBackground(partialTicks, matrixStack, buffer, combinedLight);
 		this.renderData(partialTicks, matrixStack, buffer, combinedLight);
 	}
@@ -44,9 +44,9 @@ public class WorldLineGraphRenderer {
 		this.dataSets.put(label, data);
 	}
 
-	private void renderData(float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight) {
+	private void renderData(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
 		// Do nothing if there is no data.
-		if (dataSets.size() == 0) {
+		if (dataSets.size() == 0 || dataSets.values().stream().findFirst().isEmpty()) {
 			return;
 		}
 
@@ -77,7 +77,7 @@ public class WorldLineGraphRenderer {
 		// Capture the absolute difference between the min and max values.
 		// We use this to make sure we always center around 0.
 		double maxDifference = Math.abs(minValue) + Math.abs(maxValue);
-		float smoothAnimation = (gridSpacing * ((Minecraft.getInstance().world.getGameTime() % 20) / 20.0f));
+		float smoothAnimation = (gridSpacing * ((Minecraft.getInstance().level.getGameTime() % 20) / 20.0f));
 		// Draw the data lines.
 		if (minValue == 0 && maxValue == 0) {
 			for (IGraphDataSet data : dataSets.values()) {
@@ -100,22 +100,21 @@ public class WorldLineGraphRenderer {
 
 	}
 
-	private void renderLineGraphBackground(float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight) {
+	private void renderLineGraphBackground(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
 		float yGridSpacing = gridSpacing / aspectRatio;
 		int xLines = (int) Math.ceil(1f / gridSpacing);
 		int yLines = (int) Math.ceil(1f / gridSpacing * aspectRatio);
 
 		for (int i = 0; i < xLines; i++) {
-			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f), new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f,
-					new Color(0.1f, 0.1f, 0.125f, 0.5f));
+			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f), new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f, new Color(0.1f, 0.1f, 0.125f, 0.5f));
 		}
 		for (int i = 0; i < yLines; i++) {
 			if (i == yLines / 2) {
-				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f, new Color(0.5f, 0.5f, 0.525f, 0.2f));
+				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
+						10.0f, new Color(0.5f, 0.5f, 0.525f, 0.2f));
 			} else {
-				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), 10.0f, new Color(0.1f, 0.1f, 0.125f, 0.5f));
+				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
+						10.0f, new Color(0.1f, 0.1f, 0.125f, 0.5f));
 			}
 		}
 	}

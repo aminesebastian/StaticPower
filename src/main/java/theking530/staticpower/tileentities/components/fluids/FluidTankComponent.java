@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.function.Predicate;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -13,6 +13,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.staticpower.fluid.StaticPowerFluidTank;
+import theking530.staticpower.items.upgrades.VoidUpgrade;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
@@ -79,7 +80,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void preProcessUpdate() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Check for upgrades.
 			checkUpgrades();
 		}
@@ -87,7 +88,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			// Handle sync.
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we
@@ -163,6 +164,9 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 		// Set the capacity.
 		getStorage().setCapacity((int) (defaultCapacity * upgradeMultiplier));
+
+		// Handle the void upgrade.
+		fluidStorage.setVoidExcess(upgradeInventory.hasUpgradeOfClass(VoidUpgrade.class));
 	}
 
 	public float getVisualFillLevel() {
@@ -178,7 +182,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	 * clients within a 64 block radius.
 	 */
 	public void syncToClient() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			PacketFluidTankComponent syncPacket = new PacketFluidTankComponent(this, getPos(), this.getComponentName());
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, syncPacket);
 		} else {

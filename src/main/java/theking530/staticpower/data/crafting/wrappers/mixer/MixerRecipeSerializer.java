@@ -2,18 +2,18 @@ package theking530.staticpower.data.crafting.wrappers.mixer;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<MixerRecipe> {
+public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixerRecipe> {
 	public static final MixerRecipeSerializer INSTANCE = new MixerRecipeSerializer();
 
 	private MixerRecipeSerializer() {
@@ -21,7 +21,7 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 	}
 
 	@Override
-	public MixerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public MixerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		StaticPowerIngredient input1 = StaticPowerIngredient.EMPTY;
 		StaticPowerIngredient input2 = StaticPowerIngredient.EMPTY;
 		FluidStack fluidInput1 = FluidStack.EMPTY;
@@ -43,29 +43,18 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 			fluidInput2 = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("fluid_input_2"));
 		}
 
-		// Start with the default values.
-		long powerCost = StaticPowerConfig.SERVER.mixerPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.mixerProcessingTime.get();
-
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = JSONUtils.getJsonObject(json, "processing");
-			powerCost = processingElement.get("power").getAsInt();
-			processingTime = processingElement.get("time").getAsInt();
-		}
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.mixerProcessingTime.get(), StaticPowerConfig.SERVER.mixerPowerUsage.get(), json);
 
 		// Get the fluid result.
 		FluidStack output = StaticPowerJsonParsingUtilities.parseFluidStack(json.getAsJsonObject("result"));
 
 		// Create the recipe.
-		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, processingTime, powerCost);
+		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, processing);
 	}
 
 	@Override
-	public MixerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
-
+	public MixerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		StaticPowerIngredient input1 = StaticPowerIngredient.read(buffer);
 		StaticPowerIngredient input2 = StaticPowerIngredient.read(buffer);
 		FluidStack fluidInput1 = buffer.readFluidStack();
@@ -73,17 +62,16 @@ public class MixerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<
 		FluidStack output = buffer.readFluidStack();
 
 		// Create the recipe.
-		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, time, power);
+		return new MixerRecipe(recipeId, input1, input2, fluidInput1, fluidInput2, output, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, MixerRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
+	public void toNetwork(FriendlyByteBuf buffer, MixerRecipe recipe) {
 		recipe.getPrimaryItemInput().write(buffer);
 		recipe.getSecondaryItemInput().write(buffer);
 		buffer.writeFluidStack(recipe.getPrimaryFluidInput());
 		buffer.writeFluidStack(recipe.getSecondaryFluidInput());
 		buffer.writeFluidStack(recipe.getOutput());
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

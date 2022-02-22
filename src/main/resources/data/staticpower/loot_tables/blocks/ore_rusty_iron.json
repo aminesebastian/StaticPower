@@ -49,7 +49,7 @@
 									"function": "minecraft:explosion_decay"
 								}
 							],
-							"name": "staticpower:rusty_iron_scrap"
+							"name": "staticpower:raw_rusty_iron"
 						}
 					]
 				}

@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.fluidgenerator;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
@@ -21,7 +21,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiFluidGenerator extends StaticPowerTileEntityGui<ContainerFluidGenerator, TileEntityFluidGenerator> {
 	private FireProgressBar fireBar;
 
-	public GuiFluidGenerator(ContainerFluidGenerator container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiFluidGenerator(ContainerFluidGenerator container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -32,13 +32,13 @@ public class GuiFluidGenerator extends StaticPowerTileEntityGui<ContainerFluidGe
 		registerWidget(fireBar = new FireProgressBar(81, 58));
 		fireBar.setMaxProgress(1);
 
-		getTabManager().registerTab(new GuiUpgradeTab(this.container, getTileEntity().upgradesInventory));
+		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 	}
 
 	@Override

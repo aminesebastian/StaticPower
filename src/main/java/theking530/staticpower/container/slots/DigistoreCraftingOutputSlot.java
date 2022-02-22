@@ -1,36 +1,36 @@
 package theking530.staticpower.container.slots;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.CraftingResultSlot;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.ResultSlot;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
+public class DigistoreCraftingOutputSlot extends ResultSlot {
 	private final ContainerDigistoreCraftingTerminal container;
-	private final CraftingInventory craftMatrix;
+	private final CraftingContainer craftMatrix;
 
-	public DigistoreCraftingOutputSlot(ContainerDigistoreCraftingTerminal container, PlayerEntity player, CraftingInventory craftingInventory, IInventory inventoryIn, int slotIndex,
+	public DigistoreCraftingOutputSlot(ContainerDigistoreCraftingTerminal container, Player player, CraftingContainer craftingInventory, Container inventoryIn, int slotIndex,
 			int xPosition, int yPosition) {
 		super(player, craftingInventory, inventoryIn, slotIndex, xPosition, yPosition);
 		this.container = container;
 		this.craftMatrix = craftingInventory;
 	}
 
-	public ItemStack onTake(PlayerEntity thePlayer, ItemStack stack) {
+	public void onTake(Player thePlayer, ItemStack stack) {
 		// Get current recipe and cache a copy.
 		ItemStack[] originalrecipe = new ItemStack[9];
-		for (int i = 0; i < craftMatrix.getSizeInventory(); i++) {
-			originalrecipe[i] = craftMatrix.getStackInSlot(i).copy();
+		for (int i = 0; i < craftMatrix.getContainerSize(); i++) {
+			originalrecipe[i] = craftMatrix.getItem(i).copy();
 		}
 
-		// Call the parent.
+		// Call the parent. This handles firing events and checking advancements.
 		super.onTake(thePlayer, stack);
 
 		// On the client, set the items back to the original for a moment.
-		if (container.getCableComponent().getWorld().isRemote()) {
+		if (container.getCableComponent().getWorld().isClientSide()) {
 			for (int i = 0; i < originalrecipe.length; i++) {
 				ItemStack originalStack = originalrecipe[i];
 
@@ -41,7 +41,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 				}
 
 				// Put it back.
-				craftMatrix.setInventorySlotContents(i, putBackStack);
+				craftMatrix.setItem(i, putBackStack);
 			}
 		} else {
 			// On the server, use the items and handle any container items.
@@ -50,7 +50,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 
 				// Skip holes.
 				if (originalStack.isEmpty()) {
-					craftMatrix.setInventorySlotContents(i, ItemStack.EMPTY);
+					craftMatrix.setItem(i, ItemStack.EMPTY);
 				} else {
 					// Get the stack to put back into the slot.
 					ItemStack putBackStack = originalStack.copy();
@@ -61,16 +61,16 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 					}
 
 					// Put it back.
-					craftMatrix.setInventorySlotContents(i, putBackStack);
+					craftMatrix.setItem(i, putBackStack);
 				}
 			}
 		}
 
 		// If on the server, attempt to set the crafting inventory to the same items
 		// again.
-		if (!container.getCableComponent().getWorld().isRemote) {
+		if (!container.getCableComponent().getWorld().isClientSide) {
 			container.getDigistoreNetwork().ifPresent(digistoreModule -> {
-				for (int i = 0; i < craftMatrix.getSizeInventory(); i++) {
+				for (int i = 0; i < craftMatrix.getContainerSize(); i++) {
 					// Get the original item
 					ItemStack originalItem = originalrecipe[i];
 
@@ -80,7 +80,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 					}
 
 					// Get the leftover item and track any container item re-inserts.
-					ItemStack leftoverItem = craftMatrix.getStackInSlot(i);
+					ItemStack leftoverItem = craftMatrix.getItem(i);
 					ItemStack containerItemInsertRemaining = ItemStack.EMPTY;
 
 					// If the original item and this new item are both not empty, but are not equal,
@@ -88,7 +88,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 					// Attempt to insert it back into the system. If not, skip this slot.
 					if (!originalItem.isEmpty() && !leftoverItem.isEmpty() && !ItemUtilities.areItemStacksStackable(originalItem, leftoverItem)) {
 						containerItemInsertRemaining = digistoreModule.insertItem(leftoverItem.copy(), false);
-						craftMatrix.setInventorySlotContents(i, containerItemInsertRemaining);
+						craftMatrix.setItem(i, containerItemInsertRemaining);
 					}
 
 					// Only proceed if the container item was fully insert into the digi network (or
@@ -99,11 +99,11 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 
 						// Extract the item and put it into the craft matrix if something was extracted
 						// and it won't somehow overflow the stack size.
-						if (!pulledItem.isEmpty() && craftMatrix.getStackInSlot(i).getCount() + pulledItem.getCount() < originalItem.getMaxStackSize()) {
-							if (craftMatrix.getStackInSlot(i).isEmpty()) {
-								craftMatrix.setInventorySlotContents(i, pulledItem);
+						if (!pulledItem.isEmpty() && craftMatrix.getItem(i).getCount() + pulledItem.getCount() < originalItem.getMaxStackSize()) {
+							if (craftMatrix.getItem(i).isEmpty()) {
+								craftMatrix.setItem(i, pulledItem);
 							} else {
-								craftMatrix.getStackInSlot(i).grow(pulledItem.getCount());
+								craftMatrix.getItem(i).grow(pulledItem.getCount());
 							}
 						}
 					}
@@ -112,8 +112,7 @@ public class DigistoreCraftingOutputSlot extends CraftingResultSlot {
 		}
 
 		// Raise the on created and on crafted methods.
-		stack.getItem().onCreated(stack, thePlayer.world, thePlayer);
+		stack.getItem().onCraftedBy(stack, thePlayer.level, thePlayer);
 		container.onItemCrafted(originalrecipe, stack);
-		return stack;
 	}
 }

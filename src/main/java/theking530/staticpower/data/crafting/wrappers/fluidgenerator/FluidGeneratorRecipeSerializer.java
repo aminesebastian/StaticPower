@@ -2,15 +2,15 @@ package theking530.staticpower.data.crafting.wrappers.fluidgenerator;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
-public class FluidGeneratorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<FluidGeneratorRecipe> {
+public class FluidGeneratorRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FluidGeneratorRecipe> {
 	public static final FluidGeneratorRecipeSerializer INSTANCE = new FluidGeneratorRecipeSerializer();
 
 	private FluidGeneratorRecipeSerializer() {
@@ -18,7 +18,7 @@ public class FluidGeneratorRecipeSerializer extends ForgeRegistryEntry<IRecipeSe
 	}
 
 	@Override
-	public FluidGeneratorRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public FluidGeneratorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the contained fluid.
 		JsonObject fluidObject = json.get("fluid").getAsJsonObject();
 		FluidStack containedFluid = StaticPowerJsonParsingUtilities.parseFluidStack(fluidObject);
@@ -31,7 +31,7 @@ public class FluidGeneratorRecipeSerializer extends ForgeRegistryEntry<IRecipeSe
 	}
 
 	@Override
-	public FluidGeneratorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
+	public FluidGeneratorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int power = buffer.readInt();
 		FluidStack fluid = buffer.readFluidStack();
 		// Create the recipe.
@@ -39,7 +39,7 @@ public class FluidGeneratorRecipeSerializer extends ForgeRegistryEntry<IRecipeSe
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, FluidGeneratorRecipe recipe) {
+	public void toNetwork(FriendlyByteBuf buffer, FluidGeneratorRecipe recipe) {
 		buffer.writeInt(recipe.getPowerGeneration());
 		buffer.writeFluidStack(recipe.getFluid());
 	}

@@ -1,6 +1,6 @@
 package theking530.staticpower.cables;
 
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
 
 public class CableBoundsHoverResult {
 	public enum CableBoundsHoverType {

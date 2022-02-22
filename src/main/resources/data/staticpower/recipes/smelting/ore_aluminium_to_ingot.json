@@ -1,9 +1,0 @@
-{
-  "type": "minecraft:smelting",
-  "ingredient": {
-    "item": "staticpower:ore_aluminium"
-  },
-  "result": "staticpower:ingot_aluminium",
-  "experience": 0.5,
-  "cookingtime": 200
-}

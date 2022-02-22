@@ -23,7 +23,6 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 		this.canContinueProcessingCallback = canContinueProcessingCallback;
 		this.processingEndedCallback = processingEndedCallback;
 	}
-
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
 		this(name, processingTime, () -> ProcessingCheckState.error(""), () -> ProcessingCheckState.ok(), processingEndedCallback, serverOnly);
 	}

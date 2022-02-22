@@ -14,22 +14,23 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class LatheRecipe extends AbstractMachineRecipe {
-	public static final IRecipeType<LatheRecipe> RECIPE_TYPE = IRecipeType.register("lathe");
+	public static final RecipeType<LatheRecipe> RECIPE_TYPE = RecipeType.register("lathe");
 
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;
@@ -43,8 +44,8 @@ public class LatheRecipe extends AbstractMachineRecipe {
 	private final FluidStack outputFluid;
 
 	public LatheRecipe(ResourceLocation name, int recipeWidthIn, int recipeHeightIn, NonNullList<StaticPowerIngredient> inputs, ProbabilityItemStackOutput primaryOutput,
-			ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, int processingTime, long powerCost) {
-		super(name, processingTime, powerCost);
+			ProbabilityItemStackOutput secondaryOutput, FluidStack outputFluid, MachineRecipeProcessingSection processing) {
+		super(name, processing);
 
 		this.inputs = inputs;
 		this.recipeWidth = recipeWidthIn;
@@ -105,19 +106,19 @@ public class LatheRecipe extends AbstractMachineRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return LatheRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 
 	/**
 	 * Used to check if a recipe matches current crafting inventory
 	 */
-	public boolean matches(IItemHandler inv, World worldIn) {
+	public boolean matches(IItemHandler inv, Level worldIn) {
 		for (int i = 0; i <= this.recipeWidth; ++i) {
 			for (int j = 0; j <= this.recipeHeight; ++j) {
 				if (this.checkMatch(inv, i, j, true)) {
@@ -246,7 +247,7 @@ public class LatheRecipe extends AbstractMachineRecipe {
 			throw new JsonSyntaxException("Invalid pattern: empty pattern not allowed");
 		} else {
 			for (int i = 0; i < astring.length; ++i) {
-				String s = JSONUtils.getString(jsonArr.get(i), "pattern[" + i + "]");
+				String s = GsonHelper.convertToString(jsonArr.get(i), "pattern[" + i + "]");
 				if (s.length() > MAX_WIDTH) {
 					throw new JsonSyntaxException("Invalid pattern: too many columns, " + MAX_WIDTH + " is maximum");
 				}

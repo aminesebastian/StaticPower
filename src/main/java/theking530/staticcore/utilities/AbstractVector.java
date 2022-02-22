@@ -23,6 +23,8 @@ public abstract class AbstractVector implements Cloneable {
 		}
 	}
 
+	public abstract <T extends AbstractVector> T copy();
+
 	public float getScalar(int index) {
 		return values.get(index);
 	}
@@ -64,6 +66,34 @@ public abstract class AbstractVector implements Cloneable {
 			values.set(i, values.get(i) - other.values.get(i));
 		}
 		return (T) this;
+	}
+
+	public <T extends AbstractVector> T normalize() {
+		float length = getLength();
+		for (int i = 0; i < values.size(); i++) {
+			values.set(i, values.get(i) / length);
+		}
+		return (T) this;
+	}
+
+	public float getLength() {
+		float sum = 0;
+		for (Float val : values) {
+			sum += val * val;
+		}
+		return (float) Math.pow(sum, (1.0f / values.size()));
+	}
+
+	public float dot(AbstractVector other) {
+		if (this.values.size() != other.values.size()) {
+			throw new RuntimeException("Dot product can only be calculated between two vectors of the same degree!");
+		} else {
+			float output = 0;
+			for (int i = 0; i < values.size(); i++) {
+				output += (values.get(i) * other.values.get(i));
+			}
+			return output;
+		}
 	}
 
 	@Override

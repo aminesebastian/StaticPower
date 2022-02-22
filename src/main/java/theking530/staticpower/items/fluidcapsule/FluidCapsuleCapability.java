@@ -3,10 +3,10 @@ package theking530.staticpower.items.fluidcapsule;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.util.LazyOptional;
@@ -37,9 +37,9 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 
 		// If the item does not have the proper tags, initialize them.
 		if (!container.getOrCreateTag().contains(FLUID_STORAGE_NBT_KEY)) {
-			CompoundNBT fluidContainerNBT = new CompoundNBT();
+			CompoundTag fluidContainerNBT = new CompoundTag();
 
-			CompoundNBT fluidTag = new CompoundNBT();
+			CompoundTag fluidTag = new CompoundTag();
 			FluidStack.EMPTY.writeToNBT(fluidTag);
 			fluidContainerNBT.put(STORED_FLUID_NBT_KEY, fluidTag);
 			fluidContainerNBT.putString(TIER_NBT_KEY, tier.toString());
@@ -115,7 +115,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 			}
 
 			// Update the fluid in the NBT.
-			CompoundNBT fluidTag = new CompoundNBT();
+			CompoundTag fluidTag = new CompoundTag();
 			containedFluid.writeToNBT(fluidTag);
 			container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).put(STORED_FLUID_NBT_KEY, fluidTag);
 			updateDamageUsingFluid();
@@ -145,7 +145,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 			containedFluid.shrink(drainAmount);
 
 			// Update the fluid in the NBT.
-			CompoundNBT fluidTag = new CompoundNBT();
+			CompoundTag fluidTag = new CompoundTag();
 			containedFluid.writeToNBT(fluidTag);
 			container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).put(STORED_FLUID_NBT_KEY, fluidTag);
 			updateDamageUsingFluid();
@@ -171,7 +171,7 @@ public class FluidCapsuleCapability implements IFluidHandlerItem, ICapabilityPro
 			containedFluid.shrink(drainAmount);
 
 			// Update the fluid in the NBT.
-			CompoundNBT fluidTag = new CompoundNBT();
+			CompoundTag fluidTag = new CompoundTag();
 			containedFluid.writeToNBT(fluidTag);
 			container.getTag().getCompound(FLUID_STORAGE_NBT_KEY).put(STORED_FLUID_NBT_KEY, fluidTag);
 			updateDamageUsingFluid();

@@ -1,7 +1,7 @@
 package theking530.staticpower.cables.digistore.crafting;
 
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticpower.data.crafting.IngredientUtilities;
 
 public class AutoCraftingStep {
@@ -113,13 +113,13 @@ public class AutoCraftingStep {
 
 	@Override
 	public String toString() {
-		return "AutoCraftingStep [requiredItem=" + (ingredientToCraft.hasNoMatchingItems() ? ingredientToCraft : ingredientToCraft.getMatchingStacks()[0]) + ", storedAmount=" + storedAmount
+		return "AutoCraftingStep [requiredItem=" + (ingredientToCraft.isEmpty() ? ingredientToCraft : ingredientToCraft.getItems()[0]) + ", storedAmount=" + storedAmount
 				+ ", amountToCraft=" + amountToCraft + ", amountCrafted=" + getAmountAlreadyCrafted() + ", totalRequiredAmount=" + totalRequiredAmount + ", isAttemptingResolve="
 				+ isAttemptingResolve + ", pattern=" + pattern + "]";
 	}
 
-	public CompoundNBT serialize() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serialize() {
+		CompoundTag output = new CompoundTag();
 		output.putInt("stored_amount", storedAmount);
 		output.putInt("amount_to_craft", amountToCraft);
 		output.putInt("total_amount", totalRequiredAmount);
@@ -134,7 +134,7 @@ public class AutoCraftingStep {
 		return output;
 	}
 
-	public static AutoCraftingStep read(CompoundNBT nbt) {
+	public static AutoCraftingStep read(CompoundTag nbt) {
 		int ownedAmount = nbt.getInt("stored_amount");
 		int amountCraftable = nbt.getInt("amount_to_craft");
 		int totalAmount = nbt.getInt("total_amount");

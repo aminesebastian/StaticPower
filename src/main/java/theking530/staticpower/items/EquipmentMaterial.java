@@ -1,18 +1,18 @@
 package theking530.staticpower.items;
 
-import net.minecraft.item.IArmorMaterial;
-import net.minecraft.item.IItemTier;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Tier;
 
 public class EquipmentMaterial {
 
 	private String name;
-	private TextFormatting color;
-	private IArmorMaterial armorMaterial;
-	private IItemTier toolMaterial;
+	private ChatFormatting color;
+	private ArmorMaterial armorMaterial;
+	private Tier toolMaterial;
 	private EquipmentMaterial parentMaterial;
 
-	public EquipmentMaterial(String name, TextFormatting color, EquipmentMaterial parentMaterial, boolean validArmor, boolean validTool) {
+	public EquipmentMaterial(String name, ChatFormatting color, EquipmentMaterial parentMaterial, boolean validArmor, boolean validTool) {
 		this.name = name;
 		this.color = color;
 		this.parentMaterial = parentMaterial;
@@ -32,21 +32,21 @@ public class EquipmentMaterial {
 			return parentMaterial;
 		}
 	}
-	public void initArmorMaterial(IArmorMaterial material){
+	public void initArmorMaterial(ArmorMaterial material){
 		armorMaterial = material;
 	}
-	public void initToolMaterial(IItemTier material) {
+	public void initToolMaterial(Tier material) {
 		toolMaterial = material;
 	}
 	
-	public IArmorMaterial getArmorMaterial() {
+	public ArmorMaterial getArmorMaterial() {
 		return armorMaterial;
 	}
 	public boolean isValidArmorMaterial() {
 		return getArmorMaterial() != null;
 	}
 	
-	public IItemTier getToolMaterial() {
+	public Tier getToolMaterial() {
 		return toolMaterial;
 	}
 	public boolean isValidToolMaterial() {

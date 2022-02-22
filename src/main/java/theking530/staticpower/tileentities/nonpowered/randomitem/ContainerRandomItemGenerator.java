@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.nonpowered.randomitem;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -19,11 +19,11 @@ public class ContainerRandomItemGenerator extends StaticPowerTileEntityContainer
 		}
 	}
 
-	public ContainerRandomItemGenerator(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerRandomItemGenerator(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityRandomItemGenerator) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerRandomItemGenerator(int windowId, PlayerInventory playerInventory, TileEntityRandomItemGenerator owner) {
+	public ContainerRandomItemGenerator(int windowId, Inventory playerInventory, TileEntityRandomItemGenerator owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -40,7 +40,7 @@ public class ContainerRandomItemGenerator extends StaticPowerTileEntityContainer
 	}
 
 	@Override
-	public boolean canInteractWith(PlayerEntity playerIn) {
+	public boolean stillValid(Player playerIn) {
 		return true;
 	}
 }

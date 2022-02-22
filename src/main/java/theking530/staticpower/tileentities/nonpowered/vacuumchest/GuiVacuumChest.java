@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.nonpowered.vacuumchest;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
@@ -23,7 +23,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 	private GuiMachineFluidTab fluidTab;
 	private GuiFluidContainerTab fluidContainerTab;
 
-	public GuiVacuumChest(ContainerVacuumChest container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiVacuumChest(ContainerVacuumChest container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 185);
 	}
 
@@ -36,13 +36,13 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 		registerWidget(fluidBar = new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 176, 20, 16, 74, MachineSideMode.Output, getTileEntity()));
 
 		fluidTab = (GuiMachineFluidTab) new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT);
-		fluidContainerTab = (GuiFluidContainerTab) new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket())
+		fluidContainerTab = (GuiFluidContainerTab) new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket())
 				.setTabSide(TabSide.LEFT);
 		setOutputSlotSize(16);
 
 		if (getTileEntity().showTank()) {
-			xSize = 200;
-			this.setDesieredGuiSize(200, ySize);
+			imageWidth = 200;
+			this.setDesieredGuiSize(200, imageHeight);
 		} else {
 			fluidBar.setVisible(false);
 		}
@@ -52,8 +52,8 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 	public void updateData() {
 		// Update the input tab.
 		infoTab.clear();
-		infoTab.addLine("desc", new StringTextComponent("Vacuums items in a nearby radius"));
-		infoTab.addKeyValueTwoLiner("radius", new StringTextComponent("Radius"), new StringTextComponent(String.valueOf(getTileEntity().getRadius())), TextFormatting.AQUA);
+		infoTab.addLine("desc", new TextComponent("Vacuums items in a nearby radius"));
+		infoTab.addKeyValueTwoLiner("radius", new TextComponent("Radius"), new TextComponent(String.valueOf(getTileEntity().getRadius())), ChatFormatting.AQUA);
 
 		// Change the size of the GUI depending on if there is a XP upgrade present.
 		if (!getTileEntity().showTank()) {

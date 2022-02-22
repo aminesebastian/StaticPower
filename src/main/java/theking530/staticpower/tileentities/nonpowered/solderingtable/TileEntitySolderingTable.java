@@ -1,32 +1,34 @@
 package theking530.staticpower.tileentities.nonpowered.solderingtable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderSolderingTable;
 import theking530.staticpower.init.ModBlocks;
 
 public class TileEntitySolderingTable extends AbstractSolderingTable {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntitySolderingTable> TYPE = new TileEntityTypeAllocator<TileEntitySolderingTable>((type) -> new TileEntitySolderingTable(),
-			ModBlocks.SolderingTable);
-	
+	public static final BlockEntityTypeAllocator<TileEntitySolderingTable> TYPE = new BlockEntityTypeAllocator<TileEntitySolderingTable>(
+			(type, pos, state) -> new TileEntitySolderingTable(pos, state), ModBlocks.SolderingTable);
+
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setTileEntitySpecialRenderer(TileEntityRenderSolderingTable::new);
 		}
 	}
 
-	public TileEntitySolderingTable() {
-		super(TYPE);
+	public TileEntitySolderingTable(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerSolderingTable(windowId, inventory, this);
 	}
 }

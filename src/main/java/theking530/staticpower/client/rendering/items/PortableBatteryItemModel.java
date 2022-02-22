@@ -8,30 +8,29 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.client.renderer.model.BlockFaceUV;
-import net.minecraft.client.renderer.model.BlockPartFace;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.model.ItemOverrideList;
-import net.minecraft.client.renderer.texture.AtlasTexture;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockElementFace;
+import net.minecraft.client.renderer.block.model.BlockFaceUV;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.ModelLoader;
-import net.minecraftforge.client.model.SimpleModelTransform;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -43,22 +42,24 @@ import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
+import theking530.staticpower.utilities.ModelUtilities;
 
 @SuppressWarnings("deprecation")
 @OnlyIn(Dist.CLIENT)
-public class PortableBatteryItemModel implements IBakedModel {
+public class PortableBatteryItemModel implements BakedModel {
 	private final Int2ObjectMap<PortableBatteryModel> cache = new Int2ObjectArrayMap<>();
-	private final IBakedModel baseModel;
+	private final BakedModel baseModel;
 
-	public PortableBatteryItemModel(IBakedModel baseModel) {
+	public PortableBatteryItemModel(BakedModel baseModel) {
 		this.baseModel = baseModel;
 	}
 
 	@Override
-	public ItemOverrideList getOverrides() {
-		return new ItemOverrideList() {
+	public ItemOverrides getOverrides() {
+		return new ItemOverrides() {
 			@Override
-			public IBakedModel getOverrideModel(IBakedModel originalModel, ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity livingEntity) {
+			public BakedModel resolve(BakedModel originalModel, ItemStack stack, @Nullable ClientLevel world,
+					@Nullable LivingEntity livingEntity, int x) {
 				// Make sure we have a valid portable battery.
 				if (!(stack.getItem() instanceof PortableBattery)) {
 					return originalModel;
@@ -75,12 +76,14 @@ public class PortableBatteryItemModel implements IBakedModel {
 				int intRatio = (int) (ratio * 50);
 
 				// Hash the unique info about this model.
-				int hash = Objects.hash(stack.getItem().getRegistryName() + ((PortableBattery) stack.getItem()).tier.toString() + intRatio);
+				int hash = Objects.hash(stack.getItem().getRegistryName()
+						+ ((PortableBattery) stack.getItem()).tier.toString() + intRatio);
 
 				// Check to see if we need to cache this model, if we do, do it.
 				PortableBatteryModel model = PortableBatteryItemModel.this.cache.get(hash);
 				if (model == null) {
-					model = new PortableBatteryModel(baseModel, ratio, ((PortableBattery) stack.getItem()).tier == StaticPowerTiers.CREATIVE);
+					model = new PortableBatteryModel(baseModel, ratio,
+							((PortableBattery) stack.getItem()).tier == StaticPowerTiers.CREATIVE);
 					PortableBatteryItemModel.this.cache.put(hash, model);
 				}
 				return model;
@@ -94,8 +97,8 @@ public class PortableBatteryItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isAmbientOcclusion() {
-		return baseModel.isAmbientOcclusion();
+	public boolean useAmbientOcclusion() {
+		return baseModel.useAmbientOcclusion();
 	}
 
 	@Override
@@ -104,27 +107,27 @@ public class PortableBatteryItemModel implements IBakedModel {
 	}
 
 	@Override
-	public boolean isSideLit() {
-		return baseModel.isSideLit();
+	public boolean usesBlockLight() {
+		return baseModel.usesBlockLight();
 	}
 
 	@Override
-	public boolean isBuiltInRenderer() {
-		return baseModel.isBuiltInRenderer();
+	public boolean isCustomRenderer() {
+		return baseModel.isCustomRenderer();
 	}
 
 	@Override
-	public TextureAtlasSprite getParticleTexture() {
-		return baseModel.getParticleTexture();
+	public TextureAtlasSprite getParticleIcon() {
+		return baseModel.getParticleIcon();
 	}
 
 	private class PortableBatteryModel extends AbstractBakedModel {
 		private final float filledRatio;
-		private final IBakedModel baseModel;
+		private final BakedModel baseModel;
 		private List<BakedQuad> quads = null;
 		private boolean creative;
 
-		protected PortableBatteryModel(IBakedModel baseModel, float filledRatio, boolean creative) {
+		protected PortableBatteryModel(BakedModel baseModel, float filledRatio, boolean creative) {
 			super(baseModel);
 			this.filledRatio = filledRatio;
 			this.baseModel = baseModel;
@@ -137,7 +140,8 @@ public class PortableBatteryItemModel implements IBakedModel {
 		}
 
 		@Override
-		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand, IModelData data) {
+		protected List<BakedQuad> getBakedQuadsFromIModelData(BlockState state, Direction side, Random rand,
+				IModelData data) {
 			if (side != null) {
 				return Collections.emptyList();
 			}
@@ -146,23 +150,29 @@ public class PortableBatteryItemModel implements IBakedModel {
 				quads = new ArrayList<BakedQuad>();
 				quads.addAll(baseModel.getQuads(state, side, rand, data));
 
-				AtlasTexture blocksTexture = ModelLoader.instance().getSpriteMap().getAtlasTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
-				TextureAtlasSprite sideSprite = blocksTexture.getSprite(creative ? StaticPowerSprites.PORTABLE_CREATIVE_BATTERY_FILL_BAR : StaticPowerSprites.PORTABLE_BATTERY_FILL_BAR);
+				TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap()
+						.getAtlas(TextureAtlas.LOCATION_BLOCKS);
+				TextureAtlasSprite sideSprite = blocksTexture
+						.getSprite(creative ? StaticPowerSprites.PORTABLE_CREATIVE_BATTERY_FILL_BAR
+								: StaticPowerSprites.PORTABLE_BATTERY_FILL_BAR);
 
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
-				BlockPartFace blockPartFace = new BlockPartFace(null, 1, sideSprite.getName().toString(), blockFaceUV);
+				BlockElementFace blockPartFace = new BlockElementFace(null, 1, sideSprite.getName().toString(),
+						blockFaceUV);
 
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f), new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH, SimpleModelTransform.IDENTITY, null, false,
-						new ResourceLocation("dummy_name")));
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 0.0f),
+						new Vector3f(16.0f, filledRatio * 16.0f, 8.51f), blockPartFace, sideSprite, Direction.SOUTH,
+						ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name")));
 
-				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f), new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH, SimpleModelTransform.IDENTITY, null, false,
-						new ResourceLocation("dummy_name")));
+				quads.add(FaceBaker.bakeQuad(new Vector3f(0.0f, 0.0f, 7.499f),
+						new Vector3f(16.0f, filledRatio * 16.0f, 16.0f), blockPartFace, sideSprite, Direction.NORTH,
+						ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name")));
 			}
 			return quads;
 		}
 
 		@Override
-		public IBakedModel handlePerspective(ItemCameraTransforms.TransformType cameraTransformType, MatrixStack mat) {
+		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
 			BaseModel.handlePerspective(cameraTransformType, mat);
 			return this;
 		}
@@ -173,33 +183,33 @@ public class PortableBatteryItemModel implements IBakedModel {
 		}
 
 		@Override
-		public boolean isSideLit() {
-			return baseModel.isSideLit();
+		public boolean usesBlockLight() {
+			return baseModel.usesBlockLight();
 		}
 
 		@Override
-		public boolean isBuiltInRenderer() {
+		public boolean isCustomRenderer() {
 			return false;
 		}
 
 		@Override
-		public ItemOverrideList getOverrides() {
-			return ItemOverrideList.EMPTY;
+		public ItemOverrides getOverrides() {
+			return ItemOverrides.EMPTY;
 		}
 
 		@Override
-		public boolean isAmbientOcclusion() {
+		public boolean useAmbientOcclusion() {
 			return false;
 		}
 
 		@Override
-		public TextureAtlasSprite getParticleTexture() {
+		public TextureAtlasSprite getParticleIcon() {
 			return null;
 		}
 
 	}
 
-	public static class CapsuleColorProvider implements IItemColor {
+	public static class CapsuleColorProvider implements ItemColor {
 		@Override
 		public int getColor(ItemStack stack, int tintIndex) {
 			if (tintIndex != 1) {

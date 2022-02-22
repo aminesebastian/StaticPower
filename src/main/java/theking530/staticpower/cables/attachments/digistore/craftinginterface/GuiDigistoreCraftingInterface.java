@@ -1,13 +1,13 @@
 package theking530.staticpower.cables.attachments.digistore.craftinginterface;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.cables.attachments.AbstractCableAttachmentGui;
 
 public class GuiDigistoreCraftingInterface extends AbstractCableAttachmentGui<ContainerDigistoreCraftingInterface, DigistoreCraftingInterfaceAttachment> {
 
-	public GuiDigistoreCraftingInterface(ContainerDigistoreCraftingInterface container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiDigistoreCraftingInterface(ContainerDigistoreCraftingInterface container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 151);
 		getTabManager().registerTab(new GuiInfoTab(100));
 	}

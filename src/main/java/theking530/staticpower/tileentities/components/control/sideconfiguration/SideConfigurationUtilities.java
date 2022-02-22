@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.components.control.sideconfiguration;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.Direction;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class SideConfigurationUtilities {
 
@@ -19,8 +19,8 @@ public class SideConfigurationUtilities {
 			this.sign = sign;
 		}
 
-		public TranslationTextComponent getName() {
-			return new TranslationTextComponent("gui.staticpower.side." + name.toLowerCase());
+		public TranslatableComponent getName() {
+			return new TranslatableComponent("gui.staticpower.side." + name.toLowerCase());
 		}
 
 		public Direction.AxisDirection getSign() {
@@ -252,7 +252,7 @@ public class SideConfigurationUtilities {
 
 	public static Direction getBlockHorizontal(BlockState block) {
 		if (block.hasProperty(BlockStateProperties.FACING)) {
-			return block.get(BlockStateProperties.FACING);
+			return block.getValue(BlockStateProperties.FACING);
 		}
 		return null;
 	}

@@ -2,12 +2,13 @@ package theking530.staticpower.tileentities.powered.crucible;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Items;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
+import theking530.staticcore.gui.widgets.tabs.GuiMachineFluidTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachineHeatTab;
 import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
@@ -25,7 +26,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, TileEntityCrucible> {
 	private FluidProgressBar progressBar;
 
-	public GuiCrucible(ContainerCrucible container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiCrucible(ContainerCrucible container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -40,7 +41,8 @@ public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, Til
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
-		getTabManager().registerTab(new GuiFluidContainerTab(this.container, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
+		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
 	}
 

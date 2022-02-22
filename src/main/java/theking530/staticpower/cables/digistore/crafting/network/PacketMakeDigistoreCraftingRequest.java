@@ -2,13 +2,13 @@ package theking530.staticpower.cables.digistore.crafting.network;
 
 import java.util.function.Supplier;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.autocrafting.ContainerCraftingAmount;
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketMakeDigistoreCraftingRequest extends NetworkMessage {
 	protected int windowId;
@@ -24,23 +24,23 @@ public class PacketMakeDigistoreCraftingRequest extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(windowId);
-		buffer.writeCompoundTag(bundle.serialize());
+		buffer.writeNbt(bundle.serialize());
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		windowId = buffer.readInt();
-		bundle = CraftingStepsBundle.read(buffer.readCompoundTag());
+		bundle = CraftingStepsBundle.read(buffer.readNbt());
 	}
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			ServerPlayerEntity serverPlayer = ctx.get().getSender();
-			Container container = serverPlayer.openContainer;
-			if (container instanceof ContainerCraftingAmount && container.windowId == windowId) {
+			ServerPlayer serverPlayer = ctx.get().getSender();
+			AbstractContainerMenu container = serverPlayer.containerMenu;
+			if (container instanceof ContainerCraftingAmount && container.containerId == windowId) {
 				ContainerCraftingAmount caftingContainer = (ContainerCraftingAmount) container;
 				caftingContainer.makeRequest(bundle);
 			}

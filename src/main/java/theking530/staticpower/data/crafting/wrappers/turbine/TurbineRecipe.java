@@ -1,14 +1,14 @@
 package theking530.staticpower.data.crafting.wrappers.turbine;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 
 public class TurbineRecipe extends AbstractStaticPowerRecipe {
-	public static final IRecipeType<TurbineRecipe> RECIPE_TYPE = IRecipeType.register("turbine");
+	public static final RecipeType<TurbineRecipe> RECIPE_TYPE = RecipeType.register("turbine");
 
 	private final FluidStack input;
 	private final FluidStack output;
@@ -52,12 +52,12 @@ public class TurbineRecipe extends AbstractStaticPowerRecipe {
 	}
 
 	@Override
-	public IRecipeSerializer<?> getSerializer() {
+	public RecipeSerializer<?> getSerializer() {
 		return TurbineRecipeSerializer.INSTANCE;
 	}
 
 	@Override
-	public IRecipeType<?> getType() {
+	public RecipeType<?> getType() {
 		return RECIPE_TYPE;
 	}
 }

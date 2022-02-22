@@ -18,14 +18,15 @@
 
 package theking530.thirdparty.codechicken.lib.model;
 
-import net.minecraft.client.renderer.model.BakedQuad;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Vector3f;
+
+import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.client.renderer.vertex.VertexFormat;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import net.minecraftforge.client.model.pipeline.IVertexProducer;
 import net.minecraftforge.client.model.pipeline.LightUtil;
@@ -164,12 +165,12 @@ public class Quad implements IVertexProducer, ISmartVertexConsumer {
      *
      * @param bb The box.
      */
-    public void clamp(AxisAlignedBB bb) {
+    public void clamp(AABB bb) {
         for (Vertex vertex : this.vertices) {
             float[] vec = vertex.vec;
-            vec[0] = (float) MathHelper.clamp(vec[0], bb.minX, bb.maxX);
-            vec[1] = (float) MathHelper.clamp(vec[1], bb.minY, bb.maxY);
-            vec[2] = (float) MathHelper.clamp(vec[2], bb.minZ, bb.maxZ);
+            vec[0] = (float) Mth.clamp(vec[0], bb.minX, bb.maxX);
+            vec[1] = (float) Mth.clamp(vec[1], bb.minY, bb.maxY);
+            vec[2] = (float) Mth.clamp(vec[2], bb.minZ, bb.maxZ);
         }
         this.calculateOrientation(true);
     }
@@ -188,19 +189,19 @@ public class Quad implements IVertexProducer, ISmartVertexConsumer {
         this.t.set(this.vertices[0].vec);
         this.v2.sub(this.t);
 
-        this.normal.set(this.v2.getX(), this.v2.getY(), this.v2.getZ());
+        this.normal.set(this.v2.x(), this.v2.y(), this.v2.z());
         this.normal.cross(this.v1);
         this.normal.normalize();
 
         if (this.format.hasNormal && setNormal) {
             for (Vertex vertex : this.vertices) {
-                vertex.normal[0] = this.normal.getX();
-                vertex.normal[1] = this.normal.getY();
-                vertex.normal[2] = this.normal.getZ();
+                vertex.normal[0] = this.normal.x();
+                vertex.normal[1] = this.normal.y();
+                vertex.normal[2] = this.normal.z();
                 vertex.normal[3] = 0;
             }
         }
-        this.orientation = Direction.getFacingFromVector(this.normal.getX(), this.normal.getY(), this.normal.getZ());
+        this.orientation = Direction.getNearest(this.normal.x(), this.normal.y(), this.normal.z());
     }
 
     /**
@@ -274,10 +275,10 @@ public class Quad implements IVertexProducer, ISmartVertexConsumer {
      * @return The BakedQuad.
      */
     public BakedQuad bake() {
-        if (format.format != DefaultVertexFormats.BLOCK) {
+        if (format.format != DefaultVertexFormat.BLOCK) {
             throw new IllegalStateException("Unable to bake this quad to the specified format. " + format.format);
         }
-        int[] packedData = new int[this.format.format.getSize()];
+        int[] packedData = new int[this.format.format.getVertexSize()];
         for (int v = 0; v < 4; v++) {
             for (int e = 0; e < this.format.elementCount; e++) {
                 LightUtil.pack(this.vertices[v].raw[e], packedData, this.format.format, v, e);

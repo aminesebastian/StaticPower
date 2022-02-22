@@ -1,11 +1,13 @@
 package theking530.staticpower.tileentities.powered.poweredgrinder;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.IUpgradeItem.UpgradeType;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -31,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityPoweredGrinder> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityPoweredGrinder(), ModBlocks.PoweredGrinder);
+	public static final BlockEntityTypeAllocator<TileEntityPoweredGrinder> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPoweredGrinder(pos, state), ModBlocks.PoweredGrinder);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -43,8 +45,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	@UpdateSerialize
 	private double bonusOutputChance;
 
-	public TileEntityPoweredGrinder() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityPoweredGrinder(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -147,7 +149,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerPoweredGrinder(windowId, inventory, this);
 	}
 }

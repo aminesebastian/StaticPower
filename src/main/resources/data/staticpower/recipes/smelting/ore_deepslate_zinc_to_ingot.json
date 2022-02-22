@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:ore_deepslate_zinc"
+  },
+  "result": "staticpower:ingot_zinc",
+  "experience": 0.5,
+  "cookingtime": 200
+}

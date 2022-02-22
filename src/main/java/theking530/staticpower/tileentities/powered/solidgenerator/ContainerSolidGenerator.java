@@ -1,10 +1,10 @@
 package theking530.staticpower.tileentities.powered.solidgenerator;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -22,11 +22,11 @@ public class ContainerSolidGenerator extends StaticPowerTileEntityContainer<Tile
 		}
 	}
 
-	public ContainerSolidGenerator(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerSolidGenerator(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntitySolidGenerator) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerSolidGenerator(int windowId, PlayerInventory playerInventory, TileEntitySolidGenerator owner) {
+	public ContainerSolidGenerator(int windowId, Inventory playerInventory, TileEntitySolidGenerator owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -45,8 +45,8 @@ public class ContainerSolidGenerator extends StaticPowerTileEntityContainer<Tile
 	}
 
 	@Override
-	protected boolean playerItemShiftClicked(ItemStack stack, PlayerEntity player, Slot slot, int slotIndex) {
-		if (!mergeItemStack(stack, 0, 1, false)) {
+	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
+		if (!moveItemStackTo(stack, 0, 1, false)) {
 			return true;
 		}
 		return false;

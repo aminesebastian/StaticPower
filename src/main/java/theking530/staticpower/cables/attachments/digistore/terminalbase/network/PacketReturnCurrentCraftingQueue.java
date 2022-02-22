@@ -4,50 +4,50 @@ import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.AbstractContainerDigistoreTerminal;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
-import theking530.staticpower.network.NetworkMessage;
 
 public class PacketReturnCurrentCraftingQueue extends NetworkMessage {
 	protected int windowId;
-	protected CompoundNBT craftingQueue;
+	protected CompoundTag craftingQueue;
 
 	public PacketReturnCurrentCraftingQueue() {
 
 	}
 
-	public PacketReturnCurrentCraftingQueue(int windowId, ListNBT serializedCraftingQueue) {
+	public PacketReturnCurrentCraftingQueue(int windowId, ListTag serializedCraftingQueue) {
 		this.windowId = windowId;
-		this.craftingQueue = new CompoundNBT();
+		this.craftingQueue = new CompoundTag();
 		this.craftingQueue.put("queue", serializedCraftingQueue);
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeInt(windowId);
-		buffer.writeCompoundTag(craftingQueue);
+		buffer.writeNbt(craftingQueue);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		windowId = buffer.readInt();
-		craftingQueue = buffer.readCompoundTag();
+		craftingQueue = buffer.readNbt();
 	}
 
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			Container container = Minecraft.getInstance().player.openContainer;
-			if (container instanceof AbstractContainerDigistoreTerminal && container.windowId == windowId) {
+			AbstractContainerMenu container = Minecraft.getInstance().player.containerMenu;
+			if (container instanceof AbstractContainerDigistoreTerminal && container.containerId == windowId) {
 				AbstractContainerDigistoreTerminal<?> terminalContainer = (AbstractContainerDigistoreTerminal<?>) container;
-				List<CraftingRequestResponse> craftingRequests = DigistoreNetworkCraftingManager.deserializeCraftingQueue(craftingQueue.getList("queue", Constants.NBT.TAG_COMPOUND));
+				List<CraftingRequestResponse> craftingRequests = DigistoreNetworkCraftingManager.deserializeCraftingQueue(craftingQueue.getList("queue", Tag.TAG_COMPOUND));
 				terminalContainer.updateCraftingQueue(craftingRequests);
 			}
 		});

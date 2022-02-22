@@ -4,14 +4,13 @@ import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.FloatNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.FloatTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 
-public class PowerTransferMetrics implements INBTSerializable<CompoundNBT> {
+public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
 	public enum MetricCategory {
 		TICKS, SECONDS, MINUTES, HOURS
 	}
@@ -62,8 +61,8 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundNBT> {
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeNBT() {
+		CompoundTag output = new CompoundTag();
 		output.putByte("cTick", currentTick);
 		output.putByte("cSec", currentSecond);
 		output.putByte("cMin", currentMinute);
@@ -77,7 +76,7 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundNBT> {
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		currentTick = nbt.getByte("cTick");
 		currentSecond = nbt.getByte("cSec");
 		currentMinute = nbt.getByte("cMin");
@@ -88,7 +87,7 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundNBT> {
 		}
 	}
 
-	public class PowerTransferMetricWrapper implements INBTSerializable<CompoundNBT> {
+	public class PowerTransferMetricWrapper implements INBTSerializable<CompoundTag> {
 		private MetricCategory category;
 		private Deque<Float> inputValues;
 		private Deque<Float> outputValues;
@@ -128,24 +127,24 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundNBT> {
 		}
 
 		@Override
-		public CompoundNBT serializeNBT() {
-			CompoundNBT output = new CompoundNBT();
+		public CompoundTag serializeNBT() {
+			CompoundTag output = new CompoundTag();
 
 			// Serailize the category.
 			output.putByte("cat", (byte) category.ordinal());
 
 			// Serialize the input value list.
-			ListNBT inputValueList = new ListNBT();
+			ListTag inputValueList = new ListTag();
 			inputValues.forEach(value -> {
-				FloatNBT valueTag = FloatNBT.valueOf(value);
+				FloatTag valueTag = FloatTag.valueOf(value);
 				inputValueList.add(valueTag);
 			});
 			output.put("input_values", inputValueList);
 
 			// Serialize the output value list.
-			ListNBT outputValueList = new ListNBT();
+			ListTag outputValueList = new ListTag();
 			outputValues.forEach(value -> {
-				FloatNBT valueTag = FloatNBT.valueOf(value);
+				FloatTag valueTag = FloatTag.valueOf(value);
 				outputValueList.add(valueTag);
 			});
 			output.put("output_values", outputValueList);
@@ -154,25 +153,25 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundNBT> {
 		}
 
 		@Override
-		public void deserializeNBT(CompoundNBT nbt) {
+		public void deserializeNBT(CompoundTag nbt) {
 			category = MetricCategory.values()[nbt.getByte("cat")];
 
 			inputValues.clear();
 			outputValues.clear();
 
 			// Read the serialized lists.
-			ListNBT inputNBT = nbt.getList("input_values", Constants.NBT.TAG_FLOAT);
-			ListNBT outputNBT = nbt.getList("output_values", Constants.NBT.TAG_FLOAT);
+			ListTag inputNBT = nbt.getList("input_values", Tag.TAG_FLOAT);
+			ListTag outputNBT = nbt.getList("output_values", Tag.TAG_FLOAT);
 
 			// Populate the arrays.
-			for (INBT valueTag : inputNBT) {
-				FloatNBT value = (FloatNBT) valueTag;
-				inputValues.add(value.getFloat());
+			for (Tag valueTag : inputNBT) {
+				FloatTag value = (FloatTag) valueTag;
+				inputValues.add(value.getAsFloat());
 			}
 
-			for (INBT valueTag : outputNBT) {
-				FloatNBT value = (FloatNBT) valueTag;
-				outputValues.add(value.getFloat());
+			for (Tag valueTag : outputNBT) {
+				FloatTag value = (FloatTag) valueTag;
+				outputValues.add(value.getAsFloat());
 			}
 		}
 	}

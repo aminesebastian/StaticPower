@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.powered.treefarmer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
@@ -31,7 +31,7 @@ public class GuiAxeTab extends BaseGuiTab {
 		slot = new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, treeFarmer.inputInventory, 0, this.xPosition + 4, 0);
 		container.addSlotGeneric(slot);
 
-		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.windowId);
+		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.containerId);
 		msg.addSlot(treeFarmer.inputInventory, 0, 0, 0);
 
 		// Send a packet to the server with the updated values.
@@ -41,21 +41,21 @@ public class GuiAxeTab extends BaseGuiTab {
 		slot.setEnabledState(false);
 
 		// Update the icon if it should be updated.
-		if (slot.getHasStack()) {
-			this.icon = new ItemDrawable(slot.getStack());
+		if (slot.hasItem()) {
+			this.icon = new ItemDrawable(slot.getItem());
 		}
 	}
 
 	@Override
-	protected void renderBehindItems(MatrixStack matrix, int mouseX, int mouseY, float partialTicks) {
+	protected void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-		slot.yPos = this.yPosition + 4;
+		slot.y = this.yPosition + 4;
 	}
 
 	@Override
 	protected void onTabOpened() {
 		slot.setEnabledState(true);
-		slot.yPos = this.yPosition + 4;
+		slot.y = this.yPosition + 4;
 		this.title = "";
 	}
 
@@ -66,8 +66,8 @@ public class GuiAxeTab extends BaseGuiTab {
 
 		// Update the icon to either the default if the slot is empty, or the slot's
 		// containted item.
-		if (slot.getHasStack()) {
-			this.icon = new ItemDrawable(slot.getStack());
+		if (slot.hasItem()) {
+			this.icon = new ItemDrawable(slot.getItem());
 		} else {
 			this.icon = new ItemDrawable(new ItemStack(Items.IRON_AXE));
 		}

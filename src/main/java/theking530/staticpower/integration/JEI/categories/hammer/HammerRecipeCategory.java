@@ -5,21 +5,24 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
@@ -36,16 +39,16 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 	private static final int INPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar arrow;
 
 	public HammerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent("gui.staticpower.hammering");
+		locTitle = new TranslatableComponent("gui.staticpower.hammering");
 		background = guiHelper.createBlankDrawable(110, 50);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModItems.IronMetalHammer));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModItems.IronMetalHammer));
 		arrow = new ArrowProgressBar(57, 16);
 	}
 
@@ -57,8 +60,8 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -79,22 +82,16 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void draw(HammerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 4, 16, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 86, 14, 20, 20, 0);
+	public void draw(HammerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 4, 16, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 86, 14, 0);
 
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
 
 		// Get the buffer and render the large hammer.
-		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 21, -1);
-		RenderSystem.pushMatrix();
-		RenderSystem.translatef(location.getX(), location.getY(), 0.0F);
-		RenderSystem.scalef(2.5F, 2.5F, 2.5F);
-		Minecraft.getInstance().getItemRenderer().renderItemIntoGUI(new ItemStack(ModItems.IronMetalHammer), 0, 0);
-		RenderSystem.popMatrix();
-
+		GuiDrawUtilities.drawSprite(matrixStack, new ResourceLocation("staticpower", "items/tools/hammer_iron"), 32, 32, 23, 5, 0, 0, 0, 1, 1, Color.WHITE);
 		if (!recipe.isBlockType()) {
-			GuiDrawUtilities.drawStringWithSize(matrixStack, "Requires Anvil", 89, 47, 1.0f, Color.EIGHT_BIT_GREY, false);
+			GuiDrawUtilities.drawString(matrixStack, "Requires Anvil", 89, 47, 0.0f, 1.0f, Color.EIGHT_BIT_GREY, false);
 		}
 	}
 
@@ -105,13 +102,13 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 		if (recipe.isBlockType()) {
 			// Allocate the inputs block array.
-			ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getAllElements().size()];
+			ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getValues().size()];
 			int index = 0;
-			for (Block block : recipe.getInputTag().getAllElements()) {
+			for (Block block : recipe.getInputTag().getValues()) {
 				inputBlocks[index] = new ItemStack(block);
 				index++;
 			}
-			input.add(Ingredient.fromStacks(inputBlocks));
+			input.add(Ingredient.of(inputBlocks));
 		} else {
 			input.add(recipe.getInputItem().getIngredient());
 		}

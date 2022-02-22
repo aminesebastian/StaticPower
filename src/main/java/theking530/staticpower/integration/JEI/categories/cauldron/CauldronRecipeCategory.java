@@ -5,7 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
@@ -16,18 +18,17 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.BlockRendererDispatcher;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
@@ -49,7 +50,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	private static final int INPUT_FLUID_SLOT = 2;
 	private static final int OUTPUT_FLUID_SLOT = 3;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar arrow;
@@ -57,9 +58,9 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 
 	public CauldronRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.RustyCauldron.getTranslationKey());
-		background = guiHelper.createBlankDrawable(130, 50);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.RustyCauldron));
+		locTitle = new TranslatableComponent(ModBlocks.RustyCauldron.getDescriptionId());
+		background = guiHelper.createBlankDrawable(140, 55);
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.RustyCauldron));
 		arrow = new ArrowProgressBar(57, 16);
 	}
 
@@ -71,10 +72,9 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
-
 	@Override
 	@Nonnull
 	public IDrawable getBackground() {
@@ -93,9 +93,9 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void draw(CauldronRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 4, 6, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 105, 22, 20, 20, 0);
+	public void draw(CauldronRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 4, 6, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 105, 22, 0);
 
 		arrow.setPosition(23, 6);
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
@@ -107,29 +107,29 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 0, 0);
 
 		// Render the time.
-		GuiDrawUtilities.drawStringWithSizeCentered(matrixStack, "Cook time: " + recipe.getRequiredTimeInCauldron(), 65, 4, 0.8f, Color.EIGHT_BIT_YELLOW, true);
+		GuiDrawUtilities.drawStringCentered(matrixStack, "Cook time: " + recipe.getRequiredTimeInCauldron(), 65, 4, 0.0f, 0.8f, Color.EIGHT_BIT_YELLOW, true);
 
 		// Render the block.
-		MatrixStack blockStack = new MatrixStack();
+		PoseStack blockStack = new PoseStack();
 		float scale = 1.6f;
 		{
-			blockStack.push();
-			blockStack.translate(-4.5, -0.55f, 1.0f);
+			blockStack.pushPose();
+			blockStack.translate(2.0, -1.7f, 1.75f);
 			blockStack.scale(scale, scale, 16);
-			blockStack.rotate(new Quaternion(32, 45, 0, true));
+			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 
-			BlockState blockState = ModBlocks.RustyCauldron.getDefaultState();
+			BlockState blockState = ModBlocks.RustyCauldron.defaultBlockState();
 			Minecraft mc = Minecraft.getInstance();
-			BlockRendererDispatcher blockRenderer = mc.getBlockRendererDispatcher();
-			blockRenderer.renderBlock(blockState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+			BlockRenderDispatcher blockRenderer = mc.getBlockRenderer();
+			blockRenderer.renderSingleBlock(blockState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
 
-			blockStack.push();
+			blockStack.pushPose();
 			blockStack.translate(0.2, -0.2, 0.05);
 			blockStack.scale(0.75f, 0.75f, 0.75f);
-			BlockState fireState = Blocks.FIRE.getDefaultState();
-			blockRenderer.renderBlock(fireState, blockStack, mc.getRenderTypeBuffers().getBufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
-			blockStack.pop();
-			blockStack.pop();
+			BlockState fireState = Blocks.FIRE.defaultBlockState();
+			blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+			blockStack.popPose();
+			blockStack.popPose();
 		}
 
 		// Render the fluid if it exists.
@@ -146,13 +146,13 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 				height = 1.0f - height;
 			}
 
-			blockStack.push();
+			blockStack.pushPose();
 			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
-			blockStack.rotate(new Quaternion(32, 45, 0, true));
+			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL), fluidColor,
 					blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
-			blockStack.pop();
+			blockStack.popPose();
 		}
 
 		// Render the output fluid if it exists.
@@ -165,13 +165,13 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			time -= timer.getMaxValue() / 2;
 			float height = (float) time / (timer.getMaxValue() / 2);
 
-			blockStack.push();
+			blockStack.pushPose();
 			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
-			blockStack.rotate(new Quaternion(32, 45, 0, true));
+			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL), fluidColor,
 					blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
-			blockStack.pop();
+			blockStack.popPose();
 		}
 	}
 

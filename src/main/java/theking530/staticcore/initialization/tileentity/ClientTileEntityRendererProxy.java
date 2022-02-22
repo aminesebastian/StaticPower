@@ -2,17 +2,17 @@ package theking530.staticcore.initialization.tileentity;
 
 import java.util.function.Function;
 
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
-public class ClientTileEntityRendererProxy<T extends TileEntity> implements ITileEntityRendererProxy<T> {
+public class ClientTileEntityRendererProxy<T extends BlockEntity> implements ITileEntityRendererProxy<T> {
 	@OnlyIn(Dist.CLIENT)
-	public Function<TileEntityRendererDispatcher, ? extends TileEntityRenderer<T>> rendererFactory;
+	public Function<BlockEntityRenderDispatcher, ? extends BlockEntityRenderer<T>> rendererFactory;
 
-	public ClientTileEntityRendererProxy(Function<TileEntityRendererDispatcher, ? extends TileEntityRenderer<T>> rendererFactory) {
+	public ClientTileEntityRendererProxy(Function<BlockEntityRenderDispatcher, ? extends BlockEntityRenderer<T>> rendererFactory) {
 		this.rendererFactory = rendererFactory;
 	}
 

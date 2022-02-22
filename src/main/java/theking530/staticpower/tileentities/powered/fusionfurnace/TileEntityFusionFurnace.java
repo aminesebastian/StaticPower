@@ -1,10 +1,12 @@
 package theking530.staticpower.tileentities.powered.fusionfurnace;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -26,7 +28,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityFusionFurnace(), ModBlocks.FusionFurnace);
+	public static final BlockEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFusionFurnace(pos, state), ModBlocks.FusionFurnace);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -35,8 +37,8 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 
-	public TileEntityFusionFurnace() {
-		super(TYPE, StaticPowerTiers.ENERGIZED);
+	public TileEntityFusionFurnace(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.ENERGIZED);
 		this.disableFaceInteraction();
 
 		// Setup the input inventory with no filtering (no point since there are
@@ -122,7 +124,7 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFusionFurnace(windowId, inventory, this);
 	}
 }

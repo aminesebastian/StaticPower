@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.squeezer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -21,11 +21,11 @@ public class ContainerSqueezer extends StaticPowerTileEntityContainer<TileEntity
 		}
 	}
 
-	public ContainerSqueezer(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerSqueezer(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntitySqueezer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerSqueezer(int windowId, PlayerInventory playerInventory, TileEntitySqueezer owner) {
+	public ContainerSqueezer(int windowId, Inventory playerInventory, TileEntitySqueezer owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

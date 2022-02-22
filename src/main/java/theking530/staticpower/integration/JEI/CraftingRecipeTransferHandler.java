@@ -10,21 +10,23 @@ import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ingredient.IGuiIngredient;
 import mezz.jei.api.recipe.transfer.IRecipeTransferError;
 import mezz.jei.api.recipe.transfer.IRecipeTransferHandler;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class CraftingRecipeTransferHandler<T extends Container> implements IRecipeTransferHandler<T> {
+public class CraftingRecipeTransferHandler<T extends AbstractContainerMenu, R> implements IRecipeTransferHandler<T, R> {
 
 	private final Class<T> containerClass;
+	private final Class<R> recipeClass;
 	private final int inputItems;
 
-	CraftingRecipeTransferHandler(Class<T> containerClass, int inputItems) {
+	CraftingRecipeTransferHandler(Class<T> containerClass, Class<R> recipeClass, int inputItems) {
 		this.containerClass = containerClass;
+		this.recipeClass = recipeClass;
 		this.inputItems = inputItems;
 	}
 
@@ -33,16 +35,23 @@ public class CraftingRecipeTransferHandler<T extends Container> implements IReci
 		return this.containerClass;
 	}
 
+	@Override
+	public Class<R> getRecipeClass() {
+		return this.recipeClass;
+	}
+
 	@Nullable
 	@Override
-	public IRecipeTransferError transferRecipe(T container, IRecipeLayout recipeLayout, PlayerEntity player, boolean maxTransfer, boolean doTransfer) {
+	public IRecipeTransferError transferRecipe(T container, R recipeInstance, IRecipeLayout recipeLayout, Player player,
+			boolean maxTransfer, boolean doTransfer) {
 		if (!doTransfer) {
 			return null;
 		}
 
-		Map<Integer, ? extends IGuiIngredient<ItemStack>> ingredients = recipeLayout.getItemStacks().getGuiIngredients();
+		Map<Integer, ? extends IGuiIngredient<ItemStack>> ingredients = recipeLayout.getItemStacks()
+				.getGuiIngredients();
 
-		final CompoundNBT recipe = new CompoundNBT();
+		final CompoundTag recipe = new CompoundTag();
 
 		int slotIndex = 0;
 		for (Map.Entry<Integer, ? extends IGuiIngredient<ItemStack>> ingredientEntry : ingredients.entrySet()) {
@@ -51,9 +60,9 @@ public class CraftingRecipeTransferHandler<T extends Container> implements IReci
 				continue;
 			}
 
-			for (final Slot slot : container.inventorySlots) {
+			for (final Slot slot : container.slots) {
 				if (slot.getSlotIndex() == slotIndex) {
-					final ListNBT tags = new ListNBT();
+					final ListTag tags = new ListTag();
 					final List<ItemStack> list = new ArrayList<>();
 					final ItemStack displayed = ingredient.getDisplayedIngredient();
 
@@ -68,8 +77,8 @@ public class CraftingRecipeTransferHandler<T extends Container> implements IReci
 					}
 
 					for (final ItemStack is : list) {
-						final CompoundNBT tag = new CompoundNBT();
-						is.write(tag);
+						final CompoundTag tag = new CompoundTag();
+						is.save(tag);
 						tags.add(tag);
 					}
 
@@ -82,7 +91,8 @@ public class CraftingRecipeTransferHandler<T extends Container> implements IReci
 		}
 
 		// Send the packet to the server to update the crafting grid.
-		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new JEIRecipeTransferPacket(container.windowId, inputItems, recipe));
+		StaticPowerMessageHandler.MAIN_PACKET_CHANNEL
+				.sendToServer(new JEIRecipeTransferPacket(container.containerId, inputItems, recipe));
 
 		return null;
 	}

@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.chargingstation;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -22,11 +22,11 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 		}
 	}
 
-	public ContainerChargingStation(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerChargingStation(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityChargingStation) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerChargingStation(int windowId, PlayerInventory playerInventory, TileEntityChargingStation owner) {
+	public ContainerChargingStation(int windowId, Inventory playerInventory, TileEntityChargingStation owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 
@@ -48,10 +48,10 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 54));
 
 		// Armor
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, 152, 8, EquipmentSlotType.HEAD));
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, 152, 26, EquipmentSlotType.CHEST));
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, 152, 44, EquipmentSlotType.LEGS));
-		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, 152, 62, EquipmentSlotType.FEET));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, 152, 8, EquipmentSlot.HEAD));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 38, 152, 26, EquipmentSlot.CHEST));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, 152, 44, EquipmentSlot.LEGS));
+		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, 152, 62, EquipmentSlot.FEET));
 
 		this.addPlayerInventory(getPlayerInventory(), 8, 84);
 		this.addPlayerHotbar(getPlayerInventory(), 8, 142);

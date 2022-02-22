@@ -2,17 +2,18 @@ package theking530.staticpower.data.crafting.wrappers.evaporation;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 
-public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<EvaporatorRecipe> {
+public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EvaporatorRecipe> {
 	public static final EvaporatorRecipeSerializer INSTANCE = new EvaporatorRecipeSerializer();
 
 	private EvaporatorRecipeSerializer() {
@@ -20,7 +21,7 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 	}
 
 	@Override
-	public EvaporatorRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public EvaporatorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input fluid.
 		JsonObject inputFluidObject = json.getAsJsonObject("input_fluid");
 		FluidStack inputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(inputFluidObject);
@@ -30,39 +31,34 @@ public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<IRecipeSerial
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Start with the default processing values.
-		int processingTime = TileEntityEvaporator.DEFAULT_PROCESSING_TIME;
 		float heatCost = TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
 
 		// Capture the processing and power costs.
-		if (JSONUtils.hasField(json, "processing")) {
-			JsonObject processingElement = json.getAsJsonObject("processing");
-			processingTime = processingElement.get("time").getAsInt();
-		}
-
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(TileEntityEvaporator.DEFAULT_PROCESSING_TIME, 0, json);
 		// Capture the heat cost.
-		if (JSONUtils.hasField(json, "heat")) {
+		if (GsonHelper.isValidNode(json, "heat")) {
 			heatCost = json.get("heat").getAsFloat();
 		}
 
 		// Create the recipe.
-		return new EvaporatorRecipe(recipeId, inputFluid, outputFluid, heatCost, processingTime);
+		return new EvaporatorRecipe(recipeId, inputFluid, outputFluid, heatCost, processing);
 	}
 
 	@Override
-	public EvaporatorRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		int time = buffer.readInt();
+	public EvaporatorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		float heat = buffer.readFloat();
 		FluidStack input = buffer.readFluidStack();
 		FluidStack output = buffer.readFluidStack();
 		// Create the recipe.
-		return new EvaporatorRecipe(recipeId, input, output, heat, time);
+		return new EvaporatorRecipe(recipeId, input, output, heat, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, EvaporatorRecipe recipe) {
-		buffer.writeInt(recipe.getProcessingTime());
+	public void toNetwork(FriendlyByteBuf buffer, EvaporatorRecipe recipe) {
+		;
 		buffer.writeFloat(recipe.getRequiredHeat());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

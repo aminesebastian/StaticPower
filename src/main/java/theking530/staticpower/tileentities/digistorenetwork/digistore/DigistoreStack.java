@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.digistorenetwork.digistore;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreStack {
@@ -90,17 +90,17 @@ public class DigistoreStack {
 		}
 	}
 
-	public void writeToNbt(CompoundNBT nbt) {
+	public void writeToNbt(CompoundTag nbt) {
 		nbt.putInt("count", count);
-		CompoundNBT itemTag = new CompoundNBT();
-		storedItem.write(itemTag);
+		CompoundTag itemTag = new CompoundTag();
+		storedItem.save(itemTag);
 		nbt.put("item", itemTag);
 		nbt.putBoolean("locked", locked);
 	}
 
-	public void readFromNbt(CompoundNBT nbt) {
+	public void readFromNbt(CompoundTag nbt) {
 		count = nbt.getInt("count");
-		storedItem = ItemStack.read((CompoundNBT) nbt.get("item"));
+		storedItem = ItemStack.of((CompoundTag) nbt.get("item"));
 		locked = nbt.getBoolean("locked");
 	}
 }

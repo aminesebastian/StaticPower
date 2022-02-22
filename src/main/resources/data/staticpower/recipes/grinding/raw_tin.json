@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:raw_materials/tin"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_tin",
+			"count": 2
+		},
+		{
+			"item": "staticpower:dust_silver",
+			"count": 1,
+			"chance": 0.1
+		}
+	]
+}

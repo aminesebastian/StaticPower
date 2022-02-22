@@ -1,7 +1,7 @@
 package theking530.api.attributes.defenitions;
 
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
 import theking530.api.attributes.registration.AttributeRegistration;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -11,7 +11,7 @@ public class RubyHardenedDefenition extends AbstractHardenedDefenition {
 	public static final ResourceLocation ID = new ResourceLocation("staticpower", "hardened_ruby");
 
 	public RubyHardenedDefenition(ResourceLocation id) {
-		super(ID, "attribute.staticpower.hardened_ruby", TextFormatting.RED);
+		super(ID, "attribute.staticpower.hardened_ruby", ChatFormatting.RED);
 	}
 
 	@Override

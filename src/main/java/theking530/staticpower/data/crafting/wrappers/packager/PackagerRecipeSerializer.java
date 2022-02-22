@@ -2,17 +2,18 @@ package theking530.staticpower.data.crafting.wrappers.packager;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.JSONUtils;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
-public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PackagerRecipe> {
+public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<PackagerRecipe> {
 	public static final PackagerRecipeSerializer INSTANCE = new PackagerRecipeSerializer();
 
 	private PackagerRecipeSerializer() {
@@ -20,14 +21,14 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 	}
 
 	@Override
-	public PackagerRecipe read(ResourceLocation recipeId, JsonObject json) {
+	public PackagerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredient.
-		JsonObject inputElement = JSONUtils.getJsonObject(json, "input");
+		JsonObject inputElement = GsonHelper.getAsJsonObject(json, "input");
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
-		// Start with the default processing values.
-		long powerCost = StaticPowerConfig.SERVER.packagerPowerUsage.get();
-		int processingTime = StaticPowerConfig.SERVER.packagerProcessingTime.get();
+		// Capture the processing and power costs.
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(),
+				json);
 
 		// Get the recipe size.
 		int size = json.get("size").getAsInt();
@@ -36,27 +37,24 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<IRecipeSerializ
 		ProbabilityItemStackOutput itemOutput = ProbabilityItemStackOutput.parseFromJSON(json.get("output").getAsJsonObject());
 
 		// Create the recipe.
-		return new PackagerRecipe(recipeId, processingTime, powerCost, size, input, itemOutput);
+		return new PackagerRecipe(recipeId, size, input, itemOutput, processing);
 	}
 
 	@Override
-	public PackagerRecipe read(ResourceLocation recipeId, PacketBuffer buffer) {
-		long power = buffer.readLong();
-		int time = buffer.readInt();
+	public PackagerRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		int size = buffer.readInt();
 		StaticPowerIngredient input = StaticPowerIngredient.read(buffer);
 		ProbabilityItemStackOutput outputs = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
 		// Create the recipe.
-		return new PackagerRecipe(recipeId, time, power, size, input, outputs);
+		return new PackagerRecipe(recipeId, size, input, outputs, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
-	public void write(PacketBuffer buffer, PackagerRecipe recipe) {
-		buffer.writeLong(recipe.getPowerCost());
-		buffer.writeInt(recipe.getProcessingTime());
+	public void toNetwork(FriendlyByteBuf buffer, PackagerRecipe recipe) {
 		buffer.writeInt(recipe.getSize());
 		recipe.getInputIngredient().write(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
+		recipe.getProcessingSection().writeToBuffer(buffer);
 	}
 }

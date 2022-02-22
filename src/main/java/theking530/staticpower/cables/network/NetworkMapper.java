@@ -8,10 +8,10 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Blocks;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 
 public class NetworkMapper {
 	private final Collection<ServerCable> InitialCables;
@@ -31,7 +31,7 @@ public class NetworkMapper {
 		RemovedCables.addAll(startingCables);
 	}
 
-	public void scanFromLocation(World world, BlockPos startingPos) {
+	public void scanFromLocation(Level world, BlockPos startingPos) {
 		// Create the visited hash set and add the starting position as already visited.
 		HashSet<BlockPos> visited = new HashSet<BlockPos>();
 		visited.add(startingPos);
@@ -66,7 +66,7 @@ public class NetworkMapper {
 		return startingPosition;
 	}
 
-	protected void _updateNetworkWorker(World world, HashSet<BlockPos> visited, BlockPos currentPosition) {
+	protected void _updateNetworkWorker(Level world, HashSet<BlockPos> visited, BlockPos currentPosition) {
 		// If we're testing on a position that contains a cable and the cable is
 		// disabled on the side we're testing, skip it. Do NOT mark that side as visited
 		// though, as another cable may get to it that is enabled on that side.
@@ -78,7 +78,7 @@ public class NetworkMapper {
 			}
 
 			// Get the next position to test. If we've visited it before, skip it.
-			BlockPos testPos = currentPosition.offset(facing);
+			BlockPos testPos = currentPosition.relative(facing);
 			if (visited.contains(testPos)) {
 				continue;
 			}
@@ -106,7 +106,7 @@ public class NetworkMapper {
 	 * @param location
 	 * @return True if we should continue recursing, false otherwise.
 	 */
-	protected boolean scanLocation(World world, ServerCable scanningCable, @Nullable Direction facing, BlockPos location) {
+	protected boolean scanLocation(Level world, ServerCable scanningCable, @Nullable Direction facing, BlockPos location) {
 		// Skip air blocks. This also ensures we skip any blocks that may have been
 		// removed but whose tile entity may linger for a moment. (A check for isRemoved
 		// on the tile entity does not catch this edge case...).
@@ -138,7 +138,7 @@ public class NetworkMapper {
 			// Make sure it is valid.
 			if (!Destinations.containsKey(location)) {
 				// Cache a destination wrapper for it.
-				DestinationWrapper wrapper = new DestinationWrapper(world, location, world.getTileEntity(location), scanningCable.getPos(), facing.getOpposite());
+				DestinationWrapper wrapper = new DestinationWrapper(world, location, world.getBlockEntity(location), scanningCable.getPos(), facing.getOpposite());
 				if (!wrapper.shouldBeDropped()) {
 					Destinations.put(location, wrapper);
 				}

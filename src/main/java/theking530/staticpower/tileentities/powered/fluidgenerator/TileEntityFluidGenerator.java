@@ -2,16 +2,18 @@ package theking530.staticpower.tileentities.powered.fluidgenerator;
 
 import java.util.Optional;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFluidGenerator;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -34,7 +36,7 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 
 public class TileEntityFluidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityFluidGenerator> TYPE = new TileEntityTypeAllocator<TileEntityFluidGenerator>((type) -> new TileEntityFluidGenerator(),
+	public static final BlockEntityTypeAllocator<TileEntityFluidGenerator> TYPE = new BlockEntityTypeAllocator<TileEntityFluidGenerator>((type, pos, state) -> new TileEntityFluidGenerator(pos, state),
 			ModBlocks.FluidGenerator);
 
 	static {
@@ -49,8 +51,8 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 	public final LoopingSoundComponent generatingSoundComponent;
 
-	public TileEntityFluidGenerator() {
-		super(TYPE, StaticPowerTiers.BASIC);
+	public TileEntityFluidGenerator(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 		disableFaceInteraction();
 
 		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
@@ -82,9 +84,9 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 
 	@Override
 	public void process() {
-		if (!world.isRemote) {
+		if (!level.isClientSide) {
 			if (processingComponent.getIsOnBlockState()) {
-				generatingSoundComponent.startPlayingSound(SoundEvents.ENTITY_MINECART_RIDING.getRegistryName(), SoundCategory.BLOCKS, 0.1f, 0.75f, getPos(), 64);
+				generatingSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.1f, 0.75f, getBlockPos(), 64);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
 			}
@@ -139,7 +141,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFluidGenerator(windowId, inventory, this);
 	}
 }

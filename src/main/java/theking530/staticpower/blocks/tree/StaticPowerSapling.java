@@ -3,85 +3,85 @@ package theking530.staticpower.blocks.tree;
 import java.util.Random;
 import java.util.function.Supplier;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.BushBlock;
-import net.minecraft.block.IGrowable;
-import net.minecraft.block.trees.Tree;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.item.BlockItem;
-import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.StateContainer.Builder;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.BushBlock;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition.Builder;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.ForgeEventFactory;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
-import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
+import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
-public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlockProvider, IRenderLayerProvider {
-	public static final IntegerProperty STAGE = BlockStateProperties.STAGE_0_1;
-	protected static final VoxelShape SHAPE = Block.makeCuboidShape(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
-	private final Supplier<Tree> tree;
+public class StaticPowerSapling extends BushBlock implements BonemealableBlock, IItemBlockProvider, IRenderLayerProvider {
+	public static final IntegerProperty STAGE = BlockStateProperties.STAGE;
+	protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
+	private final Supplier<AbstractTreeGrower> tree;
 
-	public StaticPowerSapling(String name, Supplier<Tree> treeIn, Properties properties) {
+	public StaticPowerSapling(String name, Supplier<AbstractTreeGrower> treeIn, Properties properties) {
 		super(properties);
 		this.setRegistryName(name);
 		this.tree = treeIn;
 	}
 
 	@Override
-	public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return SHAPE;
 	}
 
 	@SuppressWarnings("deprecation")
 	@Override
-	public void tick(BlockState state, ServerWorld worldIn, BlockPos pos, Random rand) {
+	public void tick(BlockState state, ServerLevel worldIn, BlockPos pos, Random rand) {
 		super.tick(state, worldIn, pos, rand);
 		if (!worldIn.isAreaLoaded(pos, 1)) {
 			return;
 		}
-		if (worldIn.getLight(pos.up()) >= 9 && rand.nextInt(7) == 0) {
+		if (worldIn.getMaxLocalRawBrightness(pos.above()) >= 9 && rand.nextInt(7) == 0) {
 			this.grow(worldIn, pos, state, rand);
 		}
 	}
 
-	public void grow(ServerWorld serverWorld, BlockPos pos, BlockState state, Random rand) {
-		if (state.get(STAGE) == 0) {
-			serverWorld.setBlockState(pos, state.func_235896_a_(STAGE), 4);
+	public void grow(ServerLevel serverWorld, BlockPos pos, BlockState state, Random rand) {
+		if (state.getValue(STAGE) == 0) {
+			serverWorld.setBlock(pos, state.cycle(STAGE), 4);
 		} else {
 			if (!ForgeEventFactory.saplingGrowTree(serverWorld, rand, pos))
 				return;
-			this.tree.get().attemptGrowTree(serverWorld, serverWorld.getChunkProvider().getChunkGenerator(), pos, state,
+			this.tree.get().growTree(serverWorld, serverWorld.getChunkSource().getGenerator(), pos, state,
 					rand);
 		}
 	}
 
 	@Override
-	public void grow(ServerWorld serverWorld, Random rand, BlockPos pos, BlockState state) {
+	public void performBonemeal(ServerLevel serverWorld, Random rand, BlockPos pos, BlockState state) {
 		this.grow(serverWorld, pos, state, rand);
 	}
 
 	@Override
-	public boolean canGrow(IBlockReader worldIn, BlockPos pos, BlockState state, boolean isClient) {
+	public boolean isValidBonemealTarget(BlockGetter worldIn, BlockPos pos, BlockState state, boolean isClient) {
 		return true;
 	}
 
 	@Override
-	public boolean canUseBonemeal(World worldIn, Random rand, BlockPos pos, BlockState state) {
-		return (double) worldIn.rand.nextFloat() < 0.45D;
+	public boolean isBonemealSuccess(Level worldIn, Random rand, BlockPos pos, BlockState state) {
+		return (double) worldIn.random.nextFloat() < 0.45D;
 	}
 
 	@Override
-	protected void fillStateContainer(Builder<Block, BlockState> builder) {
+	protected void createBlockStateDefinition(Builder<Block, BlockState> builder) {
 		builder.add(STAGE);
 	}
 
@@ -93,6 +93,6 @@ public class StaticPowerSapling extends BushBlock implements IGrowable, IItemBlo
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getCutout();
+		return RenderType.cutout();
 	}
 }

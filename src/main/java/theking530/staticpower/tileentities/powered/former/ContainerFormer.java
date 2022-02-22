@@ -1,8 +1,8 @@
 package theking530.staticpower.tileentities.powered.former;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -23,11 +23,11 @@ public class ContainerFormer extends StaticPowerTileEntityContainer<TileEntityFo
 		}
 	}
 
-	public ContainerFormer(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerFormer(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityFormer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerFormer(int windowId, PlayerInventory playerInventory, TileEntityFormer owner) {
+	public ContainerFormer(int windowId, Inventory playerInventory, TileEntityFormer owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

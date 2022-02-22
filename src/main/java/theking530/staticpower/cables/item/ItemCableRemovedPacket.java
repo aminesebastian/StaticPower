@@ -3,11 +3,11 @@ package theking530.staticpower.cables.item;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class ItemCableRemovedPacket extends NetworkMessage {
@@ -24,13 +24,13 @@ public class ItemCableRemovedPacket extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(tileEntityPosition);
 		buffer.writeLong(removedParcel);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		tileEntityPosition = buffer.readBlockPos();
 		removedParcel = buffer.readLong();
 	}
@@ -38,7 +38,7 @@ public class ItemCableRemovedPacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(tileEntityPosition);
+			BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(tileEntityPosition);
 			if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
 				TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
 				ItemCableComponent cableComponent = tileEntity.getComponent(ItemCableComponent.class);

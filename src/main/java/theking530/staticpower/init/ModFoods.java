@@ -1,18 +1,18 @@
 package theking530.staticpower.init;
 
-import net.minecraft.item.Food;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Effects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.food.FoodProperties;
 
 public class ModFoods {
-	public static final Food STATIC_CROP = (new Food.Builder()).hunger(3).saturation(0.3F).setAlwaysEdible().effect(() -> new EffectInstance(Effects.SPEED, 80, 2), 1.0f).build();
-	public static final Food ENERGIZED_CROP = (new Food.Builder()).hunger(6).saturation(0.5F).setAlwaysEdible().effect(() -> new EffectInstance(Effects.JUMP_BOOST, 80, 2), 1.0f).build();
-	public static final Food LUMUM_CROP = (new Food.Builder()).hunger(9).saturation(0.9F).setAlwaysEdible().effect(() -> new EffectInstance(Effects.REGENERATION, 80, 2), 1.0f).build();
-	public static final Food STATIC_PIE = (new Food.Builder()).hunger(8).saturation(0.6F).build();
-	public static final Food ENERGIZED_PIE = (new Food.Builder()).hunger(16).saturation(0.9F).build();
-	public static final Food LUMUM_PIE = (new Food.Builder()).hunger(32).saturation(1.2F).build();
-	public static final Food SMUTTON = (new Food.Builder()).hunger(4).saturation(0.4F).meat().build();
-	public static final Food COOKED_SMUTTON = (new Food.Builder()).hunger(10).saturation(1.0F).meat().build();
-	public static final Food EEEF = (new Food.Builder()).hunger(5).saturation(0.45F).meat().build();
-	public static final Food COOKED_EEEF = (new Food.Builder()).hunger(12).saturation(1.2F).meat().build();
+	public static final FoodProperties STATIC_CROP = (new FoodProperties.Builder()).nutrition(3).saturationMod(0.3F).alwaysEat().effect(() -> new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 2), 1.0f).build();
+	public static final FoodProperties ENERGIZED_CROP = (new FoodProperties.Builder()).nutrition(6).saturationMod(0.5F).alwaysEat().effect(() -> new MobEffectInstance(MobEffects.JUMP, 80, 2), 1.0f).build();
+	public static final FoodProperties LUMUM_CROP = (new FoodProperties.Builder()).nutrition(9).saturationMod(0.9F).alwaysEat().effect(() -> new MobEffectInstance(MobEffects.REGENERATION, 80, 2), 1.0f).build();
+	public static final FoodProperties STATIC_PIE = (new FoodProperties.Builder()).nutrition(8).saturationMod(0.6F).build();
+	public static final FoodProperties ENERGIZED_PIE = (new FoodProperties.Builder()).nutrition(16).saturationMod(0.9F).build();
+	public static final FoodProperties LUMUM_PIE = (new FoodProperties.Builder()).nutrition(32).saturationMod(1.2F).build();
+	public static final FoodProperties SMUTTON = (new FoodProperties.Builder()).nutrition(4).saturationMod(0.4F).meat().build();
+	public static final FoodProperties COOKED_SMUTTON = (new FoodProperties.Builder()).nutrition(10).saturationMod(1.0F).meat().build();
+	public static final FoodProperties EEEF = (new FoodProperties.Builder()).nutrition(5).saturationMod(0.45F).meat().build();
+	public static final FoodProperties COOKED_EEEF = (new FoodProperties.Builder()).nutrition(12).saturationMod(1.2F).meat().build();
 }

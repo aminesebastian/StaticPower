@@ -1,8 +1,8 @@
 package theking530.staticpower.cables.item;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 
 public class ItemRoutingParcelClient {
 	public static final int ROTATION_PER_BLOCK = 90;
@@ -83,16 +83,16 @@ public class ItemRoutingParcelClient {
 		return moveTimer == moveTime / 2;
 	}
 
-	public static ItemRoutingParcelClient create(CompoundNBT nbt) {
+	public static ItemRoutingParcelClient create(CompoundTag nbt) {
 		ItemRoutingParcelClient output = new ItemRoutingParcelClient();
 		output.readFromNbt(nbt);
 		return output;
 	}
 
-	public CompoundNBT writeToNbt(CompoundNBT nbt) {
+	public CompoundTag writeToNbt(CompoundTag nbt) {
 		// Serialize the contained item.
-		CompoundNBT containedItemTag = new CompoundNBT();
-		containedItem.write(containedItemTag);
+		CompoundTag containedItemTag = new CompoundTag();
+		containedItem.save(containedItemTag);
 		nbt.put("contained_item", containedItemTag);
 		nbt.putLong("id", id);
 		nbt.putInt("moveTimer", moveTimer);
@@ -109,10 +109,10 @@ public class ItemRoutingParcelClient {
 		return nbt;
 	}
 
-	public void readFromNbt(CompoundNBT nbt) {
+	public void readFromNbt(CompoundTag nbt) {
 		// Deserialize the contained item.
-		CompoundNBT containedItemTag = nbt.getCompound("contained_item");
-		containedItem = ItemStack.read(containedItemTag);
+		CompoundTag containedItemTag = nbt.getCompound("contained_item");
+		containedItem = ItemStack.of(containedItemTag);
 		id = nbt.getLong("id");
 		moveTimer = nbt.getInt("moveTimer");
 		moveTime = nbt.getInt("move_time");

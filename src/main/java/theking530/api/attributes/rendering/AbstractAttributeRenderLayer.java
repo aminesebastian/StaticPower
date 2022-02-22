@@ -3,10 +3,10 @@ package theking530.api.attributes.rendering;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.BakedQuad;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.IModelData;
 import theking530.api.attributes.capability.IAttributable;
 
@@ -36,7 +36,7 @@ public abstract class AbstractAttributeRenderLayer {
 
 	/**
 	 * This method should return the quads to render on top of the item.
-	 * @param stack TODO
+	 * @param stack 
 	 * @param attributable
 	 * 
 	 * @return

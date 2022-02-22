@@ -1,9 +1,9 @@
 package theking530.staticpower.tileentities.powered.poweredgrinder;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.progressbars.GrinderProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
@@ -17,7 +17,7 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPoweredGrinder, TileEntityPoweredGrinder> {
 	private GuiInfoTab infoTab;
 
-	public GuiPoweredGrinder(ContainerPoweredGrinder container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiPoweredGrinder(ContainerPoweredGrinder container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 
@@ -27,10 +27,10 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 		registerWidget(new GrinderProgressBar(79, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 100));
-		infoTab.addLine("desc", new StringTextComponent("Grinds items into their base components."));
+		infoTab.addLine("desc", new TextComponent("Grinds items into their base components."));
 		infoTab.addLineBreak();
-		infoTab.addKeyValueTwoLiner("bonus", new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"),
-				TextFormatting.GREEN);
+		infoTab.addKeyValueTwoLiner("bonus", new TextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).append("%"),
+				ChatFormatting.GREEN);
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().redstoneControlComponent));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
@@ -40,7 +40,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 
 	@Override
 	public void updateData() {
-		infoTab.addKeyValueTwoLiner("bonus", new StringTextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).appendString("%"),
-				TextFormatting.GREEN);
+		infoTab.addKeyValueTwoLiner("bonus", new TextComponent("Add. Bonus Chance"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBonusChance() - 1.0f).append("%"),
+				ChatFormatting.GREEN);
 	}
 }

@@ -1,8 +1,8 @@
 package theking530.staticcore.gui.widgets.tabs;
 
-import net.minecraft.item.Items;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
@@ -24,9 +24,9 @@ public class GuiMachineHeatTab extends AbstractInfoTab {
 	public void updateData() {
 		super.updateData();
 		clear();
-		addKeyValueTwoLiner("Generating", new StringTextComponent("Generating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), TextFormatting.RED);
-		addKeyValueTwoLiner("Dissipating", new StringTextComponent("Dissipating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), TextFormatting.AQUA);
-		addKeyValueTwoLiner("Conductivity", new StringTextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getStorage().getConductivity()),
-				TextFormatting.GREEN);
+		addKeyValueTwoLiner("Generating", new TextComponent("Generating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), ChatFormatting.RED);
+		addKeyValueTwoLiner("Dissipating", new TextComponent("Dissipating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Conductivity", new TextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getStorage().getConductivity()),
+				ChatFormatting.GREEN);
 	}
 }

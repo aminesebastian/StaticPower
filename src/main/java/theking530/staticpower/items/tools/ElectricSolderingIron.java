@@ -4,10 +4,10 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.ISolderingIron;
@@ -37,12 +37,12 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		tooltip.add(new StringTextComponent("Power per Operation: 10SV"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
+		tooltip.add(new TextComponent("Power per Operation: 10SV"));
 		if (showAdvanced) {
 			long energyStored = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 			long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-			tooltip.add(new StringTextComponent("Power Stored: ").append(GuiTextUtilities.formatEnergyToString(energyStored, capacity)));
+			tooltip.add(new TextComponent("Power Stored: ").append(GuiTextUtilities.formatEnergyToString(energyStored, capacity)));
 		}
 	}
 }

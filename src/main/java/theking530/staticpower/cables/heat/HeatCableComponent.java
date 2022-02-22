@@ -6,10 +6,10 @@ import javax.annotation.Nullable;
 
 import com.google.common.util.concurrent.AtomicDouble;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
@@ -56,7 +56,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
 				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
 				shouldUpdate |= network.getHeatStorage().getMaximumHeat() != clientSideHeatCapacity;
@@ -70,7 +70,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	public void updateClientValues() {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
 				clientSideHeat = network.getHeatStorage().getCurrentHeat();
 				clientSideHeatCapacity = network.getHeatStorage().getMaximumHeat();
@@ -78,7 +78,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
 				HeatCableUpdatePacket packet = new HeatCableUpdatePacket(getPos(), clientSideHeat, clientSideHeatCapacity);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 128, packet);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 32, packet);
 			});
 		}
 	}
@@ -89,7 +89,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	public void generateHeat(HeatNetworkModule networkModule) {
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			if (energyStorageComponent != null && heatGeneration != 0.0f) {
 				double transferableHeat = networkModule.getHeatStorage().getMaximumHeat() - networkModule.getHeatStorage().getCurrentHeat();
 				transferableHeat = Math.min(transferableHeat, heatGeneration);
@@ -111,7 +111,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public double getCurrentHeat() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().getCurrentHeat());
@@ -124,7 +124,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public double getMaximumHeat() {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().getMaximumHeat());
@@ -142,7 +142,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public double heat(double amountToHeat, boolean simulate) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().heat(amountToHeat, simulate));
@@ -155,7 +155,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	public double cool(double amountToCool, boolean simulate) {
-		if (!getTileEntity().getWorld().isRemote) {
+		if (!getTileEntity().getLevel().isClientSide) {
 			AtomicDouble recieve = new AtomicDouble(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().cool(amountToCool, simulate));
@@ -193,7 +193,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
@@ -213,7 +213,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isRemote) {
+				if (getWorld().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					Optional<ServerCable> cable = getCable();

@@ -1,10 +1,10 @@
 package theking530.staticcore.item;
 
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.utilities.Color;
 
-public class MaterialItemColor implements IItemColor {
+public class MaterialItemColor implements ItemColor {
 
 	private final Color color;
 	private final int encodedColor;

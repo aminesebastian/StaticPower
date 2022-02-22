@@ -1,9 +1,9 @@
 package theking530.staticcore.initialization.tileentity;
 
-import java.util.function.Supplier;
-
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import theking530.staticpower.tileentities.TileEntityBase;
 
 /**
  * Wrapper class used to help in the initialization of tile entites.
@@ -12,19 +12,20 @@ import net.minecraft.tileentity.TileEntityType;
  *
  * @param <T>
  */
-public class TileEntityInitializer<T extends TileEntity> implements Supplier<T> {
-	private TileEntityTypeAllocator<T> allocator;
+public class TileEntityInitializer<T extends TileEntityBase> implements BlockEntityType.BlockEntitySupplier<T> {
+	private BlockEntityTypeAllocator<T> allocator;
 
-	public TileEntityInitializer(TileEntityTypeAllocator<T> allocator) {
+	public TileEntityInitializer(BlockEntityTypeAllocator<T> allocator) {
 		this.allocator = allocator;
 	}
 
-	public void setType(TileEntityType<T> type) {
+	public void setType(BlockEntityType<T> type) {
 		allocator.type = type;
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
-	public T get() {
-		return allocator.factory.apply(allocator);
+	public T create(BlockPos p_155268_, BlockState p_155269_) {
+		return (T) allocator.create(p_155268_, p_155269_);
 	}
 }

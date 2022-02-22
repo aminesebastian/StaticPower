@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.placer;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -18,11 +18,11 @@ public class ContainerAutomaticPlacer extends StaticPowerTileEntityContainer<Til
 		}
 	}
 
-	public ContainerAutomaticPlacer(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerAutomaticPlacer(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntityAutomaticPlacer) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerAutomaticPlacer(int windowId, PlayerInventory playerInventory, TileEntityAutomaticPlacer owner) {
+	public ContainerAutomaticPlacer(int windowId, Inventory playerInventory, TileEntityAutomaticPlacer owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

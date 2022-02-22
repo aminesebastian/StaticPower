@@ -7,15 +7,14 @@ import java.util.Queue;
 
 import javax.annotation.Nonnull;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class DigistoreCraftingTerminalHistory implements INBTSerializable<CompoundNBT> {
+public class DigistoreCraftingTerminalHistory implements INBTSerializable<CompoundTag> {
 	protected Queue<DigistoreCraftingTerminalHistoryEntry> entries;
 	protected int maxHistory;
 
@@ -50,13 +49,13 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
+	public CompoundTag serializeNBT() {
 		// Allocate the final serialized result.
-		CompoundNBT serialized = new CompoundNBT();
+		CompoundTag serialized = new CompoundTag();
 		serialized.putInt("max_history", maxHistory);
 
 		// Serialize the history.
-		ListNBT entryTags = new ListNBT();
+		ListTag entryTags = new ListTag();
 		for (DigistoreCraftingTerminalHistoryEntry entry : entries) {
 			entryTags.add(entry.serializeNBT());
 		}
@@ -65,7 +64,7 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		// Clear the original entries list.
 		entries.clear();
 
@@ -73,9 +72,9 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 		maxHistory = nbt.getInt("max_history");
 
 		// Deserialize the history.
-		ListNBT serializedEntries = nbt.getList("entries", Constants.NBT.TAG_COMPOUND);
-		for (INBT entryTag : serializedEntries) {
-			CompoundNBT entryTagCompound = (CompoundNBT) entryTag;
+		ListTag serializedEntries = nbt.getList("entries", Tag.TAG_COMPOUND);
+		for (Tag entryTag : serializedEntries) {
+			CompoundTag entryTagCompound = (CompoundTag) entryTag;
 			DigistoreCraftingTerminalHistoryEntry entry = new DigistoreCraftingTerminalHistoryEntry();
 			entry.deserializeNBT(entryTagCompound);
 			entries.add(entry);
@@ -87,7 +86,7 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 		return "DigistoreCraftingTerminalHistory [entries=" + entries + ", maxHistory=" + maxHistory + "]";
 	}
 
-	public class DigistoreCraftingTerminalHistoryEntry implements INBTSerializable<CompoundNBT> {
+	public class DigistoreCraftingTerminalHistoryEntry implements INBTSerializable<CompoundTag> {
 		public ItemStack output;
 		public ItemStack[] recipe;
 
@@ -106,20 +105,20 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 		}
 
 		@Override
-		public CompoundNBT serializeNBT() {
+		public CompoundTag serializeNBT() {
 			// Allocate the final serialized result.
-			CompoundNBT serialized = new CompoundNBT();
+			CompoundTag serialized = new CompoundTag();
 
 			// Serialize the output item.
-			CompoundNBT outputTag = new CompoundNBT();
-			output.write(outputTag);
+			CompoundTag outputTag = new CompoundTag();
+			output.save(outputTag);
 			serialized.put("output", outputTag);
 
 			// Serialize the recipe.
-			ListNBT recipeTags = new ListNBT();
+			ListTag recipeTags = new ListTag();
 			for (ItemStack recipeItem : recipe) {
-				CompoundNBT itemTag = new CompoundNBT();
-				recipeItem.write(itemTag);
+				CompoundTag itemTag = new CompoundTag();
+				recipeItem.save(itemTag);
 				recipeTags.add(itemTag);
 			}
 			serialized.put("recipe", recipeTags);
@@ -129,17 +128,17 @@ public class DigistoreCraftingTerminalHistory implements INBTSerializable<Compou
 		}
 
 		@Override
-		public void deserializeNBT(CompoundNBT nbt) {
+		public void deserializeNBT(CompoundTag nbt) {
 			// Deserialize the output.
-			output = ItemStack.read(nbt.getCompound("output"));
+			output = ItemStack.of(nbt.getCompound("output"));
 
 			// Deserialize the recipe.
 			recipe = new ItemStack[nbt.getInt("recipe_size")];
-			ListNBT serializedRecipe = nbt.getList("recipe", Constants.NBT.TAG_COMPOUND);
+			ListTag serializedRecipe = nbt.getList("recipe", Tag.TAG_COMPOUND);
 			for (int i = 0; i < serializedRecipe.size(); i++) {
-				INBT recipeTag = serializedRecipe.get(i);
-				CompoundNBT recipeTagCompound = (CompoundNBT) recipeTag;
-				recipe[i] = ItemStack.read(recipeTagCompound);
+				Tag recipeTag = serializedRecipe.get(i);
+				CompoundTag recipeTagCompound = (CompoundTag) recipeTag;
+				recipe[i] = ItemStack.of(recipeTagCompound);
 			}
 		}
 	}

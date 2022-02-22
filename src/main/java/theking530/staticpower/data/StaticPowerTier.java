@@ -1,12 +1,12 @@
 package theking530.staticpower.data;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 import theking530.staticpower.StaticPower;
 
-public abstract class StaticPowerTier {
+public abstract class StaticPowerTier  {
 	/****************
 	 * Tier Settings
 	 ****************/

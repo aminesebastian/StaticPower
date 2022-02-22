@@ -1,17 +1,18 @@
 package theking530.staticpower.tileentities.nonpowered.miner;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.util.Direction.AxisDirection;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Vector3f;
+import com.mojang.math.Vector3f;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction.AxisDirection;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.api.IUpgradeItem.UpgradeType;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -26,7 +27,8 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final TileEntityTypeAllocator<TileEntityMiner> TYPE = new TileEntityTypeAllocator<>((type) -> new TileEntityMiner(), ModBlocks.Miner);
+	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityMiner(pos, state), ModBlocks.Miner);
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;
@@ -34,14 +36,17 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	public final MachineProcessingComponent fuelComponent;
 	public final MachineProcessingComponent fuelMoveComponent;
 
-	public TileEntityMiner() {
-		super(TYPE);
-		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
-		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
-		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
-				.setRedstoneControlComponent(redstoneControlComponent));
+	public TileEntityMiner(BlockPos pos, BlockState state) {
+		super(TYPE, pos, state);
+		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input)
+				.setShiftClickEnabled(true));
 		registerComponent(
-				fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
+				fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
+		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent",
+				DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
+						.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0,
+				this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
 						.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(new InputServoComponent("FuelInputServo", 20, fuelInventory));
 	}
@@ -56,21 +61,26 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
 			if (SDMath.diceRoll(0.25f)) {
-				float randomOffset = (2 * getWorld().rand.nextFloat()) - 1.0f;
+				float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 				randomOffset /= 3.5f;
 
-				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
-				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getWorld().addParticle(ParticleTypes.SMOKE, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f,
-						0.01f, 0.0f);
-				getWorld().addParticle(ParticleTypes.FLAME, getPos().getX() + forwardVector.getX(), getPos().getY() + forwardVector.getY(), getPos().getZ() + forwardVector.getZ(), 0.0f,
-						0.01f, 0.0f);
+				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f
+						: -0.05f;
+				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(),
+						new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
+				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(),
+						getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+						0.0f);
+				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(),
+						getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
+						0.0f);
 			}
 		}
 	}
 
 	public ProcessingCheckState canMoveFuel() {
-		if (isValidFuel(fuelInventory.getStackInSlot(0)) && fuelBurningInventory.getStackInSlot(0).isEmpty() && hasDrillBit()) {
+		if (isValidFuel(fuelInventory.getStackInSlot(0)) && fuelBurningInventory.getStackInSlot(0).isEmpty()
+				&& hasDrillBit()) {
 			return ProcessingCheckState.ok();
 		}
 		return ProcessingCheckState.skip();
@@ -134,7 +144,8 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public int getHeatGeneration() {
-		return (int) (StaticPowerConfig.SERVER.minerHeatGeneration.get() * processingComponent.getCalculatedPowerUsageMultipler());
+		return (int) (StaticPowerConfig.SERVER.minerHeatGeneration.get()
+				* processingComponent.getCalculatedPowerUsageMultipler());
 	}
 
 	@Override
@@ -155,15 +166,16 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public long getFuelUsage() {
-		return (long) (StaticPowerConfig.SERVER.minerFuelUsage.get() * processingComponent.getCalculatedPowerUsageMultipler());
+		return (long) (StaticPowerConfig.SERVER.minerFuelUsage.get()
+				* processingComponent.getCalculatedPowerUsageMultipler());
 	}
 
 	public int getFuelBurnTime(ItemStack input) {
-		return ForgeHooks.getBurnTime(input);
+		return ForgeHooks.getBurnTime(input, null);
 	}
 
 	public boolean isValidFuel(ItemStack input) {
-		return ForgeHooks.getBurnTime(input) > 0;
+		return ForgeHooks.getBurnTime(input, null) > 0;
 	}
 
 	public int getRemainingFuel() {
@@ -171,7 +183,7 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public Container createMenu(int windowId, PlayerInventory inventory, PlayerEntity player) {
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerMiner(windowId, inventory, this);
 	}
 }

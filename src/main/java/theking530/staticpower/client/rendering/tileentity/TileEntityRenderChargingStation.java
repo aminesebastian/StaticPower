@@ -1,17 +1,17 @@
 package theking530.staticpower.client.rendering.tileentity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.WorldRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms.TransformType;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms.TransformType;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
@@ -21,17 +21,17 @@ import theking530.staticpower.tileentities.powered.chargingstation.TileEntityCha
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderChargingStation extends StaticPowerTileEntitySpecialRenderer<TileEntityChargingStation> {
 
-	public TileEntityRenderChargingStation(TileEntityRendererDispatcher rendererDispatcherIn) {
-		super(rendererDispatcherIn);
+	public TileEntityRenderChargingStation(BlockEntityRendererProvider.Context context) {
+		super(context);
 	}
 
 	@Override
 	public void renderTileEntityBase(TileEntityChargingStation tileEntity, BlockPos pos, float partialTicks,
-			MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-		matrixStack.push();
-		matrixStack.rotate(new Quaternion(new Vector3f(0.0f, 0.0f, 0.0f), -90, true));
-		int forwardBlockLightLevel = WorldRenderer.getCombinedLight(tileEntity.getWorld(),
-				tileEntity.getPos().offset(tileEntity.getFacingDirection()));
+			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		matrixStack.pushPose();
+		matrixStack.mulPose(new Quaternion(new Vector3f(0.0f, 0.0f, 0.0f), -90, true));
+		int forwardBlockLightLevel = LevelRenderer.getLightColor(tileEntity.getLevel(),
+				tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));
 		// Render any pattern items.
 		for (int i = 0; i < 4; i++) {
 			ItemStack stack = tileEntity.unchargedInventory.getStackInSlot(i);
@@ -39,8 +39,8 @@ public class TileEntityRenderChargingStation extends StaticPowerTileEntitySpecia
 			float yOffsetFactor = (i / 2) * 0.25f;
 			if (!stack.isEmpty()) {
 				// Get the baked model and check if it wants to render the item in 3d or 2d.
-				IBakedModel itemModel = Minecraft.getInstance().getItemRenderer().getItemModelWithOverrides(stack, null,
-						null);
+				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(stack, null,
+						null, combinedOverlay);
 				boolean render3D = itemModel.isGui3d();
 
 				if (render3D) {
@@ -56,6 +56,6 @@ public class TileEntityRenderChargingStation extends StaticPowerTileEntitySpecia
 				}
 			}
 		}
-		matrixStack.pop();
+		matrixStack.popPose();
 	}
 }

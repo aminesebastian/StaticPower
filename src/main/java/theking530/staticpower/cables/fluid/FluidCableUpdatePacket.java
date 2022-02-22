@@ -3,12 +3,12 @@ package theking530.staticpower.cables.fluid;
 import java.util.function.Supplier;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 
 public class FluidCableUpdatePacket extends NetworkMessage {
@@ -27,14 +27,14 @@ public class FluidCableUpdatePacket extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buffer) {
+	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(position);
 		buffer.writeFluidStack(fluid);
 		buffer.writeFloat(filledPercentage);
 	}
 
 	@Override
-	public void decode(PacketBuffer buffer) {
+	public void decode(FriendlyByteBuf buffer) {
 		position = buffer.readBlockPos();
 		fluid = buffer.readFluidStack();
 		filledPercentage = buffer.readFloat();
@@ -43,8 +43,8 @@ public class FluidCableUpdatePacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			if (Minecraft.getInstance().player.world.isAreaLoaded(position, 1)) {
-				TileEntity rawTileEntity = Minecraft.getInstance().player.world.getTileEntity(position);
+			if (Minecraft.getInstance().player.level.isAreaLoaded(position, 1)) {
+				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(position);
 				ComponentUtilities.getComponent(FluidCableComponent.class, rawTileEntity).ifPresent(comp -> {
 					comp.recieveUpdateRenderValues(fluid, filledPercentage);
 				});

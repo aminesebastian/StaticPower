@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:chunks_diamond"
+  },
+  "result": "minecraft:diamond",
+  "experience": 0.5,
+  "cookingtime": 200
+}

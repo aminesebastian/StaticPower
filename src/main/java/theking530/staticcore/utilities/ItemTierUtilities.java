@@ -1,26 +1,31 @@
 package theking530.staticcore.utilities;
 
-import net.minecraft.item.ItemTier;
-import net.minecraft.util.text.IFormattableTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.Tiers;
 
 public class ItemTierUtilities {
-	public static IFormattableTextComponent getNameForItemTier(ItemTier tier) {
-		switch (tier) {
-		case WOOD:
-			return new TranslationTextComponent("gui.staticpower.item_tier.wood").mergeStyle(TextFormatting.GOLD);
-		case STONE:
-			return new TranslationTextComponent("gui.staticpower.item_tier.stone").mergeStyle(TextFormatting.DARK_GRAY);
-		case IRON:
-			return new TranslationTextComponent("gui.staticpower.item_tier.iron").mergeStyle(TextFormatting.GRAY);
-		case DIAMOND:
-			return new TranslationTextComponent("gui.staticpower.item_tier.diamond").mergeStyle(TextFormatting.AQUA);
-		case GOLD:
-			return new TranslationTextComponent("gui.staticpower.item_tier.gold").mergeStyle(TextFormatting.YELLOW);
-		case NETHERITE:
-			return new TranslationTextComponent("gui.staticpower.item_tier.netherite").mergeStyle(TextFormatting.DARK_RED);
+	public static MutableComponent getNameForItemTier(Tier tier) {
+		if (tier == Tiers.WOOD) {
+			return new TranslatableComponent("gui.staticpower.item_tier.wood").withStyle(ChatFormatting.GOLD);
 		}
-		return new TranslationTextComponent("**ERROR**");
+		if (tier == Tiers.STONE) {
+			return new TranslatableComponent("gui.staticpower.item_tier.stone").withStyle(ChatFormatting.DARK_GRAY);
+		}
+		if (tier == Tiers.IRON) {
+			return new TranslatableComponent("gui.staticpower.item_tier.iron").withStyle(ChatFormatting.GRAY);
+		}
+		if (tier == Tiers.DIAMOND) {
+			return new TranslatableComponent("gui.staticpower.item_tier.diamond").withStyle(ChatFormatting.AQUA);
+		}
+		if (tier == Tiers.GOLD) {
+			return new TranslatableComponent("gui.staticpower.item_tier.gold").withStyle(ChatFormatting.YELLOW);
+		}
+		if (tier == Tiers.NETHERITE) {
+			return new TranslatableComponent("gui.staticpower.item_tier.netherite").withStyle(ChatFormatting.DARK_RED);
+		}
+		return new TranslatableComponent("**ERROR**");
 	}
 }

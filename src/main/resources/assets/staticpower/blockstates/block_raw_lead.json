@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/storageblocks/block_raw_lead" }
+    }
+}

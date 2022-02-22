@@ -2,11 +2,11 @@ package theking530.staticcore.gui.widgets.tabs;
 
 import java.util.function.Supplier;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
-import theking530.staticpower.network.NetworkMessage;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -24,7 +24,7 @@ public class PacketSideConfigTab extends NetworkMessage {
 	}
 
 	@Override
-	public void encode(PacketBuffer buf) {
+	public void encode(FriendlyByteBuf buf) {
 		buf.writeBlockPos(position);
 
 		// Convert the configuration to an array of ordinals.
@@ -37,7 +37,7 @@ public class PacketSideConfigTab extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buf) {
+	public void decode(FriendlyByteBuf buf) {
 		position = buf.readBlockPos();
 
 		// Get the config ordinals.
@@ -55,7 +55,7 @@ public class PacketSideConfigTab extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			TileEntity te = context.get().getSender().world.getTileEntity(position);
+			BlockEntity te = context.get().getSender().level.getBlockEntity(position);
 
 			if (te instanceof TileEntityBase) {
 				TileEntityBase tileEntity = (TileEntityBase) te;

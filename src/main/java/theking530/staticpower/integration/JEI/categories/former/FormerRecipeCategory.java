@@ -5,8 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -14,12 +15,12 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
@@ -38,7 +39,7 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	private static final int INTPUT_SLOT = 1;
 	private static final int OUTPUT_SLOT = 2;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final ArrowProgressBar pBar;
@@ -48,9 +49,9 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 
 	public FormerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Former.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Former.getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Former));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Former));
 		pBar = new ArrowProgressBar(84, 19);
 	}
 
@@ -62,8 +63,8 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -83,10 +84,10 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	}
 
 	@Override
-	public void draw(FormerRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 40, 19, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 63, 19, 16, 16, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 110, 17, 20, 20, 0);
+	public void draw(FormerRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 40, 19, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 63, 19, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 110, 17, 0);
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
@@ -95,18 +96,18 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(FormerRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(FormerRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
 		}

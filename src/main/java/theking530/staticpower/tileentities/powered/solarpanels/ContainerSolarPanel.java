@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.powered.solarpanels;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -17,11 +17,11 @@ public class ContainerSolarPanel extends StaticPowerTileEntityContainer<TileEnti
 		}
 	}
 
-	public ContainerSolarPanel(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerSolarPanel(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, (TileEntitySolarPanel) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerSolarPanel(int windowId, PlayerInventory playerInventory, TileEntitySolarPanel owner) {
+	public ContainerSolarPanel(int windowId, Inventory playerInventory, TileEntitySolarPanel owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

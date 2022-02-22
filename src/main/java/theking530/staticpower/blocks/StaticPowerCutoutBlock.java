@@ -18,6 +18,6 @@ public class StaticPowerCutoutBlock extends StaticPowerBlock {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public RenderType getRenderType() {
-		return RenderType.getCutout();
+		return RenderType.cutout();
 	}
 }

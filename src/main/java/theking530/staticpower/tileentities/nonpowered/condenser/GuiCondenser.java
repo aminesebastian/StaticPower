@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.nonpowered.condenser;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
@@ -18,7 +18,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiCondenser extends StaticPowerTileEntityGui<ContainerCondenser, TileEntityCondenser> {
 	private FluidProgressBar progressBar;
 
-	public GuiCondenser(ContainerCondenser container, PlayerInventory invPlayer, ITextComponent name) {
+	public GuiCondenser(ContainerCondenser container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 166);
 	}
 

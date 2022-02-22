@@ -1,8 +1,8 @@
 package theking530.api.heat;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 
 public interface IHeatStorage {
 	/**
@@ -53,7 +53,7 @@ public interface IHeatStorage {
 	 * @param reader     The world access.
 	 * @param currentPos The position of this heat storage.
 	 */
-	public default void transferWithSurroundings(World world, BlockPos currentPos) {
+	public default void transferWithSurroundings(Level world, BlockPos currentPos) {
 		for (Direction dir : Direction.values()) {
 			HeatStorageUtilities.transferHeatPassivelyWithBlockFromDirection(world, currentPos, dir, this);
 			HeatStorageUtilities.transferHeatActivelyWithBlockFromDirection(world, currentPos, dir, this);

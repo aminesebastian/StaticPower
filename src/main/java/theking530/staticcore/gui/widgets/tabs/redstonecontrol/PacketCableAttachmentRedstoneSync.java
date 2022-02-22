@@ -2,14 +2,14 @@ package theking530.staticcore.gui.widgets.tabs.redstonecontrol;
 
 import java.util.function.Supplier;
 
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraftforge.fml.network.NetworkEvent.Context;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
-import theking530.staticpower.network.NetworkMessage;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
 public class PacketCableAttachmentRedstoneSync extends NetworkMessage {
@@ -27,14 +27,14 @@ public class PacketCableAttachmentRedstoneSync extends NetworkMessage {
 	}
 
 	@Override
-	public void decode(PacketBuffer buf) {
+	public void decode(FriendlyByteBuf buf) {
 		redstoneMode = RedstoneMode.values()[buf.readInt()];
 		position = buf.readBlockPos();
 		attachmentSide = Direction.values()[buf.readInt()];
 	}
 
 	@Override
-	public void encode(PacketBuffer buf) {
+	public void encode(FriendlyByteBuf buf) {
 		buf.writeInt(redstoneMode.ordinal());
 		buf.writeBlockPos(position);
 		buf.writeInt(attachmentSide.ordinal());
@@ -43,7 +43,7 @@ public class PacketCableAttachmentRedstoneSync extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(context.get().getSender().world, position);
+			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(context.get().getSender().level, position);
 	
 			if (cableComponent != null) {
 				if (!cableComponent.getAttachment(attachmentSide).isEmpty()) {

@@ -4,19 +4,19 @@ import java.util.Optional;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.CraftResultInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.ICraftingRecipe;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.util.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -32,45 +32,49 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.PlayerUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigistoreTerminal<DigistoreCraftingTerminal> implements IJEIReipceTransferHandler {
+public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigistoreTerminal<DigistoreCraftingTerminal>
+		implements IJEIReipceTransferHandler {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerDigistoreCraftingTerminal, GuiDigistoreCraftingTerminal> TYPE = new ContainerTypeAllocator<>("digistore_crafting_terminal",
-			ContainerDigistoreCraftingTerminal::new);
+	public static final ContainerTypeAllocator<ContainerDigistoreCraftingTerminal, GuiDigistoreCraftingTerminal> TYPE = new ContainerTypeAllocator<>(
+			"digistore_crafting_terminal", ContainerDigistoreCraftingTerminal::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiDigistoreCraftingTerminal::new);
 		}
 	}
 
-	private CraftingInventory craftMatrix;
-	private CraftResultInventory craftResult;
+	private CraftingContainer craftMatrix;
+	private ResultContainer craftResult;
 
-	public ContainerDigistoreCraftingTerminal(int windowId, PlayerInventory inv, PacketBuffer data) {
+	public ContainerDigistoreCraftingTerminal(int windowId, Inventory inv, FriendlyByteBuf data) {
 		this(windowId, inv, getAttachmentItemStack(inv, data), getAttachmentSide(data), getCableComponent(inv, data));
 	}
 
-	public ContainerDigistoreCraftingTerminal(int windowId, PlayerInventory playerInventory, ItemStack attachment, Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
+	public ContainerDigistoreCraftingTerminal(int windowId, Inventory playerInventory, ItemStack attachment,
+			Direction attachmentSide, AbstractCableProviderComponent cableComponent) {
 		super(TYPE, windowId, playerInventory, attachment, attachmentSide, cableComponent);
 	}
 
 	@Override
 	public void initializeContainer() {
-		craftMatrix = new CraftingInventory(this, 3, 3);
-		craftResult = new CraftResultInventory();
+		craftMatrix = new CraftingContainer(this, 3, 3);
+		craftResult = new ResultContainer();
 
 		// Add the crafting input slot.
-		addSlotsInGrid(craftMatrix, 0, 89, 120, 3, (index, xPos, yPos) -> new CraftingRecipeInputSlot(craftMatrix, index, xPos, yPos) {
-			@Override
-			public boolean isEnabled() {
-				return getViewType() == TerminalViewType.ITEMS;
-			}
+		addSlotsInGrid(craftMatrix, 0, 89, 120, 3,
+				(index, xPos, yPos) -> new CraftingRecipeInputSlot(craftMatrix, index, xPos, yPos) {
+					@Override
+					public boolean isActive() {
+						return getViewType() == TerminalViewType.ITEMS;
+					}
 
-		});
+				});
 
 		// Add crafting output slot.
-		addSlot(new DigistoreCraftingOutputSlot(this, getPlayerInventory().player, craftMatrix, craftResult, 0, 148, 138) {
+		addSlot(new DigistoreCraftingOutputSlot(this, getPlayerInventory().player, craftMatrix, craftResult, 0, 148,
+				138) {
 			@Override
-			public boolean isEnabled() {
+			public boolean isActive() {
 				return getViewType() == TerminalViewType.ITEMS;
 			}
 		});
@@ -79,16 +83,16 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	}
 
 	@Override
-	public ItemStack transferStackInSlot(PlayerEntity player, int slotIndex) {
+	public ItemStack quickMoveStack(Player player, int slotIndex) {
 		// Check if the slot we clicked on is the output crafting slot and is has an
 		// item
-		if (inventorySlots.get(slotIndex).inventory == craftResult && !inventorySlots.get(slotIndex).getStack().isEmpty()) {
+		if (slots.get(slotIndex).container == craftResult && !slots.get(slotIndex).getItem().isEmpty()) {
 			// Then, make sure we're on the server.
-			if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+			if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
 				// Get the digistore module.
 				getDigistoreNetwork().ifPresent(digistoreModule -> {
 					// Get what the output item is
-					ItemStack outputItem = inventorySlots.get(slotIndex).getStack();
+					ItemStack outputItem = slots.get(slotIndex).getItem();
 
 					// At maximum, we can only craft a stack at a time.
 					int maxOutput = outputItem.getMaxStackSize();
@@ -97,23 +101,24 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 					// Craft up to the max stack size.
 					while (!outputItem.isEmpty() && crafted + outputItem.getCount() <= maxOutput) {
 						// Perform the craft.
-						inventorySlots.get(slotIndex).onTake(player, outputItem);
+						slots.get(slotIndex).onTake(player, outputItem);
 						crafted += outputItem.getCount();
 
 						// Attempt the insert into the player's inventory.
-						if (!player.inventory.addItemStackToInventory(outputItem)) {
+						if (!player.getInventory().add(outputItem)) {
 							// If we weren't able to fully insert, attempt to insert the rest into the
 							// digistore network before stopping early.
 							ItemStack remaining = digistoreModule.insertItem(outputItem, false);
 							// Last resort, if we were unable to insert the rest into the digistore network,
 							// drop it in the world.
 							if (!remaining.isEmpty()) {
-								WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(), remaining);
+								WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(),
+										remaining);
 							}
 							// Stop crafting.
 							return;
 						}
-						outputItem = inventorySlots.get(slotIndex).getStack();
+						outputItem = slots.get(slotIndex).getItem();
 					}
 				});
 			}
@@ -121,12 +126,12 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		}
 
 		// Go to the super and cache the result.
-		ItemStack output = super.transferStackInSlot(player, slotIndex);
+		ItemStack output = super.quickMoveStack(player, slotIndex);
 
 		// If the modified slot was in the crafting matrix, notify that the matrix may
 		// have changed.
-		if (inventorySlots.get(slotIndex) instanceof CraftingRecipeInputSlot) {
-			this.onCraftMatrixChanged(inventorySlots.get(slotIndex).inventory);
+		if (slots.get(slotIndex) instanceof CraftingRecipeInputSlot) {
+			this.slotsChanged(slots.get(slotIndex).container);
 		}
 
 		// Return the cached output.
@@ -134,9 +139,9 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	}
 
 	@Override
-	public void consumeJEITransferRecipe(PlayerEntity playerIn, ItemStack[][] recipe) {
+	public void consumeJEITransferRecipe(Player playerIn, ItemStack[][] recipe) {
 		clearCraftingSlots(playerIn);
-		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				for (int i = 0; i < recipe.length; i++) {
 					ItemStack[] options = recipe[i];
@@ -149,10 +154,11 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 					for (ItemStack item : options) {
 
 						// First see if the item exists in the player's inventory. If it does, use that.
-						int playerItemSlot = PlayerUtilities.getSlotForStackInPlayerInventory(getPlayerInventory().player, item);
+						int playerItemSlot = PlayerUtilities
+								.getSlotForStackInPlayerInventory(getPlayerInventory().player, item);
 						if (playerItemSlot != -1) {
-							ItemStack playerExtracted = getPlayerInventory().decrStackSize(playerItemSlot, 1);
-							craftMatrix.setInventorySlotContents(i, playerExtracted);
+							ItemStack playerExtracted = getPlayerInventory().removeItem(playerItemSlot, 1);
+							craftMatrix.setItem(i, playerExtracted);
 							break;
 						}
 
@@ -160,7 +166,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 						// digistore network.
 						ItemStack extracted = digistoreModule.extractItem(item, 1, false);
 						if (!extracted.isEmpty()) {
-							craftMatrix.setInventorySlotContents(i, extracted);
+							craftMatrix.setItem(i, extracted);
 							break;
 						}
 					}
@@ -173,22 +179,23 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 * Callback for when the crafting matrix is changed.
 	 */
 	@Override
-	public void onCraftMatrixChanged(IInventory inventoryIn) {
-		if (!getCableComponent().getWorld().isRemote && getCableComponent().isManagerPresent()) {
+	public void slotsChanged(Container inventoryIn) {
+		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
 			// Update the output slot.
-			updateOutputSlot(getPlayerInventory().player.world, getPlayerInventory().player, this.craftMatrix, this.craftResult);
+			updateOutputSlot(getPlayerInventory().player.level, getPlayerInventory().player, this.craftMatrix,
+					this.craftResult);
 			markForResync();
 		}
 	}
 
-	public void clearCraftingSlots(@Nullable PlayerEntity playerIn) {
+	public void clearCraftingSlots(@Nullable Player playerIn) {
 		// Clear the crafting slots back into the network. Do this part only on the
 		// server. The client should just visually clear the slots.
-		if (!getCableComponent().getWorld().isRemote) {
+		if (!getCableComponent().getWorld().isClientSide) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
-				for (int i = 0; i < craftMatrix.getSizeInventory(); i++) {
+				for (int i = 0; i < craftMatrix.getContainerSize(); i++) {
 					// Skip empty slots.
-					if (craftMatrix.getStackInSlot(i).isEmpty()) {
+					if (craftMatrix.getItem(i).isEmpty()) {
 						continue;
 					}
 
@@ -198,7 +205,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 					// the system. Otherwise, drop them on the floor.
 					if (digistoreModule.isManagerPresent()) {
 						// Attempt to insert the item.
-						ItemStack output = digistoreModule.insertItem(craftMatrix.getStackInSlot(i), false);
+						ItemStack output = digistoreModule.insertItem(craftMatrix.getItem(i), false);
 
 						// If we were unable to insert the item back to the network, try to insert it
 						// into the player. If we can't, drop it on the
@@ -211,7 +218,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 						}
 					} else {
 						haveLeftover = true;
-						leftover = craftMatrix.getStackInSlot(i);
+						leftover = craftMatrix.getItem(i);
 					}
 
 					// If we have leftover, try to insert it into the player. If the
@@ -219,12 +226,16 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 					// If the player also can't take it, drop it into the world.
 					if (haveLeftover) {
 						if (playerIn != null) {
-							if (InventoryUtilities.canPartiallyInsertItemIntoPlayerInventory(leftover, playerIn.inventory)) {
-								if (!playerIn.addItemStackToInventory(leftover)) {
-									WorldUtilities.dropItem(getCableComponent().getWorld(), playerIn.getPosition(), leftover);
+							if (InventoryUtilities.canPartiallyInsertItemIntoPlayerInventory(leftover,
+									playerIn.getInventory())) {
+								if (!playerIn.addItem(leftover)) {
+									WorldUtilities.dropItem(getCableComponent().getWorld(), playerIn.blockPosition(),
+											leftover);
 								}
 							} else {
-								WorldUtilities.dropItem(getCableComponent().getWorld(), playerIn != null ? playerIn.getPosition() : getCableComponent().getPos(), leftover);
+								WorldUtilities.dropItem(getCableComponent().getWorld(),
+										playerIn != null ? playerIn.blockPosition() : getCableComponent().getPos(),
+										leftover);
 
 							}
 						}
@@ -232,33 +243,35 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 				}
 			});
 		} else {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(new PacketClearDigistoreCraftingTerminal(windowId));
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL
+					.sendToServer(new PacketClearDigistoreCraftingTerminal(containerId));
 		}
 
 		// Clear the matrix and the output slot.
-		this.craftResult.setInventorySlotContents(0, ItemStack.EMPTY);
-		craftMatrix.clear();
+		this.craftResult.setItem(0, ItemStack.EMPTY);
+		craftMatrix.clearContent();
 	}
 
 	/**
 	 * Called when the container is closed.
 	 */
-	public void onContainerClosed(PlayerEntity playerIn) {
-		super.onContainerClosed(playerIn);
+	public void removed(Player playerIn) {
+		super.removed(playerIn);
 		clearCraftingSlots(playerIn);
 	}
 
 	public void onItemCrafted(ItemStack[] recipe, ItemStack output) {
 		// Update the output slot.
-		updateOutputSlot(getPlayerInventory().player.world, getPlayerInventory().player, this.craftMatrix, this.craftResult);
+		updateOutputSlot(getPlayerInventory().player.level, getPlayerInventory().player, this.craftMatrix,
+				this.craftResult);
 	}
 
 	/**
 	 * Ensure we don't accidentally craft when someone double clicks the same kind
 	 * of item.
 	 */
-	public boolean canMergeSlot(ItemStack stack, Slot slotIn) {
-		return slotIn.inventory != this.craftResult && super.canMergeSlot(stack, slotIn);
+	public boolean canTakeItemForPickAll(ItemStack stack, Slot slotIn) {
+		return slotIn.container != this.craftResult && super.canTakeItemForPickAll(stack, slotIn);
 	}
 
 	@Override
@@ -281,19 +294,21 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 * 
 	 * @param outputInv
 	 */
-	protected void updateOutputSlot(World world, PlayerEntity player, CraftingInventory craftingInv, CraftResultInventory outputInv) {
-		if (!world.isRemote) {
-			ServerPlayerEntity serverplayerentity = (ServerPlayerEntity) player;
+	protected void updateOutputSlot(Level world, Player player, CraftingContainer craftingInv,
+			ResultContainer outputInv) {
+		if (!world.isClientSide) {
+			ServerPlayer serverplayerentity = (ServerPlayer) player;
 			ItemStack itemstack = ItemStack.EMPTY;
-			Optional<ICraftingRecipe> optional = world.getServer().getRecipeManager().getRecipe(IRecipeType.CRAFTING, craftingInv, world);
+			Optional<CraftingRecipe> optional = world.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING,
+					craftingInv, world);
 			if (optional.isPresent()) {
-				ICraftingRecipe icraftingrecipe = optional.get();
-				if (outputInv.canUseRecipe(world, serverplayerentity, icraftingrecipe)) {
-					itemstack = icraftingrecipe.getCraftingResult(craftingInv);
+				CraftingRecipe icraftingrecipe = optional.get();
+				if (outputInv.setRecipeUsed(world, serverplayerentity, icraftingrecipe)) {
+					itemstack = icraftingrecipe.assemble(craftingInv);
 				}
 			}
 
-			outputInv.setInventorySlotContents(0, itemstack);
+			outputInv.setItem(0, itemstack);
 		}
 	}
 }

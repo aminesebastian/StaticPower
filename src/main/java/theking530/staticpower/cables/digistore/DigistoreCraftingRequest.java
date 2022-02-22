@@ -6,9 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import theking530.staticpower.cables.digistore.crafting.AutoCraftingStep;
 
 public class DigistoreCraftingRequest {
@@ -49,19 +49,19 @@ public class DigistoreCraftingRequest {
 		return step;
 	}
 
-	public CompoundNBT serializeToNBT() {
-		CompoundNBT output = new CompoundNBT();
+	public CompoundTag serializeToNBT() {
+		CompoundTag output = new CompoundTag();
 		output.putLong("id", id);
 
 		// Store the pending crafts.
-		ListNBT remainingStepsNbt = new ListNBT();
+		ListTag remainingStepsNbt = new ListTag();
 		for (AutoCraftingStep step : remainingSteps) {
 			remainingStepsNbt.add(step.serialize());
 		}
 		output.put("remaining_steps", remainingStepsNbt);
 
 		// Store the completedCrafts.
-		ListNBT completedStepsNbt = new ListNBT();
+		ListTag completedStepsNbt = new ListTag();
 		for (AutoCraftingStep step : completedSteps) {
 			completedStepsNbt.add(step.serialize());
 		}
@@ -70,22 +70,22 @@ public class DigistoreCraftingRequest {
 		return output;
 	}
 
-	public static DigistoreCraftingRequest read(CompoundNBT nbt) {
+	public static DigistoreCraftingRequest read(CompoundTag nbt) {
 		long id = nbt.getLong("id");
 
 		// Read the pending steps.
-		ListNBT remainingStepsNbt = nbt.getList("remaining_steps", Constants.NBT.TAG_COMPOUND);
+		ListTag remainingStepsNbt = nbt.getList("remaining_steps", Tag.TAG_COMPOUND);
 		ArrayList<AutoCraftingStep> remainingSteps = new ArrayList<AutoCraftingStep>();
 		for (int i = 0; i < remainingStepsNbt.size(); i++) {
-			CompoundNBT outputTagNbt = (CompoundNBT) remainingStepsNbt.get(i);
+			CompoundTag outputTagNbt = (CompoundTag) remainingStepsNbt.get(i);
 			remainingSteps.add(AutoCraftingStep.read(outputTagNbt));
 		}
 
 		// Read the completed steps.
-		ListNBT completedStepsNbt = nbt.getList("completed_steps", Constants.NBT.TAG_COMPOUND);
+		ListTag completedStepsNbt = nbt.getList("completed_steps", Tag.TAG_COMPOUND);
 		ArrayList<AutoCraftingStep> completedSteps = new ArrayList<AutoCraftingStep>();
 		for (int i = 0; i < completedStepsNbt.size(); i++) {
-			CompoundNBT outputTagNbt = (CompoundNBT) completedStepsNbt.get(i);
+			CompoundTag outputTagNbt = (CompoundTag) completedStepsNbt.get(i);
 			completedSteps.add(AutoCraftingStep.read(outputTagNbt));
 		}
 

@@ -5,8 +5,9 @@ import java.util.List;
 
 import javax.annotation.Nonnull;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -15,12 +16,12 @@ import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
@@ -41,7 +42,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	private static final int SECONDARY_OUTPUT_SLOT = 2;
 	private static final int TERTIARY_OUTPUT_SLOT = 3;
 
-	private final TranslationTextComponent locTitle;
+	private final TranslatableComponent locTitle;
 	private final IDrawable background;
 	private final IDrawable icon;
 	private final CentrifugeProgressBar pBar;
@@ -51,9 +52,9 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 	public CentrifugeRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslationTextComponent(ModBlocks.Centrifuge.getTranslationKey());
+		locTitle = new TranslatableComponent(ModBlocks.Centrifuge.getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
-		icon = guiHelper.createDrawableIngredient(new ItemStack(ModBlocks.Centrifuge));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Centrifuge));
 		pBar = new CentrifugeProgressBar(79, 26);
 	}
 
@@ -65,8 +66,8 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 	@Override
 	@Nonnull
-	public String getTitle() {
-		return locTitle.getString();
+	public Component getTitle() {
+		return locTitle;
 	}
 
 	@Override
@@ -86,18 +87,18 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	}
 
 	@Override
-	public void draw(CentrifugeRecipe recipe, MatrixStack matrixStack, double mouseX, double mouseY) {
-		GuiDrawUtilities.drawSlot(matrixStack, 80, 6, 16, 16, 0);
+	public void draw(CentrifugeRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 80, 6, 0);
 
-		GuiDrawUtilities.drawSlot(matrixStack, 78, 46, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 104, 32, 20, 20, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 52, 32, 20, 20, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 78, 46, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 104, 32, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 52, 32, 0);
 
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		String rpmText = String.valueOf(recipe.getMinimumSpeed()) + " RPM";
-		GuiDrawUtilities.drawSlot(matrixStack, 103, 12.5f, Minecraft.getInstance().fontRenderer.getStringWidth(rpmText) + 4, 11, 0);
-		Minecraft.getInstance().fontRenderer.drawStringWithShadow(matrixStack, rpmText, 105, 14, Color.EIGHT_BIT_WHITE.encodeInInteger());
+		GuiDrawUtilities.drawSlot(matrixStack, Minecraft.getInstance().font.width(rpmText) + 4, 11, 103, 12.5f, 0);
+		Minecraft.getInstance().font.drawShadow(matrixStack, rpmText, 105, 14, Color.EIGHT_BIT_WHITE.encodeInInteger());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
@@ -105,21 +106,21 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 	}
 
 	@Override
-	public List<ITextComponent> getTooltipStrings(CentrifugeRecipe recipe, double mouseX, double mouseY) {
-		List<ITextComponent> output = new ArrayList<ITextComponent>();
+	public List<Component> getTooltipStrings(CentrifugeRecipe recipe, double mouseX, double mouseY) {
+		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new StringTextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.
 		Vector2D mouse = new Vector2D((float) mouseX, (float) mouseY);
 		if (pBar.isPointInsideBounds(mouse)) {
-			List<ITextComponent> tooltips = new ArrayList<ITextComponent>();
+			List<Component> tooltips = new ArrayList<Component>();
 			pBar.getTooltips(mouse, tooltips, false);
-			for (ITextComponent tooltip : tooltips) {
+			for (Component tooltip : tooltips) {
 				output.add(tooltip);
 			}
-			output.add(new StringTextComponent("Required RPM: " + recipe.getMinimumSpeed()));
+			output.add(new TextComponent("Required RPM: " + recipe.getMinimumSpeed()));
 		}
 
 		return output;

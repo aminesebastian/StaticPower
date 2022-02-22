@@ -1,12 +1,12 @@
 package theking530.staticpower.data.crafting;
 
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.level.Level;
 
-public abstract class AbstractStaticPowerRecipe implements IRecipe<IInventory> {
+public abstract class AbstractStaticPowerRecipe implements Recipe<Container> {
 	private ResourceLocation name;
 
 	public AbstractStaticPowerRecipe(ResourceLocation name) {
@@ -24,7 +24,7 @@ public abstract class AbstractStaticPowerRecipe implements IRecipe<IInventory> {
 	}
 
 	@Override
-	public boolean matches(IInventory inv, World worldIn) {
+	public boolean matches(Container inv, Level worldIn) {
 		return false;
 	}
 
@@ -34,17 +34,17 @@ public abstract class AbstractStaticPowerRecipe implements IRecipe<IInventory> {
 	}
 
 	@Override
-	public ItemStack getCraftingResult(IInventory inv) {
+	public ItemStack assemble(Container inv) {
 		return null;
 	}
 
 	@Override
-	public boolean canFit(int width, int height) {
+	public boolean canCraftInDimensions(int width, int height) {
 		return false;
 	}
 
 	@Override
-	public ItemStack getRecipeOutput() {
+	public ItemStack getResultItem() {
 		return ItemStack.EMPTY;
 	}
 

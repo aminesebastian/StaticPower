@@ -1,9 +1,9 @@
 package theking530.staticpower.cables.item;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
 
@@ -22,7 +22,7 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 
 	}
 
-	public ItemRoutingParcel(CompoundNBT nbt) {
+	public ItemRoutingParcel(CompoundTag nbt) {
 		readFromNbt(nbt);
 	}
 
@@ -115,24 +115,24 @@ public class ItemRoutingParcel extends ItemRoutingParcelClient {
 	 * @param nbt
 	 * @return
 	 */
-	public static ItemRoutingParcel create(CompoundNBT nbt) {
+	public static ItemRoutingParcel create(CompoundTag nbt) {
 		ItemRoutingParcel output = new ItemRoutingParcel();
 		output.readFromNbt(nbt);
 		return output;
 	}
 
-	public CompoundNBT writeToNbt(CompoundNBT nbt) {
+	public CompoundTag writeToNbt(CompoundTag nbt) {
 		super.writeToNbt(nbt);
 
 		// Serialize the path.
-		CompoundNBT pathTag = new CompoundNBT();
+		CompoundTag pathTag = new CompoundTag();
 		path.writeToNbt(pathTag);
 		nbt.put("path", pathTag);
 		nbt.putInt("move_timer", moveTimer);
 		return nbt;
 	}
 
-	public void readFromNbt(CompoundNBT nbt) {
+	public void readFromNbt(CompoundTag nbt) {
 		super.readFromNbt(nbt);
 
 		// Create the path.

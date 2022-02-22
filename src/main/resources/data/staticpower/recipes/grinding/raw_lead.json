@@ -1,0 +1,17 @@
+{
+	"type": "staticpower:grinder_recipe",
+	"input": {
+		"tag": "forge:raw_materials/lead"
+	},
+	"output": [
+		{
+			"item": "staticpower:dust_lead",
+			"count": 2
+		},
+		{
+			"item": "staticpower:dust_tungsten",
+			"count": 1,
+			"chance": 0.05
+		}
+	]
+}

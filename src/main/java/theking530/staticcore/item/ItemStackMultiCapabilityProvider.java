@@ -4,21 +4,21 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class ItemStackMultiCapabilityProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundNBT> {
+public class ItemStackMultiCapabilityProvider implements ICapabilityProvider, ICapabilitySerializable<CompoundTag> {
 	protected final HashMap<Capability<?>, HashMap<Direction, IItemMultiCapability>> capabilityMap;
 	protected final Set<IItemMultiCapability> flatCapabilityList;
 	protected final ItemStack stack;
-	protected final CompoundNBT nbt;
+	protected final CompoundTag nbt;
 
-	public ItemStackMultiCapabilityProvider(ItemStack stack, CompoundNBT nbt) {
+	public ItemStackMultiCapabilityProvider(ItemStack stack, CompoundTag nbt) {
 		this.stack = stack;
 		this.nbt = nbt;
 		capabilityMap = new HashMap<Capability<?>, HashMap<Direction, IItemMultiCapability>>();
@@ -85,9 +85,9 @@ public class ItemStackMultiCapabilityProvider implements ICapabilityProvider, IC
 	}
 
 	@Override
-	public CompoundNBT serializeNBT() {
+	public CompoundTag serializeNBT() {
 		// Create the output nbt.
-		CompoundNBT output = new CompoundNBT();
+		CompoundTag output = new CompoundTag();
 
 		// Serialize all the capabilities.
 		for (IItemMultiCapability cap : flatCapabilityList) {
@@ -99,7 +99,7 @@ public class ItemStackMultiCapabilityProvider implements ICapabilityProvider, IC
 	}
 
 	@Override
-	public void deserializeNBT(CompoundNBT nbt) {
+	public void deserializeNBT(CompoundTag nbt) {
 		// De-serialize all the capabilities.
 		for (IItemMultiCapability cap : flatCapabilityList) {
 			cap.deserializeNBT(nbt.getCompound(cap.getName()));

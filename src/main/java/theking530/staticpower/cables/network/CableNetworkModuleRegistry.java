@@ -2,8 +2,8 @@ package theking530.staticpower.cables.network;
 
 import java.util.HashMap;
 
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 
 public class CableNetworkModuleRegistry {
 	private static final CableNetworkModuleRegistry INSTANCE = new CableNetworkModuleRegistry();
@@ -17,7 +17,7 @@ public class CableNetworkModuleRegistry {
 		Factories.put(type, factory);
 	}
 
-	public AbstractCableNetworkModule create(ResourceLocation type, CompoundNBT nbt) {
+	public AbstractCableNetworkModule create(ResourceLocation type, CompoundTag nbt) {
 		if (Factories.containsKey(type)) {
 			AbstractCableNetworkModule output = Factories.get(type).create(type);
 			output.readFromNbt(nbt);

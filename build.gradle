@@ -1,11 +1,12 @@
 buildscript {
     repositories {
         maven { url = 'https://files.minecraftforge.net/maven' }
+        maven { url = 'https://maven.minecraftforge.net' }	
         jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
     }
 }
 apply plugin: 'net.minecraftforge.gradle'
@@ -13,25 +14,24 @@ apply plugin: 'net.minecraftforge.gradle'
 apply plugin: 'eclipse'
 apply plugin: 'maven-publish'
 
-version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}." + project.getProperty("build_number")
+version = "${mc_version}-${staticpower_major_version}.${staticpower_minor_version}." + "0"  //project.getProperty("build_number")
 group = "com.theking530.staticpower" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "StaticPower"
 
-sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
-
-def apiVersion = "${mc_version}-${staticpower_api_major_version}.${staticpower_api_minor_version}." + project.getProperty("build_number")
-def coreVersion = "${mc_version}-${staticpower_core_major_version}.${staticpower_core_minor_version}." + project.getProperty("build_number")
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+}
+def apiVersion = "${mc_version}-${staticpower_api_major_version}.${staticpower_api_minor_version}."  + "0"  // project.getProperty("build_number")
+def coreVersion = "${mc_version}-${staticpower_core_major_version}.${staticpower_core_minor_version}."  + "0"  // project.getProperty("build_number")
 
 println('Java: ' + System.getProperty('java.version') + ' JVM: ' + System.getProperty('java.vm.version') + '(' + System.getProperty('java.vendor') + ') Arch: ' + System.getProperty('os.arch'))
-minecraft {
-    // The mappings can be changed at any time, and must be in the following format.
-    // snapshot_YYYYMMDD   Snapshot are built nightly.
-    // stable_#            Stables are built at the discretion of the MCP team.
-    // Use non-default mappings at your own risk. they may not always work.
-    // Simply re-run your setup task after changing the mappings to update your workspace.
-    mappings channel: 'snapshot', version: '20201028-1.16.3'
+apply from: 'https://raw.githubusercontent.com/SizableShrimp/Forge-Class-Remapper/main/classremapper.gradle' 
 
-     accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
+minecraft {
+	mappings channel: 'official', version: '1.18.1'
+    accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
     // Default run configurations.
     // These can be tweaked, removed, or duplicated as needed.
@@ -44,9 +44,10 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
-			// Temp fix for patchouli.
-			properties 'mixin.env.disableRefMap': 'true'
+			
+			// For Patchuloi
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
 			
             mods {
                 examplemod {
@@ -63,7 +64,11 @@ minecraft {
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
-
+			
+			// For Patchuloi
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+			
             mods {
                 examplemod {
                     source sourceSets.main
@@ -95,23 +100,19 @@ dependencies {
     // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
     // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
     // The userdev artifact is a special name and will get all sorts of transformations applied to it.
-    minecraft 'net.minecraftforge:forge:1.16.4-35.1.0'
+    minecraft "net.minecraftforge:forge:${mc_version}-${forge_version}"
 
 	// compile against the JEI API but do not include it at runtime
 	compileOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}:api")
 	// at runtime, use the full JEI jar
 	runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}:${jei_version}")
-
-	compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${mc_major_version}:${one_probe_version}:api")
-    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-${mc_major_version}:${one_probe_version}")
 	
-	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}:api")
-    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${patchouli_version}")
+	compileOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}:api")
+    runtimeOnly fg.deobf("vazkii.patchouli:Patchouli:${mc_version}-${patchouli_version}")
 	
-	    // Compile against the Hwyla API, but do not include it at runtime
-    compileOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}:api")
-    // At runtime, use the full Hwyla jar
-    runtimeOnly fg.deobf("mcp.mobius.waila:Hwyla:${hwyla_version}")
+	// Visit https://www.curseforge.com/minecraft/mc-mods/jade/files/all
+    // to get the latest version
+    implementation fg.deobf("curse.maven:jade-324717:${jade_version}")
 }
 
 repositories {
@@ -122,7 +123,7 @@ repositories {
 	}
 	maven {
 		name = "tterrag maven"
-		url = "http://maven.tterrag.com/"
+		url = "https://maven.tterrag.com/"
 	}	
 	maven {
 		name = "ftb maven"
@@ -132,9 +133,12 @@ repositories {
 		name = "Patchouli Maven"
 		url = "https://maven.blamejared.com"
 	}
-	maven { 
-		url = "https://maven.tehnut.info" 
-	}
+    maven {
+        url "https://www.cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

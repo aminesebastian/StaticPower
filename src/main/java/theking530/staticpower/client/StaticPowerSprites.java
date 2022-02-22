@@ -2,7 +2,7 @@ package theking530.staticpower.client;
 
 import java.util.HashSet;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
 
 public class StaticPowerSprites {
@@ -56,8 +56,6 @@ public class StaticPowerSprites {
 	public static final ResourceLocation FILTER_NBT = registerSprite("gui/filter_nbt");
 	public static final ResourceLocation FILTER_TAG = registerSprite("gui/filter_tag");
 	public static final ResourceLocation FILTER_MOD = registerSprite("gui/filter_mod");
-	public static final ResourceLocation SCROLL_HANDLE = registerSprite("gui/scroll_handle");
-	public static final ResourceLocation SCROLL_HANDLE_DISABLED = registerSprite("gui/scroll_handle_disabled");
 
 	public static final ResourceLocation SORT_ALPHA_ASC = registerSprite("gui/sort_alphabetical_asc");
 	public static final ResourceLocation SORT_ALPHA_DESC = registerSprite("gui/sort_alphabetical_desc");
@@ -88,7 +86,8 @@ public class StaticPowerSprites {
 	public static final ResourceLocation IMPORT = registerSprite("gui/import_icon");
 	public static final ResourceLocation EXPORT = registerSprite("gui/export_icon");
 	public static final ResourceLocation FLAMES = registerSprite("gui/flames");
-	
+	public static final ResourceLocation TEAM_ICON = registerSprite("gui/team_icon");
+
 	public static final ResourceLocation SIZE_TWO_CRAFTING = registerSprite("gui/2x2");
 	public static final ResourceLocation SIZE_THREE_CRAFTING = registerSprite("gui/3x3");
 
@@ -97,8 +96,13 @@ public class StaticPowerSprites {
 	public static final ResourceLocation CLOSE = registerSprite("gui/close");
 	public static final ResourceLocation ARROW_DOWN = registerSprite("gui/arrow_down");
 
-	public static final ResourceLocation DURABILITY_BAR = registerSprite("items/tools/durability_bar");
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
+
+	public static final ResourceLocation CONCRETE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_concrete_mask");
+	public static final ResourceLocation OIL_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_oil_mask");
+	public static final ResourceLocation DYE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_dye_mask");
+
+	public static final ResourceLocation RESEARCH_NODE_CONNECTION = registerSprite("gui/research_node_connection");
 
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);

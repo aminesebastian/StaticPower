@@ -5,17 +5,17 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ObserverBlock;
-import net.minecraft.block.RepeaterBlock;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ObserverBlock;
+import net.minecraft.world.level.block.RepeaterBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -55,7 +55,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable TileEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
 		if (otherProvider != null) {
 			if (otherProvider.areCableCompatible(this, side)) {
@@ -79,22 +79,22 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@SuppressWarnings("deprecation")
-	public static boolean canConnectTo(World world, BlockPos blockPos, @Nullable Direction side) {
-		BlockState blockState = world.getBlockState(blockPos.offset(side.getOpposite()));
-		if (blockState.isIn(Blocks.REDSTONE_WIRE)) {
+	public static boolean canConnectTo(Level world, BlockPos blockPos, @Nullable Direction side) {
+		BlockState blockState = world.getBlockState(blockPos.relative(side.getOpposite()));
+		if (blockState.is(Blocks.REDSTONE_WIRE)) {
 			return true;
-		} else if (blockState.isIn(Blocks.REPEATER)) {
-			Direction direction = blockState.get(RepeaterBlock.HORIZONTAL_FACING);
+		} else if (blockState.is(Blocks.REPEATER)) {
+			Direction direction = blockState.getValue(RepeaterBlock.FACING);
 			return direction == side || direction.getOpposite() == side;
-		} else if (blockState.isIn(Blocks.OBSERVER)) {
-			return side == blockState.get(ObserverBlock.FACING);
+		} else if (blockState.is(Blocks.OBSERVER)) {
+			return side == blockState.getValue(ObserverBlock.FACING);
 		} else {
 			return side != null && !blockState.isAir() && !(blockState.getBlock() instanceof BlockRedstoneCable);
 		}
 	}
 
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getWeakPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		// Check to make sure the side is not disabled and configured to be an output.
 		if (!isSideDisabled(side.getOpposite()) && !configuration.getSideConfig(side.getOpposite()).isInputSide()) {
 			AtomicInteger output = new AtomicInteger(0);
@@ -107,7 +107,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
+	public int getStrongPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		// Check to make sure the side is not disabled and configured to be an output.
 		if (!isSideDisabled(side.getOpposite()) && !configuration.getSideConfig(side.getOpposite()).isInputSide()) {
 			AtomicInteger output = new AtomicInteger(0);
@@ -138,27 +138,28 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	public void updateConfiguration(RedstoneCableConfiguration configuration) {
 		this.configuration = configuration;
-		if (getWorld().isRemote) {
+		if (getWorld().isClientSide) {
 			// Send a packet to the server with the updated values.
 			PacketUpdateRedstoneCableConfiguration msg = new PacketUpdateRedstoneCableConfiguration(getPos(), configuration);
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
+			getTileEntity().addRenderingUpdateRequest();
 		} else {
 			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
 				CableNetworkManager.get(getWorld()).getCable(getPos()).setProperty(CONFIGURATION_KEY, configuration.serializeNBT());
-				getWorld().notifyNeighborsOfStateChange(this.getPos(), getWorld().getBlockState(getPos()).getBlock());
+				getWorld().updateNeighborsAt(this.getPos(), getWorld().getBlockState(getPos()).getBlock());
 			}
 		}
 	}
 
 	@Override
-	public CompoundNBT serializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		// Serialize the side configs.
 		nbt.put("config", configuration.serializeNBT());
 
 		// Use this as a way to sync the client side value of the power level.
-		if (getWorld() != null && !getWorld().isRemote) {
+		if (getWorld() != null && !getWorld().isClientSide) {
 			nbt.putByte("power", (byte) clientSidePowerLevel);
 		}
 
@@ -166,7 +167,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	public void deserializeUpdateNbt(CompoundNBT nbt, boolean fromUpdate) {
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		// Deserialize the side config.
@@ -175,7 +176,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 		configuration = sideConfig;
 
 		// Use this as a way to sync the client side value of the power level.
-		if (getWorld() != null && getWorld().isRemote) {
+		if (getWorld() != null && getWorld().isClientSide) {
 			clientSidePowerLevel = (int) nbt.getByte("power");
 		}
 	}

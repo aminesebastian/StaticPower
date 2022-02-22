@@ -1,6 +1,6 @@
 package theking530.staticpower.tileentities.components.items;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import theking530.api.power.StaticVoltHandler;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
@@ -28,7 +28,7 @@ public class BatteryInventoryComponent extends InventoryComponent {
 			return;
 		}
 
-		if (!getWorld().isRemote) {
+		if (!getWorld().isClientSide) {
 			if (EnergyStorage.getStoredPower() < EnergyStorage.getCapacity()) {
 				ItemStack candidate = getStackInSlot(0);
 				if (candidate != null) {

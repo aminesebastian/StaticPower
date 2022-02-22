@@ -1,0 +1,19 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ccc",
+		"cpc",
+		"ccc"
+	],
+	"key": {
+		"c": {
+			"item": "staticpower:coil_aluminum"
+		},
+		"p": {
+			"item": "staticpower:processor_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:heat_sink_aluminum"
+	}
+}

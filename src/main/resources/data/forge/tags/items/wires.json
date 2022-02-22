@@ -1,0 +1,11 @@
+{
+  "replace": false,
+  "values": [
+	"staticpower:wire_copper",
+	"staticpower:wire_silver",  
+	"staticpower:wire_gold",
+	"staticpower:wire_aluminum",
+	"staticpower:wire_platinum",
+	"staticpower:wire_tin"
+  ]
+}

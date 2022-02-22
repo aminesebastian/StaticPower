@@ -4,21 +4,21 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -39,76 +39,76 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		// Add tooltip for any break serializeable values.
 		if (IBreakSerializeable.doesItemStackHaveSerializeData(stack)) {
-			CompoundNBT nbt = IBreakSerializeable.getSerializeDataFromItemStack(stack);
+			CompoundTag nbt = IBreakSerializeable.getSerializeDataFromItemStack(stack);
 			if (nbt.contains("MainEnergyStorage")) {
-				CompoundNBT energyNbt = nbt.getCompound("MainEnergyStorage").getCompound("EnergyStorage");
-				tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.stored_power", TextFormatting.AQUA)
+				CompoundTag energyNbt = nbt.getCompound("MainEnergyStorage").getCompound("EnergyStorage");
+				tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.stored_power", ChatFormatting.AQUA)
 						.append(GuiTextUtilities.formatEnergyToString(energyNbt.getLong("current_power"))));
 			}
 		}
 
-		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.capacity", TextFormatting.GREEN)
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.capacity", ChatFormatting.GREEN)
 				.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.getTier(tier).batteryCapacity.get())));
-		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_input", TextFormatting.BLUE)
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_input", ChatFormatting.BLUE)
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
-		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_output", TextFormatting.GOLD)
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_output", ChatFormatting.GOLD)
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
-		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.battery_block_charging_tooltip", TextFormatting.GRAY));
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.battery_block_charging_tooltip", ChatFormatting.GRAY));
 	}
 
 	@Override
-	public int getStrongPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if (blockAccess.getTileEntity(pos) instanceof TileEntityBattery) {
-			TileEntityBattery battery = (TileEntityBattery) blockAccess.getTileEntity(pos);
+	public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+		if (blockAccess.getBlockEntity(pos) instanceof TileEntityBattery) {
+			TileEntityBattery battery = (TileEntityBattery) blockAccess.getBlockEntity(pos);
 			return battery.shouldOutputRedstoneSignal() ? 15 : 0;
 		}
 		return 0;
 	}
 
 	@Override
-	public int getWeakPower(BlockState blockState, IBlockReader blockAccess, BlockPos pos, Direction side) {
-		if (blockAccess.getTileEntity(pos) instanceof TileEntityBattery) {
-			TileEntityBattery battery = (TileEntityBattery) blockAccess.getTileEntity(pos);
+	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
+		if (blockAccess.getBlockEntity(pos) instanceof TileEntityBattery) {
+			TileEntityBattery battery = (TileEntityBattery) blockAccess.getBlockEntity(pos);
 			return battery.shouldOutputRedstoneSignal() ? 15 : 0;
 		}
 		return 0;
 	}
 
 	@Override
-	public boolean canProvidePower(BlockState state) {
+	public boolean isSignalSource(BlockState state) {
 		return true;
 	}
 
 	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (tier == StaticPowerTiers.BASIC) {
-			return TileEntityBattery.TYPE_BASIC.create();
+			return TileEntityBattery.TYPE_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return TileEntityBattery.TYPE_ADVANCED.create();
+			return TileEntityBattery.TYPE_ADVANCED.create(pos, state);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return TileEntityBattery.TYPE_STATIC.create();
+			return TileEntityBattery.TYPE_STATIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return TileEntityBattery.TYPE_ENERGIZED.create();
+			return TileEntityBattery.TYPE_ENERGIZED.create(pos, state);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return TileEntityBattery.TYPE_LUMUM.create();
+			return TileEntityBattery.TYPE_LUMUM.create(pos, state);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return TileEntityBattery.TYPE_CREATIVE.create();
+			return TileEntityBattery.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
 	}
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new BatteryBlockedBakedModel(existingModel);
 	}
 }

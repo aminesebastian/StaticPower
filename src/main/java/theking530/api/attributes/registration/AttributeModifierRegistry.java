@@ -5,7 +5,7 @@ import java.util.function.Supplier;
 
 import com.google.gson.JsonObject;
 
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.nbt.CompoundTag;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
 
 public class AttributeModifierRegistry {
@@ -28,7 +28,7 @@ public class AttributeModifierRegistry {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T> AbstractAttributeModifier<T> createInstance(CompoundNBT nbt) {
+	public static <T> AbstractAttributeModifier<T> createInstance(CompoundTag nbt) {
 		AbstractAttributeModifier<T> output = (AbstractAttributeModifier<T>) MODIFIER_MAP.get(nbt.getString("type")).get();
 		output.deserialize(nbt);
 		return output;

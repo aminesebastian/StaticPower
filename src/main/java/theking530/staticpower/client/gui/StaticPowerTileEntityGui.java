@@ -1,7 +1,7 @@
 package theking530.staticpower.client.gui;
 
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.tileentities.TileEntityBase;
 
@@ -15,7 +15,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
 public abstract class StaticPowerTileEntityGui<T extends StaticPowerTileEntityContainer<K>, K extends TileEntityBase> extends StaticPowerContainerGui<T> {
 	private final K owningTileEntity;
 
-	public StaticPowerTileEntityGui(T container, final PlayerInventory playerInventory, ITextComponent title, int guiXSize, int guiYSize) {
+	public StaticPowerTileEntityGui(T container, final Inventory playerInventory, Component title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title, guiXSize, guiYSize);
 		owningTileEntity = container.getTileEntity();
 		setOutputSlotSize(20);

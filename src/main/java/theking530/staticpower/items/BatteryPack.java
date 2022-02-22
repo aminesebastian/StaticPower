@@ -5,18 +5,18 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
@@ -39,7 +39,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	public boolean isActivated(ItemStack stack) {
 		// If this stack has not been initialized, do so.
 		if (!stack.hasTag()) {
-			stack.setTag(new CompoundNBT());
+			stack.setTag(new CompoundTag());
 		}
 
 		// Update the tag if it does not contain the activated tag.
@@ -64,39 +64,39 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	 * When shift right clicked, toggle activation.
 	 */
 	@Override
-	protected ActionResult<ItemStack> onStaticPowerItemRightClicked(World world, PlayerEntity player, Hand hand, ItemStack item) {
-		if (player.isSneaking()) {
+	protected InteractionResultHolder<ItemStack> onStaticPowerItemRightClicked(Level world, Player player, InteractionHand hand, ItemStack item) {
+		if (player.isShiftKeyDown()) {
 			toggleActivated(item);
-			return ActionResult.resultSuccess(item);
+			return InteractionResultHolder.success(item);
 		}
-		return ActionResult.resultPass(item);
+		return InteractionResultHolder.pass(item);
 	}
 
 	@Override
-	public boolean hasEffect(ItemStack stack) {
+	public boolean isFoil(ItemStack stack) {
 		return isActivated(stack);
 	}
 
 	@Override
-	public void inventoryTick(ItemStack stack, World worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
+	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
 
 		// If we're in a player's inventory.
-		if (isActivated(stack) && entityIn instanceof PlayerEntity) {
+		if (isActivated(stack) && entityIn instanceof Player) {
 			// Get the power capability.
 			stack.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 				// If power is stored, attempt to charge items.
 				if (powerStorage.getStoredPower() > 0) {
 					// Get the player.
-					PlayerEntity player = (PlayerEntity) entityIn;
+					Player player = (Player) entityIn;
 
 					// Get all the chargeable items.
 					List<PowerEnergyInterface> items = new ArrayList<PowerEnergyInterface>();
 
 					// Iterate through the inventory.
-					for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+					for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
 						// Get the stack in the slot. Skip if its empty.
-						ItemStack inventoryStack = player.inventory.getStackInSlot(i);
+						ItemStack inventoryStack = player.getInventory().getItem(i);
 						if (inventoryStack.isEmpty() || inventoryStack == stack || inventoryStack.getItem() instanceof BatteryPack) {
 							continue;
 						}
@@ -133,8 +133,8 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslationTextComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive"));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
+		tooltip.add(new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 
@@ -145,7 +145,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	@OnlyIn(Dist.CLIENT)
-	public IBakedModel getModelOverride(BlockState state, IBakedModel existingModel, ModelBakeEvent event) {
+	public BakedModel getModelOverride(BlockState state, BakedModel existingModel, ModelBakeEvent event) {
 		return new BatteryPackItemModel(existingModel);
 	}
 

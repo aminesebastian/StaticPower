@@ -4,26 +4,23 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.ToolType;
 import theking530.api.heat.HeatTooltipUtilities;
-import theking530.staticcore.utilities.HarvestLevel;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -34,13 +31,14 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	public final ResourceLocation tier;
 
 	public BlockHeatSink(String name, ResourceLocation tier) {
-		super(name, Block.Properties.create(Material.IRON).harvestTool(ToolType.PICKAXE).hardnessAndResistance(3.5f).harvestLevel(HarvestLevel.IRON_TOOL.ordinal()));
+		super(name, Block.Properties.of(Material.METAL).strength(3.5f));
 		this.tier = tier;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, boolean isShowingAdvanced) {
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
+			boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		tooltip.add(HeatTooltipUtilities.getHeatConductivityTooltip(tierObject.heatSinkConductivity.get()));
@@ -49,36 +47,33 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getAdvancedTooltip(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip) {
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		super.getAdvancedTooltip(stack, worldIn, tooltip);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(tierObject.heatSinkElectricHeatGeneration.get()));
-		tooltip.add(new StringTextComponent(TextFormatting.GRAY + "Generation Usage: ").append(GuiTextUtilities.formatEnergyRateToString(tierObject.heatSinkElectricHeatPowerUsage.get()))
-				.mergeStyle(TextFormatting.RED));
+		tooltip.add(new TextComponent(ChatFormatting.GRAY + "Generation Usage: ")
+				.append(GuiTextUtilities.formatEnergyRateToString(tierObject.heatSinkElectricHeatPowerUsage.get()))
+				.withStyle(ChatFormatting.RED));
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(TileEntity tileEntity, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
+			InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;
 	}
 
 	@Override
-	public boolean hasTileEntity(BlockState state) {
-		return true;
-	}
-
-	@Override
-	public TileEntity createTileEntity(final BlockState state, final IBlockReader world) {
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
 		if (tier == StaticPowerTiers.COPPER) {
-			return TileEntityHeatSink.TYPE_COPPER.create();
+			return TileEntityHeatSink.TYPE_COPPER.create(pos, state);
 		} else if (tier == StaticPowerTiers.TIN) {
-			return TileEntityHeatSink.TYPE_TIN.create();
+			return TileEntityHeatSink.TYPE_TIN.create(pos, state);
 		} else if (tier == StaticPowerTiers.SILVER) {
-			return TileEntityHeatSink.TYPE_SILVER.create();
+			return TileEntityHeatSink.TYPE_SILVER.create(pos, state);
 		} else if (tier == StaticPowerTiers.GOLD) {
-			return TileEntityHeatSink.TYPE_GOLD.create();
-		} else if (tier == StaticPowerTiers.ALUMINIUM) {
-			return TileEntityHeatSink.TYPE_ALUMINIUM.create();
+			return TileEntityHeatSink.TYPE_GOLD.create(pos, state);
+		} else if (tier == StaticPowerTiers.ALUMINUM) {
+			return TileEntityHeatSink.TYPE_ALUMINUM.create(pos, state);
 		}
 		return null;
 	}

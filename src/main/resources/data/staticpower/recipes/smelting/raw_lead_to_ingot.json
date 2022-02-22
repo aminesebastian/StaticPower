@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:smelting",
+  "ingredient": {
+    "item": "staticpower:raw_lead"
+  },
+  "result": "staticpower:ingot_lead",
+  "experience": 0.5,
+  "cookingtime": 200
+}

@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:tumbler_recipe",
 	"input": {
-		"tag": "forge:ores/tungsten"
+		"tag": "forge:raw_materials/tungsten"
 	},
 	"output": {
 		"item": "staticpower:chunks_tungsten",

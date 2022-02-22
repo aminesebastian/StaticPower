@@ -12,17 +12,17 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.objectweb.asm.Type;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.event.EntityRenderersEvent.RegisterRenderers;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.fml.DeferredWorkQueue;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
@@ -34,18 +34,19 @@ import theking530.api.attributes.registration.AttributeRegistration;
 import theking530.api.attributes.registration.AttributeRegistry;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
-import theking530.staticcore.initialization.tileentity.TileEntityTypeAllocator;
+import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.tileentities.TileEntityBase;
 
-@SuppressWarnings("deprecation")
+// TODO: Clean up exceptions.
 public class StaticCoreRegistry {
 	protected static final Logger LOGGER = LogManager.getLogger("StaticCore");
-	protected static final List<TileEntityTypeAllocator<? extends TileEntity>> TILE_ENTITY_ALLOCATORS = new LinkedList<>();
-	protected static final List<ContainerTypeAllocator<? extends Container, ? extends Screen>> CONTAINER_ALLOCATORS = new LinkedList<>();
+	protected static final List<BlockEntityTypeAllocator<? extends BlockEntity>> TILE_ENTITY_ALLOCATORS = new LinkedList<>();
+	protected static final List<ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen>> CONTAINER_ALLOCATORS = new LinkedList<>();
 	private static boolean preInitialized;
 	private static boolean initialized;
 
-	public static void preInitialize() {
+	public static void preInitialize() throws Exception {
 		// Don't preinitialize more than once.
 		if (preInitialized) {
 			throw new RuntimeException("Attempted to pre-initialize StaticCore more than once!");
@@ -64,7 +65,7 @@ public class StaticCoreRegistry {
 		LOGGER.info("StaticCore Pre-Initialized.");
 	}
 
-	public static void postInitialize() {
+	public static void postInitialize() throws Exception {
 		// Don't initialize more than once.
 		if (initialized) {
 			throw new RuntimeException("Attempted to initialize StaticCore more than once!");
@@ -72,7 +73,7 @@ public class StaticCoreRegistry {
 
 		LOGGER.info("Initializing StaticCore.");
 
-		processTileEntityTypeAllocators((teAllocator) -> {
+		processBlockEntityTypeAllocators((teAllocator) -> {
 			TILE_ENTITY_ALLOCATORS.add(teAllocator);
 		});
 		processContainerTypeAllocators((containerAllocator) -> {
@@ -85,24 +86,21 @@ public class StaticCoreRegistry {
 		LOGGER.info("StaticCore Initialized.");
 	}
 
-	public static void registerTileEntityTypes(RegistryEvent.Register<TileEntityType<?>> event) {
-		for (TileEntityTypeAllocator<?> allocator : StaticCoreRegistry.TILE_ENTITY_ALLOCATORS) {
+	public static void registerTileEntityTypes(RegistryEvent.Register<BlockEntityType<?>> event) {
+		for (BlockEntityTypeAllocator<?> allocator : StaticCoreRegistry.TILE_ENTITY_ALLOCATORS) {
 			allocator.register(event);
 		}
 	}
 
-	public static void registerAttributeDefenitions() {
+	public static void registerAttributeDefenitions() throws Exception {
 		// Process the attributes.
 		for (AnnotationData annotation : getAnnotationsOfType(AttributeRegistration.class)) {
 			try {
-				// Get the class the annotation is on.
-				Class<?> act = Class.forName(annotation.getClassType().getClassName());
-
 				// Get the constructor on the class that takes a resource location.
-				Constructor<?> cons = act.getConstructor(ResourceLocation.class);
+				Constructor<?> cons = Class.forName(annotation.memberName()).getConstructor(ResourceLocation.class);
 
 				// Get the ID for the annotation.
-				ResourceLocation id = new ResourceLocation(annotation.getAnnotationData().get("value").toString());
+				ResourceLocation id = new ResourceLocation(annotation.annotationData().get("value").toString());
 
 				// Register the attribute defenition.
 				AttributeRegistry.registerAttribute(id, (idIn) -> {
@@ -113,23 +111,20 @@ public class StaticCoreRegistry {
 					}
 				});
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.getMemberName()), e);
+				LOGGER.error(String.format("An error occured when attempting to process attribute defeinition: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
 
-	public static void registerAttributeModifiers() {
+	public static void registerAttributeModifiers() throws Exception {
 		// Process the attributes.
 		for (AnnotationData annotation : getAnnotationsOfType(AttributeModifierRegistration.class)) {
 			try {
-				// Get the class the annotation is on.
-				Class<?> act = Class.forName(annotation.getClassType().getClassName());
-
-				// Get the constructor on the class that takes a resource location.
-				Constructor<?> cons = act.getConstructor();
+				// Get the constructor on the class.
+				Constructor<?> cons = Class.forName(annotation.memberName()).getConstructor();
 
 				// Get the ID for the annotation.
-				String id = annotation.getAnnotationData().get("value").toString();
+				String id = annotation.annotationData().get("value").toString();
 
 				// Register the attribute defenition.
 				AttributeModifierRegistry.registerAttributeType(id, () -> {
@@ -140,30 +135,30 @@ public class StaticCoreRegistry {
 					}
 				});
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.getMemberName()), e);
+				throw new Exception(String.format("An error occured when attempting to process attribute modifier: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerTileEntitySpecialRenderers() {
-		StaticCoreRegistry.processTileEntityTypeAllocators((allocator) -> {
-			if (allocator.requiresTileEntitySpecialRenderer()) {
-				ClientRegistry.bindTileEntityRenderer(allocator.getType(), allocator.getTileEntitySpecialRenderer());
+	public static void registerBlockEntityRenderers(RegisterRenderers event) throws Exception {
+		StaticCoreRegistry.processBlockEntityTypeAllocators((allocator) -> {
+			if (allocator.requiresBlockEntitySpecialRenderer()) {
+				event.registerBlockEntityRenderer(allocator.getType(), allocator.getBlockEntitySpecialRenderer());
 			}
 		});
 	}
 
-	public static void registerContainerTypes(RegistryEvent.Register<ContainerType<?>> event) {
-		for (ContainerTypeAllocator<? extends Container, ? extends Screen> container : CONTAINER_ALLOCATORS) {
+	public static void registerContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
+		for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> container : CONTAINER_ALLOCATORS) {
 			container.registerContainer(event);
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public static void registerScreenFactories() {
-		DeferredWorkQueue.runLater(() -> {
-			for (ContainerTypeAllocator<? extends Container, ? extends Screen> container : CONTAINER_ALLOCATORS) {
+	public static void registerScreenFactories(FMLClientSetupEvent event) {
+		event.enqueueWork(() -> {
+			for (ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen> container : CONTAINER_ALLOCATORS) {
 				container.registerScreen();
 			}
 			LOGGER.info("Registered all Static Power container types.");
@@ -171,33 +166,35 @@ public class StaticCoreRegistry {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static void processTileEntityTypeAllocators(Consumer<TileEntityTypeAllocator<TileEntity>> allocatorConsumer) {
+	public static void processBlockEntityTypeAllocators(Consumer<BlockEntityTypeAllocator<TileEntityBase>> allocatorConsumer) throws Exception {
 		// Process the allocators.
 		for (AnnotationData annotation : getAnnotationsOfType(TileEntityTypePopulator.class)) {
 			try {
-				Class<?> act = Class.forName(annotation.getClassType().getClassName());
-				Field field = act.getField(annotation.getMemberName());
-				allocatorConsumer.accept((TileEntityTypeAllocator<TileEntity>) field.get(null));
+				String name = annotation.clazz().toString().replace('/', '.').substring(1);
+				name = name.substring(0, name.length() - 1);
+				Field field = Class.forName(name).getField(annotation.memberName());
+				allocatorConsumer.accept((BlockEntityTypeAllocator<TileEntityBase>) field.get(null));
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.getMemberName()), e);
+				throw new Exception(String.format("An error occured when attempting to process tile entity allocator: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
 
-	public static void processContainerTypeAllocators(Consumer<ContainerTypeAllocator<?, ?>> allocatorConsumer) {
+	public static void processContainerTypeAllocators(Consumer<ContainerTypeAllocator<?, ?>> allocatorConsumer) throws Exception {
 		// Process the allocators.
 		for (AnnotationData annotation : getAnnotationsOfType(ContainerTypePopulator.class)) {
 			try {
-				Class<?> act = Class.forName(annotation.getClassType().getClassName());
-				Field field = act.getField(annotation.getMemberName());
+				String name = annotation.clazz().toString().replace('/', '.').substring(1);
+				name = name.substring(0, name.length() - 1);
+				Field field = Class.forName(name).getField(annotation.memberName());
 				allocatorConsumer.accept((ContainerTypeAllocator<?, ?>) field.get(null));
 			} catch (Exception e) {
-				LOGGER.error(String.format("An error occured when attempting to process container allocator: %1$s.", annotation.getMemberName()), e);
+				throw new Exception(String.format("An error occured when attempting to process container allocator: %1$s.", annotation.memberName()), e);
 			}
 		}
 	}
 
-	public static ArrayList<AnnotationData> getAnnotationsOfType(Class<? extends Annotation> annotationType) {
+	public static ArrayList<AnnotationData> getAnnotationsOfType(Class<? extends Annotation> annotationType) throws Exception {
 		// Allocate the output.
 		ArrayList<AnnotationData> output = new ArrayList<AnnotationData>();
 
@@ -207,11 +204,11 @@ public class StaticCoreRegistry {
 			for (AnnotationData anno : mod.getFile().getScanResult().getAnnotations()) {
 				// Check to see if the annotation is of the requested type.
 				try {
-					if (anno.getAnnotationType().equals(Type.getType(annotationType))) {
+					if (anno.annotationType().equals(Type.getType(annotationType))) {
 						output.add(anno);
 					}
 				} catch (Exception e) {
-					LOGGER.error(String.format("An error occured when attempting to process annotation: %1$s.", anno.getAnnotationType().getClassName()), e);
+					throw new Exception(String.format("An error occured when attempting to process annotation: %1$s.", anno.annotationType().getClassName()), e);
 				}
 			}
 		}
