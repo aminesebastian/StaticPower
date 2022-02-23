@@ -82,10 +82,12 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 	public void updateData() {
 		float requiredHeight = 0;
 		for (AbstractGuiWidget<?> child : getChildren()) {
-			requiredHeight += child.getSize().getY();
+			if (child.getPosition().getY() > requiredHeight) {
+				requiredHeight = child.getPosition().getY() + child.getSize().getY();
+			}
 		}
 
-		float maxScroll = Math.max(0, requiredHeight - getSize().getY());
+		float maxScroll = Math.max(0, requiredHeight - getSize().getY() + 20);
 		setMaxScroll(maxScroll);
 	}
 

@@ -1,7 +1,9 @@
 package theking530.staticpower.teams.research;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -12,26 +14,27 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
-import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchLevels;
 import theking530.staticpower.data.research.ResearchLevels.ResearchLevel;
+import theking530.staticpower.data.research.ResearchLevels.ResearchNode;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 
 @SuppressWarnings("resource")
 public class GuiResearchMenu extends StaticPowerDetatchedGui {
-	protected static final int TIER_LEVEL_HEIGHT = 70;
+	protected static final int TIER_LEVEL_HEIGHT = 80;
 	protected static final int HISTORY_HEIGHT = 35;
 
 	protected ResearchInstance currentResearch;
@@ -39,8 +42,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected SelectedResearchWidget selectedResearchWidget;
 
 	protected ScrollBox nodeScrollBox;
-	protected List<HorizontalBox> tierBoxes;
-	protected List<ResearchNodeWidget> researchNodes;
+	protected Map<ResearchNode, ResearchNodeWidget> researchNodes;
 
 	protected ScrollBox sideBarScrollBox;
 	protected List<ResearchHistoryWidget> historyWidgets;
@@ -53,48 +55,86 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	@Override
 	public void initializeGui() {
-		researchNodes = new ArrayList<ResearchNodeWidget>();
-		tierBoxes = new ArrayList<HorizontalBox>();
+		researchNodes = new HashMap<ResearchNode, ResearchNodeWidget>();
 		historyWidgets = new ArrayList<ResearchHistoryWidget>();
 		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 76).setZLevel(500));
+		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
 		registerWidget(nodeScrollBox = new ScrollBox(105, 20, 10000, 0));
-		initializeResearchNodes();
-
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
-		initializeSideBar();
 
-		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
+		captureScreenSize();
+		initializeResearchNodes();
+		initializeSideBar();
+	}
+
+	public void resize(Minecraft p_96575_, int p_96576_, int p_96577_) {
+		super.resize(p_96575_, p_96576_, p_96577_);
+		captureScreenSize();
+		initializeResearchNodes();
+		initializeSideBar();
 	}
 
 	protected void initializeResearchNodes() {
 		// Remove existing nodes.
 		nodeScrollBox.clearChildren();
-		tierBoxes.clear();
+		// tierBoxes.clear();
 		researchNodes.clear();
+
+		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+
+		nodeScrollBox.setPosition(104, 25);
+		nodeScrollBox.setSize(screenWidth - 105, screenHeight - 25);
+		HashMap<ResearchNode, Integer> childrenPlaced = new HashMap<ResearchNode, Integer>();
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
 			float tint = y % 2 == 0 ? 0.05f : 0.0f;
-			HorizontalBox box = new HorizontalBox(0, y * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(1, 1, 1, tint)).setDrawBackground(true);
 			ResearchLevel level = levels.getLevels().get(y);
 
 			for (int i = 0; i < level.getResearch().size(); i++) {
-				Research research = level.getResearch().get(i);
-				int offset = level.getResearch().size() < 3 ? 0 : i % 2 == 0 ? 7 : -7;
-				ResearchNodeWidget widget = new ResearchNodeWidget(research, 0, TIER_LEVEL_HEIGHT / 2 - 12 + offset, 24, 24);
-				box.registerWidget(widget);
-				researchNodes.add(widget);
-			}
-			nodeScrollBox.registerWidget(box);
-			tierBoxes.add(box);
-		}
+				ResearchNode research = level.getResearch().get(i);
+				ResearchNode parent = research.getParent();
+				Vector2D parentPosition = new Vector2D(0, 0);
 
-		// Add another box to the bottom to prevent the last research level from getting
-		// clipped when expanded.
-		HorizontalBox box = new HorizontalBox(0, levels.getLevels().size() * TIER_LEVEL_HEIGHT, 10000, TIER_LEVEL_HEIGHT).setBackgroundColor(new Color(0, 0, 0, 0.0f)).setDrawBackground(true);
-		tierBoxes.add(box);
-		nodeScrollBox.registerWidget(box);
+				int childCount = 0;
+				int childIndex = 0;
+				int balancedIndex = 0;
+				if (childrenPlaced.containsKey(parent)) {
+					childIndex = childrenPlaced.get(parent);
+					balancedIndex = childIndex - (parent.getChildren().size() / 2);
+					childCount = parent.getChildren().size();
+				}
+
+				if (parent != null) {
+					parentPosition = researchNodes.get(parent).getPosition();
+				}
+
+				if (!childrenPlaced.containsKey(research)) {
+					childrenPlaced.put(research, 0);
+				}
+
+				if (childrenPlaced.containsKey(parent)) {
+					childrenPlaced.put(parent, childrenPlaced.get(parent) + 1);
+				} else {
+					parentPosition = new Vector2D(nodeScrollBox.getSize().getX() / 2, -TIER_LEVEL_HEIGHT / 2 + 10);
+				}
+
+				float distanceBetween = nodeScrollBox.getSize().getX() / 2;
+				if (parent != null) {
+					distanceBetween = nodeScrollBox.getSize().getX() / (parent.getChildren().size() + 1);
+					if (research.getChildren().size() == 0) {
+						distanceBetween /= 4;
+					}
+				}
+				int offset = childCount < 3 ? 0 : childIndex % 2 == 0 ? 7 : -7;
+				ResearchNodeWidget widget = new ResearchNodeWidget(research, parentPosition.getX() + (balancedIndex * distanceBetween), parentPosition.getY() + (TIER_LEVEL_HEIGHT - 20 + offset), 24,
+						24);
+				researchNodes.put(research, widget);
+				nodeScrollBox.registerWidget(widget);
+			}
+		}
 	}
 
 	protected void initializeSideBar() {
@@ -120,16 +160,11 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		}
 	}
 
-	@Override
-	public void updateBeforeRender() {
+	protected void captureScreenSize() {
 		// Capture the screen size.
 		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
 
-		// Size up the node area.
-		for (HorizontalBox box : tierBoxes) {
-			box.setSize(screenWidth - 105, TIER_LEVEL_HEIGHT);
-		}
 		nodeScrollBox.setPosition(104, 25);
 		nodeScrollBox.setSize(screenWidth - 105, screenHeight - 25);
 
@@ -140,6 +175,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			widgets.setSize(102, HISTORY_HEIGHT);
 		}
 
+	}
+
+	@Override
+	public void updateBeforeRender() {
 		// Handle the expanded node.
 		if (expandedNode != null) {
 			if (!expandedNode.isHovered()) {
@@ -147,7 +186,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				expandedNode = null;
 			}
 		} else {
-			for (ResearchNodeWidget node : researchNodes) {
+			for (ResearchNodeWidget node : researchNodes.values()) {
 				if (node.isHovered()) {
 					expandedNode = node;
 					expandedNode.setExpanded(true);
@@ -200,9 +239,9 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		RenderingUtilities.applyScissorMask(clipMask);
 
 		// Draw the lines.
-		for (ResearchNodeWidget outerNode : this.researchNodes) {
+		for (ResearchNodeWidget outerNode : this.researchNodes.values()) {
 			List<ResearchNodeWidget> preReqWidgets = new ArrayList<ResearchNodeWidget>();
-			for (ResearchNodeWidget node : this.researchNodes) {
+			for (ResearchNodeWidget node : this.researchNodes.values()) {
 				if (outerNode.getResearch().getPrerequisites().contains(node.getResearch().getId())) {
 					preReqWidgets.add(node);
 				}

@@ -19,6 +19,7 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchIcon;
+import theking530.staticpower.data.research.ResearchLevels.ResearchNode;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -31,6 +32,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private final String title;
 	private final List<String> wrappedDescription;
 	private final Research research;
+	private final ResearchNode node;
 	private final SimpleProgressBar progressBar;
 	private final Vector2D collapsedSize;
 	private final Vector2D maxExpandedSize;
@@ -39,13 +41,15 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private Team team;
 	private ResearchManager manager;
 	private boolean expand;
+	private float expandedAlpha;
 
-	public ResearchNodeWidget(Research research, float xPosition, float yPosition, float width, float height) {
+	public ResearchNodeWidget(ResearchNode node, float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
+		this.research = node.getResearch();
+		this.node = node;
 		registerWidget(progressBar = new SimpleProgressBar(28, 20, 86, 7).setMaxProgress(100).disableProgressTooltip());
 		progressBar.setVisible(false);
 		title = new TranslatableComponent(research.getTitle()).getString();
-		this.research = research;
 		this.collapsedSize = new Vector2D(width, height);
 		this.maxExpandedSize = new Vector2D(Math.min(getFontRenderer().width(title) + 15, 100), 100);
 		this.tileColor = new Color(1, 1, 1, 1);
@@ -63,10 +67,11 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		// Drive the hovered alpha.
 		if (isExpanded()) {
 			setZLevel(150);
+			expandedAlpha = (float) Math.min(1, expandedAlpha + (partialTicks * 0.45));
 		} else {
 			setZLevel(1);
+			expandedAlpha = (float) Math.max(0, expandedAlpha - (partialTicks * 0.45));
 		}
-		this.getTicksHovered();
 
 		// Update the colors.
 		updatePanelColors();
@@ -89,6 +94,10 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	public Research getResearch() {
 		return research;
+	}
+
+	public ResearchNode getNode() {
+		return node;
 	}
 
 	@Override
@@ -219,7 +228,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		}
 
 		// Split the description into wrapped lines.
-		float descriptionHeight = wrappedDescription.size() *  5;
+		float descriptionHeight = wrappedDescription.size() * 5;
 		// Draw the description.
 		for (int i = 0; i < wrappedDescription.size(); i++) {
 			GuiDrawUtilities.drawStringLeftAligned(pose, wrappedDescription.get(i), 9, 33 + (i * 5), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
@@ -276,6 +285,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	}
 
 	private float getExpandedAlpha() {
-		return getTimeHoveredScaledClamped(2) * (isExpanded() ? 1 : 0);
+		return expandedAlpha;
 	}
 }
