@@ -50,6 +50,12 @@ public class Vector2D extends AbstractVector {
 		return this;
 	}
 
+	public Vector2D multiply(float x, float y) {
+		values.set(0, values.get(0) * x);
+		values.set(1, values.get(1) * y);
+		return this;
+	}
+
 	@SuppressWarnings("unchecked")
 	@Override
 	public Vector2D copy() {

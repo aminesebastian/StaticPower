@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_cauldron",
+	"description": "Double double toil and trouble!",
+	"prerequisites": [
+		"staticpower:research/machines/io_port",
+		"staticpower:research/machines/plug"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/machine_blocks/machine_block_iron"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/machine_blocks/machine_block_iron_from_ingot"
+		}
+	],
+	"icon": {
+		"item": "staticpower:machine_block_iron"
+	}
+}

@@ -9,10 +9,13 @@ import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.resources.ResourceLocation;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class ResearchLevels {
+	private final static float TIER_LEVEL_HEIGHT = 1;
+	private final static float RELATIVE_MAX_WIDTH = 1;
 	private final List<ResearchLevel> levels;
 
 	protected ResearchLevels() {
@@ -59,7 +62,58 @@ public class ResearchLevels {
 			setParent(node, output);
 		}
 
+		// Populate the relative positions for each node.
+		populatePositions(output, allNodes);
 		return output;
+	}
+
+	private static void populatePositions(ResearchLevels levels, List<ResearchNode> allNodes) {
+		HashMap<ResearchNode, Integer> childrenPlaced = new HashMap<ResearchNode, Integer>();
+
+		for (int y = 0; y < levels.getLevels().size(); y++) {
+			ResearchLevel level = levels.getLevels().get(y);
+
+			for (int i = 0; i < level.getResearch().size(); i++) {
+				ResearchNode research = level.getResearch().get(i);
+				ResearchNode parent = research.getParent();
+				Vector2D parentPosition = new Vector2D(0, 0);
+
+				int childCount = 0;
+				int childIndex = 0;
+				int balancedIndex = 0;
+				if (childrenPlaced.containsKey(parent)) {
+					childIndex = childrenPlaced.get(parent);
+					childCount = parent.getChildren().size();
+					balancedIndex = childIndex - (childCount / 2);
+				}
+
+				if (parent != null) {
+					parentPosition = parent.getRelativePosition();
+				}
+
+				if (!childrenPlaced.containsKey(research)) {
+					childrenPlaced.put(research, 0);
+				}
+
+				if (childrenPlaced.containsKey(parent)) {
+					childrenPlaced.put(parent, childrenPlaced.get(parent) + 1);
+				} else {
+					parentPosition = new Vector2D(RELATIVE_MAX_WIDTH / 2, TIER_LEVEL_HEIGHT);
+				}
+
+				float distanceBetween = RELATIVE_MAX_WIDTH / 2;
+				if (parent != null) {
+					distanceBetween = RELATIVE_MAX_WIDTH / (parent.getChildren().size() + 1);
+					if (research.getChildren().size() == 0) {
+						distanceBetween /= 4;
+					}
+				}
+
+				float offset = childCount < 2 ? 0 : childIndex % 2 == 0 ? -0.3f : 0.3f;
+				research.setRelativePosition(
+						new Vector2D(parentPosition.getX() + (balancedIndex * distanceBetween), parentPosition.getY() - (TIER_LEVEL_HEIGHT * (1 + (childCount * 0.15f)) - offset)));
+			}
+		}
 	}
 
 	private static void setParent(ResearchNode lookingForParent, ResearchLevels cachedLevels) {
@@ -73,7 +127,7 @@ public class ResearchLevels {
 		}
 	}
 
-	public static List<Research> getAllResearchWithPrerequisitesInSet(Collection<Research> remaining, Set<ResourceLocation> cached) {
+	private static List<Research> getAllResearchWithPrerequisitesInSet(Collection<Research> remaining, Set<ResourceLocation> cached) {
 		List<Research> researchList = new ArrayList<Research>();
 
 		for (Research research : remaining) {
@@ -122,10 +176,12 @@ public class ResearchLevels {
 		private final Research research;
 		private final List<ResearchNode> children;
 		private ResearchNode parent;
+		private Vector2D relativePosition;
 
 		public ResearchNode(Research research) {
 			this.research = research;
 			this.children = new ArrayList<ResearchNode>();
+			this.relativePosition = new Vector2D(0, 0);
 		}
 
 		public void setParent(ResearchNode newParent) {
@@ -149,5 +205,12 @@ public class ResearchLevels {
 			return children;
 		}
 
+		public Vector2D getRelativePosition() {
+			return relativePosition;
+		}
+
+		public void setRelativePosition(Vector2D relativePosition) {
+			this.relativePosition = relativePosition;
+		}
 	}
 }

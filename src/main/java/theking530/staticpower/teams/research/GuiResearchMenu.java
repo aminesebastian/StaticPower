@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
+import theking530.staticcore.gui.widgets.containers.PanBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
@@ -22,6 +23,7 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
@@ -41,7 +43,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected ResearchNodeWidget expandedNode;
 	protected SelectedResearchWidget selectedResearchWidget;
 
-	protected ScrollBox nodeScrollBox;
+	protected PanBox nodeScrollBox;
 	protected Map<ResearchNode, ResearchNodeWidget> researchNodes;
 
 	protected ScrollBox sideBarScrollBox;
@@ -60,7 +62,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 76).setZLevel(500));
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
-		registerWidget(nodeScrollBox = new ScrollBox(105, 20, 10000, 0));
+		registerWidget(nodeScrollBox = new PanBox(105, 20, 10000, 0));
+		nodeScrollBox.setMaxBounds(new Vector4D(-1000, -1000, 1000, 1000));
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
 		captureScreenSize();
@@ -86,7 +89,6 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		nodeScrollBox.setPosition(104, 25);
 		nodeScrollBox.setSize(screenWidth - 105, screenHeight - 25);
-		HashMap<ResearchNode, Integer> childrenPlaced = new HashMap<ResearchNode, Integer>();
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
@@ -95,42 +97,9 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 			for (int i = 0; i < level.getResearch().size(); i++) {
 				ResearchNode research = level.getResearch().get(i);
-				ResearchNode parent = research.getParent();
-				Vector2D parentPosition = new Vector2D(0, 0);
-
-				int childCount = 0;
-				int childIndex = 0;
-				int balancedIndex = 0;
-				if (childrenPlaced.containsKey(parent)) {
-					childIndex = childrenPlaced.get(parent);
-					balancedIndex = childIndex - (parent.getChildren().size() / 2);
-					childCount = parent.getChildren().size();
-				}
-
-				if (parent != null) {
-					parentPosition = researchNodes.get(parent).getPosition();
-				}
-
-				if (!childrenPlaced.containsKey(research)) {
-					childrenPlaced.put(research, 0);
-				}
-
-				if (childrenPlaced.containsKey(parent)) {
-					childrenPlaced.put(parent, childrenPlaced.get(parent) + 1);
-				} else {
-					parentPosition = new Vector2D(nodeScrollBox.getSize().getX() / 2, -TIER_LEVEL_HEIGHT / 2 + 10);
-				}
-
-				float distanceBetween = nodeScrollBox.getSize().getX() / 2;
-				if (parent != null) {
-					distanceBetween = nodeScrollBox.getSize().getX() / (parent.getChildren().size() + 1);
-					if (research.getChildren().size() == 0) {
-						distanceBetween /= 4;
-					}
-				}
-				int offset = childCount < 3 ? 0 : childIndex % 2 == 0 ? 7 : -7;
-				ResearchNodeWidget widget = new ResearchNodeWidget(research, parentPosition.getX() + (balancedIndex * distanceBetween), parentPosition.getY() + (TIER_LEVEL_HEIGHT - 20 + offset), 24,
-						24);
+				Vector2D position = research.getRelativePosition().multiply(nodeScrollBox.getSize().getX(), -TIER_LEVEL_HEIGHT / 2);
+				position.add(0, TIER_LEVEL_HEIGHT / 2 - 10);
+				ResearchNodeWidget widget = new ResearchNodeWidget(research, position.getX(), position.getY(), 24, 24);
 				researchNodes.put(research, widget);
 				nodeScrollBox.registerWidget(widget);
 			}

@@ -240,7 +240,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			for (int i = 0; i < research.getUnlocks().size(); i++) {
 				ResearchUnlock unlock = research.getUnlocks().get(i);
 				if (unlock.getType() == ResearchUnlockType.CRAFTING && unlock.getIcon() != null) {
-					ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 36 + descriptionHeight, 151, 11f, 11f);
+					ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 36 + descriptionHeight, 155, 11f, 11f);
 					Recipe<?> recipe = unlock.getAsRecipe();
 					if (recipe != null) {
 
@@ -271,7 +271,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			if (isAvailable || isCompleted) {
 				bodyColor = new Color(0.75f, 0.75f, 1.0f, 0.95f);
 			} else {
-				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.75f);
+				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.85f);
 			}
 		} else if (manager.isResearching(research.getId()) || manager.isSelectedResearch(research.getId())) {
 			bodyColor = new Color(0.0f, 1.0f, 1.0f, 0.95f);
@@ -279,7 +279,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			if (isAvailable) {
 				bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.95f);
 			} else {
-				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.75f);
+				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.85f);
 			}
 		}
 	}
