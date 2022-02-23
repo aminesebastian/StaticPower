@@ -29,10 +29,13 @@ import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
 
 public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private final String title;
+	private final List<String> wrappedDescription;
 	private final Research research;
 	private final SimpleProgressBar progressBar;
 	private final Vector2D collapsedSize;
-	private float hoveredAlpha;
+	private final Vector2D maxExpandedSize;
+	private Color tileColor;
+	private Color bodyColor;
 	private Team team;
 	private ResearchManager manager;
 	private boolean expand;
@@ -44,6 +47,10 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		title = new TranslatableComponent(research.getTitle()).getString();
 		this.research = research;
 		this.collapsedSize = new Vector2D(width, height);
+		this.maxExpandedSize = new Vector2D(Math.min(getFontRenderer().width(title) + 15, 100), 100);
+		this.tileColor = new Color(1, 1, 1, 1);
+		this.bodyColor = new Color(1, 1, 1, 1);
+		wrappedDescription = GuiDrawUtilities.wrapString(research.getDescription(), maxExpandedSize.getXi() * 2 - 32);
 	}
 
 	public void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
@@ -55,19 +62,19 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Drive the hovered alpha.
 		if (isExpanded()) {
-			hoveredAlpha = Math.min(1, hoveredAlpha + partialTicks * 0.45f);
-			setZLevel(100);
-
+			setZLevel(150);
 		} else {
-			hoveredAlpha = Math.max(0, hoveredAlpha - partialTicks * 0.45f);
 			setZLevel(1);
 		}
+		this.getTicksHovered();
+
+		// Update the colors.
+		updatePanelColors();
 
 		// Scale the widget depending on if it is expanded.
-		List<String> description = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() * 2 - 35);
-		float maxWidth = (getFontRenderer().width(title) * .85f) * hoveredAlpha;
-		float maxHeight = 15 + (description.size() * 5) + (research.getUnlocks().size() > 0 ? 15 : 0);
-		setSize(collapsedSize.getX() + (maxWidth * hoveredAlpha), collapsedSize.getY() + (maxHeight * hoveredAlpha));
+		float maxWidth = (getFontRenderer().width(title) * .85f) * getExpandedAlpha();
+		float maxHeight = 15 + (wrappedDescription.size() * 5) + (research.getUnlocks().size() > 0 ? 15 : 0);
+		setSize(Math.min(maxExpandedSize.getX(), collapsedSize.getX() + (maxWidth * getExpandedAlpha())), collapsedSize.getY() + (maxHeight * getExpandedAlpha()));
 
 		// Move the widget up if hovered and to the up and left if going off screen.
 		Vector2D screenSpaceInitial = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getInitialPosition());
@@ -76,7 +83,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		float thisMaxX = screenSpaceInitial.getX() + getSize().getX();
 		float maxOffsetX = Math.max(thisMaxX - parentMaxX + 4, 0);
 
-		float maxOffsetY = (hoveredAlpha * (getSize().getY() / 2 - collapsedSize.getY() / 2));
+		float maxOffsetY = (getExpandedAlpha() * (getSize().getY() / 2 - collapsedSize.getY() / 2));
 		setPosition(getInitialPosition().getX() - maxOffsetX, getInitialPosition().getY() - maxOffsetY);
 	}
 
@@ -91,38 +98,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
-		boolean isAvailable = manager.isResearchAvailable(research.getId());
-		boolean isCompleted = manager.hasCompletedResearch(research.getId());
-
-		// Get the tile color and lighten it on hover.
-		Color tileColor = research.getColor().copy();
-		if (!isAvailable && !manager.hasCompletedResearch(research.getId())) {
-			tileColor = new Color(0.3f, 0.3f, 0.3f, 0.95f);
-		}
-
-		if (isHovered()) {
-			tileColor.add(0.1f, 0.1f, 0.1f);
-		}
-
-		// Get the color for the body of the node.
-		Color bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.95f);
-
-		if (isHovered()) {
-			if (isAvailable || isCompleted) {
-				bodyColor = new Color(0.75f, 0.75f, 1.0f, 0.95f);
-			} else {
-				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.75f);
-			}
-		} else if (manager.isResearching(research.getId()) || manager.isSelectedResearch(research.getId())) {
-			bodyColor = new Color(0.0f, 1.0f, 1.0f, 0.95f);
-		} else {
-			if (isAvailable) {
-				bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.95f);
-			} else {
-				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.75f);
-			}
-		}
-
 		// Draw the body layer.
 		GuiDrawUtilities.drawGenericBackground(pose, getSize().getX(), getSize().getY(), 4, 4, 0, bodyColor);
 
@@ -135,7 +110,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Draw the tile and its icon.
 		GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX(), collapsedSize.getY(), 0, 0, 0, tileColor);
-		GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + hoveredAlpha * 100, 1.0f);
+		GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100, 1.0f);
 
 		if (expand) {
 			// Draw the title.
@@ -143,65 +118,14 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 			// Update the bar.
 			progressBar.setVisible(true);
-			if (team != null) {
-				progressBar.setSize(getSize().getX() - 32, 7);
-				if (manager.isResearching(research.getId())) {
-					progressBar.setCurrentProgress((int) (manager.getResearchProgress(research.getId()).getFullfillmentPercentage() * 100));
-				} else if (manager.hasCompletedResearch(research.getId())) {
-					progressBar.setCurrentProgress(100);
-				} else {
-					progressBar.setCurrentProgress(0);
-				}
-			}
+			updateProgressBar(pose, mouseX, mouseY, partialTicks);
 
 			// Only draw the requirements and description when the node is fully expanded.
-			if (hoveredAlpha >= 1) {
-				// Draw requirements.
-				float requirementsBgSize = research.getRequirements().size() + research.getRequirements().size() * 9.25f;
-				GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 9, getSize().getX() - requirementsBgSize - 1, getSize().getY() - 9, 0, new Color(0.0f, 0.0f, 0.0f, 0.5f));
-
-				for (int i = 0; i < research.getRequirements().size(); i++) {
-					int xOffset = i * 10;
-					StaticPowerIngredient requirement = research.getRequirements().get(i);
-					drawRearchRequirement(pose, null, requirement, i, getSize().getX() - 14 - xOffset, getSize().getY() - 12);
-				}
-
-				// Split the description into wrapped lines.
-				List<String> lines = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() * 2 - 35);
-				int descriptionHeight = lines.size() * 5;
-				// Draw the description.
-				for (int i = 0; i < lines.size(); i++) {
-					GuiDrawUtilities.drawStringLeftAligned(pose, lines.get(i), 9, 33 + (i * 5), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
-				}
-
-				// Draw the unlocks.
-				if (research.getUnlocks().size() > 0) {
-					GuiDrawUtilities.drawStringLeftAligned(pose, "Unlocks:", 9, 37 + descriptionHeight, 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
-					for (int i = 0; i < research.getUnlocks().size(); i++) {
-						ResearchUnlock unlock = research.getUnlocks().get(i);
-						if (unlock.getType() == ResearchUnlockType.CRAFTING && unlock.getIcon() != null) {
-							ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 36 + descriptionHeight, 110, 11f, 11f);
-							Recipe<?> recipe = unlock.getAsRecipe();
-							if (recipe != null) {
-
-							}
-						}
-					}
-				}
+			if (getExpandedAlpha() >= 1) {
+				drawRequirementsAndUnlocks(pose, mouseX, mouseY, partialTicks);
 			}
 		} else {
 			progressBar.setVisible(false);
-		}
-	}
-
-	public void drawRearchRequirement(PoseStack pose, @Nullable ResearchInstance instance, StaticPowerIngredient requirement, int requirementIndex, float x, float y) {
-		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, hoveredAlpha * 100, 8f, 8f);
-
-		if (instance != null) {
-			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)).getString(), x + 7.5f,
-					y + 11.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
-		} else {
-			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 7.5f, y + 11.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 
@@ -257,5 +181,101 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		}
 
 		return super.mouseClick(mouseX, mouseY, button);
+	}
+
+	private void drawRearchRequirement(PoseStack pose, @Nullable ResearchInstance instance, StaticPowerIngredient requirement, int requirementIndex, float x, float y) {
+		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, getExpandedAlpha() * 150, 8f, 8f);
+
+		if (instance != null) {
+			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)).getString(), x + 8f,
+					y + 6.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+		} else {
+			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+		}
+	}
+
+	private void updateProgressBar(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		if (team != null) {
+			progressBar.setSize(getSize().getX() - 32, 7);
+			if (manager.isResearching(research.getId())) {
+				progressBar.setCurrentProgress((int) (manager.getResearchProgress(research.getId()).getFullfillmentPercentage() * 100));
+			} else if (manager.hasCompletedResearch(research.getId())) {
+				progressBar.setCurrentProgress(100);
+			} else {
+				progressBar.setCurrentProgress(0);
+			}
+		}
+	}
+
+	private void drawRequirementsAndUnlocks(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
+		// Draw requirements.
+		float requirementsBgSize = research.getRequirements().size() + research.getRequirements().size() * 9.25f;
+		GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 11, getSize().getX() - requirementsBgSize - 1, getSize().getY() - 11, 0, new Color(0.0f, 0.0f, 0.0f, 0.5f));
+
+		for (int i = 0; i < research.getRequirements().size(); i++) {
+			int xOffset = i * 10;
+			StaticPowerIngredient requirement = research.getRequirements().get(i);
+			drawRearchRequirement(pose, null, requirement, i, getSize().getX() - 14 - xOffset, getSize().getY() - 12);
+		}
+
+		// Split the description into wrapped lines.
+		float descriptionHeight = wrappedDescription.size() *  5;
+		// Draw the description.
+		for (int i = 0; i < wrappedDescription.size(); i++) {
+			GuiDrawUtilities.drawStringLeftAligned(pose, wrappedDescription.get(i), 9, 33 + (i * 5), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+		}
+
+		// Draw the unlocks.
+		if (research.getUnlocks().size() > 0) {
+			GuiDrawUtilities.drawStringLeftAligned(pose, "Unlocks:", 9, 37 + descriptionHeight, 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			for (int i = 0; i < research.getUnlocks().size(); i++) {
+				ResearchUnlock unlock = research.getUnlocks().get(i);
+				if (unlock.getType() == ResearchUnlockType.CRAFTING && unlock.getIcon() != null) {
+					ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 36 + descriptionHeight, 151, 11f, 11f);
+					Recipe<?> recipe = unlock.getAsRecipe();
+					if (recipe != null) {
+
+					}
+				}
+			}
+		}
+	}
+
+	private void updatePanelColors() {
+		boolean isAvailable = manager.isResearchAvailable(research.getId());
+		boolean isCompleted = manager.hasCompletedResearch(research.getId());
+
+		// Get the tile color and lighten it on hover.
+		tileColor = research.getColor().copy();
+		if (!isAvailable && !manager.hasCompletedResearch(research.getId())) {
+			tileColor = new Color(0.3f, 0.3f, 0.3f, 0.95f);
+		}
+
+		if (isHovered()) {
+			tileColor.add(0.1f, 0.1f, 0.1f);
+		}
+
+		// Get the color for the body of the node.
+		bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.95f);
+
+		if (isHovered()) {
+			if (isAvailable || isCompleted) {
+				bodyColor = new Color(0.75f, 0.75f, 1.0f, 0.95f);
+			} else {
+				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.75f);
+			}
+		} else if (manager.isResearching(research.getId()) || manager.isSelectedResearch(research.getId())) {
+			bodyColor = new Color(0.0f, 1.0f, 1.0f, 0.95f);
+		} else {
+			if (isAvailable) {
+				bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.95f);
+			} else {
+				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.75f);
+			}
+		}
+	}
+
+	private float getExpandedAlpha() {
+		return getTimeHoveredScaledClamped(2) * (isExpanded() ? 1 : 0);
 	}
 }

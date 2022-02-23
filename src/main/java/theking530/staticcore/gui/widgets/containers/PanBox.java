@@ -5,13 +5,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.client.gui.GuiTextures;
 
 public class PanBox extends AbstractGuiWidget<PanBox> {
 	private Color color;
@@ -30,11 +28,15 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		interpolatedPan = new Vector2D();
 		targetPan = new Vector2D();
 		maxBounds = new Vector4D();
+		interpolatedZoom = 1;
+		targetZoom = 1;
 	}
 
 	protected void updateChildLayout(PoseStack pose, int index) {
+		//pose.translate(this.getLastMousePosition().getX(), getLastMousePosition().getY(), 0);
 		pose.scale(1 / interpolatedZoom, 1 / interpolatedZoom, 1 / interpolatedZoom);
-		pose.translate(interpolatedPan.getX(), interpolatedPan.getY(), 0);
+		//pose.translate(-this.getLastMousePosition().getX(), -getLastMousePosition().getY(), 0);
+		pose.translate(targetPan.getX(), targetPan.getY(), 0);
 	}
 
 	public PanBox setBackgroundColor(Color color) {
@@ -47,17 +49,25 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		return this;
 	}
 
-	public float getCurrentScroll() {
+	public float getCurrentZoom() {
 		return targetZoom;
 	}
 
-	public PanBox setCurrentScroll(float currentScroll) {
-		this.targetZoom = currentScroll;
+	public PanBox setMaxZoom(float maxZoom) {
+		this.maxZoom = maxZoom;
 		return this;
 	}
 
-	public float getMaxScroll() {
+	public float getMaxZoom() {
 		return maxZoom;
+	}
+
+	public Vector4D getMaxBounds() {
+		return maxBounds;
+	}
+
+	public void setMaxBounds(Vector4D maxBounds) {
+		this.maxBounds = maxBounds;
 	}
 
 	public PanBox setMaxScroll(float maxScroll) {
@@ -76,16 +86,16 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 
 		float maxScroll = Math.max(0, requiredHeight - getSize().getY());
 		setMaxScroll(maxScroll);
+		
+		Vector2D panVelocity = targetPan.copy().subtract(interpolatedPan);
 	}
 
 	public RectangleBounds getClipBounds(PoseStack matrix) {
 		float guiScale = (float) Minecraft.getInstance().getWindow().getGuiScale();
-		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getGuiScaledWidth(),
-				Minecraft.getInstance().getWindow().getGuiScaledHeight());
+		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 		Vector2D screenSpace = getScreenSpacePosition();
 		Vector2D adjustedSize = getSize();
-		RectangleBounds output = new RectangleBounds(screenSpace.getX() * guiScale,
-				resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX() * guiScale,
+		RectangleBounds output = new RectangleBounds(screenSpace.getX() * guiScale, resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX() * guiScale,
 				adjustedSize.getY() * guiScale);
 		return output;
 	}
@@ -108,29 +118,29 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	@Override
 	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
 		if (isHovered()) {
-			targetZoom = (float) SDMath.clamp(targetZoom + scrollDelta * -10, 0, maxZoom);
+			targetZoom = (float) SDMath.clamp(targetZoom + scrollDelta * -0.1f, 0, maxZoom);
 		}
 		return super.mouseScrolled(mouseX, mouseY, scrollDelta);
 	}
 
-	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_,
-			double p_mouseDragged_8_) {
+	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
 		if (isHovered()) {
 			Vector2D delta = getLastMousePosition().copy().subtract((float) mouseX, (float) mouseY);
-			this.targetPan.add(delta);
+			this.targetPan.setX(targetPan.getX() + (float) p_mouseDragged_6_);
+			this.targetPan.setY(targetPan.getY() + (float) p_mouseDragged_8_);
 
 			// Limit the X.
 			if (targetPan.getX() < maxBounds.getX()) {
 				targetPan.setX(maxBounds.getX());
-			} else if (targetPan.getX() > maxBounds.getX()) {
-				targetPan.setX(maxBounds.getX());
+			} else if (targetPan.getX() > maxBounds.getZ()) {
+				targetPan.setX(maxBounds.getZ());
 			}
 
 			// Limit the Y.
 			if (targetPan.getY() < maxBounds.getY()) {
 				targetPan.setY(maxBounds.getY());
-			} else if (targetPan.getY() > maxBounds.getY()) {
-				targetPan.setY(maxBounds.getY());
+			} else if (targetPan.getY() > maxBounds.getW()) {
+				targetPan.setY(maxBounds.getW());
 			}
 		}
 		return super.mouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);

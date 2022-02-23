@@ -265,7 +265,7 @@ public class GuiDrawUtilities {
 		drawString(matrixStack, text, xPos + width, yPos, zPos, scale, color.encodeInInteger(), withShadow);
 	}
 
-	public static List<String> wrapString(String string, int maxWidth) {
+	public static List<String> wrapString(String string, float maxWidth) {
 		// Draw the description.
 		List<String> lines = new ArrayList<String>();
 		StringBuilder currentLine = new StringBuilder();

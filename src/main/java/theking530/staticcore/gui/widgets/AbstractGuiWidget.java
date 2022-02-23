@@ -265,6 +265,19 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	/**
+	 * Returns the time this widget was hovered dialated by the provided scale and
+	 * clamped in the range [0, 1]. For example, a scale of 3 means that over three
+	 * seconds of being hovered, this value will drive from 0 to 1 and then stay at
+	 * 1 until unhovered.
+	 * 
+	 * @param scale
+	 * @return
+	 */
+	public float getTimeHoveredScaledClamped(float scale) {
+		return Math.min(1, ticksHovered / scale);
+	}
+
+	/**
 	 * Gets the size of the parent of this widget.
 	 * 
 	 * @return
@@ -320,10 +333,12 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
 
-		if (isHovered()) {
-			ticksHovered += partialTicks;
-		} else {
-			ticksHovered = 0;
+		if(isVisible() && isEnabled()) {
+			if (isHovered()) {
+				ticksHovered += partialTicks;
+			} else {
+				ticksHovered = 0;
+			}
 		}
 	}
 

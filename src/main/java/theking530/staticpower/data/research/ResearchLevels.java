@@ -141,4 +141,14 @@ public class ResearchLevels {
 		}
 
 	}
+
+	public class ResearchWrapper {
+		private final Research research;
+		private final List<Research> children;
+
+		public ResearchWrapper(Research research) {
+			this.research = research;
+			this.children = new ArrayList<Research>();
+		}
+	}
 }

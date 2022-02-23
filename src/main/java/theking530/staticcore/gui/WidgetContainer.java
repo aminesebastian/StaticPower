@@ -87,7 +87,7 @@ public class WidgetContainer {
 					matrixStack.pushPose();
 					transformer.accept(matrixStack, i);
 				}
-				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);			
+				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);
 				if (transformer != null) {
 					matrixStack.popPose();
 				}
@@ -103,8 +103,8 @@ public class WidgetContainer {
 				if (transformer != null) {
 					matrixStack.pushPose();
 					transformer.accept(matrixStack, i);
-				}			
-				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);			
+				}
+				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 				if (transformer != null) {
 					matrixStack.popPose();
 				}
@@ -131,8 +131,7 @@ public class WidgetContainer {
 
 	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		for (AbstractGuiWidget<?> widget : widgets) {
-			if (widget.isVisible() && !widget.getTooltipsDisabled()
-					&& (!widget.getShouldAutoCalculateTooltipBounds() || (widget.getShouldAutoCalculateTooltipBounds() && widget.isPointInsideBounds(mousePosition)))) {
+			if (widget.isVisible() && !widget.getTooltipsDisabled() && widget.isHovered()) {
 				widget.getTooltips(mousePosition, tooltips, false);
 			}
 		}

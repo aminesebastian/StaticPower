@@ -41,11 +41,11 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 	}
 
 	public float getCurrentScroll() {
-		return targetScroll;
+		return interpolatedScroll;
 	}
 
-	public ScrollBox setCurrentScroll(float currentScroll) {
-		this.targetScroll = currentScroll;
+	public ScrollBox setTargetScroll(float targetScroll) {
+		this.targetScroll = targetScroll;
 		return this;
 	}
 
