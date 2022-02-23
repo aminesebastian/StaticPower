@@ -17,6 +17,7 @@ public class Research extends AbstractStaticPowerRecipe {
 	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
 	private final String title;
 	private final String description;
+	private final int levelOffset;
 	private final List<ResearchUnlock> unlocks;
 	private final ResearchIcon icon;
 	private final List<ResourceLocation> prerequisites;
@@ -26,11 +27,12 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final boolean hiddenUntilAvailable;
 	private final Color color;
 
-	public Research(ResourceLocation name, String title, String description, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements, List<ItemStack> rewards,
+	public Research(ResourceLocation name, String title, String description, int levelOffset, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements, List<ItemStack> rewards,
 			List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon, boolean hiddenUntilAvailable, Color color) {
 		super(name);
 		this.title = title;
 		this.description = description;
+		this.levelOffset = levelOffset;
 		this.prerequisites = prerequisites;
 		this.requirements = requirements;
 		this.rewards = rewards;
@@ -55,6 +57,10 @@ public class Research extends AbstractStaticPowerRecipe {
 
 	public String getDescription() {
 		return description;
+	}
+
+	public int getLevelOffset() {
+		return levelOffset;
 	}
 
 	public List<ResourceLocation> getPrerequisites() {

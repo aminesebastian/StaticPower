@@ -391,7 +391,7 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 					currentCraftingRequestIndex = getMenu().getCurrentCraftingQueue().size() - 1;
 				}
 				CraftingRequestResponse currentRequest = getMenu().getCurrentCraftingQueue().get(currentCraftingRequestIndex);
-				GuiDrawUtilities.drawItem(stack, currentRequest.getCraftingItem(), leftPos, topPos, (imageWidth / 2) - 8, 20, 1.0f);
+				GuiDrawUtilities.drawItem(stack, currentRequest.getCraftingItem(), (imageWidth / 2) - 8, 20, 100.0f);
 			}
 		}
 	}

@@ -5,25 +5,42 @@ import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class ResearchUnlock {
 	public enum ResearchUnlockType {
 		CRAFTING
 	}
 
-	private final ResearchIcon icon;
 	private final ResourceLocation target;
 	private final String description;
 	private final ResearchUnlockType type;
+	private ResearchIcon icon;
 
 	public ResearchUnlock(ResearchUnlockType type, ResourceLocation target, ResearchIcon icon, String description) {
 		this.type = type;
 		this.target = target;
-		this.icon = icon;
+		if (icon == null) {
+			this.icon = new ResearchIcon(null, GuiTextures.BLANK);
+		} else {
+			this.icon = icon;
+		}
+
 		this.description = description;
 	}
 
 	public ResearchIcon getIcon() {
+		// For crafting type unlocks, just return an icon of the item.
+		if (type == ResearchUnlockType.CRAFTING) {
+			CraftingRecipe recipe = StaticPowerRecipeRegistry.getRawRecipe(RecipeType.CRAFTING, target).orElse(null);
+			if (recipe != null) {
+				icon = new ResearchIcon(recipe.getResultItem(), null);
+			}
+		}
 		return icon;
 	}
 
@@ -37,6 +54,10 @@ public class ResearchUnlock {
 
 	public ResearchUnlockType getType() {
 		return type;
+	}
+
+	public Recipe<?> getAsRecipe() {
+		return StaticPowerRecipeRegistry.getRawRecipe(RecipeType.CRAFTING, getTarget()).orElse(null);
 	}
 
 	public void toBuffer(FriendlyByteBuf buffer) {

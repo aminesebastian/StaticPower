@@ -55,10 +55,10 @@ public class StaticPowerRecipeRegistry {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerRecipeRegistry.class);
 
 	@SuppressWarnings("rawtypes")
-	public static final HashMap<RecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<RecipeType, LinkedList<AbstractStaticPowerRecipe>>();
-	public static final LinkedList<SmeltingRecipe> FURNACE_RECIPES = new LinkedList<SmeltingRecipe>();
-	public static final Map<ResourceLocation, CraftingRecipe> CRAFTING_RECIPES = new HashMap<ResourceLocation, CraftingRecipe>();
-	public static final Map<ResourceLocation, Set<ResourceLocation>> LOCKED_RECIPES = new LinkedHashMap<ResourceLocation, Set<ResourceLocation>>();
+	public static final HashMap<RecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<>();
+	public static final Map<ResourceLocation, SmeltingRecipe> FURNACE_RECIPES = new HashMap<>();
+	public static final Map<ResourceLocation, CraftingRecipe> CRAFTING_RECIPES = new HashMap<>();
+	public static final Map<ResourceLocation, Set<ResourceLocation>> LOCKED_RECIPES = new LinkedHashMap<>();
 
 	/**
 	 * Attempts to find a recipe of the given type that matches the provided
@@ -108,6 +108,31 @@ public class StaticPowerRecipeRegistry {
 		for (AbstractStaticPowerRecipe recipe : RECIPES.get(recipeType)) {
 			if (recipe.getId().equals(id)) {
 				return Optional.of((T) recipe);
+			}
+		}
+
+		// If we find no match, return empty.
+		return Optional.empty();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static <T extends Recipe<?>> Optional<T> getRawRecipe(RecipeType<T> recipeType, ResourceLocation id) {
+		// If no recipes of this type exist, return empty.
+		if (recipeType == RecipeType.CRAFTING) {
+			if (CRAFTING_RECIPES.containsKey(id)) {
+				return Optional.of((T) CRAFTING_RECIPES.get(id));
+			}
+		} else if (recipeType == RecipeType.SMELTING) {
+			if (FURNACE_RECIPES.containsKey(id)) {
+				return Optional.of((T) FURNACE_RECIPES.get(id));
+			}
+		} else if (RECIPES.containsKey(recipeType)) {
+			// Iterate through the recipe linked list and return the first instance that
+			// matches.
+			for (AbstractStaticPowerRecipe recipe : RECIPES.get(recipeType)) {
+				if (recipe.getId().equals(id)) {
+					return Optional.of((T) recipe);
+				}
 			}
 		}
 
@@ -211,7 +236,7 @@ public class StaticPowerRecipeRegistry {
 				addRecipe((AbstractStaticPowerRecipe) recipe);
 			} else if (recipe.getType() == RecipeType.SMELTING) {
 				// Cache smelting recipes.
-				FURNACE_RECIPES.add((SmeltingRecipe) recipe);
+				FURNACE_RECIPES.put(recipe.getId(), (SmeltingRecipe) recipe);
 			} else if (recipe.getType() == RecipeType.CRAFTING) {
 				// Cache crafting recipes.
 				CRAFTING_RECIPES.put(recipe.getId(), (CraftingRecipe) recipe);
@@ -357,7 +382,7 @@ public class StaticPowerRecipeRegistry {
 	private static void handleResearchRecipeReplacement(RecipeManager manager) {
 		// Clear the previously cached lockable recipes.
 		LOCKED_RECIPES.clear();
-		
+
 		// Get all recipes.
 		List<Recipe<?>> recipes = new ArrayList<>(manager.getRecipes());
 

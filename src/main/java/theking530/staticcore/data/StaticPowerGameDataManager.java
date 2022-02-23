@@ -59,7 +59,7 @@ public class StaticPowerGameDataManager {
 						createAndCacheDataFirstTime(entry.getKey());
 					}
 				} catch (Exception e) {
-					StaticPower.LOGGER.error(String.format("An error occured when attempting to save data: %1$s to the disk.", entry.getKey()), e);
+					StaticPower.LOGGER.error(String.format("An error occured when attempting to load data: %1$s from the disk.", entry.getKey()), e);
 				}
 			});
 			loadDataForClients();

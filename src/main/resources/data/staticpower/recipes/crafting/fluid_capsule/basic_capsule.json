@@ -7,13 +7,13 @@
 	],
 	"key": {
 		"p": {
-			"tag": "forge:plates/brass"
+			"tag": "forge:plates/tin"
 		},
 		"b": {
-			"item": "staticpower:fluid_capsule_basic"
+			"item": "staticpower:fluid_capsule_iron"
 		}
 	},
 	"result": {
-		"item": "staticpower:fluid_capsule_advanced"
+		"item": "staticpower:fluid_capsule_basic"
 	}
 }

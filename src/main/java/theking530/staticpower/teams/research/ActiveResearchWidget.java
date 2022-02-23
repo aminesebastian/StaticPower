@@ -100,7 +100,7 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 				for (int i = 0; i < research.getRequirements().size(); i++) {
 					int xOffset = i * 20;
 					StaticPowerIngredient requirement = research.getRequirements().get(i);
-					GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 20 - xOffset, 22, 0, 0.75f, 0.75f);
+					GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 20 - xOffset, 22, 0, 12f, 12f);
 
 					GuiDrawUtilities.drawString(pose, Integer.toString(requirement.getCount() - currentProgress.getRequirementFullfillment(i)), getSize().getX() - 7f - xOffset, 40, 1, 0.5f,
 							Color.EIGHT_BIT_WHITE, true);

@@ -359,16 +359,16 @@ public class GuiDrawUtilities {
 	}
 
 	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float alpha) {
-		drawItem(pose, item, 0, 0, 0, 1, 1, alpha);
+		drawItem(pose, item, 0, 0, 0, 16, 16, alpha);
 	}
 
 	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z) {
-		drawItem(pose, item, x, y, z, 1, 1, 1);
+		drawItem(pose, item, x, y, z, 16, 16, 1);
 
 	}
 
 	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float alpha) {
-		drawItem(pose, item, x, y, z, 1, 1, alpha);
+		drawItem(pose, item, x, y, z, 16, 16, alpha);
 	}
 
 	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height) {
@@ -396,7 +396,7 @@ public class GuiDrawUtilities {
 		}
 
 		posestack.scale(1.0F, -1.0F, 1.0F);
-		posestack.scale(16.0F * width, 16.0F * height, 16.0F);
+		posestack.scale(width, height, 16.0F);
 		RenderSystem.applyModelViewMatrix();
 
 		PoseStack posestack1 = new PoseStack();
@@ -419,7 +419,7 @@ public class GuiDrawUtilities {
 
 		RenderSystem.disableDepthTest();
 		RenderSystem.enableBlend();
-		GuiDrawUtilities.drawRectangle(pose, 16 * width, 16 * height, x, y, 0,
+		GuiDrawUtilities.drawRectangle(pose, width, height, x, y, 0,
 				new Color(DEFAULT_SLOT_CORNER_COLOR.getRed(), DEFAULT_SLOT_CORNER_COLOR.getGreen(), DEFAULT_SLOT_CORNER_COLOR.getBlue(), 1.0f - alpha));
 		RenderSystem.disableBlend();
 		RenderSystem.enableDepthTest();

@@ -31,7 +31,7 @@ import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 
 @SuppressWarnings("resource")
 public class GuiResearchMenu extends StaticPowerDetatchedGui {
-	protected static final int TIER_LEVEL_HEIGHT = 80;
+	protected static final int TIER_LEVEL_HEIGHT = 70;
 	protected static final int HISTORY_HEIGHT = 35;
 
 	protected ResearchInstance currentResearch;
@@ -81,12 +81,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 			for (int i = 0; i < level.getResearch().size(); i++) {
 				Research research = level.getResearch().get(i);
-				if (!research.isHiddenUntilAvailable()) {
-					int offset = level.getResearch().size() < 3 ? 0 : i % 2 == 0 ? 7 : -7;
-					ResearchNodeWidget widget = new ResearchNodeWidget(research, 0, TIER_LEVEL_HEIGHT / 2 - 12 + offset, 24, 24);
-					box.registerWidget(widget);
-					researchNodes.add(widget);
-				}
+				int offset = level.getResearch().size() < 3 ? 0 : i % 2 == 0 ? 7 : -7;
+				ResearchNodeWidget widget = new ResearchNodeWidget(research, 0, TIER_LEVEL_HEIGHT / 2 - 12 + offset, 24, 24);
+				box.registerWidget(widget);
+				researchNodes.add(widget);
 			}
 			nodeScrollBox.registerWidget(box);
 			tierBoxes.add(box);
@@ -219,7 +217,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Vector3D preReqPosition = node.getScreenSpacePosition().promote();
 				preReqPosition.add(11, 20f, 100);
 
-				Color startLineColor = new Color(0.0f, 0.0f, 0.0f, 1.0f);
+				Color startLineColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 				Color endLineColor = startLineColor;
 
 				// Draw the line ALWAYS black. We'll color on top of it in the next step if
@@ -245,7 +243,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 					timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 3)) / 3, 0, 1);
 					endLineColor = endLineColor.multiply(timeHovered);
 
-					GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 4.0f);
+					GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 8.0f);
 				}
 
 				pose.popPose();

@@ -1,0 +1,23 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_capsules",
+	"description": "Buckets are for chumps! Capsules are a convenient way of storing multiple buckets word of fluid in a single item.",
+	"prerequisites": [
+		"staticpower:research/fluid_capsules/iron"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 35
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/fluid_capsule/lumum_capsule"
+		}
+	],
+	"icon": {
+		"item": "staticpower:fluid_capsule_lumum"
+	}
+}

@@ -1032,11 +1032,11 @@ public class ModItems {
 
 		// Research
 		StaticPowerRegistry.preRegisterItem(ResearchTier1 = new ResearchItem("research_tier_1", MinecraftColor.RED.getColor(), 1));
-		StaticPowerRegistry.preRegisterItem(ResearchTier2 = new ResearchItem("research_tier_2", MinecraftColor.LIME.getColor(), 1));
-		StaticPowerRegistry.preRegisterItem(ResearchTier3 = new ResearchItem("research_tier_3", MinecraftColor.BLACK.getColor(), 1));
-		StaticPowerRegistry.preRegisterItem(ResearchTier4 = new ResearchItem("research_tier_4", MinecraftColor.CYAN.getColor(), 1));
-		StaticPowerRegistry.preRegisterItem(ResearchTier5 = new ResearchItem("research_tier_5", MinecraftColor.MAGENTA.getColor(), 1));
-		StaticPowerRegistry.preRegisterItem(ResearchTier6 = new ResearchItem("research_tier_6", MinecraftColor.YELLOW.getColor(), 1));
-		StaticPowerRegistry.preRegisterItem(ResearchTier7 = new ResearchItem("research_tier_7", MinecraftColor.WHITE.getColor(), 1));
+		StaticPowerRegistry.preRegisterItem(ResearchTier2 = new ResearchItem("research_tier_2", MinecraftColor.LIME.getColor(), 2));
+		StaticPowerRegistry.preRegisterItem(ResearchTier3 = new ResearchItem("research_tier_3", MinecraftColor.BLACK.getColor(), 3));
+		StaticPowerRegistry.preRegisterItem(ResearchTier4 = new ResearchItem("research_tier_4", MinecraftColor.CYAN.getColor(), 4));
+		StaticPowerRegistry.preRegisterItem(ResearchTier5 = new ResearchItem("research_tier_5", MinecraftColor.MAGENTA.getColor(), 5));
+		StaticPowerRegistry.preRegisterItem(ResearchTier6 = new ResearchItem("research_tier_6", MinecraftColor.YELLOW.getColor(), 6));
+		StaticPowerRegistry.preRegisterItem(ResearchTier7 = new ResearchItem("research_tier_7", MinecraftColor.WHITE.getColor(), 7));
 	}
 }

@@ -50,4 +50,6 @@ public class GuiTextures {
 	
 	public static final ResourceLocation SCROLL_HANDLE = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/scroll_handle.png");
 	public static final ResourceLocation SCROLL_HANDLE_DISABLED = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/scroll_handle_disabled.png");
+	
+	public static final ResourceLocation BLANK = new ResourceLocation(StaticPower.MOD_ID, "textures/blank_texture.png");
 }

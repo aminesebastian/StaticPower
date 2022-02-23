@@ -1,0 +1,24 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_hamering",
+	"description": "It's Hammer Time!",
+	"hiddenUntilAvailable": true,
+	"prerequisites": [
+		"staticpower:research/hammer/alloy_hammering"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_3",
+			"count": 50
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/tools/hammers/hammer_tungsten"
+		}
+	],
+	"icon": {
+		"item": "staticpower:hammer_tungsten"
+	}
+}

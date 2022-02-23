@@ -283,7 +283,7 @@ public class PluginJEI implements IModPlugin {
 		// Fertilization
 		fertilizerRecipeCategory = new FertilizerRecipeCategory(guiHelper);
 		registration.addRecipeCategories(fertilizerRecipeCategory);
-		
+
 		// Refinery
 		refineryRecipeCategory = new RefineryRecipeCategory(guiHelper);
 		registration.addRecipeCategories(refineryRecipeCategory);
@@ -344,7 +344,7 @@ public class PluginJEI implements IModPlugin {
 	public void registerRecipes(IRecipeRegistration registration) {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LumberMillRecipe.RECIPE_TYPE), LumberMillRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FormerRecipe.RECIPE_TYPE), FormerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.FURNACE_RECIPES, PoweredFurnaceRecipeCategory.UID);
+		registration.addRecipes(StaticPowerRecipeRegistry.FURNACE_RECIPES.values(), PoweredFurnaceRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FermenterRecipe.RECIPE_TYPE), FermenterRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.UID);
@@ -424,7 +424,7 @@ public class PluginJEI implements IModPlugin {
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer), FertilizerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment), FertilizerRecipeCategory.UID);
-		
+
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Refinery), RefineryRecipeCategory.UID);
 	}
 

@@ -1,0 +1,27 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_soldering",
+	"description": "Watch your fingers!",
+	"prerequisites": [
+		"staticpower:research/soldering/electric_soldering"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_3",
+			"count": 60
+		},
+		{
+			"item": "staticpower:research_tier_4",
+			"count": 60
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/industrial_solderer"
+		}
+	],
+	"icon": {
+		"item": "staticpower:machine_industrial_soldering_table"
+	}
+}

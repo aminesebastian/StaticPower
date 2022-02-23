@@ -1,11 +1,13 @@
 package theking530.staticpower.data.research;
 
 import com.google.gson.JsonElement;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import theking530.staticcore.gui.GuiDrawUtilities;
 
 public class ResearchIcon {
 	private final ItemStack itemIcon;
@@ -34,6 +36,14 @@ public class ResearchIcon {
 			buffer.writeItem(getItemIcon());
 		} else {
 			buffer.writeUtf(getTextureIcon().toString());
+		}
+	}
+
+	public static void draw(ResearchIcon icon, PoseStack pose, float x, float y, float z, float width, float height) {
+		if (icon.isItemIcon()) {
+			GuiDrawUtilities.drawItem(pose, icon.getItemIcon(), x, y, z, width, height);
+		} else if (icon.getTextureIcon() != null) {
+			GuiDrawUtilities.drawTexture(pose, icon.getTextureIcon(), width, height, x, y, z, 0, 0, 1, 1);
 		}
 	}
 

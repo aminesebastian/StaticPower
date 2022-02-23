@@ -28,15 +28,15 @@ public class ItemDrawable implements IDrawable {
 	private final Vector2D size;
 
 	public ItemDrawable() {
-		this(ItemStack.EMPTY, new Vector2D(1, 1));
+		this(ItemStack.EMPTY, new Vector2D(16, 16));
 	}
 
 	public ItemDrawable(@Nonnull ItemLike item) {
-		this(item, new Vector2D(1, 1));
+		this(item, new Vector2D(16, 16));
 	}
 
 	public ItemDrawable(@Nonnull ItemStack stack) {
-		this(stack, new Vector2D(1, 1));
+		this(stack, new Vector2D(16, 16));
 	}
 
 	public ItemDrawable(@Nonnull ItemLike item, Vector2D size) {

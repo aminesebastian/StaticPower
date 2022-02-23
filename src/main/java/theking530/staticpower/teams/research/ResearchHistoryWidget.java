@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.item.crafting.Recipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
@@ -14,6 +15,8 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
+import theking530.staticpower.data.research.ResearchUnlock;
+import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 
 public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidget> {
 	private final SimpleProgressBar progressBar;
@@ -38,8 +41,6 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 		}
 
 		if (research != null) {
-			int requirementCount = research.getRequirements().size();
-
 			// Draw icon.
 			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 2, 2, 110, 1.0f);
 			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 21, 9, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
@@ -49,13 +50,29 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 			progressBar.setSize(getSize().getX() * 0.75f, 7);
 
 			// Draw requirements.
-			for (int i = 0; i < requirementCount; i++) {
-				int xOffset = i * 12;
-				StaticPowerIngredient requirement = research.getRequirements().get(i);
-				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 20 - xOffset, getSize().getY() - 16, 100, 0.6f, 0.6f);
+			int xOffset = 0;
+			for (StaticPowerIngredient requirement : research.getRequirements()) {
+				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 14 - xOffset, getSize().getY() - 16, 100, 8f, 8f);
 
 				int remainingCount = requirement.getCount();
-				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 9 - xOffset, getSize().getY() - 10, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 3 - xOffset, getSize().getY() - 10, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+
+				xOffset += 9;
+			}
+
+			if (research.getUnlocks().size() > 0) {
+				GuiDrawUtilities.drawRectangle(pose, 0.4f, 8, getSize().getX() - 2.5f - xOffset, getSize().getY() - 12, 10, new Color(0, 0, 0, 0.3f));
+
+				// Draw the unlocks.
+				for (ResearchUnlock unlock : research.getUnlocks()) {
+					if (unlock.getType() == ResearchUnlockType.CRAFTING) {
+						Recipe<?> recipe = unlock.getAsRecipe();
+						if (recipe != null) {
+							GuiDrawUtilities.drawItem(pose, recipe.getResultItem(), getSize().getX() - 15f - xOffset, getSize().getY() - 16, 200, 8f, 8f);
+							xOffset += 9;
+						}
+					}
+				}
 			}
 		}
 	}
@@ -78,7 +95,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 		super.getTooltips(mousePosition, tooltips, showAdvanced);
 		if (this.research != null) {
 			String desc = new TranslatableComponent(research.getDescription()).getString();
-			List<String> description = GuiDrawUtilities.wrapString(desc, 100);
+			List<String> description = GuiDrawUtilities.wrapString(desc, 150);
 			for (String line : description) {
 				tooltips.add(new TextComponent(line));
 			}

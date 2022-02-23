@@ -11,6 +11,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -238,6 +239,26 @@ public class ResearchManager {
 			return (float) fullfillmentCount / totalRequirements;
 		}
 
+		/**
+		 * Checks if the provided item can satisfy part of this research and returns the
+		 * index of the requirement.
+		 * 
+		 * @param stack
+		 * @return
+		 */
+		public int getRequirementIndexFullfilledByItem(ItemStack stack) {
+			for (int i = 0; i < getTrackedResearch().getRequirements().size(); i++) {
+				StaticPowerIngredient ing = getTrackedResearch().getRequirements().get(i);
+				if (ing.test(stack)) {
+					int fullfilled = getRequirementFullfillment(i);
+					if (fullfilled < ing.getCount()) {
+						return i;
+					}
+				}
+			}
+			return -1;
+		}
+
 		public boolean isCompleted() {
 			return getFullfillmentPercentage() >= 1.0f;
 		}
@@ -247,8 +268,9 @@ public class ResearchManager {
 			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchName), manager);
 
 			int[] fullfillment = tag.getIntArray("requirementFullfillment");
+			instance.requirementFullfillment.clear();
 			for (int i = 0; i < fullfillment.length; i++) {
-				instance.requirementFullfillment.set(i, fullfillment[i]);
+				instance.requirementFullfillment.add(fullfillment[i]);
 			}
 			return instance;
 		}

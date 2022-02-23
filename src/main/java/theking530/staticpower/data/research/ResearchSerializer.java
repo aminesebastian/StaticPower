@@ -119,14 +119,20 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			color = Color.fromJson(json.get("color").getAsJsonObject());
 		}
 
+		int levelOffset = 0;
+		if (json.has("levelOffset")) {
+			levelOffset = json.get("levelOffset").getAsInt();
+		}
+
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
+		return new Research(recipeId, title, description, levelOffset, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
 	}
 
 	@Override
 	public Research fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		String title = buffer.readUtf();
 		String description = buffer.readUtf();
+		int levelOffset = buffer.readInt();
 		ResearchIcon icon = ResearchIcon.fromBuffer(buffer);
 
 		// Prerequisites.
@@ -168,14 +174,15 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		Color color = Color.fromBuffer(buffer);
 
 		// Create the recipe.
-		return new Research(recipeId, title, description, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
+		return new Research(recipeId, title, description, levelOffset, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, Research recipe) {
 		buffer.writeUtf(recipe.getTitle());
 		buffer.writeUtf(recipe.getDescription());
-
+		buffer.writeInt(recipe.getLevelOffset());
+		
 		recipe.getIcon().toBuffer(buffer);
 
 		// Prerequisites.

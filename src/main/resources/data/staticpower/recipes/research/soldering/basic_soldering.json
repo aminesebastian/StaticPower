@@ -11,6 +11,15 @@
 			"count": 10
 		}
 	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/soldering_table"
+		},{
+			"type": "crafting",
+			"target": "staticpower:crafting/tools/soldering_iron"
+		}
+	],
 	"icon": {
 		"item": "staticpower:soldering_iron"
 	}
