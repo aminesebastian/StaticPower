@@ -45,7 +45,7 @@ public class Vector2D extends AbstractVector {
 		return this;
 	}
 
-	public Vector2D substract(float x, float y) {
+	public Vector2D subtract(float x, float y) {
 		subtract(new Vector2D(x, y));
 		return this;
 	}

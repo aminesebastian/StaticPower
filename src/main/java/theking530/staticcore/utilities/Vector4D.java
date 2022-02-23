@@ -12,6 +12,10 @@ public class Vector4D extends Vector3D {
 	 */
 	public static final Vector4D DEFAULT_UV = new Vector4D(0.0f, 0.0f, 1.0f, 1.0f);
 
+	public Vector4D() {
+		this(0, 0, 0, 0);
+	}
+
 	public Vector4D(float x, float y, float z) {
 		this(x, y, z, 0.0f);
 	}
