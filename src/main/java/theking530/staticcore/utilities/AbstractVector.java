@@ -3,6 +3,8 @@ package theking530.staticcore.utilities;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.network.FriendlyByteBuf;
+
 @SuppressWarnings("unchecked")
 public abstract class AbstractVector implements Cloneable {
 	protected final static char[] PREFIXES = { 'X', 'Y', 'Z', 'W' };
@@ -99,6 +101,12 @@ public abstract class AbstractVector implements Cloneable {
 	@Override
 	public String toString() {
 		return toStringInternal(false);
+	}
+
+	public void toBuffer(FriendlyByteBuf buff) {
+		for (float val : values) {
+			buff.writeFloat(val);
+		}
 	}
 
 	protected String toStringInternal(boolean useColor) {

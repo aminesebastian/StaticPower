@@ -14,7 +14,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.TimeOfDayDrawable;
-import theking530.staticcore.gui.widgets.containers.PanBox;
+import theking530.staticcore.gui.widgets.containers.HorizontalBox;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
@@ -23,7 +23,6 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
@@ -43,7 +42,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected ResearchNodeWidget expandedNode;
 	protected SelectedResearchWidget selectedResearchWidget;
 
-	protected PanBox nodeScrollBox;
+	protected ScrollBox nodeScrollBox;
 	protected Map<ResearchNode, ResearchNodeWidget> researchNodes;
 
 	protected ScrollBox sideBarScrollBox;
@@ -62,8 +61,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 76).setZLevel(500));
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
-		registerWidget(nodeScrollBox = new PanBox(105, 20, 10000, 0));
-		nodeScrollBox.setMaxBounds(new Vector4D(-1000, -1000, 1000, 1000));
+		registerWidget(nodeScrollBox = new ScrollBox(105, 20, 10000, 0));
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
 		captureScreenSize();
@@ -94,15 +92,14 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		for (int y = 0; y < levels.getLevels().size(); y++) {
 			float tint = y % 2 == 0 ? 0.05f : 0.0f;
 			ResearchLevel level = levels.getLevels().get(y);
-
+			HorizontalBox hBox = new HorizontalBox(0, TIER_LEVEL_HEIGHT * y + 40, screenWidth - 115, TIER_LEVEL_HEIGHT);
 			for (int i = 0; i < level.getResearch().size(); i++) {
 				ResearchNode research = level.getResearch().get(i);
-				Vector2D position = research.getRelativePosition().multiply(nodeScrollBox.getSize().getX(), -TIER_LEVEL_HEIGHT / 2);
-				position.add(0, TIER_LEVEL_HEIGHT / 2 - 10);
-				ResearchNodeWidget widget = new ResearchNodeWidget(research, position.getX(), position.getY(), 24, 24);
+				ResearchNodeWidget widget = new ResearchNodeWidget(research, 0, TIER_LEVEL_HEIGHT / - 12, 24, 24);
 				researchNodes.put(research, widget);
-				nodeScrollBox.registerWidget(widget);
+				hBox.registerWidget(widget);
 			}
+			nodeScrollBox.registerWidget(hBox);
 		}
 	}
 

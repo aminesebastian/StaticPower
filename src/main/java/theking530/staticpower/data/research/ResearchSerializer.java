@@ -14,6 +14,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
@@ -119,20 +120,21 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			color = Color.fromJson(json.get("color").getAsJsonObject());
 		}
 
-		int levelOffset = 0;
-		if (json.has("levelOffset")) {
-			levelOffset = json.get("levelOffset").getAsInt();
+		// Capture visual offset.
+		Vector2D offset = new Vector2D(0, 0);
+		if (json.has("visualOffset")) {
+			offset = Vector2D.fromJson(json.get("visualOffset"));
 		}
 
 		// Create the recipe.
-		return new Research(recipeId, title, description, levelOffset, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
+		return new Research(recipeId, title, description, offset, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
 	}
 
 	@Override
 	public Research fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		String title = buffer.readUtf();
 		String description = buffer.readUtf();
-		int levelOffset = buffer.readInt();
+		Vector2D visualOffset = Vector2D.fromBuffer(buffer);
 		ResearchIcon icon = ResearchIcon.fromBuffer(buffer);
 
 		// Prerequisites.
@@ -163,7 +165,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			rewards.add(buffer.readItem());
 		}
 
-		// Advacements.
+		// Advancements.
 		List<ResourceLocation> advacements = new ArrayList<ResourceLocation>();
 		byte advacementsCount = buffer.readByte();
 		for (int i = 0; i < advacementsCount; i++) {
@@ -174,15 +176,15 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		Color color = Color.fromBuffer(buffer);
 
 		// Create the recipe.
-		return new Research(recipeId, title, description, levelOffset, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
+		return new Research(recipeId, title, description, visualOffset, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, Research recipe) {
 		buffer.writeUtf(recipe.getTitle());
 		buffer.writeUtf(recipe.getDescription());
-		buffer.writeInt(recipe.getLevelOffset());
-		
+		recipe.getVisualOffset().toBuffer(buffer);
+
 		recipe.getIcon().toBuffer(buffer);
 
 		// Prerequisites.

@@ -33,9 +33,9 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	protected void updateChildLayout(PoseStack pose, int index) {
-		//pose.translate(this.getLastMousePosition().getX(), getLastMousePosition().getY(), 0);
+		pose.translate(-targetPan.getX(), -targetPan.getY(), 0);
 		pose.scale(1 / interpolatedZoom, 1 / interpolatedZoom, 1 / interpolatedZoom);
-		//pose.translate(-this.getLastMousePosition().getX(), -getLastMousePosition().getY(), 0);
+		pose.translate(targetPan.getX(), targetPan.getY(), 0);
 		pose.translate(targetPan.getX(), targetPan.getY(), 0);
 	}
 
@@ -86,7 +86,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 
 		float maxScroll = Math.max(0, requiredHeight - getSize().getY());
 		setMaxScroll(maxScroll);
-		
+
 		Vector2D panVelocity = targetPan.copy().subtract(interpolatedPan);
 	}
 
@@ -118,16 +118,15 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	@Override
 	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
 		if (isHovered()) {
-			targetZoom = (float) SDMath.clamp(targetZoom + scrollDelta * -0.1f, 0, maxZoom);
+			targetZoom = (float) SDMath.clamp(targetZoom + scrollDelta * -0.1f, 1, maxZoom);
 		}
 		return super.mouseScrolled(mouseX, mouseY, scrollDelta);
 	}
 
 	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
 		if (isHovered()) {
-			Vector2D delta = getLastMousePosition().copy().subtract((float) mouseX, (float) mouseY);
-			this.targetPan.setX(targetPan.getX() + (float) p_mouseDragged_6_);
-			this.targetPan.setY(targetPan.getY() + (float) p_mouseDragged_8_);
+			this.targetPan.setX(targetPan.getX() + (float) p_mouseDragged_6_ * targetZoom);
+			this.targetPan.setY(targetPan.getY() + (float) p_mouseDragged_8_ * targetZoom);
 
 			// Limit the X.
 			if (targetPan.getX() < maxBounds.getX()) {

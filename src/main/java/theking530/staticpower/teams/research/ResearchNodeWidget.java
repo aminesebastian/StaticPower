@@ -86,7 +86,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		float parentMaxX = getParent().getOwningWidget().getScreenSpacePosition().getX() + getParent().getOwningWidget().getSize().getX();
 		float thisMaxX = screenSpaceInitial.getX() + getSize().getX();
-		float maxOffsetX = Math.max(thisMaxX - parentMaxX + 4, 0);
+		float maxOffsetX = getExpandedAlpha() * Math.max(thisMaxX - parentMaxX + 4, 0);
 
 		float maxOffsetY = (getExpandedAlpha() * (getSize().getY() / 2 - collapsedSize.getY() / 2));
 		setPosition(getInitialPosition().getX() - maxOffsetX, getInitialPosition().getY() - maxOffsetY);
@@ -193,13 +193,13 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	}
 
 	private void drawRearchRequirement(PoseStack pose, @Nullable ResearchInstance instance, StaticPowerIngredient requirement, int requirementIndex, float x, float y) {
-		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, getExpandedAlpha() * 150, 8f, 8f);
+		GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], x, y, 1, 8f, 8f);
 
 		if (instance != null) {
 			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount() - instance.getRequirementFullfillment(requirementIndex)).getString(), x + 8f,
-					y + 6.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+					y + 6.5f, 10, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		} else {
-			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringCentered(pose, GuiTextUtilities.formatNumberAsString(requirement.getCount()).getString(), x + 8f, y + 6.5f, 10, 0.5f, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 

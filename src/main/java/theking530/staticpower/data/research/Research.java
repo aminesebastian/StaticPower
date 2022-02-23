@@ -8,6 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
@@ -17,7 +18,7 @@ public class Research extends AbstractStaticPowerRecipe {
 	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
 	private final String title;
 	private final String description;
-	private final int levelOffset;
+	private final Vector2D visualOffset;
 	private final List<ResearchUnlock> unlocks;
 	private final ResearchIcon icon;
 	private final List<ResourceLocation> prerequisites;
@@ -27,12 +28,12 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final boolean hiddenUntilAvailable;
 	private final Color color;
 
-	public Research(ResourceLocation name, String title, String description, int levelOffset, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements, List<ItemStack> rewards,
-			List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon, boolean hiddenUntilAvailable, Color color) {
+	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements,
+			List<ItemStack> rewards, List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon, boolean hiddenUntilAvailable, Color color) {
 		super(name);
 		this.title = title;
 		this.description = description;
-		this.levelOffset = levelOffset;
+		this.visualOffset = visualOffset;
 		this.prerequisites = prerequisites;
 		this.requirements = requirements;
 		this.rewards = rewards;
@@ -59,8 +60,8 @@ public class Research extends AbstractStaticPowerRecipe {
 		return description;
 	}
 
-	public int getLevelOffset() {
-		return levelOffset;
+	public Vector2D getVisualOffset() {
+		return visualOffset;
 	}
 
 	public List<ResourceLocation> getPrerequisites() {

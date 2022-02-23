@@ -14,8 +14,7 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class ResearchLevels {
-	private final static float TIER_LEVEL_HEIGHT = 1;
-	private final static float RELATIVE_MAX_WIDTH = 1;
+	public final static float UNIT_SCALE = 100;
 	private final List<ResearchLevel> levels;
 
 	protected ResearchLevels() {
@@ -67,6 +66,22 @@ public class ResearchLevels {
 		return output;
 	}
 
+	protected static int getTotalChildren(ResearchNode node) {
+		int output = node.getChildren().size();
+		for (ResearchNode child : node.getChildren()) {
+			output += getTotalChildren(child);
+		}
+		return output;
+	}
+
+	protected static int maxWidthChildBranch(ResearchNode node) {
+		int output = node.getChildren().size();
+		for (ResearchNode child : node.getChildren()) {
+			output = Math.max(output, maxWidthChildBranch(child));
+		}
+		return output;
+	}
+
 	private static void populatePositions(ResearchLevels levels, List<ResearchNode> allNodes) {
 		HashMap<ResearchNode, Integer> childrenPlaced = new HashMap<ResearchNode, Integer>();
 
@@ -76,42 +91,39 @@ public class ResearchLevels {
 			for (int i = 0; i < level.getResearch().size(); i++) {
 				ResearchNode research = level.getResearch().get(i);
 				ResearchNode parent = research.getParent();
+
+				// Capture the parent position.
 				Vector2D parentPosition = new Vector2D(0, 0);
-
-				int childCount = 0;
-				int childIndex = 0;
-				int balancedIndex = 0;
-				if (childrenPlaced.containsKey(parent)) {
-					childIndex = childrenPlaced.get(parent);
-					childCount = parent.getChildren().size();
-					balancedIndex = childIndex - (childCount / 2);
-				}
-
 				if (parent != null) {
-					parentPosition = parent.getRelativePosition();
+					// In the case of multiple parents, we want the average X but the closest Y.
+					float sum = 0;
+					for (ResearchNode multiParent : research.getAllParents()) {
+						sum += multiParent.getRelativePosition().getX();
+					}
+					parentPosition.setX(sum / research.getAllParents().size());
+					parentPosition.setY(research.getParent().getRelativePosition().getY());
+				} else {
+					parentPosition = new Vector2D(UNIT_SCALE, 0);
 				}
 
+				// Populate the children placed map if this is the first time we see this
+				// research node.
 				if (!childrenPlaced.containsKey(research)) {
 					childrenPlaced.put(research, 0);
 				}
 
+				// Capture where we exist with respect to our parent.
+				int balancedIndex = 0;
 				if (childrenPlaced.containsKey(parent)) {
+					balancedIndex = research.childIndex - (parent.getChildren().size() / 2);
 					childrenPlaced.put(parent, childrenPlaced.get(parent) + 1);
-				} else {
-					parentPosition = new Vector2D(RELATIVE_MAX_WIDTH / 2, TIER_LEVEL_HEIGHT);
 				}
 
-				float distanceBetween = RELATIVE_MAX_WIDTH / 2;
-				if (parent != null) {
-					distanceBetween = RELATIVE_MAX_WIDTH / (parent.getChildren().size() + 1);
-					if (research.getChildren().size() == 0) {
-						distanceBetween /= 4;
-					}
-				}
-
-				float offset = childCount < 2 ? 0 : childIndex % 2 == 0 ? -0.3f : 0.3f;
-				research.setRelativePosition(
-						new Vector2D(parentPosition.getX() + (balancedIndex * distanceBetween), parentPosition.getY() - (TIER_LEVEL_HEIGHT * (1 + (childCount * 0.15f)) - offset)));
+				int balancedIndexSign = (int) Math.signum(balancedIndex);
+				float distanceBetween = UNIT_SCALE;
+				Vector2D relativePosition = new Vector2D(parentPosition.getX() + (balancedIndex * distanceBetween), parentPosition.getY() + (research.getParent() != null ? UNIT_SCALE : 0));
+				relativePosition.add(research.getResearch().getVisualOffset().copy().multiply(balancedIndexSign));
+				research.setRelativePosition(relativePosition);
 			}
 		}
 	}
@@ -120,8 +132,10 @@ public class ResearchLevels {
 		for (int i = cachedLevels.levels.size() - 1; i >= 0; i--) {
 			for (ResearchNode parent : cachedLevels.levels.get(i).getResearch()) {
 				if (lookingForParent.research.getPrerequisites().contains(parent.research.getId())) {
-					lookingForParent.setParent(parent);
-					return;
+					if (lookingForParent.closestParent == null) {
+						lookingForParent.setClosestParent(parent);
+					}
+					lookingForParent.addAdditionalParent(parent);
 				}
 			}
 		}
@@ -175,22 +189,30 @@ public class ResearchLevels {
 	public class ResearchNode {
 		private final Research research;
 		private final List<ResearchNode> children;
-		private ResearchNode parent;
+		private final List<ResearchNode> allParents;
+		private ResearchNode closestParent;
 		private Vector2D relativePosition;
+		private int childIndex;
 
 		public ResearchNode(Research research) {
 			this.research = research;
 			this.children = new ArrayList<ResearchNode>();
+			this.allParents = new ArrayList<ResearchNode>();
 			this.relativePosition = new Vector2D(0, 0);
 		}
 
-		public void setParent(ResearchNode newParent) {
-			if (parent != null) {
-				parent.children.remove(this);
+		public void setClosestParent(ResearchNode newParent) {
+			if (closestParent != null) {
+				closestParent.children.remove(this);
 			}
 
-			parent = newParent;
-			parent.children.add(this);
+			closestParent = newParent;
+			childIndex = closestParent.children.size();
+			closestParent.children.add(this);
+		}
+
+		public void addAdditionalParent(ResearchNode addParent) {
+			this.allParents.add(addParent);
 		}
 
 		public Research getResearch() {
@@ -198,7 +220,11 @@ public class ResearchLevels {
 		}
 
 		public ResearchNode getParent() {
-			return parent;
+			return closestParent;
+		}
+
+		public List<ResearchNode> getAllParents() {
+			return allParents;
 		}
 
 		public List<ResearchNode> getChildren() {

@@ -1,5 +1,10 @@
 package theking530.staticcore.utilities;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+
+import net.minecraft.network.FriendlyByteBuf;
+
 public class Vector2D extends AbstractVector {
 
 	public Vector2D(float x, float y) {
@@ -24,6 +29,10 @@ public class Vector2D extends AbstractVector {
 		values.set(0, x);
 	}
 
+	public void addX(float x) {
+		values.set(0, values.get(0) + x);
+	}
+
 	public float getY() {
 		return values.get(1);
 	}
@@ -34,6 +43,10 @@ public class Vector2D extends AbstractVector {
 
 	public void setY(float y) {
 		values.set(1, y);
+	}
+
+	public void addY(float y) {
+		values.set(1, values.get(1) + y);
 	}
 
 	public Vector3D promote() {
@@ -54,6 +67,15 @@ public class Vector2D extends AbstractVector {
 		values.set(0, values.get(0) * x);
 		values.set(1, values.get(1) * y);
 		return this;
+	}
+
+	public static Vector2D fromBuffer(FriendlyByteBuf buff) {
+		return new Vector2D(buff.readFloat(), buff.readFloat());
+	}
+
+	public static Vector2D fromJson(JsonElement element) {
+		JsonObject obj = element.getAsJsonObject();
+		return new Vector2D(obj.get("x").getAsFloat(), obj.get("y").getAsFloat());
 	}
 
 	@SuppressWarnings("unchecked")

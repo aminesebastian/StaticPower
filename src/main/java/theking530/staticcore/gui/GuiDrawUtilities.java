@@ -389,8 +389,8 @@ public class GuiDrawUtilities {
 		posestack.translate(8.0D, 8.0D, 0.0D);
 
 		if (pose != null) {
-			Vector2D offset = GuiDrawUtilities.translatePositionByMatrix(pose, x, y);
-			posestack.translate(offset.getX(), offset.getY(), z);
+			Vector3D offset = GuiDrawUtilities.translatePositionByMatrix(pose, x, y, z);
+			posestack.translate(offset.getX(), offset.getY(), offset.getZ());
 		} else {
 			posestack.translate(x, y, z);
 		}
@@ -456,6 +456,16 @@ public class GuiDrawUtilities {
 			return new Vector2D(vector4f.x(), vector4f.y());
 		} else {
 			return new Vector2D(xPos, yPos);
+		}
+	}
+
+	public static Vector3D translatePositionByMatrix(PoseStack matrixStack, float xPos, float yPos, float zPos) {
+		if (matrixStack != null) {
+			Vector4f vector4f = new Vector4f(xPos, yPos, zPos, 1);
+			vector4f.transform(matrixStack.last().pose());
+			return new Vector3D(vector4f.x(), vector4f.y(), vector4f.z());
+		} else {
+			return new Vector3D(xPos, yPos, zPos);
 		}
 	}
 }
