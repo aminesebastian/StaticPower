@@ -27,6 +27,7 @@ public class StringUtilities {
 		// Replace the given regex
 		// with replacement string
 		// and convert it to lower case.
+		camelCase = camelCase.replace("_", "");
 		camelCase = camelCase.replaceAll(regex, replacement);
 
 		// Return string with first character capitalized.
