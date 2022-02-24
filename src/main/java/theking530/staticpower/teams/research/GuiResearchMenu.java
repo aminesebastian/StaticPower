@@ -89,6 +89,9 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		nodeScrollBox.setSize(screenWidth - 105, screenHeight - 25);
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
+		for(int i=0; i<levels.getLevels().size(); i++) {
+			
+		}
 		for (int y = 0; y < levels.getLevels().size(); y++) {
 			float tint = y % 2 == 0 ? 0.05f : 0.0f;
 			ResearchLevel level = levels.getLevels().get(y);
