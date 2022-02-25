@@ -23,8 +23,7 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromH
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiHeatBarUtilities.drawHeatBar(matrix, getPosition().getX(), getPosition().getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentHeat(),
-				heatStorage.getMaximumHeat());
+		GuiHeatBarUtilities.drawHeatBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentHeat(), heatStorage.getMaximumHeat());
 	}
 
 	@Override

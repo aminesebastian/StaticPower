@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:cable_attachment_energized_extractor"
+		"item": "staticpower:cable_attachment_energized_extractor",
+		"count": 2
 	}
 }

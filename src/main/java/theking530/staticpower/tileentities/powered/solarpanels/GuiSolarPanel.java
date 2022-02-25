@@ -18,16 +18,17 @@ public class GuiSolarPanel extends StaticPowerTileEntityGui<ContainerSolarPanel,
 	protected DrawableWidget<SpriteDrawable> notGeneratingWidget;
 
 	public GuiSolarPanel(ContainerSolarPanel container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 120, 90);
+		super(container, invPlayer, name, 130, 90);
+		setShouldDrawInventoryLabel(false);
 	}
 
 	@Override
 	public void initializeGui() {
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 
-		registerWidget(new TimeOfDayDrawable(34, 18, 50, getTileEntity().getLevel(), getTileEntity().getBlockPos()));
-		registerWidget(generatingWidget = new DrawableWidget<SpriteDrawable>(51, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.GREEN_CHECK, 16, 16)));
-		registerWidget(notGeneratingWidget = new DrawableWidget<SpriteDrawable>(51, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16)));
+		registerWidget(new TimeOfDayDrawable(19, 9, 50, getTileEntity().getLevel(), getTileEntity().getBlockPos()));
+		registerWidget(generatingWidget = new DrawableWidget<SpriteDrawable>(53, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.GREEN_CHECK, 16, 16)));
+		registerWidget(notGeneratingWidget = new DrawableWidget<SpriteDrawable>(53, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.ERROR, 16, 16)));
 
 		generatingWidget.setVisible(getTileEntity().isGenerating());
 		notGeneratingWidget.setVisible(!getTileEntity().isGenerating());

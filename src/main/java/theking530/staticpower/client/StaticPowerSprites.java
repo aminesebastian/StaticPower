@@ -104,6 +104,12 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation RESEARCH_NODE_CONNECTION = registerSprite("gui/research_node_connection");
 
+	public static final ResourceLocation BASIC_CHEST = registerSprite("entity/chest/basic_chest");
+	public static final ResourceLocation ADVANCED_CHEST = registerSprite("entity/chest/advanced_chest");
+	public static final ResourceLocation STATIC_CHEST = registerSprite("entity/chest/static_chest");
+	public static final ResourceLocation ENERGIZED_CHEST = registerSprite("entity/chest/energized_chest");
+	public static final ResourceLocation LUMUM_CHEST = registerSprite("entity/chest/lumum_chest");
+	
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);
 		SPRITES.add(sprite);

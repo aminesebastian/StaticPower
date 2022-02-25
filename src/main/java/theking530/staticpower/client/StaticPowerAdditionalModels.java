@@ -254,6 +254,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation TURBINE_BLADES_ENERGIZED = registerModel("block/machines/turbine_blades/turbine_blades_energized");
 	public static final ResourceLocation TURBINE_BLADES_LUMUM = registerModel("block/machines/turbine_blades/turbine_blades_lumum");
 	public static final ResourceLocation TURBINE_BLADES_CREATIVE = registerModel("block/machines/turbine_blades/turbine_blades_creative");
+	
 
 	static {
 		CABLE_REDSTONE_BASIC = new HashMap<>();

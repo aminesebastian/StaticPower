@@ -20,6 +20,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:cable_attachment_energized_filter"
+		"item": "staticpower:cable_attachment_energized_filter",
+		"count": 2
 	}
 }

@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:cable_attachment_lumum_extractor"
+		"item": "staticpower:cable_attachment_lumum_extractor",
+		"count": 2
 	}
 }

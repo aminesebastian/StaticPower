@@ -90,6 +90,7 @@ public class InputServoComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void preProcessUpdate() {
 		// Do nothing if this component is not enabled.

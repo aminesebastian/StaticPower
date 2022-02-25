@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class GuiSolderingTable extends AbstractGuiSolderingTable<TileEntitySolderingTable, ContainerSolderingTable> {
 
 	public GuiSolderingTable(ContainerSolderingTable container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 185);
+		super(container, invPlayer, name, 176, 195);
 	}
 
 	@Override

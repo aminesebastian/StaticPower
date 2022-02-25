@@ -1,0 +1,8 @@
+{
+    "variants": {
+		"facing=north": { "model": "staticpower:block/chests/lumum" },
+        "facing=south": { "model": "staticpower:block/chests/lumum", "y": 180 },
+        "facing=west":  { "model": "staticpower:block/chests/lumum", "y": 270 },
+        "facing=east":  { "model": "staticpower:block/chests/lumum", "y": 90 }
+    }
+}

@@ -15,7 +15,7 @@ public class GuiHeatSink extends StaticPowerTileEntityGui<ContainerHeatSink, Til
 	protected GuiInfoTab infoTab;
 
 	public GuiHeatSink(ContainerHeatSink container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 146);
+		super(container, invPlayer, name, 176, 156);
 	}
 
 	@Override

@@ -24,7 +24,7 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 	private GuiInfoTab infoTab;
 
 	public GuiCentrifuge(ContainerCentrifuge container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 176);
 	}
 
 	@Override
@@ -56,7 +56,6 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 
 		String rpmText = getTileEntity().getCurrentSpeed() + " RPM";
 		drawEmptySlot(stack, 123 - (Minecraft.getInstance().font.width(rpmText) / 2), 40, Minecraft.getInstance().font.width(rpmText) + 4, 11);
-		Minecraft.getInstance().font.drawShadow(stack, rpmText, 125 - (Minecraft.getInstance().font.width(rpmText) / 2), 42,
-				Color.EIGHT_BIT_WHITE.encodeInInteger());
+		Minecraft.getInstance().font.drawShadow(stack, rpmText, 125 - (Minecraft.getInstance().font.width(rpmText) / 2), 42, Color.EIGHT_BIT_WHITE.encodeInInteger());
 	}
 }

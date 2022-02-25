@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:cable_attachment_static_extractor"
+		"item": "staticpower:cable_attachment_static_extractor",
+		"count": 2
 	}
 }

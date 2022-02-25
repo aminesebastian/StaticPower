@@ -62,6 +62,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	protected int outputSlotSize;
 	protected int inputSlotSize;
 	protected boolean isInitialized;
+	private boolean shouldDrawInventoryLabel;
 
 	private final SpriteDrawable lockedSprite;
 
@@ -80,6 +81,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		widgetContainer = new WidgetContainer(WidgetParent.fromScreen(this));
 		imageWidth = guiXSize;
 		imageHeight = guiYSize;
+		shouldDrawInventoryLabel = true;
 		sizeTarget = new Vector2D(imageWidth, imageHeight);
 		outputSlotSize = 24;
 		inputSlotSize = 16;
@@ -200,7 +202,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		// Draw any additional foreground elements.
 		stack.pushPose();
 		stack.translate(leftPos, topPos, 0);
-		
+
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);
 
@@ -285,7 +287,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			tabBoxes.add(tab.getBounds().toRectange2d());
 		}
 
-		for (AbstractGuiWidget widget : this.widgetContainer.getWidgets()) {
+		for (AbstractGuiWidget<?> widget : this.widgetContainer.getWidgets()) {
 			tabBoxes.add(widget.getBounds().toRectange2d());
 		}
 
@@ -323,7 +325,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 *         render.
 	 */
 	protected Vector2D getInventoryLabelDrawLocation() {
-		return DEFAULT_INVENTORY_LABEL_LOCATION;
+		return new Vector2D(8, this.getYSize() - 93);
 	}
 
 	/**
@@ -355,7 +357,16 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @return True if the inventory label should be drawn, false otherwise.
 	 */
 	protected boolean shouldDrawInventoryLabel() {
-		return false;
+		return shouldDrawInventoryLabel;
+	}
+
+	/**
+	 * This method controls whether or not the player inventory label will be drawn.
+	 * 
+	 * @param shouldDrawInventoryLabel
+	 */
+	protected void setShouldDrawInventoryLabel(boolean shouldDrawInventoryLabel) {
+		this.shouldDrawInventoryLabel = shouldDrawInventoryLabel;
 	}
 
 	/**
@@ -628,7 +639,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		sizeTarget = previousSizeTarget;
 	}
 
-	public void registerWidget(AbstractGuiWidget widget) {
+	public void registerWidget(AbstractGuiWidget<?> widget) {
 		widgetContainer.registerWidget(widget);
 	}
 

@@ -39,6 +39,7 @@ import theking530.staticpower.tileentities.digistorenetwork.manager.BlockDigisto
 import theking530.staticpower.tileentities.digistorenetwork.patternstorage.BlockPatternStorage;
 import theking530.staticpower.tileentities.digistorenetwork.severrack.BlockDigistoreServerRack;
 import theking530.staticpower.tileentities.nonpowered.cauldron.BlockCauldron;
+import theking530.staticpower.tileentities.nonpowered.chest.BlockStaticChest;
 import theking530.staticpower.tileentities.nonpowered.condenser.BlockCondenser;
 import theking530.staticpower.tileentities.nonpowered.conveyors.extractor.BlockConveyorExtractor;
 import theking530.staticpower.tileentities.nonpowered.conveyors.hopper.BlockConveyorHopper;
@@ -185,7 +186,7 @@ public class ModBlocks {
 	public static StaticPowerBlock BlockRawStaticMetal;
 	public static StaticPowerBlock BlockRawEnergizedMetal;
 	public static StaticPowerBlock BlockRawLumumMetal;
-	
+
 	// Machine blocks.
 	public static StaticPowerCutoutBlock MachineBlockIron;
 	public static StaticPowerCutoutBlock MachineBlockBasic;
@@ -211,6 +212,11 @@ public class ModBlocks {
 	public static BlockPump CreativePump;
 
 	public static BlockVacuumChest VacuumChest;
+	public static BlockStaticChest BasicChest;
+	public static BlockStaticChest AdvancedChest;
+	public static BlockStaticChest StaticChest;
+	public static BlockStaticChest EnergizedChest;
+	public static BlockStaticChest LumumChest;
 	public static BlockChargingStation ChargingStation;
 	public static BlockPoweredFurnace PoweredFurnace;
 	public static BlockPoweredGrinder PoweredGrinder;
@@ -459,7 +465,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BlockRawStaticMetal = new StaticPowerBlock("block_raw_static_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockRawEnergizedMetal = new StaticPowerBlock("block_raw_energized_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockRawLumumMetal = new StaticPowerBlock("block_raw_lumum_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
-		
+
 		// Machine Blocks
 		StaticPowerRegistry.preRegisterBlock(MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
@@ -470,6 +476,12 @@ public class ModBlocks {
 
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
+		StaticPowerRegistry.preRegisterBlock(BasicChest = new BlockStaticChest("chest_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(AdvancedChest = new BlockStaticChest("chest_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(StaticChest = new BlockStaticChest("chest_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(EnergizedChest = new BlockStaticChest("chest_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(LumumChest = new BlockStaticChest("chest_lumum", StaticPowerTiers.LUMUM));
+
 		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelAdvanced = new BlockSolarPanel("solar_panel_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterBlock(SolarPanelStatic = new BlockSolarPanel("solar_panel_static", StaticPowerTiers.STATIC));

@@ -20,6 +20,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:cable_attachment_advanced_filter"
+		"item": "staticpower:cable_attachment_advanced_filter",
+		"count": 2
 	}
 }

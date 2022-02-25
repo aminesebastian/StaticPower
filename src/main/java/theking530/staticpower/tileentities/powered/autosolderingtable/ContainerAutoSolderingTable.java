@@ -31,7 +31,6 @@ public class ContainerAutoSolderingTable extends AbstractContainerSolderingTable
 	@Override
 	public void initializeContainer() {
 		enableSolderingIronSlot = false;
-		craftingGridXOffset = -18;
 		super.initializeContainer();
 
 		// Add the soldering iron slot.

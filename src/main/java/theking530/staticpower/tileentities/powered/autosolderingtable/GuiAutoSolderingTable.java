@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.nonpowered.solderingtable.AbstractGui
 public class GuiAutoSolderingTable extends AbstractGuiSolderingTable<TileEntityAutoSolderingTable, ContainerAutoSolderingTable> {
 
 	public GuiAutoSolderingTable(ContainerAutoSolderingTable container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 185);
+		super(container, invPlayer, name, 176, 195);
 	}
 
 	@Override
@@ -35,6 +35,10 @@ public class GuiAutoSolderingTable extends AbstractGuiSolderingTable<TileEntityA
 		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
+	}
+
+	protected int getPatternRecipeXOffset() {
+		return -18;
 	}
 
 	@Override

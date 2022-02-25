@@ -17,6 +17,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:cable_attachment_advanced_retriever"
+		"item": "staticpower:cable_attachment_advanced_retriever",
+		"count": 2
 	}
 }

@@ -21,7 +21,6 @@ import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StringUtilities;
-import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;

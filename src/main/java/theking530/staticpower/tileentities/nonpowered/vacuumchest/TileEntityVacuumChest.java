@@ -149,6 +149,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 		}
 	}
 
+	@SuppressWarnings("resource")
 	protected void vacuumExperience(AABB bounds) {
 		List<ExperienceOrb> xpOrbs = getLevel().getEntitiesOfClass(ExperienceOrb.class, bounds);
 		for (ExperienceOrb orb : xpOrbs) {
