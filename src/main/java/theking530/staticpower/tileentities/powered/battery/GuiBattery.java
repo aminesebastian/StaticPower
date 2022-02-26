@@ -31,7 +31,7 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 	private TextButton outputDown;
 
 	public GuiBattery(ContainerBattery container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

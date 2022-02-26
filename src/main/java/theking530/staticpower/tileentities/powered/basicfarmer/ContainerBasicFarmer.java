@@ -51,8 +51,7 @@ public class ContainerBasicFarmer extends StaticPowerTileEntityContainer<TileEnt
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
 
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 
 	@Override

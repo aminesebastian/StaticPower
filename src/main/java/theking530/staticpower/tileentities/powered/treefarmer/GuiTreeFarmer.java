@@ -29,7 +29,7 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 	private SpriteButton drawPreviewButton;
 
 	public GuiTreeFarmer(ContainerTreeFarmer container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 174);
 	}
 
 	@Override

@@ -30,8 +30,7 @@ public class AbstractCableAttachmentContainer<T extends Item> extends StaticPowe
 
 	@Override
 	public void initializeContainer() {
-		this.addPlayerInventory(getPlayerInventory(), 8, 69);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addAllPlayerSlots();
 	}
 
 	@Override

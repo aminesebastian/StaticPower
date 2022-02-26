@@ -19,12 +19,12 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargingStation, TileEntityChargingStation> {
 
 	public GuiChargingStation(ContainerChargingStation container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 176);
 	}
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 42));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 50));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
@@ -38,9 +38,9 @@ public class GuiChargingStation extends StaticPowerTileEntityGui<ContainerChargi
 	@Override
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_HELMET), 152, 8, 0.3f);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_CHESTPLATE), 152, 26, 0.3f);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_LEGGINGS), 152, 44, 0.3f);
-		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_BOOTS), topPos, 152, 62, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_HELMET), 152, 8, 0, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_CHESTPLATE), 152, 26, 0, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_LEGGINGS), 152, 44, 0, 0.3f);
+		GuiDrawUtilities.drawItem(stack, new ItemStack(Items.IRON_BOOTS), 152, 62, 0, 0.3f);
 	}
 }

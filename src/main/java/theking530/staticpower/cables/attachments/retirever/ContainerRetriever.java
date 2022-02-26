@@ -43,8 +43,7 @@ public class ContainerRetriever extends AbstractCableAttachmentContainer<Retriev
 
 		this.addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
-		this.addPlayerInventory(getPlayerInventory(), 8, 69);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addAllPlayerSlots();
 	}
 
 	public ItemStackHandler getExtractorInventory() {

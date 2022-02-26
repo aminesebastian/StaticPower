@@ -20,7 +20,7 @@ public class GuiVulcanizer extends StaticPowerTileEntityGui<ContainerVulcanizer,
 	private FluidProgressBar progressBar;
 
 	public GuiVulcanizer(ContainerVulcanizer container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

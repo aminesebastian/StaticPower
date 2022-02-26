@@ -40,7 +40,6 @@ public class ContainerLumberMill extends StaticPowerTileEntityContainer<TileEnti
 		this.addSlot(new OutputSlot(getTileEntity().mainOutputInventory, 0, 90, 32));
 		this.addSlot(new OutputSlot(getTileEntity().secondaryOutputInventory, 0, 120, 32));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

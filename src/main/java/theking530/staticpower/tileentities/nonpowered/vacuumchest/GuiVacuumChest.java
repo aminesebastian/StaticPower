@@ -24,7 +24,7 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 	private GuiFluidContainerTab fluidContainerTab;
 
 	public GuiVacuumChest(ContainerVacuumChest container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 185);
+		super(container, invPlayer, name, 176, 192);
 	}
 
 	@Override
@@ -57,12 +57,12 @@ public class GuiVacuumChest extends StaticPowerTileEntityGui<ContainerVacuumChes
 
 		// Change the size of the GUI depending on if there is a XP upgrade present.
 		if (!getTileEntity().showTank()) {
-			setGuiSizeTarget(176, 185);
+			setGuiSizeTarget(176, 192);
 			fluidBar.setVisible(false);
 			getTabManager().removeTab(fluidTab);
 			getTabManager().removeTab(fluidContainerTab);
 		} else {
-			setGuiSizeTarget(200, 185);
+			setGuiSizeTarget(200, 192);
 			fluidBar.setVisible(true);
 			getTabManager().registerTab(fluidTab);
 			getTabManager().registerTab(fluidContainerTab);

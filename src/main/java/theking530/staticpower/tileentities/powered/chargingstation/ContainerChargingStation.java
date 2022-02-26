@@ -45,7 +45,7 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 		this.addSlot(new OutputSlot(getTileEntity().chargedInventory, 3, 117, 52));
 
 		// Battery
-		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 54));
+		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 62));
 
 		// Armor
 		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 39, 152, 8, EquipmentSlot.HEAD));
@@ -53,7 +53,6 @@ public class ContainerChargingStation extends StaticPowerTileEntityContainer<Til
 		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 37, 152, 44, EquipmentSlot.LEGS));
 		this.addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, 152, 62, EquipmentSlot.FEET));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

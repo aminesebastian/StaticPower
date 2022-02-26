@@ -60,8 +60,7 @@ public class ContainerItemFilter extends StaticPowerItemContainer<ItemFilter> {
 		addSlotsInGrid(filterInventory, 0, 89, 19, SDMath.getSmallestFactor(filterInventory.getSlots(), 9), 16,
 				(index, x, y) -> new PhantomSlot(filterInventory, index, x, y, true).renderFluidContainerAsFluid());
 
-		addPlayerInventory(getPlayerInventory(), 8, 69 + (filterInventory.getSlots() > 9 ? 12 : 0));
-		addPlayerHotbar(getPlayerInventory(), 8, 127 + (filterInventory.getSlots() > 9 ? 12 : 0));
+		addAllPlayerSlots();
 	}
 
 	@Override

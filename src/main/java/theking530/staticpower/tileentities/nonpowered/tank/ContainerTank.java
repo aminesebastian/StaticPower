@@ -37,7 +37,6 @@ public class ContainerTank extends StaticPowerTileEntityContainer<TileEntityTank
 		addSlot(new FluidContainerSlot(getTileEntity().outputFluidContainerComponent, Items.BUCKET, 0, 130, 31));
 		addSlot(new FluidContainerSlot(getTileEntity().outputFluidContainerComponent, Items.WATER_BUCKET, 1, 130, 63));
 
-		addPlayerInventory(getPlayerInventory(), 8, 103);
-		addPlayerHotbar(getPlayerInventory(), 8, 161);
+		addAllPlayerSlots();
 	}
 }

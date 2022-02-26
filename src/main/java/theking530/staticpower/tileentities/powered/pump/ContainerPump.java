@@ -37,7 +37,6 @@ public class ContainerPump extends StaticPowerTileEntityContainer<TileEntityPump
 		// Battery
 		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 58));
 
-		addPlayerInventory(getPlayerInventory(), 8, 78);
-		addPlayerHotbar(getPlayerInventory(), 8, 136);
+		addAllPlayerSlots();
 	}
 }

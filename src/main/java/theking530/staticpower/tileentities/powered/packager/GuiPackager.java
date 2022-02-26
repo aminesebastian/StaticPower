@@ -22,7 +22,7 @@ public class GuiPackager extends StaticPowerTileEntityGui<ContainerPackager, Til
 	private SpriteButton recipeSizeButton;
 
 	public GuiPackager(ContainerPackager container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

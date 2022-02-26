@@ -44,8 +44,7 @@ public class ContainerDigistoreCraftingInterface extends AbstractCableAttachment
 
 		addSlotsInGrid(filterInventory, 0, 88, 24, SDMath.getSmallestFactor(filterInventory.getSlots(), 6), 16, (index, x, y) -> new EncodedPatternSlot(filterInventory, index, x, y));
 
-		addPlayerInventory(getPlayerInventory(), 8, 69);
-		addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addAllPlayerSlots();
 	}
 
 	public ItemStackHandler getExtractorInventory() {

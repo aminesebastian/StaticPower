@@ -18,7 +18,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiLathe extends StaticPowerTileEntityGui<ContainerLathe, TileEntityLathe> {
 
 	public GuiLathe(ContainerLathe container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 174);
 	}
 
 	@Override

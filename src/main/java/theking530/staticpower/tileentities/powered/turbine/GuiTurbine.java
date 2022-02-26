@@ -21,7 +21,7 @@ public class GuiTurbine extends StaticPowerTileEntityGui<ContainerTurbine, TileE
 	private FireProgressBar progressBar;
 
 	public GuiTurbine(ContainerTurbine container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 176);
 	}
 
 	@Override

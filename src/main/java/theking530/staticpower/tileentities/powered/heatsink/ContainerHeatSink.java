@@ -27,7 +27,6 @@ public class ContainerHeatSink extends StaticPowerTileEntityContainer<TileEntity
 
 	@Override
 	public void initializeContainer() {
-		this.addPlayerInventory(getPlayerInventory(), 8, 74);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 132);
+		addAllPlayerSlots();
 	}
 }

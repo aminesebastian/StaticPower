@@ -5,10 +5,13 @@ import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
@@ -221,8 +224,8 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
-		// setToDefault(true);
+	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+
 	}
 
 	private void setToDefault(boolean suppressEvent) {
@@ -279,6 +282,8 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	@Override
 	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
+		configuration = new MachineSideMode[6];
+		enabledState = new boolean[6];
 		for (int i = 0; i < 6; i++) {
 			configuration[i] = MachineSideMode.values()[nbt.getInt("mode" + i)];
 		}

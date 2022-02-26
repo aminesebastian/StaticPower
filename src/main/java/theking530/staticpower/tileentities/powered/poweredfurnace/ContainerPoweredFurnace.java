@@ -45,7 +45,6 @@ public class ContainerPoweredFurnace extends StaticPowerTileEntityContainer<Tile
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 32));
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

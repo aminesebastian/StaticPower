@@ -38,8 +38,7 @@ public class ContainerEvaporator extends StaticPowerTileEntityContainer<TileEnti
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 37));
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 57));
 
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 
 	@Override

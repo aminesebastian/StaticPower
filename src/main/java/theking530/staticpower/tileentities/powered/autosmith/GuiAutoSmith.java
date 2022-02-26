@@ -23,7 +23,7 @@ public class GuiAutoSmith extends StaticPowerTileEntityGui<ContainerAutoSmith, T
 	private GuiInfoTab infoTab;
 
 	public GuiAutoSmith(ContainerAutoSmith container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 174);
 	}
 
 	@Override

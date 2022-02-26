@@ -34,8 +34,7 @@ public class ContainerDigistore extends StaticPowerTileEntityContainer<TileEntit
 	public void initializeContainer() {
 		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.BasicSingularDigistoreCard), 0.3f, getTileEntity().inventory, 0, 80, 45));
 
-		addPlayerHotbar(getPlayerInventory(), 8, 126);
-		addPlayerInventory(getPlayerInventory(), 8, 68);
+		addAllPlayerSlots();
 	}
 
 	@Override

@@ -68,13 +68,7 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 					}
 				});
 
-		// Upgrades
-//		this.addSlot(new UpgradeItemSlot(inventory, 1, 61, 38));
-//		this.addSlot(new UpgradeItemSlot(inventory, 2, 79, 38));
-//		this.addSlot(new UpgradeItemSlot(inventory, 3, 97, 38));
-
-		addPlayerHotbar(getPlayerInventory(), 8, 118 + (inventory.getSlots() > 9 ? 12 : 0));
-		addPlayerInventory(getPlayerInventory(), 8, 60 + (inventory.getSlots() > 9 ? 12 : 0));
+		addAllPlayerSlots();
 	}
 
 	@Override

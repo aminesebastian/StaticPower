@@ -35,8 +35,7 @@ public class ContainerRandomItemGenerator extends StaticPowerTileEntityContainer
 			}
 		}
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 103);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 161);
+		addAllPlayerSlots();
 	}
 
 	@Override

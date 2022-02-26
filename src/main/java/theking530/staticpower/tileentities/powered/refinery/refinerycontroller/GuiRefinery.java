@@ -25,7 +25,7 @@ public class GuiRefinery extends StaticPowerTileEntityGui<ContainerRefinery, Til
 	private FluidProgressBar fluidBar3;
 
 	public GuiRefinery(ContainerRefinery container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

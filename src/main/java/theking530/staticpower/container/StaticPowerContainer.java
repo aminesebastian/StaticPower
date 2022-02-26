@@ -41,15 +41,48 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	protected int playerHotbarStart;
 	protected int playerInventoryEnd;
 	protected int playerHotbarEnd;
+	protected int clientHeight;
+	protected int clientWidth;
 	private final Inventory playerInventory;
+	private final List<Slot> playerInventorySlots;
+	private final List<Slot> playerHotBarSlots;
 	private ContainerOpener<?> opener;
 	private Component name;
 
 	protected StaticPowerContainer(ContainerTypeAllocator<? extends StaticPowerContainer, ?> allocator, int id, Inventory inv) {
 		super(allocator.getType(), id);
 		this.allocator = allocator;
+		this.playerInventorySlots = new ArrayList<Slot>();
+		this.playerHotBarSlots = new ArrayList<Slot>();
 		playerInventory = inv;
 		preInitializeContainer();
+	}
+
+	/**
+	 * Updates the GUI screen size. This should not be called manually and instead
+	 * left to the StaticPowerContainerGui to call it. This will automatically move
+	 * the player slots to stay pinned at the bottom.
+	 * 
+	 * @param clientWidth
+	 * @param clientHeight
+	 */
+	public void setDimensions(int clientWidth, int clientHeight) {
+		this.clientWidth = clientWidth;
+		this.clientHeight = clientHeight;
+
+		for (int i = 0; i < playerInventorySlots.size(); i++) {
+			Slot slot = playerInventorySlots.get(i);
+			int row = i / 9;
+			int col = i % 9;
+			slot.x = (col * 18) + (clientWidth / 2) - 80;
+			slot.y = clientHeight - (row * 18) - 46;
+
+		}
+		for (int i = 0; i < playerHotBarSlots.size(); i++) {
+			Slot hotbarSlot = playerHotBarSlots.get(i);
+			hotbarSlot.x = (18 * i) + (clientWidth / 2) - 80;
+			hotbarSlot.y = clientHeight - 24;
+		}
 	}
 
 	/**
@@ -114,20 +147,27 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return this.name;
 	}
 
+	protected void addAllPlayerSlots() {
+		this.addPlayerInventory(getPlayerInventory(), 8, -82);
+		this.addPlayerHotbar(getPlayerInventory(), 8, -24);
+	}
+
 	protected void addPlayerInventory(Inventory invPlayer, int xPosition, int yPosition) {
+		playerInventorySlots.clear();
 		playerInventoryStart = this.slots.size();
 		for (int i = 0; i < 3; i++) {
 			for (int j = 0; j < 9; j++) {
-				addSlot(new Slot(invPlayer, j + i * 9 + 9, xPosition + j * 18, yPosition + i * 18));
+				playerInventorySlots.add(addSlot(new Slot(invPlayer, j + i * 9 + 9, xPosition + j * 18, yPosition + i * 18)));
 			}
 		}
 		playerInventoryEnd = this.slots.size() - 1;
 	}
 
 	protected void addPlayerHotbar(Inventory invPlayer, int xPosition, int yPosition) {
+		playerHotBarSlots.clear();
 		playerHotbarStart = this.slots.size();
 		for (int i = 0; i < 9; i++) {
-			addSlot(new Slot(invPlayer, i, xPosition + i * 18, yPosition));
+			playerHotBarSlots.add(addSlot(new Slot(invPlayer, i, xPosition + i * 18, yPosition)));
 		}
 		playerHotbarEnd = this.slots.size() - 1;
 	}

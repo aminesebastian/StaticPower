@@ -40,8 +40,6 @@ public class ContainerMiner extends StaticPowerTileEntityContainer<TileEntityMin
 
 		// Output
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 80, 32));
-
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

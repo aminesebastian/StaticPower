@@ -39,8 +39,7 @@ public class ContainerStaticChest extends StaticPowerTileEntityContainer<TileEnt
 			return new StaticPowerContainerSlot(getTileEntity().inventory, index, x, y);
 		});
 
-		this.addPlayerInventory(getPlayerInventory(), 8, size.getYi() - 82);
-		this.addPlayerHotbar(getPlayerInventory(), 8, size.getYi() - 24);
+		addAllPlayerSlots();
 	}
 
 	@Override

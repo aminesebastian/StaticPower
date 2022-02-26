@@ -32,7 +32,6 @@ public class ContainerPatternStorage extends StaticPowerTileEntityContainer<Tile
 			return new StaticPowerContainerSlot(getTileEntity().patternInventory, index, x, y);
 		});
 
-		addPlayerHotbar(getPlayerInventory(), 8, 126);
-		addPlayerInventory(getPlayerInventory(), 8, 68);
+		addAllPlayerSlots();
 	}
 }

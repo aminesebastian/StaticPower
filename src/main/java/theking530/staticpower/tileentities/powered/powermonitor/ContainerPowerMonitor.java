@@ -27,7 +27,6 @@ public class ContainerPowerMonitor extends StaticPowerTileEntityContainer<TileEn
 
 	@Override
 	public void initializeContainer() {
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

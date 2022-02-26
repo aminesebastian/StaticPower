@@ -42,7 +42,6 @@ public class ContainerLathe extends StaticPowerTileEntityContainer<TileEntityLat
 		this.addSlot(new OutputSlot(getTileEntity().mainOutputInventory, 0, 120, 20));
 		this.addSlot(new OutputSlot(getTileEntity().secondaryOutputInventory, 0, 120, 52));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

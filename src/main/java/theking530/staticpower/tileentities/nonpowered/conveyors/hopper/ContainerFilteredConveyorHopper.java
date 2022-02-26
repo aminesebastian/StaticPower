@@ -30,7 +30,6 @@ public class ContainerFilteredConveyorHopper extends StaticPowerTileEntityContai
 	@Override
 	public void initializeContainer() {
 		addSlot(new FilterItemSlot(getTileEntity().filterInventory, 0, 80, 20));
-		addPlayerInventory(getPlayerInventory(), 8, 42);
-		addPlayerHotbar(getPlayerInventory(), 8, 100);
+		addAllPlayerSlots();
 	}
 }

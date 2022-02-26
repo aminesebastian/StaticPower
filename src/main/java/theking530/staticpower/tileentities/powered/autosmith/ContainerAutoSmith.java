@@ -46,10 +46,9 @@ public class ContainerAutoSmith extends StaticPowerTileEntityContainer<TileEntit
 		addSlot(new OutputSlot(getTileEntity().completedOutputInventory, 0, 95, 60));
 
 		// Battery
-		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
+		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 60));
 
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 
 	@Override

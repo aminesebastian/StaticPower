@@ -38,7 +38,6 @@ public class ContainerDigistoreServerRack extends StaticPowerTileEntityContainer
 		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 6, 93, 60));
 		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inventory, 7, 93, 80));
 
-		addPlayerHotbar(getPlayerInventory(), 8, 161);
-		addPlayerInventory(getPlayerInventory(), 8, 103);
+		addAllPlayerSlots();
 	}
 }

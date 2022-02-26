@@ -30,7 +30,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 	private final IDigistoreInventory inventory;
 
 	public GuiDigistore(ContainerDigistore container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 150);
+		super(container, invPlayer, name, 176, 154);
 		inventory = getTileEntity().inventory;
 	}
 

@@ -42,7 +42,6 @@ public class ContainerEnchanter extends StaticPowerTileEntityContainer<TileEntit
 		// Output
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 150, 40));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

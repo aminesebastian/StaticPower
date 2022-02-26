@@ -15,7 +15,7 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 public class GuiLaboratory extends StaticPowerTileEntityGui<ContainerLaboratory, TileEntityLaboratory> {
 
 	public GuiLaboratory(ContainerLaboratory container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

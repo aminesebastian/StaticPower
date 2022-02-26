@@ -62,8 +62,7 @@ public class ContainerAutoCraftingTable extends StaticPowerTileEntityContainer<T
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 57));
 
 		// Player slots.
-		addPlayerInventory(getPlayerInventory(), 8, 103);
-		addPlayerHotbar(getPlayerInventory(), 8, 161);
+		addAllPlayerSlots();
 	}
 
 	@Override

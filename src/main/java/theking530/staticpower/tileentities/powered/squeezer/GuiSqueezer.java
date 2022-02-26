@@ -25,7 +25,7 @@ public class GuiSqueezer extends StaticPowerTileEntityGui<ContainerSqueezer, Til
 	private FluidProgressBar progressBar;
 
 	public GuiSqueezer(ContainerSqueezer container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 
 	}
 

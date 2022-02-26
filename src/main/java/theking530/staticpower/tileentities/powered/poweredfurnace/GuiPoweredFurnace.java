@@ -15,7 +15,7 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 public class GuiPoweredFurnace extends StaticPowerTileEntityGui<ContainerPoweredFurnace, TileEntityPoweredFurnace> {
 
 	public GuiPoweredFurnace(ContainerPoweredFurnace container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

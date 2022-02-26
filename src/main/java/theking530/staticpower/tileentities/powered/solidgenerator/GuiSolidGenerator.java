@@ -14,12 +14,12 @@ import theking530.staticpower.tileentities.components.control.RedstoneControlCom
 public class GuiSolidGenerator extends StaticPowerTileEntityGui<ContainerSolidGenerator, TileEntitySolidGenerator> {
 
 	public GuiSolidGenerator(ContainerSolidGenerator container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 174);
 	}
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 70));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 12, 16, 64));
 		registerWidget(new FireProgressBar(81, 58).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));

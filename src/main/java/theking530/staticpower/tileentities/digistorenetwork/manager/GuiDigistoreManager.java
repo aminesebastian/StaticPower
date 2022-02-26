@@ -11,7 +11,7 @@ import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigistoreManager, TileEntityDigistoreManager> {
 
 	public GuiDigistoreManager(ContainerDigistoreManager container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

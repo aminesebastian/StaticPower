@@ -19,15 +19,15 @@ public class GuiCondenser extends StaticPowerTileEntityGui<ContainerCondenser, T
 	private FluidProgressBar progressBar;
 
 	public GuiCondenser(ContainerCondenser container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 170);
 	}
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 8, 16, 16, 62));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().inputTankComponent, 50, 18, 20, 58, MachineSideMode.Input, getTileEntity()));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().outputTankComponent, 106, 18, 20, 58, MachineSideMode.Output, getTileEntity()));
-		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(75, 44, 26, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 8, 18, 16, 54));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().inputTankComponent, 50, 20, 20, 54, MachineSideMode.Input, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().outputTankComponent, 106, 20, 20, 54, MachineSideMode.Output, getTileEntity()));
+		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(75, 46, 26, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));

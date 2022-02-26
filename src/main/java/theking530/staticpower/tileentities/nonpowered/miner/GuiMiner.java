@@ -34,7 +34,7 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, TileEntit
 	private GuiInfoTab infoTab;
 
 	public GuiMiner(ContainerMiner container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 170);
 	}
 
 	@Override

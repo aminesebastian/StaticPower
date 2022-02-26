@@ -26,7 +26,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 	private GuiInfoTab infoTab;
 
 	public GuiFermenter(ContainerFermenter container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 174);
 	}
 
 	@Override

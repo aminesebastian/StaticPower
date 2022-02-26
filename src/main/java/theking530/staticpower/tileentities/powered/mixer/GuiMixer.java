@@ -25,7 +25,7 @@ public class GuiMixer extends StaticPowerTileEntityGui<ContainerMixer, TileEntit
 	private FluidProgressBar progressBar;
 
 	public GuiMixer(ContainerMixer container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 179);
 	}
 
 	@Override

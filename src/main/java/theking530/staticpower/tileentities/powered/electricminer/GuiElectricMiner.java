@@ -35,7 +35,7 @@ public class GuiElectricMiner extends StaticPowerTileEntityGui<ContainerElectric
 	private GuiInfoTab infoTab;
 
 	public GuiElectricMiner(ContainerElectricMiner container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

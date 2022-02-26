@@ -24,7 +24,7 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 	private GuiInfoTab infoTab;
 
 	public GuiCentrifuge(ContainerCentrifuge container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 176);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

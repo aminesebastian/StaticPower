@@ -37,8 +37,7 @@ public abstract class AbstractContainerSolderingTable<T extends AbstractSolderin
 		addOutputSlot();
 
 		// Player slots.
-		addPlayerInventory(getPlayerInventory(), 8, 113);
-		addPlayerHotbar(getPlayerInventory(), 8, 171);
+		addAllPlayerSlots();
 	}
 
 	protected abstract void addOutputSlot();

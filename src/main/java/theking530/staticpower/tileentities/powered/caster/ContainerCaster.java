@@ -47,7 +47,6 @@ public class ContainerCaster extends StaticPowerTileEntityContainer<TileEntityCa
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 35));
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 53));
 
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

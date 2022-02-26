@@ -43,8 +43,6 @@ public class ContainerLaboratory extends StaticPowerTileEntityContainer<TileEnti
 		// Battery
 		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
-
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

@@ -18,13 +18,13 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 	private GuiInfoTab infoTab;
 
 	public GuiPump(ContainerPump container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 160);
+		super(container, invPlayer, name, 176, 174);
 	}
 
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 10, 16, 44));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 71, 20, 32, 52));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 71, 20, 28, 52));
 		registerWidget(new ArrowProgressBar(106, 20).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100));

@@ -40,8 +40,7 @@ public class ContainerSolidGenerator extends StaticPowerTileEntityContainer<Tile
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 36));
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 56));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 
 	@Override

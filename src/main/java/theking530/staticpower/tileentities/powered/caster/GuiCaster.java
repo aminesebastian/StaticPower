@@ -26,7 +26,7 @@ public class GuiCaster extends StaticPowerTileEntityGui<ContainerCaster, TileEnt
 	private FluidProgressBar progressBar;
 
 	public GuiCaster(ContainerCaster container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 180);
 	}
 
 	@Override

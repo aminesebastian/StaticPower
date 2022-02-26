@@ -36,7 +36,6 @@ public class ContainerMixer extends StaticPowerTileEntityContainer<TileEntityMix
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

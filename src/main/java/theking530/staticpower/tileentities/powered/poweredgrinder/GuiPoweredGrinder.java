@@ -18,7 +18,7 @@ public class GuiPoweredGrinder extends StaticPowerTileEntityGui<ContainerPowered
 	private GuiInfoTab infoTab;
 
 	public GuiPoweredGrinder(ContainerPoweredGrinder container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

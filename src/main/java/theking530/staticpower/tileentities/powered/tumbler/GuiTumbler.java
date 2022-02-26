@@ -23,7 +23,7 @@ public class GuiTumbler extends StaticPowerTileEntityGui<ContainerTumbler, TileE
 	private GuiInfoTab infoTab;
 
 	public GuiTumbler(ContainerTumbler container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 180);
 	}
 
 	@Override

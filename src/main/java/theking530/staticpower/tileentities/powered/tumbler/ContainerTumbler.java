@@ -45,7 +45,6 @@ public class ContainerTumbler extends StaticPowerTileEntityContainer<TileEntityT
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 35));
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 53));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

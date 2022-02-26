@@ -23,7 +23,7 @@ public class GuiAutoCraftingTable extends StaticPowerTileEntityGui<ContainerAuto
 	private final SpriteDrawable lockedSprite;
 
 	public GuiAutoCraftingTable(ContainerAutoCraftingTable container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 185);
+		super(container, invPlayer, name, 176, 194);
 
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
 		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));

@@ -35,8 +35,7 @@ public class ContainerBasicRedstoneIO extends StaticPowerTileEntityContainer<Til
 
 	@Override
 	public void initializeContainer() {
-		addPlayerInventory(getPlayerInventory(), 8, 69);
-		addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addAllPlayerSlots();
 	}
 
 	public Direction getHitSide() {

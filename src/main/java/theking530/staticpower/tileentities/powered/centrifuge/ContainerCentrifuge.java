@@ -53,8 +53,7 @@ public class ContainerCentrifuge extends StaticPowerTileEntityContainer<TileEnti
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 32));
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 52));
 
-		this.addPlayerInventory(getPlayerInventory(), 8, 94);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 152);
+		addAllPlayerSlots();
 	}
 
 	@Override

@@ -33,7 +33,6 @@ public class ContainerAutomaticPlacer extends StaticPowerTileEntityContainer<Til
 			return new StaticPowerContainerSlot(getTileEntity().inventory, index, x, y);
 		});
 
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

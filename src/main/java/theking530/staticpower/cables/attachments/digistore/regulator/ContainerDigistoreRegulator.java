@@ -56,8 +56,7 @@ public class ContainerDigistoreRegulator extends AbstractCableAttachmentContaine
 		addSlot(new UpgradeItemSlot(upgradeInventory, 1, -19, 32));
 		addSlot(new UpgradeItemSlot(upgradeInventory, 2, -19, 50));
 
-		addPlayerInventory(getPlayerInventory(), 8, 69);
-		addPlayerHotbar(getPlayerInventory(), 8, 127);
+		addAllPlayerSlots();
 	}
 
 	public ItemStackHandler getExtractorInventory() {

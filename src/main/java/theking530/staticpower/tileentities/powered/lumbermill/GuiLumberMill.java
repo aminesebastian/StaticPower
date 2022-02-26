@@ -18,7 +18,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiLumberMill extends StaticPowerTileEntityGui<ContainerLumberMill, TileEntityLumberMill> {
 
 	public GuiLumberMill(ContainerLumberMill container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 174);
 	}
 
 	@Override

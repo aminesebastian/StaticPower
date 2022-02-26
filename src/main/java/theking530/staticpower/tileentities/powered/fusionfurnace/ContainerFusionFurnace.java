@@ -49,7 +49,6 @@ public class ContainerFusionFurnace extends StaticPowerTileEntityContainer<TileE
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 1, 152, 34));
 		addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 2, 152, 54));
 
-		addPlayerInventory(getPlayerInventory(), 8, 84);
-		addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

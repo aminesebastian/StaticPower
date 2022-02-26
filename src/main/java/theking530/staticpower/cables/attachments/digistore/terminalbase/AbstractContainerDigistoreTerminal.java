@@ -100,8 +100,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		addSlot(new PlayerArmorItemSlot(getPlayerInventory(), 36, -18, 167, EquipmentSlot.FEET));
 
 		// On both the client and the server, add the player slots.
-		addPlayerHotbar(getPlayerInventory(), 8, 246);
-		addPlayerInventory(getPlayerInventory(), 8, 188);
+		addAllPlayerSlots();
 	}
 
 	@Override

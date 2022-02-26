@@ -17,7 +17,7 @@ public class GuiFormer extends StaticPowerTileEntityGui<ContainerFormer, TileEnt
 	private GuiInfoTab infoTab;
 
 	public GuiFormer(ContainerFormer container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 180);
 	}
 
 	@Override

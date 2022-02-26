@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 public class GuiEnchanter extends StaticPowerTileEntityGui<ContainerEnchanter, TileEntityEnchanter> {
 
 	public GuiEnchanter(ContainerEnchanter container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

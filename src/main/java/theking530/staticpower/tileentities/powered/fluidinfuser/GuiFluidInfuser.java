@@ -24,7 +24,7 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 	private FluidProgressBar progressBar;
 
 	public GuiFluidInfuser(ContainerFluidInfuser container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

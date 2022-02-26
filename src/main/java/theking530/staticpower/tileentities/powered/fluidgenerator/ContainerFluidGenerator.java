@@ -27,7 +27,6 @@ public class ContainerFluidGenerator extends StaticPowerTileEntityContainer<Tile
 
 	@Override
 	public void initializeContainer() {
-		this.addPlayerInventory(getPlayerInventory(), 8, 84);
-		this.addPlayerHotbar(getPlayerInventory(), 8, 142);
+		addAllPlayerSlots();
 	}
 }

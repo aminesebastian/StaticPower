@@ -77,6 +77,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 */
 	public StaticPowerContainerGui(T container, final Inventory playerInventory, Component title, int guiXSize, int guiYSize) {
 		super(container, playerInventory, title);
+		container.setDimensions(guiXSize, guiYSize);
 		inventory = playerInventory;
 		widgetContainer = new WidgetContainer(WidgetParent.fromScreen(this));
 		imageWidth = guiXSize;
@@ -637,6 +638,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		this.imageHeight = ySize;
 		previousSizeTarget = new Vector2D(xSize, ySize);
 		sizeTarget = previousSizeTarget;
+		this.menu.setDimensions(imageWidth, imageHeight);
 	}
 
 	public void registerWidget(AbstractGuiWidget<?> widget) {
@@ -687,6 +689,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			}
 
 			onScreenSizeChanged(alpha);
+			this.menu.setDimensions(imageWidth, imageHeight);
 		} else if (isScreenSizeChanging) {
 			onScreenSizeChangeCompleted();
 			isScreenSizeChanging = false;

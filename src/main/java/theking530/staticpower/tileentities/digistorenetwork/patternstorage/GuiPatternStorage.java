@@ -13,7 +13,7 @@ public class GuiPatternStorage extends StaticPowerTileEntityGui<ContainerPattern
 	private GuiInfoTab infoTab;
 
 	public GuiPatternStorage(ContainerPatternStorage container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 150);
+		super(container, invPlayer, name, 176, 158);
 	}
 
 	@Override
