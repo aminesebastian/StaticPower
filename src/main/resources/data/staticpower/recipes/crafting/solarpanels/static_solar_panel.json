@@ -16,7 +16,7 @@
 			"tag": "forge:glass/lime"
 		},
 		"s": {
-			"item": "staticpower:solar_panel_advanced"
+			"item": "staticpower:silicon_doped_static"
 		}
 	},
 	"result": {

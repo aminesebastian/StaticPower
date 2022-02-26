@@ -36,7 +36,7 @@ public class TileEntityRenderStaticChest extends StaticPowerTileEntitySpecialRen
 	@Override
 	protected void renderTileEntityBase(TileEntityStaticChest te, BlockPos position, float partialTicks, PoseStack pos, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (te.isOpen()) {
-			te.openAlpha = Math.min(te.openAlpha + partialTicks * 0.01f, 1);
+			te.openAlpha = Math.min(te.openAlpha + partialTicks * 0.025f, 1);
 		} else {
 			te.openAlpha = Math.max(te.openAlpha - partialTicks * 0.01f, 0);
 		}
@@ -71,7 +71,7 @@ public class TileEntityRenderStaticChest extends StaticPowerTileEntitySpecialRen
 		stack.popPose();
 
 		stack.pushPose();
-		stack.translate(0, -0.175f * lidRotation, 0.0);
+		stack.translate(0, -0.115f * lidRotation, 0.0);
 		lock.render(stack, consumer, light, overlay);
 		stack.translate(-0.2, 0, 0);
 		lock.render(stack, consumer, light, overlay);

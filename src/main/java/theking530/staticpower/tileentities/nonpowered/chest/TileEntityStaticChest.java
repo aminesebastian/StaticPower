@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -17,10 +16,11 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderStaticChest;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.tileentities.TileEntityConfigurable;
+import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
-public class TileEntityStaticChest extends TileEntityConfigurable implements MenuProvider {
+public class TileEntityStaticChest extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> BASIC_TYPE = new BlockEntityTypeAllocator<>(
 			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.BASIC, 36, pos, state), ModBlocks.BasicChest);
@@ -46,7 +46,7 @@ public class TileEntityStaticChest extends TileEntityConfigurable implements Men
 			LUMUM_TYPE.setTileEntitySpecialRenderer(TileEntityRenderStaticChest::new);
 		}
 	}
-
+	
 	public final ResourceLocation tier;
 	public final InventoryComponent inventory;
 	public float openAlpha;
@@ -55,7 +55,7 @@ public class TileEntityStaticChest extends TileEntityConfigurable implements Men
 	public TileEntityStaticChest(BlockEntityTypeAllocator<TileEntityStaticChest> type, ResourceLocation tier, int slotCount, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		this.tier = tier;
-		registerComponent(inventory = new InventoryComponent("Inventory", slotCount).setShiftClickEnabled(true));
+		registerComponent(inventory = new InventoryComponent("Inventory", slotCount, MachineSideMode.Regular).setShiftClickEnabled(true));
 	}
 
 	public static Vector2D getInventorySize(TileEntityStaticChest chest) {
@@ -73,7 +73,8 @@ public class TileEntityStaticChest extends TileEntityConfigurable implements Men
 
 	public void addOpenCount() {
 		if (openCount == 0) {
-			getLevel().playSound(null, getBlockPos(), SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 1.0f, 1.0f);
+			getLevel().playSound(null, getBlockPos(), SoundEvents.CHEST_OPEN, SoundSource.BLOCKS, 0.5f, 1.05f + getLevel().getRandom().nextFloat() * 0.1f);
+			getLevel().playSound(null, getBlockPos(), SoundEvents.SHULKER_BOX_OPEN, SoundSource.BLOCKS, 0.5f, 1.0f);
 		}
 		openCount++;
 	}
@@ -81,7 +82,7 @@ public class TileEntityStaticChest extends TileEntityConfigurable implements Men
 	public void removeOpenCount() {
 		openCount = Math.max(0, openCount - 1);
 		if (openCount == 0) {
-			getLevel().playSound(null, getBlockPos(), SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 1.0f, 1.0f);
+			getLevel().playSound(null, getBlockPos(), SoundEvents.CHEST_CLOSE, SoundSource.BLOCKS, 1.0f, 1.15f);
 		}
 	}
 

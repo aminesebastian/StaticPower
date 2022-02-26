@@ -71,8 +71,8 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 			}
 
 			// Draw requirements.
-			float requirementsBgSize =  getSize().getX() - 8;
-			GuiDrawUtilities.drawRectangle(pose,  requirementsBgSize, 14, getSize().getX() -  requirementsBgSize - 5, getSize().getY() - 18, -1000, new Color(0.0f, 0.0f, 0.0f, 0.35f));
+			float requirementsBgSize =  requirementCount * 14;
+			GuiDrawUtilities.drawRectangle(pose,  requirementsBgSize, 14, getSize().getX() -  requirementsBgSize - 7, getSize().getY() - 18, -1000, new Color(0.0f, 0.0f, 0.0f, 0.35f));
 
 			for (int i = 0; i < requirementCount; i++) {
 				int xOffset = i * 14;
@@ -83,7 +83,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 				if (researchProgress != null) {
 					remainingCount -= researchProgress.getRequirementFullfillment(i);
 				}
-				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 11 - xOffset, getSize().getY() - 12, 1, 0.5f, Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 11 - xOffset, getSize().getY() - 12, 101, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 			}
 		}
 	}

@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
@@ -171,6 +172,14 @@ public abstract class AbstractTileEntityComponent {
 
 	public boolean isEnabled() {
 		return isEnabled;
+	}
+
+	protected Direction getOwningTileEntityFacing() {
+		BlockState currentBlockState = getTileEntity().getBlockState();
+		if (currentBlockState.hasProperty(StaticPowerTileEntityBlock.FACING)) {
+			return currentBlockState.getValue(StaticPowerTileEntityBlock.FACING);
+		}
+		return null;
 	}
 
 	public void setEnabled(boolean isEnabled) {

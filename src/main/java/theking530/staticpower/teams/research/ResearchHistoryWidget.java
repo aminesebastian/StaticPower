@@ -52,16 +52,16 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 			// Draw requirements.
 			int xOffset = 0;
 			for (StaticPowerIngredient requirement : research.getRequirements()) {
-				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 14 - xOffset, getSize().getY() - 16, 100, 8f, 8f);
+				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 17 - xOffset, getSize().getY() - 16, 100, 8f, 8f);
 
 				int remainingCount = requirement.getCount();
-				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 3 - xOffset, getSize().getY() - 10, 1, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 7.5f - xOffset, getSize().getY() - 10, 101, 0.5f, Color.EIGHT_BIT_WHITE, true);
 
 				xOffset += 9;
 			}
 
 			if (research.getUnlocks().size() > 0) {
-				GuiDrawUtilities.drawRectangle(pose, 0.4f, 8, getSize().getX() - 2.5f - xOffset, getSize().getY() - 12, 10, new Color(0, 0, 0, 0.3f));
+				GuiDrawUtilities.drawRectangle(pose, 0.4f, 8, getSize().getX() - 5.5f - xOffset, getSize().getY() - 12, 10, new Color(0, 0, 0, 0.3f));
 
 				// Draw the unlocks.
 				for (ResearchUnlock unlock : research.getUnlocks()) {

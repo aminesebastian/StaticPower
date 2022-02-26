@@ -11,28 +11,29 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.ISolderingIron;
+import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implements ISolderingIron {
 
-	public ElectricSolderingIron(String name, int capacity) {
+	public ElectricSolderingIron(String name, long capacity) {
 		super(name, capacity);
 	}
 
 	@Override
 	public boolean useSolderingItem(ItemStack itemstack) {
 		// Should move to config, but 10SV per soldering operation.
-		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= 10000) {
-			EnergyHandlerItemStackUtilities.drainPower(itemstack, 10000, false);
+		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >=  10 * CapabilityStaticVolt.mSV_TO_SV) {
+			EnergyHandlerItemStackUtilities.drainPower(itemstack,  10 * CapabilityStaticVolt.mSV_TO_SV, false);
 		}
 		return false;
 	}
 
 	@Override
 	public boolean canSolder(ItemStack itemstack) {
-		return EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= 10000;
+		return EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >=  10 * CapabilityStaticVolt.mSV_TO_SV;
 	}
 
 	@Override

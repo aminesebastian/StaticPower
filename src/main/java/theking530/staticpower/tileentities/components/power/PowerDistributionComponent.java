@@ -30,6 +30,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 		this.outputMode = mode;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void preProcessUpdate() {
 		if (getWorld().isClientSide) {

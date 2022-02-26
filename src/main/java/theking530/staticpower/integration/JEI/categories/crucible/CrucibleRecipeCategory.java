@@ -92,7 +92,7 @@ public class CrucibleRecipeCategory extends BaseJEIRecipeCategory<CrucibleRecipe
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 106, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
-		GuiHeatBarUtilities.drawHeatBar(matrixStack, 28, 54, 4, 48, 1.0f, recipe.getMinimumTemperature(), getNetHighestMultipleOf10(recipe.getMinimumTemperature()));
+		GuiHeatBarUtilities.drawHeatBar(matrixStack, 20, 0, 4, 48, 1.0f, recipe.getMinimumTemperature(), getNetHighestMultipleOf10(recipe.getMinimumTemperature()));
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 72, 18, 0);

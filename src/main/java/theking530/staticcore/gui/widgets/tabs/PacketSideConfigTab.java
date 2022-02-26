@@ -3,6 +3,7 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
@@ -52,18 +53,24 @@ public class PacketSideConfigTab extends NetworkMessage {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
-			BlockEntity te = context.get().getSender().level.getBlockEntity(position);
+			if (context.get().getSender().getLevel().isAreaLoaded(position, 1)) {
+				BlockEntity te = context.get().getSender().level.getBlockEntity(position);
 
-			if (te instanceof TileEntityBase) {
-				TileEntityBase tileEntity = (TileEntityBase) te;
-				if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
-					return;
+				if (te instanceof TileEntityBase) {
+					TileEntityBase tileEntity = (TileEntityBase) te;
+					if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
+						return;
+					}
+
+					SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
+					for (Direction side : Direction.values()) {
+						sideComp.setWorldSpaceDirectionConfiguration(side, configuration[side.ordinal()]);
+					}
 				}
-				SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
-				sideComp.setWorldSpaceConfiguration(configuration);
 			}
 		});
 	}

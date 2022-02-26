@@ -27,7 +27,7 @@ public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, Til
 	private FluidProgressBar progressBar;
 
 	public GuiCrucible(ContainerCrucible container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

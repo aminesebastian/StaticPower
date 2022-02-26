@@ -68,6 +68,7 @@
 		"#staticpower:tanks",
 		"#staticpower:pumps",
 		"#staticpower:cables",
-		"#staticpower:heatsinks"
+		"#staticpower:heatsinks",
+		"#staticpower:chests"
 	]
 }

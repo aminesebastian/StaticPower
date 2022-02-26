@@ -3,7 +3,9 @@ package theking530.staticpower.init;
 import net.minecraft.world.food.Foods;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
+import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticcore.utilities.MinecraftColor;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
@@ -677,7 +679,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumChainsaw = new Chainsaw("chainsaw_lumum", 5.0f, 5.0f, StaticPowerTiers.LUMUM));
 
 		StaticPowerRegistry.preRegisterItem(SolderingIron = new SolderingIron("soldering_iron", 100));
-		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000));
+		StaticPowerRegistry.preRegisterItem(ElectringSolderingIron = new ElectricSolderingIron("soldering_iron_electric", 1000 * CapabilityStaticVolt.mSV_TO_SV));
 
 		StaticPowerRegistry.preRegisterItem(Wrench = new StaticWrench("wrench"));
 		StaticPowerRegistry.preRegisterItem(StaticWrench = new StaticWrench("wrench_static"));

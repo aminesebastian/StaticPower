@@ -29,7 +29,7 @@ import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
  */
 public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	/** The INITIAL maximum amount of energy that can be stored by this item. */
-	private int capacity;
+	private long capacity;
 
 	/**
 	 * Creates a default energy storing item.
@@ -37,7 +37,7 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	 * @param name     The registry name of the item sans namespace.
 	 * @param capacity The amount of energy that can be stored by this item.
 	 */
-	public StaticPowerEnergyStoringItem(String name, int capacity) {
+	public StaticPowerEnergyStoringItem(String name, long capacity) {
 		super(name, new Item.Properties().stacksTo(1).setNoRepair());
 		this.capacity = capacity;
 	}
@@ -79,9 +79,9 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 		if (handler == null) {
 			return 0;
 		}
-
+		
 		// Get the power ratio.
-		return (int) (handler.getStoredPower() / handler.getCapacity()) * 13;
+		return (int) (handler.getStoredPower() / (float)handler.getCapacity() * 13);
 	}
 
 	@Override

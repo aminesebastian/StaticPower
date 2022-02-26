@@ -16,7 +16,7 @@
 			"tag": "forge:glass/cyan"
 		},
 		"s": {
-			"item": "staticpower:solar_panel_static"
+			"item": "staticpower:silicon_doped_energized"
 		}
 	},
 	"result": {

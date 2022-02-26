@@ -16,7 +16,7 @@
 			"tag": "forge:glass/yellow"
 		},
 		"s": {
-			"item": "staticpower:solar_panel_basic"
+			"tag": "forge:silicon"
 		}
 	},
 	"result": {

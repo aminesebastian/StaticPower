@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -18,7 +17,6 @@ import theking530.staticpower.tileentities.components.control.redstonecontrol.Re
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.CompoundInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -44,14 +42,11 @@ public class TileEntityConfigurable extends TileEntityBase {
 	@SaveSerialize
 	private boolean disableFaceInteraction;
 
-	public TileEntityConfigurable(BlockEntityTypeAllocator<? extends TileEntityConfigurable> allocator, BlockPos pos,
-			BlockState state) {
+	public TileEntityConfigurable(BlockEntityTypeAllocator<? extends TileEntityConfigurable> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		disableFaceInteraction();
-		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration",
-				this::onSidesConfigUpdate, this::checkSideConfiguration, getDefaultSideConfiguration()));
-		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent",
-				RedstoneMode.Ignore));
+		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", this::onSidesConfigUpdate, this::isValidSideConfiguration, getDefaultSideConfiguration()));
+		registerComponent(redstoneControlComponent = new RedstoneControlComponent("RedstoneControlComponent", RedstoneMode.Ignore));
 	}
 
 	@Override
@@ -98,24 +93,15 @@ public class TileEntityConfigurable extends TileEntityBase {
 	}
 
 	/* Side Control */
-	protected void onSidesConfigUpdate(Direction worldSpaceSide, MachineSideMode newMode) {
-		Direction relativeSpaceSide = SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT,
-				getFacingDirection());
-		if (isFaceInteractionDisabled() && ioSideConfiguration
-				.getWorldSpaceDirectionConfiguration(relativeSpaceSide) != MachineSideMode.Never) {
-			ioSideConfiguration.setWorldSpaceDirectionConfiguration(
-					SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, getFacingDirection()),
-					MachineSideMode.Never);
+	protected void onSidesConfigUpdate(BlockSide side, MachineSideMode newMode) {
+		if (isFaceInteractionDisabled() && ioSideConfiguration.getBlockSideConfiguration(BlockSide.FRONT) != MachineSideMode.Never) {
+			ioSideConfiguration.setBlockSpaceConfiguration(BlockSide.FRONT, MachineSideMode.Never);
+			ioSideConfiguration.setBlockSideEnabledState(BlockSide.FRONT, false);
 		}
 	}
 
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output
-				|| mode == MachineSideMode.Input;
-	}
-
-	private boolean checkSideConfiguration(Direction direction, MachineSideMode mode) {
-		return isValidSideConfiguration(SideConfigurationUtilities.getBlockSide(direction, getFacingDirection()), mode);
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
 	}
 
 	/**
@@ -161,8 +147,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	}
 
 	@Override
-	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state,
-			LivingEntity placer, ItemStack stack) {
+	public boolean shouldDeserializeWhenPlaced(CompoundTag nbt, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		return true;
 	}
 

@@ -38,13 +38,7 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 	}
 
 	public int getNetHighestMultipleOf10(int value) {
-		if (value <= 5) {
-			return 5;
-		} else if (value < 10) {
-			return 10;
-		} else if (value < 25) {
-			return 25;
-		} else if (value < 50) {
+		if (value < 50) {
 			return 50;
 		} else if (value < 100) {
 			return 100;
@@ -105,8 +99,8 @@ public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> impleme
 					// Add the tooltip for the bonus output.
 					if (outputWrapper.getAdditionalBonus() > 0) {
 						Component bonus = new TranslatableComponent("gui.staticpower.bonus_output").withStyle(ChatFormatting.GREEN).append(": ")
-								.append(ChatFormatting.GOLD.toString() + String.valueOf(outputWrapper.getAdditionalBonus()) + ChatFormatting.GRAY.toString()
-										+ ChatFormatting.ITALIC.toString() + " (" + String.valueOf((int) (outputWrapper.getBonusChance() * 100)) + "%)");
+								.append(ChatFormatting.GOLD.toString() + String.valueOf(outputWrapper.getAdditionalBonus()) + ChatFormatting.GRAY.toString() + ChatFormatting.ITALIC.toString() + " ("
+										+ String.valueOf((int) (outputWrapper.getBonusChance() * 100)) + "%)");
 						tooltip.add(bonus);
 					}
 
