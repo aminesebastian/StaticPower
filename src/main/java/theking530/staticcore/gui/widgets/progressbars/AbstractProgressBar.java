@@ -102,6 +102,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 		currentProgress = 0;
 		tickDownRate = 1;
 		visualCurrentProgress = 0.0f;
+		maxProgress = 0;
 		enableProgressTooltip = true;
 		percentageDelay = Optional.empty();
 		percentageDelayBefore = false;

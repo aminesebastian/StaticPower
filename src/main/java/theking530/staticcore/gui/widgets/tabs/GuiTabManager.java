@@ -10,6 +10,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
+import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabState;
 import theking530.staticcore.utilities.Vector2D;
@@ -148,6 +149,20 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 			// Pop the matrix.
 			matrixStack.popPose();
 		}
+
+		// Render the tab backgrounds.
+		for (BaseGuiTab tab : registeredTabs) {
+			matrixStack.pushPose();
+			matrixStack.translate(tab.xPosition, tab.yPosition, 0);
+			// Draw the tab panel.
+			tab.drawTabPanel(matrixStack, partialTicks);
+
+			// If open, draw the tab background.
+			if (tab.isOpen()) {
+				tab.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY);
+			}
+			matrixStack.popPose();
+		}
 	}
 
 	@Override
@@ -196,15 +211,36 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 		}
 	}
 
+	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+		for (BaseGuiTab tab : registeredTabs) {
+			EInputResult inputUsed = tab.mouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+			if (inputUsed == EInputResult.HANDLED) {
+				return EInputResult.HANDLED;
+			}
+		}
+		return super.mouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+	}
+
 	@Override
-	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		for (BaseGuiTab tab : registeredTabs) {
 			EInputResult inputUsed = tab.mouseClick(getLastRenderMatrix(), mouseX, mouseY, button);
 			if (inputUsed == EInputResult.HANDLED) {
 				return EInputResult.HANDLED;
 			}
 		}
-		return EInputResult.UNHANDLED;
+		return super.mouseClick(mouseX, mouseY, button);
+	}
+
+	@Override
+	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
+		for (BaseGuiTab tab : registeredTabs) {
+			EInputResult inputUsed = tab.mouseReleased(mouseX, mouseY, button);
+			if (inputUsed == EInputResult.HANDLED) {
+				return EInputResult.HANDLED;
+			}
+		}
+		return super.mouseClick(mouseX, mouseY, button);
 	}
 
 	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
@@ -225,7 +261,7 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 	}
 
 	@Override
-	public EInputResult mouseMove(int mouseX, int mouseY) {
+	public EInputResult mouseMove(double mouseX, double mouseY) {
 		for (BaseGuiTab tab : registeredTabs) {
 			if (tab.isOpen()) {
 				if (tab.mouseHover(mouseX, mouseY) == EInputResult.HANDLED) {

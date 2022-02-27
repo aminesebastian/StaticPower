@@ -56,7 +56,7 @@ public class ScrollBarWidget extends AbstractGuiWidget<ScrollBarWidget> {
 		return (float) scrollAmount / Math.max(1, maxScroll);
 	}
 
-	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		if (isPointInsideBounds(new Vector2D((float) mouseX, (float) mouseY))) {
 			int offset = (int) mouseY - (int) getScrollHandleLocation().getY();
 			int scrollSpaceOffset = Math.round(((offset * maxScroll) / getSize().getY()));

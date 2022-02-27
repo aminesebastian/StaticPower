@@ -196,13 +196,13 @@ public abstract class BaseGuiTab {
 	 * @return True if the event was handled, false otherwise.
 	 */
 	@SuppressWarnings("resource")
-	public EInputResult mouseClick(PoseStack matrixStack, int mouseX, int mouseY, int button) {
+	public EInputResult mouseClick(PoseStack matrixStack, double mouseX, double mouseY, int button) {
 		if (!Minecraft.getInstance().player.containerMenu.getCarried().isEmpty()) { // TODO: Check if this works.
 			return EInputResult.UNHANDLED;
 		}
 
 		// Check if we clicked on the icon bounds.
-		if (getIconBounds().isPointInBounds(new Vector2D(mouseX, mouseY))) {
+		if (getIconBounds().isPointInBounds(new Vector2D((float) mouseX, (float) mouseY))) {
 			if (tabState == TabState.CLOSED) {
 				tabState = TabState.OPENING;
 				owningManager.tabOpening(this);
@@ -222,15 +222,26 @@ public abstract class BaseGuiTab {
 		return EInputResult.UNHANDLED;
 	}
 
+	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
+		return EInputResult.UNHANDLED;
+	}
+
 	/**
 	 * This even is raised when the mouse moves.
 	 * 
 	 * @param x The x position of the mouse.
 	 * @param y The y position of the mouse.
 	 */
-	public EInputResult mouseHover(int x, int y) {
+	public EInputResult mouseHover(double x, double y) {
 		if (tabState == TabState.OPEN) {
 			return widgetContainer.handleMouseMove(x, y);
+		}
+		return EInputResult.UNHANDLED;
+	}
+
+	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
+		if (tabState == TabState.OPEN) {
+			return widgetContainer.handleMouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
 		}
 		return EInputResult.UNHANDLED;
 	}

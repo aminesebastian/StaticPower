@@ -15,6 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.gui.WidgetContainer.WidgetParent;
+import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
@@ -333,7 +334,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
 
-		if(isVisible() && isEnabled()) {
+		if (isVisible() && isEnabled()) {
 			if (isHovered()) {
 				ticksHovered += partialTicks;
 			} else {
@@ -547,11 +548,15 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	/* Input Events */
-	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		return internalContainer.handleMouseClick(mouseX, mouseY, button);
 	}
 
-	public EInputResult mouseMove(int mouseX, int mouseY) {
+	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
+		return internalContainer.handleMouseReleased(mouseX, mouseY, button);
+	}
+
+	public EInputResult mouseMove(double mouseX, double mouseY) {
 		return internalContainer.handleMouseMove(mouseX, mouseY);
 	}
 

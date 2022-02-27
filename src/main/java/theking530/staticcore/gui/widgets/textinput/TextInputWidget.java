@@ -101,14 +101,14 @@ public class TextInputWidget extends AbstractGuiWidget<TextInputWidget> {
 	}
 
 	@Override
-	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(getLastRenderMatrix(), getPosition());
-		Vector2D adjustedMousePosition = new Vector2D(mouseX - screenSpacePosition.getX() + getPosition().getXi(), mouseY - screenSpacePosition.getY() + getPosition().getYi());
+		Vector2D adjustedMousePosition = new Vector2D((float) mouseX - screenSpacePosition.getX() + getPosition().getXi(), (float) mouseY - screenSpacePosition.getY() + getPosition().getYi());
 		return textField.mouseClicked(adjustedMousePosition.getX(), adjustedMousePosition.getY(), button) ? EInputResult.HANDLED : EInputResult.UNHANDLED;
 	}
 
 	@Override
-	public EInputResult mouseMove(int mouseX, int mouseY) {
+	public EInputResult mouseMove(double mouseX, double mouseY) {
 		textField.mouseMoved(mouseX, mouseY);
 		return EInputResult.UNHANDLED;
 	}

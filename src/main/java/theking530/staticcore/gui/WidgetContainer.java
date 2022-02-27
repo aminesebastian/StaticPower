@@ -149,6 +149,18 @@ public class WidgetContainer {
 		return EInputResult.UNHANDLED;
 	}
 
+	public EInputResult handleMouseReleased(double mouseX, double mouseY, int button) {
+		// Raise the mouse hovered event for all the widgets,
+		for (AbstractGuiWidget<?> widget : widgets) {
+			if (widget.isVisible()) {
+				if (widget.mouseReleased((int) mouseX, (int) mouseY, button) == EInputResult.HANDLED) {
+					return EInputResult.HANDLED;
+				}
+			}
+		}
+		return EInputResult.UNHANDLED;
+	}
+
 	public EInputResult handleMouseMove(double mouseX, double mouseY) {
 		// Raise the mouse hovered event for all the widgets,
 		for (AbstractGuiWidget<?> widget : widgets) {

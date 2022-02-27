@@ -83,7 +83,7 @@ public class StandardButton extends AbstractGuiWidget<StandardButton> {
 	}
 
 	@Override
-	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		if (!isVisible() || !isEnabled()) {
 			return EInputResult.UNHANDLED;
 		}
@@ -108,7 +108,7 @@ public class StandardButton extends AbstractGuiWidget<StandardButton> {
 	}
 
 	@Override
-	public EInputResult mouseMove(int mouseX, int mouseY) {
+	public EInputResult mouseMove(double mouseX, double mouseY) {
 		// Always just update the clicked state to NONE here.
 		currentlyPressedMouseButton = MouseButton.NONE;
 
@@ -116,8 +116,8 @@ public class StandardButton extends AbstractGuiWidget<StandardButton> {
 			return EInputResult.UNHANDLED;
 		}
 
-		this.mouseX = mouseX;
-		this.mouseY = mouseY;
+		this.mouseX = (int) mouseX;
+		this.mouseY = (int) mouseY;
 
 		if (isHovered()) {
 			return EInputResult.HANDLED;

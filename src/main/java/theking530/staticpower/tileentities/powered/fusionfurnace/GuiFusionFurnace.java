@@ -17,7 +17,7 @@ public class GuiFusionFurnace extends StaticPowerTileEntityGui<ContainerFusionFu
 	private GuiInfoTab infoTab;
 
 	public GuiFusionFurnace(ContainerFusionFurnace container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

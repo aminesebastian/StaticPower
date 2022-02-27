@@ -20,7 +20,7 @@ public class GuiBottler extends StaticPowerTileEntityGui<ContainerBottler, TileE
 	private FluidProgressBar progressBar;
 
 	public GuiBottler(ContainerBottler container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 166);
+		super(container, invPlayer, name, 176, 178);
 	}
 
 	@Override

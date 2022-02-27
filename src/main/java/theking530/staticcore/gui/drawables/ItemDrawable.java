@@ -52,7 +52,6 @@ public class ItemDrawable implements IDrawable {
 	@Override
 	public void draw(@Nullable PoseStack stack, float x, float y, float z) {
 		if (itemStack != null && !itemStack.isEmpty()) {
-			// We add +10 here to account for the depth of the item clipping through its background.
 			GuiDrawUtilities.drawItem(stack, itemStack, x, y, z + 10, size.getX(), size.getY());
 		}
 	}

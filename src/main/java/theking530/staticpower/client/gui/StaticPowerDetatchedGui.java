@@ -198,6 +198,15 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	}
 
 	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int button) {
+		boolean superCallResult = super.mouseReleased(mouseX, mouseY, button);
+		if (visible) {
+			widgetContainer.handleMouseReleased(mouseX, mouseY, button);
+		}
+		return superCallResult;
+	}
+
+	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
 		EInputResult result = EInputResult.UNHANDLED;
 		if (visible) {

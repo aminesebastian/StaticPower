@@ -164,14 +164,14 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	}
 
 	@Override
-	public EInputResult mouseMove(int mouseX, int mouseY) {
+	public EInputResult mouseMove(double mouseX, double mouseY) {
 		if (isHovered()) {
 			return EInputResult.HANDLED;
 		}
 		return super.mouseMove(mouseX, mouseY);
 	}
 
-	public EInputResult mouseClick(int mouseX, int mouseY, int button) {
+	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		if (isHovered() && button == 0) {
 			boolean isAvailable = manager.isResearchAvailable(research.getId());
 			if (isAvailable) {

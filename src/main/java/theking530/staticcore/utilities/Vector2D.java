@@ -6,6 +6,12 @@ import com.google.gson.JsonObject;
 import net.minecraft.network.FriendlyByteBuf;
 
 public class Vector2D extends AbstractVector {
+	
+	public Vector2D(double x, double y) {
+		super(2);
+		setX((float) x);
+		setY((float) y);
+	}
 
 	public Vector2D(float x, float y) {
 		super(2);

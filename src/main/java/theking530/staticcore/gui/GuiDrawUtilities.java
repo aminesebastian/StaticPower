@@ -152,6 +152,12 @@ public class GuiDrawUtilities {
 		drawRectangle(pose, 1, height, x + width, y, z, DEFAULT_SLOT_LIGHT_EDGE_COLOR);
 
 		drawRectangle(pose, width, height, x, y, z, DEFAULT_SLOT_CORNER_COLOR);
+
+		if (borderColor != null) {
+			Color lighterFill = borderColor.copy();
+			lighterFill.setW(0.25f);
+			drawRectangle(pose, width, height, x, y, z, lighterFill);
+		}
 	}
 
 	public static void drawSlot(PoseStack pose, float width, float height, float x, float y, float z) {
@@ -407,6 +413,8 @@ public class GuiDrawUtilities {
 		}
 
 		Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.GUI, false, posestack1, multibuffersource$buffersource, 15728880, OverlayTexture.NO_OVERLAY, model);
+
+		
 		multibuffersource$buffersource.endBatch();
 		RenderSystem.enableDepthTest();
 		if (flag) {
