@@ -3,7 +3,6 @@ package theking530.staticcore.gui.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Vector2D;
 
 public class GuiIslandWidget extends AbstractGuiWidget {
 	private boolean topEnabled;

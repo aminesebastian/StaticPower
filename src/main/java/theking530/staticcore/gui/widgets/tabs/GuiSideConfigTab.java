@@ -51,7 +51,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	private Direction highlightedSide;
 
 	public GuiSideConfigTab(TileEntityBase te) {
-		super("Side Config", Color.EIGHT_BIT_WHITE, 105, 110, new Color(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
+		super("Side Config", Color.EIGHT_BIT_WHITE, 110, 105, new Color(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
 		tileEntity = te;
 
 		rotation = new Vector2D(55, -25);
@@ -94,21 +94,19 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			return;
 		}
 
-		drawDarkBackground(matrix, 9, 24, (int) getWidth() - 18, (int) getHeight() - 34);
-		getFontRenderer().drawShadow(matrix, getTitle(), (getTabSide() == TabSide.LEFT ? 11 : 24), 8, titleColor.encodeInInteger());
+		drawDarkBackground(matrix, 12, 24, (int) getWidth() - 20, (int) getHeight() - 32);
 
-		RenderSystem.disableCull();
 		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
 		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
 		matrix.pushPose();
-		matrix.translate(74f, 41f, 0);
-		matrix.scale(-42, 42, 42);
+		matrix.translate(76f, 40f, 0);
+		matrix.scale(-40, 40, 40);
 		matrix.translate(0.5f, 0.5f, 0.5f);
 		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
 		matrix.translate(-0.5f, -0.5f, -0.5f);
-		Lighting.setupFor3DItems();
+		Lighting.setupForEntityInInventory();
 		renderer.renderSingleBlock(tileEntity.getBlockState(), matrix, buffer, 15728880, OverlayTexture.NO_OVERLAY, data);
 		buffer.endBatch();
 
@@ -126,8 +124,14 @@ public class GuiSideConfigTab extends BaseGuiTab {
 				if (enabled) {
 					MachineSideMode mode = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide);
 					Color color = mode.getColor().copy();
-					color.setW(0.75f);
-					HIGHLIGHT_RENDERER.drawPreviewSide(matrix, result.getDirection(), new Vector3f(-0.025f, -0.025f, -0.025f), new Vector3f(1.05f, 1.05f, 1.05f), color);
+					color.setW(0.85f);
+
+					matrix.pushPose();
+					matrix.translate(0.5f, 0.5f, 0.5f);
+					matrix.mulPose(result.getDirection().getRotation());
+					matrix.translate(-0.5f, -0.5f, -0.5f);
+					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.2f, 1.025f, 0.2f), new Vector3f(0.6f, 0.05f, 0.6f), color, matrix);
+					matrix.popPose();
 				} else {
 					highlightedSide = null; // Clear out the highlighted side if its a disabled side.
 				}
@@ -174,11 +178,11 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
 		if (highlightedSide != null) {
 			SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
-			SideIncrementDirection direction = button == 1 ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
+			SideIncrementDirection direction = button == 0 ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
 			sideComp.modulateWorldSpaceSideMode(highlightedSide, direction);
 
 			// Play the click sound.
-			Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 1.0f, 1.0f, false);
+			Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 0.6f, button == 0 ? 1.25f : 1.1f, false);
 			// Send a packet to the server with the updated values.
 			NetworkMessage msg = new PacketSideConfigTab(sideComp.getWorldSpaceConfiguration(), tileEntity.getBlockPos());
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);

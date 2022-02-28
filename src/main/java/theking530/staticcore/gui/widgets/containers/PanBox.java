@@ -78,7 +78,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		return this;
 	}
 
-	public void updateData() {
+	public void tick() {
 		float requiredHeight = 0;
 		for (AbstractGuiWidget<?> child : getChildren()) {
 			requiredHeight += child.getSize().getY();

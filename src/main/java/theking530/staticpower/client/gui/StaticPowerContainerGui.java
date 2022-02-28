@@ -186,7 +186,6 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		widgetContainer.renderBehindItems(stack, mouseX, mouseY, partialTicks);
 
 		// Draw anything infront of the background but behind the items.
-
 		drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		stack.popPose();
 

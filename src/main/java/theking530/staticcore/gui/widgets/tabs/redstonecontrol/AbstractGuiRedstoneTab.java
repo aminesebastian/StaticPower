@@ -11,7 +11,6 @@ import theking530.staticcore.gui.widgets.button.ItemButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
 @OnlyIn(Dist.CLIENT)
@@ -22,17 +21,17 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public ItemButton highRedstoneButton;
 
 	public AbstractGuiRedstoneTab(RedstoneMode currentMode) {
-		super("Redstone Control", Color.EIGHT_BIT_YELLOW, 124, 100, new Color(1, 0.1f, 0.1f, 1), Items.REDSTONE);
+		super("Redstone Control", Color.EIGHT_BIT_YELLOW, 125, 100, new Color(1, 0.1f, 0.1f, 1), Items.REDSTONE);
 
-		registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 23, 25, 20, 20, (button, mouseButton) -> {
+		registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 21, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);
 			updateToggledButton(ignoreRedstoneButton);
 		}));
-		registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 53, 25, 20, 20, (button, mouseButton) -> {
+		registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 51, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.Low);
 			updateToggledButton(lowRedstoneButton);
 		}));
-		registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 83, 25, 20, 20, (button, mouseButton) -> {
+		registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 81, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.High);
 			updateToggledButton(highRedstoneButton);
 		}));
@@ -54,8 +53,10 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	@Override
 	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
-		drawDarkBackground(matrix, 15, 20, 95, 30);
-		drawText(matrix, 0, 0);
+		if (isOpen()) {
+			drawDarkBackground(matrix, 13, 21, 95, 30);
+			drawText(matrix, 0, 0);
+		}
 	}
 
 	protected void drawText(PoseStack stack, int xPos, int yPos) {

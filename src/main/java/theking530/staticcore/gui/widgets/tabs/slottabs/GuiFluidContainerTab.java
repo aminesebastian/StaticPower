@@ -15,9 +15,7 @@ import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.FluidContainerSlot;
@@ -46,7 +44,7 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerInventoryComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
-		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 0, 57,  MinecraftColor.MAGENTA.getColor(), Items.BUCKET);
+		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 26, 83,  new Color(1, 0, 1, 1), Items.BUCKET);
 		this.container = container;
 		this.fluidConatinerInventoryIndecies = new ArrayList<Integer>();
 		this.fluidContainerComponent = fluidContainerComponent;

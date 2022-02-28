@@ -43,7 +43,7 @@ public class GuiBasicFarmer extends StaticPowerTileEntityGui<ContainerBasicFarme
 		drawPreviewButton.setToggleable(true);
 		drawPreviewButton.setToggled(getTileEntity().getShouldDrawRadiusPreview());
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 120));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(getTitle(), 140));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 

@@ -13,7 +13,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
@@ -81,7 +80,9 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		if (isOpen()) {
 			if (info != null) {
-				drawDarkBackground(matrix, 8, 22, getSize().getXi() - 16, getSize().getYi() - 30);
+				int padding = 8;
+
+				drawDarkBackground(matrix, padding, 22, getSize().getXi() - (2 * padding), getSize().getYi() - (2 * padding) - 14);
 				drawInfo(matrix, false);
 			}
 		}
@@ -89,9 +90,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 
 	@Override
 	public void tick() {
-		if (this.isOpen()) {
-			this.setExpandedHeight(drawInfo(null, true) + HEIGHT_PADDING);
-		}
+		this.setExpandedHeight(drawInfo(null, true) + HEIGHT_PADDING);
 	}
 
 	protected float drawInfo(@Nullable PoseStack stack, boolean simulate) {
@@ -107,7 +106,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 				}
 
 				// Get the word wrapped result.
-				List<String> lines = GuiDrawUtilities.wrapString(formattedText.getString(), this.getWidth() - 28);
+				List<String> lines = GuiDrawUtilities.wrapString(formattedText.getString(), getExpandedSize().getX() - 30);
 				// Render the info text.
 				for (String line : lines) {
 					if (!simulate) {

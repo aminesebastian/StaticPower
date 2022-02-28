@@ -9,9 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
@@ -31,7 +29,7 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	}
 
 	public GuiUpgradeTab(StaticPowerContainer container, InventoryComponent upgradesInventory, Item icon) {
-		super("Upgrades", Color.EIGHT_BIT_WHITE, 0, 57, MinecraftColor.YELLOW.getColor(), icon);
+		super("Upgrades", Color.EIGHT_BIT_WHITE, 26, 83, new Color(1f, 1.0f, 0.1f), icon);
 		this.container = container;
 		this.slots = new ArrayList<StaticPowerContainerSlot>();
 		this.upgradesInventory = upgradesInventory;
@@ -96,17 +94,20 @@ public class GuiUpgradeTab extends BaseGuiTab {
 
 	protected void positionSlots() {
 		if (slots.size() == 1) {
-			slots.get(0).x = (int) (this.getXPosition() + getWidth() + 4);
+			setExpandedSize(26, 26);
+			slots.get(0).x = (int) (this.getXPosition() + 7);
 			slots.get(0).y = (int) (this.getYPosition() + 22);
 		} else if (slots.size() == 3) {
+			setExpandedSize(26, 83);
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).x = (int) (this.getXPosition() + getWidth() + 4);
+				slots.get(i).x = (int) (this.getXPosition() + 7);
 				slots.get(i).y = (int) (this.getYPosition() + 24 + (i * 18));
 			}
 		} else if (slots.size() == 4) {
+			setExpandedSize(44, 64);
 			int xOffset = -18;
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).x = (int) (this.getXPosition() + getWidth() + 4 + ((i / 2) * xOffset));
+				slots.get(i).x = (int) (this.getXPosition() + 25 + ((i / 2) * xOffset));
 				slots.get(i).y = (int) (this.getYPosition() + 24 + ((i % 2) * 18));
 			}
 		}

@@ -79,11 +79,11 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 		return this;
 	}
 
-	public void updateData() {
+	public void tick() {
 		float requiredHeight = 0;
 		for (AbstractGuiWidget<?> child : getChildren()) {
 			if (child.getPosition().getY() > requiredHeight) {
-				requiredHeight = child.getPosition().getY() + child.getSize().getY();
+				requiredHeight = child.getPosition().getY() + child.getHeight();
 			}
 		}
 
@@ -114,7 +114,6 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 		} else {
 			interpolatedScroll = SDMath.clamp(interpolatedScroll + partialTicks * interpSpeed, 0, targetScroll);
 		}
-
 		if (drawScrollBar) {
 			int topPosition = 5;
 			int bottomPosition = (int) (getSize().getY() - 5);

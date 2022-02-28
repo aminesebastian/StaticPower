@@ -22,6 +22,7 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 		super(0.0f, 0.0f, 0.0f, 0.0f);
 		registeredTabs = new ArrayList<BaseGuiTab>();
 		this.setShouldAutoCalculateTooltipBounds(false);
+		this.internalContainer.setTransfomer(this::updateChildLayout);
 	}
 
 	public GuiTabManager registerTab(BaseGuiTab tab, boolean initiallyOpen) {
@@ -74,79 +75,45 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 	public void tabClosing(BaseGuiTab tab) {
 	}
 
+	protected void updateChildLayout(PoseStack pose, int index) {
+		pose.translate(0, 0, 0);
+
+	}
+
 	@Override
 	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
-		int tabPositionX = (int) (getPosition().getX() + getParentSize().getX() - 1 + getPosition().getX());
-		int tabPositionY = (int) (getPosition().getY() + 10 + getPosition().getY());
+		float maxOffset = getPosition().getY() + getParentSize().getY() - 25;
+		int leftTabs = 0;
+		int rightTabs = 0;
+		float leftYOffset = 10;
+		float rightYOffset = 10;
 
-		// Allocate lists for the left and right tabs.
-		List<BaseGuiTab> leftTabs = new ArrayList<BaseGuiTab>();
-		List<BaseGuiTab> rightTabs = new ArrayList<BaseGuiTab>();
-
-		// Populuate those lists.
 		for (BaseGuiTab tab : registeredTabs) {
+			float xPosition = getPosition().getX() + getParentSize().getX() + getPosition().getX();
+			float yPosition = rightYOffset;
+			int index = rightTabs;
+
+			if (tab.getTabSide() == TabSide.LEFT) {
+				xPosition = -tab.getWidth();
+				yPosition = leftYOffset;
+				index = leftTabs;
+			}
+
+			yPosition = Math.min(maxOffset, yPosition);
+
+			// Push a matrix for this tab's position.
+			matrixStack.pushPose();
+			matrixStack.translate(xPosition, yPosition, 0);
+			tab.updateTabPosition(matrixStack, xPosition, yPosition, partialTicks, mouseX, mouseY, index);
+			matrixStack.popPose();
+
 			if (tab.getTabSide() == TabSide.RIGHT) {
-				rightTabs.add(tab);
+				rightTabs++;
+				rightYOffset += tab.getHeight();
 			} else {
-				leftTabs.add(tab);
+				leftTabs++;
+				leftYOffset += tab.getHeight();
 			}
-		}
-
-		// Calculate the maximum amount we can push a tab down.
-		int maxOffset = (int) (getPosition().getY() + getParentSize().getY() - 25);
-
-		// Iterate through the right tabs.
-		for (int i = rightTabs.size() - 1; i >= 0; i--) {
-			// Allocate the offset.
-			int offset = 0;
-
-			// Set the offset.
-			if (i > 0) {
-				for (int j = i - 1; j >= 0; j--) {
-					offset += (int) rightTabs.get(j).getBounds().getHeight() - 24;
-				}
-			}
-
-			// Calculate the final offset and clamp it to the max.
-			int adjustedOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-
-			// Push a matrix for this tab's position.
-			matrixStack.pushPose();
-			matrixStack.translate(tabPositionX, adjustedOffset, 0);
-
-			// Update the position.
-			rightTabs.get(i).updateTabPosition(matrixStack, tabPositionX, adjustedOffset, partialTicks, mouseX, mouseY, Math.max(0, rightTabs.size() - i - 1));
-
-			// Pop the matrix.
-			matrixStack.popPose();
-		}
-
-		// Iterate through the left tabs.
-		for (int i = leftTabs.size() - 1; i >= 0; i--) {
-			BaseGuiTab tab = leftTabs.get(i);
-
-			// Allocate the offset.
-			int offset = 0;
-
-			// Set the offset.
-			if (i > 0) {
-				for (int j = i - 1; j >= 0; j--) {
-					offset += (int) leftTabs.get(j).getBounds().getHeight() - 24;
-				}
-			}
-
-			// Calculate the final offset and clamp it to the max.
-			int yOffset = Math.min(tabPositionY + (i * 25) + offset, maxOffset);
-
-			// Push a matrix for this tab's position.
-			matrixStack.pushPose();
-			matrixStack.translate(0, yOffset, 0);
-
-			// Update the position.
-			tab.updateTabPosition(matrixStack, -tab.getWidth(), yOffset, partialTicks, mouseX, mouseY, Math.max(0, leftTabs.size() - i - 1));
-
-			// Pop the matrix.
-			matrixStack.popPose();
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package theking530.staticcore.gui.widgets.tabs;
+package theking530.staticcore.gui.widgets.tabs.slottabs;
 
 import java.util.ArrayList;
 import java.util.List;

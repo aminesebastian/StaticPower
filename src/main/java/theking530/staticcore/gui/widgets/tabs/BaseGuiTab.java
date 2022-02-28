@@ -73,14 +73,14 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	protected String title;
 	protected Color titleColor;
 	protected RectangleBounds cachedIconBounds;
-	protected Vector2D expandedSize;
 	protected Color tabColor;
 	protected IDrawable icon;
 	private int tabIndex;
 	private float animationTimer = 0;
-	private float animationTime = 4.0f;
+	private float animationTime = 1.0f;
 	private TabState tabState;
 	private TabSide tabSide;
+	private Vector2D expandedSize;
 	private boolean initialPositionSet;
 	protected boolean showNotificationBadge;
 	protected boolean drawTitle;
@@ -156,7 +156,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(stack, new Vector2D(0, 0));
 		if (this.tabSide == TabSide.LEFT) {
-			cachedIconBounds.update(screenSpacePosition.getX() - COLLAPSED_SIZE.getX(), screenSpacePosition.getY(), 24, 24);
+			cachedIconBounds.update(screenSpacePosition.getX() + getWidth() - COLLAPSED_SIZE.getX(), screenSpacePosition.getY(), 24, 24);
 		} else {
 			cachedIconBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), 24, 24);
 		}
@@ -245,24 +245,24 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	@Override
 	protected void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		updateAnimation(partialTicks);
-
-		float width = getWidth() +2;
-		float xPos = -2;
-		if (getTabSide() == TabSide.LEFT) {
-			width = getWidth() + 2;
-			xPos = 2;
+		float width = getWidth() + 4;
+		float xPos = 0;
+		if (tabSide == TabSide.LEFT) {
+			xPos = 1;
+		} else {
+			xPos = -4;
 		}
-		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0, -10, tabColor);
+		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0, -10 * tabIndex, tabColor);
 
 		if (icon != null) {
 			if (this.tabSide == TabSide.LEFT) {
-				icon.draw(matrix, 8, 4.5f, 100.0f);
+				icon.draw(matrix, getWidth() - 19f, 4.5f, -tabIndex * 5);
 			} else {
-				icon.draw(matrix, 4, 4.5f, 100.0f);
+				icon.draw(matrix, 3.5f, 4.5f, -tabIndex * 5);
 			}
 
 			if (showNotificationBadge && tabState == TabState.CLOSED) {
-				notifictionBadge.draw(matrix, getTabSide() == TabSide.RIGHT ? 17 : getSize().getX() - 4.0f, -2.0f, tabIndex);
+				notifictionBadge.draw(matrix, getTabSide() == TabSide.RIGHT ? 17 : -2, -2.0f, tabIndex);
 			}
 		}
 
@@ -270,9 +270,9 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 			if (drawTitle) {
 				// Draw title.
 				if (this.tabSide == TabSide.LEFT) {
-					GuiDrawUtilities.drawStringLeftAligned(matrix, getTitle(), 12, 15, 200, 1.0f, titleColor, true);
+					GuiDrawUtilities.drawStringLeftAligned(matrix, getTitle(), 8, 15, 200, 1.0f, titleColor, true);
 				} else {
-					GuiDrawUtilities.drawStringLeftAligned(matrix, getTitle(), 24, 15, 200, 1.0f, titleColor, true);
+					GuiDrawUtilities.drawStringLeftAligned(matrix, getTitle(), 26, 15, 200, 1.0f, titleColor, true);
 				}
 			}
 		}
@@ -368,8 +368,8 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	}
 
 	/**
-	 * This value indicates how far down the tab is on the particular that it is
-	 * being rendered on. The higher the number, the lower it is.
+	 * This value indicates how far down the tab is on the particular side that it
+	 * is being rendered on. The higher the number, the lower it is.
 	 * 
 	 * @return
 	 */
@@ -377,8 +377,13 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 		return tabIndex;
 	}
 
-	public void setExpandedSize(Vector2D expandedSize) {
-		this.expandedSize = expandedSize;
+	public Vector2D getExpandedSize() {
+		return expandedSize;
+	}
+
+	public void setExpandedSize(float width, float height) {
+		this.expandedSize.setX(width);
+		this.expandedSize.setY(height);
 	}
 
 	public void setExpandedHeight(float height) {
@@ -396,13 +401,13 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 */
 	private void updateAnimation(float partialTicks) {
 		if (tabState == TabState.OPENING && animationTimer < animationTime) {
-			animationTimer = Math.min(animationTime, animationTimer + partialTicks * 1.75f);
+			animationTimer = Math.min(animationTime, animationTimer + partialTicks * 0.45f);
 			if (animationTimer == animationTime) {
 				tabState = TabState.OPEN;
 				onTabOpened();
 			}
 		} else if (tabState == TabState.CLOSING && animationTimer > 0) {
-			animationTimer = Math.max(0, animationTimer - partialTicks * 2);
+			animationTimer = Math.max(0, animationTimer - partialTicks * 0.75f);
 			if (animationTimer == 0) {
 				tabState = TabState.CLOSED;
 				onTabClosed();
