@@ -8,7 +8,7 @@ import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.client.gui.GuiTextures;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -19,16 +19,16 @@ public class GuiAxeTab extends BaseGuiTab {
 	private StaticPowerContainerSlot slot;
 
 	public GuiAxeTab(StaticPowerContainer container, TileEntityTreeFarm treeFarmer) {
-		super("Lumber Axe", Color.EIGHT_BIT_WHITE, 0, 0, GuiTextures.ORANGE_TAB, Items.IRON_AXE);
+		super("Lumber Axe", Color.EIGHT_BIT_WHITE, 0, 0, MinecraftColor.ORANGE.getColor(), Items.IRON_AXE);
 		this.container = container;
 		this.treeFarmer = treeFarmer;
 		this.drawTitle = false;
 	}
 
 	@Override
-	protected void initialized(int tabXPosition, int tabYPosition) {
+	protected void initialized() {
 		// Add the slots.
-		slot = new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, treeFarmer.inputInventory, 0, this.xPosition + 4, 0);
+		slot = new StaticPowerContainerSlot(new ItemStack(Items.IRON_AXE), 0.3f, treeFarmer.inputInventory, 0, (int) (getXPosition() + 4), 0);
 		container.addSlotGeneric(slot);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.containerId);
@@ -47,15 +47,15 @@ public class GuiAxeTab extends BaseGuiTab {
 	}
 
 	@Override
-	protected void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-		slot.y = this.yPosition + 4;
+	protected void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
+		slot.y = (int) (this.getYPosition() + 4);
 	}
 
 	@Override
 	protected void onTabOpened() {
 		slot.setEnabledState(true);
-		slot.y = this.yPosition + 4;
+		slot.y = (int) (this.getYPosition() + 4);
 		this.title = "";
 	}
 

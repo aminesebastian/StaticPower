@@ -291,8 +291,8 @@ public class GuiDrawUtilities {
 			}
 		}
 
-		if (currentLine.toString().trim().length() > 0) {
-			lines.add(currentLine.toString().trim());
+		if (currentLine.toString().stripTrailing().length() > 0) {
+			lines.add(currentLine.toString().stripTrailing());
 			currentLineWidth = 0;
 		}
 

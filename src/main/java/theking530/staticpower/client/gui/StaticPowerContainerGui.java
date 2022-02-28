@@ -167,7 +167,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		stack.translate(leftPos, topPos, 0);
 
 		// Update the widgets and then draw the background.
-		widgetContainer.update(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
+		widgetContainer.updateBeforeRender(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
 		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks);
 
 		// Draw the container background.

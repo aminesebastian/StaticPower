@@ -73,7 +73,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		this.partialTicks = partialTicks;
 
 		// Update the widgets.
-		widgetContainer.update(pose, new Vector2D(width, height), partialTicks, mouseX, mouseY);
+		widgetContainer.updateBeforeRender(pose, new Vector2D(width, height), partialTicks, mouseX, mouseY);
 
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);

@@ -6,7 +6,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiInfoTab extends AbstractInfoTab {
@@ -19,6 +18,6 @@ public class GuiInfoTab extends AbstractInfoTab {
 	}
 
 	public GuiInfoTab(String title, int width) {
-		super(title, new Color(0, 242, 255), width, GuiTextures.GREEN_TAB, new ItemDrawable(Items.PAPER));
+		super(title, new Color(0, 242, 255), width,  new Color(0.1f, 0.6f, 0.1f, 1), new ItemDrawable(Items.PAPER));
 	}
 }

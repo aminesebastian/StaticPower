@@ -41,11 +41,11 @@ public class WidgetContainer {
 	public void tick() {
 		// Tick all the widgets.
 		for (AbstractGuiWidget<?> widget : widgets) {
-			widget.updateData();
+			widget.tick();
 		}
 	}
 
-	public void update(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		// Render the foreground of all the widgets. We should NOT check visibility here
 		// as widgets may drive their visibility in there.
 		for (int i = 0; i < widgets.size(); i++) {

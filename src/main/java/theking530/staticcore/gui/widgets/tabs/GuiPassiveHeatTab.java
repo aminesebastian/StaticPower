@@ -15,8 +15,8 @@ public class GuiPassiveHeatTab extends GuiMachineHeatTab {
 	}
 
 	@Override
-	public void updateData() {
-		super.updateData();
+	public void tick() {
+		super.tick();
 		clear();
 		addKeyValueTwoLiner("Heating", new TextComponent("Heating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), ChatFormatting.RED);
 		addKeyValueTwoLiner("Dissipating", new TextComponent("Dissipating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), ChatFormatting.AQUA);
