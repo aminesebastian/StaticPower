@@ -75,8 +75,7 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 	public void tabClosing(BaseGuiTab tab) {
 	}
 
-	protected void updateChildLayout(PoseStack pose, int index) {
-		pose.translate(0, 0, 0);
+	protected void updateChildLayout(PoseStack pose, AbstractGuiWidget<?> widget, int index) {
 
 	}
 

@@ -25,7 +25,7 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 		this.internalContainer.setTransfomer(this::updateChildLayout);
 	}
 
-	protected void updateChildLayout(PoseStack pose, int index) {
+	protected void updateChildLayout(PoseStack pose, AbstractGuiWidget widget, int index) {
 		pose.translate(0, -interpolatedScroll, 0);
 
 	}

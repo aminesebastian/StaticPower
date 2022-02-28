@@ -3,7 +3,6 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.Collections;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
@@ -31,6 +30,7 @@ import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.rendering.BlockModel;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -94,14 +94,14 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			return;
 		}
 
-		drawDarkBackground(matrix, 12, 24, (int) getWidth() - 20, (int) getHeight() - 32);
+		drawDarkBackground(matrix, 10, 24, (int) getWidth() - 22, (int) getHeight() - 32);
 
 		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
 		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
 		matrix.pushPose();
-		matrix.translate(76f, 40f, 0);
+		matrix.translate(75f, 41f, 0);
 		matrix.scale(-40, 40, 40);
 		matrix.translate(0.5f, 0.5f, 0.5f);
 		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
@@ -124,7 +124,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 				if (enabled) {
 					MachineSideMode mode = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide);
 					Color color = mode.getColor().copy();
-					color.setW(0.85f);
+					color.setW(0.75f);
 
 					matrix.pushPose();
 					matrix.translate(0.5f, 0.5f, 0.5f);
@@ -178,11 +178,17 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
 		if (highlightedSide != null) {
 			SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
-			SideIncrementDirection direction = button == 0 ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
-			sideComp.modulateWorldSpaceSideMode(highlightedSide, direction);
 
-			// Play the click sound.
-			Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 0.6f, button == 0 ? 1.25f : 1.1f, false);
+			// Middle mouse blocks all sides up.
+			if (ModKeyBindings.RESET_SIDE_CONFIGURATION.isDown()) {
+				sideComp.setToDefault();
+				Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.PAINTING_PLACE, SoundSource.MASTER, 0.6f, 1.1f, false);
+			} else {
+				SideIncrementDirection direction = button == 0 ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
+				sideComp.modulateWorldSpaceSideMode(highlightedSide, direction);
+				Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 0.6f, button == 0 ? 1.25f : 1.1f, false);
+			}
+
 			// Send a packet to the server with the updated values.
 			NetworkMessage msg = new PacketSideConfigTab(sideComp.getWorldSpaceConfiguration(), tileEntity.getBlockPos());
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);

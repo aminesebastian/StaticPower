@@ -1008,6 +1008,7 @@
 	"key.staticpower.toggle_magnet": "Toggle Magnet",
 	"key.staticpower.open_portable_digistore": "Open Portable Digistore",
 	"key.staticpower.open_research": "Open Research Window",
+	"key.staticpower.reset_side_configuration": "Reset Side Configuration",
 	"staticpower.research.basic_capsules": "Portable Fluids",
 	"staticpower.research.basic_cauldron": "Rubber Galore",
 	"staticpower.research.basic_farming": "Alien Farming",

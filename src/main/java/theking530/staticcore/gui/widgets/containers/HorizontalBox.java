@@ -16,7 +16,7 @@ public class HorizontalBox extends AbstractGuiWidget<HorizontalBox> {
 		this.internalContainer.setTransfomer(this::updateChildLayout);
 	}
 
-	public void updateChildLayout(PoseStack pose, int index) {
+	public void updateChildLayout(PoseStack pose, AbstractGuiWidget widget, int index) {
 		float distanceBetween = getSize().getX() / (getChildren().size() + 1);
 		pose.translate(((index + 1) * distanceBetween), 0, 0);
 	}

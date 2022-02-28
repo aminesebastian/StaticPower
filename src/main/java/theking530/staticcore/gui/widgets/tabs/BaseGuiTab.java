@@ -248,17 +248,17 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 		float width = getWidth() + 4;
 		float xPos = 0;
 		if (tabSide == TabSide.LEFT) {
-			xPos = 1;
+			xPos = 2;
 		} else {
-			xPos = -4;
+			xPos = -5;
 		}
 		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0, -10 * tabIndex, tabColor);
 
 		if (icon != null) {
 			if (this.tabSide == TabSide.LEFT) {
-				icon.draw(matrix, getWidth() - 19f, 4.5f, -tabIndex * 5);
+				icon.draw(matrix, getWidth() - 18f, 4.5f, -tabIndex * 5);
 			} else {
-				icon.draw(matrix, 3.5f, 4.5f, -tabIndex * 5);
+				icon.draw(matrix, 3f, 4.5f, -tabIndex * 5);
 			}
 
 			if (showNotificationBadge && tabState == TabState.CLOSED) {

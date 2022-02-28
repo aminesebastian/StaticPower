@@ -32,7 +32,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		targetZoom = 1;
 	}
 
-	protected void updateChildLayout(PoseStack pose, int index) {
+	protected void updateChildLayout(PoseStack pose, AbstractGuiWidget widget, int index) {
 		pose.translate(-targetPan.getX(), -targetPan.getY(), 0);
 		pose.scale(1 / interpolatedZoom, 1 / interpolatedZoom, 1 / interpolatedZoom);
 		pose.translate(targetPan.getX(), targetPan.getY(), 0);
