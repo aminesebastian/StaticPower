@@ -94,7 +94,7 @@ public class TileEntityTank extends TileEntityBase {
 		
 		// Add the tank component.
 		int capacity = SDMath.multiplyRespectingOverflow(tierObject.defaultTankCapacity.get(), MACHINE_TANK_CAPACITY_MULTIPLIER);
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Regular, MachineSideMode.Input, MachineSideMode.Output));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Input, MachineSideMode.Output));
 		fluidTankComponent.setCanFill(true);
 		fluidTankComponent.setAutoSyncPacketsEnabled(true);
 		fluidTankComponent.setUpgradeInventory(voidUpgradeInventory);
@@ -102,7 +102,7 @@ public class TileEntityTank extends TileEntityBase {
 		// Add the side configuration component.
 		registerComponent(ioSideConfiguration = new SideConfigurationComponent("SideConfiguration", (side, mode) -> {
 		}, (side, mode) -> {
-			return mode == MachineSideMode.Input || mode == MachineSideMode.Output || mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular;
+			return mode == MachineSideMode.Input || mode == MachineSideMode.Output || mode == MachineSideMode.Disabled;
 		}));
 
 		// Add the inventory for the fluid containers.

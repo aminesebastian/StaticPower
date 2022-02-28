@@ -42,11 +42,12 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 @OnlyIn(Dist.CLIENT)
 public class GuiSideConfigTab extends BaseGuiTab {
 	private static final BlockModel HIGHLIGHT_RENDERER = new BlockModel();
-	private static final AABB BOUNDS = new AABB(new Vec3(0, 0, 0), new Vec3(1, 1, 1));
+	private static final AABB BOUNDS = new AABB(new Vec3(-0.05, -0.05, -0.05), new Vec3(1.05, 1.05, 1.05));
 
 	public TileEntityBase tileEntity;
 	private Vector2D rotation;
 	private Vector2D rotationVelocity;
+	private Vector2D mouseDownLocation;
 	private boolean mouseDownInside;
 	private Direction highlightedSide;
 
@@ -56,6 +57,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 		rotation = new Vector2D(55, -25);
 		rotationVelocity = new Vector2D(0, 0);
+		mouseDownLocation = new Vector2D(0, 0);
 
 		// Rotate initially to reflect the angle the player is looking from.
 		@SuppressWarnings("resource")
@@ -130,7 +132,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 					matrix.translate(0.5f, 0.5f, 0.5f);
 					matrix.mulPose(result.getDirection().getRotation());
 					matrix.translate(-0.5f, -0.5f, -0.5f);
-					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.2f, 1.025f, 0.2f), new Vector3f(0.6f, 0.05f, 0.6f), color, matrix);
+					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.25f, 1.025f, 0.25f), new Vector3f(0.5f, 0.2f, 0.5f), color, matrix);
 					matrix.popPose();
 				} else {
 					highlightedSide = null; // Clear out the highlighted side if its a disabled side.
@@ -159,7 +161,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		} else {
 			mouseDownInside = false;
 		}
-
+		mouseDownLocation = new Vector2D(mouseX, mouseY);
 		return super.mouseClick(mouseX, mouseY, button);
 	}
 
@@ -176,7 +178,10 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	@SuppressWarnings("resource")
 	@Override
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
-		if (highlightedSide != null) {
+		// Make sure a side is highlighted AND the mouse hasn't moved too much. IF it
+		// has, we don't change the side mode becuase its probably the result of someone
+		// rotating the block, not intending to change the side.
+		if (highlightedSide != null && (new Vector2D(mouseX, mouseY).subtract(mouseDownLocation).getLength() < 2.0f)) {
 			SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
 
 			// Middle mouse blocks all sides up.

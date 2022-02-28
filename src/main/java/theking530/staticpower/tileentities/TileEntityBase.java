@@ -52,7 +52,6 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.SerializationUtilities;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
@@ -478,15 +477,6 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		for (AbstractTileEntityComponent component : components.values()) {
 			component.postProcessUpdate();
 		}
-	}
-
-	public List<MachineSideMode> getValidSideConfigurations() {
-		List<MachineSideMode> modes = new ArrayList<MachineSideMode>();
-		modes.add(MachineSideMode.Input);
-		modes.add(MachineSideMode.Output);
-		modes.add(MachineSideMode.Regular);
-		modes.add(MachineSideMode.Disabled);
-		return modes;
 	}
 
 	public List<InventoryComponent> getPriorityOrderedInventories() {

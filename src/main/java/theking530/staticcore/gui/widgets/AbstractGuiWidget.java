@@ -368,7 +368,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseX
 	 * @param mouseY
 	 */
-	public void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+	public final void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
 		this.parentSize = parentSize;
 		lastMousePosition = new Vector2D(mouseX, mouseY);
 
@@ -412,7 +412,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
 		RectangleBounds clip = getClipBounds(matrix);
@@ -440,7 +440,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
 		RectangleBounds clip = getClipBounds(matrix);
@@ -460,7 +460,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		}
 	}
 
-	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
 		RectangleBounds clip = getClipBounds(matrix);
@@ -569,10 +569,15 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	/* Tooltip */
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public final void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (shouldDrawChildren()) {
 			internalContainer.getTooltips(mousePosition, tooltips, showAdvanced);
 		}
+		getWidgetTooltips(mousePosition, tooltips, showAdvanced);
+	}
+
+	protected void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+
 	}
 
 	public boolean getTooltipsDisabled() {

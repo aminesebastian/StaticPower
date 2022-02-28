@@ -58,7 +58,7 @@ public class GuiFluidBarFromTank extends AbstractGuiWidget<GuiFluidBarFromTank> 
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		tooltips.addAll(GuiFluidBarUtilities.getTooltip(tank.getFluidAmount(), tank.getCapacity(), tank.getFluid()));
 	}
 }

@@ -511,7 +511,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 *                 border).
 	 */
 	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
-		if (slotMode == MachineSideMode.Regular) {
+		if (slotMode == MachineSideMode.NA) {
 			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 0);
 		} else {
 			GuiDrawUtilities.drawSlotWithBorder(matrixStack, width, height, xPos, yPos, 0, slotMode.getColor());
@@ -578,13 +578,13 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 
 				// If side configuration is present, draw the slow with a border.
 				if (sideConfiguration != null) {
-					if (intendedMode != MachineSideMode.Regular && intendedMode != MachineSideMode.Never) {
+					if (intendedMode != MachineSideMode.NA && intendedMode != MachineSideMode.Never) {
 						// Get the side mode to draw with.
-						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.Regular;
+						MachineSideMode drawnSideMode = sideConfiguration.getCountOfSidesWithMode(intendedMode) > 0 ? intendedMode : MachineSideMode.NA;
 
 						// If the drawn side is regular, check to see if we can render one of the two
 						// general output or input modes.
-						if (drawnSideMode == MachineSideMode.Regular) {
+						if (drawnSideMode == MachineSideMode.NA) {
 							if (intendedMode.isOutputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Output) > 0) {
 								drawnSideMode = MachineSideMode.Output;
 							} else if (intendedMode.isInputMode() && sideConfiguration.getCountOfSidesWithMode(MachineSideMode.Input) > 0) {

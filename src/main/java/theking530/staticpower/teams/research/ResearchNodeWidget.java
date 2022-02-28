@@ -141,7 +141,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	public void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 	}
 
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getTooltips(mousePosition, tooltips, showAdvanced);
 	}
 

@@ -156,7 +156,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
 		if (isProcessingErrored) {

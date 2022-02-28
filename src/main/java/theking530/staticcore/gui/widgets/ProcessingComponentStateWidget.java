@@ -39,7 +39,7 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget<Processing
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
 		if (machineProcessingComponent.isProcessingStoppedDueToError()) {

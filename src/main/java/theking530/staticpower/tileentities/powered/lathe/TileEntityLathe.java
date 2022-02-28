@@ -165,7 +165,7 @@ public class TileEntityLathe extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
 				|| mode == MachineSideMode.Output3;
 	}
 

@@ -57,7 +57,7 @@ public class TankMachineBakedModel extends DefaultMachineBakedModel {
 		newQuads.add(originalQuad);
 
 		// Get the side configuration.
-		if (sideConfiguration != MachineSideMode.Regular) {
+		if (sideConfiguration != MachineSideMode.NA) {
 			// Get the texture sprite for the side.
 			TextureAtlasSprite sideSprite = getSpriteForMachineSide(sideConfiguration, blocksTexture, side);
 

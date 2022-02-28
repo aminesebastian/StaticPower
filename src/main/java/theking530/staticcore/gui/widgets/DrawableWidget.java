@@ -61,8 +61,8 @@ public class DrawableWidget<T extends IDrawable> extends AbstractGuiWidget<Drawa
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		super.getTooltips(mousePosition, tooltips, showAdvanced);
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 		if (tooltip != null) {
 			tooltips.add(tooltip);
 		}

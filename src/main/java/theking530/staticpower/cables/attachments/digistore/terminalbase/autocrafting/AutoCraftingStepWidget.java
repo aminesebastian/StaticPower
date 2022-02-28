@@ -51,7 +51,7 @@ public class AutoCraftingStepWidget extends AbstractGuiWidget<AutoCraftingStepWi
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (material == null) {
 			return;
 		}

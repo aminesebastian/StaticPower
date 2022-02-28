@@ -44,7 +44,7 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerInventoryComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
-		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 26, 83,  new Color(1, 0, 1, 1), Items.BUCKET);
+		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 26, 83, new Color(1, 0, 1, 1), Items.BUCKET);
 		this.container = container;
 		this.fluidConatinerInventoryIndecies = new ArrayList<Integer>();
 		this.fluidContainerComponent = fluidContainerComponent;
@@ -94,6 +94,8 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 		topSlot.y = (int) (this.getYPosition() + 24);
 		bottomSlot.y = (int) (this.getYPosition() + 60);
+		topSlot.x = (int) (getXPosition() + 7);
+		bottomSlot.x = (int) (getXPosition() + 7);
 	}
 
 	@Override

@@ -18,7 +18,7 @@ public class DigistoreInventoryComponent extends InventoryComponent implements I
 	private BiConsumer<InventoryChangeType, ItemStack> digistoreChangeCallback;
 
 	public DigistoreInventoryComponent(String name, int slotCount) {
-		super(name, slotCount, MachineSideMode.Regular);
+		super(name, slotCount);
 		setFilter(new ItemStackHandlerFilter() {
 			@Override
 			public boolean canInsertItem(int slot, ItemStack stack) {
