@@ -38,7 +38,7 @@ public class GuiTreeFarmer extends StaticPowerTileEntityGui<ContainerTreeFarmer,
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new ProcessingComponentStateWidget(getTileEntity().processingComponent, 82, 74, 9, 9));
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab(100));
+		getTabManager().registerTab(infoTab = new GuiInfoTab(125));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 

@@ -55,6 +55,12 @@ import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.teams.TeamManager;
+import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
+import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.CactusCropHarvester;
+import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.GenericCropHarvester;
+import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.NetherWartCropHarvester;
+import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.StemCropHarvester;
+import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.SugarCaneCropHarvester;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventsCommon {
@@ -92,6 +98,13 @@ public class StaticPowerModEventsCommon {
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GRAY, new RedstoneNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GRAY, new RedstoneNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLACK, new RedstoneNetworkModuleFactory());
+
+		// Register farming harvesters.
+		TileEntityBasicFarmer.registerHarvester(new GenericCropHarvester());
+		TileEntityBasicFarmer.registerHarvester(new SugarCaneCropHarvester());
+		TileEntityBasicFarmer.registerHarvester(new CactusCropHarvester());
+		TileEntityBasicFarmer.registerHarvester(new NetherWartCropHarvester());
+		TileEntityBasicFarmer.registerHarvester(new StemCropHarvester());
 
 		// Register composter recipes.
 		event.enqueueWork(() -> {

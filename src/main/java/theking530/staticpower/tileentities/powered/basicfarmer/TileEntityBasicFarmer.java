@@ -1,16 +1,15 @@
 package theking530.staticpower.tileentities.powered.basicfarmer;
 
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -19,16 +18,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.AttachedStemBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.CactusBlock;
-import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.MelonBlock;
-import net.minecraft.world.level.block.NetherWartBlock;
-import net.minecraft.world.level.block.PumpkinBlock;
-import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
@@ -64,13 +55,15 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent.I
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
+import theking530.staticpower.tileentities.powered.basicfarmer.IFarmerHarvester.HarvestResult;
 import theking530.staticpower.utilities.InventoryUtilities;
-import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBasicFarmer> TYPE = new BlockEntityTypeAllocator<TileEntityBasicFarmer>((allocator, pos, state) -> new TileEntityBasicFarmer(pos, state),
 			ModBlocks.BasicFarmer);
+	private static final Map<Class<?>, IFarmerHarvester> HARVETERS = new LinkedHashMap<Class<?>, IFarmerHarvester>();
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -87,10 +80,10 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
-	private final HashSet<Class<? extends Block>> validHarvestacbleClasses;
-
 	private final List<BlockPos> blocks;
+	@UpdateSerialize
 	private int currentBlockIndex;
+	@UpdateSerialize
 	private int range;
 	private boolean shouldDrawRadiusPreview;
 	private AABBTicket wateringTicket;
@@ -131,125 +124,26 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		// Set the energy storage upgrade inventory.
 		energyStorage.setUpgradeInventory(upgradesInventory);
-
-		// Capture all the harvestable blocks.
-		validHarvestacbleClasses = new HashSet<Class<? extends Block>>();
-		validHarvestacbleClasses.add(CropBlock.class);
-		validHarvestacbleClasses.add(SugarCaneBlock.class);
-		validHarvestacbleClasses.add(CactusBlock.class);
-		validHarvestacbleClasses.add(NetherWartBlock.class);
-		validHarvestacbleClasses.add(MelonBlock.class);
-		validHarvestacbleClasses.add(PumpkinBlock.class);
-		validHarvestacbleClasses.add(AttachedStemBlock.class);
-
 		range = StaticPowerConfig.SERVER.basicFarmerDefaultRange.get();
 		blocks = new LinkedList<BlockPos>();
 		shouldDrawRadiusPreview = false;
+
 	}
 
-	@SuppressWarnings("resource")
-	@Override
-	public void process() {
-		if (processingComponent.isPerformingWork()) {
-			if (!getLevel().isClientSide()) {
-				// If we're processing but somehow the watering ticket is not valid, create one.
-				if (wateringTicket == null || !wateringTicket.isValid()) {
-					captureWateringTicket();
-				}
-
-				// Use fluid.
-				fluidTankComponent.drain(StaticPowerConfig.SERVER.basicFarmerFluidUsage.get(), FluidAction.EXECUTE);
-			}
-		} else {
-			// If we're not processing, remove the watering tick.
-			if (!getLevel().isClientSide()) {
-				if (wateringTicket != null) {
-					wateringTicket.invalidate();
-				}
-			}
-		}
+	public static <T extends IFarmerHarvester> void registerHarvester(T instance) {
+		HARVETERS.put(instance.getClass(), instance);
 	}
 
-	@Override
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		super.postInit(world, pos, state);
-		captureWateringTicket();
+	public BlockPos getCurrentPosition() {
+		return blocks.get(currentBlockIndex);
 	}
 
-	@Override
-	public void onChunkUnloaded() {
-		super.onChunkUnloaded();
-
-		if (!getLevel().isClientSide()) {
-			wateringTicket.invalidate();
-		}
+	public boolean hasHoe() {
+		return ModTags.FARMING_HOE.contains(inputInventory.getStackInSlot(0).getItem());
 	}
 
-	protected void captureWateringTicket() {
-		if (!getLevel().isClientSide()) {
-			if (wateringTicket != null) {
-				wateringTicket.invalidate();
-			}
-
-			AABB rangeBounds = new AABB(getBlockPos().getX() - range, getBlockPos().getY() - 1, getBlockPos().getZ() - range, getBlockPos().getX() + range, getBlockPos().getY(),
-					getBlockPos().getZ() + range);
-			wateringTicket = FarmlandWaterManager.addAABBTicket(getLevel(), rangeBounds);
-
-			StaticPower.LOGGER.debug(String.format("Adding farmland watering ticket for farmer at position: %1$s.", getBlockPos().toString()));
-		}
-	}
-
-	protected ProcessingCheckState processingCompleted() {
-		// Edge case where we somehow need to refresh blocks.
-		if (blocks.size() == 0) {
-			refreshBlocksInRange(range);
-		}
-
-		boolean harvested = false;
-		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
-			// Harvest the current block.
-			harvested = attemptHarvestPosition(getCurrentPosition());
-			// Increment first to ensure we're always harvesting the next block.
-			incrementPosition();
-		}
-
-		// For each of the farmed stacks, place the harvested stacks into the output
-		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
-		// Otherwise, update the farmed stack.
-
-		for (int i = 0; i < internalInventory.getSlots(); i++) {
-			ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
-			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, extractedStack, false);
-			if (!insertedStack.isEmpty()) {
-				internalInventory.setStackInSlot(i, insertedStack);
-			}
-		}
-
-		// Return true if we finished clearing the internal inventory.
-		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
-			if (harvested) {
-				return ProcessingCheckState.ok();
-			} else {
-				return ProcessingCheckState.cancel();
-			}
-		} else {
-			return ProcessingCheckState.internalInventoryNotEmpty();
-		}
-	}
-
-	@Override
-	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-		currentBlockIndex = nbt.getInt("current_index");
-		range = nbt.getInt("range");
-	}
-
-	@Override
-	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-		nbt.putInt("current_index", currentBlockIndex);
-		nbt.putInt("range", range);
-		return nbt;
+	public boolean hasAxe() {
+		return ModTags.FARMING_AXE.contains(inputInventory.getStackInSlot(1).getItem());
 	}
 
 	public int getRadius() {
@@ -262,10 +156,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			return recipe.getFertalizationAmount();
 		}
 		return 0.0f;
-	}
-
-	public boolean getShouldDrawRadiusPreview() {
-		return shouldDrawRadiusPreview;
 	}
 
 	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
@@ -291,6 +181,113 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		shouldDrawRadiusPreview = shouldDraw;
 	}
 
+	@Override
+	public void process() {
+		if (processingComponent.isPerformingWork()) {
+			if (!getLevel().isClientSide()) {
+				// If we're processing but somehow the watering ticket is not valid, create one.
+				if (wateringTicket == null || !wateringTicket.isValid()) {
+					captureWateringTicket();
+				}
+
+				// Use fluid.
+				fluidTankComponent.drain(StaticPowerConfig.SERVER.basicFarmerFluidUsage.get(), FluidAction.EXECUTE);
+			}
+		} else {
+			// If we're not processing, remove the watering tick.
+			invalidateWateringTicket();
+		}
+	}
+
+	@Override
+	protected void postInit(Level world, BlockPos pos, BlockState state) {
+		super.postInit(world, pos, state);
+		captureWateringTicket();
+	}
+
+	@Override
+	public void onChunkUnloaded() {
+		super.onChunkUnloaded();
+		invalidateWateringTicket();
+	}
+
+	protected void captureWateringTicket() {
+		if (!getLevel().isClientSide()) {
+			if (wateringTicket != null) {
+				wateringTicket.invalidate();
+			}
+
+			AABB rangeBounds = new AABB(getBlockPos().getX() - range - 1, getBlockPos().getY() - 1, getBlockPos().getZ() - range - 1, getBlockPos().getX() + range + 1, getBlockPos().getY(),
+					getBlockPos().getZ() + range + 1);
+			wateringTicket = FarmlandWaterManager.addAABBTicket(getLevel(), rangeBounds);
+
+			StaticPower.LOGGER.debug(String.format("Adding farmland watering ticket for farmer at position: %1$s.", getBlockPos().toString()));
+		}
+	}
+
+	protected void invalidateWateringTicket() {
+		if (!getLevel().isClientSide()) {
+			wateringTicket.invalidate();
+		}
+	}
+
+	protected ProcessingCheckState processingCompleted() {
+		// Edge case where we somehow need to refresh blocks.
+		if (blocks.size() == 0) {
+			refreshBlocksInRange(range);
+		}
+
+		boolean harvested = false;
+		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
+			// Harvest the current block.
+			harvested = attemptHarvestPosition(getCurrentPosition());
+			// Increment first to ensure we're always harvesting the next block.
+			currentBlockIndex = Math.floorMod(currentBlockIndex + 1, blocks.size() - 1);
+		}
+
+		// For each of the farmed stacks, place the harvested stacks into the output
+		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
+		// Otherwise, update the farmed stack.
+
+		for (int i = 0; i < internalInventory.getSlots(); i++) {
+			ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
+			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(outputInventory, extractedStack, false);
+			if (!insertedStack.isEmpty()) {
+				internalInventory.setStackInSlot(i, insertedStack);
+			}
+		}
+
+		// Return true if we finished clearing the internal inventory.
+		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
+			if (harvested) {
+				((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D, getCurrentPosition().getZ() + 0.5D, 1,
+						0.0D, 0.0D, 0.0D, 0.0D);
+				return ProcessingCheckState.ok();
+			} else {
+				return ProcessingCheckState.cancel();
+			}
+		} else {
+			return ProcessingCheckState.internalInventoryNotEmpty();
+		}
+	}
+
+	protected ProcessingCheckState canFarm() {
+		if (!hasAxe()) {
+			return ProcessingCheckState.error("Missing Axe!");
+		}
+		if (!hasHoe()) {
+			return ProcessingCheckState.error("Missing Hoe!");
+		}
+		if (fluidTankComponent.getFluid().getAmount() < StaticPowerConfig.SERVER.basicFarmerFluidUsage.get()) {
+			return ProcessingCheckState.notEnoughFluid();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	protected boolean getShouldDrawRadiusPreview() {
+		return shouldDrawRadiusPreview;
+	}
+
 	private void refreshBlocksInRange(int range) {
 		StaticPower.LOGGER.debug(String.format("Farmer at position: %1$s refershing eligible blocks..", getBlockPos().toString()));
 		blocks.clear();
@@ -309,37 +306,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		captureWateringTicket();
 	}
 
-	private void incrementPosition() {
-		if (!getLevel().isClientSide) {
-			currentBlockIndex = Math.floorMod(currentBlockIndex + 1, blocks.size() - 1);
-		}
-	}
-
-	public BlockPos getCurrentPosition() {
-		return blocks.get(currentBlockIndex);
-	}
-
-	public ProcessingCheckState canFarm() {
-		if (!hasAxe()) {
-			return ProcessingCheckState.error("Missing Axe!");
-		}
-		if (!hasHoe()) {
-			return ProcessingCheckState.error("Missing Hoe!");
-		}
-		if (fluidTankComponent.getFluid().getAmount() < StaticPowerConfig.SERVER.basicFarmerFluidUsage.get()) {
-			return ProcessingCheckState.notEnoughFluid();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	public boolean hasHoe() {
-		return ModTags.FARMING_HOE.contains(inputInventory.getStackInSlot(0).getItem());
-	}
-
-	public boolean hasAxe() {
-		return ModTags.FARMING_AXE.contains(inputInventory.getStackInSlot(1).getItem());
-	}
-
+	@SuppressWarnings("resource")
 	protected void useHoe() {
 		// If we have an hoe, and we're on the server, use it.
 		if (hasHoe() && !getLevel().isClientSide) {
@@ -350,6 +317,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	protected void useAxe() {
 		// If we have an axe, and we're on the server, use it.
 		if (hasAxe() && !getLevel().isClientSide) {
@@ -361,10 +329,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	protected boolean attemptHarvestPosition(BlockPos pos) {
-		if (getLevel().isClientSide) {
-			return false;
-		}
-
+		// Till the spot if we can and return.
 		if (ModTags.TILLABLE.contains(getLevel().getBlockState(pos.relative(Direction.DOWN)).getBlock().asItem())) {
 			getLevel().destroyBlock(pos.relative(Direction.DOWN), false);
 			getLevel().setBlockAndUpdate(pos.relative(Direction.DOWN), Blocks.FARMLAND.defaultBlockState());
@@ -375,13 +340,15 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		boolean farmed = false;
 
 		// Check to see if we're at a farmable block. If we are, harvest it.
-		if (isFarmableBlock(pos)) {
-			farmed |= harvestGenericCrop(pos);
-			farmed |= harvestSugarCane(pos);
-			farmed |= harvestCactus(pos);
-			farmed |= harvestStem(pos);
-			farmed |= harvestNetherWart(pos);
-			farmed |= harvestMelonOrPumpkin(pos);
+		for (IFarmerHarvester harvester : HARVETERS.values()) {
+			HarvestResult result = harvester.harvest(getLevel(), pos);
+			if (!result.isEmpty()) {
+				for (ItemStack stack : result.getResults()) {
+					InventoryUtilities.insertItemIntoInventory(internalInventory, stack, false);
+				}
+				farmed = true;
+				break;
+			}
 		}
 
 		// Grow the crop if we can.
@@ -392,117 +359,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return farmed;
 	}
 
-	protected boolean isFarmableBlock(BlockPos pos) {
-		if (getLevel().getBlockState(pos) == null) {
-			return false;
-		}
-		for (Class<? extends Block> harvestableClass : validHarvestacbleClasses) {
-			if (harvestableClass.isInstance(getLevel().getBlockState(pos).getBlock())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	protected void captureHarvestItems(BlockPos pos) {
-		for (ItemStack drop : WorldUtilities.getBlockDrops(getLevel(), pos)) {
-			InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
-		}
-		getLevel().playSound(null, pos, getLevel().getBlockState(pos).getBlock().getSoundType(getLevel().getBlockState(pos), level, pos, null).getBreakSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
-		((ServerLevel) getLevel()).sendParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-	}
-
-	protected boolean harvestGenericCrop(BlockPos pos) {
-		// If the current position is an instance of a CropsBlock.
-		if (getLevel().getBlockState(pos).getBlock() instanceof CropBlock) {
-			// Get the block and check if it is of max age.
-			CropBlock tempCrop = (CropBlock) getLevel().getBlockState(pos).getBlock();
-			// If the crop is fully grown, harvest it.
-			if (tempCrop.isMaxAge(getLevel().getBlockState(pos))) {
-				// Harvest the provided position, set the age of the crop back to 0, and use the
-				// hoe.
-				captureHarvestItems(pos);
-				getLevel().setBlock(pos, tempCrop.getStateForAge(0), 1 | 2);
-				useHoe();
-				return true;
-			}
-		}
-		return false;
-	}
-
-	protected boolean harvestSugarCane(BlockPos pos) {
-		boolean harvested = false;
-		for (int i = 1; i < 255; i++) {
-			if (getLevel().getBlockState(pos.offset(0, i, 0)).getBlock() instanceof SugarCaneBlock) {
-				captureHarvestItems(pos.offset(0, i, 0));
-				getLevel().setBlock(pos.offset(0, i, 0), Blocks.AIR.defaultBlockState(), 1 | 2);
-				useAxe();
-				harvested = true;
-			} else {
-				break;
-			}
-		}
-
-		return harvested;
-	}
-
-	protected boolean harvestCactus(BlockPos pos) {
-		boolean harvested = false;
-		for (int i = 1; i < 255; i++) {
-			if (getLevel().getBlockState(pos.offset(0, i, 0)).getBlock() instanceof CactusBlock) {
-				captureHarvestItems(pos.offset(0, i, 0));
-				getLevel().setBlock(pos.offset(0, i, 0), Blocks.AIR.defaultBlockState(), 1 | 2);
-				useAxe();
-				harvested = true;
-			} else {
-				break;
-			}
-		}
-
-		return harvested;
-	}
-
-	protected boolean harvestStem(BlockPos pos) {
-		Block block = getLevel().getBlockState(pos).getBlock();
-		if (block instanceof AttachedStemBlock) {
-			// Check for the melon or pumpkin around the stem.
-			for (Direction dir : Direction.values()) {
-				if (dir.getAxis() == Direction.Axis.Y) {
-					continue;
-				}
-				if (harvestMelonOrPumpkin(pos.relative(dir))) {
-					return true;
-				}
-
-			}
-		}
-		return false;
-	}
-
-	protected boolean harvestMelonOrPumpkin(BlockPos pos) {
-		Block block = getLevel().getBlockState(pos).getBlock();
-		if (block instanceof MelonBlock || block instanceof PumpkinBlock) {
-			captureHarvestItems(pos);
-			getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
-			useAxe();
-			return true;
-		}
-		return false;
-	}
-
-	protected boolean harvestNetherWart(BlockPos pos) {
-		if (getLevel().getBlockState(pos).getBlock() instanceof NetherWartBlock) {
-			NetherWartBlock tempNetherwart = (NetherWartBlock) getLevel().getBlockState(pos).getBlock();
-			if (tempNetherwart.getPlant(getLevel(), pos).getValue(NetherWartBlock.AGE) >= 3) {
-				captureHarvestItems(pos);
-				getLevel().setBlock(pos, Blocks.NETHER_WART.defaultBlockState(), 1 | 2);
-				useHoe();
-			}
-			return true;
-		}
-		return false;
-	}
-
+	@SuppressWarnings("resource")
 	protected boolean growCrop(BlockPos pos) {
 		if (getLevel().getBlockState(pos) != null && getLevel().getBlockState(pos).getBlock() instanceof BonemealableBlock) {
 			BonemealableBlock tempCrop = (BonemealableBlock) getLevel().getBlockState(pos).getBlock();

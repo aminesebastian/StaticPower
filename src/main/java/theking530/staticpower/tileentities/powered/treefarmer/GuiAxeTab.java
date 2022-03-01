@@ -18,7 +18,7 @@ public class GuiAxeTab extends BaseGuiTab {
 	private StaticPowerContainerSlot slot;
 
 	public GuiAxeTab(StaticPowerContainer container, TileEntityTreeFarm treeFarmer) {
-		super("Lumber Axe", Color.EIGHT_BIT_WHITE,26, 26, new Color(0.5f, 0.35f, 1.0f, 1.0f), Items.IRON_AXE);
+		super("Lumber Axe", Color.EIGHT_BIT_WHITE, 26, 26, new Color(0.5f, 0.35f, 1.0f, 1.0f), Items.IRON_AXE);
 		this.container = container;
 		this.treeFarmer = treeFarmer;
 		this.drawTitle = false;
