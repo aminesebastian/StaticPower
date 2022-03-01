@@ -7,7 +7,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 
@@ -16,13 +15,13 @@ public class GuiMachineHeatTab extends AbstractInfoTab {
 	protected HeatStorageComponent heatStorage;
 
 	public GuiMachineHeatTab(HeatStorageComponent storage) {
-		super("Heat I/O", new Color(100, 255, 255), 75, GuiTextures.ORANGE_TAB, new ItemDrawable(Items.CAMPFIRE));
+		super("Heat I/O", new Color(100, 255, 255), 105,  new Color(1, 0.5f, 0.1f, 1.0f), new ItemDrawable(Items.CAMPFIRE));
 		heatStorage = storage;
 	}
 
 	@Override
-	public void updateData() {
-		super.updateData();
+	public void tick() {
+		super.tick();
 		clear();
 		addKeyValueTwoLiner("Generating", new TextComponent("Generating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), ChatFormatting.RED);
 		addKeyValueTwoLiner("Dissipating", new TextComponent("Dissipating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), ChatFormatting.AQUA);

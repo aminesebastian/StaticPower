@@ -15,7 +15,6 @@ import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
 import theking530.staticcore.gui.WidgetContainer.WidgetParent;
-import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
@@ -152,7 +151,32 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public T setPosition(float xPos, float yPos) {
 		position.setX(xPos);
 		position.setY(yPos);
+		onPositionChanged(position);
 		return (T) this;
+	}
+
+	public T setXPosition(float xPos) {
+		position.setX(xPos);
+		onPositionChanged(position);
+		return (T) this;
+	}
+
+	public T setYPosition(float yPos) {
+		position.setY(yPos);
+		onPositionChanged(position);
+		return (T) this;
+	}
+
+	public float getXPosition() {
+		return position.getX();
+	}
+
+	public float getYPosition() {
+		return position.getY();
+	}
+
+	protected void onPositionChanged(Vector2D newPosition) {
+
 	}
 
 	/**
@@ -225,7 +249,24 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public T setSize(float width, float height) {
 		size.setX(width);
 		size.setY(height);
+		onSizeChanged(size);
 		return (T) this;
+	}
+
+	public T setWidth(float width) {
+		size.setX(width);
+		onSizeChanged(size);
+		return (T) this;
+	}
+
+	public T setHeight(float height) {
+		size.setY(height);
+		onSizeChanged(size);
+		return (T) this;
+	}
+
+	protected void onSizeChanged(Vector2D newSize) {
+
 	}
 
 	/**
@@ -235,6 +276,14 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 */
 	public Vector2D getSize() {
 		return size;
+	}
+
+	public float getWidth() {
+		return size.getX();
+	}
+
+	public float getHeight() {
+		return size.getY();
 	}
 
 	/**
@@ -302,8 +351,11 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * a good place to perform any calculations that don't have to happen per frame
 	 * but still have to occur rapidly.
 	 */
-	public void updateData() {
-
+	public void tick() {
+		// Tick all the widgets.
+		for (AbstractGuiWidget<?> widget : this.getChildren()) {
+			widget.tick();
+		}
 	}
 
 	/* Render Events */
@@ -316,14 +368,18 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseX
 	 * @param mouseY
 	 */
-	public void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+	public final void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
 		this.parentSize = parentSize;
 		lastMousePosition = new Vector2D(mouseX, mouseY);
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
 		matrixStack.pushPose();
 		transformPoseBeforeRender(matrixStack);
-		internalContainer.update(matrixStack, parentSize, partialTicks, mouseX, mouseY);
+
+		if (shouldDrawChildren()) {
+			internalContainer.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY);
+		}
+		updateWidgetBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY);
 		matrixStack.popPose();
 
 		// Make a NEW matrix that translates from local space to screen space. We make a
@@ -343,6 +399,10 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		}
 	}
 
+	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+
+	}
+
 	/**
 	 * This method should be overriden to draw anything that should appear behind
 	 * slots/items/anything else.
@@ -352,7 +412,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
 		RectangleBounds clip = getClipBounds(matrix);
@@ -360,7 +420,9 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 			RenderingUtilities.applyScissorMask(clip);
 		}
 
-		internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
+		if (shouldDrawChildren()) {
+			internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
+		}
 		renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
 
@@ -378,7 +440,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
 		RectangleBounds clip = getClipBounds(matrix);
@@ -387,16 +449,18 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		}
 
 		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
-		internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+
+		if (shouldDrawChildren()) {
+			internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+		}
 		matrix.popPose();
 
 		if (clip != null) {
 			RenderingUtilities.clearScissorMask();
-			;
 		}
 	}
 
-	public void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
 		RectangleBounds clip = getClipBounds(matrix);
@@ -404,7 +468,9 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 			RenderingUtilities.applyScissorMask(clip);
 		}
 
-		internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks);
+		if (shouldDrawChildren()) {
+			internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks);
+		}
 		renderWidgetForeground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
 
@@ -503,8 +569,15 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	/* Tooltip */
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		internalContainer.getTooltips(mousePosition, tooltips, showAdvanced);
+	public final void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+		if (shouldDrawChildren()) {
+			internalContainer.getTooltips(mousePosition, tooltips, showAdvanced);
+		}
+		getWidgetTooltips(mousePosition, tooltips, showAdvanced);
+	}
+
+	protected void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+
 	}
 
 	public boolean getTooltipsDisabled() {
@@ -547,32 +620,57 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		return internalContainer.getWidgets();
 	}
 
+	protected boolean shouldDrawChildren() {
+		return true;
+	}
+
 	/* Input Events */
 	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
-		return internalContainer.handleMouseClick(mouseX, mouseY, button);
+		if (shouldDrawChildren()) {
+			return internalContainer.handleMouseClick(mouseX, mouseY, button);
+		}
+		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
-		return internalContainer.handleMouseReleased(mouseX, mouseY, button);
+		if (shouldDrawChildren()) {
+			return internalContainer.handleMouseReleased(mouseX, mouseY, button);
+		}
+		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult mouseMove(double mouseX, double mouseY) {
-		return internalContainer.handleMouseMove(mouseX, mouseY);
+		if (shouldDrawChildren()) {
+			return internalContainer.handleMouseMove(mouseX, mouseY);
+		}
+		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-		return internalContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+		if (shouldDrawChildren()) {
+			return internalContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+		}
+		return EInputResult.UNHANDLED;
 	}
 
-	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-		return internalContainer.handleMouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
+	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+		if (shouldDrawChildren()) {
+			return internalContainer.handleMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		}
+		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult characterTyped(char character, int p_charTyped_2_) {
-		return internalContainer.characterTyped(character, p_charTyped_2_);
+		if (shouldDrawChildren()) {
+			return internalContainer.characterTyped(character, p_charTyped_2_);
+		}
+		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult keyPressed(int key, int scanCode, int modifiers) {
-		return internalContainer.handleKeyPressed(key, scanCode, modifiers);
+		if (shouldDrawChildren()) {
+			return internalContainer.handleKeyPressed(key, scanCode, modifiers);
+		}
+		return EInputResult.UNHANDLED;
 	}
 }

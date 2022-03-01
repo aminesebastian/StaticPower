@@ -5,6 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.BiConsumer;
 
+import org.apache.logging.log4j.util.TriConsumer;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -27,32 +29,32 @@ import theking530.staticcore.utilities.Vector2D;
 public class WidgetContainer {
 	protected final List<AbstractGuiWidget<?>> widgets;
 	protected final WidgetParent parent;
-	protected BiConsumer<PoseStack, Integer> transformer;
+	protected TriConsumer<PoseStack, AbstractGuiWidget<?>, Integer> transformer;
 
 	public WidgetContainer(WidgetParent parent) {
 		widgets = new ArrayList<AbstractGuiWidget<?>>();
 		this.parent = parent;
 	}
 
-	public void setTransfomer(BiConsumer<PoseStack, Integer> transformer) {
+	public void setTransfomer(TriConsumer<PoseStack, AbstractGuiWidget<?>, Integer> transformer) {
 		this.transformer = transformer;
 	}
 
 	public void tick() {
 		// Tick all the widgets.
 		for (AbstractGuiWidget<?> widget : widgets) {
-			widget.updateData();
+			widget.tick();
 		}
 	}
 
-	public void update(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
 		// Render the foreground of all the widgets. We should NOT check visibility here
 		// as widgets may drive their visibility in there.
 		for (int i = 0; i < widgets.size(); i++) {
 			AbstractGuiWidget<?> widget = widgets.get(i);
 			if (transformer != null) {
 				matrixStack.pushPose();
-				transformer.accept(matrixStack, i);
+				transformer.accept(matrixStack, widget, i);
 			}
 			widget.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY);
 			if (transformer != null) {
@@ -68,7 +70,7 @@ public class WidgetContainer {
 			if (widget.isVisible()) {
 				if (transformer != null) {
 					matrixStack.pushPose();
-					transformer.accept(matrixStack, i);
+					transformer.accept(matrixStack, widget, i);
 				}
 				widget.renderBackground(matrixStack, mouseX, mouseY, partialTicks);
 				if (transformer != null) {
@@ -85,7 +87,7 @@ public class WidgetContainer {
 			if (widget.isVisible()) {
 				if (transformer != null) {
 					matrixStack.pushPose();
-					transformer.accept(matrixStack, i);
+					transformer.accept(matrixStack, widget, i);
 				}
 				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);
 				if (transformer != null) {
@@ -102,7 +104,7 @@ public class WidgetContainer {
 			if (widget.isVisible()) {
 				if (transformer != null) {
 					matrixStack.pushPose();
-					transformer.accept(matrixStack, i);
+					transformer.accept(matrixStack, widget, i);
 				}
 				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
 				if (transformer != null) {

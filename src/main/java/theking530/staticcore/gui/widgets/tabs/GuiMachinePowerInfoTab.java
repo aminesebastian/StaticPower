@@ -16,18 +16,16 @@ public class GuiMachinePowerInfoTab extends AbstractInfoTab {
 	private EnergyStorageComponent energyStorage;
 
 	public GuiMachinePowerInfoTab(EnergyStorageComponent storage) {
-		super("Power I/O", new Color(242, 0, 255), 83, GuiTextures.PURPLE_TAB, new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
+		super("Power I/O", new Color(242, 0, 255), 105, new Color(0.6f, 0.1f, 1.0f), new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
 		this.energyStorage = storage;
 	}
 
 	@Override
-	public void updateData() {
-		super.updateData();
+	public void tick() {
+		super.tick();
 		clear();
-		addKeyValueTwoLiner("Input", new TextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getReceivedPerTick()),
-				ChatFormatting.GREEN);
-		addKeyValueTwoLiner("Usage", new TextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getExtractedPerTick()),
-				ChatFormatting.RED);
+		addKeyValueTwoLiner("Input", new TextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getReceivedPerTick()), ChatFormatting.GREEN);
+		addKeyValueTwoLiner("Usage", new TextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getExtractedPerTick()), ChatFormatting.RED);
 		addKeyValueTwoLiner("I/O", new TextComponent("Max I/O"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getMaxDrain()), ChatFormatting.AQUA);
 	}
 }

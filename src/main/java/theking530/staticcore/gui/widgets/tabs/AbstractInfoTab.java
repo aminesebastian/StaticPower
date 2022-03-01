@@ -13,10 +13,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FormattedCharSequence;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.utilities.Color;
 
@@ -24,13 +23,13 @@ import theking530.staticcore.utilities.Color;
 public abstract class AbstractInfoTab extends BaseGuiTab {
 	public static final float LINE_HEIGHT = 10.5f;
 	public static final float LINE_BREAK_HEIGHT = 8.0f;
-	public static final float HEIGHT_PADDING = 9.0f;
+	public static final float HEIGHT_PADDING = 2.0f;
 
 	private Map<String, List<Component>> info;
 	private int lineBreakIndex;
 
-	public AbstractInfoTab(String title, Color titleColor, int width, ResourceLocation tabBackground, IDrawable icon) {
-		super(title, titleColor, width, 0, tabBackground, icon);
+	public AbstractInfoTab(String title, Color titleColor, int width, Color color, IDrawable icon) {
+		super(title, titleColor, width, 100, color, icon);
 		info = new LinkedHashMap<String, List<Component>>();
 		lineBreakIndex = 0;
 	}
@@ -77,50 +76,48 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	}
 
 	@Override
-	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
+	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		if (isOpen()) {
 			if (info != null) {
-				drawDarkBackground(matrix, 10, 22, tabWidth + 5, tabHeight - 7);
-				drawTextBG(matrix);
+				int padding = 8;
+
+				drawDarkBackground(matrix, padding, 22, getSize().getXi() - (2 * padding), getSize().getYi() - (2 * padding) - 14);
 				drawInfo(matrix, false);
 			}
 		}
 	}
 
 	@Override
-	public void updateData() {
-		this.tabHeight = (int) (drawInfo(null, true) + HEIGHT_PADDING);
+	public void tick() {
+		this.setExpandedHeight(drawInfo(null, true) + HEIGHT_PADDING);
 	}
 
 	protected float drawInfo(@Nullable PoseStack stack, boolean simulate) {
 		// Scale offsets.
-		float lineHeight = 0.0f;
-		float height = 0;
+		float lineHeight = 32.0f;
 
 		// Iterate through all the info lines.
 		for (List<Component> formattedTextList : info.values()) {
 			for (Component formattedText : formattedTextList) {
 				if (formattedText.getString().equals("\n")) {
 					lineHeight += LINE_BREAK_HEIGHT;
-					height += LINE_BREAK_HEIGHT;
 					continue;
 				}
 
 				// Get the word wrapped result.
-				List<FormattedCharSequence> wordWrappedText = fontRenderer.split(formattedText, this.tabWidth);
+				List<String> lines = GuiDrawUtilities.wrapString(formattedText.getString(), getExpandedSize().getX() - 30);
 				// Render the info text.
-				for (FormattedCharSequence text : wordWrappedText) {
+				for (String line : lines) {
 					if (!simulate) {
-						fontRenderer.drawShadow(stack, text, 14, 25 + lineHeight, 16777215);
+						GuiDrawUtilities.drawStringLeftAligned(stack, line, 12, lineHeight, 0, 1, Color.EIGHT_BIT_WHITE, true);
 					}
 					lineHeight += LINE_HEIGHT;
-					height += LINE_HEIGHT;
 				}
 			}
 		}
 
-		return height;
+		return lineHeight;
 	}
 
 	protected void drawTextBG(PoseStack stack) {

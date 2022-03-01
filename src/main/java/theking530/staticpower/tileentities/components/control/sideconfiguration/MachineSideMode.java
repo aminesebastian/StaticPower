@@ -6,10 +6,10 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.utilities.Color;
 
+// TODO: The NA mode could probably be removed.
 public enum MachineSideMode {
-	Regular("regular", ChatFormatting.WHITE, new Color(139, 139, 139, 255).fromEightBitToFloat()), Input("input", ChatFormatting.BLUE, new Color(80, 130, 179, 255).fromEightBitToFloat()),
-	Input2("input2", ChatFormatting.DARK_PURPLE, new Color(100, 0, 200, 255).fromEightBitToFloat()),
-	Input3("input3", ChatFormatting.LIGHT_PURPLE, new Color(213, 0, 168, 255).fromEightBitToFloat()),
+	NA("na", ChatFormatting.WHITE, new Color(139, 139, 139, 255).fromEightBitToFloat()), Input("input", ChatFormatting.BLUE, new Color(80, 130, 179, 255).fromEightBitToFloat()),
+	Input2("input2", ChatFormatting.DARK_PURPLE, new Color(100, 0, 200, 255).fromEightBitToFloat()), Input3("input3", ChatFormatting.LIGHT_PURPLE, new Color(213, 0, 168, 255).fromEightBitToFloat()),
 	Output("output", ChatFormatting.GOLD, new Color(237, 160, 45, 255).fromEightBitToFloat()), Output2("output2", ChatFormatting.GREEN, new Color(0, 200, 50, 255).fromEightBitToFloat()),
 	Output3("output3", ChatFormatting.YELLOW, new Color(220, 220, 0, 255).fromEightBitToFloat()), Output4("output4", ChatFormatting.AQUA, new Color(0, 206, 217, 255).fromEightBitToFloat()),
 	Disabled("disabled", ChatFormatting.RED, new Color(200, 20, 20, 255).fromEightBitToFloat()), Never("never", ChatFormatting.GRAY, new Color(0, 0, 0, 0).fromEightBitToFloat());

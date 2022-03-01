@@ -17,7 +17,6 @@ import theking530.staticpower.client.rendering.tileentity.TileEntityRenderStatic
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 
 public class TileEntityStaticChest extends TileEntityBase {
@@ -55,7 +54,7 @@ public class TileEntityStaticChest extends TileEntityBase {
 	public TileEntityStaticChest(BlockEntityTypeAllocator<TileEntityStaticChest> type, ResourceLocation tier, int slotCount, BlockPos pos, BlockState state) {
 		super(type, pos, state);
 		this.tier = tier;
-		registerComponent(inventory = new InventoryComponent("Inventory", slotCount, MachineSideMode.Regular).setShiftClickEnabled(true));
+		registerComponent(inventory = new InventoryComponent("Inventory", slotCount).setShiftClickEnabled(true));
 	}
 
 	public static Vector2D getInventorySize(TileEntityStaticChest chest) {

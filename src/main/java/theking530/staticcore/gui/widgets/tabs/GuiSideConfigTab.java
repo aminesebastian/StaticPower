@@ -2,7 +2,7 @@ package theking530.staticcore.gui.widgets.tabs;
 
 import java.util.Collections;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
@@ -26,12 +26,11 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
-import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.rendering.BlockModel;
+import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -43,20 +42,22 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 @OnlyIn(Dist.CLIENT)
 public class GuiSideConfigTab extends BaseGuiTab {
 	private static final BlockModel HIGHLIGHT_RENDERER = new BlockModel();
-	private static final AABB BOUNDS = new AABB(new Vec3(0, 0, 0), new Vec3(1, 1, 1));
+	private static final AABB BOUNDS = new AABB(new Vec3(-0.05, -0.05, -0.05), new Vec3(1.05, 1.05, 1.05));
 
 	public TileEntityBase tileEntity;
 	private Vector2D rotation;
 	private Vector2D rotationVelocity;
+	private Vector2D mouseDownLocation;
 	private boolean mouseDownInside;
 	private Direction highlightedSide;
 
 	public GuiSideConfigTab(TileEntityBase te) {
-		super("Side Config", Color.EIGHT_BIT_WHITE, 80, 80, GuiTextures.BLUE_TAB, te.getBlockState().getBlock());
+		super("Side Config", Color.EIGHT_BIT_WHITE, 110, 105, new Color(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
 		tileEntity = te;
 
 		rotation = new Vector2D(55, -25);
 		rotationVelocity = new Vector2D(0, 0);
+		mouseDownLocation = new Vector2D(0, 0);
 
 		// Rotate initially to reflect the angle the player is looking from.
 		@SuppressWarnings("resource")
@@ -69,7 +70,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	}
 
 	@Override
-	public void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
 		// Add the velocity.
 		rotation.add(rotationVelocity);
 
@@ -87,22 +88,27 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 	@SuppressWarnings("resource")
 	@Override
-	public void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		super.renderBackground(matrix, mouseX, mouseY, partialTicks);
-		drawDarkBackground(matrix, 10, 22, 85, 75);
-		fontRenderer.drawShadow(matrix, getTitle(), (getTabSide() == TabSide.LEFT ? 11 : 24), 8, titleColor);
+	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 
-		RenderSystem.disableCull();
+		// Don't render anything if we're not open.
+		if (!isOpen()) {
+			return;
+		}
+
+		drawDarkBackground(matrix, 10, 24, (int) getWidth() - 22, (int) getHeight() - 32);
+
 		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
 		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
 		matrix.pushPose();
-		matrix.translate(73f, 38.5f, 0);
-		matrix.scale(-42, 42, 42);
+		matrix.translate(75f, 41f, 10);
+		matrix.scale(-40, 40, 40);
 		matrix.translate(0.5f, 0.5f, 0.5f);
 		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
 		matrix.translate(-0.5f, -0.5f, -0.5f);
+		Lighting.setupForEntityInInventory();
 		renderer.renderSingleBlock(tileEntity.getBlockState(), matrix, buffer, 15728880, OverlayTexture.NO_OVERLAY, data);
 		buffer.endBatch();
 
@@ -114,11 +120,6 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		BlockHitResult result = AABB.clip(Collections.singleton(BOUNDS), new Vec3(mouseMin.x(), mouseMin.y(), mouseMin.z()), new Vec3(mouseMax.x(), mouseMax.y(), mouseMax.z()), new BlockPos(0, 0, 0));
 		if (result != null) {
 			highlightedSide = result.getDirection();
-		} else {
-			highlightedSide = null;
-		}
-
-		if (highlightedSide != null) {
 			SideConfigurationComponent sideConfig = tileEntity.getComponent(SideConfigurationComponent.class);
 			if (sideConfig != null) {
 				boolean enabled = sideConfig.getWorldSpaceEnabledState(highlightedSide);
@@ -126,13 +127,20 @@ public class GuiSideConfigTab extends BaseGuiTab {
 					MachineSideMode mode = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide);
 					Color color = mode.getColor().copy();
 					color.setW(0.75f);
-					HIGHLIGHT_RENDERER.drawPreviewSide(matrix, result.getDirection(), new Vector3f(-0.025f, -0.025f, -0.025f), new Vector3f(1.05f, 1.05f, 1.05f), color);
+
+					matrix.pushPose();
+					matrix.translate(0.5f, 0.5f, 0.5f);
+					matrix.mulPose(result.getDirection().getRotation());
+					matrix.translate(-0.5f, -0.5f, -0.5f);
+					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.25f, 1.025f, 0.25f), new Vector3f(0.5f, 0.2f, 0.5f), color, matrix);
+					matrix.popPose();
 				} else {
 					highlightedSide = null; // Clear out the highlighted side if its a disabled side.
 				}
 			}
+		} else {
+			highlightedSide = null;
 		}
-
 		matrix.popPose();
 	}
 
@@ -144,7 +152,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		return mouse;
 	}
 
-	public EInputResult mouseClick(PoseStack matrixStack, double mouseX, double mouseY, int button) {
+	@Override
+	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		if (this.getBounds().isPointInBounds(new Vector2D(mouseX, mouseY))) {
 			if (this.getTabState() == TabState.OPEN) {
 				mouseDownInside = true;
@@ -152,13 +161,14 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		} else {
 			mouseDownInside = false;
 		}
-
-		return super.mouseClick(matrixStack, mouseX, mouseY, button);
+		mouseDownLocation = new Vector2D(mouseX, mouseY);
+		return super.mouseClick(mouseX, mouseY, button);
 	}
 
+	@Override
 	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (mouseDownInside) {
-			rotationVelocity.setX((float) deltaX * 1.5f);
+			rotationVelocity.setX((float) deltaX * -1.5f);
 			rotationVelocity.setY((float) deltaY * -1.5f);
 			return EInputResult.HANDLED;
 		}
@@ -166,14 +176,24 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	}
 
 	@SuppressWarnings("resource")
+	@Override
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
-		if (highlightedSide != null) {
+		// Make sure a side is highlighted AND the mouse hasn't moved too much. IF it
+		// has, we don't change the side mode becuase its probably the result of someone
+		// rotating the block, not intending to change the side.
+		if (highlightedSide != null && (new Vector2D(mouseX, mouseY).subtract(mouseDownLocation).getLength() < 2.0f)) {
 			SideConfigurationComponent sideComp = tileEntity.getComponent(SideConfigurationComponent.class);
-			SideIncrementDirection direction = button == 1 ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
-			sideComp.modulateWorldSpaceSideMode(highlightedSide, direction);
 
-			// Play the click sound.
-			Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 1.0f, 1.0f, false);
+			// Middle mouse blocks all sides up.
+			if (ModKeyBindings.RESET_SIDE_CONFIGURATION.isDown()) {
+				sideComp.setToDefault();
+				Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.PAINTING_PLACE, SoundSource.MASTER, 0.6f, 1.1f, false);
+			} else {
+				SideIncrementDirection direction = button == 0 ? SideIncrementDirection.FORWARD : SideIncrementDirection.BACKWARDS;
+				sideComp.modulateWorldSpaceSideMode(highlightedSide, direction);
+				Minecraft.getInstance().level.playLocalSound(tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.MASTER, 0.6f, button == 0 ? 1.25f : 1.1f, false);
+			}
+
 			// Send a packet to the server with the updated values.
 			NetworkMessage msg = new PacketSideConfigTab(sideComp.getWorldSpaceConfiguration(), tileEntity.getBlockPos());
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);

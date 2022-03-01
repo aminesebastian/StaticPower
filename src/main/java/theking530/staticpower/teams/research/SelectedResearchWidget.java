@@ -27,7 +27,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 		cacheResearch();
 	}
 
-	public void updateData() {
+	public void tick() {
 		cacheResearch();
 	}
 

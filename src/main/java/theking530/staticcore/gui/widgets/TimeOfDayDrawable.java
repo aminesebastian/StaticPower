@@ -67,7 +67,7 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		// Allocate the tooltip.
 		MutableComponent output;
 

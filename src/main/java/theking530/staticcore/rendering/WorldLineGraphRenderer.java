@@ -46,7 +46,7 @@ public class WorldLineGraphRenderer {
 
 	private void renderData(float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight) {
 		// Do nothing if there is no data.
-		if (dataSets.size() == 0 || dataSets.values().stream().findFirst().isEmpty()) {
+		if (dataSets.size() == 0 || dataSets.get(0) == null) {
 			return;
 		}
 

@@ -57,8 +57,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		wrappedDescription = GuiDrawUtilities.wrapString(research.getDescription(), maxExpandedSize.getXi() * 2 - 32);
 	}
 
-	public void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
-		super.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY);
+	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
 
 		// Update the team and manager.
 		team = TeamManager.getLocalTeam();
@@ -142,8 +141,8 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	public void renderWidgetForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 	}
 
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		super.getTooltips(mousePosition, tooltips, showAdvanced);
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 	}
 
 	public void setExpanded(boolean expanded) {

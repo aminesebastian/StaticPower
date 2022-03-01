@@ -10,7 +10,6 @@ import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
@@ -22,9 +21,9 @@ public class GuiResearchTab extends AbstractInfoTab {
 	public TextButton setTeamButton;
 
 	public GuiResearchTab(TeamComponent teamComponent) {
-		super("gui.staticpower.tab_title.research", new Color(255, 255, 255), 100, GuiTextures.SEA_FOAM_TAB, new ItemDrawable(ModItems.ResearchTier1));
+		super("gui.staticpower.tab_title.research", new Color(255, 255, 255), 100, new Color(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(ModItems.ResearchTier1));
 		this.teamComponent = teamComponent;
-		widgetContainer.registerWidget(setTeamButton = new TextButton(12, 25, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
+		internalContainer.registerWidget(setTeamButton = new TextButton(12, 25, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
 		setTeamButton.setTooltip(new TranslatableComponent("gui.staticpower.machine_set_team"));
 	}
 
@@ -36,15 +35,15 @@ public class GuiResearchTab extends AbstractInfoTab {
 	}
 
 	@Override
-	public void updateData() {
-		super.updateData();
+	public void tick() {
+		super.tick();
 		if (teamComponent.getOwningTeam() != null) {
 			addKeyValueTwoLiner("team_name", new TextComponent("Owners"), new TextComponent(teamComponent.getOwningTeam().getName()), ChatFormatting.AQUA);
 		} else {
 			addLine("team_name", ChatFormatting.RED, new TextComponent("Missing Team!"));
 		}
-
-		tabHeight += 24;
-		setTeamButton.setPosition(setTeamButton.getPosition().getX(), tabHeight - 3);
+		
+		setTeamButton.setPosition(setTeamButton.getPosition().getX(), getHeight() - 26);
+		this.setExpandedHeight(getExpandedSize().getY() + 16);
 	}
 }

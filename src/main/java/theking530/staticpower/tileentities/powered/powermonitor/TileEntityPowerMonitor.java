@@ -1,5 +1,7 @@
 package theking530.staticpower.tileentities.powered.powermonitor;
 
+import java.util.Collections;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Inventory;
@@ -108,6 +110,10 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 
 		// Create the metric capturing values.
 		metrics = new PowerTransferMetrics();
+
+		// Initialize the default data.
+		recievedData = new FloatGraphDataSet(new Color(0.1f, 1.0f, 0.2f, 0.75f), Collections.emptyList());
+		providedData = new FloatGraphDataSet(new Color(1.0f, 0.1f, 0.2f, 0.75f), Collections.emptyList());
 	}
 
 	@Override

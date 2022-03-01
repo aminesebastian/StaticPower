@@ -223,8 +223,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
-				|| mode == MachineSideMode.Output3 || mode == MachineSideMode.Output4;
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2 || mode == MachineSideMode.Output3
+				|| mode == MachineSideMode.Output4;
 	}
 
 	@Override

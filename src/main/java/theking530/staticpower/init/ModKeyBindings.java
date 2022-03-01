@@ -29,13 +29,19 @@ public class ModKeyBindings {
 	 */
 	public static final KeyBinding TOGGLE_MAGNET = create("toggle_magnet", GLFW.GLFW_KEY_M);
 	/**
-	 * If the player has a wireless digistore terminal in their inventory, attempts to open it.
+	 * If the player has a wireless digistore terminal in their inventory, attempts
+	 * to open it.
 	 */
 	public static final KeyBinding OPEN_PORTABLE_DIGISTORE = create("open_portable_digistore", GLFW.GLFW_KEY_TAB);
 	/**
 	 * Opens the research window.
 	 */
 	public static final KeyBinding OPEN_RESEARCH = create("open_research", GLFW.GLFW_KEY_R);
+	/**
+	 * If held while clicking inside the side config tab, reset the config to
+	 * default.
+	 */
+	public static final KeyBinding RESET_SIDE_CONFIGURATION = create("reset_side_configuration", GLFW.GLFW_KEY_R);
 
 	/**
 	 * Passing this function a binding and a callback will ensure the callback is

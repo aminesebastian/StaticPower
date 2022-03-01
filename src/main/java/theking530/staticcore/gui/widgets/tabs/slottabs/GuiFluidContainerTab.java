@@ -15,10 +15,8 @@ import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.StaticPowerSprites;
-import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.FluidContainerSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
@@ -46,7 +44,7 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	public GuiFluidContainerTab(StaticPowerContainer container, FluidContainerInventoryComponent fluidContainerComponent, Item emptyBucketPreview, Item filledBucketPreview) {
-		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 0, 57, GuiTextures.MAGENTA_TAB, Items.BUCKET);
+		super("Fluid Containers", Color.EIGHT_BIT_WHITE, 26, 83, new Color(1, 0, 1, 1), Items.BUCKET);
 		this.container = container;
 		this.fluidConatinerInventoryIndecies = new ArrayList<Integer>();
 		this.fluidContainerComponent = fluidContainerComponent;
@@ -56,12 +54,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 
 		// Initialize the button.
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
-			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(2, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(6, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
 			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
 		} else {
-			this.widgetContainer.registerWidget(fillDirectionButton = new SpriteButton(2, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(6, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = emptyBucketPreview;
 			this.bottomSlotPreview = filledBucketPreview;
 			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
@@ -72,12 +70,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	@Override
-	protected void initialized(int tabXPosition, int tabYPosition) {
+	protected void initialized() {
 		// Add the slots.
-		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, 4 + xPosition, 0));
+		topSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, topSlotPreview, 0, (int) (4 + getXPosition()), 0));
 		fluidConatinerInventoryIndecies.add(container.slots.size() - 1);
 
-		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, 4 + xPosition, 0));
+		bottomSlot = container.addSlotGeneric(new FluidContainerSlot(fluidContainerComponent, bottomSlotPreview, 1, (int) (4 + getXPosition()), 0));
 		fluidConatinerInventoryIndecies.add(container.slots.size() - 1);
 
 		PacketGuiTabAddSlots msg = new PacketGuiTabAddSlots(container.containerId);
@@ -92,18 +90,20 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 	}
 
 	@Override
-	protected void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		super.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
-		topSlot.y = this.yPosition + 24;
-		bottomSlot.y = this.yPosition + 60;
+	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
+		topSlot.y = (int) (this.getYPosition() + 24);
+		bottomSlot.y = (int) (this.getYPosition() + 60);
+		topSlot.x = (int) (getXPosition() + 8);
+		bottomSlot.x = (int) (getXPosition() + 8);
 	}
 
 	@Override
 	protected void onTabOpened() {
 		for (int index : fluidConatinerInventoryIndecies) {
 			StaticPowerContainerSlot slot = (StaticPowerContainerSlot) container.slots.get(index);
-			topSlot.y = this.yPosition + 24;
-			bottomSlot.y = this.yPosition + 60;
+			topSlot.y = (int) (this.getYPosition() + 24);
+			bottomSlot.y = (int) (this.getYPosition() + 60);
 			slot.setEnabledState(true);
 		}
 	}

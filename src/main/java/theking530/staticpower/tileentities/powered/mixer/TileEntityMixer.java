@@ -74,10 +74,8 @@ public class TileEntityMixer extends TileEntityMachine {
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the fluid tanks.
-		registerComponent(
-				fluidInput1 = new FluidTankComponent("FluidTank1", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input2).setUpgradeInventory(upgradesInventory));
-		registerComponent(
-				fluidInput2 = new FluidTankComponent("FluidTank2", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input3).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidInput1 = new FluidTankComponent("FluidTank1", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input2).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidInput2 = new FluidTankComponent("FluidTank2", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input3).setUpgradeInventory(upgradesInventory));
 		registerComponent(fluidOutput = new FluidTankComponent("FluidTankOutput", tier.defaultTankCapacity.get()));
 		fluidOutput.setCapabilityExposedModes(MachineSideMode.Output);
 		fluidOutput.setUpgradeInventory(upgradesInventory);
@@ -146,8 +144,7 @@ public class TileEntityMixer extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Input2
-				|| mode == MachineSideMode.Input3;
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Input2 || mode == MachineSideMode.Input3;
 	}
 
 	@Override

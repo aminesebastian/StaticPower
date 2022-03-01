@@ -91,7 +91,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 		return this;
 	}
 
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getTooltips(mousePosition, tooltips, showAdvanced);
 		if (this.research != null) {
 			String desc = new TranslatableComponent(research.getDescription()).getString();

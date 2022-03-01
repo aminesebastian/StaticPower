@@ -60,7 +60,6 @@ public class TileEntityConfigurable extends TileEntityBase {
 		// Create the three compound inventory categories.
 		modeList.put(MachineSideMode.Input, new ArrayList<InventoryComponent>());
 		modeList.put(MachineSideMode.Output, new ArrayList<InventoryComponent>());
-		modeList.put(MachineSideMode.Regular, new ArrayList<InventoryComponent>());
 
 		// Iterate through all the side modes and organize the inventories.
 		for (InventoryComponent inv : inventories) {
@@ -69,11 +68,6 @@ public class TileEntityConfigurable extends TileEntityBase {
 				modeList.get(MachineSideMode.Input).add(inv);
 			} else if (inv.getMode().isOutputMode()) {
 				modeList.get(MachineSideMode.Output).add(inv);
-			}
-
-			// Add all non disabled modes to the regular list.
-			if (!inv.getMode().isDisabledMode()) {
-				modeList.get(MachineSideMode.Regular).add(inv);
 			}
 		}
 
@@ -101,7 +95,7 @@ public class TileEntityConfigurable extends TileEntityBase {
 	}
 
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input;
 	}
 
 	/**

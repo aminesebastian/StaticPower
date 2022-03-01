@@ -155,14 +155,14 @@ public class TileEntityEnchanter extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Input2;
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Input2;
 	}
 
 	@Override
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
 		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.BACK, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2);
 	}
-	
+
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerEnchanter(windowId, inventory, this);

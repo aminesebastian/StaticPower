@@ -172,8 +172,8 @@ public class TileEntityRefinery extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Regular || mode == MachineSideMode.Output || mode == MachineSideMode.Output2 || mode == MachineSideMode.Output3
-				|| mode == MachineSideMode.Input || mode == MachineSideMode.Input2 || mode == MachineSideMode.Input3;
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Output2 || mode == MachineSideMode.Output3 || mode == MachineSideMode.Input
+				|| mode == MachineSideMode.Input2 || mode == MachineSideMode.Input3;
 	}
 
 	@Override

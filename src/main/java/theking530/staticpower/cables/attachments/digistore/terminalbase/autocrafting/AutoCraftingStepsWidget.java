@@ -43,7 +43,7 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget<AutoCraftingSteps
 	}
 
 	@Override
-	public void updateData() {
+	public void tick() {
 		// If there is no request, do nothing.
 		if (request == null) {
 			return;
@@ -61,12 +61,12 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget<AutoCraftingSteps
 		for (int i = end - 1; i >= start; i--) {
 			int zeroIndex = i - start;
 			stepRenderers.get(zeroIndex).setStepData(request, materials.getMaterials().get(i), request.getCurrentCraftingStepIndex() - 1 == zeroIndex);
-			stepRenderers.get(zeroIndex).updateData();
+			stepRenderers.get(zeroIndex).tick();
 		}
 	}
 
 	@Override
-	public void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
+	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		// If there is no request, do nothing.
 		if (request == null) {
 			return;

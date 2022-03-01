@@ -8,6 +8,7 @@ import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -17,25 +18,29 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AttachedStemBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CactusBlock;
 import net.minecraft.world.level.block.CropBlock;
-import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.MelonBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.PumpkinBlock;
 import net.minecraft.world.level.block.SugarCaneBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.FarmlandWaterManager;
+import net.minecraftforge.common.ticket.AABBTicket;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderFarmer;
@@ -88,6 +93,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	private int currentBlockIndex;
 	private int range;
 	private boolean shouldDrawRadiusPreview;
+	private AABBTicket wateringTicket;
 
 	public TileEntityBasicFarmer(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.STATIC);
@@ -106,8 +112,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
-		registerComponent(
-				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm, this::canFarm,
 				this::processingCompleted, true).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage)
@@ -142,19 +147,55 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		shouldDrawRadiusPreview = false;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
-			if (!getLevel().isClientSide) {
-				fluidTankComponent.drain(StaticPowerConfig.SERVER.basicFarmerFluidUsage.get(), FluidAction.EXECUTE);
+			if (!getLevel().isClientSide()) {
+				// If we're processing but somehow the watering ticket is not valid, create one.
+				if (wateringTicket == null || !wateringTicket.isValid()) {
+					captureWateringTicket();
+				}
 
-				for (BlockPos blockpos : blocks) {
-					BlockPos farmlandPos = blockpos.relative(Direction.DOWN);
-					if (getLevel().getBlockState(farmlandPos).getBlock() == Blocks.FARMLAND) {
-						getLevel().setBlock(farmlandPos, getLevel().getBlockState(farmlandPos).setValue(FarmBlock.MOISTURE, Integer.valueOf(7)), 2 | 16);
-					}
+				// Use fluid.
+				fluidTankComponent.drain(StaticPowerConfig.SERVER.basicFarmerFluidUsage.get(), FluidAction.EXECUTE);
+			}
+		} else {
+			// If we're not processing, remove the watering tick.
+			if (!getLevel().isClientSide()) {
+				if (wateringTicket != null) {
+					wateringTicket.invalidate();
 				}
 			}
+		}
+	}
+
+	@Override
+	protected void postInit(Level world, BlockPos pos, BlockState state) {
+		super.postInit(world, pos, state);
+		captureWateringTicket();
+	}
+
+	@Override
+	public void onChunkUnloaded() {
+		super.onChunkUnloaded();
+
+		if (!getLevel().isClientSide()) {
+			wateringTicket.invalidate();
+		}
+	}
+
+	protected void captureWateringTicket() {
+		if (!getLevel().isClientSide()) {
+			if (wateringTicket != null) {
+				wateringTicket.invalidate();
+			}
+
+			AABB rangeBounds = new AABB(getBlockPos().getX() - range, getBlockPos().getY() - 1, getBlockPos().getZ() - range, getBlockPos().getX() + range, getBlockPos().getY(),
+					getBlockPos().getZ() + range);
+			wateringTicket = FarmlandWaterManager.addAABBTicket(getLevel(), rangeBounds);
+
+			StaticPower.LOGGER.debug(String.format("Adding farmland watering ticket for farmer at position: %1$s.", getBlockPos().toString()));
 		}
 	}
 
@@ -251,6 +292,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	private void refreshBlocksInRange(int range) {
+		StaticPower.LOGGER.debug(String.format("Farmer at position: %1$s refershing eligible blocks..", getBlockPos().toString()));
 		blocks.clear();
 		for (BlockPos pos : BlockPos.betweenClosed(getBlockPos().offset(-range, 0, -range), getBlockPos().offset(range, 0, range))) {
 			if (pos != getBlockPos()) {
@@ -262,6 +304,9 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		if (currentBlockIndex > blocks.size() - 1) {
 			currentBlockIndex = 0;
 		}
+
+		// Update the watering ticket just in case.
+		captureWateringTicket();
 	}
 
 	private void incrementPosition() {
@@ -295,7 +340,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return ModTags.FARMING_AXE.contains(inputInventory.getStackInSlot(1).getItem());
 	}
 
-	public void useHoe() {
+	protected void useHoe() {
 		// If we have an hoe, and we're on the server, use it.
 		if (hasHoe() && !getLevel().isClientSide) {
 			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getLevel().random, null)) {
@@ -305,7 +350,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 	}
 
-	public void useAxe() {
+	protected void useAxe() {
 		// If we have an axe, and we're on the server, use it.
 		if (hasAxe() && !getLevel().isClientSide) {
 			if (inputInventory.getStackInSlot(1).hurt(StaticPowerConfig.SERVER.basicFarmerToolUsage.get(), getLevel().random, null)) {
@@ -315,15 +360,16 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		}
 	}
 
-	public boolean attemptHarvestPosition(BlockPos pos) {
+	protected boolean attemptHarvestPosition(BlockPos pos) {
 		if (getLevel().isClientSide) {
 			return false;
 		}
 
-		if (getLevel().getBlockState(pos.relative(Direction.DOWN)).getBlock() == Blocks.DIRT || getLevel().getBlockState(pos.relative(Direction.DOWN)).getBlock() == Blocks.GRASS_BLOCK) {
-			getLevel().setBlock(pos.relative(Direction.DOWN), Blocks.FARMLAND.defaultBlockState(), 1 | 2);
+		if (ModTags.TILLABLE.contains(getLevel().getBlockState(pos.relative(Direction.DOWN)).getBlock().asItem())) {
+			getLevel().destroyBlock(pos.relative(Direction.DOWN), false);
+			getLevel().setBlockAndUpdate(pos.relative(Direction.DOWN), Blocks.FARMLAND.defaultBlockState());
 			getLevel().playSound(null, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
-
+			return false;
 		}
 
 		boolean farmed = false;
@@ -346,7 +392,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return farmed;
 	}
 
-	public boolean isFarmableBlock(BlockPos pos) {
+	protected boolean isFarmableBlock(BlockPos pos) {
 		if (getLevel().getBlockState(pos) == null) {
 			return false;
 		}
@@ -362,12 +408,11 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		for (ItemStack drop : WorldUtilities.getBlockDrops(getLevel(), pos)) {
 			InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
 		}
-		getLevel().playSound(null, pos, getLevel().getBlockState(pos).getBlock().getSoundType(getLevel().getBlockState(pos), level, pos, null).getBreakSound(), SoundSource.BLOCKS, 1.0F,
-				1.0F);
+		getLevel().playSound(null, pos, getLevel().getBlockState(pos).getBlock().getSoundType(getLevel().getBlockState(pos), level, pos, null).getBreakSound(), SoundSource.BLOCKS, 1.0F, 1.0F);
 		((ServerLevel) getLevel()).sendParticles(ParticleTypes.LARGE_SMOKE, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 	}
 
-	public boolean harvestGenericCrop(BlockPos pos) {
+	protected boolean harvestGenericCrop(BlockPos pos) {
 		// If the current position is an instance of a CropsBlock.
 		if (getLevel().getBlockState(pos).getBlock() instanceof CropBlock) {
 			// Get the block and check if it is of max age.
@@ -385,7 +430,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return false;
 	}
 
-	public boolean harvestSugarCane(BlockPos pos) {
+	protected boolean harvestSugarCane(BlockPos pos) {
 		boolean harvested = false;
 		for (int i = 1; i < 255; i++) {
 			if (getLevel().getBlockState(pos.offset(0, i, 0)).getBlock() instanceof SugarCaneBlock) {
@@ -401,7 +446,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return harvested;
 	}
 
-	public boolean harvestCactus(BlockPos pos) {
+	protected boolean harvestCactus(BlockPos pos) {
 		boolean harvested = false;
 		for (int i = 1; i < 255; i++) {
 			if (getLevel().getBlockState(pos.offset(0, i, 0)).getBlock() instanceof CactusBlock) {
@@ -417,7 +462,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return harvested;
 	}
 
-	public boolean harvestStem(BlockPos pos) {
+	protected boolean harvestStem(BlockPos pos) {
 		Block block = getLevel().getBlockState(pos).getBlock();
 		if (block instanceof AttachedStemBlock) {
 			// Check for the melon or pumpkin around the stem.
@@ -434,7 +479,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return false;
 	}
 
-	public boolean harvestMelonOrPumpkin(BlockPos pos) {
+	protected boolean harvestMelonOrPumpkin(BlockPos pos) {
 		Block block = getLevel().getBlockState(pos).getBlock();
 		if (block instanceof MelonBlock || block instanceof PumpkinBlock) {
 			captureHarvestItems(pos);
@@ -445,7 +490,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return false;
 	}
 
-	public boolean harvestNetherWart(BlockPos pos) {
+	protected boolean harvestNetherWart(BlockPos pos) {
 		if (getLevel().getBlockState(pos).getBlock() instanceof NetherWartBlock) {
 			NetherWartBlock tempNetherwart = (NetherWartBlock) getLevel().getBlockState(pos).getBlock();
 			if (tempNetherwart.getPlant(getLevel(), pos).getValue(NetherWartBlock.AGE) >= 3) {
@@ -458,23 +503,18 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		return false;
 	}
 
-	public boolean growCrop(BlockPos pos) {
-		for (int i = 0; i < getGrowthBonus() / 100; i++) {
-			if (getLevel().random.nextInt(100) < getGrowthBonus()) {
-				if (getLevel().getBlockState(pos) != null && getLevel().getBlockState(pos).getBlock() instanceof BonemealableBlock) {
-					BonemealableBlock tempCrop = (BonemealableBlock) getLevel().getBlockState(pos).getBlock();
-					if (tempCrop.isValidBonemealTarget(getLevel(), pos, getLevel().getBlockState(pos), false)) {
-						tempCrop.performBonemeal((ServerLevel) getLevel(), getLevel().random, pos, getLevel().getBlockState(pos));
-						((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
-					}
-				}
+	protected boolean growCrop(BlockPos pos) {
+		if (getLevel().getBlockState(pos) != null && getLevel().getBlockState(pos).getBlock() instanceof BonemealableBlock) {
+			BonemealableBlock tempCrop = (BonemealableBlock) getLevel().getBlockState(pos).getBlock();
+			if (tempCrop.isValidBonemealTarget(getLevel(), pos, getLevel().getBlockState(pos), false)) {
+				tempCrop.performBonemeal((ServerLevel) getLevel(), getLevel().random, pos, getLevel().getBlockState(pos));
+				((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 			}
 		}
-
 		return true;
 	}
 
-	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
+	protected void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
 		range = StaticPowerConfig.SERVER.basicFarmerDefaultRange.get();
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {

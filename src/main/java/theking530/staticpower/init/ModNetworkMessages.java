@@ -2,10 +2,10 @@ package theking530.staticpower.init;
 
 import theking530.staticcore.data.StaticPowerGameDataLoadPacket;
 import theking530.staticcore.data.StaticPowerGameDataSyncPacket;
-import theking530.staticcore.gui.widgets.tabs.PacketGuiTabAddSlots;
 import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
+import theking530.staticcore.gui.widgets.tabs.slottabs.PacketGuiTabAddSlots;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketClearDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;

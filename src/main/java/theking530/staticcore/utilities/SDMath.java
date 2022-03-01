@@ -84,15 +84,15 @@ public class SDMath {
 	}
 
 	public static float lerp(int a, int b, float alpha) {
-		return (b * alpha) + (a * (1 - alpha));
+		return (b * alpha) + (a * (1.0f - alpha));
 	}
 
 	public static double lerp(double a, double b, float alpha) {
-		return (b * alpha) + (a * (1 - alpha));
+		return (b * alpha) + (a * (1.0f - alpha));
 	}
 
 	public static float lerp(float a, float b, float alpha) {
-		return (b * alpha) + (a * (1 - alpha));
+		return (b * alpha) + (a * (1.0f - alpha));
 	}
 
 	public static int multiplyRespectingOverflow(int base, int multiplier) {
