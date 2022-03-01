@@ -103,7 +103,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
 		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
 		matrix.pushPose();
-		matrix.translate(75f, 41f, 0);
+		matrix.translate(75f, 41f, 10);
 		matrix.scale(-40, 40, 40);
 		matrix.translate(0.5f, 0.5f, 0.5f);
 		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));

@@ -94,20 +94,20 @@ public class GuiUpgradeTab extends BaseGuiTab {
 
 	protected void positionSlots() {
 		if (slots.size() == 1) {
-			setExpandedSize(26, 26);
-			slots.get(0).x = (int) (this.getXPosition() + 7);
+			setExpandedSize(26, 43);
+			slots.get(0).x = (int) (this.getXPosition() + 8);
 			slots.get(0).y = (int) (this.getYPosition() + 22);
 		} else if (slots.size() == 3) {
 			setExpandedSize(26, 83);
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).x = (int) (this.getXPosition() + 7);
+				slots.get(i).x = (int) (this.getXPosition() + 8);
 				slots.get(i).y = (int) (this.getYPosition() + 24 + (i * 18));
 			}
 		} else if (slots.size() == 4) {
 			setExpandedSize(44, 64);
 			int xOffset = -18;
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).x = (int) (this.getXPosition() + 25 + ((i / 2) * xOffset));
+				slots.get(i).x = (int) (this.getXPosition() + 26 + ((i / 2) * xOffset));
 				slots.get(i).y = (int) (this.getYPosition() + 24 + ((i % 2) * 18));
 			}
 		}

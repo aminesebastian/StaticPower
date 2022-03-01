@@ -248,7 +248,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 		float width = getWidth() + 4;
 		float xPos = 0;
 		if (tabSide == TabSide.LEFT) {
-			xPos = 2;
+			xPos = 3;
 		} else {
 			xPos = -5;
 		}

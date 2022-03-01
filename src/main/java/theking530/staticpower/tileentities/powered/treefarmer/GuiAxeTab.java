@@ -48,13 +48,15 @@ public class GuiAxeTab extends BaseGuiTab {
 	@Override
 	protected void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
-		slot.y = (int) (this.getYPosition() + 4);
+		slot.y = (int) (this.getYPosition() + 5);
+		slot.x = -18;
 	}
 
 	@Override
 	protected void onTabOpened() {
 		slot.setEnabledState(true);
-		slot.y = (int) (this.getYPosition() + 4);
+		slot.y = (int) (this.getYPosition() + 5);
+		slot.x = -18;
 		this.title = "";
 	}
 
