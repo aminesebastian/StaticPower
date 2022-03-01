@@ -142,7 +142,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	}
 
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		super.getTooltips(mousePosition, tooltips, showAdvanced);
+		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 	}
 
 	public void setExpanded(boolean expanded) {
