@@ -11,7 +11,7 @@ import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
+import theking530.staticpower.tileentities.powered.cropfarmer.TileEntityBasicFarmer;
 
 @OnlyIn(Dist.CLIENT)
 public class TileEntityRenderFarmer extends StaticPowerTileEntitySpecialRenderer<TileEntityBasicFarmer> {

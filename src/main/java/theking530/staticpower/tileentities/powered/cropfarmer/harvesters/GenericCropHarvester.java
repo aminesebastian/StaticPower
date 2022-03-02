@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.basicfarmer.harvesters;
+package theking530.staticpower.tileentities.powered.cropfarmer.harvesters;
 
 import java.util.List;
 
@@ -7,7 +7,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.CropBlock;
-import theking530.staticpower.tileentities.powered.basicfarmer.IFarmerHarvester;
+import theking530.staticpower.tileentities.powered.cropfarmer.IFarmerHarvester;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class GenericCropHarvester implements IFarmerHarvester {

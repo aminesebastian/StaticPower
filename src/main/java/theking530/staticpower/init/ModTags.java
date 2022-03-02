@@ -16,7 +16,6 @@ public class ModTags {
 	public static final Tag<Item> FARMING_HOE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "farming_hoe"));
 	public static final Tag<Item> SOLDERING_IRON = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "soldering_iron"));
 	public static final Tag<Item> RESEARCH = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "research"));
-	
 	public static final Tag<Item> TILLABLE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "tillable"));
 
 	public static Tag<Item> createItemWrapper(ResourceLocation name) {

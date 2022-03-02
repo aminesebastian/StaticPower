@@ -1,5 +1,6 @@
 package theking530.staticpower.tileentities.powered.treefarmer;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -65,13 +65,14 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent.I
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
+import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityTreeFarm extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityTreeFarm> TYPE = new BlockEntityTypeAllocator<TileEntityTreeFarm>(
-			(type, pos, state) -> new TileEntityTreeFarm(pos, state), ModBlocks.TreeFarmer);
+	public static final BlockEntityTypeAllocator<TileEntityTreeFarm> TYPE = new BlockEntityTypeAllocator<TileEntityTreeFarm>((type, pos, state) -> new TileEntityTreeFarm(pos, state),
+			ModBlocks.TreeFarmer);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -89,12 +90,14 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
+	@UpdateSerialize
+	private int currentBlockIndex;
+	@UpdateSerialize
+	private int range;
 	private boolean shouldDrawRadiusPreview;
 
 	private final List<BlockPos> blocks;
-	private int currentBlockIndex;
-	private int range;
-
+	private final HashSet<BlockPos> visited;
 	private final Ingredient woodIngredient;
 	private final Ingredient leafIngredient;
 	private final Ingredient saplingIngredient;
@@ -106,24 +109,17 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		leafIngredient = Ingredient.of(ModTags.LEAVES);
 		saplingIngredient = Ingredient.of(ModTags.SAPLING);
 
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input)
-				.setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-					public boolean canInsertItem(int slot, ItemStack stack) {
-						return slot == 0 ? ModTags.FARMING_AXE.contains(stack.getItem())
-								: saplingIngredient.test(stack);
-					}
-				}).setSlotsLockable(true));
-
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 10, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return slot == 0 ? ModTags.FARMING_AXE.contains(stack.getItem()) : saplingIngredient.test(stack);
+			}
+		}).setSlotsLockable(true));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
-		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
-		registerComponent(
-				upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
-						.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
-				StaticPowerConfig.SERVER.treeFarmerProcessingTime.get(), this::canProcess, this::canProcess,
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.treeFarmerProcessingTime.get(), this::canProcess, this::canProcess,
 				this::processingCompleted, true));
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
@@ -131,17 +127,15 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
-			return StaticPowerRecipeRegistry
-					.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
-		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory)
-				.setAutoSyncPacketsEnabled(true));
+			return StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
+		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory).setAutoSyncPacketsEnabled(true));
 
 		currentBlockIndex = 0;
 		shouldDrawRadiusPreview = false;
 		range = StaticPowerConfig.SERVER.treeFarmerDefaultRange.get();
 		blocks = new LinkedList<BlockPos>();
-		registerComponent(
-				fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent));
+		visited = new HashSet<BlockPos>(StaticPowerConfig.SERVER.treeFarmerMaxTreeRecursion.get());
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("BucketDrain", fluidTankComponent));
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
@@ -150,10 +144,52 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
+	public int getRadius() {
+		return range;
+	}
+
+	public boolean hasAxe() {
+		return ModTags.FARMING_AXE.contains(inputInventory.getStackInSlot(0).getItem());
+	}
+
+	public float getGrowthBonus() {
+		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(this.fluidTankComponent.getFluid())).orElse(null);
+		if (recipe != null) {
+			return recipe.getFertalizationAmount();
+		}
+		return 0.0f;
+	}
+
+	public BlockPos getCurrentPosition() {
+		return blocks.get(currentBlockIndex);
+	}
+
+	public boolean getShouldDrawRadiusPreview() {
+		return shouldDrawRadiusPreview;
+	}
+
+	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
+		shouldDrawRadiusPreview = shouldDraw;
+		if (shouldDraw) {
+			// Set the scale equal to the range * 2 plus 1.
+			Vector3f scale = new Vector3f((range * 2) + 1, 1.0f, (range * 2) + 1);
+			// Shift over so we center the range around the farmer.
+			Vector3f position = new Vector3f(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ());
+			Vec3i offsetDirection = this.getFacingDirection().getOpposite().getNormal();
+			position.add(new Vector3f((offsetDirection.getX() * range) - range, 0.0f, (offsetDirection.getZ() * range) - range));
+			position.add(new Vector3f(offsetDirection.getX(), 0.0f, offsetDirection.getZ()));
+			// Add the entry.
+			CustomRenderer.addCubeRenderer(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
+		} else {
+			// Remove the entry.
+			CustomRenderer.removeCubeRenderer(this, "range");
+		}
+	}
+
 	@Override
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
-			if (!getLevel().isClientSide) {
+			if (!isOnClientSide()) {
 				fluidTankComponent.drain(StaticPowerConfig.SERVER.treeFarmerFluidUsage.get(), FluidAction.EXECUTE);
 			}
 		}
@@ -175,10 +211,11 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			refreshBlocksInRange(range);
 		}
 
+		// Only perform a harvest if the internal inventory is TOTALLY empty.
 		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
-			if (farmTree(getCurrentPosition())) {
-				useAxe();
-			}
+			processBlock(getCurrentPosition());
+			((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D, getCurrentPosition().getZ() + 0.5D, 1, 0.0D,
+					0.0D, 0.0D, 0.0D);
 			incrementPosition();
 		}
 
@@ -193,8 +230,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 					targetInventory = inputInventory;
 				}
 			}
-			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack,
-					false);
+			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack, false);
 			if (!insertedStack.isEmpty()) {
 				internalInventory.setStackInSlot(i, insertedStack);
 			}
@@ -208,7 +244,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		}
 	}
 
-	private void refreshBlocksInRange(int range) {
+	protected void refreshBlocksInRange(int range) {
 		if (this.isRemoved()) {
 			return;
 		}
@@ -246,105 +282,99 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		}
 	}
 
-	private void incrementPosition() {
-		if (!getLevel().isClientSide) {
-			currentBlockIndex = Math.floorMod(currentBlockIndex + 1, blocks.size() - 1);
-		}
+	protected void incrementPosition() {
+		currentBlockIndex = Math.floorMod(currentBlockIndex + 1, blocks.size() - 1);
 	}
 
-	public boolean hasAxe() {
-		return ModTags.FARMING_AXE.contains(inputInventory.getStackInSlot(0).getItem());
-	}
-
-	public void useAxe() {
+	protected void useAxe() {
 		if (hasAxe()) {
-			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.treeFarmerToolUsage.get(),
-					getLevel().random, null)) {
+			if (inputInventory.getStackInSlot(0).hurt(StaticPowerConfig.SERVER.treeFarmerToolUsage.get(), getLevel().getRandom(), null)) {
 				inputInventory.setStackInSlot(0, ItemStack.EMPTY);
 				getLevel().playSound(null, worldPosition, SoundEvents.ITEM_BREAK, SoundSource.BLOCKS, 1.0F, 1.0F);
 			}
 		}
 	}
 
-	public boolean farmTree(BlockPos pos) {
-		if (!getLevel().isClientSide) {
-			if (isFarmableBlock(pos)) {
-				getLevel().playSound(null, pos,
-						getLevel().getBlockState(pos).getBlock()
-								.getSoundType(getLevel().getBlockState(pos), level, pos, null).getBreakSound(),
-						SoundSource.BLOCKS, 0.5F, 1.0F);
-				List<ItemStack> harvestResults = new LinkedList<ItemStack>();
-				harvestBlock(pos, harvestResults, 0);
-				useAxe();
-				for (ItemStack drop : harvestResults) {
-					InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
-				}
-			}
-			plantSapling(pos);
-			if (bonemealSapling(pos)) {
-				getLevel().addParticle(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D,
-						pos.getZ() + 0.5D, 0.0D, 0.0D, 0.0D);
+	protected void processBlock(BlockPos pos) {
+		if (isFarmableBlock(pos)) {
+			// Clear the visited and add the current position.
+			visited.clear();
+			visited.add(pos);
+
+			// Allocate a list for the harvested results and perform the harvest.
+			List<ItemStack> harvestResults = new LinkedList<ItemStack>();
+			harvestBlock(pos, harvestResults, visited);
+
+			// Insert all the harvested results into the internal inventory.
+			for (ItemStack drop : harvestResults) {
+				InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
 			}
 		}
-		return false;
+
+		// Plant a sapling in this place if possible and apply the bonemeal.
+		plantSapling(pos);
+		bonemealSapling(pos);
 	}
 
 	@SuppressWarnings("deprecation")
-	public boolean isFarmableBlock(BlockPos pos) {
+	protected boolean isFarmableBlock(BlockPos pos) {
 		// Get the block at the position.
 		Block block = getLevel().getBlockState(pos).getBlock();
+		BlockState state = getLevel().getBlockState(pos);
 
 		// Perform these sanity checks as a quick optimization (the ingredient test is
 		// O(n)).
-		if (block != Blocks.AIR && !getLevel().getBlockState(pos).hasBlockEntity()
-				&& getLevel().getBlockState(pos).getDestroySpeed(getLevel(), pos) != -1) {
-			return woodIngredient.test(new ItemStack(Item.byBlock(block)))
-					|| this.leafIngredient.test(new ItemStack(Item.byBlock(block)));
+		if (!state.isAir() && !state.hasBlockEntity() && state.getDestroySpeed(getLevel(), pos) != -1) {
+			return woodIngredient.test(new ItemStack(Item.byBlock(block))) || leafIngredient.test(new ItemStack(Item.byBlock(block)));
 		}
 		return false;
 	}
 
-	private void harvestBlock(BlockPos pos, List<ItemStack> items, int index) {
+	protected void harvestBlock(BlockPos pos, List<ItemStack> items, HashSet<BlockPos> hitPositions) {
 		// If we've hit our max recursion, stop.
-		if (index >= StaticPowerConfig.SERVER.treeFarmerMaxTreeRecursion.get()) {
-			return;
+		if (hitPositions.size() >= StaticPowerConfig.SERVER.treeFarmerMaxTreeRecursion.get()) {
+			//return;
 		}
 
 		// Add the drops for the current block and break it.
 		items.addAll(WorldUtilities.getBlockDrops(getLevel(), pos));
-		getLevel().setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
+		hitPositions.add(pos);
+		System.out.println(hitPositions.size() + "   " + getLevel().getBlockState(pos));
+		System.out.println(items.size());
+		getLevel().destroyBlock(pos, false);
 		energyStorage.useBulkPower(StaticPowerConfig.SERVER.treeFarmerHarvestPowerUsage.get());
+		useAxe();
 
 		// Recurse to any adjacent blocks if they are farm-able.
 		for (Direction facing : Direction.values()) {
 			BlockPos testPos = pos.relative(facing);
-			if (isFarmableBlock(testPos)) {
-				harvestBlock(testPos, items, index + 1);
+			if (!hitPositions.contains(testPos)) {
+				if (isFarmableBlock(testPos)) {
+					harvestBlock(testPos, items, hitPositions);
+				}
+			}
+
+			if (hitPositions.size() >= StaticPowerConfig.SERVER.treeFarmerMaxTreeRecursion.get()) {
+				//return;
 			}
 		}
 	}
 
-	public boolean bonemealSapling(BlockPos pos) {
-		if (getLevel().isClientSide) {
-			throw new RuntimeException("This method should only be called on the server!");
-		}
+	protected boolean bonemealSapling(BlockPos pos) {
 		Block block = getLevel().getBlockState(pos).getBlock();
 		if (block instanceof BonemealableBlock && SDMath.diceRoll(getGrowthBonus())) {
 			BonemealableBlock growable = (BonemealableBlock) block;
-			if (growable.isBonemealSuccess(getLevel(), getLevel().random, pos, getLevel().getBlockState(pos))
+			if (growable.isBonemealSuccess(getLevel(), getLevel().getRandom(), pos, getLevel().getBlockState(pos))
 					&& growable.isValidBonemealTarget(getLevel(), pos, getLevel().getBlockState(pos), false)) {
-				growable.performBonemeal((ServerLevel) getLevel(), getLevel().random, pos,
-						getLevel().getBlockState(pos));
+				growable.performBonemeal((ServerLevel) getLevel(), getLevel().getRandom(), pos, getLevel().getBlockState(pos));
+				((ServerLevel) getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 				return true;
 			}
 		}
 		return false;
 	}
 
-	public boolean plantSapling(BlockPos pos) {
-		if (getLevel().isClientSide) {
-			throw new RuntimeException("This method should only be called on the server!");
-		}
+	protected boolean plantSapling(BlockPos pos) {
 		if (currentBlockIndex % StaticPowerConfig.SERVER.treeFarmerSaplingSpacing.get() == 0) {
 			// Get the block space we're trying to plant IN.
 			Block block = getLevel().getBlockState(pos).getBlock();
@@ -368,9 +398,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 					// itsself.
 					FakePlayer player = FakePlayerFactory.getMinecraft((ServerLevel) getLevel());
 					player.setItemInHand(InteractionHand.MAIN_HAND, sapling.copy());
-					InteractionResult placementResult = sapling
-							.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND,
-									new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
+					InteractionResult placementResult = sapling.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f), Direction.UP, pos, false)));
 
 					if (placementResult.consumesAction()) {
 						// Once planted, extract the sapling from the slot.
@@ -385,52 +413,11 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		return false;
 	}
 
-	public int getRadius() {
-		return range;
-	}
-
-	public float getGrowthBonus() {
-		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE,
-				new RecipeMatchParameters(this.fluidTankComponent.getFluid())).orElse(null);
-		if (recipe != null) {
-			return recipe.getFertalizationAmount();
-		}
-		return 0.0f;
-	}
-
-	public BlockPos getCurrentPosition() {
-		return blocks.get(currentBlockIndex);
-	}
-
-	public boolean getShouldDrawRadiusPreview() {
-		return shouldDrawRadiusPreview;
-	}
-
-	public void setShouldDrawRadiusPreview(boolean shouldDraw) {
-		shouldDrawRadiusPreview = shouldDraw;
-		if (shouldDraw) {
-			// Set the scale equal to the range * 2 plus 1.
-			Vector3f scale = new Vector3f((range * 2) + 1, 1.0f, (range * 2) + 1);
-			// Shift over so we center the range around the farmer.
-			Vector3f position = new Vector3f(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ());
-			Vec3i offsetDirection = this.getFacingDirection().getOpposite().getNormal();
-			position.add(new Vector3f((offsetDirection.getX() * range) - range, 0.0f,
-					(offsetDirection.getZ() * range) - range));
-			position.add(new Vector3f(offsetDirection.getX(), 0.0f, offsetDirection.getZ()));
-			// Add the entry.
-			CustomRenderer.addCubeRenderer(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
-		} else {
-			// Remove the entry.
-			CustomRenderer.removeCubeRenderer(this, "range");
-		}
-	}
-
-	public void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
+	protected void onUpgradesInventoryModifiedCallback(InventoryChangeType changeType, ItemStack item, int slot) {
 		range = StaticPowerConfig.SERVER.treeFarmerDefaultRange.get();
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
-				range = (int) Math.max(range, StaticPowerConfig.SERVER.treeFarmerDefaultRange.get()
-						* (((BaseRangeUpgrade) stack.getItem()).getTier().rangeUpgrade.get()));
+				range = (int) Math.max(range, StaticPowerConfig.SERVER.treeFarmerDefaultRange.get() * (((BaseRangeUpgrade) stack.getItem()).getTier().rangeUpgrade.get()));
 			}
 		}
 		refreshBlocksInRange(range);
@@ -439,19 +426,6 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		if (getShouldDrawRadiusPreview()) {
 			setShouldDrawRadiusPreview(true);
 		}
-	}
-
-	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-		nbt.putInt("current_index", currentBlockIndex);
-		nbt.putInt("range", range);
-		return nbt;
-	}
-
-	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-		currentBlockIndex = nbt.getInt("current_index");
-		range = nbt.getInt("range");
 	}
 
 	@Override

@@ -171,7 +171,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 				}
 
 				// If this slot is in the players inventory.
-				if (slotIndex <= this.playerInventoryEnd) {
+				if (isHotbarSlot(slotIndex) || isInventorySlot(slotIndex)) {
 					// Attempt to insert it into the digistore network.
 					ItemStack remaining = digistoreModule.insertItem(targetItem, false);
 

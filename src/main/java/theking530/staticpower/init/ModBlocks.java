@@ -59,12 +59,12 @@ import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChe
 import theking530.staticpower.tileentities.powered.autocrafter.BlockAutoCraftingTable;
 import theking530.staticpower.tileentities.powered.autosmith.BlockAutoSmith;
 import theking530.staticpower.tileentities.powered.autosolderingtable.BlockAutoSolderingTable;
-import theking530.staticpower.tileentities.powered.basicfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.battery.BlockBattery;
 import theking530.staticpower.tileentities.powered.bottler.BlockBottler;
 import theking530.staticpower.tileentities.powered.caster.BlockCaster;
 import theking530.staticpower.tileentities.powered.centrifuge.BlockCentrifuge;
 import theking530.staticpower.tileentities.powered.chargingstation.BlockChargingStation;
+import theking530.staticpower.tileentities.powered.cropfarmer.BlockBasicFarmer;
 import theking530.staticpower.tileentities.powered.crucible.BlockCrucible;
 import theking530.staticpower.tileentities.powered.electricminer.BlockElectricMiner;
 import theking530.staticpower.tileentities.powered.enchanter.BlockEnchanter;

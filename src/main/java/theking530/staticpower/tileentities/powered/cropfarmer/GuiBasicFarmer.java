@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.basicfarmer;
+package theking530.staticpower.tileentities.powered.cropfarmer;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

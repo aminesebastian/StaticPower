@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.basicfarmer;
+package theking530.staticpower.tileentities.powered.cropfarmer;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;

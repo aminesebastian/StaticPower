@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.basicfarmer.harvesters;
+package theking530.staticpower.tileentities.powered.cropfarmer.harvesters;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.AttachedStemBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.MelonBlock;
 import net.minecraft.world.level.block.PumpkinBlock;
-import theking530.staticpower.tileentities.powered.basicfarmer.IFarmerHarvester;
+import theking530.staticpower.tileentities.powered.cropfarmer.IFarmerHarvester;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class StemCropHarvester implements IFarmerHarvester {

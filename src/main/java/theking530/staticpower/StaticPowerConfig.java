@@ -663,7 +663,7 @@ public class StaticPowerConfig {
 							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerToolUsage").define("TreeFarmerToolUsage", 1);
 					treeFarmerMaxTreeRecursion = builder
 							.comment("Controls the maximum amount of blocks a Tree Farmer will consider as being part of a tree. The higher this value, the higher the impact to performance.")
-							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerMaxTreeRecursion").define("TreeFarmerMaxTreeRecursion", 1);
+							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerMaxTreeRecursion").define("TreeFarmerMaxTreeRecursion", 100);
 					treeFarmerSaplingSpacing = builder.comment("Controls the spacing between saplings when planted.").translation(StaticPower.MOD_ID + ".config." + "treeFarmerSaplingSpacing")
 							.define("TreeFarmerSaplingSpacing", 2);
 					builder.pop();

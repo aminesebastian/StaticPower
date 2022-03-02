@@ -60,7 +60,7 @@ public class TileEntityStaticChest extends TileEntityBase {
 
 	public static Vector2D getInventorySize(TileEntityStaticChest chest) {
 		int rows = chest.inventory.getSlots() / getSlotsPerRow(chest);
-		return new Vector2D(176, 120 + (rows * 18));
+		return new Vector2D(176, 116 + (rows * 18));
 	}
 
 	public static int getSlotsPerRow(TileEntityStaticChest chest) {

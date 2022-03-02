@@ -55,12 +55,12 @@ import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.teams.TeamManager;
-import theking530.staticpower.tileentities.powered.basicfarmer.TileEntityBasicFarmer;
-import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.CactusCropHarvester;
-import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.GenericCropHarvester;
-import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.NetherWartCropHarvester;
-import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.StemCropHarvester;
-import theking530.staticpower.tileentities.powered.basicfarmer.harvesters.SugarCaneCropHarvester;
+import theking530.staticpower.tileentities.powered.cropfarmer.TileEntityBasicFarmer;
+import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.CactusCropHarvester;
+import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.GenericCropHarvester;
+import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.NetherWartCropHarvester;
+import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.StemCropHarvester;
+import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.SugarCaneCropHarvester;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventsCommon {

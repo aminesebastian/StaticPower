@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.basicfarmer;
+package theking530.staticpower.tileentities.powered.cropfarmer;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -17,7 +17,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -56,7 +55,7 @@ import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilt
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.tileentities.powered.basicfarmer.IFarmerHarvester.HarvestResult;
+import theking530.staticpower.tileentities.powered.cropfarmer.IFarmerHarvester.HarvestResult;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityBasicFarmer extends TileEntityMachine {
@@ -90,7 +89,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 	public TileEntityBasicFarmer(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.STATIC);
-		disableFaceInteraction();
 
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
@@ -118,8 +116,8 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		fluidTankComponent.setUpgradeInventory(upgradesInventory);
 		fluidTankComponent.setAutoSyncPacketsEnabled(true);
 
-		registerComponent(new InputServoComponent("InputServo", 2, inputInventory, 0));
-		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory, 0, 1, 2, 3, 4, 5, 6, 7, 8));
+		registerComponent(new InputServoComponent("InputServo", inputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", outputInventory));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
 
 		// Set the energy storage upgrade inventory.
@@ -193,16 +191,12 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 				// Use fluid.
 				fluidTankComponent.drain(StaticPowerConfig.SERVER.basicFarmerFluidUsage.get(), FluidAction.EXECUTE);
 			}
-		} else {
-			// If we're not processing, remove the watering tick.
+		}
+
+		// If we ahve no fluid, remove the watering ticket.
+		if (this.fluidTankComponent.isEmpty()) {
 			invalidateWateringTicket();
 		}
-	}
-
-	@Override
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		super.postInit(world, pos, state);
-		captureWateringTicket();
 	}
 
 	@Override
@@ -220,7 +214,6 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 			AABB rangeBounds = new AABB(getBlockPos().getX() - range - 1, getBlockPos().getY() - 1, getBlockPos().getZ() - range - 1, getBlockPos().getX() + range + 1, getBlockPos().getY(),
 					getBlockPos().getZ() + range + 1);
 			wateringTicket = FarmlandWaterManager.addAABBTicket(getLevel(), rangeBounds);
-
 			StaticPower.LOGGER.debug(String.format("Adding farmland watering ticket for farmer at position: %1$s.", getBlockPos().toString()));
 		}
 	}
