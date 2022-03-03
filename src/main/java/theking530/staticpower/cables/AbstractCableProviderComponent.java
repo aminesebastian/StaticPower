@@ -215,8 +215,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * wrapper in the network for this cable. If not, we provide one.
 	 */
 	@Override
-	public void onOwningTileEntityValidate(boolean isInitialPlacement) {
-		super.onOwningTileEntityValidate(isInitialPlacement);
+	public void onOwningTileEntityPostInit(boolean isInitialPlacement) {
+		super.onOwningTileEntityPostInit(isInitialPlacement);
 
 		// If we're on the server, check to see if the cable network manager for this
 		// world is tracking a cable at this position. If it is not, add this cable for
@@ -290,8 +290,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		if (getWorld().isClientSide()) {
 			getTileEntity().addRenderingUpdateRequest();
 			StaticPower.LOGGER.debug(String.format("Performing cable rendering state update at position: %1$s.", getPos().toString()));
-		} else {
-			StaticPower.LOGGER.warn(String.format("Calling #updateRenderingStateForCable() on the server is a no-op. Called at position: %1$s.", getPos().toString()));
 		}
 	}
 

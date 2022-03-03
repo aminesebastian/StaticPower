@@ -146,7 +146,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 			FluidAttributes attributes = fluid.getFluid().getAttributes();
 			return attributes.getLuminosity(fluid);
 		}
-		return getLightEmission(state, world, pos);
+		return super.getLightEmission(state, world, pos);
 	}
 
 	@Override

@@ -2,6 +2,7 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_cauldron",
 	"description": "Double double toil and trouble!",
+	"visualOffset": [0.5, 2],
 	"prerequisites": [
 		"staticpower:research/machines/io_port",
 		"staticpower:research/machines/plug"

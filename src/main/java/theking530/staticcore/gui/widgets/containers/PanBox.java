@@ -32,7 +32,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		targetZoom = 1;
 	}
 
-	protected void updateChildLayout(PoseStack pose, AbstractGuiWidget widget, int index) {
+	public void updateChildLayout(PoseStack pose, AbstractGuiWidget<?> widget, int index) {
 		pose.translate(-targetPan.getX(), -targetPan.getY(), 0);
 		pose.scale(1 / interpolatedZoom, 1 / interpolatedZoom, 1 / interpolatedZoom);
 		pose.translate(targetPan.getX(), targetPan.getY(), 0);
@@ -124,24 +124,24 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-		if (isHovered()) {
-			this.targetPan.setX(targetPan.getX() + (float) p_mouseDragged_6_ * targetZoom);
-			this.targetPan.setY(targetPan.getY() + (float) p_mouseDragged_8_ * targetZoom);
+//		if (isHovered()) {
+		this.targetPan.setX(targetPan.getX() + (float) p_mouseDragged_6_ * targetZoom);
+		this.targetPan.setY(targetPan.getY() + (float) p_mouseDragged_8_ * targetZoom);
 
-			// Limit the X.
-			if (targetPan.getX() < maxBounds.getX()) {
-				targetPan.setX(maxBounds.getX());
-			} else if (targetPan.getX() > maxBounds.getZ()) {
-				targetPan.setX(maxBounds.getZ());
-			}
-
-			// Limit the Y.
-			if (targetPan.getY() < maxBounds.getY()) {
-				targetPan.setY(maxBounds.getY());
-			} else if (targetPan.getY() > maxBounds.getW()) {
-				targetPan.setY(maxBounds.getW());
-			}
+		// Limit the X.
+		if (targetPan.getX() < maxBounds.getX()) {
+			targetPan.setX(maxBounds.getX());
+		} else if (targetPan.getX() > maxBounds.getZ()) {
+			targetPan.setX(maxBounds.getZ());
 		}
+
+		// Limit the Y.
+		if (targetPan.getY() < maxBounds.getY()) {
+			targetPan.setY(maxBounds.getY());
+		} else if (targetPan.getY() > maxBounds.getW()) {
+			targetPan.setY(maxBounds.getW());
+		}
+//		}
 		return super.mouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
 	}
 

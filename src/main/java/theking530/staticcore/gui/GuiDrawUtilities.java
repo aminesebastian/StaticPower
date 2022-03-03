@@ -368,6 +368,19 @@ public class GuiDrawUtilities {
 		matrixStack.popPose();
 	}
 
+	public static void drawAlignedLine(PoseStack pose, Vector3D start, Vector3D end, Color startColor, Color endColor, float thickness) {
+		Vector3D line1Start = new Vector3D(start.getX(), start.getY(), start.getZ());
+		Vector3D line1End = new Vector3D(start.getX(), end.getY() + 25, start.getZ());
+		Vector3D line2Start = line1End;
+		Vector3D line2End = new Vector3D(end.getX(), end.getY() + 25, end.getZ());
+		Vector3D line3Start = line2End;
+		Vector3D line3End = new Vector3D(end.getX(), end.getY(), end.getZ());
+
+		drawLine(pose, line1Start, line1End, startColor, endColor, thickness);
+		drawLine(pose, line2Start, line2End, startColor, endColor, thickness);
+		drawLine(pose, line3Start, line3End, startColor, endColor, thickness);
+	}
+
 	public static void drawLine(PoseStack pose, Vector3D start, Vector3D end, Color startcolor, Color endColor, float thickness) {
 		RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
 		RenderSystem.enableBlend();

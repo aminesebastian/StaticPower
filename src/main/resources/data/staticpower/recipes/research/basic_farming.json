@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_farming",
-	"description": "Get yourself a green thumb.",
+	"description": "Get yourself a green thumb.",	
+	"visualOffset": [-3, 1],
 	"prerequisites": [
 		"staticpower:research/basic_research"
 	],

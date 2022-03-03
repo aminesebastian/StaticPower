@@ -103,6 +103,34 @@ public abstract class AbstractVector implements Cloneable {
 		return toStringInternal(false);
 	}
 
+	@Override
+	public int hashCode() {
+		int output = 0;
+		for (int i = 0; i < values.size(); i++) {
+			output = 31 * output + Float.floatToIntBits(values.get(i));
+		}
+		return output;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof AbstractVector) {
+			AbstractVector other = (AbstractVector) obj;
+			if (other.values.size() != values.size()) {
+				return false;
+			}
+
+			for (int i = 0; i < other.values.size(); i++) {
+				if (other.values.get(i) != values.get(i)) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+		return false;
+	}
+
 	public void toBuffer(FriendlyByteBuf buff) {
 		for (float val : values) {
 			buff.writeFloat(val);

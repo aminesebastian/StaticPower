@@ -55,7 +55,7 @@ public abstract class AbstractTileEntityComponent {
 	public void onRemovedFromOwner(TileEntityBase owner) {
 	}
 
-	public void onOwningTileEntityValidate(boolean isInitialPlacement) {
+	public void onOwningTileEntityPostInit(boolean isInitialPlacement) {
 
 	}
 

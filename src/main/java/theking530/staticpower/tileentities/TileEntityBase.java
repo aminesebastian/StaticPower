@@ -186,15 +186,15 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	}
 
 	protected void postInit(Level world, BlockPos pos, BlockState state) {
-
+		for (AbstractTileEntityComponent component : components.values()) {
+			component.onOwningTileEntityPostInit(hasFirstPlacedMethodRun);
+		}
 	}
 
 	@Override
 	public void clearRemoved() {
 		super.clearRemoved();
-		for (AbstractTileEntityComponent component : components.values()) {
-			component.onOwningTileEntityValidate(hasFirstPlacedMethodRun);
-		}
+
 	}
 
 	@Override

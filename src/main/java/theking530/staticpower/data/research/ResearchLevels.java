@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 
 import net.minecraft.resources.ResourceLocation;
@@ -62,7 +64,7 @@ public class ResearchLevels {
 		}
 
 		// Populate the relative positions for each node.
-		populatePositions(output, allNodes);
+		populatePositions(output, allNodes, new HashSet<RelativeNodePosition>());
 		return output;
 	}
 
@@ -82,48 +84,50 @@ public class ResearchLevels {
 		return output;
 	}
 
-	private static void populatePositions(ResearchLevels levels, List<ResearchNode> allNodes) {
-		HashMap<ResearchNode, Integer> childrenPlaced = new HashMap<ResearchNode, Integer>();
+	private static void populatePositions(ResearchLevels levels, List<ResearchNode> allNodes, Set<RelativeNodePosition> usedPositions) {
+		ResearchLevel level = levels.getLevels().get(0);
+		Queue<ResearchNode> queue = new LinkedList<ResearchNode>();
+		for (ResearchNode research : level.getResearch()) {
+			queue.add(research);
+		}
 
-		for (int y = 0; y < levels.getLevels().size(); y++) {
-			ResearchLevel level = levels.getLevels().get(y);
+		while (!queue.isEmpty()) {
+			ResearchNode research = queue.poll();
 
-			for (int i = 0; i < level.getResearch().size(); i++) {
-				ResearchNode research = level.getResearch().get(i);
-				ResearchNode parent = research.getParent();
+			// This initial case will ONLY be used for the root node.
+			int parentX = research.getRelativePosition().getX();
+			int targetY = research.getRelativePosition().getY() + 1;
 
-				// Capture the parent position.
-				Vector2D parentPosition = new Vector2D(0, 0);
-				if (parent != null) {
-					// In the case of multiple parents, we want the average X but the closest Y.
-					float sum = 0;
-					for (ResearchNode multiParent : research.getAllParents()) {
-						sum += multiParent.getRelativePosition().getX();
+			// Get the offset.
+			int offset = 0;
+			if (research.getChildren().size() > 1) {
+				offset = research.getChildren().size() / 2;
+			}
+
+			// Set the initial x position.
+			for (int i = 0; i < research.getChildren().size(); i++) {
+				ResearchNode child = research.getChildren().get(i);
+				child.setRelativeX(parentX + i - offset);
+			}
+
+			// Loop until we get a region with NO collisions.
+			boolean collision = false;
+			do {
+				collision = false;
+				for (ResearchNode child : research.getChildren()) {
+					child.setRelativeY(targetY);
+					if (usedPositions.contains(child.getRelativePosition())) {
+						targetY++;
+						collision = true;
+						break;
 					}
-					parentPosition.setX(sum / research.getAllParents().size());
-					parentPosition.setY(research.getParent().getRelativePosition().getY());
-				} else {
-					parentPosition = new Vector2D(UNIT_SCALE, 0);
 				}
+			} while (collision);
 
-				// Populate the children placed map if this is the first time we see this
-				// research node.
-				if (!childrenPlaced.containsKey(research)) {
-					childrenPlaced.put(research, 0);
-				}
-
-				// Capture where we exist with respect to our parent.
-				int balancedIndex = 0;
-				if (childrenPlaced.containsKey(parent)) {
-					balancedIndex = research.childIndex - (parent.getChildren().size() / 2);
-					childrenPlaced.put(parent, childrenPlaced.get(parent) + 1);
-				}
-
-				int balancedIndexSign = (int) Math.signum(balancedIndex);
-				float distanceBetween = UNIT_SCALE;
-				Vector2D relativePosition = new Vector2D(parentPosition.getX() + (balancedIndex * distanceBetween), parentPosition.getY() + (research.getParent() != null ? UNIT_SCALE : 0));
-				relativePosition.add(research.getResearch().getVisualOffset().copy().multiply(balancedIndexSign));
-				research.setRelativePosition(relativePosition);
+			// Add the positions to the hash set and then set them.
+			for (ResearchNode child : research.getChildren()) {
+				usedPositions.add(child.getRelativePosition());
+				queue.add(child);
 			}
 		}
 	}
@@ -186,19 +190,68 @@ public class ResearchLevels {
 		}
 	}
 
+	public class RelativeNodePosition {
+		private int x;
+		private int y;
+
+		public RelativeNodePosition(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+
+		public int getX() {
+			return x;
+		}
+
+		public void setX(int x) {
+			this.x = x;
+		}
+
+		public int getY() {
+			return y;
+		}
+
+		public void setY(int y) {
+			this.y = y;
+		}
+
+		public Vector2D getScaledVector(float scale) {
+			return new Vector2D(x * scale, y * scale);
+		}
+
+		@Override
+		public int hashCode() {
+			int i = x;
+			return 31 * i + y;
+		}
+
+		@Override
+		public boolean equals(Object obj) {
+			if (obj instanceof RelativeNodePosition) {
+				RelativeNodePosition other = (RelativeNodePosition) obj;
+				return x == other.x && y == other.y;
+			}
+			return false;
+		}
+
+		@Override
+		public String toString() {
+			return "[x=" + x + ", y=" + y + "]";
+		}
+	}
+
 	public class ResearchNode {
 		private final Research research;
 		private final List<ResearchNode> children;
 		private final List<ResearchNode> allParents;
 		private ResearchNode closestParent;
-		private Vector2D relativePosition;
-		private int childIndex;
+		private RelativeNodePosition relativePosition;
 
 		public ResearchNode(Research research) {
 			this.research = research;
 			this.children = new ArrayList<ResearchNode>();
 			this.allParents = new ArrayList<ResearchNode>();
-			this.relativePosition = new Vector2D(0, 0);
+			this.relativePosition = new RelativeNodePosition(0, 0);
 		}
 
 		public void setClosestParent(ResearchNode newParent) {
@@ -207,7 +260,6 @@ public class ResearchLevels {
 			}
 
 			closestParent = newParent;
-			childIndex = closestParent.children.size();
 			closestParent.children.add(this);
 		}
 
@@ -231,12 +283,16 @@ public class ResearchLevels {
 			return children;
 		}
 
-		public Vector2D getRelativePosition() {
+		public RelativeNodePosition getRelativePosition() {
 			return relativePosition;
 		}
 
-		public void setRelativePosition(Vector2D relativePosition) {
-			this.relativePosition = relativePosition;
+		public void setRelativeX(int x) {
+			this.relativePosition.setX(x);
+		}
+
+		public void setRelativeY(int y) {
+			this.relativePosition.setY(y);
 		}
 	}
 }

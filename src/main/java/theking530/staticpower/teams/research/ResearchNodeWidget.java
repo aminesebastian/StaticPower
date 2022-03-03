@@ -170,7 +170,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		return super.mouseMove(mouseX, mouseY);
 	}
 
-	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
+	public EInputResult mouseRelease(double mouseX, double mouseY, int button) {
 		if (isHovered() && button == 0) {
 			boolean isAvailable = manager.isResearchAvailable(research.getId());
 			if (isAvailable) {

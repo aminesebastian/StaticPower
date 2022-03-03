@@ -219,7 +219,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 	}
 
 	protected void invalidateWateringTicket() {
-		if (!getLevel().isClientSide()) {
+		if (!getLevel().isClientSide() && wateringTicket != null) {
 			wateringTicket.invalidate();
 		}
 	}

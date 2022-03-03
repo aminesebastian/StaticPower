@@ -1,12 +1,13 @@
 package theking530.staticcore.utilities;
 
+import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 
 public class Vector2D extends AbstractVector {
-	
+
 	public Vector2D(double x, double y) {
 		super(2);
 		setX((float) x);
@@ -80,8 +81,8 @@ public class Vector2D extends AbstractVector {
 	}
 
 	public static Vector2D fromJson(JsonElement element) {
-		JsonObject obj = element.getAsJsonObject();
-		return new Vector2D(obj.get("x").getAsFloat(), obj.get("y").getAsFloat());
+		JsonArray obj = element.getAsJsonArray();
+		return new Vector2D(obj.get(0).getAsFloat(), obj.get(1).getAsFloat());
 	}
 
 	@SuppressWarnings("unchecked")
