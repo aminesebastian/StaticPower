@@ -64,7 +64,7 @@ public class ResearchLevels {
 		}
 
 		// Populate the relative positions for each node.
-		populatePositions(output, allNodes, new HashSet<RelativeNodePosition>());
+		populatePositions(output, allNodes);
 		return output;
 	}
 
@@ -84,7 +84,7 @@ public class ResearchLevels {
 		return output;
 	}
 
-	private static void populatePositions(ResearchLevels levels, List<ResearchNode> allNodes, Set<RelativeNodePosition> usedPositions) {
+	private static void populatePositions(ResearchLevels levels, List<ResearchNode> allNodes) {
 		ResearchLevel level = levels.getLevels().get(0);
 		Queue<ResearchNode> queue = new LinkedList<ResearchNode>();
 		for (ResearchNode research : level.getResearch()) {
@@ -94,39 +94,16 @@ public class ResearchLevels {
 		while (!queue.isEmpty()) {
 			ResearchNode research = queue.poll();
 
-			// This initial case will ONLY be used for the root node.
-			int parentX = research.getRelativePosition().getX();
-			int targetY = research.getRelativePosition().getY() + 1;
-
-			// Get the offset.
-			int offset = 0;
-			if (research.getChildren().size() > 1) {
-				offset = research.getChildren().size() / 2;
-			}
-
-			// Set the initial x position.
-			for (int i = 0; i < research.getChildren().size(); i++) {
-				ResearchNode child = research.getChildren().get(i);
-				child.setRelativeX(parentX + i - offset);
-			}
-
-			// Loop until we get a region with NO collisions.
-			boolean collision = false;
-			do {
-				collision = false;
-				for (ResearchNode child : research.getChildren()) {
-					child.setRelativeY(targetY);
-					if (usedPositions.contains(child.getRelativePosition())) {
-						targetY++;
-						collision = true;
-						break;
-					}
-				}
-			} while (collision);
-
 			// Add the positions to the hash set and then set them.
 			for (ResearchNode child : research.getChildren()) {
-				usedPositions.add(child.getRelativePosition());
+				float targetX = 0;
+				for (ResearchNode parent : child.getAllParents()) {
+					targetX += parent.getRelativePosition().getX();
+				}
+				targetX /= child.getAllParents().size();
+
+				child.setRelativeX(targetX + child.getResearch().getVisualOffset().getX());
+				child.setRelativeY(research.getRelativePosition().getY() + 1 + child.getResearch().getVisualOffset().getY());
 				queue.add(child);
 			}
 		}
@@ -191,38 +168,32 @@ public class ResearchLevels {
 	}
 
 	public class RelativeNodePosition {
-		private int x;
-		private int y;
+		private float x;
+		private float y;
 
-		public RelativeNodePosition(int x, int y) {
+		public RelativeNodePosition(float x, float y) {
 			this.x = x;
 			this.y = y;
 		}
 
-		public int getX() {
+		public float getX() {
 			return x;
 		}
 
-		public void setX(int x) {
+		public void setX(float x) {
 			this.x = x;
 		}
 
-		public int getY() {
+		public float getY() {
 			return y;
 		}
 
-		public void setY(int y) {
+		public void setY(float y) {
 			this.y = y;
 		}
 
 		public Vector2D getScaledVector(float scale) {
 			return new Vector2D(x * scale, y * scale);
-		}
-
-		@Override
-		public int hashCode() {
-			int i = x;
-			return 31 * i + y;
 		}
 
 		@Override
@@ -287,11 +258,11 @@ public class ResearchLevels {
 			return relativePosition;
 		}
 
-		public void setRelativeX(int x) {
+		public void setRelativeX(float x) {
 			this.relativePosition.setX(x);
 		}
 
-		public void setRelativeY(int y) {
+		public void setRelativeY(float y) {
 			this.relativePosition.setY(y);
 		}
 	}

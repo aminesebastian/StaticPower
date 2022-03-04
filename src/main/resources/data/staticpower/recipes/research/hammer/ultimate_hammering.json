@@ -2,7 +2,7 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_hamering",
 	"description": "It's Hammer Time!",
-	"visualOffset": [2, 4],
+	"visualOffset": [0, 0],
 	"hiddenUntilAvailable": true,
 	"prerequisites": [
 		"staticpower:research/hammer/alloy_hammering"

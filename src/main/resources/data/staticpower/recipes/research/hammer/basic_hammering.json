@@ -2,7 +2,7 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_hamering",
 	"description": "It's Hammer Time!",
-	"visualOffset": [2, 1],
+	"visualOffset": [2, 0],
 	"prerequisites": [
 		"staticpower:research/basic_research"
 	],
