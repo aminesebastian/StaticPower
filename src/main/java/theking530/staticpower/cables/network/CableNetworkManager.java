@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.fluid.FluidNetworkModule;
 
 /**
  * Much thanks to raoulvdberge and RefinedPipes for offering a ton of wisdom on
@@ -83,14 +84,12 @@ public class CableNetworkManager extends SavedData {
 
 	public void addCable(ServerCable cable) {
 		if (!firstTick) {
-			LOGGER.error(
-					String.format("Attempted to add a cable before the world is fully loaded: %1$s.", cable.getPos()));
+			LOGGER.error(String.format("Attempted to add a cable before the world is fully loaded: %1$s.", cable.getPos()));
 			return;
 		}
 
 		if (WorldCables.containsKey(cable.getPos())) {
-			throw new RuntimeException(
-					String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
+			throw new RuntimeException(String.format("Attempted to add a cable where one already existed: %1$s.", cable.getPos()));
 		}
 		WorldCables.put(cable.getPos(), cable);
 		LOGGER.debug(String.format("Cable added at position: %1$s.", cable.getPos()));
@@ -107,8 +106,7 @@ public class CableNetworkManager extends SavedData {
 
 	public void refreshCable(ServerCable cable) {
 		if (cable.Network == null) {
-			throw new RuntimeException(String
-					.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
+			throw new RuntimeException(String.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
 		}
 
 		// Get the original network's cables.
@@ -154,8 +152,7 @@ public class CableNetworkManager extends SavedData {
 
 	public void removeCable(BlockPos pos) {
 		if (!WorldCables.containsKey(pos)) {
-			throw new RuntimeException(
-					String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
+			throw new RuntimeException(String.format("Attempted to remove a cable where one did not already exist: %1$s.", pos));
 		}
 		// Get the cable.
 		ServerCable cable = getCable(pos);
@@ -314,11 +311,9 @@ public class CableNetworkManager extends SavedData {
 	}
 
 	public static CableNetworkManager get(ServerLevel world) {
-		String name = PREFIX + "_" + world.dimension().location().getNamespace() + "_"
-				+ world.dimension().location().getPath();
+		String name = PREFIX + "_" + world.dimension().location().getNamespace() + "_" + world.dimension().location().getPath();
 
-		return world.getDataStorage().computeIfAbsent((tag) -> CableNetworkManager.load(tag, name, world),
-				() -> new CableNetworkManager(name, world), name);
+		return world.getDataStorage().computeIfAbsent((tag) -> CableNetworkManager.load(tag, name, world), () -> new CableNetworkManager(name, world), name);
 	}
 
 	private CableNetwork formNetworkAt(Level world, BlockPos pos) {
@@ -426,8 +421,7 @@ public class CableNetworkManager extends SavedData {
 
 	private void addNetwork(CableNetwork network) {
 		if (Networks.containsKey(network.getId())) {
-			throw new RuntimeException(
-					String.format("Attempted to register a network with duplicate Id: %1$s.", network.getId()));
+			throw new RuntimeException(String.format("Attempted to register a network with duplicate Id: %1$s.", network.getId()));
 		}
 		network.setWorld(World);
 		Networks.put(network.getId(), network);
@@ -437,8 +431,7 @@ public class CableNetworkManager extends SavedData {
 
 	private void removeNetwork(long id) {
 		if (!Networks.containsKey(id)) {
-			throw new RuntimeException(
-					String.format("Attempted to remove a network with Id: %1$s that had not been registered.", id));
+			throw new RuntimeException(String.format("Attempted to remove a network with Id: %1$s that had not been registered.", id));
 		}
 
 		Networks.remove(id);
@@ -470,9 +463,21 @@ public class CableNetworkManager extends SavedData {
 				continue;
 			}
 
-			if (adjacent.shouldConnectTo(cable)) {
-				wrappers.add(adjacent);
+			if (!adjacent.shouldConnectTo(cable)) {
+				continue;
 			}
+
+			// TODO: Check specifically for fluid networks to ensure they contain they same
+			// fluid.
+			if (adjacent.getNetwork().hasModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE)) {
+				FluidNetworkModule module = adjacent.getNetwork().getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
+
+				// If the targeted network has a fluid already, we don't AUTO connect to it.
+				if (!module.getFluidStorage().isEmpty()) {
+					continue;
+				}
+			}
+			wrappers.add(adjacent);
 		}
 
 		return wrappers;

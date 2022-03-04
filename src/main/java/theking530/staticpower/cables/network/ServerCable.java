@@ -17,6 +17,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 public class ServerCable {
@@ -219,6 +220,18 @@ public class ServerCable {
 	}
 
 	public boolean shouldConnectTo(ServerCable otherCable) {
+		if (getNetwork() != null && otherCable.getNetwork() != null) {
+			if (getNetwork().hasModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE) && otherCable.getNetwork().hasModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE)) {
+				FluidNetworkModule otherModule = otherCable.getNetwork().getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
+				FluidNetworkModule thisModule = getNetwork().getModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
+				System.out.println(otherModule.getFluidStorage().getFluid().getDisplayName().getString() + "   " + thisModule.getFluidStorage().getFluid().getDisplayName().getString());
+				// If the targeted network has a fluid already, we don't AUTO connect to it.
+				if (!thisModule.getFluidStorage().getFluid().isFluidEqual(otherModule.getFluidStorage().getFluid())) {
+					return false;
+				}
+			}
+		}
+
 		for (ResourceLocation moduleType : otherCable.getSupportedNetworkModules()) {
 			if (supportsNetworkModule(moduleType)) {
 				return true;
