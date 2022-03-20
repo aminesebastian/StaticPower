@@ -48,7 +48,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	public float getCurrentZoom() {
-		return targetZoom;
+		return interpolatedZoom;
 	}
 
 	public PanBox setMaxZoom(float maxZoom) {
@@ -69,7 +69,6 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	public PanBox setMaxScroll(float maxScroll) {
-		this.maxZoom = maxScroll;
 		if (targetZoom > maxScroll) {
 			targetZoom = maxScroll;
 		}

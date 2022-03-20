@@ -1,5 +1,6 @@
 package theking530.staticcore.gui;
 
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -435,14 +436,19 @@ public class GuiDrawUtilities {
 
 		PoseStack posestack = RenderSystem.getModelViewStack();
 		posestack.pushPose();
-		posestack.translate(8.0D, 8.0D, 0.0D);
 
 		if (pose != null) {
 			Vector3D offset = GuiDrawUtilities.translatePositionByMatrix(pose, x, y, z);
 			posestack.translate(offset.getX(), offset.getY(), offset.getZ());
+
+			// Extract the scale too.
+			Vector3D scale = getScaleFromMatrix(pose);
+			posestack.scale(scale.getX(), scale.getY(), 1.0F);
+
 		} else {
 			posestack.translate(x, y, z);
 		}
+		posestack.translate(8.0D, 8.0D, 0.0D);
 
 		posestack.scale(1.0F, -1.0F, 1.0F);
 		posestack.scale(width, height, 16.0F);
@@ -517,5 +523,11 @@ public class GuiDrawUtilities {
 		} else {
 			return new Vector3D(xPos, yPos, zPos);
 		}
+	}
+
+	public static Vector3D getScaleFromMatrix(PoseStack pose) {
+		Vector3D zero = GuiDrawUtilities.translatePositionByMatrix(pose, 0, 0, 0);
+		Vector3D one = GuiDrawUtilities.translatePositionByMatrix(pose, 1, 1, 1);
+		return one.substract(zero.getX(), zero.getY(), zero.getZ());
 	}
 }

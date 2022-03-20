@@ -55,7 +55,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 				GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 17 - xOffset, getSize().getY() - 16, 100, 8f, 8f);
 
 				int remainingCount = requirement.getCount();
-				GuiDrawUtilities.drawString(pose, Integer.toString(remainingCount), getSize().getX() - 7.5f - xOffset, getSize().getY() - 10, 101, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawStringCentered(pose, Integer.toString(remainingCount), getSize().getX() - 9f - xOffset, getSize().getY() - 10, 101, 0.5f, Color.EIGHT_BIT_WHITE, true);
 
 				xOffset += 9;
 			}
@@ -68,7 +68,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 					if (unlock.getType() == ResearchUnlockType.CRAFTING) {
 						Recipe<?> recipe = unlock.getAsRecipe();
 						if (recipe != null) {
-							GuiDrawUtilities.drawItem(pose, recipe.getResultItem(), getSize().getX() - 15f - xOffset, getSize().getY() - 16, 200, 8f, 8f);
+							GuiDrawUtilities.drawItem(pose, recipe.getResultItem(), getSize().getX() - 18f - xOffset, getSize().getY() - 16, 200, 8f, 8f);
 							xOffset += 9;
 						}
 					}

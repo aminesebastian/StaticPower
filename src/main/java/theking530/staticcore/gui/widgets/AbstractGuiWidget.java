@@ -18,6 +18,7 @@ import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 
 @SuppressWarnings({ "unchecked" })
 public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
@@ -373,6 +374,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		lastMousePosition = new Vector2D(mouseX, mouseY);
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
+		Vector3D scale = GuiDrawUtilities.getScaleFromMatrix(matrixStack);
+
 		matrixStack.pushPose();
 		transformPoseBeforeRender(matrixStack);
 
@@ -388,7 +391,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		lastMatrixStack = new PoseStack();
 		lastMatrixStack.translate(screenSpacePosition.getX() - getPosition().getX(), screenSpacePosition.getY() - getPosition().getY(), 0);
 
-		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX(), this.size.getY());
+		cachedBounds.update(screenSpacePosition.getX(), screenSpacePosition.getY(), this.size.getX() * scale.getX(), this.size.getY() * scale.getY());
 
 		if (isVisible() && isEnabled()) {
 			if (isHovered()) {

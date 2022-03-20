@@ -192,8 +192,8 @@ public class ResearchLevels {
 			this.y = y;
 		}
 
-		public Vector2D getScaledVector(float scale) {
-			return new Vector2D(x * scale, y * scale);
+		public Vector2D getScaledVector(float scaleX, float scaleY) {
+			return new Vector2D(x * scaleX, y * scaleY);
 		}
 
 		@Override

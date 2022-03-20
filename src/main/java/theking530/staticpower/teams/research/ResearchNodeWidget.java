@@ -36,6 +36,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private final SimpleProgressBar progressBar;
 	private final Vector2D collapsedSize;
 	private final Vector2D maxExpandedSize;
+	private float researchPanelZoom;
 	private Color tileColor;
 	private Color bodyColor;
 	private Team team;
@@ -54,6 +55,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		this.maxExpandedSize = new Vector2D(Math.min(getFontRenderer().width(title) + 15, 100), 100);
 		this.tileColor = new Color(1, 1, 1, 1);
 		this.bodyColor = new Color(1, 1, 1, 1);
+		this.researchPanelZoom = 1.0f;
 		wrappedDescription = GuiDrawUtilities.wrapString(research.getDescription(), maxExpandedSize.getXi() * 2 - 32);
 	}
 
@@ -99,6 +101,10 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		return node;
 	}
 
+	public void setReasearchPanelZoom(float zoom) {
+		this.researchPanelZoom = zoom;
+	}
+
 	@Override
 	public void renderWidgetBackground(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 
@@ -118,7 +124,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Draw the tile and its icon.
 		GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX(), collapsedSize.getY(), 0, 0, 0, tileColor);
-		GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100, 1.0f);
+		GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100);
 
 		if (expand) {
 			// Draw the title.
@@ -146,7 +152,9 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	}
 
 	public void setExpanded(boolean expanded) {
-		playSoundLocally(SoundEvents.BOOK_PAGE_TURN, 0.75f, expanded ? 2.0f : 1.5f);
+		if (!this.expand && expanded) {
+			playSoundLocally(SoundEvents.BOOK_PAGE_TURN, 0.75f, expanded ? 2.0f : 1.5f);
+		}
 		this.expand = expanded;
 	}
 
@@ -170,7 +178,8 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		return super.mouseMove(mouseX, mouseY);
 	}
 
-	public EInputResult mouseRelease(double mouseX, double mouseY, int button) {
+	@Override
+	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
 		if (isHovered() && button == 0) {
 			boolean isAvailable = manager.isResearchAvailable(research.getId());
 			if (isAvailable) {
@@ -272,8 +281,8 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			} else {
 				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.85f);
 			}
-		} else if (manager.isResearching(research.getId()) || manager.isSelectedResearch(research.getId())) {
-			bodyColor = new Color(0.0f, 1.0f, 1.0f, 0.95f);
+		} else if (manager.isResearching(research.getId())) {
+			bodyColor = new Color(0.1f, 0.6f, 1.0f, 0.95f);
 		} else {
 			if (isAvailable) {
 				bodyColor = new Color(0.75f, 0.75f, 0.75f, 0.95f);

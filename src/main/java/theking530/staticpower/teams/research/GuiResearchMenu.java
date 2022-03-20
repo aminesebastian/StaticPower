@@ -40,7 +40,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected static final int HISTORY_HEIGHT = 35;
 
 	protected ResearchInstance currentResearch;
-	protected ResearchNodeWidget expandedNode;
+	protected ResearchNodeWidget hoveredNode;
 	protected SelectedResearchWidget selectedResearchWidget;
 
 	protected PanBox nodePanBox;
@@ -48,6 +48,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	protected ScrollBox sideBarScrollBox;
 	protected List<ResearchHistoryWidget> historyWidgets;
+
+	protected float nodeHoveredTime;
 
 	public GuiResearchMenu() {
 		super(400, 400);
@@ -59,13 +61,13 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	public void initializeGui() {
 		researchNodes = new HashMap<ResearchNode, ResearchNodeWidget>();
 		historyWidgets = new ArrayList<ResearchHistoryWidget>();
-		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 76).setZLevel(500));
+		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 65).setZLevel(500));
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 10000, 0));
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-
+		nodePanBox.setMaxZoom(2.0f);
 		captureScreenSize();
 		initializeResearchNodes();
 		initializeSideBar();
@@ -88,7 +90,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
 
 		nodePanBox.setPosition(104, 25);
-		nodePanBox.setSize(screenWidth *100, screenHeight - 25);
+		nodePanBox.setSize(screenWidth * 100, screenHeight - 25);
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
@@ -96,7 +98,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			ResearchLevel level = levels.getLevels().get(y);
 			for (int i = 0; i < level.getResearch().size(); i++) {
 				ResearchNode research = level.getResearch().get(i);
-				Vector2D relative = research.getRelativePosition().getScaledVector(50.0f);
+				Vector2D relative = research.getRelativePosition().getScaledVector(45.0f, 55.0f);
 				ResearchNodeWidget widget = new ResearchNodeWidget(research, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
 				researchNodes.put(research, widget);
 				nodePanBox.registerWidget(widget);
@@ -146,17 +148,26 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	@Override
 	public void updateBeforeRender() {
+		// Update zooms.
+		for (ResearchNodeWidget node : researchNodes.values()) {
+			node.setReasearchPanelZoom(this.nodePanBox.getCurrentZoom());
+		}
+
 		// Handle the expanded node.
-		if (expandedNode != null) {
-			if (!expandedNode.isHovered()) {
-				expandedNode.setExpanded(false);
-				expandedNode = null;
+		if (hoveredNode != null) {
+			if (!hoveredNode.isHovered()) {
+				hoveredNode.setExpanded(false);
+				hoveredNode = null;
+				nodeHoveredTime = 0.0f;
+			} else {
+				if (nodeHoveredTime > 1.0f && !hoveredNode.isExpanded()) {
+					hoveredNode.setExpanded(true);
+				}
 			}
 		} else {
 			for (ResearchNodeWidget node : researchNodes.values()) {
 				if (node.isHovered()) {
-					expandedNode = node;
-					expandedNode.setExpanded(true);
+					hoveredNode = node;
 					break;
 				}
 			}
@@ -168,6 +179,9 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		// We have to do this as Screens don't usually have this called.
 		this.renderBackground(pose);
 		super.render(pose, mouseX, mouseY, partialTicks);
+		if (hoveredNode != null) {
+			nodeHoveredTime += partialTicks;
+		}
 	}
 
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
@@ -218,10 +232,13 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			for (ResearchNodeWidget node : preReqWidgets) {
 				index++;
 				pose.pushPose();
+				float scaleFactor = (1 / this.nodePanBox.getCurrentZoom());
+				
 				Vector3D expandedPosition = outerNode.getScreenSpacePosition().promote();
-				expandedPosition.add(11, 1, 100);
+				expandedPosition.add(11 * scaleFactor, 2 * scaleFactor, 100);
+				
 				Vector3D preReqPosition = node.getScreenSpacePosition().promote();
-				preReqPosition.add(11, 20f, 100);
+				preReqPosition.add(11 * scaleFactor, 20f * scaleFactor, 100);
 
 				Color startLineColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 				Color endLineColor = startLineColor;
@@ -233,20 +250,20 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				// If no node is expanded, draw the connecting lines behind everything.
 				// If a node is expanded, only draw lines for that node and push them over
 				// everything.
-				if (expandedNode != null && outerNode == expandedNode) {
+				if (hoveredNode != null && outerNode == hoveredNode) {
 					preReqPosition.add(0, 0, 500);
-					float timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 2)) / 2, 0, 1);
+					float timeHovered = SDMath.clamp((this.hoveredNode.getTicksHovered() - (index * 2)) / 1f, 0, 1);
 
 					if (!getLocalTeam().getResearchManager().hasCompletedResearch(node.getResearch().getId())) {
 						startLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
 						endLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
 					} else {
-						startLineColor = new Color(0.0f, 1.0f, 0.2f, 1.0f);
-						endLineColor = new Color(0.0f, 1.0f, 0.2f, 1.0f);
+						startLineColor = new Color(0.0f, 0.9f, 0.2f, 1.0f);
+						endLineColor = new Color(0.0f, 0.9f, 0.2f, 1.0f);
 					}
 
 					startLineColor = startLineColor.multiply(timeHovered);
-					timeHovered = SDMath.clamp((this.expandedNode.getTicksHovered() - (index * 3)) / 3, 0, 1);
+					timeHovered = SDMath.clamp((this.hoveredNode.getTicksHovered() - (index * 3)) / 4, 0, 1);
 					endLineColor = endLineColor.multiply(timeHovered);
 
 					GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 8.0f);
