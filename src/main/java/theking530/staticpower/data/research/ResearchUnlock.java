@@ -2,6 +2,7 @@ package theking530.staticpower.data.research;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.sun.jna.platform.win32.Guid.GUID;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -16,12 +17,15 @@ public class ResearchUnlock {
 		CRAFTING
 	}
 
+	private final String displayKey;
 	private final ResourceLocation target;
 	private final String description;
 	private final ResearchUnlockType type;
 	private ResearchIcon icon;
+	private boolean hidden;
 
-	public ResearchUnlock(ResearchUnlockType type, ResourceLocation target, ResearchIcon icon, String description) {
+	public ResearchUnlock(String displayKey, ResearchUnlockType type, ResourceLocation target, ResearchIcon icon, String description, boolean hidden) {
+		this.displayKey = displayKey;
 		this.type = type;
 		this.target = target;
 		if (icon == null) {
@@ -31,6 +35,7 @@ public class ResearchUnlock {
 		}
 
 		this.description = description;
+		this.hidden = hidden;
 	}
 
 	public ResearchIcon getIcon() {
@@ -42,6 +47,14 @@ public class ResearchUnlock {
 			}
 		}
 		return icon;
+	}
+
+	public String getDisplayKey() {
+		return displayKey;
+	}
+
+	public boolean isHidden() {
+		return hidden;
 	}
 
 	public String getDescription() {
@@ -61,6 +74,7 @@ public class ResearchUnlock {
 	}
 
 	public void toBuffer(FriendlyByteBuf buffer) {
+		buffer.writeUtf(displayKey);
 		buffer.writeUtf(target.toString());
 		buffer.writeByte(type.ordinal());
 
@@ -73,9 +87,12 @@ public class ResearchUnlock {
 		if (icon != null) {
 			icon.toBuffer(buffer);
 		}
+
+		buffer.writeBoolean(isHidden());
 	}
 
 	public static ResearchUnlock fromBuffer(FriendlyByteBuf buffer) {
+		String displayKey = buffer.readUtf();
 		ResourceLocation target = new ResourceLocation(buffer.readUtf());
 		ResearchUnlockType type = ResearchUnlockType.values()[buffer.readByte()];
 		ResearchIcon icon = null;
@@ -88,11 +105,18 @@ public class ResearchUnlock {
 			description = buffer.readUtf();
 		}
 
-		return new ResearchUnlock(type, target, icon, description);
+		boolean hidden = buffer.readBoolean();
+		return new ResearchUnlock(displayKey, type, target, icon, description, hidden);
 	}
 
 	public static ResearchUnlock fromJson(JsonElement element) {
 		JsonObject input = element.getAsJsonObject();
+
+		// Make the display key optional.
+		String displayKey = GUID.newGuid().toGuidString();
+		if (input.has("displayKey")) {
+			displayKey = input.get("displayKey").getAsString();
+		}
 
 		// Get the unlock type.
 		ResearchUnlockType type = null;
@@ -122,6 +146,11 @@ public class ResearchUnlock {
 			description = input.get("description").getAsString();
 		}
 
-		return new ResearchUnlock(type, target, icon, description);
+		// Get if hidden.
+		boolean hidden = false;
+		if (input.has("hidden")) {
+			hidden = input.get("hidden").getAsBoolean();
+		}
+		return new ResearchUnlock(displayKey, type, target, icon, description, hidden);
 	}
 }

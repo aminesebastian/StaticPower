@@ -30,11 +30,14 @@ public class GuiPowerBarUtilities {
 		float percentFilled = (float) currentEnergy / (float) maxEnergy;
 		float filledHeight = percentFilled * height;
 
+		matrixStack.pushPose();
+		matrixStack.translate(xpos, ypos, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, width, height, 0, 0, 0);
 		float glowState = getPowerBarGlow();
 		GuiDrawUtilities.drawTexture(matrixStack, GuiTextures.POWER_BAR_BG, width, height, 0, 0, 1, 1, Color.WHITE);
 		GuiDrawUtilities.drawTexture(matrixStack, GuiTextures.POWER_BAR_FG, width, filledHeight, 0, height - filledHeight, 0, 0, 1 - percentFilled, 1, 1,
 				new Color(glowState, glowState, glowState, 1.0f));
+		matrixStack.popPose();
 	}
 
 	private static float getPowerBarGlow() {

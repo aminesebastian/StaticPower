@@ -87,7 +87,7 @@ public class TumblerRecipeCategory extends BaseJEIRecipeCategory<TumblerRecipe> 
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 40, 6, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 38, 46, 0);
 
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 66, 16, 60, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());

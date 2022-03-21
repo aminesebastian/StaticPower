@@ -103,7 +103,7 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput2(), 0, 0, 126, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluidOutput3(), 0, 0, 148, 54, 1.0f, 16, 52, MachineSideMode.Never, true);
 
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 52, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		// Draw the progress bar as a fluid (can't use the widget here because this is a
 		// singleton class).

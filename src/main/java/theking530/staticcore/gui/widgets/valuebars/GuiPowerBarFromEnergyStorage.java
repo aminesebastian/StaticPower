@@ -23,7 +23,7 @@ public class GuiPowerBarFromEnergyStorage extends AbstractGuiWidget<GuiPowerBarF
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiPowerBarUtilities.drawPowerBar(matrix, getPosition().getX(), getPosition().getY() + getSize().getY(), getSize().getX(), getSize().getY(), 0.0f, energyStorage.getStoredPower(),
+		GuiPowerBarUtilities.drawPowerBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, energyStorage.getStoredPower(),
 				energyStorage.getCapacity());
 	}
 

@@ -3,6 +3,7 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.Collections;
 
 import com.mojang.blaze3d.platform.Lighting;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
@@ -28,6 +29,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.init.ModKeyBindings;
@@ -96,15 +99,15 @@ public class GuiSideConfigTab extends BaseGuiTab {
 			return;
 		}
 
-		drawDarkBackground(matrix, 10, 24, (int) getWidth() - 22, (int) getHeight() - 32);
+		drawDarkBackground(matrix, 12, 25, (int) getWidth() - 26, (int) getHeight() - 35);
 
 		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
 		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
 		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
 		matrix.pushPose();
-		matrix.translate(75f, 41f, 10);
-		matrix.scale(-40, 40, 40);
+		matrix.translate(73f, 41.2f, 50);
+		matrix.scale(-38, 38, 38);
 		matrix.translate(0.5f, 0.5f, 0.5f);
 		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
 		matrix.translate(-0.5f, -0.5f, -0.5f);

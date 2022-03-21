@@ -6,9 +6,11 @@ import javax.annotation.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.crafting.Recipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
@@ -22,6 +24,7 @@ import theking530.staticpower.data.research.ResearchIcon;
 import theking530.staticpower.data.research.ResearchLevels.ResearchNode;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
+import theking530.staticpower.data.research.ResearchUnlockUtilities;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
@@ -117,9 +120,9 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Draw the outline indicator.
 		if (manager.isSelectedResearch(research.getId())) {
-			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 4, collapsedSize.getY() + 4, -2, -2, 0, new Color(2.0f, 1.0f, 0.5f, 1));
+			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 6, collapsedSize.getY() + 6, -3, -3, 0, new Color(2.0f, 1.0f, 0.5f, 1));
 		} else if (manager.hasCompletedResearch(research.getId())) {
-			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 6, collapsedSize.getY() + 6, -3, -3, 0, new Color(0.5f, 2.0f, 0.5f, 1));
+			GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX() + 4, collapsedSize.getY() + 4, -2, -2, 0, new Color(0.5f, 2.0f, 0.5f, 1));
 		}
 
 		// Draw the tile and its icon.
@@ -149,6 +152,20 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
+
+		Vector2D localPosition = mousePosition.copy().subtract(getScreenSpacePosition());
+		boolean isInUnlockRegion = localPosition.getY() >= (getSize().getY() - 12) && localPosition.getY() <= (getSize().getY() - 1);
+		if (isInUnlockRegion && localPosition.getX() > 9) {
+			List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
+			int index = (int) ((localPosition.getX() - 9) / 11.5f);
+			System.out.println(index);
+			if (index >= 0 && index < unlocks.size()) {
+				if (unlocks.get(index).getType() == ResearchUnlockType.CRAFTING) {
+					tooltips.addAll(
+							unlocks.get(index).getAsRecipe().getResultItem().getTooltipLines(getLocalPlayer(), Screen.hasControlDown() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
+				}
+			}
+		}
 	}
 
 	public void setExpanded(boolean expanded) {
@@ -227,12 +244,12 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private void drawRequirementsAndUnlocks(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		// Draw requirements.
 		float requirementsBgSize = research.getRequirements().size() + research.getRequirements().size() * 9.25f;
-		GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 11, getSize().getX() - requirementsBgSize - 1, getSize().getY() - 11, 0, new Color(0.0f, 0.0f, 0.0f, 0.5f));
+		GuiDrawUtilities.drawRectangle(pose, requirementsBgSize, 11, getSize().getX() - requirementsBgSize - 1, getSize().getY() - 12, 0, new Color(0.0f, 0.0f, 0.0f, 0.5f));
 
 		for (int i = 0; i < research.getRequirements().size(); i++) {
 			int xOffset = i * 10;
 			StaticPowerIngredient requirement = research.getRequirements().get(i);
-			drawRearchRequirement(pose, null, requirement, i, getSize().getX() - 14 - xOffset, getSize().getY() - 12);
+			drawRearchRequirement(pose, null, requirement, i, getSize().getX() - 14 - xOffset, getSize().getY() - 13.5f);
 		}
 
 		// Split the description into wrapped lines.
@@ -243,12 +260,13 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		}
 
 		// Draw the unlocks.
-		if (research.getUnlocks().size() > 0) {
-			GuiDrawUtilities.drawStringLeftAligned(pose, "Unlocks:", 9, 37 + descriptionHeight, 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
-			for (int i = 0; i < research.getUnlocks().size(); i++) {
-				ResearchUnlock unlock = research.getUnlocks().get(i);
+		List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
+		if (unlocks.size() > 0) {
+			GuiDrawUtilities.drawStringLeftAligned(pose, "Unlocks:", 9, 40 + descriptionHeight, 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			for (int i = 0; i < unlocks.size(); i++) {
+				ResearchUnlock unlock = unlocks.get(i);
 				if (unlock.getType() == ResearchUnlockType.CRAFTING && unlock.getIcon() != null) {
-					ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 36 + descriptionHeight, 155, 11f, 11f);
+					ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 40 + descriptionHeight, 155, 11f, 11f);
 					Recipe<?> recipe = unlock.getAsRecipe();
 					if (recipe != null) {
 

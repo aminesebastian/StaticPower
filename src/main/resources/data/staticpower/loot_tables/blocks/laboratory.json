@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "staticpower:machine_laboratory"
+          "name": "staticpower:laboratory"
         }
       ],
       "conditions": [

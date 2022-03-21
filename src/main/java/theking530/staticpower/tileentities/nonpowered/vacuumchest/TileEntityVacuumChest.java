@@ -34,7 +34,10 @@ import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.TeleportUpgrade;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
@@ -48,8 +51,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityVacuumChest extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityVacuumChest(pos, state), ModBlocks.VacuumChest);
+	public static final BlockEntityTypeAllocator<TileEntityVacuumChest> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityVacuumChest(pos, state), ModBlocks.VacuumChest);
 
 	public static final int DEFAULT_RANGE = 6;
 	public static final int DEFAULT_TANK_SIZE = 5000;
@@ -61,7 +63,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final FluidOutputServoComponent fluidOutputServo;
-	
+
 	@UpdateSerialize
 	protected float vacuumDiamater;
 	@UpdateSerialize
@@ -71,21 +73,17 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 
 	public TileEntityVacuumChest(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
+		this.enableFaceInteraction();
 		vacuumDiamater = DEFAULT_RANGE;
 		shouldTeleport = false;
 
-		registerComponent(
-				inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output).setShiftClickEnabled(true));
-		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1).setShiftClickEnabled(true)
-				.setShiftClickPriority(100));
+		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output).setShiftClickEnabled(true));
+		registerComponent(filterSlotInventory = new InventoryComponent("FilterSlot", 1).setShiftClickEnabled(true).setShiftClickPriority(100));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE)
-				.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
-		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo",
-				fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
-		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100,
-				fluidTankComponent, MachineSideMode.Output));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", DEFAULT_TANK_SIZE).setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(fluidOutputServo = new FluidOutputServoComponent("FluidInputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
 	}
@@ -99,8 +97,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 			// Vacuum every other tick.
 			if (SDMath.diceRoll(0.75)) {
 				// Create the AABB to search within.
-				AABB aabb = new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(),
-						worldPosition.getX() + 1, worldPosition.getY() + 1, worldPosition.getZ() + 1);
+				AABB aabb = new AABB(worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), worldPosition.getX() + 1, worldPosition.getY() + 1, worldPosition.getZ() + 1);
 				aabb = aabb.expandTowards(vacuumDiamater, vacuumDiamater, vacuumDiamater);
 				aabb = aabb.move(-vacuumDiamater / 2, -vacuumDiamater / 2, -vacuumDiamater / 2);
 
@@ -116,8 +113,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 	}
 
 	protected void vacuumItems(AABB bounds) {
-		List<ItemEntity> droppedItems = getLevel().getEntitiesOfClass(ItemEntity.class, bounds,
-				(ItemEntity item) -> true);
+		List<ItemEntity> droppedItems = getLevel().getEntitiesOfClass(ItemEntity.class, bounds, (ItemEntity item) -> true);
 		for (ItemEntity entity : droppedItems) {
 
 			double x = (worldPosition.getX() + 0.5D - entity.getX());
@@ -129,20 +125,16 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 				if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
 					InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
 					entity.remove(RemovalReason.DISCARDED);
-					((ServerLevel) getLevel()).sendParticles(ParticleTypes.PORTAL, worldPosition.getX() + 0.5,
-							(double) worldPosition.getY() + 1.0, (double) worldPosition.getZ() + 0.5, 1, 0.0D, 0.0D,
+					((ServerLevel) getLevel()).sendParticles(ParticleTypes.PORTAL, worldPosition.getX() + 0.5, (double) worldPosition.getY() + 1.0, (double) worldPosition.getZ() + 0.5, 1, 0.0D, 0.0D,
 							0.0D, 0.0D);
-					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(),
-							(double) worldPosition.getZ(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F, 1.0F);
+					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(), (double) worldPosition.getZ(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F, 1.0F);
 				} else {
 					double var11 = 1.0 - distance / 15.0;
 					if (var11 > 0.0D) {
 						var11 *= var11;
-						entity.push(x / distance * var11 * 0.06, y / distance * var11 * 0.15,
-								z / distance * var11 * 0.06);
+						entity.push(x / distance * var11 * 0.06, y / distance * var11 * 0.15, z / distance * var11 * 0.06);
 						Vec3 entityPos = entity.position();
-						((ServerLevel) getLevel()).sendParticles(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5,
-								entityPos.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+						((ServerLevel) getLevel()).sendParticles(ParticleTypes.PORTAL, entityPos.x, entityPos.y - 0.5, entityPos.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 					}
 				}
 			}
@@ -158,8 +150,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 			double z = (worldPosition.getZ() + 0.5D - orb.getZ());
 
 			// Check if we can take the orb's xp. If not, stop.
-			int tempFilled = fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value),
-					FluidAction.SIMULATE);
+			int tempFilled = fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value), FluidAction.SIMULATE);
 			if (tempFilled != orb.value) {
 				break;
 			}
@@ -168,11 +159,9 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 			if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
 				if (true) {// experienceTank.canFill() && experienceTank.fill(new
 							// FluidStack(ModFluids.LiquidExperience, orb.getXpValue()), false) > 0) {
-					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value),
-							FluidAction.EXECUTE);
+					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value), FluidAction.EXECUTE);
 					orb.remove(RemovalReason.DISCARDED);
-					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(),
-							(double) worldPosition.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.5F,
+					getLevel().playSound(null, (double) worldPosition.getX(), (double) worldPosition.getY(), (double) worldPosition.getZ(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.BLOCKS, 0.5F,
 							(getLevel().random.nextFloat() + 1) / 2);
 				}
 			} else {
@@ -186,8 +175,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 	}
 
 	public boolean hasFilter() {
-		if (!filterSlotInventory.getStackInSlot(0).isEmpty()
-				&& filterSlotInventory.getStackInSlot(0).getItem() instanceof ItemFilter) {
+		if (!filterSlotInventory.getStackInSlot(0).isEmpty() && filterSlotInventory.getStackInSlot(0).getItem() instanceof ItemFilter) {
 			return true;
 		}
 		return false;
@@ -214,6 +202,14 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 		return shouldVacuumExperience;
 	}
 
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output;
+	}
+
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return SideConfigurationComponent.ALL_SIDES_OUTPUT;
+	}
+
 	/* Update Handling */
 	public void upgradeTick() {
 		shouldTeleport = upgradesInventory.hasUpgradeOfClass(TeleportUpgrade.class);
@@ -236,8 +232,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 
 	public boolean canAcceptUpgrade(@Nonnull ItemStack upgrade) {
 		if (upgrade != ItemStack.EMPTY) {
-			if (upgrade.getItem() instanceof BaseRangeUpgrade || upgrade.getItem() instanceof TeleportUpgrade
-					|| upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
+			if (upgrade.getItem() instanceof BaseRangeUpgrade || upgrade.getItem() instanceof TeleportUpgrade || upgrade.getItem() instanceof ExperienceVacuumUpgrade) {
 				return true;
 			}
 		}

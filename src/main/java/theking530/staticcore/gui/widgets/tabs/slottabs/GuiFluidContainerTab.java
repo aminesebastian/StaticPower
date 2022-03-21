@@ -54,12 +54,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 
 		// Initialize the button.
 		if (fluidContainerComponent.getFluidInteractionMode() == FluidContainerInteractionMode.DRAIN) {
-			registerWidget(fillDirectionButton = new SpriteButton(6, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(4, 40, 20, 20, StaticPowerSprites.EMPTY_BUCKET, StaticPowerSprites.EMPTY_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = filledBucketPreview;
 			this.bottomSlotPreview = emptyBucketPreview;
 			fillDirectionButton.setTooltip(new TextComponent("Fill Machine with Container Contents"));
 		} else {
-			registerWidget(fillDirectionButton = new SpriteButton(6, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
+			registerWidget(fillDirectionButton = new SpriteButton(4, 40, 20, 20, StaticPowerSprites.FILL_BUCKET, StaticPowerSprites.FILL_BUCKET_HOVERED, this::buttonPressed));
 			this.topSlotPreview = emptyBucketPreview;
 			this.bottomSlotPreview = filledBucketPreview;
 			fillDirectionButton.setTooltip(new TextComponent("Fill Container with Machine Contents"));
@@ -94,8 +94,8 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 		topSlot.y = (int) (this.getYPosition() + 24);
 		bottomSlot.y = (int) (this.getYPosition() + 60);
-		topSlot.x = (int) (getXPosition() + 8);
-		bottomSlot.x = (int) (getXPosition() + 8);
+		topSlot.x = (int) (getXPosition() + 6);
+		bottomSlot.x = (int) (getXPosition() + 6);
 	}
 
 	@Override

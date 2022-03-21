@@ -21,17 +21,17 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public ItemButton highRedstoneButton;
 
 	public AbstractGuiRedstoneTab(RedstoneMode currentMode) {
-		super("Redstone Control", Color.EIGHT_BIT_YELLOW, 125, 100, new Color(1, 0.1f, 0.1f, 1), Items.REDSTONE);
+		super("Redstone Control", Color.EIGHT_BIT_YELLOW, 120, 100, new Color(1, 0.1f, 0.1f, 1), Items.REDSTONE);
 
-		registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 21, 26, 20, 20, (button, mouseButton) -> {
+		registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 18, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);
 			updateToggledButton(ignoreRedstoneButton);
 		}));
-		registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 51, 26, 20, 20, (button, mouseButton) -> {
+		registerWidget(lowRedstoneButton = new ItemButton(Items.REDSTONE, 48, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.Low);
 			updateToggledButton(lowRedstoneButton);
 		}));
-		registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 81, 26, 20, 20, (button, mouseButton) -> {
+		registerWidget(highRedstoneButton = new ItemButton(Blocks.REDSTONE_TORCH.asItem(), 78, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.High);
 			updateToggledButton(highRedstoneButton);
 		}));
@@ -54,29 +54,29 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		if (isOpen()) {
-			drawDarkBackground(matrix, 13, 21, 95, 30);
-			drawText(matrix, 0, 0);
+			drawDarkBackground(matrix, 11, 22, 95, 30);
+			drawText(matrix, 10, 0);
 		}
 	}
 
 	protected void drawText(PoseStack stack, int xPos, int yPos) {
 		String redstoneMode = "Mode: ";
-		getFontRenderer().drawShadow(stack, redstoneMode, 9, 55, 16777215);
+		getFontRenderer().drawShadow(stack, redstoneMode, xPos, 55, 16777215);
 		if (getCurrentMode() == RedstoneMode.Low) {
-			getFontRenderer().drawShadow(stack, "Low", 38, 55, 16777215);
-			getFontRenderer().drawShadow(stack, "This machine will", 9, 67, 16777215);
-			getFontRenderer().drawShadow(stack, "only operate with no", 9, 76, 16777215);
-			getFontRenderer().drawShadow(stack, "signal.", 9, 85, 16777215);
+			getFontRenderer().drawShadow(stack, "Low", xPos + 31, 55, 16777215);
+			getFontRenderer().drawShadow(stack, "This machine will", xPos, 67, 16777215);
+			getFontRenderer().drawShadow(stack, "only operate with no", xPos, 76, 16777215);
+			getFontRenderer().drawShadow(stack, "signal.", xPos, 85, 16777215);
 		} else if (getCurrentMode() == RedstoneMode.High) {
-			getFontRenderer().drawShadow(stack, "High", 38, 55, 16777215);
-			getFontRenderer().drawShadow(stack, "This machine will", 9, 67, 16777215);
-			getFontRenderer().drawShadow(stack, "only operate with a", 9, 76, 16777215);
-			getFontRenderer().drawShadow(stack, "redstone signal.", 9, 85, 16777215);
+			getFontRenderer().drawShadow(stack, "High", xPos + 31, 55, 16777215);
+			getFontRenderer().drawShadow(stack, "This machine will", xPos, 67, 16777215);
+			getFontRenderer().drawShadow(stack, "only operate with a", xPos, 76, 16777215);
+			getFontRenderer().drawShadow(stack, "redstone signal.", xPos, 85, 16777215);
 		} else if (getCurrentMode() == RedstoneMode.Ignore) {
-			getFontRenderer().drawShadow(stack, "Ignore", 38, 55, 16777215);
-			getFontRenderer().drawShadow(stack, "This machine will", 9, 67, 16777215);
-			getFontRenderer().drawShadow(stack, "ignore any redstone", 9, 76, 16777215);
-			getFontRenderer().drawShadow(stack, "signal.", 9, 85, 16777215);
+			getFontRenderer().drawShadow(stack, "Ignore", xPos + 31, 55, 16777215);
+			getFontRenderer().drawShadow(stack, "This machine will", xPos, 67, 16777215);
+			getFontRenderer().drawShadow(stack, "ignore any redstone", xPos, 76, 16777215);
+			getFontRenderer().drawShadow(stack, "signal.", xPos, 85, 16777215);
 		}
 	}
 

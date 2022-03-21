@@ -98,7 +98,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			ResearchLevel level = levels.getLevels().get(y);
 			for (int i = 0; i < level.getResearch().size(); i++) {
 				ResearchNode research = level.getResearch().get(i);
-				Vector2D relative = research.getRelativePosition().getScaledVector(45.0f, 55.0f);
+				Vector2D relative = research.getRelativePosition().getScaledVector(45.0f, 55.0f).add(100, 30);
 				ResearchNodeWidget widget = new ResearchNodeWidget(research, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
 				researchNodes.put(research, widget);
 				nodePanBox.registerWidget(widget);

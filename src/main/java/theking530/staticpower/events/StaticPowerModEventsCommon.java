@@ -13,6 +13,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -61,6 +62,7 @@ import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.Generic
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.NetherWartCropHarvester;
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.StemCropHarvester;
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.SugarCaneCropHarvester;
+import theking530.staticpower.world.ModFeatures;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventsCommon {
@@ -213,6 +215,11 @@ public class StaticPowerModEventsCommon {
 	@SubscribeEvent
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
 		StaticPowerRegistry.onRegisterEntities(event);
+	}
+
+	@SubscribeEvent
+	public static void registerFeatures(final RegistryEvent.Register<Feature<?>> event) {
+		ModFeatures.registerFeatures(event);
 	}
 
 	@SubscribeEvent

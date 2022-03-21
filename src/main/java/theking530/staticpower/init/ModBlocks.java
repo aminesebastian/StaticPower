@@ -83,6 +83,7 @@ import theking530.staticpower.tileentities.powered.poweredfurnace.BlockPoweredFu
 import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.tileentities.powered.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
+import theking530.staticpower.tileentities.powered.pump.PumpTube;
 import theking530.staticpower.tileentities.powered.refinery.refinerycontroller.BlockRefinery;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
@@ -203,6 +204,7 @@ public class ModBlocks {
 	public static BlockTank LumumTank;
 	public static BlockTank CreativeTank;
 
+	public static PumpTube PumpTube;
 	public static BlockPump IronPump;
 	public static BlockPump BasicPump;
 	public static BlockPump AdvancedPump;
@@ -553,6 +555,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(CreativeTank = new BlockTank("tank_creative", StaticPowerTiers.CREATIVE));
 
 		// Pumps
+		StaticPowerRegistry.preRegisterBlock(PumpTube = new PumpTube("pump_tube"));
 		StaticPowerRegistry.preRegisterBlock(IronPump = new BlockPump("pump_iron", StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterBlock(BasicPump = new BlockPump("pump_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(AdvancedPump = new BlockPump("pump_advanced", StaticPowerTiers.ADVANCED));

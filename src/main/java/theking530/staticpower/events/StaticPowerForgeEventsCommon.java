@@ -45,6 +45,7 @@ import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.api.attributes.AttributeUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
 import theking530.staticcore.data.StaticPowerGameDataManager;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.ITooltipProvider;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -62,6 +63,7 @@ import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.TeamManager;
+import theking530.staticpower.world.fluid.ModWorldFluids;
 import theking530.staticpower.world.ore.ModOres;
 import theking530.staticpower.world.trees.ModTrees;
 
@@ -140,6 +142,7 @@ public class StaticPowerForgeEventsCommon {
 	@SubscribeEvent
 	public static void onBiomeLoading(BiomeLoadingEvent event) {
 		ModOres.addOreGenFeatures(event);
+		ModWorldFluids.addFluidGenFeatures(event);
 		ModTrees.addTreeFeatures(event);
 		ModEntities.addSpawns(event);
 	}
@@ -177,13 +180,13 @@ public class StaticPowerForgeEventsCommon {
 			if (event.getItemStack().getItem() instanceof ITooltipProvider) {
 				ITooltipProvider spItem = (ITooltipProvider) event.getItemStack().getItem();
 				if (spItem != null && event.getPlayer() != null && event.getPlayer().getCommandSenderWorld() != null) {
-					spItem.getTooltip(event.getItemStack(), event.getPlayer().getCommandSenderWorld(), basicTooltips, Screen.hasControlDown());
+					spItem.getTooltip(event.getItemStack(), event.getPlayer().getCommandSenderWorld(), basicTooltips, Screen.hasShiftDown());
 					spItem.getAdvancedTooltip(event.getItemStack(), event.getPlayer().level, advancedToolTips);
 				}
 			}
 
 			// Add thermal rate tooltips.
-			if (Screen.hasControlDown()) {
+			if (Screen.hasShiftDown()) {
 				// Add the basic tooltips if any are presented.
 				if (basicTooltips.size() > 0) {
 					event.getToolTip().addAll(basicTooltips);
@@ -191,7 +194,12 @@ public class StaticPowerForgeEventsCommon {
 
 				// Add the advanced.
 				if (advancedToolTips.size() > 0) {
-					event.getToolTip().addAll(advancedToolTips);
+					for (Component comp : advancedToolTips) {
+						List<String> lines = GuiDrawUtilities.wrapString(comp.getString(), 150);
+						for (String line : lines) {
+							event.getToolTip().add(new TextComponent(line).setStyle(comp.getStyle()));
+						}
+					}
 				}
 
 				// Create recipe match parameters for checking for heat tooltip values.
@@ -208,7 +216,7 @@ public class StaticPowerForgeEventsCommon {
 					matchParameters.setBlocks(blockState);
 				}
 
-				// Add the tooltip if the control key is down.
+				// Add the tooltip if the shift key is down.
 				StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
 					// Add heat conductivity tooltip.
 					event.getToolTip().add(HeatTooltipUtilities.getHeatConductivityTooltip(recipe.getThermalConductivity()));
@@ -225,7 +233,7 @@ public class StaticPowerForgeEventsCommon {
 				});
 
 				// Add attributable tooltips.
-				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasControlDown());
+				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasShiftDown());
 			} else {
 				// Add the basic tooltips if any are presented.
 				if (basicTooltips.size() > 0) {
@@ -233,12 +241,12 @@ public class StaticPowerForgeEventsCommon {
 				}
 
 				// Add attributable tooltips.
-				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasControlDown());
+				AttributeUtilities.addTooltipsForAttribute(event.getItemStack(), event.getToolTip(), Screen.hasShiftDown());
 
-				// Add the "Hold Control" indentifier.
+				// Add the "Hold Shift" indentifier.
 				if (advancedToolTips.size() > 0) {
 					event.getToolTip().add(new TextComponent(" "));
-					event.getToolTip().add(new TranslatableComponent("gui.staticpower.hold_control").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
+					event.getToolTip().add(new TranslatableComponent("gui.staticpower.hold_shift").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
 				}
 			}
 		}

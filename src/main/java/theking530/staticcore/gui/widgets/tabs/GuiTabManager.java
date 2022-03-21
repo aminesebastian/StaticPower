@@ -88,12 +88,12 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 		float rightYOffset = 10;
 
 		for (BaseGuiTab tab : registeredTabs) {
-			float xPosition = getPosition().getX() + getParentSize().getX() + getPosition().getX();
+			float xPosition = getPosition().getX() + getParentSize().getX() + getPosition().getX() - 2;
 			float yPosition = rightYOffset;
 			int index = rightTabs;
 
 			if (tab.getTabSide() == TabSide.LEFT) {
-				xPosition = -tab.getWidth();
+				xPosition = -tab.getWidth()+2;
 				yPosition = leftYOffset;
 				index = leftTabs;
 			}

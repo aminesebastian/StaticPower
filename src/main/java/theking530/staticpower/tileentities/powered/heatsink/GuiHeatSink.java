@@ -20,8 +20,8 @@ public class GuiHeatSink extends StaticPowerTileEntityGui<ContainerHeatSink, Til
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 46));
-		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().cableComponent, 64, 16, 48, 44));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().cableComponent, 58, 18, 64, 40));
 		
 		getTabManager().registerTab(new GuiInfoTab(80));
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);

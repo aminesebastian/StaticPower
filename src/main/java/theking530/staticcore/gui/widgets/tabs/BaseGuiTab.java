@@ -243,22 +243,26 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	}
 
 	@Override
+	public void transformPoseBeforeRender(PoseStack matrix) {
+		super.transformPoseBeforeRender(matrix);
+		// matrix.translate(1, 0, 0);
+	}
+
+	@Override
 	protected void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		updateAnimation(partialTicks);
 		float width = getWidth() + 4;
 		float xPos = 0;
-		if (tabSide == TabSide.LEFT) {
-			xPos = 3;
-		} else {
-			xPos = -5;
+		if (tabSide == TabSide.RIGHT) {
+			xPos -= 4;
 		}
 		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0, -10 * tabIndex, tabColor);
 
 		if (icon != null) {
 			if (this.tabSide == TabSide.LEFT) {
-				icon.draw(matrix, getWidth() - 18f, 4.5f, -tabIndex * 5);
+				icon.draw(matrix, getWidth() - 20.25f, 5f, -tabIndex * 5);
 			} else {
-				icon.draw(matrix, 3f, 4.5f, -tabIndex * 5);
+				icon.draw(matrix, 4f, 5f, -tabIndex * 5);
 			}
 
 			if (showNotificationBadge && tabState == TabState.CLOSED) {
@@ -272,7 +276,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 				if (this.tabSide == TabSide.LEFT) {
 					GuiDrawUtilities.drawStringLeftAligned(matrix, getTitle(), 8, 15, 200, 1.0f, titleColor, true);
 				} else {
-					GuiDrawUtilities.drawStringLeftAligned(matrix, getTitle(), 26, 15, 200, 1.0f, titleColor, true);
+					GuiDrawUtilities.drawStringLeftAligned(matrix, getTitle(), 22, 16, 200, 1.0f, titleColor, true);
 				}
 			}
 		}

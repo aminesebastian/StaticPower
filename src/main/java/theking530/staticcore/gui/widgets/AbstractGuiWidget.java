@@ -519,7 +519,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * 
 	 * @param matrix
 	 */
-	protected void transformPoseBeforeRender(PoseStack matrix) {
+	public void transformPoseBeforeRender(PoseStack matrix) {
 		matrix.translate(getPosition().getX(), getPosition().getY(), zLevel);
 	}
 

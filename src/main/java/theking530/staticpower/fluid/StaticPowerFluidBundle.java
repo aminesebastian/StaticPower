@@ -11,6 +11,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.fluids.FluidAttributes;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Flowing;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;
 import theking530.staticpower.items.StaticPowerFluidBucket;
@@ -50,7 +51,7 @@ public class StaticPowerFluidBundle {
 		public String name;
 		private String textureName;
 		private Supplier<Item> bucketSupplier;
-		private Consumer<FluidAttributes.Builder> attributes;
+		private Consumer<FluidAttributes.Builder> extraAttributes;
 		private StaticPowerFluidBucket autoBucket;
 		private boolean shouldRegisterBucketItem;
 
@@ -65,7 +66,7 @@ public class StaticPowerFluidBundle {
 		}
 
 		public StaticPowerFluidBuilder addAttributes(Consumer<FluidAttributes.Builder> attributes) {
-			this.attributes = attributes;
+			this.extraAttributes = attributes;
 			return this;
 		}
 
@@ -99,6 +100,16 @@ public class StaticPowerFluidBundle {
 			String flowingTexture = "blocks/fluids/" + textureName + "_flowing";
 			Named<Fluid> tag = FluidTags.bind(name);
 			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.of(Material.WATER));
+
+			// Handle some default attributes.
+			Consumer<FluidAttributes.Builder> attributes = (builder) -> {
+				builder.color(Color.EIGHT_BIT_WHITE.encodeInInteger());
+				builder.overlay(new ResourceLocation("minecraft", "block/water_overlay"));
+				if (extraAttributes != null) {
+					extraAttributes.accept(builder);
+				}
+			};
+
 			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
 			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, attributes);
 

@@ -27,7 +27,8 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
-	public static final DefaultSideConfiguration ALL_SIDES_DISABLED = new DefaultSideConfiguration();
+	public static final DefaultSideConfiguration ALL_SIDES_NEVER = new DefaultSideConfiguration();
+	public static final DefaultSideConfiguration ALL_SIDES_OUTPUT = new DefaultSideConfiguration();
 	static {
 		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input);
 		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
@@ -36,12 +37,19 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.LEFT, true, MachineSideMode.Input);
 		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.RIGHT, true, MachineSideMode.Input);
 
-		ALL_SIDES_DISABLED.setSide(BlockSide.TOP, false, MachineSideMode.Never);
-		ALL_SIDES_DISABLED.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
-		ALL_SIDES_DISABLED.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
-		ALL_SIDES_DISABLED.setSide(BlockSide.BACK, false, MachineSideMode.Never);
-		ALL_SIDES_DISABLED.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
-		ALL_SIDES_DISABLED.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
+		ALL_SIDES_NEVER.setSide(BlockSide.TOP, false, MachineSideMode.Never);
+		ALL_SIDES_NEVER.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
+		ALL_SIDES_NEVER.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
+		ALL_SIDES_NEVER.setSide(BlockSide.BACK, false, MachineSideMode.Never);
+		ALL_SIDES_NEVER.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
+		ALL_SIDES_NEVER.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
+		
+		ALL_SIDES_OUTPUT.setSide(BlockSide.TOP, true, MachineSideMode.Output);
+		ALL_SIDES_OUTPUT.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
+		ALL_SIDES_OUTPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Output);
+		ALL_SIDES_OUTPUT.setSide(BlockSide.BACK, true, MachineSideMode.Output);
+		ALL_SIDES_OUTPUT.setSide(BlockSide.LEFT, true, MachineSideMode.Output);
+		ALL_SIDES_OUTPUT.setSide(BlockSide.RIGHT, true, MachineSideMode.Output);
 	}
 
 	private MachineSideMode[] configuration;

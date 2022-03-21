@@ -80,9 +80,9 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		if (isOpen()) {
 			if (info != null) {
-				int padding = 8;
+				int padding = 9;
 
-				drawDarkBackground(matrix, padding, 22, getSize().getXi() - (2 * padding), getSize().getYi() - (2 * padding) - 14);
+				drawDarkBackground(matrix, padding, 23, getSize().getXi() - (2 * padding), getSize().getYi() - (2 * padding) - 14);
 				drawInfo(matrix, false);
 			}
 		}
@@ -110,7 +110,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 				// Render the info text.
 				for (String line : lines) {
 					if (!simulate) {
-						GuiDrawUtilities.drawStringLeftAligned(stack, line, 12, lineHeight, 0, 1, Color.EIGHT_BIT_WHITE, true);
+						GuiDrawUtilities.drawStringLeftAligned(stack, line, 12, lineHeight + 1, 0, 1, Color.EIGHT_BIT_WHITE, true);
 					}
 					lineHeight += LINE_HEIGHT;
 				}

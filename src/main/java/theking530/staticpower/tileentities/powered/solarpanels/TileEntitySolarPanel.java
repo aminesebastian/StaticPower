@@ -62,7 +62,7 @@ public class TileEntitySolarPanel extends TileEntityBase {
 
 		// Set the side config to only output on the bottom and disable on the rest.
 		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig", this::sideConfigCallback, this::sideModeFilter,
-				SideConfigurationComponent.ALL_SIDES_DISABLED.copy().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output)));
+				SideConfigurationComponent.ALL_SIDES_NEVER.copy().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output)));
 
 		// Set the distribution component.
 		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage.getStorage()));

@@ -85,7 +85,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	public void draw(FluidGeneratorRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		// This doesn't actually draw the fluid, just the bars.
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getFluid(), 0, 0, 77, 54, 1.0f, 16, 48, MachineSideMode.Never, true);
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 8, 54, 16, 48, 1.0f, recipe.getPowerGeneration(), recipe.getPowerGeneration());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, 1.0f, recipe.getPowerGeneration(), recipe.getPowerGeneration());
 
 		// Draw the progress bars.
 		pBar.setCurrentProgress(processingTimer.getValue());
@@ -122,7 +122,7 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 	public void setRecipe(IRecipeLayout recipeLayout, FluidGeneratorRecipe recipe, IIngredients ingredients) {
 		// Add the fluid.
 		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		fluids.init(3, true, 77, 6, 16, 48, getFluidTankDisplaySize(recipe.getFluid()), false, null);
+		fluids.init(3, true, 77, 6, 16, 48, 1, false, null);
 		fluids.set(ingredients);
 
 		int burnTime = 100;
