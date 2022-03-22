@@ -84,6 +84,7 @@ import theking530.staticpower.tileentities.powered.poweredgrinder.BlockPoweredGr
 import theking530.staticpower.tileentities.powered.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
 import theking530.staticpower.tileentities.powered.pump.PumpTube;
+import theking530.staticpower.tileentities.powered.pumpjack.BlockPumpJack;
 import theking530.staticpower.tileentities.powered.refinery.refinerycontroller.BlockRefinery;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
@@ -212,6 +213,7 @@ public class ModBlocks {
 	public static BlockPump EnergizedPump;
 	public static BlockPump LumumPump;
 	public static BlockPump CreativePump;
+	public static BlockPumpJack PumpJack;
 
 	public static BlockVacuumChest VacuumChest;
 	public static BlockStaticChest BasicChest;
@@ -563,6 +565,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(EnergizedPump = new BlockPump("pump_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(LumumPump = new BlockPump("pump_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(CreativePump = new BlockPump("pump_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry.preRegisterBlock(PumpJack = new BlockPumpJack("pump_jack"));
 
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));

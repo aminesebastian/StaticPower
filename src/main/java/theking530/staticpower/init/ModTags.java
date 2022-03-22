@@ -1,9 +1,11 @@
 package theking530.staticpower.init;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.material.Fluid;
 import theking530.staticpower.StaticPower;
 
 public class ModTags {
@@ -18,7 +20,13 @@ public class ModTags {
 	public static final Tag<Item> RESEARCH = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "research"));
 	public static final Tag<Item> TILLABLE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "tillable"));
 
+	public static final Tag<Fluid> OIL = createFluidWrapper(new ResourceLocation("minecraft", "oil_crude"));
+
 	public static Tag<Item> createItemWrapper(ResourceLocation name) {
 		return ItemTags.getAllTags().getTagOrEmpty(name);
+	}
+
+	public static Tag<Fluid> createFluidWrapper(ResourceLocation name) {
+		return FluidTags.getAllTags().getTagOrEmpty(name);
 	}
 }

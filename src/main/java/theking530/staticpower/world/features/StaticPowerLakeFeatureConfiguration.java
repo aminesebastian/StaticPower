@@ -10,15 +10,19 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 public class StaticPowerLakeFeatureConfiguration implements FeatureConfiguration {
 	public static final Codec<StaticPowerLakeFeatureConfiguration> CODEC = RecordCodecBuilder.create((builder) -> {
 		return builder.group(BlockStateProvider.CODEC.fieldOf("fluid").forGetter(StaticPowerLakeFeatureConfiguration::getFluid),
+
+				BlockStateProvider.CODEC.fieldOf("barrier").forGetter(StaticPowerLakeFeatureConfiguration::getBarrier),
 				IntProvider.CODEC.fieldOf("size").forGetter(StaticPowerLakeFeatureConfiguration::getSizeProvider),
 				IntProvider.CODEC.fieldOf("depth").forGetter(StaticPowerLakeFeatureConfiguration::getDepthProvider)).apply(builder, StaticPowerLakeFeatureConfiguration::new);
 	});
 	private final BlockStateProvider fluidBlockState;
+	private final BlockStateProvider barrier;
 	private final IntProvider sizeProvider;
 	private final IntProvider depthProvider;
 
-	public StaticPowerLakeFeatureConfiguration(BlockStateProvider fluidBlockState, IntProvider sizeProvider, IntProvider depthProvider) {
+	public StaticPowerLakeFeatureConfiguration(BlockStateProvider fluidBlockState, BlockStateProvider barrier, IntProvider sizeProvider, IntProvider depthProvider) {
 		this.fluidBlockState = fluidBlockState;
+		this.barrier = barrier;
 		this.sizeProvider = sizeProvider;
 		this.depthProvider = depthProvider;
 	}
@@ -33,5 +37,9 @@ public class StaticPowerLakeFeatureConfiguration implements FeatureConfiguration
 
 	public BlockStateProvider getFluid() {
 		return fluidBlockState;
+	}
+
+	public BlockStateProvider getBarrier() {
+		return barrier;
 	}
 }

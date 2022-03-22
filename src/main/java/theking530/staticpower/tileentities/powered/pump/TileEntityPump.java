@@ -38,6 +38,7 @@ import theking530.staticpower.tileentities.components.control.AbstractProcesingC
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -130,10 +131,10 @@ public class TileEntityPump extends TileEntityMachine {
 
 	@Override()
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		if (side != BlockSide.TOP && mode != MachineSideMode.Disabled) {
+		if (side != BlockSide.TOP && mode != MachineSideMode.Never) {
 			return false;
 		}
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output;
+		return mode == MachineSideMode.Output;
 	}
 
 	/**
@@ -211,7 +212,7 @@ public class TileEntityPump extends TileEntityMachine {
 							this.getLevel().setBlock(position, ModBlocks.PumpTube.defaultBlockState(), 2);
 						}
 					}
-					
+
 					// If this is water, we just stop. No recursion as water is infinite anyway.
 					if (pumpedStack.getFluid() == Fluids.WATER) {
 						positionsToPump.clear();
@@ -269,6 +270,10 @@ public class TileEntityPump extends TileEntityMachine {
 			}
 		}
 		return null;
+	}
+
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return SideConfigurationComponent.TOP_SIDE_ONLY_OUTPUT;
 	}
 
 	public CompoundTag serializeSaveNbt(CompoundTag nbt) {

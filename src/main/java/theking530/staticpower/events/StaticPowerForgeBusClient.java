@@ -7,6 +7,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.SheetedDecalTextureGenerator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -14,6 +15,9 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.FogRenderer;
+import net.minecraft.client.renderer.FogRenderer.FogMode;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -24,11 +28,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.DrawSelectionEvent;
+import net.minecraftforge.client.event.EntityViewRenderEvent;
+import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
+import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderLevelLastEvent;
@@ -44,6 +52,8 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.StaticPowerExtensionGui;
 import theking530.staticpower.client.gui.StaticPowerHUDElement;
 import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.fluid.AbstractStaticPowerFluid;
+import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
@@ -110,6 +120,27 @@ public class StaticPowerForgeBusClient {
 				gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
 			}
 		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
+	public static void onEvent(FogDensity event) {
+
+	}
+
+	@SubscribeEvent
+	public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
+		LocalPlayer player = Minecraft.getInstance().player;
+		FluidState fluid = player.getLevel().getFluidState(new BlockPos(player.getEyePosition()));
+		if (fluid.getType() instanceof AbstractStaticPowerFluid) {
+			RenderSystem.setShaderFogStart(1);
+			RenderSystem.setShaderFogEnd(2);
+			RenderSystem.setShaderFogColor(0.05f, 0.05f, 0.05f);
+		}
+	}
+
+	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
+	public static void onEvent(FogColors event) {
+
 	}
 
 	/**

@@ -185,7 +185,7 @@ public class ModFluids {
 		registerFluidBundle(MoltenBronze = new StaticPowerFluidBuilder("molten_bronze").addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(1500).density(32).temperature(950).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
 		}).build());
-		
+
 		registerFluidBundle(CrudeOil = new StaticPowerFluidBuilder("oil_crude").addAutoBucket(true, StaticPowerSprites.OIL_BUCKET_FLUID_MASK).addAttributes(builder -> {
 			builder.viscosity(1500).density(32).sound(SoundEvents.BUCKET_FILL_LAVA, SoundEvents.BUCKET_EMPTY_LAVA);
 		}).build());

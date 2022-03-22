@@ -2,6 +2,7 @@ package theking530.staticpower.world.fluid;
 
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.valueproviders.UniformInt;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
@@ -16,8 +17,8 @@ import theking530.staticpower.world.ModFeatures;
 import theking530.staticpower.world.features.StaticPowerLakeFeatureConfiguration;
 
 public class ModWorldFluids {
-	public static final PlacedFeature LAKE_OIL_SURFACE = PlacementUtils.register("lake_oil_surface", new WorldFluidConfigBuilder(ModFluids.CrudeOil).build().placed(RarityFilter.onAverageOnceEvery(10),
-			InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BiomeFilter.biome()));
+	public static final PlacedFeature LAKE_OIL_SURFACE = PlacementUtils.register("lake_oil_surface",
+			new WorldFluidConfigBuilder(ModFluids.CrudeOil, BlockStateProvider.simple(Blocks.MOSSY_COBBLESTONE)).build().placed(RarityFilter.onAverageOnceEvery(10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BiomeFilter.biome()));
 
 	public static void addFluidGenFeatures(BiomeLoadingEvent event) {
 		event.getGeneration().addFeature(GenerationStep.Decoration.LAKES, LAKE_OIL_SURFACE);
@@ -25,14 +26,16 @@ public class ModWorldFluids {
 
 	private static class WorldFluidConfigBuilder {
 		private final StaticPowerFluidBundle fluid;
+		private final BlockStateProvider barrier;
 
-		public WorldFluidConfigBuilder(StaticPowerFluidBundle fluid) {
+		public WorldFluidConfigBuilder(StaticPowerFluidBundle fluid, BlockStateProvider barrier) {
 			this.fluid = fluid;
+			this.barrier = barrier;
 		}
 
 		public ConfiguredFeature<?, ?> build() {
-			StaticPowerLakeFeatureConfiguration configuration = new StaticPowerLakeFeatureConfiguration(BlockStateProvider.simple(fluid.FluidBlock.defaultBlockState()), UniformInt.of(2, 10),
-					UniformInt.of(15, 50));
+			StaticPowerLakeFeatureConfiguration configuration = new StaticPowerLakeFeatureConfiguration(BlockStateProvider.simple(fluid.FluidBlock.defaultBlockState()), barrier, UniformInt.of(2, 10),
+					UniformInt.of(30, 100));
 			return ModFeatures.STATIC_LAKE.configured(configuration);
 		}
 	}

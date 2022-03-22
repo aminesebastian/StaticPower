@@ -24,13 +24,14 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 
 	public PanBox(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		//this.internalContainer.setTransfomer(this::updateChildLayout);
+		// this.internalContainer.setTransfomer(this::updateChildLayout);
 		interpolatedPan = new Vector2D();
 		targetPan = new Vector2D();
 		maxBounds = new Vector4D();
 		interpolatedZoom = 1;
 		targetZoom = 1;
 	}
+
 	@Override
 	public void transformPoseBeforeRender(PoseStack pose) {
 		pose.scale(1 / interpolatedZoom, 1 / interpolatedZoom, 1 / interpolatedZoom);

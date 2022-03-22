@@ -20,6 +20,7 @@ public class Color extends Vector4D {
 
 	public static final Color EIGHT_BIT_RED = new Color(255.0f, 0.0f, 0.0f, 255.0f);
 	public static final Color EIGHT_BIT_WHITE = new Color(255.0f, 255.0f, 255.0f, 255.0f);
+	public static final Color EIGHT_BIT_BLACK = new Color(0.0f, 0.0f, 0.0f, 255.0f);
 	public static final Color EIGHT_BIT_GREY = new Color(128.0f, 128.0f, 128.0f, 255.0f);
 	public static final Color EIGHT_BIT_DARK_GREY = new Color(63.0f, 63.0f, 63.0f, 255.0f);
 	public static final Color EIGHT_BIT_YELLOW = new Color(255.0f, 255.0f, 85.0f, 1.0f);

@@ -5,6 +5,7 @@ import java.util.Random;
 import com.mojang.serialization.Codec;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.WorldGenLevel;
@@ -30,15 +31,17 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 		int zSize = SDMath.getRandomIntInRange(config.getSizeProvider().getMinValue(), config.getSizeProvider().getMaxValue());
 
 		for (int y = 0; y < depth; y++) {
-			// For the first 8 levels, just place the central block.
-			if (y < 8) {
+			// For the first 20 levels, just place the central block.
+			if (y < 20) {
 				blockpos = configContext.origin().offset(0, -y, 0);
-				BlockState fluidBlock = config.getFluid().getState(random, blockpos);
-				BlockState existingState = worldgenlevel.getBlockState(blockpos);
-				if (!existingState.isAir()) {
-					worldgenlevel.setBlock(blockpos, fluidBlock, 2);
-					worldgenlevel.scheduleTick(blockpos, fluidBlock.getBlock(), 0);
-					this.markAboveForPostProcessing(worldgenlevel, blockpos);
+				if (shouldPlaceHere(worldgenlevel, config, blockpos)) {
+					BlockState fluidBlock = config.getFluid().getState(random, blockpos);
+					BlockState existingState = worldgenlevel.getBlockState(blockpos);
+					if (!existingState.isAir()) {
+						worldgenlevel.setBlock(blockpos, fluidBlock, 2);
+						worldgenlevel.scheduleTick(blockpos, fluidBlock.getBlock(), 0);
+						this.markAboveForPostProcessing(worldgenlevel, blockpos);
+					}
 				}
 				continue;
 			}
@@ -54,20 +57,37 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 				for (int z = -noisyZ; z < noisyZ; z++) {
 					// Get the position to place at and the existing block.
 					blockpos = configContext.origin().offset(x, -y, z);
-					BlockState existingState = worldgenlevel.getBlockState(blockpos);
 
 					// If this is an air block, ignore it.
-					if (existingState.isAir()) {
+					if (!shouldPlaceHere(worldgenlevel, config, blockpos)) {
 						continue;
 					}
 
-					if (canReplaceBlock(existingState)) {
-						BlockState fluidBlock = config.getFluid().getState(random, blockpos);
-						worldgenlevel.setBlock(blockpos, fluidBlock, 2);
-						worldgenlevel.scheduleTick(blockpos, fluidBlock.getBlock(), 0);
-						this.markAboveForPostProcessing(worldgenlevel, blockpos);
-					}
+					BlockState fluidBlock = config.getFluid().getState(random, blockpos);
+					worldgenlevel.setBlock(blockpos, fluidBlock, 2);
+					worldgenlevel.scheduleTick(blockpos, fluidBlock.getBlock(), 0);
+					markAboveForPostProcessing(worldgenlevel, blockpos);
 				}
+			}
+		}
+		return true;
+	}
+
+	private boolean shouldPlaceHere(WorldGenLevel level, StaticPowerLakeFeatureConfiguration config, BlockPos pos) {
+		BlockState existingState = level.getBlockState(pos);
+		if (!canReplaceBlock(existingState)) {
+			return false;
+		}
+
+		for (Direction dir : Direction.values()) {
+			if (dir == Direction.UP) {
+				continue;
+			}
+			
+			BlockPos offsetPos = pos.relative(dir);
+			BlockState state = level.getBlockState(offsetPos);
+			if (state.isAir()) {
+				return false;
 			}
 		}
 		return true;

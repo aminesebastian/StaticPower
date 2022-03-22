@@ -158,7 +158,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		if (isInUnlockRegion && localPosition.getX() > 9) {
 			List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
 			int index = (int) ((localPosition.getX() - 9) / 11.5f);
-			System.out.println(index);
 			if (index >= 0 && index < unlocks.size()) {
 				if (unlocks.get(index).getType() == ResearchUnlockType.CRAFTING) {
 					tooltips.addAll(
