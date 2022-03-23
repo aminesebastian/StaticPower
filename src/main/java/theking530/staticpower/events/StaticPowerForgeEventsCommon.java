@@ -6,6 +6,7 @@ import java.util.List;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -15,12 +16,12 @@ import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.BucketItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.LevelResource;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
@@ -31,7 +32,6 @@ import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.RightClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
@@ -57,8 +57,8 @@ import theking530.staticpower.entities.player.datacapability.CapabilityStaticPow
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCapabilityProvider;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
+import theking530.staticpower.fluid.AbstractStaticPowerFluid;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -79,6 +79,25 @@ public class StaticPowerForgeEventsCommon {
 				CableNetworkManager.get(event.world).tick();
 				StaticPowerGameDataManager.tickGameData();
 			}
+		}
+	}
+
+	@SubscribeEvent
+	public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
+		Fluid fluid = Fluids.EMPTY;
+		FluidState fluidState = event.player.getLevel().getFluidState(new BlockPos(event.player.getEyePosition().subtract(0, 1, 0)));
+		fluid = fluidState.getType();
+
+		float movementModifier = 0.65f;
+		if (fluid instanceof AbstractStaticPowerFluid) {
+			Vec3 deltaMovement = event.player.getDeltaMovement();
+			
+			double yMovement = deltaMovement.y < 0 ? deltaMovement.y * movementModifier : deltaMovement.y;
+			
+			
+			event.player.setDeltaMovement(deltaMovement.x * movementModifier, yMovement, deltaMovement.z * movementModifier);
+			event.player.setOnGround(true);
+			
 		}
 	}
 
@@ -263,25 +282,6 @@ public class StaticPowerForgeEventsCommon {
 	@SubscribeEvent
 	public static void resourcesReloadedEvent(RecipesUpdatedEvent event) {
 		StaticPowerRecipeRegistry.onResourcesReloaded(event.getRecipeManager());
-	}
-
-	@SubscribeEvent
-	public static void onPlayerInteract(RightClickBlock event) {
-		if (event.getPlayer().getMainHandItem().getItem() == Items.MILK_BUCKET) {
-			// Create a proxy item to handle all the fluid placement logic for the milk.
-			BucketItem milkeBucketProxy = new BucketItem(() -> ModFluids.Milk.Fluid, new Item.Properties());
-
-			// Call the on item rightclick logic.
-			milkeBucketProxy.use(event.getWorld(), event.getPlayer(), event.getHand());
-
-			// If not creative, set the held item to the proxy bucket.
-			if (!event.getPlayer().isCreative()) {
-				event.getPlayer().setItemInHand(event.getHand(), new ItemStack(milkeBucketProxy));
-			}
-
-			// Cancel the event so no further events occur.
-			event.setCanceled(true);
-		}
 	}
 
 	@SubscribeEvent

@@ -4,6 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import theking530.staticcore.initialization.StaticCoreRegistry;
@@ -46,6 +47,9 @@ public class StaticPower {
 
 	public StaticPower() {
 		try {
+			// Enable forge's milk.
+			ForgeMod.enableMilkFluid();
+			
 			StaticPowerConfig.preInitialize();
 
 			StaticPowerConfig.registerTier(StaticPowerTiers.WOOD, StaticPowerTierWood::new);

@@ -1,6 +1,5 @@
 package theking530.staticcore.gui;
 
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -236,6 +235,30 @@ public class GuiDrawUtilities {
 		bufferbuilder.vertex(pose.last().pose(), (x + width), y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxU, minV).endVertex();
 		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minU, minV).endVertex();
 		tessellator.end();
+	}
+
+	public static void drawScreenOverlay(ResourceLocation texture, Color color, float alpha, float width, float height) {
+		if (Minecraft.getInstance().getWindow() != null) {
+			RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+			RenderSystem.setShaderTexture(0, texture);
+			RenderSystem.enableBlend();
+
+			int screenWidth = Minecraft.getInstance().getWindow().getWidth();
+			int screenHeight = Minecraft.getInstance().getWindow().getHeight();
+
+			for (int x = 0; x < Math.ceil(screenWidth / width); x++) {
+				for (int y = 0; y < Math.ceil(screenHeight / height); y++) {
+					Tesselator tessellator = Tesselator.getInstance();
+					BufferBuilder bufferbuilder = tessellator.getBuilder();
+					bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+					bufferbuilder.vertex((x * width), (y * height) + height, 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(0, 1).endVertex();
+					bufferbuilder.vertex((x * width) + width, (y * height) + height, 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(1, 1).endVertex();
+					bufferbuilder.vertex((x * width) + width, (y * height), 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(1, 0).endVertex();
+					bufferbuilder.vertex((x * width), (y * height), 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(0, 0).endVertex();
+					tessellator.end();
+				}
+			}
+		}
 	}
 
 	public static void drawSprite(PoseStack pose, ResourceLocation spriteLocation, float width, float height, float minU, float minV, float maxU, float maxV, Color color) {

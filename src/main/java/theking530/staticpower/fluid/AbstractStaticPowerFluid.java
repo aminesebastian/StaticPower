@@ -24,6 +24,7 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.FluidAttributes;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
@@ -38,8 +39,11 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 	public String FlowingTexture;
 	public Named<Fluid> Tag;
 
+	private Color fogColor;
+	private Color overlayColor;
+
 	public AbstractStaticPowerFluid(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-			String flowingTexture, Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
+			String flowingTexture, Named<Fluid> tag, Color fogColor, Color overlayColor, Consumer<FluidAttributes.Builder> attributes) {
 		setRegistryName(name);
 		Bucket = bucket;
 		FluidBlock = fluidBlock;
@@ -47,8 +51,26 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 		FlowingFluid = flowingFluid;
 		StillTexture = stillTexture;
 		FlowingTexture = flowingTexture;
+		this.fogColor = fogColor;
+		this.overlayColor = overlayColor;
 		Tag = tag;
 		AdditionalAtrributesDelegate = attributes;
+	}
+
+	public Color getFogColor() {
+		return fogColor;
+	}
+
+	public void setFogColor(Color fogColor) {
+		this.fogColor = fogColor;
+	}
+
+	public Color getOverlayColor() {
+		return overlayColor;
+	}
+
+	public void setOverlayColor(Color overlayColor) {
+		this.overlayColor = overlayColor;
 	}
 
 	@Override
@@ -163,8 +185,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 	public static class Source extends AbstractStaticPowerFluid {
 
 		public Source(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-				String flowingTexture, Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
-			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
+				String flowingTexture, Named<Fluid> tag, Color fogColor, Color overlayColor, Consumer<FluidAttributes.Builder> attributes) {
+			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, fogColor, overlayColor, attributes);
 		}
 
 		@Override
@@ -181,8 +203,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 	public static class Flowing extends AbstractStaticPowerFluid {
 
 		public Flowing(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-				String flowingTexture, Named<Fluid> tag, Consumer<FluidAttributes.Builder> attributes) {
-			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, attributes);
+				String flowingTexture, Named<Fluid> tag, Color fogColor, Color overlayColor, Consumer<FluidAttributes.Builder> attributes) {
+			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, fogColor, overlayColor, attributes);
 		}
 
 		@Override

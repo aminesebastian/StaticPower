@@ -16,8 +16,6 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.FogRenderer;
-import net.minecraft.client.renderer.FogRenderer.FogMode;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -28,6 +26,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -48,13 +47,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
+import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.StaticPowerExtensionGui;
 import theking530.staticpower.client.gui.StaticPowerHUDElement;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid;
-import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
+import theking530.staticpower.utilities.PlayerUtilities;
 import theking530.staticpower.utilities.RaytracingUtilities;
 
 /**
@@ -119,6 +120,13 @@ public class StaticPowerForgeBusClient {
 				gui.renderBackground(event.getMatrixStack());
 				gui.render(event.getMatrixStack(), 0, 0, event.getPartialTicks());
 			}
+
+			// Draw the fluid overlay.
+			Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
+			if (fluid instanceof AbstractStaticPowerFluid) {
+				AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;
+				GuiDrawUtilities.drawScreenOverlay(fluid.getAttributes().getOverlayTexture(), abstractFluid.getOverlayColor(), 0.3f, 512, 512);
+			}
 		}
 	}
 
@@ -129,18 +137,24 @@ public class StaticPowerForgeBusClient {
 
 	@SubscribeEvent
 	public static void onRenderFog(EntityViewRenderEvent.RenderFogEvent event) {
-		LocalPlayer player = Minecraft.getInstance().player;
-		FluidState fluid = player.getLevel().getFluidState(new BlockPos(player.getEyePosition()));
-		if (fluid.getType() instanceof AbstractStaticPowerFluid) {
-			RenderSystem.setShaderFogStart(1);
-			RenderSystem.setShaderFogEnd(2);
-			RenderSystem.setShaderFogColor(0.05f, 0.05f, 0.05f);
+		Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
+		if (fluid instanceof AbstractStaticPowerFluid) {
+			RenderSystem.setShaderFogStart(-8.0f);
+			RenderSystem.setShaderFogEnd(event.getFarPlaneDistance() * 0.05f);
 		}
 	}
 
 	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
 	public static void onEvent(FogColors event) {
+		Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
 
+		if (fluid instanceof AbstractStaticPowerFluid) {
+			AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;	
+			Color color = abstractFluid.getFogColor();	
+			event.setRed(color.getRed());
+			event.setGreen(color.getGreen());
+			event.setBlue(color.getBlue());
+		}
 	}
 
 	/**
