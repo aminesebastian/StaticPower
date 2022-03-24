@@ -85,6 +85,10 @@ minecraft {
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
 
+			// For Patchuloi
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${projectDir}/build/createSrgToMcp/output.srg"
+
             args '--mod', 'staticpower', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
 
             mods {

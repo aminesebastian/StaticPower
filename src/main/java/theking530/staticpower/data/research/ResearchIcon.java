@@ -30,20 +30,27 @@ public class ResearchIcon {
 		return itemIcon != null;
 	}
 
+	public static ResearchIcon fromItem(ItemStack stack) {
+		return new ResearchIcon(stack, null);
+	}
+
+	public static ResearchIcon fromTexture(ResourceLocation textureIcon) {
+		return new ResearchIcon(null, textureIcon);
+	}
+	public static void draw(ResearchIcon icon, PoseStack pose, float x, float y, float z, float width, float height) {
+		if (icon.isItemIcon()) {
+			GuiDrawUtilities.drawItem(pose, icon.getItemIcon(), x, y, z, width, height);
+		} else if (icon.getTextureIcon() != null) {
+			GuiDrawUtilities.drawTexture(pose, icon.getTextureIcon(), width, height, x, y, z, 0, 0, 1, 1);
+		}
+	}
+
 	public void toBuffer(FriendlyByteBuf buffer) {
 		buffer.writeBoolean(isItemIcon());
 		if (isItemIcon()) {
 			buffer.writeItem(getItemIcon());
 		} else {
 			buffer.writeUtf(getTextureIcon().toString());
-		}
-	}
-
-	public static void draw(ResearchIcon icon, PoseStack pose, float x, float y, float z, float width, float height) {
-		if (icon.isItemIcon()) {
-			GuiDrawUtilities.drawItem(pose, icon.getItemIcon(), x, y, z, width, height);
-		} else if (icon.getTextureIcon() != null) {
-			GuiDrawUtilities.drawTexture(pose, icon.getTextureIcon(), width, height, x, y, z, 0, 0, 1, 1);
 		}
 	}
 

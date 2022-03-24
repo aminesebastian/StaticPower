@@ -96,13 +96,14 @@ public class ResearchUnlock {
 		ResourceLocation target = new ResourceLocation(buffer.readUtf());
 		ResearchUnlockType type = ResearchUnlockType.values()[buffer.readByte()];
 		ResearchIcon icon = null;
-		if (buffer.readBoolean()) {
-			icon = ResearchIcon.fromBuffer(buffer);
-		}
-
+		
 		String description = null;
 		if (buffer.readBoolean()) {
 			description = buffer.readUtf();
+		}
+
+		if (buffer.readBoolean()) {
+			icon = ResearchIcon.fromBuffer(buffer);
 		}
 
 		boolean hidden = buffer.readBoolean();

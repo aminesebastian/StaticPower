@@ -30,14 +30,14 @@ public class PacketFluidTankComponent extends NetworkMessage {
 	public void decode(FriendlyByteBuf buf) {
 		fluidComponentNBT = buf.readNbt();
 		position = buf.readBlockPos();
-		componentName = readStringOnServer(buf);
+		componentName =buf.readUtf();
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buf) {
 		buf.writeNbt(fluidComponentNBT);
 		buf.writeBlockPos(position);
-		writeStringOnServer(componentName, buf);
+		buf.writeUtf(componentName);
 	}
 
 	@Override

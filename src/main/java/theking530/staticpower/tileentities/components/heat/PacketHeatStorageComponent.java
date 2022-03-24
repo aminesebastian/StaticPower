@@ -30,14 +30,14 @@ public class PacketHeatStorageComponent extends NetworkMessage {
 	public void decode(FriendlyByteBuf buf) {
 		heatComponentNBT = buf.readNbt();
 		position = buf.readBlockPos();
-		componentName = readStringOnServer(buf);
+		componentName = buf.readUtf();
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buf) {
 		buf.writeNbt(heatComponentNBT);
 		buf.writeBlockPos(position);
-		writeStringOnServer(componentName, buf);
+		buf.writeUtf(componentName);
 	}
 
 	@Override

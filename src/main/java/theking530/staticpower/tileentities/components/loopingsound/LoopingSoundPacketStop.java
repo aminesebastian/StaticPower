@@ -25,13 +25,13 @@ public class LoopingSoundPacketStop extends NetworkMessage {
 
 	@Override
 	public void decode(FriendlyByteBuf buf) {
-		componentName = readStringOnServer(buf);
+		componentName =buf.readUtf();
 		position = buf.readBlockPos();
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buf) {
-		writeStringOnServer(componentName, buf);
+		buf.writeUtf(componentName);
 		buf.writeBlockPos(position);
 	}
 

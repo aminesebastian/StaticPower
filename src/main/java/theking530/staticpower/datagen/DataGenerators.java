@@ -11,6 +11,6 @@ public class DataGenerators {
 	@SubscribeEvent
 	public static void gatherData(GatherDataEvent event) {
 		DataGenerator generator = event.getGenerator();
-		generator.addProvider(new ResearchProvider());
+		generator.addProvider(new ResearchProvider(generator));
 	}
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -17,11 +16,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.LevelResource;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
@@ -57,7 +52,6 @@ import theking530.staticpower.entities.player.datacapability.CapabilityStaticPow
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCapabilityProvider;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
-import theking530.staticpower.fluid.AbstractStaticPowerFluid;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.Hammer;
@@ -84,20 +78,10 @@ public class StaticPowerForgeEventsCommon {
 
 	@SubscribeEvent
 	public static void playerTickEvent(TickEvent.PlayerTickEvent event) {
-		Fluid fluid = Fluids.EMPTY;
-		FluidState fluidState = event.player.getLevel().getFluidState(new BlockPos(event.player.getEyePosition().subtract(0, 1, 0)));
-		fluid = fluidState.getType();
-
-		float movementModifier = 0.65f;
-		if (fluid instanceof AbstractStaticPowerFluid) {
-			Vec3 deltaMovement = event.player.getDeltaMovement();
-			
-			double yMovement = deltaMovement.y < 0 ? deltaMovement.y * movementModifier : deltaMovement.y;
-			
-			
-			event.player.setDeltaMovement(deltaMovement.x * movementModifier, yMovement, deltaMovement.z * movementModifier);
-			event.player.setOnGround(true);
-			
+		if (event.phase == TickEvent.Phase.END) {
+			event.player.getCapability(CapabilityStaticPowerPlayerData.PLAYER_CAPABILITY).ifPresent((playerCap) -> {
+				playerCap.tick(event);
+			});
 		}
 	}
 

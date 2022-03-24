@@ -1,20 +1,18 @@
 package theking530.staticpower.datagen;
 
-import java.io.IOException;
+import net.minecraft.data.DataGenerator;
+import net.minecraft.resources.ResourceLocation;
+import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.research.Research;
+import theking530.staticpower.data.research.Research.ResearchBuilder;
+import theking530.staticpower.init.ModItems;
 
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.HashCache;
+public class ResearchProvider extends AbstractResearchProvider {
 
-public class ResearchProvider implements DataProvider {
-	private final static String NAME = "staticpower:research_provider";
+	public final Research TestResearch = this.register(ResearchBuilder.Create("test", "test").description("this is a test").visualOffset(5, 7).icon(ModItems.AdvancedBlade)
+			.preReqs(new ResourceLocation(StaticPower.MOD_ID, "basic_research")).tier1(20));
 
-	@Override
-	public void run(HashCache cache) throws IOException {
+	public ResearchProvider(DataGenerator dataGeneratorIn) {
+		super(dataGeneratorIn);
 	}
-
-	@Override
-	public String getName() {
-		return NAME;
-	}
-
 }

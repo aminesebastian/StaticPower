@@ -122,7 +122,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 			ItemStack stack = entity.getItem().copy();
 			if (InventoryUtilities.canFullyInsertItemIntoInventory(inventory, stack) && doesItemPassFilter(stack)) {
 				double distance = Math.sqrt(x * x + y * y + z * z);
-				if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
+				if (distance < 0.6f || (shouldTeleport && distance < getRadius() - 0.1f)) {
 					InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
 					entity.remove(RemovalReason.DISCARDED);
 					((ServerLevel) getLevel()).sendParticles(ParticleTypes.PORTAL, worldPosition.getX() + 0.5, (double) worldPosition.getY() + 1.0, (double) worldPosition.getZ() + 0.5, 1, 0.0D, 0.0D,
@@ -156,7 +156,7 @@ public class TileEntityVacuumChest extends TileEntityConfigurable implements Men
 			}
 
 			double distance = Math.sqrt(x * x + y * y + z * z);
-			if (distance < 1.1 || (shouldTeleport && distance < getRadius() - 0.1f)) {
+			if (distance < 0.6f || (shouldTeleport && distance < getRadius() - 0.1f)) {
 				if (true) {// experienceTank.canFill() && experienceTank.fill(new
 							// FluidStack(ModFluids.LiquidExperience, orb.getXpValue()), false) > 0) {
 					fluidTankComponent.fill(new FluidStack(ModFluids.LiquidExperience.Fluid, orb.value), FluidAction.EXECUTE);

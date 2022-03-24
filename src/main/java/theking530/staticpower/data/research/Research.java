@@ -4,14 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.ResearchItem;
 
 public class Research extends AbstractStaticPowerRecipe {
@@ -167,4 +171,140 @@ public class Research extends AbstractStaticPowerRecipe {
 		return color;
 	}
 
+	public static class ResearchBuilder {
+		private final ResourceLocation name;
+		private final String title;
+		private String description;
+		private Vector2D visualOffset;
+		private ResearchIcon icon;
+		private boolean hiddenUntilAvailable;
+		private Color color;
+
+		private final List<ResourceLocation> prerequisites;
+		private final List<StaticPowerIngredient> requirements;
+		private final List<ResourceLocation> advancements;
+		private final List<ItemStack> rewards;
+		private final List<ResearchUnlock> unlocks;
+
+		public ResearchBuilder(ResourceLocation name, String title) {
+			this.name = name;
+			this.title = title;
+			this.prerequisites = new ArrayList<>();
+			this.requirements = new ArrayList<>();
+			this.rewards = new ArrayList<>();
+			this.advancements = new ArrayList<>();
+			this.unlocks = new ArrayList<>();
+		}
+
+		public ResourceLocation getName() {
+			return name;
+		}
+
+		public static ResearchBuilder Create(ResourceLocation name, String title) {
+			ResearchBuilder output = new ResearchBuilder(name, title);
+			return output;
+		}
+
+		public static ResearchBuilder Create(String name, String title) {
+			ResearchBuilder output = new ResearchBuilder(new ResourceLocation(StaticPower.MOD_ID, name), title);
+			return output;
+		}
+
+		public ResearchBuilder description(String description) {
+			this.description = description;
+			return this;
+		}
+
+		public ResearchBuilder visualOffset(float x, float y) {
+			this.visualOffset = new Vector2D(x, y);
+			return this;
+		}
+
+		public ResearchBuilder icon(ResourceLocation texture) {
+			this.icon = ResearchIcon.fromTexture(texture);
+			return this;
+		}
+		public ResearchBuilder icon(Item item) {
+			this.icon = ResearchIcon.fromItem(new ItemStack(item));
+			return this;
+		}
+
+		public ResearchBuilder icon(ItemStack stack) {
+			this.icon = ResearchIcon.fromItem(stack);
+			return this;
+		}
+
+		public ResearchBuilder color(Color color) {
+			this.color = color;
+			return this;
+		}
+
+		public ResearchBuilder hiddenUntilAvailable() {
+			this.hiddenUntilAvailable = true;
+			return this;
+		}
+
+		public ResearchBuilder preReqs(ResourceLocation... prereqs) {
+			for (ResourceLocation req : prereqs) {
+				this.prerequisites.add(req);
+			}
+			return this;
+		}
+
+		public ResearchBuilder advancements(ResourceLocation... advancements) {
+			for (ResourceLocation advancement : advancements) {
+				this.advancements.add(advancement);
+			}
+			return this;
+		}
+
+		public ResearchBuilder tier1(int count) {
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier1), count));
+			return this;
+		}
+
+		public ResearchBuilder tier2(int count) {
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier2), count));
+			return this;
+		}
+
+		public ResearchBuilder tier3(int count) {
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier3), count));
+			return this;
+		}
+
+		public ResearchBuilder tier4(int count) {
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier4), count));
+			return this;
+		}
+
+		public ResearchBuilder tier5(int count) {
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier5), count));
+			return this;
+		}
+
+		public ResearchBuilder tier6(int count) {
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier6), count));
+			return this;
+		}
+
+		public ResearchBuilder tier7(int count) {
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier7), count));
+			return this;
+		}
+
+		public ResearchBuilder craftingUnlock(String uniqueKey, ResourceLocation recipe, String description) {
+			unlocks.add(new ResearchUnlock(uniqueKey, ResearchUnlockType.CRAFTING, recipe, null, description, false));
+			return this;
+		}
+
+		public ResearchBuilder hiddenCraftingUnlock(String uniqueKey, ResourceLocation recipe, String description) {
+			unlocks.add(new ResearchUnlock(uniqueKey, ResearchUnlockType.CRAFTING, recipe, null, description, true));
+			return this;
+		}
+
+		public Research build() {
+			return new Research(name, title, description, visualOffset, advancements, requirements, rewards, unlocks, advancements, icon, hiddenUntilAvailable, color);
+		}
+	}
 }

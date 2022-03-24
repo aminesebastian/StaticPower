@@ -29,14 +29,14 @@ public class PacketRedstoneComponentSync extends NetworkMessage {
 	public void decode(FriendlyByteBuf buf) {
 		redstoneMode = RedstoneMode.values()[buf.readInt()];
 		position = buf.readBlockPos();
-		componentName = readStringOnServer(buf);
+		componentName = buf.readUtf();
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buf) {
 		buf.writeInt(redstoneMode.ordinal());
 		buf.writeBlockPos(position);
-		writeStringOnServer(componentName, buf);
+		buf.writeUtf(componentName);
 	}
 
 	@Override
