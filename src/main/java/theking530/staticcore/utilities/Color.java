@@ -64,6 +64,18 @@ public class Color extends Vector4D {
 
 	public Color darken(float r, float g, float b, float a) {
 		subtract(new Vector4D(r, g, b, a));
+		setX(Math.max(0, getRed()));
+		setY(Math.max(0, getGreen()));
+		setZ(Math.max(0, getBlue()));
+		setW(Math.max(0, getAlpha()));
+		return this;
+	}
+
+	public Color desaturate(float percentage) {
+		float luminance = 0.3f * getRed() + 0.6f * getGreen() + 0.1f * getBlue();
+		setX(getRed() + percentage * (luminance - getRed()));
+		setY(getGreen() + percentage * (luminance - getGreen()));
+		setZ(getBlue() + percentage * (luminance - getBlue()));
 		return this;
 	}
 

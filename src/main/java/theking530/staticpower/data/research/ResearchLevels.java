@@ -35,16 +35,16 @@ public class ResearchLevels {
 	public static ResearchLevels getAllResearchLevels() {
 		ResearchLevels output = new ResearchLevels();
 		Map<ResourceLocation, Research> allResearch = getResearch();
-		Set<ResourceLocation> cached = new HashSet<ResourceLocation>();
+		Set<ResourceLocation> handled = new HashSet<ResourceLocation>();
 		List<ResearchNode> allNodes = new ArrayList<ResearchNode>();
 
 		// Build all the levels.
 		ResearchLevel currentLevel = output.new ResearchLevel();
 		while (allResearch.size() > 0) {
-			List<Research> satisfied = getAllResearchWithPrerequisitesInSet(allResearch.values(), cached);
+			List<Research> satisfied = getAllResearchWithPrerequisitesInSet(allResearch.values(), handled);
 			for (Research research : satisfied) {
 				allResearch.remove(research.getId());
-				cached.add(research.getId());
+				handled.add(research.getId());
 				ResearchNode newNode = output.new ResearchNode(research);
 				currentLevel.research.add(newNode);
 				allNodes.add(newNode);
@@ -217,7 +217,6 @@ public class ResearchLevels {
 		private final List<ResearchNode> allParents;
 		private ResearchNode closestParent;
 		private RelativeNodePosition relativePosition;
-
 		public ResearchNode(Research research) {
 			this.research = research;
 			this.children = new ArrayList<ResearchNode>();

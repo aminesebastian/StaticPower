@@ -16,6 +16,7 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchUnlock;
+import theking530.staticpower.data.research.ResearchUnlockUtilities;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 
 public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidget> {
@@ -37,12 +38,15 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 		// Draw background.
 		if (drawBackground) {
 			GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), 0, 0, 0.0f, color);
-
 		}
+
+		Color borderColor = new Color(0, 0, 0, 0.3f);
+		GuiDrawUtilities.drawRectangle(pose, getSize().getX(), 0.5f, 0, 0, 1.0f, borderColor);
+		GuiDrawUtilities.drawRectangle(pose, getSize().getX(), 0.5f, 0, getSize().getY(), 1.0f, borderColor);
 
 		if (research != null) {
 			// Draw icon.
-			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 2, 2, 110, 1.0f);
+			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 2, 4, 110, 1.0f);
 			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 21, 9, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.
@@ -60,19 +64,22 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 				xOffset += 9;
 			}
 
-			if (research.getUnlocks().size() > 0) {
-				GuiDrawUtilities.drawRectangle(pose, 0.4f, 8, getSize().getX() - 5.5f - xOffset, getSize().getY() - 12, 10, new Color(0, 0, 0, 0.3f));
+			List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
+			if (unlocks.size() > 0) {
+				GuiDrawUtilities.drawRectangle(pose, 0.4f, 8, getSize().getX() - 6f - xOffset, getSize().getY() - 12, 10, new Color(0, 0, 0, 0.3f));
 
 				// Draw the unlocks.
-				for (ResearchUnlock unlock : research.getUnlocks()) {
+				for (ResearchUnlock unlock : unlocks) {
 					if (unlock.getType() == ResearchUnlockType.CRAFTING) {
 						Recipe<?> recipe = unlock.getAsRecipe();
 						if (recipe != null) {
-							GuiDrawUtilities.drawItem(pose, recipe.getResultItem(), getSize().getX() - 18f - xOffset, getSize().getY() - 16, 200, 8f, 8f);
+							GuiDrawUtilities.drawItem(pose, recipe.getResultItem(), getSize().getX() - 19.5f - xOffset, getSize().getY() - 16, 200, 8f, 8f);
 							xOffset += 9;
 						}
 					}
 				}
+
+				GuiDrawUtilities.drawRectangle(pose, unlocks.size() * 10f, 9.5f, getSize().getX() - 7.5f - xOffset, getSize().getY() - 12.85f, 10, new Color(0, 0, 0, 0.3f));
 			}
 		}
 	}

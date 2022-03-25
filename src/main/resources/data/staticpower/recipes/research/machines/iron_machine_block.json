@@ -6,6 +6,7 @@
 		0,
 		0
 	],
+	"hiddenUntilAvailable": true,
 	"prerequisites": [
 		"staticpower:research/machines/io_port",
 		"staticpower:research/machines/plug"

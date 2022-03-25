@@ -39,7 +39,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	private final SimpleProgressBar progressBar;
 	private final Vector2D collapsedSize;
 	private final Vector2D maxExpandedSize;
-	private float researchPanelZoom;
 	private Color tileColor;
 	private Color bodyColor;
 	private Team team;
@@ -58,7 +57,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		this.maxExpandedSize = new Vector2D(Math.min(getFontRenderer().width(title) + 15, 100), 100);
 		this.tileColor = new Color(1, 1, 1, 1);
 		this.bodyColor = new Color(1, 1, 1, 1);
-		this.researchPanelZoom = 1.0f;
 		wrappedDescription = GuiDrawUtilities.wrapString(research.getDescription(), maxExpandedSize.getXi() * 2 - 32);
 	}
 
@@ -71,10 +69,10 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		// Drive the hovered alpha.
 		if (isExpanded()) {
 			setZLevel(150);
-			expandedAlpha = (float) Math.min(1, expandedAlpha + (partialTicks * 0.45));
+			expandedAlpha = (float) Math.min(1, expandedAlpha + (partialTicks * 0.75));
 		} else {
 			setZLevel(1);
-			expandedAlpha = (float) Math.max(0, expandedAlpha - (partialTicks * 0.45));
+			expandedAlpha = (float) Math.max(0, expandedAlpha - (partialTicks * 0.75));
 		}
 
 		// Update the colors.
@@ -82,18 +80,12 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Scale the widget depending on if it is expanded.
 		float maxWidth = (getFontRenderer().width(title) * .85f) * getExpandedAlpha();
-		float maxHeight = 15 + (wrappedDescription.size() * 5) + (research.getUnlocks().size() > 0 ? 15 : 0);
+		float maxHeight = 15 + (wrappedDescription.size() * 5.5f) + (research.getUnlocks().size() > 0 ? 15 : 0);
 		setSize(Math.min(maxExpandedSize.getX(), collapsedSize.getX() + (maxWidth * getExpandedAlpha())), collapsedSize.getY() + (maxHeight * getExpandedAlpha()));
 
 		// Move the widget up if hovered and to the up and left if going off screen.
-		Vector2D screenSpaceInitial = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getInitialPosition());
-
-		float parentMaxX = getParent().getOwningWidget().getScreenSpacePosition().getX() + getParent().getOwningWidget().getSize().getX();
-		float thisMaxX = screenSpaceInitial.getX() + getSize().getX();
-		float maxOffsetX = getExpandedAlpha() * Math.max(thisMaxX - parentMaxX + 4, 0);
-
 		float maxOffsetY = (getExpandedAlpha() * (getSize().getY() / 2 - collapsedSize.getY() / 2));
-		setPosition(getInitialPosition().getX() - maxOffsetX, getInitialPosition().getY() - maxOffsetY);
+		setPosition(getInitialPosition().getX(), getInitialPosition().getY() - maxOffsetY);
 	}
 
 	public Research getResearch() {
@@ -102,10 +94,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	public ResearchNode getNode() {
 		return node;
-	}
-
-	public void setReasearchPanelZoom(float zoom) {
-		this.researchPanelZoom = zoom;
 	}
 
 	@Override
@@ -127,7 +115,13 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 		// Draw the tile and its icon.
 		GuiDrawUtilities.drawGenericBackground(pose, collapsedSize.getX(), collapsedSize.getY(), 0, 0, 0, tileColor);
-		GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100);
+
+		// Draw an item silhouette if the research is not available.
+		if (manager.hasCompletedResearch(research.getId()) || manager.isResearchAvailable(research.getId())) {
+			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100);
+		} else {
+			GuiDrawUtilities.drawItemSilhouette(pose, research.getIcon().getItemIcon(), 4, 4, 99 + getExpandedAlpha() * 100);
+		}
 
 		if (expand) {
 			// Draw the title.
@@ -153,15 +147,17 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 
-		Vector2D localPosition = mousePosition.copy().subtract(getScreenSpacePosition());
-		boolean isInUnlockRegion = localPosition.getY() >= (getSize().getY() - 12) && localPosition.getY() <= (getSize().getY() - 1);
-		if (isInUnlockRegion && localPosition.getX() > 9) {
-			List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
-			int index = (int) ((localPosition.getX() - 9) / 11.5f);
-			if (index >= 0 && index < unlocks.size()) {
-				if (unlocks.get(index).getType() == ResearchUnlockType.CRAFTING) {
-					tooltips.addAll(
-							unlocks.get(index).getAsRecipe().getResultItem().getTooltipLines(getLocalPlayer(), Screen.hasControlDown() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
+		if (isExpanded()) {
+			Vector2D localPosition = mousePosition.copy().subtract(getScreenSpacePosition());
+			boolean isInUnlockRegion = localPosition.getY() >= (getSize().getY() - 12) && localPosition.getY() <= (getSize().getY() - 1);
+			if (isInUnlockRegion && localPosition.getX() > 9) {
+				List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
+				int index = (int) ((localPosition.getX() - 9) / 11.5f);
+				if (index >= 0 && index < unlocks.size()) {
+					if (unlocks.get(index).getType() == ResearchUnlockType.CRAFTING) {
+						tooltips.addAll(unlocks.get(index).getAsRecipe().getResultItem().getTooltipLines(getLocalPlayer(),
+								Screen.hasControlDown() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
+					}
 				}
 			}
 		}
@@ -282,7 +278,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		// Get the tile color and lighten it on hover.
 		tileColor = research.getColor().copy();
 		if (!isAvailable && !manager.hasCompletedResearch(research.getId())) {
-			tileColor = new Color(0.3f, 0.3f, 0.3f, 0.95f);
+			tileColor = new Color(0.1f, 0.1f, 0.1f);
 		}
 
 		if (isHovered()) {

@@ -79,7 +79,7 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 
 			// Draw background.
 			if (drawBackground) {
-				GuiDrawUtilities.drawGenericBackground(pose, width, height, 0, 0, 0, new Color(1.0f, 0.8f, 1.2f, 0.8f));
+				GuiDrawUtilities.drawGenericBackground(pose, width, height, 0, 0, 0, new Color(1.0f, 0.8f, 1.2f, 0.9f));
 			}
 
 			// Draw icon.
@@ -98,12 +98,12 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 			// Draw requirements.
 			if (team.getResearchManager().hasSelectedResearch() && !team.getResearchManager().getSelectedResearch().isCompleted()) {
 				for (int i = 0; i < research.getRequirements().size(); i++) {
-					int xOffset = i * 20;
+					int xOffset = i * 14;
 					StaticPowerIngredient requirement = research.getRequirements().get(i);
-					GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 20 - xOffset, 22, 0, 12f, 12f);
+					GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 24 - xOffset, 23, 0, 12f, 12f);
 
-					GuiDrawUtilities.drawString(pose, Integer.toString(requirement.getCount() - currentProgress.getRequirementFullfillment(i)), getSize().getX() - 7f - xOffset, 40, 1, 0.5f,
-							Color.EIGHT_BIT_WHITE, true);
+					GuiDrawUtilities.drawString(pose, Integer.toString(requirement.getCount() - currentProgress.getRequirementFullfillment(i)), getSize().getX() - 13f - xOffset, 31, 1, 0.5f,
+							Color.EIGHT_BIT_YELLOW, true);
 				}
 			}
 

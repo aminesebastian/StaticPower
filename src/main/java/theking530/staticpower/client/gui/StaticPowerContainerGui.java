@@ -313,7 +313,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			Vector2D containerLabelLocation = getContainerLabelDrawLocation();
 			Component containerName = getTitle();
 			String containerString = containerName.getString();
-			font.draw(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 4210752);
+			GuiDrawUtilities.drawStringCentered(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 1, 1.0f, Color.EIGHT_BIT_DARK_GREY, false);
 		}
 
 		// Draw the inventory label if requested at the designated location.
@@ -353,9 +353,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 *         render.
 	 */
 	protected Vector2D getContainerLabelDrawLocation() {
-		Component containerName = getTitle();
-		String containerString = containerName.getString();
-		return new Vector2D(imageWidth / 2 - font.width(containerString) / 2, 6);
+		return new Vector2D(imageWidth / 2, 13);
 	}
 
 	/**

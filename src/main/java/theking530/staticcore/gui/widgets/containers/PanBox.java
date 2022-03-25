@@ -34,8 +34,10 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 
 	@Override
 	public void transformPoseBeforeRender(PoseStack pose) {
+		pose.translate((getSize().getX() + getPosition().getX()) / 2, (getSize().getY() + getPosition().getY()) / 2, 0);
 		pose.scale(1 / interpolatedZoom, 1 / interpolatedZoom, 1 / interpolatedZoom);
-		pose.translate(targetPan.getX(), targetPan.getY(), 0);
+		pose.translate((getSize().getX() + getPosition().getX()) / -2, (getSize().getY() + getPosition().getY()) / -2, 0);
+		pose.translate(interpolatedPan.getX(), interpolatedPan.getY(), 0);
 	}
 
 	public PanBox setBackgroundColor(Color color) {
@@ -77,15 +79,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	public void tick() {
-		float requiredHeight = 0;
-		for (AbstractGuiWidget<?> child : getChildren()) {
-			requiredHeight += child.getSize().getY();
-		}
 
-		float maxScroll = Math.max(0, requiredHeight - getSize().getY());
-		setMaxScroll(maxScroll);
-
-		Vector2D panVelocity = targetPan.copy().subtract(interpolatedPan);
 	}
 
 	public RectangleBounds getClipBounds(PoseStack matrix) {
@@ -104,13 +98,17 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 			GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), 0, 0, 0, color);
 		}
 
-		// Interpolate the scroll target.
+		// Interpolate the zoom target.
 		float interpSpeed = Math.max(0, Math.abs(interpolatedZoom - targetZoom)) / 2;
 		if (interpolatedZoom >= targetZoom) {
 			interpolatedZoom = SDMath.clamp(interpolatedZoom - partialTicks * interpSpeed, targetZoom, maxZoom);
 		} else {
 			interpolatedZoom = SDMath.clamp(interpolatedZoom + partialTicks * interpSpeed, 0, targetZoom);
 		}
+
+		// Interpolate the pan target.
+		Vector2D panDelta = targetPan.copy().subtract(interpolatedPan);
+		interpolatedPan.add(panDelta.copy().multiply(0.15f));
 	}
 
 	@Override
@@ -139,7 +137,6 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		} else if (targetPan.getY() > maxBounds.getW()) {
 			targetPan.setY(maxBounds.getW());
 		}
-//		}
 		return super.mouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
 	}
 

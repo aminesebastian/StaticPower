@@ -50,6 +50,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected List<ResearchHistoryWidget> historyWidgets;
 
 	protected float nodeHoveredTime;
+	protected int completedResearchCount;
 
 	public GuiResearchMenu() {
 		super(400, 400);
@@ -64,13 +65,15 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 65).setZLevel(500));
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
-		registerWidget(nodePanBox = new PanBox(105, 20, 10000, 0));
+		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
 		nodePanBox.setMaxZoom(2.0f);
 		captureScreenSize();
 		initializeResearchNodes();
 		initializeSideBar();
+
+		completedResearchCount = getLocalTeam().getResearchManager().getCompletedResearch().size();
 	}
 
 	public void resize(Minecraft p_96575_, int p_96576_, int p_96577_) {
@@ -83,25 +86,27 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected void initializeResearchNodes() {
 		// Remove existing nodes.
 		nodePanBox.clearChildren();
-		// tierBoxes.clear();
 		researchNodes.clear();
 
 		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
 
 		nodePanBox.setPosition(104, 25);
-		nodePanBox.setSize(screenWidth * 100, screenHeight - 25);
+		nodePanBox.setSize(screenWidth, screenHeight - 25);
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
-			float tint = y % 2 == 0 ? 0.05f : 0.0f;
 			ResearchLevel level = levels.getLevels().get(y);
 			for (int i = 0; i < level.getResearch().size(); i++) {
-				ResearchNode research = level.getResearch().get(i);
-				Vector2D relative = research.getRelativePosition().getScaledVector(45.0f, 55.0f).add(100, 30);
-				ResearchNodeWidget widget = new ResearchNodeWidget(research, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
-				researchNodes.put(research, widget);
-				nodePanBox.registerWidget(widget);
+				ResearchNode researchNode = level.getResearch().get(i);
+				Research research = researchNode.getResearch();
+
+				// Skip nodes that should be hidden.r
+					// Calculate the reletive position and create the research node widget.
+					Vector2D relative = researchNode.getRelativePosition().getScaledVector(45.0f, 55.0f).add(100, 30);
+					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
+					researchNodes.put(researchNode, widget);
+					nodePanBox.registerWidget(widget);
 			}
 		}
 	}
@@ -147,12 +152,18 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	}
 
 	@Override
-	public void updateBeforeRender() {
-		// Update zooms.
-		for (ResearchNodeWidget node : researchNodes.values()) {
-			node.setReasearchPanelZoom(this.nodePanBox.getCurrentZoom());
+	public void tick() {
+		super.tick();
+		if (completedResearchCount != getLocalTeam().getResearchManager().getCompletedResearch().size()) {
+			captureScreenSize();
+			initializeResearchNodes();
+			initializeSideBar();
+			completedResearchCount = getLocalTeam().getResearchManager().getCompletedResearch().size();
 		}
+	}
 
+	@Override
+	public void updateBeforeRender() {
 		// Handle the expanded node.
 		if (hoveredNode != null) {
 			if (!hoveredNode.isHovered()) {
@@ -160,7 +171,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				hoveredNode = null;
 				nodeHoveredTime = 0.0f;
 			} else {
-				if (nodeHoveredTime > 1.0f && !hoveredNode.isExpanded()) {
+				if (nodeHoveredTime > 0.5f && !hoveredNode.isExpanded() && shouldExpandResearch(hoveredNode.getResearch())) {
 					hoveredNode.setExpanded(true);
 				}
 			}
@@ -195,8 +206,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected void drawForegroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		Player player = getMinecraft().player;
 
-		//String biomeName = StringUtilities.prettyFormatCamelCase(getMinecraft().player.getLevel().getBiome(player.getOnPos()).getRegistryName().getPath());
-		//GuiDrawUtilities.drawStringLeftAligned(pose, biomeName, 134, 14f, 0, 0.75f, Color.EIGHT_BIT_WHITE, true);
+		// String biomeName =
+		// StringUtilities.prettyFormatCamelCase(getMinecraft().player.getLevel().getBiome(player.getOnPos()).getRegistryName().getPath());
+		// GuiDrawUtilities.drawStringLeftAligned(pose, biomeName, 134, 14f, 0, 0.75f,
+		// Color.EIGHT_BIT_WHITE, true);
 
 		String dimensionName = StringUtilities.prettyFormatCamelCase(getMinecraft().player.getLevel().dimensionType().effectsLocation().getPath());
 		GuiDrawUtilities.drawStringCentered(pose, dimensionName, getMinecraft().getWindow().getGuiScaledWidth() / 2 + 62, 11f, 0, 1, Color.EIGHT_BIT_WHITE, true);
@@ -233,10 +246,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				index++;
 				pose.pushPose();
 				float scaleFactor = (1 / this.nodePanBox.getCurrentZoom());
-				
+
 				Vector3D expandedPosition = outerNode.getScreenSpacePosition().promote();
 				expandedPosition.add(11 * scaleFactor, 2 * scaleFactor, 100);
-				
+
 				Vector3D preReqPosition = node.getScreenSpacePosition().promote();
 				preReqPosition.add(11 * scaleFactor, 20f * scaleFactor, 100);
 
@@ -275,6 +288,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		// Reset the clip mask.
 		RenderingUtilities.clearScissorMask();
+	}
+
+	protected boolean shouldExpandResearch(Research research) {
+		return getLocalTeam().getResearchManager().isResearchAvailable(research.getId()) || getLocalTeam().getResearchManager().hasCompletedResearch(research.getId());
 	}
 
 	protected Team getLocalTeam() {

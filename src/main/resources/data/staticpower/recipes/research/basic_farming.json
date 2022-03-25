@@ -2,6 +2,7 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_farming",
 	"description": "Get yourself a green thumb.",	
+	"hiddenUntilAvailable": true,
 	"visualOffset": [-3, 0],
 	"prerequisites": [
 		"staticpower:research/basic_research"

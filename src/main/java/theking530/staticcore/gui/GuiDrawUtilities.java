@@ -448,8 +448,24 @@ public class GuiDrawUtilities {
 		drawItem(pose, item, x, y, z, width, height, 1);
 	}
 
-	@SuppressWarnings("resource")
 	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height, float alpha) {
+		drawItem(pose, item, x, y, z, width, height, alpha, 15728880);
+	}
+
+	public static void drawItemSilhouette(@Nullable PoseStack pose, ItemStack item, float x, float y, float z) {
+		drawItem(pose, item, x, y, z, 16.0f, 16.0f, 1.0f, 0);
+	}
+
+	public static void drawItemSilhouette(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height) {
+		drawItem(pose, item, x, y, z, width, height, 1.0f, 0);
+	}
+
+	public static void drawItemSilhouette(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height, float alpha) {
+		drawItem(pose, item, x, y, z, width, height, alpha, 0);
+	}
+
+	@SuppressWarnings("resource")
+	public static void drawItem(@Nullable PoseStack pose, ItemStack item, float x, float y, float z, float width, float height, float alpha, int lightLevel) {
 		BakedModel model = Minecraft.getInstance().getItemRenderer().getModel(item, (Level) null, Minecraft.getInstance().player, 0);
 		Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
 		RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
@@ -484,7 +500,7 @@ public class GuiDrawUtilities {
 			Lighting.setupForFlatItems();
 		}
 
-		Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.GUI, false, posestack1, multibuffersource$buffersource, 15728880, OverlayTexture.NO_OVERLAY, model);
+		Minecraft.getInstance().getItemRenderer().render(item, ItemTransforms.TransformType.GUI, false, posestack1, multibuffersource$buffersource, lightLevel, OverlayTexture.NO_OVERLAY, model);
 
 		multibuffersource$buffersource.endBatch();
 		RenderSystem.enableDepthTest();

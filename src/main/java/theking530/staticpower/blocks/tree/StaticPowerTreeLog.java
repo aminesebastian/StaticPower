@@ -27,8 +27,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 	private final Supplier<Integer> maxBark;
 	private final Supplier<Item> barkItemSupplier;
 
-	public StaticPowerTreeLog(String name, Block strippedVariant, Properties properties, Supplier<Integer> minBark,
-			Supplier<Integer> maxBark, Supplier<Item> barkItem) {
+	public StaticPowerTreeLog(String name, Block strippedVariant, Properties properties, Supplier<Integer> minBark, Supplier<Integer> maxBark, Supplier<Item> barkItem) {
 		super(name, properties);
 		this.strippedVariant = strippedVariant;
 		this.minBark = minBark;
@@ -36,8 +35,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 		this.barkItemSupplier = barkItem;
 	}
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant,
-			Properties properties) {
+	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties) {
 		this(name, strippedVariant, properties, () -> 0, () -> 0, () -> null);
 	}
 
@@ -45,9 +43,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 		this(name, null, properties, () -> 0, () -> 0, () -> null);
 	}
 
-	@Deprecated
-	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn,
-			BlockHitResult hit) {
+	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		// If there is a striped variant defined.
 		if (strippedVariant != null) {
 			// If the player is holding an axe.
