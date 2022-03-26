@@ -108,8 +108,15 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 			}
 
 			// Draw the tooltip.
-			String openTooltip = new TranslatableComponent("gui.staticpower.research_menu_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
-					.getString();
+			String openTooltip;
+			if (team.getResearchManager().hasSelectedResearch()) {
+				openTooltip = new TranslatableComponent("gui.staticpower.research_menu_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
+						.getString();
+			} else {
+				openTooltip = new TranslatableComponent("gui.staticpower.research_menu_no_selected_research_key_tooltip", ModKeyBindings.OPEN_RESEARCH.getMapping().getKey().getDisplayName().getString().toUpperCase())
+						.getString();
+			}
+
 			GuiDrawUtilities.drawStringLeftAligned(pose, openTooltip, 5, getSize().getY() - 5, 0, 0.5f, Color.EIGHT_BIT_YELLOW, true);
 		}
 	}

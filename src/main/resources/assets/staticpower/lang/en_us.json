@@ -999,6 +999,7 @@
 	"gui.staticpower.fertlization": "Fertilization",
 	"gui.staticpower.fertlization_bonus": "Fertilization Bonus: %s",
 	"gui.staticpower.research_menu_key_tooltip": "Press %1$s to view more",
+	"gui.staticpower.research_menu_no_selected_research_key_tooltip": "Press %1$s to select new research!",
 	"gui.staticpower.set_team": "Set Team",
 	"gui.staticpower.machine_set_team": "Sets the team this machine belongs to.",
 	"gui.staticpower.tab_title.research": "Research",

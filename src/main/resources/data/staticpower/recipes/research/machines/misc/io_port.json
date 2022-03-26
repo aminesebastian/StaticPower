@@ -2,10 +2,10 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_cauldron",
 	"description": "Double double toil and trouble!",
-	"visualOffset": [1, 0],
+	"visualOffset": [0, 0],
 	"hiddenUntilAvailable": true,
 	"prerequisites": [
-		"staticpower:research/basic_research"
+		"staticpower:research/research_tiers/basic_research"
 	],
 	"requirements": [
 		{
@@ -16,10 +16,10 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/misc/plug"
+			"target": "staticpower:crafting/misc/io_port"
 		}
 	],
 	"icon": {
-		"item": "staticpower:plug"
+		"item": "staticpower:io_port"
 	}
 }

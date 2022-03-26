@@ -36,7 +36,6 @@ import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 
 @SuppressWarnings("resource")
 public class GuiResearchMenu extends StaticPowerDetatchedGui {
-	protected static final int TIER_LEVEL_HEIGHT = 80;
 	protected static final int HISTORY_HEIGHT = 35;
 
 	protected ResearchInstance currentResearch;
@@ -62,103 +61,24 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	public void initializeGui() {
 		researchNodes = new HashMap<ResearchNode, ResearchNodeWidget>();
 		historyWidgets = new ArrayList<ResearchHistoryWidget>();
-		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getLocalTeam().getResearchManager(), 0, 0, 109, 65).setZLevel(500));
+		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getResearchManager(), 0, 0, 109, 65).setZLevel(500));
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
 		nodePanBox.setMaxZoom(2.0f);
-		captureScreenSize();
-		initializeResearchNodes();
-		initializeSideBar();
+		refreshResearchWidgets();
 
-		completedResearchCount = getLocalTeam().getResearchManager().getCompletedResearch().size();
-	}
-
-	public void resize(Minecraft p_96575_, int p_96576_, int p_96577_) {
-		super.resize(p_96575_, p_96576_, p_96577_);
-		captureScreenSize();
-		initializeResearchNodes();
-		initializeSideBar();
-	}
-
-	protected void initializeResearchNodes() {
-		// Remove existing nodes.
-		nodePanBox.clearChildren();
-		researchNodes.clear();
-
-		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-
-		nodePanBox.setPosition(104, 25);
-		nodePanBox.setSize(screenWidth, screenHeight - 25);
-
-		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
-		for (int y = 0; y < levels.getLevels().size(); y++) {
-			ResearchLevel level = levels.getLevels().get(y);
-			for (int i = 0; i < level.getResearch().size(); i++) {
-				ResearchNode researchNode = level.getResearch().get(i);
-				Research research = researchNode.getResearch();
-
-				// Skip nodes that should be hidden.r
-					// Calculate the reletive position and create the research node widget.
-					Vector2D relative = researchNode.getRelativePosition().getScaledVector(45.0f, 55.0f).add(100, 30);
-					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
-					researchNodes.put(researchNode, widget);
-					nodePanBox.registerWidget(widget);
-			}
-		}
-	}
-
-	protected void initializeSideBar() {
-		// Remove existing history.
-		sideBarScrollBox.clearChildren();
-		historyWidgets.clear();
-
-		if (TeamManager.getLocalTeam() != null) {
-			int index = 0;
-			// We need to iterate backwards here.
-			List<ResourceLocation> completed = new ArrayList<>(TeamManager.getLocalTeam().getResearchManager().getCompletedResearch());
-			for (int i = completed.size() - 1; i >= 0; i--) {
-				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
-				if (research != null) {
-					float tint = index % 2 == 0 ? 0.5f : 0.0f;
-					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, index * HISTORY_HEIGHT, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f))
-							.setDrawBackground(true);
-					historyWidgets.add(historyWidget);
-					sideBarScrollBox.registerWidget(historyWidget);
-					index++;
-				}
-			}
-		}
-	}
-
-	protected void captureScreenSize() {
-		// Capture the screen size.
-		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
-		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
-
-		nodePanBox.setPosition(104, 25);
-		nodePanBox.setSize(screenWidth - 105, screenHeight - 25);
-
-		// Size up the sidebar.
-		sideBarScrollBox.setPosition(0, selectedResearchWidget.getSize().getY());
-		sideBarScrollBox.setSize(102, screenHeight - selectedResearchWidget.getSize().getY());
-		for (ResearchHistoryWidget widgets : historyWidgets) {
-			widgets.setSize(102, HISTORY_HEIGHT);
-		}
-
+		completedResearchCount = getResearchManager().getCompletedResearch().size();
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
-		if (completedResearchCount != getLocalTeam().getResearchManager().getCompletedResearch().size()) {
-			captureScreenSize();
-			initializeResearchNodes();
-			initializeSideBar();
-			completedResearchCount = getLocalTeam().getResearchManager().getCompletedResearch().size();
+		if (completedResearchCount != getResearchManager().getCompletedResearch().size()) {
+			refreshResearchWidgets();
+			completedResearchCount = getResearchManager().getCompletedResearch().size();
 		}
 	}
 
@@ -193,6 +113,98 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		if (hoveredNode != null) {
 			nodeHoveredTime += partialTicks;
 		}
+	}
+
+	public void resize(Minecraft minecraft, int width, int height) {
+		super.resize(minecraft, width, height);
+		refreshResearchWidgets();
+	}
+
+	protected void refreshResearchWidgets() {
+		hoveredNode = null;
+		captureScreenSize();
+		initializeResearchNodes();
+		initializeSideBar();
+	}
+
+	protected void initializeResearchNodes() {
+		// Remove existing nodes.
+		nodePanBox.clearChildren();
+		researchNodes.clear();
+
+		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+
+		nodePanBox.setPosition(104, 25);
+		nodePanBox.setSize(screenWidth, screenHeight - 25);
+
+		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
+		for (int y = 0; y < levels.getLevels().size(); y++) {
+			ResearchLevel level = levels.getLevels().get(y);
+			for (int i = 0; i < level.getResearch().size(); i++) {
+				ResearchNode researchNode = level.getResearch().get(i);
+				Research research = researchNode.getResearch();
+				boolean isCompleted = getResearchManager().hasCompletedResearch(research.getId());
+				boolean isAvailable = getResearchManager().isResearchAvailable(research.getId());
+				boolean isParentAvailable = false;
+				for (ResearchNode parent : researchNode.getAllParents()) {
+					if (getResearchManager().isResearchAvailable(parent.getResearch().getId())) {
+						isParentAvailable = true;
+						break;
+					}
+				}
+
+				// Only show research that is either completed, marked as hidden until available
+				// AND available, or if their parent is available.
+				//if (isCompleted || isAvailable || (!research.isHiddenUntilAvailable() && !isAvailable) || isParentAvailable) {
+					// Calculate the reletive position and create the research node widget.
+					Vector2D relative = researchNode.getRelativePosition().getScaledVector(45.0f, 55.0f).add(100, 30);
+					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
+					researchNodes.put(researchNode, widget);
+					nodePanBox.registerWidget(widget);
+				//}
+			}
+		}
+	}
+
+	protected void initializeSideBar() {
+		// Remove existing history.
+		sideBarScrollBox.clearChildren();
+		historyWidgets.clear();
+
+		if (getLocalTeam() != null) {
+			int index = 0;
+			// We need to iterate backwards here.
+			List<ResourceLocation> completed = new ArrayList<>(getResearchManager().getCompletedResearch());
+			for (int i = completed.size() - 1; i >= 0; i--) {
+				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
+				if (research != null) {
+					float tint = index % 2 == 0 ? 0.5f : 0.0f;
+					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, index * HISTORY_HEIGHT, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f))
+							.setDrawBackground(true);
+					historyWidgets.add(historyWidget);
+					sideBarScrollBox.registerWidget(historyWidget);
+					index++;
+				}
+			}
+		}
+	}
+
+	protected void captureScreenSize() {
+		// Capture the screen size.
+		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
+		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
+
+		nodePanBox.setPosition(104, 25);
+		nodePanBox.setSize(screenWidth - 105, screenHeight - 25);
+
+		// Size up the sidebar.
+		sideBarScrollBox.setPosition(0, selectedResearchWidget.getSize().getY());
+		sideBarScrollBox.setSize(102, screenHeight - selectedResearchWidget.getSize().getY());
+		for (ResearchHistoryWidget widgets : historyWidgets) {
+			widgets.setSize(102, HISTORY_HEIGHT);
+		}
+
 	}
 
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
@@ -267,7 +279,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 					preReqPosition.add(0, 0, 500);
 					float timeHovered = SDMath.clamp((this.hoveredNode.getTicksHovered() - (index * 2)) / 1f, 0, 1);
 
-					if (!getLocalTeam().getResearchManager().hasCompletedResearch(node.getResearch().getId())) {
+					if (!getResearchManager().hasCompletedResearch(node.getResearch().getId())) {
 						startLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
 						endLineColor = new Color(0.8f, 0.15f, 0.15f, 1.0f);
 					} else {
@@ -291,7 +303,11 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	}
 
 	protected boolean shouldExpandResearch(Research research) {
-		return getLocalTeam().getResearchManager().isResearchAvailable(research.getId()) || getLocalTeam().getResearchManager().hasCompletedResearch(research.getId());
+		return getResearchManager().isResearchAvailable(research.getId()) || getResearchManager().hasCompletedResearch(research.getId());
+	}
+
+	protected ResearchManager getResearchManager() {
+		return getLocalTeam().getResearchManager();
 	}
 
 	protected Team getLocalTeam() {

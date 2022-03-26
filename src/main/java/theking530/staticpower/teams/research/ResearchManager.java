@@ -43,6 +43,11 @@ public class ResearchManager {
 		team.markDirty(true);
 	}
 
+	public void clearSelectedResearch() {
+		selectedResearch = null;
+		team.markDirty(true);
+	}
+
 	public List<ResourceLocation> getCompletedResearch() {
 		return completedResearch;
 	}

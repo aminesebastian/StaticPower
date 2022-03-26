@@ -192,19 +192,24 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	@Override
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
-		if (isHovered() && button == 0) {
-			boolean isAvailable = manager.isResearchAvailable(research.getId());
-			if (isAvailable) {
-				// Set the selected research on both the client AND the server.
-				manager.setSelectedResearch(research.getId());
-				StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketSetSelectedResearch(team.getId(), research.getId()));
-				playSoundLocally(SoundEvents.BOOK_PAGE_TURN, 2.0f, 1.5f);
-				playSoundLocally(SoundEvents.UI_BUTTON_CLICK, 0.15f, 1.5f);
-			} else if (manager.hasCompletedResearch(research.getId())) {
-				playSoundLocally(SoundEvents.BREWING_STAND_BREW, 0.5f, 2.0f);
-			} else {
-				playSoundLocally(SoundEvents.VILLAGER_NO, 1.0f, 2.0f);
+		if (isHovered()) {
+			if (button == 0) {
+				boolean isAvailable = manager.isResearchAvailable(research.getId());
+				if (isAvailable) {
+					// Set the selected research on both the client AND the server.
+					manager.setSelectedResearch(research.getId());
+					StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketSetSelectedResearch(team.getId(), research.getId()));
+					playSoundLocally(SoundEvents.BOOK_PAGE_TURN, 2.0f, 1.5f);
+					playSoundLocally(SoundEvents.UI_BUTTON_CLICK, 0.15f, 1.5f);
+				} else if (manager.hasCompletedResearch(research.getId())) {
+					playSoundLocally(SoundEvents.BREWING_STAND_BREW, 0.5f, 2.0f);
+				} else {
+					playSoundLocally(SoundEvents.VILLAGER_NO, 1.0f, 2.0f);
+				}
+			}else {
+				manager.clearSelectedResearch();
 			}
+
 			playSoundLocally(SoundEvents.BOOK_PUT, 1.0f, 2.0f);
 			return EInputResult.HANDLED;
 		}
@@ -278,11 +283,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		// Get the tile color and lighten it on hover.
 		tileColor = research.getColor().copy();
 		if (!isAvailable && !manager.hasCompletedResearch(research.getId())) {
-			tileColor = new Color(0.1f, 0.1f, 0.1f);
-		}
-
-		if (isHovered()) {
-			tileColor.add(0.1f, 0.1f, 0.1f);
+			tileColor = new Color(0.075f, 0.075f, 0.075f);
 		}
 
 		// Get the color for the body of the node.
@@ -302,6 +303,10 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			} else {
 				bodyColor = new Color(0.35f, 0.35f, 0.35f, 0.85f);
 			}
+		}
+
+		if (isHovered()) {
+			tileColor.add(0.085f, 0.085f, 0.085f);
 		}
 	}
 

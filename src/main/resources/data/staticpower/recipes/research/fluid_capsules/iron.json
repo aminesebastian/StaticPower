@@ -5,7 +5,7 @@
 	"visualOffset": [4, 0],
 	"hiddenUntilAvailable": true,
 	"prerequisites": [
-		"staticpower:research/basic_research"
+		"staticpower:research/research_tiers/basic_research"
 	],
 	"requirements": [
 		{

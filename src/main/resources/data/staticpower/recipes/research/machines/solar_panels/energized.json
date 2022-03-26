@@ -1,0 +1,33 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.energized_solar_panel",
+	"description": "staticpower.research.energized_solar_panel_description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"hiddenUntilAvailable": true,
+	"prerequisites": [
+		"staticpower:research/machines/solar_panels/static"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_4",
+			"count": 60
+		},
+		{
+			"item": "staticpower:research_tier_5",
+			"count": 30
+		}
+	],
+	"icon": {
+		"item": "staticpower:solar_panel_energized"
+	},
+	"unlocks": [
+		{
+			"displayKey": "solar_panel",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/solar_panels/solar_panel_energized"
+		}
+	]
+}
