@@ -3,6 +3,7 @@ package theking530.staticpower.blocks.tree;
 import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
@@ -19,6 +20,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blocks.StaticPowerItemBlock;
 import theking530.staticpower.blocks.StaticPowerRotatePillarBlock;
+import theking530.staticpower.init.ModResearch;
+import theking530.staticpower.teams.Team;
+import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
@@ -45,33 +49,42 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 		// If there is a striped variant defined.
-		if (strippedVariant != null) {
-			// If the player is holding an axe.
-			if (player.getItemInHand(handIn).isCorrectToolForDrops(state)) {
-				// Update to the stripped variant.
-				worldIn.setBlockAndUpdate(pos, strippedVariant.defaultBlockState());
+		if (handIn == InteractionHand.MAIN_HAND && strippedVariant != null) {
+			Team team = TeamManager.get().getTeamForPlayer(player);
+			if (team != null) {
+				if (team.getResearchManager().hasCompletedResearch(ModResearch.RUBBER_WOOD_STRIPPING)) {
+					// If the player is holding an axe.
+					if (player.getItemInHand(handIn).isCorrectToolForDrops(state)) {
+						// Update to the stripped variant.
+						worldIn.setBlockAndUpdate(pos, strippedVariant.defaultBlockState());
 
-				// Play the strip sound.
-				worldIn.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
+						// Play the strip sound.
+						worldIn.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-				// Damage the held item.
-				player.getItemInHand(handIn).hurtAndBreak(1, player, (p_220040_1_) -> {
-					p_220040_1_.broadcastBreakEvent(handIn);
-				});
+						// Damage the held item.
+						player.getItemInHand(handIn).hurtAndBreak(1, player, (p_220040_1_) -> {
+							p_220040_1_.broadcastBreakEvent(handIn);
+						});
 
-				// Spawn the bark if needed.
-				Item barkItem = barkItemSupplier.get();
-				if (barkItem != null && !worldIn.isClientSide) {
-					// Get the amount to spawn.
-					int barkAmount = SDMath.getRandomIntInRange(minBark.get(), maxBark.get());
-					if (barkAmount > 0) {
-						ItemStack barkStack = new ItemStack(barkItem, barkAmount);
-						WorldUtilities.dropItem(worldIn, pos.relative(hit.getDirection()), barkStack);
+						// Spawn the bark if needed.
+						Item barkItem = barkItemSupplier.get();
+						if (barkItem != null && !worldIn.isClientSide) {
+							// Get the amount to spawn.
+							int barkAmount = SDMath.getRandomIntInRange(minBark.get(), maxBark.get());
+							if (barkAmount > 0) {
+								ItemStack barkStack = new ItemStack(barkItem, barkAmount);
+								WorldUtilities.dropItem(worldIn, pos.relative(hit.getDirection()), barkStack);
+							}
+						}
+
+						// Return a success.
+						return InteractionResult.SUCCESS;
+					}
+				} else {
+					if (!worldIn.isClientSide()) {
+						player.sendMessage(new TranslatableComponent("gui.missing_research"), player.getUUID());
 					}
 				}
-
-				// Return a success.
-				return InteractionResult.SUCCESS;
 			}
 		}
 

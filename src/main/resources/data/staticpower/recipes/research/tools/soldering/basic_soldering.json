@@ -2,9 +2,9 @@
 	"type": "staticpower:research",
 	"title": "research.basic_soldering.title",
 	"description": "research.basic_soldering.description",
-	"visualOffset": [-2, 0],
+	"visualOffset": [-1, 0],
 	"prerequisites": [
-		"staticpower:research/research_tiers/basic_research"
+		"staticpower:research/tools/hammer/basic"
 	],
 	"requirements": [
 		{

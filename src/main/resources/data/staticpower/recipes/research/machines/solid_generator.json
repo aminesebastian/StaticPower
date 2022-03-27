@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.generator_solid.title",
+	"description": "staticpower.research.generator_solid.description",
+	"icon": {
+		"item": "staticpower:machine_generator_solid"
+	},
+	"visualOffset": [
+		-1,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/machine_blocks/aluminum"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"displayKey": "generator_solid",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/generator_solid"
+		}
+	]
+}

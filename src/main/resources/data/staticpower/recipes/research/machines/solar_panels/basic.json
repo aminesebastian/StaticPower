@@ -7,7 +7,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/soldering/basic_soldering"
+		"staticpower:research/machines/machine_blocks/aluminum"
 	],
 	"requirements": [
 		{

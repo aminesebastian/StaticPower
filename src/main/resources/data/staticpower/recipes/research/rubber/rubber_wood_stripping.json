@@ -3,11 +3,11 @@
 	"title": "staticpower.research.rubber_wood_stripping",
 	"description": "staticpower.research.rubber_wood_stripping_description",
 	"visualOffset": [
-		0,
+		-4,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/rubber/rubber_wood_stripping"
+		"staticpower:research/research_tiers/basic_research"
 	],
 	"requirements": [
 		{
@@ -16,6 +16,6 @@
 		}
 	],
 	"icon": {
-		"item": "minecraft:iron_axe"
+		"item": "staticpower:rubber_wood_bark"
 	}
 }

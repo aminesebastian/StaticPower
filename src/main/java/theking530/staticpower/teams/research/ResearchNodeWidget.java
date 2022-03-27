@@ -24,6 +24,7 @@ import theking530.staticpower.data.research.ResearchIcon;
 import theking530.staticpower.data.research.ResearchLevels.ResearchNode;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
+import theking530.staticpower.init.ModResearch;
 import theking530.staticpower.data.research.ResearchUnlockUtilities;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.Team;
@@ -199,15 +200,20 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 					// Set the selected research on both the client AND the server.
 					manager.setSelectedResearch(research.getId());
 					StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketSetSelectedResearch(team.getId(), research.getId()));
-					playSoundLocally(SoundEvents.BOOK_PAGE_TURN, 2.0f, 1.5f);
-					playSoundLocally(SoundEvents.UI_BUTTON_CLICK, 0.15f, 1.5f);
+					playSoundLocally(SoundEvents.UI_BUTTON_CLICK, 0.1f, 1.5f);
 				} else if (manager.hasCompletedResearch(research.getId())) {
 					playSoundLocally(SoundEvents.BREWING_STAND_BREW, 0.5f, 2.0f);
 				} else {
 					playSoundLocally(SoundEvents.VILLAGER_NO, 1.0f, 2.0f);
 				}
-			}else {
-				manager.clearSelectedResearch();
+			} else {
+				// The only research we CAN'T clear is the first research. This is to ensure
+				// there is always either a selected OR last completed research to display in
+				// the UI.
+				if (!getResearch().getId().equals(ModResearch.BASIC_RESEARCH)) {
+					manager.clearSelectedResearch();
+					playSoundLocally(SoundEvents.STONE_BUTTON_CLICK_OFF, 1.0f, 2.0f);
+				}
 			}
 
 			playSoundLocally(SoundEvents.BOOK_PUT, 1.0f, 2.0f);

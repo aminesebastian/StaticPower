@@ -190,7 +190,7 @@ public class ModBlocks {
 	public static StaticPowerBlock BlockRawLumumMetal;
 
 	// Machine blocks.
-	public static StaticPowerCutoutBlock MachineBlockIron;
+	public static StaticPowerCutoutBlock MachineBlockAluminum;
 	public static StaticPowerCutoutBlock MachineBlockBasic;
 	public static StaticPowerCutoutBlock MachineBlockAdvanced;
 	public static StaticPowerCutoutBlock MachineBlockStatic;
@@ -470,8 +470,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BlockRawEnergizedMetal = new StaticPowerBlock("block_raw_energized_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockRawLumumMetal = new StaticPowerBlock("block_raw_lumum_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
 
-		// Machine Blocks
-		StaticPowerRegistry.preRegisterBlock(MachineBlockIron = new StaticPowerCutoutBlock("machine_block_iron", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
+		// Machine Blocks 
+		StaticPowerRegistry.preRegisterBlock(MachineBlockAluminum = new StaticPowerCutoutBlock("machine_block_aluminum", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));

@@ -1,5 +1,5 @@
 {
-    "parent": "staticpower:block/machines/base_blocks/machine_block_laboratory",
+    "parent": "staticpower:block/machines/base_blocks/machine_block_aluminum",
     "textures": {
 		"front_overlay": "staticpower:blocks/machines/laboratory_face_off"
     }

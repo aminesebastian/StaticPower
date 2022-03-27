@@ -3,11 +3,11 @@
 	"title": "research.basic_cauldron.title",
 	"description": "research.basic_cauldron_description",
 	"visualOffset": [
-		0,
+		1,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/research_tiers/basic_research"
+		"staticpower:research/rubber/rubber_wood_stripping"
 	],
 	"requirements": [
 		{

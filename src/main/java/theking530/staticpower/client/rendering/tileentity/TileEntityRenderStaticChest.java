@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.InventoryMenu;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.chest.TileEntityStaticChest;
@@ -35,13 +36,14 @@ public class TileEntityRenderStaticChest extends StaticPowerTileEntitySpecialRen
 
 	@Override
 	protected void renderTileEntityBase(TileEntityStaticChest te, BlockPos position, float partialTicks, PoseStack pos, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
-		if (te.isOpen()) {
-			te.openAlpha = Math.min(te.openAlpha + partialTicks * 0.025f, 1);
-		} else {
-			te.openAlpha = Math.max(te.openAlpha - partialTicks * 0.01f, 0);
-		}
+		float interpretedOpenAlpha = 0.0f;
 
-		float interpretedOpenAlpha = te.openAlpha;
+		if (te.isOpen()) {
+			interpretedOpenAlpha = SDMath.clamp(te.openAlpha + (partialTicks / 10), 0, 1);
+		} else if (te.openAlpha > 0) {
+			interpretedOpenAlpha = SDMath.clamp(te.openAlpha - (partialTicks / 10), 0, 1);
+		}
+		
 		interpretedOpenAlpha = 1.0F - interpretedOpenAlpha;
 		interpretedOpenAlpha = 1.0F - interpretedOpenAlpha * interpretedOpenAlpha * interpretedOpenAlpha;
 

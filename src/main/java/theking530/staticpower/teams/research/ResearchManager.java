@@ -149,7 +149,7 @@ public class ResearchManager {
 		CompoundTag output = new CompoundTag();
 
 		if (selectedResearch != null) {
-			output.putString("selectedResearch", selectedResearch.getResearchName().toString());
+			output.putString("selectedResearch", selectedResearch.getId().toString());
 		}
 
 		output.put("completedResearch", NBTUtilities.serialize(completedResearch, (research, tag) -> {
@@ -175,7 +175,7 @@ public class ResearchManager {
 		NBTUtilities.deserialize(activeResearchList, (research) -> {
 			return ResearchInstance.deserialize(research, this);
 		}).forEach((active) -> {
-			activeResearch.put(active.getResearchName(), active);
+			activeResearch.put(active.getId(), active);
 		});
 
 		selectedResearch = null;
@@ -192,14 +192,12 @@ public class ResearchManager {
 			LOCKED, UNLOCKED, IN_PROGRESS_INACTIVE, IN_PROGRESS_ACTIVE, COMPLETED
 		}
 
-		private final ResourceLocation researchName;
 		private final List<Integer> requirementFullfillment;
 		private final Research research;
 		private final ResearchManager manager;
 
 		public ResearchInstance(ResourceLocation researchName, ResearchManager manager) {
 			this.manager = manager;
-			this.researchName = researchName;
 			this.requirementFullfillment = new LinkedList<Integer>();
 			research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, researchName).orElse(null);
 
@@ -213,8 +211,8 @@ public class ResearchManager {
 			}
 		}
 
-		public ResourceLocation getResearchName() {
-			return researchName;
+		public ResourceLocation getId() {
+			return research.getId();
 		}
 
 		public Research getTrackedResearch() {
@@ -269,8 +267,8 @@ public class ResearchManager {
 		}
 
 		public static ResearchInstance deserialize(CompoundTag tag, ResearchManager manager) {
-			String researchName = tag.getString("researchName");
-			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchName), manager);
+			String researchId = tag.getString("researchId");
+			ResearchInstance instance = new ResearchInstance(new ResourceLocation(researchId), manager);
 
 			int[] fullfillment = tag.getIntArray("requirementFullfillment");
 			instance.requirementFullfillment.clear();
@@ -282,7 +280,7 @@ public class ResearchManager {
 
 		public CompoundTag serialize() {
 			CompoundTag output = new CompoundTag();
-			output.putString("researchName", researchName.toString());
+			output.putString("researchId", getId().toString());
 			output.putIntArray("requirementFullfillment", requirementFullfillment);
 			return output;
 		}

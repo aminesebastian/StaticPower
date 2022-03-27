@@ -17,10 +17,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.data.StaticPowerGameData;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.init.ModResearch;
 
 public class TeamManager extends StaticPowerGameData {
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "teams");
-	private static final ResourceLocation INITIAL_RESEARCH = new ResourceLocation(StaticPower.MOD_ID, "research/research_tiers/basic_research");
 	private Map<String, Team> teams;
 
 	public TeamManager() {
@@ -97,7 +97,7 @@ public class TeamManager extends StaticPowerGameData {
 		}
 
 		// Set the initial research.
-		newTeam.getResearchManager().setSelectedResearch(INITIAL_RESEARCH);
+		newTeam.getResearchManager().setSelectedResearch(ModResearch.BASIC_RESEARCH);
 
 		// Add the new team to the teams array.
 		teams.put(newTeam.getId(), newTeam);

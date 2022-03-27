@@ -2,6 +2,8 @@ package theking530.staticpower.teams.research;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.TranslatableComponent;
@@ -13,36 +15,33 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchUnlock;
-import theking530.staticpower.data.research.ResearchUnlockUtilities;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
+import theking530.staticpower.data.research.ResearchUnlockUtilities;
 import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 
 public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWidget> {
 	private final SimpleProgressBar progressBar;
-	private final ResearchManager manager;
 	private Research research;
 	private ResearchInstance researchProgress;
+	private List<String> description;
 
-	public SelectedResearchWidget(ResearchManager manager, float xPosition, float yPosition, float width, float height) {
+	public SelectedResearchWidget(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		this.manager = manager;
 		registerWidget(progressBar = new SimpleProgressBar(0, 0, 86, 7).disableProgressTooltip());
 		progressBar.setMaxProgress(100);
-		cacheResearch();
 	}
 
 	public void tick() {
-		cacheResearch();
 	}
 
-	public void cacheResearch() {
-		if (manager != null) {
-			if (manager.hasSelectedResearch()) {
-				research = manager.getSelectedResearch().getTrackedResearch();
-				researchProgress = manager.getSelectedResearch();
-			} else {
-				research = manager.getLastCompletedResearch();
-			}
+	public void setResearch(Research research,@Nullable  ResearchInstance instance) {
+		this.research = research;
+		researchProgress = instance;
+		// Split the description into wrapped lines and cache it. Also resize the widget
+		// here and not on the render method for optimization reasons.
+		if (research != null) {
+			description = GuiDrawUtilities.wrapString(new TranslatableComponent(research.getDescription()).getString(), getSize().getXi() * 2 - 35);
+			setSize(getSize().getX(), Math.max(65, 50 + (description.size() * 5)));
 		}
 	}
 
@@ -52,12 +51,9 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 		GuiDrawUtilities.drawGenericBackground(pose, getSize().getX() + 4, getSize().getY() + 4, -4, -4, 0.0f, new Color(0.25f, 0.5f, 1.0f, 1.0f));
 
 		if (research != null) {
-			// Split the description into wrapped lines.
-			List<String> lines = GuiDrawUtilities.wrapString(new TranslatableComponent(research.getDescription()).getString(), getSize().getXi() * 2 - 35);
-			for (int i = 0; i < lines.size(); i++) {
-				GuiDrawUtilities.drawStringLeftAligned(pose, lines.get(i), 4, 33 + (i * 5.5f), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			for (int i = 0; i < description.size(); i++) {
+				GuiDrawUtilities.drawStringLeftAligned(pose, description.get(i), 4, 33 + (i * 5.5f), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			}
-			setSize(getSize().getX(), Math.max(65, 50 + (lines.size() * 5)));
 
 			int requirementCount = research.getRequirements().size();
 

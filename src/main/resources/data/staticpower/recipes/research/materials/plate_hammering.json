@@ -1,8 +1,8 @@
 {
 	"type": "staticpower:research",
-	"title": "research.basic_farming.title",
-	"description": "research.basic_farming.description",	
-	"visualOffset": [-3, 0],
+	"title": "staticpower.research.plate_hammering.title",
+	"description": "staticpower.research.plate_hammering.description",
+	"visualOffset": [-1, 0],
 	"prerequisites": [
 		"staticpower:research/research_tiers/basic_research"
 	],
@@ -13,6 +13,6 @@
 		}
 	],
 	"icon": {
-		"item": "staticpower:seed_static"
+		"item": "minecraft:anvil"
 	}
 }

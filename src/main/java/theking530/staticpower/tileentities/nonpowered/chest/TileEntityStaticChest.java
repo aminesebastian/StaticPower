@@ -46,7 +46,7 @@ public class TileEntityStaticChest extends TileEntityBase {
 			LUMUM_TYPE.setTileEntitySpecialRenderer(TileEntityRenderStaticChest::new);
 		}
 	}
-	
+
 	public final ResourceLocation tier;
 	public final InventoryComponent inventory;
 	public float openAlpha;
@@ -56,6 +56,16 @@ public class TileEntityStaticChest extends TileEntityBase {
 		super(type, pos, state);
 		this.tier = tier;
 		registerComponent(inventory = new InventoryComponent("Inventory", slotCount, MachineSideMode.NA).setShiftClickEnabled(true));
+	}
+
+	@Override
+	public void process() {
+		// This is run on the game thread, so @ 20hz. 
+		if (isOpen()) {
+			openAlpha = Math.min(openAlpha + 0.1f, 1);
+		} else {
+			openAlpha = Math.max(openAlpha - 0.1f, 0);
+		}
 	}
 
 	public static Vector2D getInventorySize(TileEntityStaticChest chest) {

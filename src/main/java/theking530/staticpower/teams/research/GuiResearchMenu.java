@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -38,7 +40,7 @@ import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	protected static final int HISTORY_HEIGHT = 35;
 
-	protected ResearchInstance currentResearch;
+	protected ResourceLocation currentResearch;
 	protected ResearchNodeWidget hoveredNode;
 	protected SelectedResearchWidget selectedResearchWidget;
 
@@ -61,24 +63,57 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 	public void initializeGui() {
 		researchNodes = new HashMap<ResearchNode, ResearchNodeWidget>();
 		historyWidgets = new ArrayList<ResearchHistoryWidget>();
-		registerWidget(selectedResearchWidget = new SelectedResearchWidget(getResearchManager(), 0, 0, 109, 65).setZLevel(500));
+
+		// Initialize the selected research widget.
+		registerWidget(selectedResearchWidget = new SelectedResearchWidget(0, 0, 109, 0).setZLevel(500));
+		if (getResearchManager().hasSelectedResearch()) {
+			selectedResearchWidget.setResearch(getResearchManager().getSelectedResearch().getTrackedResearch(), getResearchManager().getSelectedResearch());
+			currentResearch = getResearchManager().getSelectedResearch().getId();
+		} else {
+			selectedResearchWidget.setResearch(getResearchManager().getLastCompletedResearch(), null);
+			currentResearch = getResearchManager().getLastCompletedResearch().getId();
+		}
+
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
-		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
 		nodePanBox.setMaxZoom(2.0f);
-		refreshResearchWidgets();
 
-		completedResearchCount = getResearchManager().getCompletedResearch().size();
+		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
+
+		refreshResearchWidgets();
 	}
 
 	@Override
 	public void tick() {
 		super.tick();
+		// If the count of completed researchs changed, then refresh the widgets.
 		if (completedResearchCount != getResearchManager().getCompletedResearch().size()) {
 			refreshResearchWidgets();
-			completedResearchCount = getResearchManager().getCompletedResearch().size();
+		}
+
+		// If we have selected research, then both of the below will be populated.
+		// If not, only the last completed research will exist, with no accompanying
+		// instance.
+		Research selectedResearch = null;
+		ResearchInstance selectedResearchInstance = null;
+		if (getResearchManager().hasSelectedResearch()) {
+			selectedResearchInstance = getResearchManager().getSelectedResearch();
+			selectedResearch = selectedResearchInstance.getTrackedResearch();
+		} else {
+			selectedResearch = getResearchManager().getLastCompletedResearch();
+		}
+
+		// Track when the current research changes.
+		if (!currentResearch.equals(selectedResearch.getId())) {
+			if (selectedResearchInstance != null) {
+				currentResearch = selectedResearchInstance.getId();
+				selectedResearchChanged(selectedResearch, selectedResearchInstance);
+			} else {
+				currentResearch = selectedResearch.getId();
+				selectedResearchChanged(selectedResearch, selectedResearchInstance);
+			}
 		}
 	}
 
@@ -125,6 +160,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		captureScreenSize();
 		initializeResearchNodes();
 		initializeSideBar();
+		completedResearchCount = getResearchManager().getCompletedResearch().size();
 	}
 
 	protected void initializeResearchNodes() {
@@ -156,13 +192,14 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 				// Only show research that is either completed, marked as hidden until available
 				// AND available, or if their parent is available.
-				//if (isCompleted || isAvailable || (!research.isHiddenUntilAvailable() && !isAvailable) || isParentAvailable) {
-					// Calculate the reletive position and create the research node widget.
-					Vector2D relative = researchNode.getRelativePosition().getScaledVector(45.0f, 55.0f).add(100, 30);
-					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
-					researchNodes.put(researchNode, widget);
-					nodePanBox.registerWidget(widget);
-				//}
+				// if (isCompleted || isAvailable || (!research.isHiddenUntilAvailable() &&
+				// !isAvailable) || isParentAvailable) {
+				// Calculate the reletive position and create the research node widget.
+				Vector2D relative = researchNode.getRelativePosition().getScaledVector(40.0f, 40.0f).add(100, 30);
+				ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
+				researchNodes.put(researchNode, widget);
+				nodePanBox.registerWidget(widget);
+				// }
 			}
 		}
 	}
@@ -172,6 +209,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		sideBarScrollBox.clearChildren();
 		historyWidgets.clear();
 
+		sideBarScrollBox.setPosition(0, selectedResearchWidget.getSize().getY());
 		if (getLocalTeam() != null) {
 			int index = 0;
 			// We need to iterate backwards here.
@@ -199,12 +237,16 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		nodePanBox.setSize(screenWidth - 105, screenHeight - 25);
 
 		// Size up the sidebar.
-		sideBarScrollBox.setPosition(0, selectedResearchWidget.getSize().getY());
 		sideBarScrollBox.setSize(102, screenHeight - selectedResearchWidget.getSize().getY());
 		for (ResearchHistoryWidget widgets : historyWidgets) {
 			widgets.setSize(102, HISTORY_HEIGHT);
 		}
 
+	}
+
+	protected void selectedResearchChanged(Research research, @Nullable ResearchInstance researchInstance) {
+		selectedResearchWidget.setResearch(research, researchInstance);
+		sideBarScrollBox.setPosition(0, selectedResearchWidget.getSize().getY());
 	}
 
 	protected void drawBackgroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
