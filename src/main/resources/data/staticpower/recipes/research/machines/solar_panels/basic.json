@@ -6,7 +6,6 @@
 		1,
 		0
 	],
-	"hiddenUntilAvailable": true,
 	"prerequisites": [
 		"staticpower:research/soldering/basic_soldering"
 	],

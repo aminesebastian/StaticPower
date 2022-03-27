@@ -15,7 +15,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.MultiPlayerGameMode;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -27,7 +26,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -61,7 +59,7 @@ import theking530.staticpower.utilities.RaytracingUtilities;
 /**
  * Any client only event handling is performed here.
  * 
- * @author amine
+ * @author 
  *
  */
 @SuppressWarnings("resource")
@@ -97,7 +95,7 @@ public class StaticPowerForgeBusClient {
 	}
 
 	@SubscribeEvent(priority = EventPriority.NORMAL)
-	public static void onDrawScreen(DrawScreenEvent event) {
+	public static void onDrawScreen(DrawScreenEvent.Post event) {
 		for (StaticPowerExtensionGui gui : UI_EXTENSIONS) {
 			gui.tick();
 			gui.render(event.getPoseStack(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
@@ -252,6 +250,7 @@ public class StaticPowerForgeBusClient {
 	 * @param world         the active world
 	 * @param extraBlocks   the list of blocks
 	 */
+	@SuppressWarnings("deprecation")
 	private static void drawBlockDamageTexture(LevelRenderer worldRender, PoseStack matrixStackIn, Camera renderInfo, Level world, Iterable<BlockPos> extraBlocks) {
 		// Get the current break progress.
 		int progress = (int) (getCurrentFocusedBlockDamage() * 10.0F) - 1;

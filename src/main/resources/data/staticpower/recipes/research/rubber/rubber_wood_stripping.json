@@ -1,0 +1,21 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.rubber_wood_stripping",
+	"description": "staticpower.research.rubber_wood_stripping_description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/rubber/rubber_wood_stripping"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"icon": {
+		"item": "minecraft:iron_axe"
+	}
+}

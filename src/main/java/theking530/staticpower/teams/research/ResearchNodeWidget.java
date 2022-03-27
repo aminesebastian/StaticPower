@@ -57,7 +57,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		this.maxExpandedSize = new Vector2D(Math.min(getFontRenderer().width(title) + 15, 100), 100);
 		this.tileColor = new Color(1, 1, 1, 1);
 		this.bodyColor = new Color(1, 1, 1, 1);
-		wrappedDescription = GuiDrawUtilities.wrapString(research.getDescription(), maxExpandedSize.getXi() * 2 - 32);
+		wrappedDescription = GuiDrawUtilities.wrapString(new TranslatableComponent(research.getDescription()).getString(), maxExpandedSize.getXi() * 2 - 32);
 	}
 
 	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {

@@ -1011,11 +1011,13 @@
 	"key.staticpower.open_portable_digistore": "Open Portable Digistore",
 	"key.staticpower.open_research": "Open Research Window",
 	"key.staticpower.reset_side_configuration": "Reset Side Configuration",
-	"staticpower.research.basic_capsules": "Portable Fluids",
-	"staticpower.research.basic_cauldron": "Rubber Galore",
-	"staticpower.research.basic_farming": "Alien Farming",
-	"staticpower.research.basic_hamering": "Hammer Time",
-	"staticpower.research.basic_research": "Back to School!",
-	"staticpower.research.basic_soldering": "Basic Soldering",
-	"staticpower.research.third_level": "Your Third Research"
+	"research.basic_capsules.title": "Portable Fluids",
+	"research.basic_cauldron.title": "Rubber Galore",
+	"research.basic_farming.title": "Alien Farming",
+	"research.basic_farming.description": "Get yourself a green thumb.",
+	"research.basic_hamering.title": "Hammer Time",
+	"research.basic_research.title": "Back to School!",
+	"research.basic_research.description": "Here at Static Co., we take our research and development VERY seriously. So much so that you guys are the ONLY team we pay more than minimum wage. How you choose to spend that extra nickel is up to you.",
+	"research.basic_soldering.title": "Basic Soldering",
+	"research.basic_soldering.description": "Watch your fingers!"
 }

@@ -53,7 +53,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 
 		if (research != null) {
 			// Split the description into wrapped lines.
-			List<String> lines = GuiDrawUtilities.wrapString(research.getDescription(), getSize().getXi() * 2 - 35);
+			List<String> lines = GuiDrawUtilities.wrapString(new TranslatableComponent(research.getDescription()).getString(), getSize().getXi() * 2 - 35);
 			for (int i = 0; i < lines.size(); i++) {
 				GuiDrawUtilities.drawStringLeftAligned(pose, lines.get(i), 4, 33 + (i * 5.5f), 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			}

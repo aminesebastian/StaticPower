@@ -6,7 +6,6 @@
 		0,
 		0
 	],
-	"hiddenUntilAvailable": true,
 	"prerequisites": [
 		"staticpower:research/machines/machine_blocks/energized"
 	],

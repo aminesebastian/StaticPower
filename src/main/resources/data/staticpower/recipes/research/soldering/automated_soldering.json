@@ -3,7 +3,6 @@
 	"title": "staticpower.research.basic_soldering",
 	"description": "Watch your fingers!",
 	"visualOffset": [0, 0],
-	"hiddenUntilAvailable": true,
 	"prerequisites": [
 		"staticpower:research/soldering/electric_soldering"
 	],
