@@ -126,8 +126,13 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 			offset = Vector2D.fromJson(json.get("visualOffset"));
 		}
 
+		int sortOrder = 0;
+		if (json.has("sortOrder")) {
+			sortOrder = json.get("sortOrder").getAsInt();
+		}
+
 		// Create the recipe.
-		return new Research(recipeId, title, description, offset, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
+		return new Research(recipeId, title, description, offset, sortOrder, prerequisites, requirements, rewards, unlocks, advancements, icon, hidden, color);
 	}
 
 	@Override
@@ -135,6 +140,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		String title = buffer.readUtf();
 		String description = buffer.readUtf();
 		Vector2D visualOffset = Vector2D.fromBuffer(buffer);
+		int sortOrder = buffer.readInt();
 		ResearchIcon icon = ResearchIcon.fromBuffer(buffer);
 
 		// Prerequisites.
@@ -176,7 +182,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		Color color = Color.fromBuffer(buffer);
 
 		// Create the recipe.
-		return new Research(recipeId, title, description, visualOffset, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
+		return new Research(recipeId, title, description, visualOffset, sortOrder, prerequisites, requirements, rewards, unlocks, advacements, icon, hidden, color);
 	}
 
 	@Override
@@ -184,7 +190,7 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 		buffer.writeUtf(recipe.getTitle());
 		buffer.writeUtf(recipe.getDescription());
 		recipe.getVisualOffset().toBuffer(buffer);
-
+		buffer.writeInt(recipe.getSortOrder());
 		recipe.getIcon().toBuffer(buffer);
 
 		// Prerequisites.

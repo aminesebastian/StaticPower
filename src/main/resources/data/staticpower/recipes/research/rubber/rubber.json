@@ -1,0 +1,32 @@
+{
+	"type": "staticpower:research",
+	"title": "research.rubber.title",
+	"description": "research.rubber.description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"sortingOrder": 1,
+	"prerequisites": [
+		"staticpower:research/rubber/rubber_wood_stripping"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/rubber_bar_from_latex"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/plates/rubber_sheet"
+		}
+	],
+	"icon": {
+		"item": "staticpower:rubber_bar"
+	}
+}

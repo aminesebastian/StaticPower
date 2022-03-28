@@ -16,6 +16,8 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.research.Research;
+import theking530.staticpower.data.research.ResearchLevels;
+import theking530.staticpower.init.ModResearch;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.utilities.NBTUtilities;
 
@@ -115,6 +117,19 @@ public class ResearchManager {
 		}
 
 		return true;
+	}
+
+	public void unlockAllResearch() {
+		for (Research research : ResearchLevels.getAllResearch().values()) {
+			completedResearch.add(research.getId());
+		}
+		selectedResearch = null;
+	}
+
+	public void lockAllResearch() {
+		completedResearch.clear();
+		activeResearch.clear();
+		setSelectedResearch(ModResearch.BASIC_RESEARCH);
 	}
 
 	public Team getTeam() {

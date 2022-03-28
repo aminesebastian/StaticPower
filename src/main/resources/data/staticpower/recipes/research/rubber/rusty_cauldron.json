@@ -1,11 +1,12 @@
 {
 	"type": "staticpower:research",
-	"title": "research.basic_cauldron.title",
-	"description": "research.basic_cauldron_description",
+	"title": "research.rusty_cauldron.title",
+	"description": "research.rusty_cauldron.description",
 	"visualOffset": [
-		1,
+		0,
 		0
 	],
+	"sortingOrder": 0,
 	"prerequisites": [
 		"staticpower:research/rubber/rubber_wood_stripping"
 	],

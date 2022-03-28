@@ -1,0 +1,24 @@
+{
+	"type": "staticpower:research",
+	"title": "research.soldering_table.title",
+	"description": "research.soldering_table.description",
+	"visualOffset": [0, 0],
+	"prerequisites": [
+		"staticpower:research/machines/machine_blocks/aluminum"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 20
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/soldering_table"
+		}
+	],
+	"icon": {
+		"item": "staticpower:soldering_table"
+	}
+}

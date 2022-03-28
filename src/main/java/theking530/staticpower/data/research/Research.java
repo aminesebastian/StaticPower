@@ -23,6 +23,7 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final String title;
 	private final String description;
 	private final Vector2D visualOffset;
+	private final int sortOrder;
 	private final List<ResearchUnlock> unlocks;
 	private final ResearchIcon icon;
 	private final List<ResourceLocation> prerequisites;
@@ -32,7 +33,7 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final boolean hiddenUntilAvailable;
 	private final Color color;
 
-	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements,
+	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, int sortOrder, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements,
 			List<ItemStack> rewards, List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon, boolean hiddenUntilAvailable, Color color) {
 		super(name);
 		this.title = title;
@@ -45,6 +46,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		this.icon = icon;
 		this.advancements = advancements;
 		this.hiddenUntilAvailable = hiddenUntilAvailable;
+		this.sortOrder = sortOrder;
 		if (color == null) {
 			this.color = calculateColor();
 		} else {
@@ -66,6 +68,10 @@ public class Research extends AbstractStaticPowerRecipe {
 
 	public Vector2D getVisualOffset() {
 		return visualOffset;
+	}
+
+	public int getSortOrder() {
+		return sortOrder;
 	}
 
 	public List<ResourceLocation> getPrerequisites() {
@@ -176,6 +182,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		private final String title;
 		private String description;
 		private Vector2D visualOffset;
+		private int sortOrder;
 		private ResearchIcon icon;
 		private boolean hiddenUntilAvailable;
 		private Color color;
@@ -189,6 +196,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		public ResearchBuilder(ResourceLocation name, String title) {
 			this.name = name;
 			this.title = title;
+			this.sortOrder = 0;
 			this.prerequisites = new ArrayList<>();
 			this.requirements = new ArrayList<>();
 			this.rewards = new ArrayList<>();
@@ -224,6 +232,7 @@ public class Research extends AbstractStaticPowerRecipe {
 			this.icon = ResearchIcon.fromTexture(texture);
 			return this;
 		}
+
 		public ResearchBuilder icon(Item item) {
 			this.icon = ResearchIcon.fromItem(new ItemStack(item));
 			return this;
@@ -255,6 +264,11 @@ public class Research extends AbstractStaticPowerRecipe {
 			for (ResourceLocation advancement : advancements) {
 				this.advancements.add(advancement);
 			}
+			return this;
+		}
+
+		public ResearchBuilder sortOrder(int sortOrder) {
+			this.sortOrder = sortOrder;
 			return this;
 		}
 
@@ -304,7 +318,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		}
 
 		public Research build() {
-			return new Research(name, title, description, visualOffset, advancements, requirements, rewards, unlocks, advancements, icon, hiddenUntilAvailable, color);
+			return new Research(name, title, description, visualOffset, sortOrder, advancements, requirements, rewards, unlocks, advancements, icon, hiddenUntilAvailable, color);
 		}
 	}
 }

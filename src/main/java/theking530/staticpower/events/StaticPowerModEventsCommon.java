@@ -130,7 +130,6 @@ public class StaticPowerModEventsCommon {
 		CapabilityAttributable.register(event);
 		CapabilityStaticPowerPlayerData.register(event);
 	}
-
 	@SubscribeEvent
 	public static void enqueueIMC(InterModEnqueueEvent event) {
 		LOGGER.info("Static Power IMC Messages Enqueued!");

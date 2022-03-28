@@ -1,12 +1,15 @@
 {
 	"type": "staticpower:research",
-	"title": "research.rubber_wood_stripping",
-	"description": "research.rubber_wood_stripping_description",
+	"title": "research.static_farming.title",
+	"description": "research.static_farming.description",
+	"icon": {
+		"item": "staticpower:seed_static"
+	},
 	"visualOffset": [
-		-8,
+		-4,
 		0
 	],
-	"sortOrder": 0,
+	"sortOrder": 40,
 	"prerequisites": [
 		"staticpower:research/research_tiers/basic_research"
 	],
@@ -16,7 +19,7 @@
 			"count": 15
 		}
 	],
-	"icon": {
-		"item": "staticpower:rubber_wood_bark"
-	}
+	"unlocks": [
+
+	]
 }

@@ -2,7 +2,11 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_hamering",
 	"description": "It's Hammer Time!",
-	"visualOffset": [4, 0],
+	"visualOffset": [
+		8,
+		0
+	],
+	"sortOrder": 200,
 	"prerequisites": [
 		"staticpower:research/research_tiers/basic_research"
 	],

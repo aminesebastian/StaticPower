@@ -2,6 +2,8 @@ package theking530.staticpower.data.research;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -34,7 +36,7 @@ public class ResearchLevels {
 
 	public static ResearchLevels getAllResearchLevels() {
 		ResearchLevels output = new ResearchLevels();
-		Map<ResourceLocation, Research> allResearch = getResearch();
+		Map<ResourceLocation, Research> allResearch = getAllResearch();
 		Set<ResourceLocation> handled = new HashSet<ResourceLocation>();
 		List<ResearchNode> allNodes = new ArrayList<ResearchNode>();
 
@@ -49,6 +51,7 @@ public class ResearchLevels {
 				currentLevel.research.add(newNode);
 				allNodes.add(newNode);
 			}
+			currentLevel.finalize();
 			output.levels.add(currentLevel);
 			currentLevel = output.new ResearchLevel();
 
@@ -61,6 +64,13 @@ public class ResearchLevels {
 		// Populate the parents for each level.
 		for (ResearchNode node : allNodes) {
 			setParent(node, output);
+		}
+
+		// Finalize the sorts for all the nodes.
+		// This has to be done after ALL the nodes have their parents setup as per the
+		// above.
+		for (ResearchNode node : allNodes) {
+			node.finalize();
 		}
 
 		// Populate the relative positions for each node.
@@ -95,15 +105,25 @@ public class ResearchLevels {
 			ResearchNode research = queue.poll();
 
 			// Add the positions to the hash set and then set them.
-			for (ResearchNode child : research.getChildren()) {
+			int childCount = research.getChildren().size();
+			float initialOffset = childCount / -2.0f;
+			float currentOffset = initialOffset + 0.5f;
+			for (int i = 0; i < research.getChildren().size(); i++) {
+				ResearchNode child = research.getChildren().get(i);
 				float targetX = 0;
 				for (ResearchNode parent : child.getAllParents()) {
 					targetX += parent.getRelativePosition().getX();
 				}
 				targetX /= child.getAllParents().size();
-
+				targetX += currentOffset;
+				currentOffset += 1.0f;
 				child.setRelativeX(targetX + child.getResearch().getVisualOffset().getX());
-				child.setRelativeY(research.getRelativePosition().getY() + 1 + child.getResearch().getVisualOffset().getY());
+				
+				float yOffset = 0.0f;
+				if(research.getChildren().size() > 2) {
+					yOffset = (i % 2 == 0 ? -0.05f : 0.05f);
+				}
+				child.setRelativeY(research.getRelativePosition().getY() + 1 + child.getResearch().getVisualOffset().getY() + yOffset);
 				queue.add(child);
 			}
 		}
@@ -142,12 +162,26 @@ public class ResearchLevels {
 		return researchList;
 	}
 
-	private static Map<ResourceLocation, Research> getResearch() {
+	public static Map<ResourceLocation, Research> getAllResearch() {
 		Map<ResourceLocation, Research> output = new HashMap<ResourceLocation, Research>();
 		StaticPowerRecipeRegistry.getRecipesOfType(Research.RECIPE_TYPE).forEach((re) -> {
 			output.put(re.getId(), re);
 		});
 		return output;
+	}
+
+	private static void sortNodes(List<ResearchNode> nodes) {
+		Collections.sort(nodes, new Comparator<ResearchNode>() {
+			@Override
+			public int compare(ResearchNode lhs, ResearchNode rhs) {
+				// First try to sort by sort order. If it's zero, then move to sort by the ID.
+				int sortOrderComparison = Integer.compare(lhs.getResearch().getSortOrder(), rhs.getResearch().getSortOrder());
+				if (sortOrderComparison != 0) {
+					return sortOrderComparison;
+				}
+				return lhs.getResearch().getId().compareTo(rhs.getResearch().getId());
+			}
+		});
 	}
 
 	public class ResearchLevel {
@@ -159,6 +193,10 @@ public class ResearchLevels {
 
 		public List<ResearchNode> getResearch() {
 			return research;
+		}
+
+		public void finalize() {
+			sortNodes(research);
 		}
 
 		@Override
@@ -217,6 +255,7 @@ public class ResearchLevels {
 		private final List<ResearchNode> allParents;
 		private ResearchNode closestParent;
 		private RelativeNodePosition relativePosition;
+
 		public ResearchNode(Research research) {
 			this.research = research;
 			this.children = new ArrayList<ResearchNode>();
@@ -263,6 +302,10 @@ public class ResearchLevels {
 
 		public void setRelativeY(float y) {
 			this.relativePosition.setY(y);
+		}
+
+		public void finalize() {
+			sortNodes(children);
 		}
 	}
 }

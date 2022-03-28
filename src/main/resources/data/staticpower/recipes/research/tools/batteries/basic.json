@@ -1,0 +1,27 @@
+{
+	"type": "staticpower:research",
+	"title": "research.portable_battery_basic.title",
+	"description": "research.portable_battery_basic.description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/solid_generator"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 10
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/portable_battries/basic"
+		}
+	],
+	"icon": {
+		"item": "staticpower:portable_battery_basic"
+	}
+}

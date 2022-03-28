@@ -1,8 +1,12 @@
 {
 	"type": "staticpower:research",
-	"title": "staticpower.research.plate_hammering.title",
-	"description": "staticpower.research.plate_hammering.description",
-	"visualOffset": [-1, 0],
+	"title": "research.plate_hammering.title",
+	"description": "research.plate_hammering.description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"sortOrder": 110,
 	"prerequisites": [
 		"staticpower:research/research_tiers/basic_research"
 	],

@@ -1,8 +1,12 @@
 {
 	"type": "staticpower:research",
-	"title": "staticpower.research.basic_cauldron",
+	"title": "research.basic_cauldron",
 	"description": "Double double toil and trouble!",
-	"visualOffset": [1, 0],
+	"visualOffset": [
+		0,
+		0
+	],
+	"sortOrder": 90,
 	"prerequisites": [
 		"staticpower:research/research_tiers/basic_research"
 	],

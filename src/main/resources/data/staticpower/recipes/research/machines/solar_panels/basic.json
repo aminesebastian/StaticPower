@@ -3,7 +3,7 @@
 	"title": "staticpower.research.basic_solar_panel",
 	"description": "staticpower.research.basic_solar_panel_description",
 	"visualOffset": [
-		1,
+		0,
 		0
 	],
 	"prerequisites": [
@@ -22,7 +22,7 @@
 		{
 			"displayKey": "solar_panel",
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/solar_panels/solar_panel_basic"
+			"target": "staticpower:crafting/solar_panels/basic_solar_panel"
 		}
 	]
 }

@@ -48,7 +48,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 	@Override
 	protected void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
 		// Draw background.
-		GuiDrawUtilities.drawGenericBackground(pose, getSize().getX() + 4, getSize().getY() + 4, -4, -4, 0.0f, new Color(0.25f, 0.5f, 1.0f, 1.0f));
+		GuiDrawUtilities.drawGenericBackground(pose, getSize().getX() + 4, getSize().getY() + 3.5f, -4, -4, 0.0f, new Color(0.25f, 0.5f, 1.0f, 1.0f));
 
 		if (research != null) {
 			for (int i = 0; i < description.size(); i++) {

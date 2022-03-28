@@ -114,7 +114,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		float scale = 1.6f;
 		{
 			blockStack.pushPose();
-			blockStack.translate(2.0, -1.7f, 1.75f);
+			blockStack.translate(-4.5, -0.6f, 0.8f);
 			blockStack.scale(scale, scale, 16);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 
@@ -124,7 +124,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			blockRenderer.renderSingleBlock(blockState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
 
 			blockStack.pushPose();
-			blockStack.translate(0.2, -0.2, 0.05);
+			blockStack.translate(0.2, -0.18, 0.05);
 			blockStack.scale(0.75f, 0.75f, 0.75f);
 			BlockState fireState = Blocks.FIRE.defaultBlockState();
 			blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
@@ -147,7 +147,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			}
 
 			blockStack.pushPose();
-			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 265);
+			blockStack.translate(location.getX() + 43, location.getY() + 17.8f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL), fluidColor,

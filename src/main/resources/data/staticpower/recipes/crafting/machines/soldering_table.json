@@ -1,13 +1,13 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"sss",
-		"scs",
-		"s s"
+		"   ",
+		" c ",
+		" m "
 	],
 	"key": {
-		"s": {
-			"tag": "forge:stone"
+		"m": {
+			"item": "staticpower:machine_block_aluminum"
 		},
 		"c": {
 			"item": "minecraft:crafting_table"

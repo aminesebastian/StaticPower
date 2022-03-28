@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:research",
-	"title": "staticpower.research.basic_cauldron",
-	"description": "Double double toil and trouble!",
+	"title": "research.clear_cauldron.title",
+	"description": "research.clear_cauldron.description",
 	"visualOffset": [0, 0],
 	"prerequisites": [
 		"staticpower:research/rubber/rusty_cauldron"

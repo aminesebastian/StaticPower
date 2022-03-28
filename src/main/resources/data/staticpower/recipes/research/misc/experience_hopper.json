@@ -1,12 +1,15 @@
 {
 	"type": "staticpower:research",
-	"title": "research.basic_cauldron",
-	"description": "Double double toil and trouble!",
+	"title": "research.experience_hopper.title",
+	"description": "research.experience_hopper.description",
+	"icon": {
+		"item": "staticpower:experience_hopper"
+	},
 	"visualOffset": [
-		0,
+		4,
 		0
 	],
-	"sortOrder": 100,
+	"sortOrder": 150,
 	"prerequisites": [
 		"staticpower:research/research_tiers/basic_research"
 	],
@@ -19,10 +22,7 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/misc/io_port"
+			"target": "staticpower:crafting/machines/experience_hopper"
 		}
-	],
-	"icon": {
-		"item": "staticpower:io_port"
-	}
+	]
 }

@@ -6,7 +6,7 @@
 		"item": "staticpower:machine_generator_solid"
 	},
 	"visualOffset": [
-		-1,
+		0,
 		0
 	],
 	"prerequisites": [

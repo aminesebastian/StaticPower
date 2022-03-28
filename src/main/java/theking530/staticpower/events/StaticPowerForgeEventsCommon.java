@@ -4,8 +4,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.brigadier.CommandDispatcher;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -22,6 +25,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
+import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -52,6 +56,7 @@ import theking530.staticpower.entities.player.datacapability.CapabilityStaticPow
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerCapabilityProvider;
 import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerData;
+import theking530.staticpower.init.ModCommands.ResearchCommands;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.tools.Hammer;
@@ -65,6 +70,12 @@ import theking530.staticpower.world.trees.ModTrees;
 public class StaticPowerForgeEventsCommon {
 	public static final ResourceLocation STATIC_POWER_PLAYER_DATA = new ResourceLocation(StaticPower.MOD_ID, "player_data");
 	public static Path DATA_PATH;
+
+	@SubscribeEvent
+	public static void onRegisterCommandEvent(RegisterCommandsEvent event) {
+		CommandDispatcher<CommandSourceStack> commandDispatcher = event.getDispatcher();
+		ResearchCommands.register(commandDispatcher);
+	}
 
 	@SubscribeEvent
 	public static void worldTickEvent(TickEvent.WorldTickEvent event) {

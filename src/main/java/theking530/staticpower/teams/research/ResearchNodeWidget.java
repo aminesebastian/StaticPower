@@ -85,7 +85,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		setSize(Math.min(maxExpandedSize.getX(), collapsedSize.getX() + (maxWidth * getExpandedAlpha())), collapsedSize.getY() + (maxHeight * getExpandedAlpha()));
 
 		// Move the widget up if hovered and to the up and left if going off screen.
-		float maxOffsetY = (getExpandedAlpha() * (getSize().getY() / 2 - collapsedSize.getY() / 2));
+		float maxOffsetY = (getExpandedAlpha() * (getSize().getY() / 2.5f - collapsedSize.getY() / 2));
 		setPosition(getInitialPosition().getX(), getInitialPosition().getY() - maxOffsetY);
 	}
 

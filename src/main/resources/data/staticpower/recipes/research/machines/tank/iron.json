@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.tank_iron.title",
+	"description": "staticpower.research.tank_iron.description",
+	"icon": {
+		"item": "staticpower:tank_iron"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/transport/fluid/basic"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"displayKey": "laboratory",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/tanks/iron_tank"
+		}
+	]
+}

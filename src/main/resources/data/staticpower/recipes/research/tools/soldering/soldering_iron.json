@@ -1,8 +1,11 @@
 {
 	"type": "staticpower:research",
-	"title": "research.basic_soldering.title",
-	"description": "research.basic_soldering.description",
-	"visualOffset": [-1, 0],
+	"title": "research.soldering_iron.title",
+	"description": "research.soldering_iron.description",
+	"visualOffset": [
+		0,
+		0
+	],
 	"prerequisites": [
 		"staticpower:research/tools/hammer/basic"
 	],
@@ -14,9 +17,6 @@
 	],
 	"unlocks": [
 		{
-			"type": "crafting",
-			"target": "staticpower:crafting/machines/soldering_table"
-		},{
 			"type": "crafting",
 			"target": "staticpower:crafting/tools/soldering_iron"
 		}

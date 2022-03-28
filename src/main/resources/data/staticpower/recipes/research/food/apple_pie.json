@@ -1,0 +1,27 @@
+{
+	"type": "staticpower:research",
+	"title": "research.pie_apple.title",
+	"description": "research.pie_apple.description",
+	"icon": {
+		"item": "staticpower:pie_apple"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/farming/static_farming"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/food/apple_pie"
+		}
+	]
+}

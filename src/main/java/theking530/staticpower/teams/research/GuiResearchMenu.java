@@ -78,7 +78,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-		nodePanBox.setMaxZoom(2.0f);
+		nodePanBox.setMaxZoom(4.0f);
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
@@ -192,14 +192,14 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 				// Only show research that is either completed, marked as hidden until available
 				// AND available, or if their parent is available.
-				// if (isCompleted || isAvailable || (!research.isHiddenUntilAvailable() &&
-				// !isAvailable) || isParentAvailable) {
-				// Calculate the reletive position and create the research node widget.
-				Vector2D relative = researchNode.getRelativePosition().getScaledVector(40.0f, 40.0f).add(100, 30);
-				ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
-				researchNodes.put(researchNode, widget);
-				nodePanBox.registerWidget(widget);
-				// }
+				boolean debugMode = true;
+				if (debugMode || isCompleted || isAvailable || isParentAvailable && !research.isHiddenUntilAvailable()) {
+					// Calculate the reletive position and create the research node widget.
+					Vector2D relative = researchNode.getRelativePosition().getScaledVector(40.0f, 60.0f).add(100, 30);
+					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
+					researchNodes.put(researchNode, widget);
+					nodePanBox.registerWidget(widget);
+				}
 			}
 		}
 	}

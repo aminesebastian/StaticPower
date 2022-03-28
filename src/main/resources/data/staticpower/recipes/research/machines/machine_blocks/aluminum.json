@@ -6,9 +6,10 @@
 		"item": "staticpower:machine_block_aluminum"
 	},
 	"visualOffset": [
-		0,
+		-0.5,
 		0
 	],
+	"sortOrder": 20,
 	"prerequisites": [
 		"staticpower:research/machines/misc/io_port",
 		"staticpower:research/machines/misc/plug",

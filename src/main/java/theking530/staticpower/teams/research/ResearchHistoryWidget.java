@@ -40,7 +40,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 			GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), 0, 0, 0.0f, color);
 		}
 
-		Color borderColor = new Color(0, 0, 0, 0.3f);
+		Color borderColor = new Color(0, 0, 0, 0.1f);
 		GuiDrawUtilities.drawRectangle(pose, getSize().getX(), 0.5f, 0, 0, 1.0f, borderColor);
 		GuiDrawUtilities.drawRectangle(pose, getSize().getX(), 0.5f, 0, getSize().getY(), 1.0f, borderColor);
 
