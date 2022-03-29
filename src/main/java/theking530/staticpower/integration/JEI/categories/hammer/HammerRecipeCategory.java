@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.Block;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -86,7 +87,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 4, 16, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 86, 14, 0);
 
-		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		// Get the buffer and render the large hammer.
 		GuiDrawUtilities.drawSprite(matrixStack, new ResourceLocation("staticpower", "items/tools/hammer_iron"), 32, 32, 23, 5, 0, 0, 0, 1, 1, Color.WHITE);

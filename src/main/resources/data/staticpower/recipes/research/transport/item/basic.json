@@ -2,6 +2,7 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.cable_item_basic.title",
 	"description": "staticpower.research.cable_item_basic.description",
+	"sortOrder": 150,
 	"visualOffset": [
 		0,
 		0

@@ -13,7 +13,7 @@ import net.minecraft.network.FriendlyByteBuf;
  * @author Amine Sebastian
  *
  */
-public class Color extends Vector4D {
+public class Color extends AbstractVector<Color> {
 
 	public static final List<String> DYE_COLORS = Arrays.asList("white", "orange", "magenta", "light_blue", "yellow", "lime", "pink", "gray", "light_gray", "cyan", "purple", "blue", "brown", "green",
 			"red", "black");
@@ -42,40 +42,60 @@ public class Color extends Vector4D {
 	}
 
 	public float getRed() {
-		return getX();
+		return values[0];
+	}
+
+	public Color setRed(float red) {
+		values[0] = red;
+		return this;
 	}
 
 	public float getGreen() {
-		return getY();
+		return values[1];
+	}
+
+	public Color setGreen(float green) {
+		values[1] = green;
+		return this;
 	}
 
 	public float getBlue() {
-		return getZ();
+		return values[2];
+	}
+
+	public Color setBlue(float blue) {
+		values[2] = blue;
+		return this;
 	}
 
 	public float getAlpha() {
-		return getW();
+		return values[3];
+	}
+
+	public Color setAlpha(float alpha) {
+		values[3] = alpha;
+		return this;
 	}
 
 	public Color lighten(float r, float g, float b, float a) {
-		add(new Vector4D(r, g, b, a));
+		add(new Color(r, g, b, a));
 		return this;
 	}
 
 	public Color darken(float r, float g, float b, float a) {
-		subtract(new Vector4D(r, g, b, a));
-		setX(Math.max(0, getRed()));
-		setY(Math.max(0, getGreen()));
-		setZ(Math.max(0, getBlue()));
-		setW(Math.max(0, getAlpha()));
+		subtract(new Color(r, g, b, a));
+		setRed(Math.max(0, getRed()));
+		setGreen(Math.max(0, getGreen()));
+		setBlue(Math.max(0, getBlue()));
+		setAlpha(Math.max(0, getAlpha()));
 		return this;
 	}
 
 	public Color desaturate(float percentage) {
 		float luminance = 0.3f * getRed() + 0.6f * getGreen() + 0.1f * getBlue();
-		setX(getRed() + percentage * (luminance - getRed()));
-		setY(getGreen() + percentage * (luminance - getGreen()));
-		setZ(getBlue() + percentage * (luminance - getBlue()));
+		setRed(getRed() + percentage * (luminance - getRed()));
+		setGreen(getGreen() + percentage * (luminance - getGreen()));
+		setBlue(getBlue() + percentage * (luminance - getBlue()));
 		return this;
 	}
 
@@ -121,7 +141,7 @@ public class Color extends Vector4D {
 
 	@Override
 	public Color copy() {
-		return new Color(values.get(0), values.get(1), values.get(2), values.get(3));
+		return new Color(values[0], values[1], values[2], values[3]);
 	}
 
 	public void toBuffer(FriendlyByteBuf buff) {

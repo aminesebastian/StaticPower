@@ -1,11 +1,8 @@
 {
 	"type": "staticpower:research",
-	"title": "staticpower.research.pump_iron.title",
-	"description": "staticpower.research.pump_iron.description",
-	"icon": {
-		"item": "staticpower:pump_iron"
-	},
-	"sortOrder": -10,
+	"title": "research.motor.title",
+	"description": "research.motor.description",
+	"sortOrder": 100,
 	"visualOffset": [
 		0,
 		0
@@ -21,9 +18,11 @@
 	],
 	"unlocks": [
 		{
-			"displayKey": "laboratory",
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/pump/pump_iron"
+			"target": "staticpower:crafting/misc/motor"
 		}
-	]
+	],
+	"icon": {
+		"item": "staticpower:motor"
+	}
 }

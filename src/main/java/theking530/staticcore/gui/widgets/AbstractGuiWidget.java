@@ -14,6 +14,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.WidgetContainer;
+import theking530.staticcore.gui.WidgetContainer.WidgetClipType;
 import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
@@ -32,6 +33,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	protected WidgetContainer owningContainer;
 	protected final WidgetContainer internalContainer;
 	protected boolean DEBUG_HOVER;
+	private WidgetClipType clipType;
 	private Vector2D initialPosition;
 	private Vector2D position;
 	private float zLevel;
@@ -57,6 +59,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		lastMousePosition = new Vector2D(0.0f, 0.0f);
 		isVisible = true;
 		isEnabled = true;
+		clipType = WidgetClipType.FREE;
 		zLevel = 0.0f;
 		autoHandleTooltipBounds = true;
 		internalContainer = new WidgetContainer(WidgetParent.fromWidget(this));
@@ -220,6 +223,24 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	/**
+	 * Gets the clip type of the parent.
+	 * 
+	 * @return
+	 */
+	public WidgetClipType getClipType() {
+		return this.clipType;
+	}
+
+	/**
+	 * Sets the clip type of the parent.
+	 * 
+	 * @param type
+	 */
+	public void setClipType(WidgetClipType type) {
+		this.clipType = type;
+	}
+
+	/**
 	 * Gets the last screen space absolute position that this widget was rendered
 	 * at.
 	 * 
@@ -369,7 +390,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseX
 	 * @param mouseY
 	 */
-	public final void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+	public final void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY, RectangleBounds parentBounds) {
 		this.parentSize = parentSize;
 		lastMousePosition = new Vector2D(mouseX, mouseY);
 
@@ -378,10 +399,12 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 		matrixStack.pushPose();
 		transformPoseBeforeRender(matrixStack);
-
+		
+		RectangleBounds clip = getClipBounds(matrixStack).multiply((float) getMinecraft().getWindow().getGuiScale());
 		if (shouldDrawChildren()) {
-			internalContainer.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY);
+			internalContainer.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY, clip);
 		}
+		
 		updateWidgetBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY);
 		matrixStack.popPose();
 
@@ -415,23 +438,21 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public final void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
-		RectangleBounds clip = getClipBounds(matrix);
-		if (clip != null) {
-			RenderingUtilities.applyScissorMask(clip);
+		
+		// Apply the clip if it was requested by this widget.
+		RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
+		if(getClipType() == WidgetClipType.CLIP) {
+			RenderingUtilities.applyScissorMask(clip);	
 		}
 
 		if (shouldDrawChildren()) {
-			internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks);
+			internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks, clip);
 		}
 		renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
-
-		if (clip != null) {
-			RenderingUtilities.clearScissorMask();
-		}
 	}
 
 	/**
@@ -443,43 +464,39 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {		
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
-		RectangleBounds clip = getClipBounds(matrix);
-		if (clip != null) {
-			RenderingUtilities.applyScissorMask(clip);
+		
+		// Apply the clip if it was requested by this widget.
+		RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
+		if(getClipType() == WidgetClipType.CLIP) {
+			RenderingUtilities.applyScissorMask(clip);	
 		}
-
+		
 		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 
 		if (shouldDrawChildren()) {
-			internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks);
+			internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks, clip);
 		}
 		matrix.popPose();
-
-		if (clip != null) {
-			RenderingUtilities.clearScissorMask();
-		}
 	}
 
-	public final void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+	public final void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
 		matrix.pushPose();
 		transformPoseBeforeRender(matrix);
-		RectangleBounds clip = getClipBounds(matrix);
-		if (clip != null) {
-			RenderingUtilities.applyScissorMask(clip);
-		}
 
+		// Apply the clip if it was requested by this widget.
+		RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
+		if(getClipType() == WidgetClipType.CLIP) {
+			RenderingUtilities.applyScissorMask(clip);		
+		}
+		
 		if (shouldDrawChildren()) {
-			internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks);
+			internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks, clip);
 		}
 		renderWidgetForeground(matrix, mouseX, mouseY, partialTicks);
 		matrix.popPose();
-
-		if (clip != null) {
-			RenderingUtilities.clearScissorMask();
-		}
 	}
 
 	/**
@@ -524,7 +541,9 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	public RectangleBounds getClipBounds(PoseStack matrix) {
-		return null;
+		RectangleBounds output = getBounds().copy();
+		output.setY(Minecraft.getInstance().getWindow().getGuiScaledHeight() - getBounds().getY() - getSize().getY());
+		return output;
 	}
 
 	/**

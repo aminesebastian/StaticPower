@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.cables.digistore.crafting.CraftingRequestResponse;
@@ -98,8 +99,8 @@ public class AutoCraftingStepsWidget extends AbstractGuiWidget<AutoCraftingSteps
 			// If the widget has a cooresponding material, set it and render. Otherwise, set
 			// it to null and do nothing.
 			if (i < materials.size()) {
-				widget.updateBeforeRender(matrix, getSize(), partialTicks, mouseX, mouseY);
-				widget.renderForeground(matrix, mouseX, mouseY, partialTicks);
+				widget.updateBeforeRender(matrix, getSize(), partialTicks, mouseX, mouseY, RectangleBounds.INFINITE_BOUNDS);
+				widget.renderForeground(matrix, mouseX, mouseY, partialTicks, RectangleBounds.INFINITE_BOUNDS);
 			} else {
 				widget.setStepData(null, null, false);
 			}

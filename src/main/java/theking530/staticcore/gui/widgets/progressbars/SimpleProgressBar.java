@@ -43,7 +43,7 @@ public class SimpleProgressBar extends AbstractProgressBar<SimpleProgressBar> {
 		Color actualBarColor = barColor.copy();
 		if (visualCurrentProgresPercentage >= 1.0f) {
 			float glowFactor = GuiDrawUtilities.getSinFunction(5.0f, 3.0f);
-			actualBarColor.setW(glowFactor);
+			actualBarColor.setAlpha(glowFactor);
 		}
 
 		if (flipped) {

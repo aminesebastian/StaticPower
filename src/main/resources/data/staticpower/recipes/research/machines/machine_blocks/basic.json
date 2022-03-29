@@ -1,0 +1,38 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_machine_block_description",
+	"description": "staticpower.research.basic_machine_block_description",
+	"icon": {
+		"item": "staticpower:machine_block_basic"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"sortOrder": 20,
+	"prerequisites": [
+		"staticpower:research/machines/solar_panels/basic",
+		"staticpower:research/machines/soldering_table",
+		"staticpower:research/machines/solid_generator",
+		"staticpower:research/machines/laboratory",
+		"staticpower:research/tools/batteries/basic"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"displayKey": "machine_block",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/machine_blocks/machine_block_basic"
+		},
+		{
+			"displayKey": "machine_block",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/machine_blocks/machine_block_basic_from_ingot"
+		}
+	]
+}

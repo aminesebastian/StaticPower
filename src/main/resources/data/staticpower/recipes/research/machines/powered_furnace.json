@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:research",
+	"title": "research.powered_furnace.title",
+	"description": "research.powered_furnace.description",
+	"icon": {
+		"item": "staticpower:machine_powered_furnace"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/machine_blocks/basic"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"displayKey": "laboratory",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/powered_furnace"
+		}
+	]
+}

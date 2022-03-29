@@ -10,6 +10,7 @@ import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 
 public abstract class StaticPowerDetatchedGui extends Screen {
@@ -73,13 +74,13 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		this.partialTicks = partialTicks;
 
 		// Update the widgets.
-		widgetContainer.updateBeforeRender(pose, new Vector2D(width, height), partialTicks, mouseX, mouseY);
+		widgetContainer.updateBeforeRender(pose, new Vector2D(width, height), partialTicks, mouseX, mouseY, getScreenBounds());
 
 		// Raise the mouse hovered event for all the widgets,
 		widgetContainer.handleMouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
-		widgetContainer.renderForegound(pose, mouseX, mouseY, partialTicks);
+		widgetContainer.renderForegound(pose, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		// Draw any additional foreground elements.
 		pose.pushPose();
@@ -107,10 +108,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		drawBackgroundExtras(pose, partialTicks, mouseX, mouseY);
 
 		// Update the widgets and then draw the background.
-		widgetContainer.renderBackground(pose, mouseX, mouseY, partialTicks);
+		widgetContainer.renderBackground(pose, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		// Draw any widgets that need to appear above slots/items.
-		widgetContainer.renderBehindItems(pose, mouseX, mouseY, partialTicks);
+		widgetContainer.renderBehindItems(pose, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		// Draw anything infront of the background but behind the items.
 		drawBehindItems(pose, partialTicks, mouseX, mouseY);
@@ -165,6 +166,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	 * @param mouseY       The mouse's y position.
 	 */
 	protected void drawForegroundExtras(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
+	}
+
+	public RectangleBounds getScreenBounds() {
+		return new RectangleBounds(0, 0, Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 	}
 
 	public void setDrawDefaultDarkBackground(boolean drawDefaultDarkBackground) {

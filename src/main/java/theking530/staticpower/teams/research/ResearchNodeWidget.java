@@ -271,12 +271,8 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 			GuiDrawUtilities.drawStringLeftAligned(pose, "Unlocks:", 9, 40 + descriptionHeight, 0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
 			for (int i = 0; i < unlocks.size(); i++) {
 				ResearchUnlock unlock = unlocks.get(i);
-				if (unlock.getType() == ResearchUnlockType.CRAFTING && unlock.getIcon() != null) {
+				if (unlock.getIcon() != null) {
 					ResearchIcon.draw(unlock.getIcon(), pose, 6.5f + (i * 11), 40 + descriptionHeight, 155, 11f, 11f);
-					Recipe<?> recipe = unlock.getAsRecipe();
-					if (recipe != null) {
-
-					}
 				}
 			}
 		}

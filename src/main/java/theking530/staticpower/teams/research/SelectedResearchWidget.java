@@ -14,6 +14,7 @@ import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
+import theking530.staticpower.data.research.ResearchIcon;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 import theking530.staticpower.data.research.ResearchUnlockUtilities;
@@ -34,7 +35,7 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 	public void tick() {
 	}
 
-	public void setResearch(Research research,@Nullable  ResearchInstance instance) {
+	public void setResearch(Research research, @Nullable ResearchInstance instance) {
 		this.research = research;
 		researchProgress = instance;
 		// Split the description into wrapped lines and cache it. Also resize the widget
@@ -93,13 +94,10 @@ public class SelectedResearchWidget extends AbstractGuiWidget<SelectedResearchWi
 
 				// Draw the unlocks.
 				for (ResearchUnlock unlock : unlocks) {
-					if (unlock.getType() == ResearchUnlockType.CRAFTING) {
-						Recipe<?> recipe = unlock.getAsRecipe();
-						if (recipe != null) {
-							GuiDrawUtilities.drawItem(pose, recipe.getResultItem(), getSize().getX() - 25.5f - xOffset, getSize().getY() - 20, 200, 12f, 12f);
-							xOffset += 12.1f;
-						}
+					if (unlock.getIcon() != null) {
+						ResearchIcon.draw(unlock.getIcon(), pose, getSize().getX() - 25.5f - xOffset, getSize().getY() - 20, 200, 12f, 12f);
 					}
+					xOffset += 12.1f;
 				}
 			}
 		}

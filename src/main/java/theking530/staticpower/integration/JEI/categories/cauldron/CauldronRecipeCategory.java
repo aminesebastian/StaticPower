@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
@@ -98,10 +99,10 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 105, 22, 0);
 
 		arrow.setPosition(23, 6);
-		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		arrow.setPosition(80, 25);
-		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		// Get the buffer and render the large hammer.
 		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 0, 0);

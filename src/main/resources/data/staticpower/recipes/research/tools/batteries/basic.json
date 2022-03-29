@@ -7,7 +7,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/solid_generator"
+		"staticpower:research/machines/machine_blocks/aluminum"
 	],
 	"requirements": [
 		{
@@ -18,7 +18,7 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/portable_battries/basic"
+			"target": "staticpower:crafting/portable_batteries/basic"
 		}
 	],
 	"icon": {

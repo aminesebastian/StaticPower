@@ -2,22 +2,17 @@ package theking530.staticcore.utilities;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 
 import net.minecraft.network.FriendlyByteBuf;
 
-public class Vector2D extends AbstractVector {
+public class Vector2D extends AbstractVector<Vector2D> {
 
 	public Vector2D(double x, double y) {
-		super(2);
-		setX((float) x);
-		setY((float) y);
+		super((float) x, (float) y);
 	}
 
 	public Vector2D(float x, float y) {
-		super(2);
-		setX(x);
-		setY(y);
+		super(x, y);
 	}
 
 	public Vector2D() {
@@ -25,35 +20,35 @@ public class Vector2D extends AbstractVector {
 	}
 
 	public float getX() {
-		return values.get(0);
+		return values[0];
 	}
 
 	public int getXi() {
-		return Math.round(values.get(0));
+		return Math.round(values[0]);
 	}
 
 	public void setX(float x) {
-		values.set(0, x);
+		values[0] = x;
 	}
 
 	public void addX(float x) {
-		values.set(0, values.get(0) + x);
+		values[0] += x;
 	}
 
 	public float getY() {
-		return values.get(1);
+		return values[1];
 	}
 
 	public int getYi() {
-		return Math.round(values.get(1));
+		return Math.round(values[1]);
 	}
 
 	public void setY(float y) {
-		values.set(1, y);
+		values[1] = y;
 	}
 
 	public void addY(float y) {
-		values.set(1, values.get(1) + y);
+		values[1] += y;
 	}
 
 	public Vector3D promote() {
@@ -71,8 +66,8 @@ public class Vector2D extends AbstractVector {
 	}
 
 	public Vector2D multiply(float x, float y) {
-		values.set(0, values.get(0) * x);
-		values.set(1, values.get(1) * y);
+		values[0] *= x;
+		values[1] *= y;
 		return this;
 	}
 
@@ -85,9 +80,8 @@ public class Vector2D extends AbstractVector {
 		return new Vector2D(obj.get(0).getAsFloat(), obj.get(1).getAsFloat());
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Vector2D copy() {
-		return new Vector2D(values.get(0), values.get(1));
+		return new Vector2D(values[0], values[1]);
 	}
 }

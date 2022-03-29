@@ -111,7 +111,7 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 			// Get the fluid attributes and add alpha to the fluid.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-			fluidColor.setW(0.2f);
+			fluidColor.setAlpha(0.2f);
 
 			// Get the height and y position.
 			float height = tileEntity.inputFluidTankComponent.getVisualFillLevel() * TEXEL * 15;

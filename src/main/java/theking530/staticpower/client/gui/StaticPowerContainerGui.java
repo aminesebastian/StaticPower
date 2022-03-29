@@ -9,6 +9,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.Rect2i;
 import net.minecraft.network.chat.Component;
@@ -25,6 +26,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.container.StaticPowerContainer;
@@ -167,8 +169,8 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		stack.translate(leftPos, topPos, 0);
 
 		// Update the widgets and then draw the background.
-		widgetContainer.updateBeforeRender(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY);
-		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks);
+		widgetContainer.updateBeforeRender(stack, new Vector2D(getXSize(), getYSize()), partialTicks, mouseX, mouseY, getScreenBounds());
+		widgetContainer.renderBackground(stack, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		// Draw the container background.
 		drawGenericBackground(stack);
@@ -183,7 +185,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		}
 
 		// Draw any widgets that need to appear above slots/items.
-		widgetContainer.renderBehindItems(stack, mouseX, mouseY, partialTicks);
+		widgetContainer.renderBehindItems(stack, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		// Draw anything infront of the background but behind the items.
 		drawBehindItems(stack, partialTicks, mouseX, mouseY);
@@ -207,7 +209,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		widgetContainer.handleMouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
-		widgetContainer.renderForegound(stack, mouseX, mouseY, partialTicks);
+		widgetContainer.renderForegound(stack, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		drawSlotOverlays(menu.slots);
 
@@ -285,6 +287,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			return super.keyPressed(key, scanCode, modifiers);
 		}
 		return true;
+	}
+
+	public RectangleBounds getScreenBounds() {
+		return new RectangleBounds(0, 0, Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 	}
 
 	public List<Rect2i> getGuiBounds() {

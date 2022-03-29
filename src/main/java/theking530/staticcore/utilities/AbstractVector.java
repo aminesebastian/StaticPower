@@ -1,79 +1,83 @@
 package theking530.staticcore.utilities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.network.FriendlyByteBuf;
 
-@SuppressWarnings("unchecked")
-public abstract class AbstractVector implements Cloneable {
+@SuppressWarnings({ "unchecked", "rawtypes" })
+public abstract class AbstractVector<T extends AbstractVector> implements Cloneable {
 	protected final static char[] PREFIXES = { 'X', 'Y', 'Z', 'W' };
 	protected final static char[] COLOR_PREFIXES = { 'R', 'G', 'B', 'A' };
-	protected final List<Float> values;
+	protected final float[] values;
 
 	public AbstractVector(int size) {
-		values = new ArrayList<Float>();
+		values = new float[size];
 		for (int i = 0; i < size; i++) {
-			values.add(0.0f);
+			values[i] = 0.0f;
 		}
 	}
 
 	public AbstractVector(float... initialValues) {
-		values = new ArrayList<Float>();
+		values = new float[initialValues.length];
 		for (int i = 0; i < initialValues.length; i++) {
-			values.add(initialValues[i]);
+			values[i] = initialValues[i];
 		}
 	}
 
-	public abstract <T extends AbstractVector> T copy();
+	public abstract T copy();
 
 	public float getScalar(int index) {
-		return values.get(index);
+		return values[index];
 	}
 
 	public int getDimensions() {
-		return values.size();
+		return values.length;
 	}
 
-	public <T extends AbstractVector> T multiply(float multiplier) {
-		for (int i = 0; i < values.size(); i++) {
-			values.set(i, values.get(i) * multiplier);
+	public T multiply(float multiplier) {
+		for (int i = 0; i < values.length; i++) {
+			values[i] *= multiplier;
 		}
 		return (T) this;
 	}
 
-	public <T extends AbstractVector> T divide(float divisor) {
-		for (int i = 0; i < values.size(); i++) {
-			values.set(i, values.get(i) / divisor);
+	public T divide(float divisor) {
+		for (int i = 0; i < values.length; i++) {
+			values[i] /= divisor;
 		}
 		return (T) this;
 	}
 
-	public <T extends AbstractVector> T divide(AbstractVector other) {
+	public T divide(T other) {
 		for (int i = 0; i < Math.min(other.getDimensions(), getDimensions()); i++) {
-			values.set(i, values.get(i) / other.values.get(i));
+			values[i] /= other.values[i];
 		}
 		return (T) this;
 	}
 
-	public <T extends AbstractVector> T add(AbstractVector other) {
+	public T add(T other) {
 		for (int i = 0; i < Math.min(other.getDimensions(), getDimensions()); i++) {
-			values.set(i, values.get(i) + other.values.get(i));
+			values[i] += other.values[i];
 		}
 		return (T) this;
 	}
 
-	public <T extends AbstractVector> T subtract(AbstractVector other) {
+	public T add(float... values) {
+		for (int i = 0; i < Math.min(values.length, getDimensions()); i++) {
+			this.values[i] += values[i];
+		}
+		return (T) this;
+	}
+
+	public T subtract(T other) {
 		for (int i = 0; i < Math.min(other.getDimensions(), getDimensions()); i++) {
-			values.set(i, values.get(i) - other.values.get(i));
+			values[i] -= other.values[i];
 		}
 		return (T) this;
 	}
 
-	public <T extends AbstractVector> T normalize() {
+	public T normalize() {
 		float length = getLength();
-		for (int i = 0; i < values.size(); i++) {
-			values.set(i, values.get(i) / length);
+		for (int i = 0; i < values.length; i++) {
+			values[i] /= length;
 		}
 		return (T) this;
 	}
@@ -83,16 +87,16 @@ public abstract class AbstractVector implements Cloneable {
 		for (Float val : values) {
 			sum += val * val;
 		}
-		return (float) Math.pow(sum, (1.0f / values.size()));
+		return (float) Math.pow(sum, (1.0f / values.length));
 	}
 
-	public float dot(AbstractVector other) {
-		if (this.values.size() != other.values.size()) {
+	public float dot(T other) {
+		if (this.values.length != other.values.length) {
 			throw new RuntimeException("Dot product can only be calculated between two vectors of the same degree!");
 		} else {
 			float output = 0;
-			for (int i = 0; i < values.size(); i++) {
-				output += (values.get(i) * other.values.get(i));
+			for (int i = 0; i < values.length; i++) {
+				output += (values[i] * other.values[i]);
 			}
 			return output;
 		}
@@ -106,8 +110,8 @@ public abstract class AbstractVector implements Cloneable {
 	@Override
 	public int hashCode() {
 		int output = 0;
-		for (int i = 0; i < values.size(); i++) {
-			output = 31 * output + Float.floatToIntBits(values.get(i));
+		for (int i = 0; i < values.length; i++) {
+			output = 31 * output + Float.floatToIntBits(values[i]);
 		}
 		return output;
 	}
@@ -116,12 +120,12 @@ public abstract class AbstractVector implements Cloneable {
 	public boolean equals(Object obj) {
 		if (obj instanceof AbstractVector) {
 			AbstractVector other = (AbstractVector) obj;
-			if (other.values.size() != values.size()) {
+			if (other.values.length != values.length) {
 				return false;
 			}
 
-			for (int i = 0; i < other.values.size(); i++) {
-				if (other.values.get(i) != values.get(i)) {
+			for (int i = 0; i < other.values.length; i++) {
+				if (other.values[i] != values[i]) {
 					return false;
 				}
 			}
@@ -139,8 +143,8 @@ public abstract class AbstractVector implements Cloneable {
 
 	protected String toStringInternal(boolean useColor) {
 		String output = "[";
-		for (int i = 0; i < values.size(); i++) {
-			output += (useColor ? COLOR_PREFIXES[i] : PREFIXES[i]) + ":" + values.get(i);
+		for (int i = 0; i < values.length; i++) {
+			output += (useColor ? COLOR_PREFIXES[i] : PREFIXES[i]) + ":" + values[i];
 			output += " ";
 		}
 		output = output.substring(0, output.length() - 1);

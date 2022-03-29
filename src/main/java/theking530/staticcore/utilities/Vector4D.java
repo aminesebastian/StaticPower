@@ -6,7 +6,7 @@ package theking530.staticcore.utilities;
  * @author Amine Sebastian
  *
  */
-public class Vector4D extends Vector3D {
+public class Vector4D extends AbstractVector<Vector4D> {
 	/**
 	 * Default UV vector 0.0f, 0.0f, 1.0f, 1.0f. DO NOT MODIFY.
 	 */
@@ -21,20 +21,63 @@ public class Vector4D extends Vector3D {
 	}
 
 	public Vector4D(float x, float y, float z, float w) {
-		super(x, y, z);
-		values.add(w);
+		super(x, y, z, w);
+	}
+
+	public float getX() {
+		return values[0];
+	}
+
+	public int getXi() {
+		return Math.round(values[0]);
+	}
+
+	public void setX(float x) {
+		values[0] = x;
+	}
+
+	public void addX(float x) {
+		values[0] += x;
+	}
+
+	public float getY() {
+		return values[1];
+	}
+
+	public int getYi() {
+		return Math.round(values[1]);
+	}
+
+	public void setY(float y) {
+		values[1] = y;
+	}
+
+	public void addY(float y) {
+		values[1] += y;
+	}
+
+	public float getZ() {
+		return values[2];
+	}
+
+	public void setZ(float z) {
+		values[2] = z;
+	}
+
+	public int getZi() {
+		return Math.round(values[2]);
 	}
 
 	public float getW() {
-		return values.get(3);
+		return values[3];
 	}
 
 	public void setW(float w) {
-		values.set(3, w);
+		values[3] = w;
 	}
 
 	public int getWi() {
-		return Math.round(values.get(3));
+		return Math.round(values[3]);
 	}
 
 	public Vector4D add(float x, float y, float z, float w) {
@@ -49,6 +92,6 @@ public class Vector4D extends Vector3D {
 
 	@Override
 	public Vector4D copy() {
-		return new Vector4D(values.get(0), values.get(1), values.get(2), values.get(3));
+		return new Vector4D(values[0], values[1], values[2], values[3]);
 	}
 }

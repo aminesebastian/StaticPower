@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"m": {
-			"item": "staticpower:machine_block_aluminum"
+			"item": "staticpower:machine_block_basic"
 		},
 		"g": {
 			"tag": "forge:gears/tin"

@@ -14,7 +14,7 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
 public class ResearchUnlock {
 	public enum ResearchUnlockType {
-		CRAFTING
+		CRAFTING, MACHINE_RECIPE
 	}
 
 	private final String displayKey;

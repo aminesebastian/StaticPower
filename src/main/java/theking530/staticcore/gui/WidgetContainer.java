@@ -3,7 +3,6 @@ package theking530.staticcore.gui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 import org.apache.logging.log4j.util.TriConsumer;
 
@@ -17,6 +16,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
+import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
 
 /**
@@ -27,6 +28,7 @@ import theking530.staticcore.utilities.Vector2D;
  */
 @OnlyIn(Dist.CLIENT)
 public class WidgetContainer {
+	protected final boolean isTopLevel;
 	protected final List<AbstractGuiWidget<?>> widgets;
 	protected final WidgetParent parent;
 	protected TriConsumer<PoseStack, AbstractGuiWidget<?>, Integer> transformer;
@@ -34,6 +36,7 @@ public class WidgetContainer {
 	public WidgetContainer(WidgetParent parent) {
 		widgets = new ArrayList<AbstractGuiWidget<?>>();
 		this.parent = parent;
+		this.isTopLevel = parent.getType() == WidgetParentType.SCREEN;
 	}
 
 	public void setTransfomer(TriConsumer<PoseStack, AbstractGuiWidget<?>, Integer> transformer) {
@@ -47,7 +50,7 @@ public class WidgetContainer {
 		}
 	}
 
-	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY) {
+	public void updateBeforeRender(PoseStack matrixStack, Vector2D ownerSize, float partialTicks, int mouseX, int mouseY, RectangleBounds bounds) {
 		// Render the foreground of all the widgets. We should NOT check visibility here
 		// as widgets may drive their visibility in there.
 		for (int i = 0; i < widgets.size(); i++) {
@@ -56,14 +59,14 @@ public class WidgetContainer {
 				matrixStack.pushPose();
 				transformer.accept(matrixStack, widget, i);
 			}
-			widget.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY);
+			widget.updateBeforeRender(matrixStack, ownerSize, partialTicks, mouseX, mouseY, bounds);
 			if (transformer != null) {
 				matrixStack.popPose();
 			}
 		}
 	}
 
-	public void renderBackground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderBackground(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks, RectangleBounds bounds) {
 		// Render the foreground of all the widgets.
 		for (int i = 0; i < widgets.size(); i++) {
 			AbstractGuiWidget<?> widget = widgets.get(i);
@@ -72,32 +75,19 @@ public class WidgetContainer {
 					matrixStack.pushPose();
 					transformer.accept(matrixStack, widget, i);
 				}
-				widget.renderBackground(matrixStack, mouseX, mouseY, partialTicks);
+				widget.renderBackground(matrixStack, mouseX, mouseY, partialTicks, bounds);
 				if (transformer != null) {
 					matrixStack.popPose();
 				}
 			}
-		}
-	}
 
-	public void renderBehindItems(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
-		// Render the foreground of all the widgets.
-		for (int i = 0; i < widgets.size(); i++) {
-			AbstractGuiWidget<?> widget = widgets.get(i);
-			if (widget.isVisible()) {
-				if (transformer != null) {
-					matrixStack.pushPose();
-					transformer.accept(matrixStack, widget, i);
-				}
-				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks);
-				if (transformer != null) {
-					matrixStack.popPose();
-				}
+			if (isTopLevel) {
+				RenderingUtilities.clearScissorMask();
 			}
 		}
 	}
 
-	public void renderForegound(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+	public void renderBehindItems(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks, RectangleBounds bounds) {
 		// Render the foreground of all the widgets.
 		for (int i = 0; i < widgets.size(); i++) {
 			AbstractGuiWidget<?> widget = widgets.get(i);
@@ -106,10 +96,35 @@ public class WidgetContainer {
 					matrixStack.pushPose();
 					transformer.accept(matrixStack, widget, i);
 				}
-				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks);
+				widget.renderBehindItems(matrixStack, mouseX, mouseY, partialTicks, bounds);
 				if (transformer != null) {
 					matrixStack.popPose();
 				}
+			}
+
+			if (isTopLevel) {
+				RenderingUtilities.clearScissorMask();
+			}
+		}
+	}
+
+	public void renderForegound(PoseStack matrixStack, int mouseX, int mouseY, float partialTicks, RectangleBounds bounds) {
+		// Render the foreground of all the widgets.
+		for (int i = 0; i < widgets.size(); i++) {
+			AbstractGuiWidget<?> widget = widgets.get(i);
+			if (widget.isVisible()) {
+				if (transformer != null) {
+					matrixStack.pushPose();
+					transformer.accept(matrixStack, widget, i);
+				}
+				widget.renderForeground(matrixStack, mouseX, mouseY, partialTicks, bounds);
+				if (transformer != null) {
+					matrixStack.popPose();
+				}
+			}
+
+			if (isTopLevel) {
+				RenderingUtilities.clearScissorMask();
 			}
 		}
 	}
@@ -254,6 +269,10 @@ public class WidgetContainer {
 		SCREEN, WIDGET, TAB
 	}
 
+	public enum WidgetClipType {
+		CLIP, FREE
+	}
+
 	public static class WidgetParent {
 		protected final Screen owningGui;
 		protected final AbstractGuiWidget<?> owningWidget;
@@ -281,6 +300,17 @@ public class WidgetContainer {
 
 		public WidgetParentType getType() {
 			return type;
+		}
+
+		public WidgetClipType getClipType() {
+			if (type == WidgetParentType.WIDGET) {
+				return owningWidget.getClipType();
+			} else if (type == WidgetParentType.SCREEN) {
+				return WidgetClipType.FREE;
+			} else if (type == WidgetParentType.TAB) {
+				return WidgetClipType.FREE;
+			}
+			return WidgetClipType.FREE;
 		}
 
 		// TODO: Populate this.

@@ -120,6 +120,7 @@ public class ResearchManager {
 	}
 
 	public void unlockAllResearch() {
+		completedResearch.clear();
 		for (Research research : ResearchLevels.getAllResearch().values()) {
 			completedResearch.add(research.getId());
 		}

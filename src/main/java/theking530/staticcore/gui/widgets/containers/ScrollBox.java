@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.WidgetContainer.WidgetClipType;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
@@ -23,6 +24,7 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 	public ScrollBox(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
 		this.internalContainer.setTransfomer(this::updateChildLayout);
+		this.setClipType(WidgetClipType.CLIP);
 	}
 
 	protected void updateChildLayout(PoseStack pose, AbstractGuiWidget widget, int index) {
@@ -82,23 +84,16 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 	public void tick() {
 		float requiredHeight = 0;
 		for (AbstractGuiWidget<?> child : getChildren()) {
-			if (child.getPosition().getY() > requiredHeight) {
-				requiredHeight = child.getPosition().getY() + child.getHeight();
-			}
+			requiredHeight += child.getHeight();
 		}
 
-		float maxScroll = Math.max(0, requiredHeight - getSize().getY() + 20);
+		float maxScroll = Math.max(0, requiredHeight - getSize().getY());
 		setMaxScroll(maxScroll);
 	}
 
+	@Override
 	public RectangleBounds getClipBounds(PoseStack matrix) {
-		float guiScale = (float) Minecraft.getInstance().getWindow().getGuiScale();
-		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
-		Vector2D screenSpace = getScreenSpacePosition();
-		Vector2D adjustedSize = getSize();
-		RectangleBounds output = new RectangleBounds(screenSpace.getX() * guiScale, resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX() * guiScale,
-				adjustedSize.getY() * guiScale);
-		return output;
+		return super.getClipBounds(matrix);
 	}
 
 	@Override

@@ -37,7 +37,7 @@ public class TileEntityRenderTank extends StaticPowerTileEntitySpecialRenderer<T
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-			fluidColor.setW(1.0f); // Render color as opaque so only the texture controls opacity.
+			fluidColor.setAlpha(1.0f); // Render color as opaque so only the texture controls opacity.
 			boolean isGas = fluid.getFluid().getAttributes().isGaseous();
 
 			// Calculate the hight and position, then render.

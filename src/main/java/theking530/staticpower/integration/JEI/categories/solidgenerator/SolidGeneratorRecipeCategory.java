@@ -27,6 +27,7 @@ import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -93,11 +94,11 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 
 		fireBar.setCurrentProgress(processingTimer.getValue());
 		fireBar.setMaxProgress(processingTimer.getMaxValue());
-		fireBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		fireBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		Font fontRenderer = Minecraft.getInstance().font;
 		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get()).getString();

@@ -26,6 +26,7 @@ import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
@@ -90,11 +91,11 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 		// Draw the progress bars.
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
-		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		flameBar.setCurrentProgress(processingTimer.getValue());
 		flameBar.setMaxProgress(processingTimer.getMaxValue());
-		flameBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		flameBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		Font fontRenderer = Minecraft.getInstance().font;
 		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(recipe.getPowerGeneration()).getString();

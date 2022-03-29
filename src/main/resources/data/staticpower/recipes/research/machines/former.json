@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:research",
+	"title": "research.former.title",
+	"description": "research.former.description",
+	"icon": {
+		"item": "staticpower:machine_former"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/powered_furnace"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"displayKey": "laboratory",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/former"
+		}
+	]
+}

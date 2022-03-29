@@ -192,7 +192,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 				// Only show research that is either completed, marked as hidden until available
 				// AND available, or if their parent is available.
-				boolean debugMode = true;
+				boolean debugMode = false;
 				if (debugMode || isCompleted || isAvailable || isParentAvailable && !research.isHiddenUntilAvailable()) {
 					// Calculate the reletive position and create the research node widget.
 					Vector2D relative = researchNode.getRelativePosition().getScaledVector(40.0f, 60.0f).add(100, 30);
@@ -283,7 +283,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	protected void drawConnectingLines(PoseStack pose, float partialTicks, int mouseX, int mouseY) {
 		// Clip the lines to the scroll box area.
-		RectangleBounds clipMask = nodePanBox.getClipBounds(pose);
+		RectangleBounds clipMask = nodePanBox.getClipBounds(pose).copy().multiply((float) getMinecraft().getWindow().getGuiScale());
 		RenderingUtilities.applyScissorMask(clipMask);
 
 		// Draw the lines.

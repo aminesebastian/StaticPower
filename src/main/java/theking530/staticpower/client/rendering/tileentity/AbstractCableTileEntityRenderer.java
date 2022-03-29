@@ -78,7 +78,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends TileEntityBase> 
 	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, PoseStack matrixStack, AbstractCableProviderComponent cableComponent) {
 		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-		fluidColor.setW(1.0f); // Force the opacity  to 1.0f to have the texture control the opaicty.
+		fluidColor.setAlpha(1.0f); // Force the opacity  to 1.0f to have the texture control the opaicty.
 		
 		boolean wasExtensionDrawn = false;
 		for (Direction dir : Direction.values()) {

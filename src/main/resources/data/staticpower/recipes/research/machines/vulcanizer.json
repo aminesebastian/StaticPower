@@ -1,0 +1,28 @@
+{
+	"type": "staticpower:research",
+	"title": "research.vulcanizer.title",
+	"description": "research.vulcanizer.description",
+	"icon": {
+		"item": "staticpower:machine_vulcanizer"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/machine_blocks/basic"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"displayKey": "laboratory",
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/vulcanizer"
+		}
+	]
+}

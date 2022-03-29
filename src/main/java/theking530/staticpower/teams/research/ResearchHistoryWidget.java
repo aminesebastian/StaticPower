@@ -15,6 +15,7 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
+import theking530.staticpower.data.research.ResearchIcon;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlockUtilities;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
@@ -70,13 +71,10 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 
 				// Draw the unlocks.
 				for (ResearchUnlock unlock : unlocks) {
-					if (unlock.getType() == ResearchUnlockType.CRAFTING) {
-						Recipe<?> recipe = unlock.getAsRecipe();
-						if (recipe != null) {
-							GuiDrawUtilities.drawItem(pose, recipe.getResultItem(), getSize().getX() - 19.5f - xOffset, getSize().getY() - 16, 200, 8f, 8f);
-							xOffset += 9;
-						}
+					if (unlock.getIcon() != null) {
+						ResearchIcon.draw(unlock.getIcon(), pose, getSize().getX() - 19.5f - xOffset, getSize().getY() - 16, 200, 8f, 8f);
 					}
+					xOffset += 9;
 				}
 
 				GuiDrawUtilities.drawRectangle(pose, unlocks.size() * 10f, 9.5f, getSize().getX() - 7.5f - xOffset, getSize().getY() - 12.85f, 10, new Color(0, 0, 0, 0.3f));

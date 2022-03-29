@@ -129,7 +129,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 				if (enabled) {
 					MachineSideMode mode = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide);
 					Color color = mode.getColor().copy();
-					color.setW(0.75f);
+					color.setAlpha(0.75f);
 
 					matrix.pushPose();
 					matrix.translate(0.5f, 0.5f, 0.5f);

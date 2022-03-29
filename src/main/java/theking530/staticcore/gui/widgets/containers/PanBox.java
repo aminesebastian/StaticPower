@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.WidgetContainer.WidgetClipType;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
@@ -30,6 +31,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		maxBounds = new Vector4D();
 		interpolatedZoom = 1;
 		targetZoom = 1;
+		this.setClipType(WidgetClipType.CLIP);
 	}
 
 	@Override
@@ -83,12 +85,10 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	public RectangleBounds getClipBounds(PoseStack matrix) {
-		float guiScale = (float) Minecraft.getInstance().getWindow().getGuiScale();
 		Vector2D resolution = new Vector2D(Minecraft.getInstance().getWindow().getGuiScaledWidth(), Minecraft.getInstance().getWindow().getGuiScaledHeight());
 		Vector2D screenSpace = getScreenSpacePosition();
 		Vector2D adjustedSize = getSize();
-		RectangleBounds output = new RectangleBounds(screenSpace.getX() * guiScale, resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX() * guiScale,
-				adjustedSize.getY() * guiScale);
+		RectangleBounds output = new RectangleBounds(screenSpace.getX(), resolution.getY() - adjustedSize.getY() - screenSpace.getY(), adjustedSize.getX(), adjustedSize.getY());
 		return output;
 	}
 

@@ -185,7 +185,7 @@ public class GuiDrawUtilities {
 
 		if (borderColor != null) {
 			Color lighterFill = borderColor.copy();
-			lighterFill.setW(0.25f);
+			lighterFill.setAlpha(0.25f);
 			drawRectangle(pose, width, height, x, y, z, lighterFill);
 		}
 	}
@@ -208,10 +208,10 @@ public class GuiDrawUtilities {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
-		bufferbuilder.vertex(pose.last().pose(), x, y + height, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x + width, y + height, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x + width, y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, y + height, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x + width, y + height, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x + width, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
 		tessellator.end();
 	}
 
@@ -230,10 +230,10 @@ public class GuiDrawUtilities {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		bufferbuilder.vertex(pose.last().pose(), x, (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minU, maxV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxU, maxV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxU, minV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minU, minV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minU, maxV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxU, maxV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + width), y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxU, minV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minU, minV).endVertex();
 		tessellator.end();
 	}
 
@@ -251,10 +251,10 @@ public class GuiDrawUtilities {
 					Tesselator tessellator = Tesselator.getInstance();
 					BufferBuilder bufferbuilder = tessellator.getBuilder();
 					bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-					bufferbuilder.vertex((x * width), (y * height) + height, 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(0, 1).endVertex();
-					bufferbuilder.vertex((x * width) + width, (y * height) + height, 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(1, 1).endVertex();
-					bufferbuilder.vertex((x * width) + width, (y * height), 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(1, 0).endVertex();
-					bufferbuilder.vertex((x * width), (y * height), 0).color(color.getX(), color.getY(), color.getZ(), color.getW() * alpha).uv(0, 0).endVertex();
+					bufferbuilder.vertex((x * width), (y * height) + height, 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(0, 1).endVertex();
+					bufferbuilder.vertex((x * width) + width, (y * height) + height, 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(1, 1).endVertex();
+					bufferbuilder.vertex((x * width) + width, (y * height), 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(1, 0).endVertex();
+					bufferbuilder.vertex((x * width), (y * height), 0).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha() * alpha).uv(0, 0).endVertex();
 					tessellator.end();
 				}
 			}
@@ -302,10 +302,10 @@ public class GuiDrawUtilities {
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
-		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minSpriteU, maxSpriteV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxSpriteU, maxSpriteV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + 0), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(maxSpriteU, minSpriteV).endVertex();
-		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + 0), z).color(color.getX(), color.getY(), color.getZ(), color.getW()).uv(minSpriteU, minSpriteV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minSpriteU, maxSpriteV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + height), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxSpriteU, maxSpriteV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + width), (y + 0), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(maxSpriteU, minSpriteV).endVertex();
+		bufferbuilder.vertex(pose.last().pose(), (x + 0), (y + 0), z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).uv(minSpriteU, minSpriteV).endVertex();
 		tessellator.end();
 	}
 
@@ -411,7 +411,7 @@ public class GuiDrawUtilities {
 		RenderSystem.disableCull();
 		RenderSystem.lineWidth(thickness);
 
-		Vector2D normal = end.copy().subtract(start).normalize();
+		Vector3D normal = end.copy().subtract(start).normalize();
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);

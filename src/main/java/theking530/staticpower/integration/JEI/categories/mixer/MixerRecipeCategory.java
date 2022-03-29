@@ -27,6 +27,7 @@ import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.MixerProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
+import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -110,7 +111,7 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 		mixerPBar.setCurrentProgress(processingTimer.getValue());
 		mixerPBar.setMaxProgress(processingTimer.getMaxValue());
-		mixerPBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f);
+		mixerPBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 	}
 
 	@Override

@@ -1,0 +1,27 @@
+{
+	"type": "staticpower:research",
+	"title": "research.magnet_basic.title",
+	"description": "research.magnet_basic.description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/tools/hammer/basic"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 10
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/magnets/basic_magnet"
+		}
+	],
+	"icon": {
+		"item": "staticpower:magnet_basic"
+	}
+}
