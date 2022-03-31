@@ -108,20 +108,29 @@ public class ResearchLevels {
 			int childCount = research.getChildren().size();
 			float initialOffset = childCount / -2.0f;
 			float currentOffset = initialOffset + 0.5f;
+
 			for (int i = 0; i < research.getChildren().size(); i++) {
 				ResearchNode child = research.getChildren().get(i);
-				float targetX = 0;
+
+				float minParentX = Integer.MAX_VALUE;
+				float maxParentX = Integer.MIN_VALUE;
 				for (ResearchNode parent : child.getAllParents()) {
-					targetX += parent.getRelativePosition().getX();
+					if (parent.getRelativePosition().getX() < minParentX) {
+						minParentX = parent.getRelativePosition().getX();
+					}
+					if (parent.getRelativePosition().getX() > maxParentX) {
+						maxParentX = parent.getRelativePosition().getX();
+					}
 				}
-				targetX /= child.getAllParents().size();
+
+				float targetX = (minParentX + maxParentX) / 2;
 				targetX += currentOffset;
 				currentOffset += 1.0f;
 				child.setRelativeX(targetX + child.getResearch().getVisualOffset().getX());
-				
-				float yOffset = 0.0f;
-				if(research.getChildren().size() > 2) {
-					yOffset = (i % 2 == 0 ? -0.05f : 0.05f);
+
+				float yOffset = 0;
+				if (research.getChildren().size() > 2) {
+					yOffset += (i % 2 == 0 ? -0.05f : 0.05f);
 				}
 				child.setRelativeY(research.getRelativePosition().getY() + 1 + child.getResearch().getVisualOffset().getY() + yOffset);
 				queue.add(child);

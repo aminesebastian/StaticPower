@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "staticpower:ingot_lumum"
+  },
+  "result": "staticpower:ingot_lumum_heated",
+  "experience": 0.5,
+  "cookingtime": 100
+}

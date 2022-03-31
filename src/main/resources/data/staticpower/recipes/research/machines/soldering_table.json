@@ -2,7 +2,10 @@
 	"type": "staticpower:research",
 	"title": "research.soldering_table.title",
 	"description": "research.soldering_table.description",
-	"visualOffset": [0, 0],
+	"visualOffset": [
+		0,
+		0
+	],
 	"prerequisites": [
 		"staticpower:research/machines/machine_blocks/aluminum"
 	],
@@ -16,6 +19,10 @@
 		{
 			"type": "crafting",
 			"target": "staticpower:crafting/machines/soldering_table"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/tools/soldering_iron"
 		}
 	],
 	"icon": {

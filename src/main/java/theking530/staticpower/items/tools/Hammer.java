@@ -125,8 +125,7 @@ public class Hammer extends StaticPowerItem {
 							entity.getItem().shrink(recipe.get().getInputItem().getCount());
 							entity.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.5F, (float) (0.8F + Math.random() * 0.3));
 							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
-									0.00D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
 							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.1D);
 							crafted = true;
 							break;
@@ -148,6 +147,7 @@ public class Hammer extends StaticPowerItem {
 					player.getCooldowns().addCooldown(stack.getItem(), 5);
 				}
 			}
+			return crafted;
 		}
 		return false;
 	}

@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:hammer_recipe",
 	"input_item": {
-		"tag": "forge:ingots/magnesium"
+		"item": "staticpower:ingot_magnesium_heated"
 	},
 	"output": {
 		"item": "staticpower:plate_magnesium",

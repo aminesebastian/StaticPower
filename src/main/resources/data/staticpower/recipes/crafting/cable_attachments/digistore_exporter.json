@@ -1,16 +1,13 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"zdz",
+		"z z",
 		"zpz",
 		" c "
 	],
 	"key": {
 		"z": {
 			"tag": "forge:ingots/magnesium"
-		},
-		"d": {
-			"item": "staticpower:servo"
 		},
 		"p": {
 			"item": "staticpower:processor_basic"

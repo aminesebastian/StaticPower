@@ -10,11 +10,15 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/machine_blocks/basic"
+		"staticpower:research/rubber/rusty_cauldron"
 	],
 	"requirements": [
 		{
 			"item": "staticpower:research_tier_1",
+			"count": 15
+		},
+		{
+			"item": "staticpower:research_tier_2",
 			"count": 15
 		}
 	],

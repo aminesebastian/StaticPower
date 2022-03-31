@@ -3,14 +3,11 @@
 	"pattern": [
 		" c ",
 		"zpz",
-		"zdz"
+		"z z"
 	],
 	"key": {
 		"z": {
 			"tag": "forge:ingots/magnesium"
-		},
-		"d": {
-			"item": "staticpower:servo"
 		},
 		"p": {
 			"item": "staticpower:processor_basic"

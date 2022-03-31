@@ -13,7 +13,7 @@
 			"tag": "forge:plates/iron"
 		},
 		"g": {
-			"tag": "forge:glass/lime"
+			"tag": "forge:glass"
 		},
 		"s": {
 			"item": "staticpower:silicon_doped_static"

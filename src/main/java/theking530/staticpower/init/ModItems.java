@@ -29,6 +29,7 @@ import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistorePatternCard;
 import theking530.staticpower.items.DigistoreStackedCard;
 import theking530.staticpower.items.GearBox;
+import theking530.staticpower.items.HeatedIngot;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
 import theking530.staticpower.items.PortableBattery;
@@ -113,6 +114,26 @@ public class ModItems {
 	public static StaticPowerItem IngotRedstoneAlloy;
 	public static StaticPowerItem IngotBrass;
 	public static StaticPowerItem IngotBronze;
+
+	public static StaticPowerItem IngotTinHeated;
+	public static StaticPowerItem IngotZincHeated;
+	public static StaticPowerItem IngotSilverHeated;
+	public static StaticPowerItem IngotLeadHeated;
+	public static StaticPowerItem IngotTungstenHeated;
+	public static StaticPowerItem IngotMagnesiumHeated;
+	public static StaticPowerItem IngotPlatinumHeated;
+	public static StaticPowerItem IngotAluminumHeated;
+	public static StaticPowerItem IngotStaticHeated;
+	public static StaticPowerItem IngotEnergizedHeated;
+	public static StaticPowerItem IngotLumumHeated;
+	public static StaticPowerItem IngotInertInfusionHeated;
+	public static StaticPowerItem IngotRedstoneAlloyHeated;
+	public static StaticPowerItem IngotBrassHeated;
+	public static StaticPowerItem IngotBronzeHeated;
+
+	public static StaticPowerItem IngotIronHeated;
+	public static StaticPowerItem IngotCopperHeated;
+	public static StaticPowerItem IngotGoldHeated;
 
 	public static StaticPowerItem NuggetCopper;
 	public static StaticPowerItem NuggetTin;
@@ -542,6 +563,27 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(IngotLumum = new StaticPowerItem("ingot_lumum"));
 		StaticPowerRegistry.preRegisterItem(IngotInertInfusion = new StaticPowerItem("ingot_inert_infusion"));
 		StaticPowerRegistry.preRegisterItem(IngotRedstoneAlloy = new StaticPowerItem("ingot_redstone_alloy"));
+
+		// Heated Ingots
+		StaticPowerRegistry.preRegisterItem(IngotTinHeated = new HeatedIngot("ingot_tin_heated", () -> ModItems.IngotTin));
+		StaticPowerRegistry.preRegisterItem(IngotZincHeated = new HeatedIngot("ingot_zinc_heated", () -> ModItems.IngotZinc));
+		StaticPowerRegistry.preRegisterItem(IngotSilverHeated = new HeatedIngot("ingot_silver_heated", () -> ModItems.IngotSilver));
+		StaticPowerRegistry.preRegisterItem(IngotLeadHeated = new HeatedIngot("ingot_lead_heated", () -> ModItems.IngotLead));
+		StaticPowerRegistry.preRegisterItem(IngotMagnesiumHeated = new HeatedIngot("ingot_magnesium_heated", () -> ModItems.IngotMagnesium));
+		StaticPowerRegistry.preRegisterItem(IngotTungstenHeated = new HeatedIngot("ingot_tungsten_heated", () -> ModItems.IngotTungsten));
+		StaticPowerRegistry.preRegisterItem(IngotPlatinumHeated = new HeatedIngot("ingot_platinum_heated", () -> ModItems.IngotPlatinum));
+		StaticPowerRegistry.preRegisterItem(IngotBrassHeated = new HeatedIngot("ingot_brass_heated", () -> ModItems.IngotBrass));
+		StaticPowerRegistry.preRegisterItem(IngotBronzeHeated = new HeatedIngot("ingot_bronze_heated", () -> ModItems.IngotBronze));
+		StaticPowerRegistry.preRegisterItem(IngotAluminumHeated = new HeatedIngot("ingot_aluminum_heated", () -> ModItems.IngotAluminum));
+		StaticPowerRegistry.preRegisterItem(IngotStaticHeated = new HeatedIngot("ingot_static_heated", () -> ModItems.IngotStatic));
+		StaticPowerRegistry.preRegisterItem(IngotEnergizedHeated = new HeatedIngot("ingot_energized_heated", () -> ModItems.IngotEnergized));
+		StaticPowerRegistry.preRegisterItem(IngotLumumHeated = new HeatedIngot("ingot_lumum_heated", () -> ModItems.IngotLumum));
+		StaticPowerRegistry.preRegisterItem(IngotInertInfusionHeated = new HeatedIngot("ingot_inert_infusion_heated", () -> ModItems.IngotInertInfusion));
+		StaticPowerRegistry.preRegisterItem(IngotRedstoneAlloyHeated = new HeatedIngot("ingot_redstone_alloy_heated", () -> ModItems.IngotRedstoneAlloy));
+
+		StaticPowerRegistry.preRegisterItem(IngotIronHeated = new HeatedIngot("ingot_iron_heated", () -> Items.IRON_INGOT));
+		StaticPowerRegistry.preRegisterItem(IngotCopperHeated = new HeatedIngot("ingot_copper_heated", () -> Items.COPPER_INGOT));
+		StaticPowerRegistry.preRegisterItem(IngotGoldHeated = new HeatedIngot("ingot_gold_heated", () -> Items.GOLD_INGOT));
 
 		// Raw Ores
 		StaticPowerRegistry.preRegisterItem(RawRustyIron = new StaticPowerItem("raw_rusty_iron"));

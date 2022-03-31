@@ -3,12 +3,11 @@
 	"title": "staticpower.research.basic_chest.title",
 	"description": "staticpower.research.basic_chest.description",
 	"visualOffset": [
-		1,
+		0,
 		0
 	],
-	"sortOrder": 1,
 	"prerequisites": [
-		"staticpower:research/transport/item/basic"
+		"staticpower:research/transport/basic"
 	],
 	"requirements": [
 		{

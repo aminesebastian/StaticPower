@@ -1,9 +1,9 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		" g ",
-		"pbp",
-		"ptp"
+		" b ",
+		"ptp",
+		" u "
 	],
 	"key": {
 		"b": {
@@ -15,8 +15,8 @@
 		"t": {
 			"item": "staticpower:cable_industrial_fluid_static"
 		},
-		"g": {
-			"tag": "forge:glass"
+		"u": {
+			"item": "staticpower:pump_tube"
 		}
 	},
 	"result": {

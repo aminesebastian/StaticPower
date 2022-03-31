@@ -11,9 +11,9 @@
 	],
 	"sortOrder": 20,
 	"prerequisites": [
-		"staticpower:research/machines/misc/io_port",
-		"staticpower:research/machines/misc/plug",
-		"staticpower:research/materials/plate_hammering"
+		"staticpower:research/tools/wrench/basic",
+		"staticpower:research/machines/misc/basic_components",
+		"staticpower:research/materials/basic_forging"
 	],
 	"requirements": [
 		{

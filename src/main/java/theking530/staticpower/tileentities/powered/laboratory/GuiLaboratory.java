@@ -8,6 +8,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiResearchTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
+import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.tileentities.components.control.RedstoneControlComponent;
@@ -28,6 +29,7 @@ public class GuiLaboratory extends StaticPowerTileEntityGui<ContainerLaboratory,
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		setOutputSlotSize(20);
 	}

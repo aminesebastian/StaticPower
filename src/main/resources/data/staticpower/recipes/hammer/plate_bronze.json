@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:hammer_recipe",
 	"input_item": {
-		"tag": "forge:ingots/bronze"
+		"item": "staticpower:ingot_bronze_heated"
 	},
 	"output": {
 		"item": "staticpower:plate_bronze",

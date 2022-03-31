@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "item": "staticpower:ingot_inert_infusion"
+  },
+  "result": "staticpower:ingot_inert_infusion_heated",
+  "experience": 0.5,
+  "cookingtime": 100
+}

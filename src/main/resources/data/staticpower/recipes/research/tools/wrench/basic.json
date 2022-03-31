@@ -3,8 +3,9 @@
 	"title": "staticpower.research.wrench.title",
 	"description": "staticpower.research.wrench.description",
 	"visualOffset": [0, 0],
+	"sortOrder": 100,
 	"prerequisites": [
-			"staticpower:research/tools/hammer/basic"
+		"staticpower:research/research_tiers/tier_1"
 	],
 	"requirements": [
 		{

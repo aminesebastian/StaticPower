@@ -1,0 +1,32 @@
+{
+	"type": "staticpower:research",
+	"title": "research.staticpower.basic_components.title",
+	"description": "research.staticpower.basic_components.description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"sortOrder": 90,
+	"prerequisites": [
+		"staticpower:research/research_tiers/tier_1"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/misc/plug"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/misc/io_port"
+		}
+	],
+	"icon": {
+		"item": "staticpower:plug"
+	}
+}

@@ -308,12 +308,12 @@ public class Research extends AbstractStaticPowerRecipe {
 		}
 
 		public ResearchBuilder craftingUnlock(String uniqueKey, ResourceLocation recipe, String description) {
-			unlocks.add(new ResearchUnlock(uniqueKey, ResearchUnlockType.CRAFTING, recipe, null, description, false));
+			unlocks.add(new ResearchUnlock(uniqueKey, ResearchUnlockType.CRAFTING, recipe, null, description, ItemStack.EMPTY, false));
 			return this;
 		}
 
 		public ResearchBuilder hiddenCraftingUnlock(String uniqueKey, ResourceLocation recipe, String description) {
-			unlocks.add(new ResearchUnlock(uniqueKey, ResearchUnlockType.CRAFTING, recipe, null, description, true));
+			unlocks.add(new ResearchUnlock(uniqueKey, ResearchUnlockType.CRAFTING, recipe, null, description, ItemStack.EMPTY, true));
 			return this;
 		}
 

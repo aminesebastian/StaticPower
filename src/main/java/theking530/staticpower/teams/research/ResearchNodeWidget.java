@@ -155,10 +155,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 				List<ResearchUnlock> unlocks = ResearchUnlockUtilities.getCollapsedUnlocks(research);
 				int index = (int) ((localPosition.getX() - 9) / 11.5f);
 				if (index >= 0 && index < unlocks.size()) {
-					if (unlocks.get(index).getType() == ResearchUnlockType.CRAFTING) {
-						tooltips.addAll(unlocks.get(index).getAsRecipe().getResultItem().getTooltipLines(getLocalPlayer(),
-								Screen.hasControlDown() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
-					}
+					tooltips.addAll(unlocks.get(index).getTooltip(getLocalPlayer(), Screen.hasControlDown() ? TooltipFlag.Default.ADVANCED : TooltipFlag.Default.NORMAL));
 				}
 			}
 		}

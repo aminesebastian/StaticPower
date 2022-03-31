@@ -182,10 +182,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Research research = researchNode.getResearch();
 				boolean isCompleted = getResearchManager().hasCompletedResearch(research.getId());
 				boolean isAvailable = getResearchManager().isResearchAvailable(research.getId());
-				boolean isParentAvailable = false;
+				boolean isAnyParentAvailable = false;
 				for (ResearchNode parent : researchNode.getAllParents()) {
 					if (getResearchManager().isResearchAvailable(parent.getResearch().getId())) {
-						isParentAvailable = true;
+						isAnyParentAvailable = true;
 						break;
 					}
 				}
@@ -193,7 +193,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				// Only show research that is either completed, marked as hidden until available
 				// AND available, or if their parent is available.
 				boolean debugMode = false;
-				if (debugMode || isCompleted || isAvailable || isParentAvailable && !research.isHiddenUntilAvailable()) {
+				if (debugMode || isCompleted || isAvailable || isAnyParentAvailable && !research.isHiddenUntilAvailable()) {
 					// Calculate the reletive position and create the research node widget.
 					Vector2D relative = researchNode.getRelativePosition().getScaledVector(40.0f, 60.0f).add(100, 30);
 					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);

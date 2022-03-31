@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "tag": "forge:ingots/gold"
+  },
+  "result": "staticpower:ingot_gold_heated",
+  "experience": 0.5,
+  "cookingtime": 100
+}

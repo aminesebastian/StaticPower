@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:hammer_recipe",
 	"input_item": {
-		"item": "staticpower:ingot_redstone_alloy"
+		"item": "staticpower:ingot_redstone_alloy_heated"
 	},
 	"output": {
 		"item": "staticpower:plate_redstone_alloy",

@@ -10,7 +10,7 @@
 			"tag": "forge:plates/tin"
 		},
 		"w": {
-			"tag": "forge:wires/tin"
+			"tag": "forge:wires/copper"
 		},
 		"r": {
 			"tag": "forge:dusts/redstone"

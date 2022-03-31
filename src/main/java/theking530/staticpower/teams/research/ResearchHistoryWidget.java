@@ -77,7 +77,7 @@ public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidg
 					xOffset += 9;
 				}
 
-				GuiDrawUtilities.drawRectangle(pose, unlocks.size() * 10f, 9.5f, getSize().getX() - 7.5f - xOffset, getSize().getY() - 12.85f, 10, new Color(0, 0, 0, 0.3f));
+				GuiDrawUtilities.drawRectangle(pose, unlocks.size() * 10f, 9.5f, getSize().getX() - 6.5f - (1f * unlocks.size())- xOffset, getSize().getY() - 12.85f, 10, new Color(0, 0, 0, 0.3f));
 			}
 		}
 	}

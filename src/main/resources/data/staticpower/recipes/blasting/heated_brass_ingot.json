@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:blasting",
+  "ingredient": {
+    "tag": "forge:ingots/brass"
+  },
+  "result": "staticpower:ingot_brass_heated",
+  "experience": 0.5,
+  "cookingtime": 100
+}

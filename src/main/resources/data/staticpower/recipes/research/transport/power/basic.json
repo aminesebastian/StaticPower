@@ -11,7 +11,7 @@
 	],
 	"sortOrder": 0,
 	"prerequisites": [
-		"staticpower:research/machines/misc/plug"
+		"staticpower:research/machines/misc/basic_components"
 	],
 	"requirements": [
 		{

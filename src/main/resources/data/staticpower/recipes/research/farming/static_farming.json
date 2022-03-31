@@ -11,7 +11,7 @@
 	],
 	"sortOrder": 40,
 	"prerequisites": [
-		"staticpower:research/research_tiers/basic_research"
+		"staticpower:research/research_tiers/tier_1"
 	],
 	"requirements": [
 		{

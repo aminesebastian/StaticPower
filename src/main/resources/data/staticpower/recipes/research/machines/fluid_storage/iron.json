@@ -1,0 +1,36 @@
+{
+	"type": "staticpower:research",
+	"title": "research.staticpower.fluid_storage.title",
+	"description": "research.staticpower.fluid_storage.description",
+	"icon": {
+		"item": "staticpower:tank_iron"
+	},
+	"sortOrder": -10,
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/machine_blocks/aluminum"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/tanks/iron_tank"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/pump/pump_iron"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/misc/pump_tube"
+		}
+	]
+}

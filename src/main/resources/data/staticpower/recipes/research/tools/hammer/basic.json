@@ -8,7 +8,7 @@
 	],
 	"sortOrder": 200,
 	"prerequisites": [
-		"staticpower:research/research_tiers/basic_research"
+		"staticpower:research/research_tiers/tier_1"
 	],
 	"requirements": [
 		{
@@ -19,10 +19,18 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/tools/hammers/hammer_copper"
+			"target": "staticpower:crafting/tools/hammers/hammer_iron"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/tools/hammers/hammer_zinc"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/tools/hammers/hammer_tin"
 		}
 	],
 	"icon": {
-		"item": "staticpower:hammer_copper"
+		"item": "staticpower:hammer_iron"
 	}
 }

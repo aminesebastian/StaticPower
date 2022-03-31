@@ -1,0 +1,23 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"trt",
+		"l l",
+		"trt"
+	],
+	"key": {
+		"t": {
+			"tag": "forge:ingots/tin"
+		},
+		"r": {
+			"tag": "forge:plates/rubber"
+		},
+		"l": {
+			"item": "minecraft:leather"
+		}
+	},
+	"result": {
+		"item": "staticpower:pump_tube",
+		"count": 1
+	}
+}

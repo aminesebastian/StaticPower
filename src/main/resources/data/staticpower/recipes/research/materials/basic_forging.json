@@ -1,0 +1,73 @@
+{
+	"type": "staticpower:research",
+	"title": "research.staticpower.basic_forging.title",
+	"description": "research.staticpower.basic_forging.description",
+	"visualOffset": [
+		0,
+		0
+	],
+	"sortOrder": 110,
+	"prerequisites": [
+		"staticpower:research/research_tiers/tier_1"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 20
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/tools/hammers/hammer_copper"
+		},
+		{
+			"type": "display_only",
+			"tooltip": {
+				"item": "staticpower:plate_tin"
+			},
+			"icon": {
+				"item": "staticpower:plate_tin"
+			}
+		},
+		{
+			"type": "display_only",
+			"tooltip": {
+				"item": "staticpower:plate_copper"
+			},
+			"icon": {
+				"item": "staticpower:plate_copper"
+			}
+		},
+		{
+			"type": "display_only",
+			"tooltip": {
+				"item": "staticpower:plate_iron"
+			},
+			"icon": {
+				"item": "staticpower:plate_iron"
+			}
+		},
+		{
+			"type": "display_only",
+			"tooltip": {
+				"item": "staticpower:plate_aluminum"
+			},
+			"icon": {
+				"item": "staticpower:plate_aluminum"
+			}
+		},
+		{
+			"type": "display_only",
+			"tooltip": {
+				"item": "staticpower:rubber_sheet"
+			},
+			"icon": {
+				"item": "staticpower:rubber_sheet"
+			}
+		}
+	],
+	"icon": {
+		"item": "minecraft:anvil"
+	}
+}

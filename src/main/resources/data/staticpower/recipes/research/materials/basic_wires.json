@@ -11,7 +11,7 @@
 	],
 	"sortOrder": 40,
 	"prerequisites": [
-		"staticpower:research/materials/plate_hammering"
+		"staticpower:research/materials/basic_forging"
 	],
 	"requirements": [
 		{
@@ -20,6 +20,10 @@
 		}
 	],
 	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/tools/wire_cutters/wire_cutters_iron"
+		},
 		{
 			"displayKey": "aluminum",
 			"type": "crafting",
@@ -49,6 +53,36 @@
 			"displayKey": "copper",
 			"type": "crafting",
 			"target": "staticpower:crafting/materials/wire/wire_copper_from_plate"
+		},
+		{
+			"displayKey": "silver",
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/wire/wire_silver_from_ingot"
+		},
+		{
+			"displayKey": "silver",
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/wire/wire_silver_from_plate"
+		},
+		{
+			"displayKey": "gold",
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/wire/wire_gold_from_ingot"
+		},
+		{
+			"displayKey": "gold",
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/wire/wire_gold_from_plate"
+		},
+		{
+			"displayKey": "platinum",
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/wire/wire_platinum_from_ingot"
+		},
+		{
+			"displayKey": "platinum",
+			"type": "crafting",
+			"target": "staticpower:crafting/materials/wire/wire_platinum_from_plate"
 		}
 	]
 }
