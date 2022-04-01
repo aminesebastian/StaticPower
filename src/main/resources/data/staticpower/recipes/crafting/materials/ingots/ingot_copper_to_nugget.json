@@ -6,7 +6,7 @@
 		}
 	],
 	"result": {
-		"item": "minecraft:copper_ingot",
+		"item": "staticpower:nugget_copper",
 		"count": 9
 	}
 }

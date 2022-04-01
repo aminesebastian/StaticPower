@@ -5,10 +5,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.TextComponent;
-import theking530.staticcore.gui.WidgetContainer;
-import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
+import theking530.staticcore.gui.widgets.TopLevelWidget;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
@@ -16,7 +15,7 @@ import theking530.staticcore.utilities.Vector2D;
 public abstract class StaticPowerDetatchedGui extends Screen {
 
 	/** The container responsible for managing all the widget. */
-	protected final WidgetContainer widgetContainer;
+	protected final TopLevelWidget widgetContainer;
 	/** The tab manager widget. */
 	protected final GuiTabManager tabManager;
 	protected int width;
@@ -34,7 +33,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	public StaticPowerDetatchedGui(int width, int height) {
 		super(new TextComponent(""));
 		drawDefaultDarkBackground = true;
-		widgetContainer = new WidgetContainer(WidgetParent.fromScreen(this));
+		widgetContainer = new TopLevelWidget();
 		visible = true;
 		registerWidget(tabManager = new GuiTabManager());
 		init(Minecraft.getInstance(), width, height);
@@ -77,10 +76,10 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 		widgetContainer.updateBeforeRender(pose, new Vector2D(width, height), partialTicks, mouseX, mouseY, getScreenBounds());
 
 		// Raise the mouse hovered event for all the widgets,
-		widgetContainer.handleMouseMove(mouseX, mouseY);
+		widgetContainer.mouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
-		widgetContainer.renderForegound(pose, mouseX, mouseY, partialTicks, getScreenBounds());
+		widgetContainer.renderForeground(pose, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		// Draw any additional foreground elements.
 		pose.pushPose();
@@ -197,7 +196,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	public boolean mouseClicked(double mouseX, double mouseY, int button) {
 		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
 		if (visible) {
-			widgetContainer.handleMouseClick(mouseX, mouseY, button);
+			widgetContainer.mouseClick(mouseX, mouseY, button);
 		}
 		return superCallResult;
 	}
@@ -206,7 +205,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
 		boolean superCallResult = super.mouseReleased(mouseX, mouseY, button);
 		if (visible) {
-			widgetContainer.handleMouseReleased(mouseX, mouseY, button);
+			widgetContainer.mouseReleased(mouseX, mouseY, button);
 		}
 		return superCallResult;
 	}
@@ -215,7 +214,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
 		EInputResult result = EInputResult.UNHANDLED;
 		if (visible) {
-			result = widgetContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+			result = widgetContainer.mouseScrolled(mouseX, mouseY, scrollDelta);
 		}
 		if (result != EInputResult.HANDLED) {
 			return super.mouseScrolled(mouseX, mouseY, scrollDelta);
@@ -227,7 +226,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		EInputResult result = EInputResult.UNHANDLED;
 		if (visible) {
-			result = widgetContainer.handleMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+			result = widgetContainer.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 		}
 		if (result != EInputResult.HANDLED) {
 			return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -251,7 +250,7 @@ public abstract class StaticPowerDetatchedGui extends Screen {
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
 		EInputResult result = EInputResult.UNHANDLED;
 		if (visible) {
-			result = widgetContainer.handleKeyPressed(key, scanCode, modifiers);
+			result = widgetContainer.keyPressed(key, scanCode, modifiers);
 		}
 		if (result == EInputResult.UNHANDLED) {
 			return super.keyPressed(key, scanCode, modifiers);

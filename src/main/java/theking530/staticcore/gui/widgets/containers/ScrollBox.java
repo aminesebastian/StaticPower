@@ -2,14 +2,11 @@ package theking530.staticcore.gui.widgets.containers;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.WidgetContainer.WidgetClipType;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.GuiTextures;
 
 public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
@@ -23,13 +20,33 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 
 	public ScrollBox(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-		this.internalContainer.setTransfomer(this::updateChildLayout);
 		this.setClipType(WidgetClipType.CLIP);
 	}
 
-	protected void updateChildLayout(PoseStack pose, AbstractGuiWidget widget, int index) {
-		pose.translate(0, -interpolatedScroll, 0);
+	@Override
+	public void transformPoseBeforeRender(PoseStack matrix) {
+		super.transformPoseBeforeRender(matrix);
+		matrix.translate(0, -interpolatedScroll, 0);
 
+	}
+
+	protected void onWidgetAdded(AbstractGuiWidget<?> widget) {
+		repositionElements();
+	}
+
+	protected void onWidgetRemoved(AbstractGuiWidget<?> widget) {
+		repositionElements();
+	}
+
+	protected void repositionElements() {
+		for (int i = 0; i < getChildren().size(); i++) {
+			AbstractGuiWidget<?> widget = getChildren().get(i);
+			if (i == 0) {
+				widget.setPosition(0, 0);
+			} else {
+				widget.setPosition(0, getChildren().get(i - 1).getYPosition() + getChildren().get(i - 1).getSize().getY());
+			}
+		}
 	}
 
 	public ScrollBox setBackgroundColor(Color color) {

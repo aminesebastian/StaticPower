@@ -22,7 +22,6 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 		super(0.0f, 0.0f, 0.0f, 0.0f);
 		registeredTabs = new ArrayList<BaseGuiTab>();
 		this.setShouldAutoCalculateTooltipBounds(false);
-		this.internalContainer.setTransfomer(this::updateChildLayout);
 	}
 
 	public GuiTabManager registerTab(BaseGuiTab tab, boolean initiallyOpen) {
@@ -75,12 +74,10 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 	public void tabClosing(BaseGuiTab tab) {
 	}
 
-	protected void updateChildLayout(PoseStack pose, AbstractGuiWidget<?> widget, int index) {
-
-	}
-
 	@Override
 	public void updateWidgetBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY) {
+		setWidth(getMinecraft().getWindow().getGuiScaledWidth());
+		setHeight(getMinecraft().getWindow().getGuiScaledHeight());
 		float maxOffset = getPosition().getY() + getParentSize().getY() - 25;
 		int leftTabs = 0;
 		int rightTabs = 0;
@@ -93,7 +90,7 @@ public class GuiTabManager extends AbstractGuiWidget<GuiTabManager> {
 			int index = rightTabs;
 
 			if (tab.getTabSide() == TabSide.LEFT) {
-				xPosition = -tab.getWidth()+2;
+				xPosition = -tab.getWidth() + 2;
 				yPosition = leftYOffset;
 				index = leftTabs;
 			}

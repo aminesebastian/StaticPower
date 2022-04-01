@@ -67,10 +67,7 @@ public class GuiDigistoreCraftingTerminal extends AbstractGuiDigistoreTerminal<C
 		}
 	}
 
-	@Override
-	protected Vector2D getContainerLabelDrawLocation() {
-		return new Vector2D(8, 8);
-	}
+
 
 	@Override
 	protected boolean shouldDrawInventoryLabel() {

@@ -18,11 +18,10 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.items.SlotItemHandler;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.WidgetContainer;
-import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
+import theking530.staticcore.gui.widgets.TopLevelWidget;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
 import theking530.staticcore.utilities.Color;
@@ -52,7 +51,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	public static final Vector2D DEFAULT_INVENTORY_LABEL_LOCATION = new Vector2D(8, 97);
 
 	/** The container responsible for managing all the widget. */
-	protected final WidgetContainer widgetContainer;
+	protected final TopLevelWidget widgetContainer;
 	/** The tab manager widget. */
 	protected final GuiTabManager tabManager;
 	protected final Inventory inventory;
@@ -81,7 +80,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		super(container, playerInventory, title);
 		container.setDimensions(guiXSize, guiYSize);
 		inventory = playerInventory;
-		widgetContainer = new WidgetContainer(WidgetParent.fromScreen(this));
+		widgetContainer = new TopLevelWidget();
 		imageWidth = guiXSize;
 		imageHeight = guiYSize;
 		shouldDrawInventoryLabel = true;
@@ -206,10 +205,10 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		stack.translate(leftPos, topPos, 0);
 
 		// Raise the mouse hovered event for all the widgets,
-		widgetContainer.handleMouseMove(mouseX, mouseY);
+		widgetContainer.mouseMove(mouseX, mouseY);
 
 		// Render the foreground of all the widgets.
-		widgetContainer.renderForegound(stack, mouseX, mouseY, partialTicks, getScreenBounds());
+		widgetContainer.renderForeground(stack, mouseX, mouseY, partialTicks, getScreenBounds());
 
 		drawSlotOverlays(menu.slots);
 
@@ -242,20 +241,20 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		}
 
 		boolean superCallResult = super.mouseClicked(mouseX, mouseY, button);
-		widgetContainer.handleMouseClick(mouseX, mouseY, button);
+		widgetContainer.mouseClick(mouseX, mouseY, button);
 		return superCallResult;
 	}
 
 	@Override
 	public boolean mouseReleased(double mouseX, double mouseY, int button) {
 		boolean superCallResult = super.mouseReleased(mouseX, mouseY, button);
-		widgetContainer.handleMouseReleased(mouseX, mouseY, button);
+		widgetContainer.mouseReleased(mouseX, mouseY, button);
 		return superCallResult;
 	}
 
 	@Override
 	public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-		EInputResult result = widgetContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+		EInputResult result = widgetContainer.mouseScrolled(mouseX, mouseY, scrollDelta);
 		if (result != EInputResult.HANDLED) {
 			return super.mouseScrolled(mouseX, mouseY, scrollDelta);
 		}
@@ -264,7 +263,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 
 	@Override
 	public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-		EInputResult result = widgetContainer.handleMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+		EInputResult result = widgetContainer.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 		if (result != EInputResult.HANDLED) {
 			return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
 		}
@@ -282,7 +281,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 
 	@Override
 	public boolean keyPressed(int key, int scanCode, int modifiers) {
-		EInputResult result = widgetContainer.handleKeyPressed(key, scanCode, modifiers);
+		EInputResult result = widgetContainer.keyPressed(key, scanCode, modifiers);
 		if (result == EInputResult.UNHANDLED) {
 			return super.keyPressed(key, scanCode, modifiers);
 		}
@@ -300,7 +299,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			tabBoxes.add(tab.getBounds().toRectange2d());
 		}
 
-		for (AbstractGuiWidget<?> widget : this.widgetContainer.getWidgets()) {
+		for (AbstractGuiWidget<?> widget : this.widgetContainer.getChildren()) {
 			tabBoxes.add(widget.getBounds().toRectange2d());
 		}
 
