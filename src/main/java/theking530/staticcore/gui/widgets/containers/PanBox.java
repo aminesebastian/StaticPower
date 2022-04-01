@@ -4,7 +4,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.WidgetContainer.WidgetClipType;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;

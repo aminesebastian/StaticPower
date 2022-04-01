@@ -10,10 +10,6 @@ public class GuiDigistoreTerminal extends AbstractGuiDigistoreTerminal<Container
 	public GuiDigistoreTerminal(ContainerDigistoreTerminal container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 270);
 	}
-	@Override
-	protected Vector2D getContainerLabelDrawLocation() {
-		return new Vector2D(8, 8);
-	}
 
 	@Override
 	protected boolean shouldDrawInventoryLabel() {

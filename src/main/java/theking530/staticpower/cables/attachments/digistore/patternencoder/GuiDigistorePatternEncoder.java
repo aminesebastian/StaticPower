@@ -73,11 +73,6 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 	}
 
 	@Override
-	protected Vector2D getContainerLabelDrawLocation() {
-		return new Vector2D(8, 8);
-	}
-
-	@Override
 	protected boolean shouldDrawInventoryLabel() {
 		return true;
 	}

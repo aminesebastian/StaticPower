@@ -4,6 +4,8 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.entities.AbstractEntityType;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
+import theking530.staticpower.entities.anvilentity.AnvilForgeEntity;
+import theking530.staticpower.entities.anvilentity.AnvilForgeEntityType;
 import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntity;
 import theking530.staticpower.entities.cauldroncontainedentity.CauldronContainedEntityType;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
@@ -19,6 +21,7 @@ public class ModEntities {
 	public static AbstractEntityType<CauldronContainedEntity> CauldronContainedEntity;
 	public static AbstractEntityType<ConveyorBeltEntity> ConveyorBeltEntity;
 	public static AbstractEntityType<TestTrainEntity> TestTrainEntity;
+	public static AbstractEntityType<AnvilForgeEntity> AnvilForgeEntity;
 
 	public static void init() {
 		StaticPowerRegistry.preRegisterEntity(Smeep = new TypeSmeep("smeep"));
@@ -26,6 +29,7 @@ public class ModEntities {
 		StaticPowerRegistry.preRegisterEntity(CauldronContainedEntity = new CauldronContainedEntityType("cauldron_contained_entity"));
 		StaticPowerRegistry.preRegisterEntity(ConveyorBeltEntity = new ConveyorBeltEntityType("conveyor_belt_entity"));
 		StaticPowerRegistry.preRegisterEntity(TestTrainEntity = new TestTrainEntityType("test_train_entity"));
+		StaticPowerRegistry.preRegisterEntity(AnvilForgeEntity = new AnvilForgeEntityType("anvil_forge_entity"));
 	}
 
 	public static void addSpawns(BiomeLoadingEvent event) {
@@ -36,4 +40,3 @@ public class ModEntities {
 		}
 	}
 }
- 

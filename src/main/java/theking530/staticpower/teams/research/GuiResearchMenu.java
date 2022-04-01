@@ -218,7 +218,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
 				if (research != null) {
 					float tint = index % 2 == 0 ? 0.5f : 0.0f;
-					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, index * HISTORY_HEIGHT, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f))
+					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f))
 							.setDrawBackground(true);
 					historyWidgets.add(historyWidget);
 					sideBarScrollBox.registerWidget(historyWidget);

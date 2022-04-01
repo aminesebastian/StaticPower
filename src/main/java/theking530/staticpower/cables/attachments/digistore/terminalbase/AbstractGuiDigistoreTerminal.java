@@ -396,6 +396,10 @@ public abstract class AbstractGuiDigistoreTerminal<T extends AbstractContainerDi
 		}
 	}
 
+	protected Vector2D getContainerLabelDrawLocation() {
+		return new Vector2D(font.width(this.getTitle()) / 2 + 8, 15);
+	}
+
 	protected void setItemsPerRow(int itemsPerRow) {
 		this.itemsPerRow = itemsPerRow;
 	}

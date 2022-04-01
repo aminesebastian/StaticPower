@@ -23,7 +23,7 @@ public class GuiResearchTab extends AbstractInfoTab {
 	public GuiResearchTab(TeamComponent teamComponent) {
 		super("gui.staticpower.tab_title.research", new Color(255, 255, 255), 100, new Color(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(ModItems.ResearchTier1));
 		this.teamComponent = teamComponent;
-		internalContainer.registerWidget(setTeamButton = new TextButton(12, 25, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
+		registerWidget(setTeamButton = new TextButton(12, 25, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
 		setTeamButton.setTooltip(new TranslatableComponent("gui.staticpower.machine_set_team"));
 	}
 

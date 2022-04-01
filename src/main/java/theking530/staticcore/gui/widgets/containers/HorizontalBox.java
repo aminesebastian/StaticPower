@@ -12,11 +12,9 @@ public class HorizontalBox extends AbstractGuiWidget<HorizontalBox> {
 
 	public HorizontalBox(float xPosition, float yPosition, float width, float height) {
 		super(xPosition, yPosition, width, height);
-
-		this.internalContainer.setTransfomer(this::updateChildLayout);
 	}
 
-	public void updateChildLayout(PoseStack pose, AbstractGuiWidget widget, int index) {
+	protected void transformPoseBeforeChildRender(PoseStack pose, AbstractGuiWidget<?> child, int index) {
 		float distanceBetween = getSize().getX() / (getChildren().size() + 1);
 		pose.translate(((index + 1) * distanceBetween), 0, 0);
 	}

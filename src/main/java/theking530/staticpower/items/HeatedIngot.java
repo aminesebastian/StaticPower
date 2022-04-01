@@ -26,15 +26,29 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.client.rendering.items.HeatedItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.entities.anvilentity.AnvilForgeEntity;
 
 public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier {
-	public static final int HEAT_LASTING_TIME = 200;
+	public static final int HEAT_LASTING_TIME = 400;
 	public static final String HEATED_TAG = "heated_time";
 	private final Supplier<Item> cooledVariantSupplier;
 
 	public HeatedIngot(String name, Supplier<Item> cooledVariantSupplier) {
 		super(name);
 		this.cooledVariantSupplier = cooledVariantSupplier;
+	}
+
+	@Override
+	public boolean hasCustomEntity(ItemStack stack) {
+		return true;
+	}
+
+	@Nullable
+	@Override
+	public Entity createEntity(Level world, Entity location, ItemStack itemstack) {
+		Entity output = new AnvilForgeEntity(world, location.getEyePosition().x, location.getEyePosition().y, location.getEyePosition().z, itemstack);
+		output.setDeltaMovement(location.getDeltaMovement());
+		return output;
 	}
 
 	@Nullable
@@ -57,21 +71,36 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier
 		super.inventoryTick(stack, level, entity, slot, selected);
 
 		// Only cool down if in a player's inventory (just for fun/balance reasons).
+		// Also gets cooled if thrown in the world.
 		if (entity instanceof Player) {
 			Player player = (Player) entity;
 			if (stack.hasTag()) {
-				// Get the current remaining heat time.
-				int remaining = stack.getTag().getInt(HEATED_TAG);
-
 				// If it's ready to cool, perform the cooling.
-				if (remaining <= 1) {
-					ItemStack cooledStack = new ItemStack(cooledVariantSupplier.get(), stack.getCount());
-					player.getInventory().setItem(slot, cooledStack);
+				boolean cooled = cooldownIngot(stack);
+				if (cooled) {
+					player.getInventory().setItem(slot, getCooledVariant(stack));
 					level.playSound(player, player.getOnPos(), SoundEvents.FIRE_EXTINGUISH, SoundSource.PLAYERS, 0.5f, 1.0f);
 				} else {
-					stack.getTag().putInt(HEATED_TAG, remaining - 1);
+					stack.getTag().putInt(HEATED_TAG, getRemainingHeat(stack) - 1);
 				}
 			}
+		}
+	}
+
+	public ItemStack getCooledVariant(ItemStack stack) {
+		return new ItemStack(cooledVariantSupplier.get(), stack.getCount());
+	}
+
+	public boolean cooldownIngot(ItemStack stack) {
+		// Get the current remaining heat time.
+		int remaining = getRemainingHeat(stack);
+
+		// If it's ready to cool, perform the cooling.
+		if (remaining <= 1) {
+			return true;
+		} else {
+			stack.getTag().putInt(HEATED_TAG, remaining - 1);
+			return false;
 		}
 	}
 
@@ -107,7 +136,8 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.remaining_heat_time").append(" ").append(GuiTextUtilities.formatNumberAsStringOneDecimal(getRemainingHeat(stack) / 20.0f).withStyle(ChatFormatting.GOLD))
+		tooltip.add(new TranslatableComponent("gui.staticpower.remaining_heat_time").append(" ")
+				.append(GuiTextUtilities.formatNumberAsStringOneDecimal(getRemainingHeat(stack) / 20.0f).withStyle(ChatFormatting.GOLD))
 				.append(new TranslatableComponent("gui.staticpower.seconds.short").withStyle(ChatFormatting.GOLD)));
 	}
 

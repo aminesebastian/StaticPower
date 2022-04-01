@@ -1,5 +1,6 @@
 package theking530.staticcore.gui.widgets;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -8,14 +9,12 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.WidgetContainer;
-import theking530.staticcore.gui.WidgetContainer.WidgetClipType;
-import theking530.staticcore.gui.WidgetContainer.WidgetParent;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
@@ -27,11 +26,12 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		HANDLED, UNHANDLED
 	}
 
+	protected final List<AbstractGuiWidget<?>> widgets;
+
 	/**
 	 * The owning container of this widget.
 	 */
-	protected WidgetContainer owningContainer;
-	protected final WidgetContainer internalContainer;
+	protected AbstractGuiWidget<?> parent;
 	protected boolean DEBUG_HOVER;
 	private WidgetClipType clipType;
 	private Vector2D initialPosition;
@@ -48,9 +48,11 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	private PoseStack lastMatrixStack;
 	private Vector2D lastMousePosition;
 	private final Font fontRenderer;
+	private boolean shouldRenderThisFrame;
 
 	@SuppressWarnings("resource")
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
+		widgets = new ArrayList<AbstractGuiWidget<?>>();
 		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		initialPosition = new Vector2D(xPosition, yPosition);
 		position = new Vector2D(xPosition, yPosition);
@@ -62,7 +64,6 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		clipType = WidgetClipType.FREE;
 		zLevel = 0.0f;
 		autoHandleTooltipBounds = true;
-		internalContainer = new WidgetContainer(WidgetParent.fromWidget(this));
 		fontRenderer = getMinecraft().font;
 	}
 
@@ -70,20 +71,11 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * Sets the owning container of this widget. This is called straight from the
 	 * {@link WidgetContainer} that will contain this widget.
 	 * 
-	 * @param container
-	 * @param parent    TODO
+	 * @param parent
 	 */
-	public void setOwningContainer(WidgetContainer container) {
-		owningContainer = container;
-	}
-
-	/**
-	 * Gets the parent for this widget.
-	 * 
-	 * @return
-	 */
-	public WidgetParent getParent() {
-		return owningContainer.getParent();
+	public final void setParent(AbstractGuiWidget<?> parent) {
+		this.parent = parent;
+		addedToParent(parent);
 	}
 
 	/**
@@ -91,7 +83,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * 
 	 * @param gui
 	 */
-	public void addedToParent(@Nullable WidgetParent parent) {
+	protected void addedToParent(@Nullable AbstractGuiWidget<?> parent) {
 
 	}
 
@@ -100,7 +92,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * 
 	 * @param gui
 	 */
-	public void removedFromParent(@Nullable WidgetParent parent) {
+	public void removedFromParent(@Nullable AbstractGuiWidget<?> parent) {
 
 	}
 
@@ -308,6 +300,10 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		return size.getY();
 	}
 
+	public AbstractGuiWidget<?> getParent() {
+		return this.parent;
+	}
+
 	/**
 	 * Gets the last matrix that was used to render this widget. This is useful to
 	 * translate a position from local space of this widget, to screen space. This
@@ -399,13 +395,20 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 		matrixStack.pushPose();
 		transformPoseBeforeRender(matrixStack);
-		
+
 		RectangleBounds clip = getClipBounds(matrixStack).multiply((float) getMinecraft().getWindow().getGuiScale());
 		if (shouldDrawChildren()) {
-			internalContainer.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY, clip);
+			for (int i = 0; i < widgets.size(); i++) {
+				AbstractGuiWidget<?> widget = widgets.get(i);
+				matrixStack.pushPose();
+				transformPoseBeforeChildRender(matrixStack, widget, i);
+				widget.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY, parentBounds);
+				matrixStack.popPose();
+			}
 		}
-		
+
 		updateWidgetBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY);
+		shouldRenderThisFrame = shouldRender(matrixStack);
 		matrixStack.popPose();
 
 		// Make a NEW matrix that translates from local space to screen space. We make a
@@ -439,20 +442,38 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param partialTicks
 	 */
 	public final void renderBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
-		matrix.pushPose();
-		transformPoseBeforeRender(matrix);
-		
-		// Apply the clip if it was requested by this widget.
-		RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
-		if(getClipType() == WidgetClipType.CLIP) {
-			RenderingUtilities.applyScissorMask(clip);	
-		}
+		if (shouldRenderThisFrame) {
+			matrix.pushPose();
+			transformPoseBeforeRender(matrix);
 
-		if (shouldDrawChildren()) {
-			internalContainer.renderBackground(matrix, mouseX, mouseY, partialTicks, clip);
+			// Apply the clip if it was requested by this widget.
+			RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
+			if (getClipType() == WidgetClipType.CLIP) {
+				RenderingUtilities.applyScissorMask(clip);
+			}
+
+			if (shouldDrawChildren()) {
+				// Render the foreground of all the widgets.
+				for (int i = 0; i < widgets.size(); i++) {
+					AbstractGuiWidget<?> widget = widgets.get(i);
+					if (widget.isVisible() && shouldRenderChild(matrix, widget, i)) {
+						matrix.pushPose();
+						transformPoseBeforeChildRender(matrix, widget, i);
+						widget.renderBackground(matrix, mouseX, mouseY, partialTicks, parentBounds);
+						matrix.popPose();
+					}
+
+//					if (isTopLevel) {
+//						RenderingUtilities.clearScissorMask();
+//					}
+				}
+			}
+			renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
+			matrix.popPose();
+			if (getClipType() == WidgetClipType.CLIP) {
+				RenderingUtilities.clearScissorMask();
+			}
 		}
-		renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
-		matrix.popPose();
 	}
 
 	/**
@@ -464,39 +485,75 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @param mouseY
 	 * @param partialTicks
 	 */
-	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {		
-		matrix.pushPose();
-		transformPoseBeforeRender(matrix);
-		
-		// Apply the clip if it was requested by this widget.
-		RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
-		if(getClipType() == WidgetClipType.CLIP) {
-			RenderingUtilities.applyScissorMask(clip);	
-		}
-		
-		renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
+	public final void renderBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
+		if (shouldRenderThisFrame) {
+			matrix.pushPose();
+			transformPoseBeforeRender(matrix);
 
-		if (shouldDrawChildren()) {
-			internalContainer.renderBehindItems(matrix, mouseX, mouseY, partialTicks, clip);
+			// Apply the clip if it was requested by this widget.
+			RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
+			if (getClipType() == WidgetClipType.CLIP) {
+				RenderingUtilities.applyScissorMask(clip);
+			}
+
+			renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
+
+			if (shouldDrawChildren()) {
+				// Render the foreground of all the widgets.
+				for (int i = 0; i < widgets.size(); i++) {
+					AbstractGuiWidget<?> widget = widgets.get(i);
+					if (widget.isVisible() && shouldRenderChild(matrix, widget, i)) {
+						matrix.pushPose();
+						transformPoseBeforeChildRender(matrix, widget, i);
+						widget.renderBehindItems(matrix, mouseX, mouseY, partialTicks, parentBounds);
+						matrix.popPose();
+					}
+
+//					if (isTopLevel) {
+//						RenderingUtilities.clearScissorMask();
+//					}
+				}
+			}
+			matrix.popPose();
+			if (getClipType() == WidgetClipType.CLIP) {
+				RenderingUtilities.clearScissorMask();
+			}
 		}
-		matrix.popPose();
 	}
 
 	public final void renderForeground(PoseStack matrix, int mouseX, int mouseY, float partialTicks, RectangleBounds parentBounds) {
-		matrix.pushPose();
-		transformPoseBeforeRender(matrix);
+		if (shouldRenderThisFrame) {
+			matrix.pushPose();
+			transformPoseBeforeRender(matrix);
 
-		// Apply the clip if it was requested by this widget.
-		RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
-		if(getClipType() == WidgetClipType.CLIP) {
-			RenderingUtilities.applyScissorMask(clip);		
+			// Apply the clip if it was requested by this widget.
+			RectangleBounds clip = getClipBounds(matrix).multiply((float) getMinecraft().getWindow().getGuiScale());
+			if (getClipType() == WidgetClipType.CLIP) {
+				RenderingUtilities.applyScissorMask(clip);
+			}
+
+			if (shouldDrawChildren()) {
+				// Render the foreground of all the widgets.
+				for (int i = 0; i < widgets.size(); i++) {
+					AbstractGuiWidget<?> widget = widgets.get(i);
+					if (widget.isVisible() && shouldRenderChild(matrix, widget, i)) {
+						matrix.pushPose();
+						transformPoseBeforeChildRender(matrix, widget, i);
+						widget.renderForeground(matrix, mouseX, mouseY, partialTicks, parentBounds);
+						matrix.popPose();
+					}
+
+//					if (isTopLevel) {
+//						RenderingUtilities.clearScissorMask();
+//					}
+				}
+			}
+			renderWidgetForeground(matrix, mouseX, mouseY, partialTicks);
+			matrix.popPose();
+			if (getClipType() == WidgetClipType.CLIP) {
+				RenderingUtilities.clearScissorMask();
+			}
 		}
-		
-		if (shouldDrawChildren()) {
-			internalContainer.renderForegound(matrix, mouseX, mouseY, partialTicks, clip);
-		}
-		renderWidgetForeground(matrix, mouseX, mouseY, partialTicks);
-		matrix.popPose();
 	}
 
 	/**
@@ -540,10 +597,42 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrix.translate(getPosition().getX(), getPosition().getY(), zLevel);
 	}
 
+	protected void transformPoseBeforeChildRender(PoseStack matrix, AbstractGuiWidget<?> child, int index) {
+
+	}
+
 	public RectangleBounds getClipBounds(PoseStack matrix) {
 		RectangleBounds output = getBounds().copy();
 		output.setY(Minecraft.getInstance().getWindow().getGuiScaledHeight() - getBounds().getY() - getSize().getY());
 		return output;
+	}
+
+	protected final boolean shouldRender(PoseStack matrix) {
+		return true && shouldRenderWidget(matrix);
+	}
+
+	protected boolean shouldRenderWidget(PoseStack matrix) {
+		return true;
+	}
+
+	protected boolean shouldRenderChild(PoseStack matrix, AbstractGuiWidget<?> widget, int index) {
+		if (clipType == WidgetClipType.CLIP) {
+			Vector2D childMin = widget.getScreenSpacePosition();
+			Vector2D childMax = childMin.copy().add(widget.getSize());
+			Vector2D parentMin = getScreenSpacePosition();
+			Vector2D parentMax = parentMin.copy().add(getSize());
+
+			if (childMax.getY() < parentMin.getY() || childMin.getY() > parentMax.getY()) {
+				// System.out.println("Parent: " + childMin + " Child: " + parentMax);
+				return false;
+			}
+			if (childMax.getX() < parentMin.getX() || childMin.getX() > parentMax.getX()) {
+				// System.out.println("Parent: " + parentMin + " Child: " + parentMax);
+				return false;
+			}
+		}
+
+		return true;
 	}
 
 	/**
@@ -579,21 +668,60 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	}
 
 	public void registerWidget(@SuppressWarnings("rawtypes") AbstractGuiWidget widget) {
-		internalContainer.registerWidget(widget);
+		widgets.add(widget);
+		widget.setParent(this);
+		widget.addedToParent(parent);
+		onWidgetAdded(widget);
 	}
 
-	public void removeWidget(@SuppressWarnings("rawtypes") AbstractGuiWidget widget) {
-		internalContainer.removeWidget(widget);
+	protected void onWidgetAdded(AbstractGuiWidget<?> widget) {
+
+	}
+
+	public boolean removeWidget(@SuppressWarnings("rawtypes") AbstractGuiWidget widget) {
+		widget.removedFromParent(parent);
+		if (widgets.remove(widget)) {
+			onWidgetRemoved(widget);
+			return true;
+		}
+		return false;
+	}
+
+	protected void onWidgetRemoved(AbstractGuiWidget<?> widget) {
+
 	}
 
 	public void clearChildren() {
-		internalContainer.clearWidgets();
+		for (AbstractGuiWidget<?> widget : widgets) {
+			widget.removedFromParent(parent);
+		}
+		widgets.clear();
 	}
 
 	/* Tooltip */
+	@SuppressWarnings("resource")
+	public final void renderTooltips(PoseStack matrixStack, int mouseX, int mouseY) {
+		// Capture all the tooltips for all the widgets. Skip any invisible widgets or
+		// widgets that are not hovered.
+		Vector2D mousePosition = new Vector2D(mouseX, mouseY);
+		List<Component> tooltips = new ArrayList<Component>();
+		getTooltips(mousePosition, tooltips, Screen.hasShiftDown());
+		// If there are any tooltips to render, render them.
+		if (tooltips.size() > 0) {
+			// Format them and then draw them.
+			if (Minecraft.getInstance().screen != null) {
+				Minecraft.getInstance().screen.renderComponentTooltip(matrixStack, tooltips, mouseX, mouseY);
+			}
+		}
+	}
+
 	public final void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (shouldDrawChildren()) {
-			internalContainer.getTooltips(mousePosition, tooltips, showAdvanced);
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible() && !widget.getTooltipsDisabled() && widget.isHovered()) {
+					widget.getTooltips(mousePosition, tooltips, showAdvanced);
+				}
+			}
 		}
 		getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 	}
@@ -639,60 +767,116 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 * @return
 	 */
 	public List<AbstractGuiWidget<?>> getChildren() {
-		return internalContainer.getWidgets();
+		return widgets;
 	}
 
 	protected boolean shouldDrawChildren() {
 		return true;
 	}
-	
+
 	/* Input Events */
 	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		if (shouldDrawChildren()) {
-			return internalContainer.handleMouseClick(mouseX, mouseY, button);
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible()) {
+					if (widget.mouseClick((int) mouseX, (int) mouseY, button) == EInputResult.HANDLED) {
+						return EInputResult.HANDLED;
+					}
+				}
+			}
 		}
 		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
 		if (shouldDrawChildren()) {
-			return internalContainer.handleMouseReleased(mouseX, mouseY, button);
+			// Raise the mouse hovered event for all the widgets,
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible()) {
+					if (widget.mouseReleased((int) mouseX, (int) mouseY, button) == EInputResult.HANDLED) {
+						return EInputResult.HANDLED;
+					}
+				}
+			}
 		}
 		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult mouseMove(double mouseX, double mouseY) {
 		if (shouldDrawChildren()) {
-			return internalContainer.handleMouseMove(mouseX, mouseY);
+			// Raise the mouse hovered event for all the widgets,
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible()) {
+					if (widget.mouseMove((int) mouseX, (int) mouseY) == EInputResult.HANDLED) {
+						return EInputResult.HANDLED;
+					}
+				}
+			}
 		}
 		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
 		if (shouldDrawChildren()) {
-			return internalContainer.handleMouseScrolled(mouseX, mouseY, scrollDelta);
+			// Raise the mouse scrolled event for all the widgets,
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible()) {
+					if (widget.mouseScrolled(mouseX, mouseY, scrollDelta) == EInputResult.HANDLED) {
+						return EInputResult.HANDLED;
+					}
+				}
+			}
 		}
 		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (shouldDrawChildren()) {
-			return internalContainer.handleMouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+			// Raise the mouse scrolled event for all the widgets,
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible()) {
+					if (widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY) == EInputResult.HANDLED) {
+						return EInputResult.HANDLED;
+					}
+				}
+			}
 		}
 		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult characterTyped(char character, int p_charTyped_2_) {
 		if (shouldDrawChildren()) {
-			return internalContainer.characterTyped(character, p_charTyped_2_);
+			// Raise the character typed event for all the widgets,
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible()) {
+					if (widget.characterTyped(character, p_charTyped_2_) == EInputResult.HANDLED) {
+						return EInputResult.HANDLED;
+					}
+				}
+			}
 		}
 		return EInputResult.UNHANDLED;
 	}
 
 	public EInputResult keyPressed(int key, int scanCode, int modifiers) {
 		if (shouldDrawChildren()) {
-			return internalContainer.handleKeyPressed(key, scanCode, modifiers);
+			// Raise the key presed event for all the widgets,
+			for (AbstractGuiWidget<?> widget : widgets) {
+				if (widget.isVisible()) {
+					if (widget.keyPressed(key, scanCode, modifiers) == EInputResult.HANDLED) {
+						return EInputResult.HANDLED;
+					}
+				}
+			}
 		}
 		return EInputResult.UNHANDLED;
+	}
+
+	public boolean shouldRespondToInput() {
+		return shouldRenderThisFrame && isVisible() && isEnabled();
+	}
+
+	public enum WidgetClipType {
+		CLIP, FREE
 	}
 }
