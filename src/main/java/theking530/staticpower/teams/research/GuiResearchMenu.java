@@ -286,6 +286,9 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		RectangleBounds clipMask = nodePanBox.getClipBounds(pose).copy().multiply((float) getMinecraft().getWindow().getGuiScale());
 		RenderingUtilities.applyScissorMask(clipMask);
 
+		pose.pushPose();
+		nodePanBox.transformPoseBeforeRender(pose);
+
 		// Draw the lines.
 		for (ResearchNodeWidget outerNode : this.researchNodes.values()) {
 			List<ResearchNodeWidget> preReqWidgets = new ArrayList<ResearchNodeWidget>();
@@ -298,14 +301,12 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			int index = 0;
 			for (ResearchNodeWidget node : preReqWidgets) {
 				index++;
-				pose.pushPose();
-				float scaleFactor = (1 / this.nodePanBox.getCurrentZoom());
 
-				Vector3D expandedPosition = outerNode.getScreenSpacePosition().promote();
-				expandedPosition.add(11 * scaleFactor, 2 * scaleFactor, 100);
+				Vector3D expandedPosition = outerNode.getPosition().promote();
+				expandedPosition.add(11, 2, 100);
 
-				Vector3D preReqPosition = node.getScreenSpacePosition().promote();
-				preReqPosition.add(11 * scaleFactor, 20f * scaleFactor, 100);
+				Vector3D preReqPosition = node.getPosition().promote();
+				preReqPosition.add(11, 20f, 100);
 
 				Color startLineColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 				Color endLineColor = startLineColor;
@@ -335,10 +336,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 					GuiDrawUtilities.drawLine(pose, expandedPosition, preReqPosition, startLineColor, endLineColor, 8.0f);
 				}
-
-				pose.popPose();
 			}
 		}
+
+		pose.popPose();
 
 		// Reset the clip mask.
 		RenderingUtilities.clearScissorMask();

@@ -1,0 +1,27 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.vacuum_chest.title",
+	"description": "staticpower.research.vacuum_chest.description",
+	"icon": {
+		"item": "staticpower:chest_vacuum"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/fluid_storage/iron"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 20
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/vacuum_chest"
+		}
+	]
+}

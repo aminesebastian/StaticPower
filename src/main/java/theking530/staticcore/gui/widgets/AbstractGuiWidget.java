@@ -645,7 +645,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	protected boolean shouldDrawChildren() {
 		return true;
 	}
-
+	
 	/* Input Events */
 	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		if (shouldDrawChildren()) {

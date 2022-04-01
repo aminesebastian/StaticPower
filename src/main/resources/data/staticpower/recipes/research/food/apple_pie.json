@@ -6,11 +6,12 @@
 		"item": "staticpower:pie_apple"
 	},
 	"visualOffset": [
-		0,
+		-4,
 		0
 	],
+	"sortOrder": 40,
 	"prerequisites": [
-		"staticpower:research/farming/static_farming"
+		"staticpower:research/research_tiers/tier_1"
 	],
 	"requirements": [
 		{

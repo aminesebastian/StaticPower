@@ -7,11 +7,10 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/solar_panels/basic",
 		"staticpower:research/machines/soldering_table",
 		"staticpower:research/machines/solid_generator",
 		"staticpower:research/machines/fluid_storage/iron",
-		"staticpower:research/machines/solid_generator",
+		"staticpower:research/machines/laboratory",
 		"staticpower:research/transport/basic"
 	],
 	"requirements": [

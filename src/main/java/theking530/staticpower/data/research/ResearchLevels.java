@@ -104,10 +104,19 @@ public class ResearchLevels {
 		while (!queue.isEmpty()) {
 			ResearchNode research = queue.poll();
 
-			// Add the positions to the hash set and then set them.
-			int childCount = research.getChildren().size();
+			// Capture the amount of TYPICAL children (children where this is the only
+			// parent).
+			int childCount = 0; // Math.max(0, research.getChildren().size() - 1);
+			for (ResearchNode child : research.getChildren()) {
+				if (child.getAllParents().size() == 1) {
+					childCount++;
+				}
+			}
+			childCount = Math.max(0, childCount - 1);
+
+			// Base our offsets based on the amount of SOLO children we have.
 			float initialOffset = childCount / -2.0f;
-			float currentOffset = initialOffset + 0.5f;
+			float currentOffset = initialOffset;
 
 			for (int i = 0; i < research.getChildren().size(); i++) {
 				ResearchNode child = research.getChildren().get(i);
@@ -123,9 +132,16 @@ public class ResearchLevels {
 					}
 				}
 
+				// The following is a useful debug line.
+				//System.out.println("Parent: " + research.getResearch().getId() + "  Child: " + child.getResearch().getId() + "  " + currentOffset);
+
 				float targetX = (minParentX + maxParentX) / 2;
-				targetX += currentOffset;
-				currentOffset += 1.0f;
+
+				// Only apply the current offset if this is a single parent node (ie. the
+				// current research we pulled off the queue is its ONLY parent).
+				if (child.getAllParents().size() == 1) {
+					targetX += currentOffset;
+				}
 				child.setRelativeX(targetX + child.getResearch().getVisualOffset().getX());
 
 				float yOffset = 0;
@@ -134,6 +150,7 @@ public class ResearchLevels {
 				}
 				child.setRelativeY(research.getRelativePosition().getY() + 1 + child.getResearch().getVisualOffset().getY() + yOffset);
 				queue.add(child);
+				currentOffset += 1.0f;
 			}
 		}
 	}
