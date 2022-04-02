@@ -49,10 +49,12 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	private Vector2D lastMousePosition;
 	private final Font fontRenderer;
 	private boolean shouldRenderThisFrame;
+	private List<AbstractGuiWidget<?>> childrenToDraw;
 
 	@SuppressWarnings("resource")
 	public AbstractGuiWidget(float xPosition, float yPosition, float width, float height) {
 		widgets = new ArrayList<AbstractGuiWidget<?>>();
+		childrenToDraw = new ArrayList<AbstractGuiWidget<?>>();
 		cachedBounds = new RectangleBounds(0.0f, 0.0f, 0.0f, 0.0f); // Must be initially set to 0.
 		initialPosition = new Vector2D(xPosition, yPosition);
 		position = new Vector2D(xPosition, yPosition);
@@ -388,6 +390,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	 */
 	public final void updateBeforeRender(PoseStack matrixStack, Vector2D parentSize, float partialTicks, int mouseX, int mouseY, RectangleBounds parentBounds) {
 		this.parentSize = parentSize;
+		this.childrenToDraw.clear();
 		lastMousePosition = new Vector2D(mouseX, mouseY);
 
 		Vector2D screenSpacePosition = GuiDrawUtilities.translatePositionByMatrix(matrixStack, getPosition());
@@ -403,6 +406,11 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 				matrixStack.pushPose();
 				transformPoseBeforeChildRender(matrixStack, widget, i);
 				widget.updateBeforeRender(matrixStack, parentSize, partialTicks, mouseX, mouseY, parentBounds);
+
+				// Add this widget to the children to draw list if we should draw it.
+				if (shouldRenderChild(matrixStack, widget, i)) {
+					childrenToDraw.add(widget);
+				}
 				matrixStack.popPose();
 			}
 		}
@@ -454,9 +462,9 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 			if (shouldDrawChildren()) {
 				// Render the foreground of all the widgets.
-				for (int i = 0; i < widgets.size(); i++) {
-					AbstractGuiWidget<?> widget = widgets.get(i);
-					if (widget.isVisible() && shouldRenderChild(matrix, widget, i)) {
+				for (int i = 0; i < childrenToDraw.size(); i++) {
+					AbstractGuiWidget<?> widget = childrenToDraw.get(i);
+					if (shouldRenderChild(matrix, widget, i)) {
 						matrix.pushPose();
 						transformPoseBeforeChildRender(matrix, widget, i);
 						widget.renderBackground(matrix, mouseX, mouseY, partialTicks, parentBounds);
@@ -500,9 +508,9 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 			if (shouldDrawChildren()) {
 				// Render the foreground of all the widgets.
-				for (int i = 0; i < widgets.size(); i++) {
-					AbstractGuiWidget<?> widget = widgets.get(i);
-					if (widget.isVisible() && shouldRenderChild(matrix, widget, i)) {
+				for (int i = 0; i < childrenToDraw.size(); i++) {
+					AbstractGuiWidget<?> widget = childrenToDraw.get(i);
+					if (shouldRenderChild(matrix, widget, i)) {
 						matrix.pushPose();
 						transformPoseBeforeChildRender(matrix, widget, i);
 						widget.renderBehindItems(matrix, mouseX, mouseY, partialTicks, parentBounds);
@@ -534,9 +542,9 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 			if (shouldDrawChildren()) {
 				// Render the foreground of all the widgets.
-				for (int i = 0; i < widgets.size(); i++) {
-					AbstractGuiWidget<?> widget = widgets.get(i);
-					if (widget.isVisible() && shouldRenderChild(matrix, widget, i)) {
+				for (int i = 0; i < childrenToDraw.size(); i++) {
+					AbstractGuiWidget<?> widget = childrenToDraw.get(i);
+					if (shouldRenderChild(matrix, widget, i)) {
 						matrix.pushPose();
 						transformPoseBeforeChildRender(matrix, widget, i);
 						widget.renderForeground(matrix, mouseX, mouseY, partialTicks, parentBounds);
@@ -632,7 +640,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 			}
 		}
 
-		return true;
+		return widget.isVisible();
 	}
 
 	/**
@@ -717,7 +725,7 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 
 	public final void getTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (shouldDrawChildren()) {
-			for (AbstractGuiWidget<?> widget : widgets) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
 				if (widget.isVisible() && !widget.getTooltipsDisabled() && widget.isHovered()) {
 					widget.getTooltips(mousePosition, tooltips, showAdvanced);
 				}
@@ -777,8 +785,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	/* Input Events */
 	public EInputResult mouseClick(double mouseX, double mouseY, int button) {
 		if (shouldDrawChildren()) {
-			for (AbstractGuiWidget<?> widget : widgets) {
-				if (widget.isVisible()) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
+				if (widget.shouldRespondToInput()) {
 					if (widget.mouseClick((int) mouseX, (int) mouseY, button) == EInputResult.HANDLED) {
 						return EInputResult.HANDLED;
 					}
@@ -791,8 +799,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public EInputResult mouseReleased(double mouseX, double mouseY, int button) {
 		if (shouldDrawChildren()) {
 			// Raise the mouse hovered event for all the widgets,
-			for (AbstractGuiWidget<?> widget : widgets) {
-				if (widget.isVisible()) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
+				if (widget.shouldRespondToInput()) {
 					if (widget.mouseReleased((int) mouseX, (int) mouseY, button) == EInputResult.HANDLED) {
 						return EInputResult.HANDLED;
 					}
@@ -805,8 +813,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public EInputResult mouseMove(double mouseX, double mouseY) {
 		if (shouldDrawChildren()) {
 			// Raise the mouse hovered event for all the widgets,
-			for (AbstractGuiWidget<?> widget : widgets) {
-				if (widget.isVisible()) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
+				if (widget.shouldRespondToInput()) {
 					if (widget.mouseMove((int) mouseX, (int) mouseY) == EInputResult.HANDLED) {
 						return EInputResult.HANDLED;
 					}
@@ -819,8 +827,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public EInputResult mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
 		if (shouldDrawChildren()) {
 			// Raise the mouse scrolled event for all the widgets,
-			for (AbstractGuiWidget<?> widget : widgets) {
-				if (widget.isVisible()) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
+				if (widget.shouldRespondToInput()) {
 					if (widget.mouseScrolled(mouseX, mouseY, scrollDelta) == EInputResult.HANDLED) {
 						return EInputResult.HANDLED;
 					}
@@ -833,8 +841,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (shouldDrawChildren()) {
 			// Raise the mouse scrolled event for all the widgets,
-			for (AbstractGuiWidget<?> widget : widgets) {
-				if (widget.isVisible()) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
+				if (widget.shouldRespondToInput()) {
 					if (widget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY) == EInputResult.HANDLED) {
 						return EInputResult.HANDLED;
 					}
@@ -847,8 +855,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public EInputResult characterTyped(char character, int p_charTyped_2_) {
 		if (shouldDrawChildren()) {
 			// Raise the character typed event for all the widgets,
-			for (AbstractGuiWidget<?> widget : widgets) {
-				if (widget.isVisible()) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
+				if (widget.shouldRespondToInput()) {
 					if (widget.characterTyped(character, p_charTyped_2_) == EInputResult.HANDLED) {
 						return EInputResult.HANDLED;
 					}
@@ -861,8 +869,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 	public EInputResult keyPressed(int key, int scanCode, int modifiers) {
 		if (shouldDrawChildren()) {
 			// Raise the key presed event for all the widgets,
-			for (AbstractGuiWidget<?> widget : widgets) {
-				if (widget.isVisible()) {
+			for (AbstractGuiWidget<?> widget : childrenToDraw) {
+				if (widget.shouldRespondToInput()) {
 					if (widget.keyPressed(key, scanCode, modifiers) == EInputResult.HANDLED) {
 						return EInputResult.HANDLED;
 					}

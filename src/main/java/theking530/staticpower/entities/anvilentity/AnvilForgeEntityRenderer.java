@@ -2,6 +2,7 @@ package theking530.staticpower.entities.anvilentity;
 
 import java.util.Random;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
@@ -21,6 +22,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.items.HeatedIngot;
 
 /**
  * Renderer for conveyor belt entities. We keep the generic parameter as an item
@@ -70,7 +73,6 @@ public class AnvilForgeEntityRenderer extends EntityRenderer<ItemEntity> {
 
 				float f3 = entityIn.getSpin(partialTicks);
 				matrixStackIn.mulPose(Vector3f.YP.rotation(f3));
-				System.out.println(f3);
 			}
 		}
 
@@ -95,7 +97,6 @@ public class AnvilForgeEntityRenderer extends EntityRenderer<ItemEntity> {
 					matrixStackIn.translate(shouldSpreadItems() ? f12 : 0, shouldSpreadItems() ? f14 : 0, 0.0D);
 				}
 			}
-
 			this.itemRenderer.render(itemstack, ItemTransforms.TransformType.GROUND, false, matrixStackIn, bufferIn, packedLightIn, OverlayTexture.NO_OVERLAY, ibakedmodel);
 			matrixStackIn.popPose();
 			if (!flag) {

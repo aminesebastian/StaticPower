@@ -300,9 +300,11 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		}
 
 		for (AbstractGuiWidget<?> widget : this.widgetContainer.getChildren()) {
-			tabBoxes.add(widget.getBounds().toRectange2d());
+			// Skip the tab manager widget.
+			if (!(widget instanceof GuiTabManager)) {
+				tabBoxes.add(widget.getBounds().toRectange2d());
+			}
 		}
-
 		return tabBoxes;
 	}
 

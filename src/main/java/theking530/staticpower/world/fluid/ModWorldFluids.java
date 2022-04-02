@@ -4,7 +4,6 @@ import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
 import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
@@ -18,7 +17,7 @@ import theking530.staticpower.world.features.StaticPowerLakeFeatureConfiguration
 
 public class ModWorldFluids {
 	public static final PlacedFeature LAKE_OIL_SURFACE = PlacementUtils.register("lake_oil_surface",
-			new WorldFluidConfigBuilder(ModFluids.CrudeOil, BlockStateProvider.simple(Blocks.MOSSY_COBBLESTONE)).build().placed(RarityFilter.onAverageOnceEvery(10), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BiomeFilter.biome()));
+			new WorldFluidConfigBuilder(ModFluids.CrudeOil, BlockStateProvider.simple(Blocks.MOSSY_COBBLESTONE)).build());
 
 	public static void addFluidGenFeatures(BiomeLoadingEvent event) {
 		event.getGeneration().addFeature(GenerationStep.Decoration.LAKES, LAKE_OIL_SURFACE);
@@ -33,10 +32,10 @@ public class ModWorldFluids {
 			this.barrier = barrier;
 		}
 
-		public ConfiguredFeature<?, ?> build() {
+		public PlacedFeature build() {
 			StaticPowerLakeFeatureConfiguration configuration = new StaticPowerLakeFeatureConfiguration(BlockStateProvider.simple(fluid.FluidBlock.defaultBlockState()), barrier, UniformInt.of(2, 10),
 					UniformInt.of(30, 100));
-			return ModFeatures.STATIC_LAKE.configured(configuration);
+			return ModFeatures.STATIC_LAKE.configured(configuration).placed(RarityFilter.onAverageOnceEvery(100), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_TOP_SOLID, BiomeFilter.biome());
 		}
 	}
 }
