@@ -1,0 +1,27 @@
+{
+	"type": "staticpower:research",
+	"title": "staticpower.research.basic_filter.title",
+	"description": "staticpower.research.basic_filter.description",
+	"icon": {
+		"item": "staticpower:filter_item_basic"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/misc/basic_processor"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 20
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/filter/basic_filter"
+		}
+	]
+}

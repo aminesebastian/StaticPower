@@ -11,21 +11,20 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.crafting.Recipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchIcon;
 import theking530.staticpower.data.research.ResearchLevels.ResearchNode;
 import theking530.staticpower.data.research.ResearchUnlock;
-import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
-import theking530.staticpower.init.ModResearch;
 import theking530.staticpower.data.research.ResearchUnlockUtilities;
+import theking530.staticpower.init.ModResearch;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
@@ -147,7 +146,6 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
-
 		if (isExpanded()) {
 			Vector2D localPosition = mousePosition.copy().subtract(getScreenSpacePosition());
 			boolean isInUnlockRegion = localPosition.getY() >= (getSize().getY() - 12) && localPosition.getY() <= (getSize().getY() - 1);

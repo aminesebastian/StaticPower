@@ -10,7 +10,7 @@
 			"item": "minecraft:bucket"
 		},
 		"b": {
-			"item": "staticpower:machine_block_energized"
+			"item": "staticpower:machine_block_static"
 		},
 		"g": {
 			"tag": "forge:glass"

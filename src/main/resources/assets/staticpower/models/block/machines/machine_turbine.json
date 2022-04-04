@@ -4,7 +4,7 @@
 	"textures": {
 		"particle": "staticpower:blocks/machines/turbine",
 		"texture": "staticpower:blocks/machines/turbine",
-		"texture2": "staticpower:blocks/machines/sides/basic_machine_top"
+		"texture2": "staticpower:blocks/machines/sides/advanced_machine_top"
 	},
 	"elements": [
 		{

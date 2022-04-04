@@ -1,5 +1,5 @@
 {
-	"parent": "staticpower:block/machines/base_blocks/machine_block_energized",
+	"parent": "staticpower:block/machines/base_blocks/machine_block_static",
 	"textures": {
 		"front_overlay": "staticpower:blocks/machines/condenser_face"
 	}

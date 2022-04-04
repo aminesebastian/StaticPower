@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/fluid_storage/iron"
+		"staticpower:research/machines/misc/basic_processor"
 	],
 	"requirements": [
 		{

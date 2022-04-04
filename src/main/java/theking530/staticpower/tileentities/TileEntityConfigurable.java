@@ -51,6 +51,8 @@ public class TileEntityConfigurable extends TileEntityBase {
 
 	@Override
 	protected void postInit(Level world, BlockPos pos, BlockState state) {
+		super.postInit(world, pos, state);
+		
 		// Get all inventories for this tile entitiy.
 		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
 

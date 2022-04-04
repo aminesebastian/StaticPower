@@ -13,7 +13,7 @@
 			"item": "staticpower:soldering_table"
 		},
 		"b": {
-			"item": "staticpower:machine_block_basic"
+			"item": "staticpower:machine_block_energized"
 		},
 		"p": {
 			"item": "staticpower:plug"

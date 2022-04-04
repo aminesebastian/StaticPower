@@ -7,7 +7,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/tools/hammer/basic"
+		"staticpower:research/machines/fluid_storage/iron"
 	],
 	"requirements": [
 		{

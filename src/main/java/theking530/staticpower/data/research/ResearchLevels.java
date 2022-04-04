@@ -159,7 +159,8 @@ public class ResearchLevels {
 		for (int i = cachedLevels.levels.size() - 1; i >= 0; i--) {
 			for (ResearchNode parent : cachedLevels.levels.get(i).getResearch()) {
 				if (lookingForParent.research.getPrerequisites().contains(parent.research.getId())) {
-					if (lookingForParent.closestParent == null) {
+					// Set the closest parent as the first parent in the list of prereqs.
+					if (lookingForParent.research.getPrerequisites().get(0).equals(parent.research.getId())) {
 						lookingForParent.setClosestParent(parent);
 					}
 					lookingForParent.addAdditionalParent(parent);

@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/rubber/rusty_cauldron"
+		"staticpower:research/machines/squeezer"
 	],
 	"requirements": [
 		{

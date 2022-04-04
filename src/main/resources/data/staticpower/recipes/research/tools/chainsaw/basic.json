@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/tools/soldering/electric_soldering_iron"
+		"staticpower:research/misc/basic_item_filter"
 	],
 	"requirements": [
 		{

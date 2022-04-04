@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/food/apple_pie"
+		"staticpower:research/transport/basic_attachments"
 	],
 	"requirements": [
 		{

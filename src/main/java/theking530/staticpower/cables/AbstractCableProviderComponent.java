@@ -52,7 +52,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	protected final ItemStack[] covers;
 	/** List of valid attachment classes. */
 	private final HashSet<Class<? extends AbstractCableAttachment>> validAttachments;
-	private boolean initialDisabledStateApplied;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
@@ -62,15 +61,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			supportedNetworkModules.add(module);
 		}
 
-		initialDisabledStateApplied = false;
-
 		// Initialize the valid attachments set.
 		validAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
 
 		// Initialize the disabled sides, connection states, and attachments arrays.
 		disabledSides = new boolean[] { false, false, false, false, false, false };
-//		connectionStates = new CableConnectionState[] { CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE, CableConnectionState.NONE,
-//				CableConnectionState.NONE };
 		attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 	}
@@ -90,20 +85,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	@Override
 	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
 		super.onInitializedInWorld(world, pos, firstTimePlaced);
-		if (!initialDisabledStateApplied) {
-			// Handle the initial states of the disabled sides for the new cable.
-			for (Direction side : Direction.values()) {
-				disabledSides[side.ordinal()] = getInitialSideDisabledState(side);
-				if (!getWorld().isClientSide) {
-					CableNetworkManager.get(getWorld()).getCable(getPos()).setDisabledStateOnSide(side, getInitialSideDisabledState(side));
-				}
-			}
-			initialDisabledStateApplied = true;
-
-			// Update the rendering state on all connected blocks.
-			if (getWorld().isClientSide()) {
-				updateRenderingStateOnAllAdjacent();
-			}
+		// Update the rendering state on all connected blocks.
+		if (getWorld().isClientSide()) {
+			updateRenderingStateOnAllAdjacent();
 		}
 	}
 
@@ -598,9 +582,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			nbt.put("cover" + i, itemNbt);
 		}
 
-		// Save the initial disabled state applied.
-		nbt.putBoolean("initial_disabled_applied", initialDisabledStateApplied);
-
 		return nbt;
 	}
 
@@ -635,13 +616,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			CompoundTag itemNbt = nbt.getCompound("cover" + i);
 			covers[i] = ItemStack.of(itemNbt);
 		}
-
-		// Deserialize the initial disabled state.
-		initialDisabledStateApplied = nbt.getBoolean("initial_disabled_applied");
-	}
-
-	protected boolean getInitialSideDisabledState(Direction side) {
-		return false;
 	}
 
 	protected ServerCable createCable() {

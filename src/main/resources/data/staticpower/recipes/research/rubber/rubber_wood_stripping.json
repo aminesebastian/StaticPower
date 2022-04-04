@@ -3,12 +3,11 @@
 	"title": "research.rubber_wood_stripping",
 	"description": "research.rubber_wood_stripping_description",
 	"visualOffset": [
-		-8,
+		-0.5,
 		0
 	],
-	"sortOrder": 0,
 	"prerequisites": [
-		"staticpower:research/research_tiers/tier_1"
+		"staticpower:research/machines/misc/basic_components"
 	],
 	"requirements": [
 		{

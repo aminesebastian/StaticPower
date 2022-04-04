@@ -13,7 +13,7 @@
 			"tag": "forge:plates/tin"
 		},
 		"l": {
-			"item": "minecraft:lever"
+			"tag": "forge:plates/rubber"
 		}
 	},
 	"result": {

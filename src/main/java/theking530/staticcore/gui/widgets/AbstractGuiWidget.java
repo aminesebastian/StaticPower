@@ -399,7 +399,6 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		matrixStack.pushPose();
 		transformPoseBeforeRender(matrixStack);
 
-		RectangleBounds clip = getClipBounds(matrixStack).multiply((float) getMinecraft().getWindow().getGuiScale());
 		if (shouldDrawChildren()) {
 			for (int i = 0; i < widgets.size(); i++) {
 				AbstractGuiWidget<?> widget = widgets.get(i);

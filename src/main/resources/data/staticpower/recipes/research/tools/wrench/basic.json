@@ -2,10 +2,16 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.wrench.title",
 	"description": "staticpower.research.wrench.description",
-	"visualOffset": [0, 0],
+	"icon": {
+		"item": "staticpower:wrench"
+	},
+	"visualOffset": [
+		0.5,
+		0
+	],
 	"sortOrder": 100,
 	"prerequisites": [
-		"staticpower:research/research_tiers/tier_1"
+		"staticpower:research/materials/basic_forging"
 	],
 	"requirements": [
 		{
@@ -18,8 +24,5 @@
 			"type": "crafting",
 			"target": "staticpower:crafting/tools/wrench"
 		}
-	],
-	"icon": {
-		"item": "staticpower:wrench"
-	}
+	]
 }

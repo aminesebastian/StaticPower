@@ -48,7 +48,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 	public final FluidTankComponent fluidTankComponent;
 
 	public TileEntityFermenter(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, StaticPowerTiers.BASIC);
+		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {

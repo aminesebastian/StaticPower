@@ -59,7 +59,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	protected final ItemStack[] filterInventory;
 
 	public TileEntityAutoCraftingTable(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, StaticPowerTiers.BASIC);
+		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));

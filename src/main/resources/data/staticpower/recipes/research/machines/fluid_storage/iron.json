@@ -5,13 +5,12 @@
 	"icon": {
 		"item": "staticpower:tank_iron"
 	},
-	"sortOrder": -10,
 	"visualOffset": [
 		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/machine_blocks/aluminum"
+		"staticpower:research/transport/basic"
 	],
 	"requirements": [
 		{

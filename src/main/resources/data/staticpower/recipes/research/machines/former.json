@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/machine_blocks/basic"
+		"staticpower:research/machines/powered_furnace"
 	],
 	"requirements": [
 		{
@@ -33,12 +33,18 @@
 			"target": "staticpower:former/blank_mold",
 			"icon": {
 				"item": "staticpower:mold_blank"
+			},
+			"tooltip": {
+				"item": "staticpower:mold_blank"
 			}
 		},
 		{
 			"type": "machine_recipe",
 			"target": "staticpower:former/mold_plate",
 			"icon": {
+				"item": "staticpower:mold_plate"
+			},
+			"tooltip": {
 				"item": "staticpower:mold_plate"
 			}
 		},
@@ -47,6 +53,9 @@
 			"target": "staticpower:former/mold_wire",
 			"icon": {
 				"item": "staticpower:mold_wire"
+			},
+			"tooltip": {
+				"item": "staticpower:mold_wire"
 			}
 		},
 		{
@@ -54,12 +63,18 @@
 			"target": "staticpower:former/mold_gear",
 			"icon": {
 				"item": "staticpower:mold_gear"
+			},
+			"tooltip": {
+				"item": "staticpower:mold_gear"
 			}
 		},
 		{
 			"type": "machine_recipe",
 			"target": "staticpower:former/mold_blade",
 			"icon": {
+				"item": "staticpower:mold_blade"
+			},
+			"tooltip": {
 				"item": "staticpower:mold_blade"
 			}
 		}

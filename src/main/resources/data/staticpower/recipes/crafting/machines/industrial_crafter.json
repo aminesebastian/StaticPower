@@ -13,7 +13,7 @@
 			"item": "minecraft:crafting_table"
 		},
 		"b": {
-			"item": "staticpower:machine_block_basic"
+			"item": "staticpower:machine_block_advanced"
 		},
 		"p": {
 			"item": "staticpower:plug"

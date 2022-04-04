@@ -2,13 +2,15 @@
 	"type": "staticpower:research",
 	"title": "research.rusty_cauldron.title",
 	"description": "research.rusty_cauldron.description",
+	"icon": {
+		"item": "staticpower:rusty_cauldron"
+	},
 	"visualOffset": [
-		0,
+		0.5,
 		0
 	],
-	"sortingOrder": 0,
 	"prerequisites": [
-		"staticpower:research/rubber/rubber_wood_stripping"
+		"staticpower:research/materials/basic_forging"
 	],
 	"requirements": [
 		{
@@ -21,8 +23,5 @@
 			"type": "crafting",
 			"target": "staticpower:crafting/machines/rusty_cauldron"
 		}
-	],
-	"icon": {
-		"item": "staticpower:rusty_cauldron"
-	}
+	]
 }

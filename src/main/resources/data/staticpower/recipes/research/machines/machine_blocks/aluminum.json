@@ -11,7 +11,7 @@
 	],
 	"sortOrder": 20,
 	"prerequisites": [
-		"staticpower:research/tools/wrench/basic",
+		"staticpower:research/materials/basic_wires",
 		"staticpower:research/machines/misc/basic_components",
 		"staticpower:research/materials/basic_forging"
 	],

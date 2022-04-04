@@ -4,7 +4,7 @@
 	"description": "research.clear_cauldron.description",
 	"visualOffset": [0, 0],
 	"prerequisites": [
-		"staticpower:research/rubber/rusty_cauldron"
+		"staticpower:research/rubber/rusty_cauldrond"
 	],
 	"requirements": [
 		{

@@ -46,7 +46,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		super(TYPE, pos, state);
 
 		// Get the tier.
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.ENERGIZED);
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.STATIC);
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",

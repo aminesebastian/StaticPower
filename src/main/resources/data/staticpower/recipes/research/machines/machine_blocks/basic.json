@@ -32,24 +32,6 @@
 			"displayKey": "machine_block",
 			"type": "crafting",
 			"target": "staticpower:crafting/machines/machine_blocks/machine_block_basic_from_ingot"
-		},
-		{
-			"type": "display_only",
-			"tooltip": {
-				"item": "staticpower:silicon"
-			},
-			"icon": {
-				"item": "staticpower:silicon"
-			}
-		},
-		{
-			"type": "display_only",
-			"tooltip": {
-				"item": "staticpower:processor_basic"
-			},
-			"icon": {
-				"item": "staticpower:processor_basic"
-			}
 		}
 	]
 }

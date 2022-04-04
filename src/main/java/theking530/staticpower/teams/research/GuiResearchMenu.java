@@ -78,7 +78,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-		nodePanBox.setMaxZoom(4.0f);
+		nodePanBox.setMaxZoom(2.0f);
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
@@ -171,8 +171,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		int screenHeight = Minecraft.getInstance().getWindow().getGuiScaledHeight();
 		int screenWidth = Minecraft.getInstance().getWindow().getGuiScaledWidth();
 
-		nodePanBox.setPosition(104, 25);
-		nodePanBox.setSize(screenWidth, screenHeight - 25);
+		nodePanBox.setPosition(105, 25);
+		nodePanBox.setSize(screenWidth - 105, screenHeight - 25);
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
@@ -195,7 +195,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				boolean debugMode = false;
 				if (debugMode || isCompleted || isAvailable || isAnyParentAvailable && !research.isHiddenUntilAvailable()) {
 					// Calculate the reletive position and create the research node widget.
-					Vector2D relative = researchNode.getRelativePosition().getScaledVector(40.0f, 60.0f).add(100, 30);
+					Vector2D relative = researchNode.getRelativePosition().getScaledVector(50.0f, 65.0f).add(93, 30);
 					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
 					researchNodes.put(researchNode, widget);
 					nodePanBox.registerWidget(widget);

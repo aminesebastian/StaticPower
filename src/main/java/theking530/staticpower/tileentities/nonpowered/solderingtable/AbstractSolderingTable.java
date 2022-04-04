@@ -26,7 +26,7 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 
 	public AbstractSolderingTable(BlockEntityTypeAllocator<? extends AbstractSolderingTable> allocator, BlockPos pos,
 			BlockState state) {
-		super(allocator, pos, state, StaticPowerTiers.BASIC);
+		super(allocator, pos, state, StaticPowerTiers.ENERGIZED);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
 		registerComponent(
 				inventory = new InventoryComponent("Inventory", 9, MachineSideMode.Never).setShiftClickEnabled(true));

@@ -6,12 +6,12 @@
 		"item": "staticpower:wire_copper"
 	},
 	"visualOffset": [
-		0.5,
+		0,
 		0
 	],
-	"sortOrder": 40,
+	"sortOrder": 100,
 	"prerequisites": [
-		"staticpower:research/materials/basic_forging"
+		"staticpower:research/research_tiers/tier_1"
 	],
 	"requirements": [
 		{

@@ -1,0 +1,35 @@
+{
+	"type": "staticpower:research",
+	"title": "research.staticpower.transport_heat_copper.title",
+	"description": "research.staticpower.transport_heat_copper.description",
+	"icon": {
+		"item": "staticpower:cable_heat_copper"
+	},
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/solid_fueled_miner"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 60
+		},
+		{
+			"item": "staticpower:research_tier_2",
+			"count": 15
+		},
+		{
+			"item": "staticpower:research_tier_3",
+			"count": 15
+		}
+	],
+	"unlocks": [
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/cables/heat/heat_cable_copper"
+		}
+	]
+}

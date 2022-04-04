@@ -63,7 +63,9 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 					return CableConnectionState.CABLE;
 				}
 			} else {
-				return getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ||  otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE) || otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ? CableConnectionState.TILE_ENTITY: CableConnectionState.NONE;
+				return getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE)
+						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE)
+						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ? CableConnectionState.TILE_ENTITY : CableConnectionState.NONE;
 			}
 		} else if (!firstWorldLoaded && otherProvider == null) {
 			if (canConnectTo(getWorld(), getPos(), side.getOpposite())) {
@@ -194,12 +196,6 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 		} else {
 			return super.getAttachmentModelForSide(side);
 		}
-	}
-
-	@Override
-	protected boolean getInitialSideDisabledState(Direction side) {
-
-		return false;// getWorld().getBlockState(getPos().offset(side)).isIn(Blocks.GRASS_BLOCK);
 	}
 
 	protected static ResourceLocation getModuleType(String selector) {

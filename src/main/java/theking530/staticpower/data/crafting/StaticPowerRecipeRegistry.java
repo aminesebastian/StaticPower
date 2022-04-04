@@ -2,6 +2,7 @@ package theking530.staticpower.data.crafting;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -50,6 +51,7 @@ import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
+import theking530.staticpower.teams.Team;
 
 public class StaticPowerRecipeRegistry {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerRecipeRegistry.class);
@@ -251,6 +253,16 @@ public class StaticPowerRecipeRegistry {
 		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), RECIPES.size() + FURNACE_RECIPES.size() + CRAFTING_RECIPES.size()));
 	}
 
+	public static List<ResourceLocation> getMissingResearchForRecipe(ResourceLocation recipeId, Team team) {
+		// If the recipe is locked, capture all the research that still needs to be
+		// completed.
+		if (LOCKED_RECIPES.containsKey(recipeId)) {
+			return LOCKED_RECIPES.get(recipeId).stream().filter((resourceLocation) -> !team.getResearchManager().hasCompletedResearch(resourceLocation)).toList();
+		}
+
+		return Collections.emptyList();
+	}
+
 	private static void cacheDynamicBottlerRecipes(RecipeManager manager, @Nullable Level world) {
 		// Capture dynamic recipes.
 		for (Item item : RegistryManager.ACTIVE.getRegistry(Item.class)) {
@@ -390,7 +402,7 @@ public class StaticPowerRecipeRegistry {
 		// them.
 		for (Research research : manager.getAllRecipesFor(Research.RECIPE_TYPE)) {
 			for (ResearchUnlock unlock : research.getUnlocks()) {
-				if (unlock.getType() == ResearchUnlockType.CRAFTING) {
+				if (unlock.getType() == ResearchUnlockType.CRAFTING || unlock.getType() == ResearchUnlockType.MACHINE_RECIPE) {
 					if (!LOCKED_RECIPES.containsKey(unlock.getTarget())) {
 						LOCKED_RECIPES.put(unlock.getTarget(), new HashSet<ResourceLocation>());
 					}

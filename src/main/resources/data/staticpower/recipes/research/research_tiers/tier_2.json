@@ -9,7 +9,7 @@
 	"prerequisites": [
 		"staticpower:research/machines/soldering_table",
 		"staticpower:research/machines/solid_generator",
-		"staticpower:research/machines/fluid_storage/iron",
+		"staticpower:research/machines/misc/basic_processor",
 		"staticpower:research/machines/laboratory",
 		"staticpower:research/transport/basic"
 	],

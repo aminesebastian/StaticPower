@@ -7,7 +7,7 @@
 	],
 	"key": {
 		"b": {
-			"item": "staticpower:machine_block_energized"
+			"item": "staticpower:machine_block_static"
 		},
 		"a": {
 			"tag": "forge:glass"

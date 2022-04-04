@@ -1,0 +1,42 @@
+{
+	"type": "staticpower:research",
+	"title": "research.staticpower.basic_processor.title",
+	"description": "research.staticpower.basic_processor.description",
+	"icon": {
+		"item": "staticpower:processor_basic"
+	},
+	"sortOrder": -10,
+	"visualOffset": [
+		0,
+		0
+	],
+	"prerequisites": [
+		"staticpower:research/machines/machine_blocks/aluminum"
+	],
+	"requirements": [
+		{
+			"item": "staticpower:research_tier_1",
+			"count": 60
+		}
+	],
+	"unlocks": [
+		{
+			"type": "display_only",
+			"tooltip": {
+				"item": "staticpower:silicon"
+			},
+			"icon": {
+				"item": "staticpower:silicon"
+			}
+		},
+		{
+			"type": "display_only",
+			"tooltip": {
+				"item": "staticpower:processor_basic"
+			},
+			"icon": {
+				"item": "staticpower:processor_basic"
+			}
+		}
+	]
+}
