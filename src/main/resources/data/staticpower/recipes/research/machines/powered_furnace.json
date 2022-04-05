@@ -5,6 +5,7 @@
 	"icon": {
 		"item": "staticpower:machine_powered_furnace"
 	},
+	"sortOrder": 250,
 	"visualOffset": [
 		0,
 		0

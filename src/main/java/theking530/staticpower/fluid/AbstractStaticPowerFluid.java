@@ -44,7 +44,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 
 	public AbstractStaticPowerFluid(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
 			String flowingTexture, Named<Fluid> tag, Color fogColor, Color overlayColor, Consumer<FluidAttributes.Builder> attributes) {
-		setRegistryName(name);
+		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, name));
 		Bucket = bucket;
 		FluidBlock = fluidBlock;
 		StillFluid = stillFluid;

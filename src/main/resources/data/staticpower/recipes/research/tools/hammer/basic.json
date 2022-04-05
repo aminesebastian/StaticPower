@@ -2,16 +2,23 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_hamering",
 	"description": "It's Hammer Time!",
+	"icon": {
+		"item": "staticpower:hammer_iron"
+	},
 	"visualOffset": [
 		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/misc/basic_chest"
+		"staticpower:research/tools/saw/basic"
 	],
 	"requirements": [
 		{
 			"item": "staticpower:research_tier_1",
+			"count": 10
+		},
+		{
+			"item": "staticpower:research_tier_2",
 			"count": 10
 		}
 	],
@@ -28,8 +35,5 @@
 			"type": "crafting",
 			"target": "staticpower:crafting/tools/hammers/hammer_tin"
 		}
-	],
-	"icon": {
-		"item": "staticpower:hammer_iron"
-	}
+	]
 }

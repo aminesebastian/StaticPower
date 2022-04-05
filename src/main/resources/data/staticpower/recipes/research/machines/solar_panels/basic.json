@@ -2,6 +2,9 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_solar_panel",
 	"description": "staticpower.research.basic_solar_panel_description",
+	"icon": {
+		"item": "staticpower:solar_panel_basic"
+	},
 	"visualOffset": [
 		0,
 		0
@@ -15,9 +18,6 @@
 			"count": 60
 		}
 	],
-	"icon": {
-		"item": "staticpower:solar_panel_basic"
-	},
 	"unlocks": [
 		{
 			"type": "crafting",

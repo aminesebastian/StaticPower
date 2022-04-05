@@ -23,6 +23,15 @@
 		{
 			"type": "display_only",
 			"tooltip": {
+				"item": "staticpower:raw_silicon"
+			},
+			"icon": {
+				"item": "staticpower:raw_silicon"
+			}
+		},
+		{
+			"type": "display_only",
+			"tooltip": {
 				"item": "staticpower:silicon"
 			},
 			"icon": {

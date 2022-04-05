@@ -1,0 +1,7 @@
+{
+	"type": "staticpower:thermal_conducitity",
+	"fluids": [
+		"staticpower:coolant_flowing"
+	],
+	"conductivity": "16.0"
+}

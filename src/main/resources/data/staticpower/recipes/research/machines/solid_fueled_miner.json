@@ -7,11 +7,11 @@
 	},
 	"sortOrder": -100,
 	"visualOffset": [
-		-1,
+		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/battery/basic"
+		"staticpower:research/machines/battery/basictest"
 	],
 	"requirements": [
 		{

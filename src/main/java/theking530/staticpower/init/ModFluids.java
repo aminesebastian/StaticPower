@@ -39,6 +39,7 @@ public class ModFluids {
 	public static StaticPowerFluidBundle Fertilizer;
 	public static StaticPowerFluidBundle Honey;
 	public static StaticPowerFluidBundle Latex;
+	public static StaticPowerFluidBundle Coolant;
 
 	public static Map<MinecraftColor, StaticPowerFluidBundle> ColoredConrete;
 	public static Map<MinecraftColor, StaticPowerFluidBundle> Dyes;
@@ -140,6 +141,10 @@ public class ModFluids {
 
 		registerFluidBundle(Latex = new StaticPowerFluidBuilder("latex", new Color(1.0f, 1.0f, 1.0f)).addAutoBucket().addAttributes(builder -> {
 			builder.viscosity(1500).density(32).sound(SoundEvents.HONEY_BLOCK_STEP);
+		}).build());
+
+		registerFluidBundle(Coolant = new StaticPowerFluidBuilder("coolant", new Color(0.7f, 0.8f, 1.0f)).addAutoBucket(true, StaticPowerSprites.DYE_BUCKET_FLUID_MASK).addAttributes(builder -> {
+			builder.viscosity(500).density(32);
 		}).build());
 
 		registerFluidBundle(MoltenIron = new StaticPowerFluidBuilder("molten_iron", new Color(1.0f, 0.25f, 0.1f)).addAutoBucket().addAttributes(builder -> {

@@ -30,6 +30,10 @@
 		{
 			"type": "crafting",
 			"target": "staticpower:crafting/misc/pump_tube"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/fluid_capsule/iron_capsule"
 		}
 	]
 }

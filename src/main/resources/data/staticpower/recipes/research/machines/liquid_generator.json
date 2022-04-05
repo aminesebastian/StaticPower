@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/machine_blocks/basic"
+		"staticpower:research/machines/battery/basic"
 	],
 	"requirements": [
 		{

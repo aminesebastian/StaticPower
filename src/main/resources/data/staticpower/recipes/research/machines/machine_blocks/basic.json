@@ -5,6 +5,7 @@
 	"icon": {
 		"item": "staticpower:machine_block_basic"
 	},
+	"sortOrder": 250,
 	"visualOffset": [
 		0,
 		0

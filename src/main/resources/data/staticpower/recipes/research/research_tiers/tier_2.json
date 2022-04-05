@@ -4,7 +4,7 @@
 	"description": "research.basic_research.description",
 	"visualOffset": [
 		0,
-		0
+		0.5
 	],
 	"prerequisites": [
 		"staticpower:research/machines/soldering_table",

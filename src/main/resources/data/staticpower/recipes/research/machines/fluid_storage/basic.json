@@ -5,12 +5,13 @@
 	"icon": {
 		"item": "staticpower:tank_basic"
 	},
+	"sortOrder": 750,
 	"visualOffset": [
-		-0.5,
+		2,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/battery/basic"
+		"staticpower:research/machines/machine_blocks/basic"
 	],
 	"requirements": [
 		{

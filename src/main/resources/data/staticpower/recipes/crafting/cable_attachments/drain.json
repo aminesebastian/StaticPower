@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"cpc",
+		"iui",
+		"igi"
+	],
+	"key": {
+		"c": {
+			"tag": "forge:plates/copper"
+		},
+		"i": {
+			"tag": "forge:ingots/tin"
+		},
+		"g": {
+			"tag": "forge:gears/iron"
+		},
+		"u": {
+			"item": "minecraft:bucket"
+		},
+		"p": {
+			"tag": "forge:plates/rubber"
+		}
+	},
+	"result": {
+		"item": "staticpower:cable_attachment_drain"
+	}
+}

@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/liquid_generator"
+		"staticpower:research/machines/fluid_storage/basic"
 	],
 	"requirements": [
 		{

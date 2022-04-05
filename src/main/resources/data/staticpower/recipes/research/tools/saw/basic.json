@@ -5,12 +5,13 @@
 	"icon": {
 		"item": "staticpower:saw_iron"
 	},
+	"sortOrder": 500,
 	"visualOffset": [
-		0,
+		4.5,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/machine_blocks/basic"
+		"staticpower:research/research_tiers/tier_2"
 	],
 	"requirements": [
 		{

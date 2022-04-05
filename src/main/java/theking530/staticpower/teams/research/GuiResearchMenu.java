@@ -1,12 +1,14 @@
 package theking530.staticpower.teams.research;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import com.google.common.collect.Iterables;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.client.Minecraft;
@@ -70,7 +72,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 			selectedResearchWidget.setResearch(getResearchManager().getSelectedResearch().getTrackedResearch(), getResearchManager().getSelectedResearch());
 			currentResearch = getResearchManager().getSelectedResearch().getId();
 		} else {
-			selectedResearchWidget.setResearch(getResearchManager().getLastCompletedResearch(), null);
+			Collection<ResearchInstance> activeResearch = getResearchManager().getAllActiveResearch().values();
+			selectedResearchWidget.setResearch(getResearchManager().getLastCompletedResearch(), activeResearch.size() > 0 ? Iterables.getLast(activeResearch) : null);
 			currentResearch = getResearchManager().getLastCompletedResearch().getId();
 		}
 
@@ -218,8 +221,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
 				if (research != null) {
 					float tint = index % 2 == 0 ? 0.5f : 0.0f;
-					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f))
-							.setDrawBackground(true);
+					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f)).setDrawBackground(true);
 					historyWidgets.add(historyWidget);
 					sideBarScrollBox.registerWidget(historyWidget);
 					index++;

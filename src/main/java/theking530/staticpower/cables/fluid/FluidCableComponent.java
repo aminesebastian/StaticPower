@@ -18,6 +18,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
+import theking530.staticpower.cables.attachments.drain.DrainAttachment;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -48,6 +49,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (!isIndustrial) {
 			addValidAttachmentClass(ExtractorAttachment.class);
 			addValidAttachmentClass(SprinklerAttachment.class);
+			addValidAttachmentClass(DrainAttachment.class);
 		}
 	}
 

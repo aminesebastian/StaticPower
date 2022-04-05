@@ -210,6 +210,7 @@ public class StaticPowerAdditionalModels {
 	public static final ResourceLocation CABLE_DIGISTORE_CRAFTING_INTERFACE_ATTACHMENT = registerModel("block/cables/attachments/digistore_crafting_interface");
 
 	public static final ResourceLocation SPRINKLER = registerModel("block/cables/attachments/sprinkler");
+	public static final ResourceLocation DRAIN = registerModel("block/cables/attachments/drain");
 
 	public static final ResourceLocation BASIC_DIGISTORE_CARD = registerModel("block/machines/digistore_card_basic");
 	public static final ResourceLocation ADVANCVED_DIGISTORE_CARD = registerModel("block/machines/digistore_card_advanced");

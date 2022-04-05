@@ -5,8 +5,9 @@
 	"icon": {
 		"item": "staticpower:battery_block_basic"
 	},
+	"sortOrder": 0,
 	"visualOffset": [
-		0,
+		-2,
 		0
 	],
 	"prerequisites": [

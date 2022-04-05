@@ -126,12 +126,12 @@ public class StaticPowerFluidBundle {
 		public StaticPowerFluidBundle build() {
 			String stillTexture = "blocks/fluids/" + textureName + "_still";
 			String flowingTexture = "blocks/fluids/" + textureName + "_flowing";
-			Named<Fluid> tag = FluidTags.bind(name);
+			Named<Fluid> tag = FluidTags.bind(new ResourceLocation(StaticPower.MOD_ID, name).toString());
 			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.of(Material.WATER));
 
 			// Handle some default attributes.
 			Consumer<FluidAttributes.Builder> attributes = (builder) -> {
-				//builder.color(Color.EIGHT_BIT_WHITE.encodeInInteger());
+				// builder.color(Color.EIGHT_BIT_WHITE.encodeInInteger());
 				builder.overlay(new ResourceLocation(StaticPower.MOD_ID, "textures/misc/underfluid.png"));
 				if (extraAttributes != null) {
 					extraAttributes.accept(builder);

@@ -1,21 +1,21 @@
 {
 	"type": "staticpower:research",
-	"title": "research.mining_drill_basic.title",
-	"description": "research.mining_drill_basic.description",
+	"title": "research.staticpower.battery_pack_basic",
+	"description": "research.staticpower.battery_pack_basic",
 	"icon": {
-		"item": "staticpower:mining_drill_basic"
+		"item": "staticpower:battery_pack_basic"
 	},
 	"visualOffset": [
 		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/tools/magnet/basic"
+		"staticpower:research/machines/battery/basic"
 	],
 	"requirements": [
 		{
 			"item": "staticpower:research_tier_1",
-			"count": 10
+			"count": 15
 		},
 		{
 			"item": "staticpower:research_tier_2",
@@ -25,7 +25,7 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/tools/mining_drills/mining_drill_basic"
+			"target": "staticpower:crafting/battery_pack/basic"
 		}
 	]
 }

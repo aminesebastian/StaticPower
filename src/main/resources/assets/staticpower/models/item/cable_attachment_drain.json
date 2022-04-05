@@ -1,0 +1,4 @@
+{
+	"parent": "staticpower:block/cables/attachments/drain",
+	"gui_light": "front"
+}

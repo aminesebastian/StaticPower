@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/misc/basic_item_filter"
+		"staticpower:research/tools/magnet/basic"
 	],
 	"requirements": [
 		{

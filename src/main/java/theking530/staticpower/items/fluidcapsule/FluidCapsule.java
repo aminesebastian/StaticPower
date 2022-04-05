@@ -11,17 +11,12 @@ import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -29,15 +24,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
-import net.minecraft.world.level.block.LiquidBlockContainer;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.api.distmarker.Dist;
@@ -54,6 +44,7 @@ import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerItem;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplier {
 	public final ResourceLocation tier;
@@ -149,7 +140,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 							ItemStack itemstack1 = bucketpickup.pickupBlock(pLevel, blockpos, blockstate1);
 							if (!itemstack1.isEmpty()) {
 								pPlayer.awardStat(Stats.ITEM_USED.get(this));
-								playFillSound(targetStack, pPlayer, pLevel, blockpos);
+								WorldUtilities.playBucketFillSound(targetStack, pPlayer, pLevel, blockpos);
 								pLevel.gameEvent(pPlayer, GameEvent.FLUID_PICKUP, blockpos);
 								fluidHandler.fill(targetStack, FluidAction.EXECUTE);
 								if (!pLevel.isClientSide) {
@@ -163,8 +154,10 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 					return InteractionResultHolder.fail(itemstack);
 				} else {
 					BlockState blockstate = pLevel.getBlockState(blockpos);
-					BlockPos blockpos2 = canBlockContainFluid(fluidHandler, pLevel, blockpos, blockstate) ? blockpos : blockpos1;
-					if (this.placeFluid(fluidHandler, pPlayer, pLevel, blockpos2, blockhitresult)) {
+					BlockPos blockpos2 = WorldUtilities.canBlockContainFluid(fluidHandler, pLevel, blockpos, blockstate) ? blockpos : blockpos1;
+					if (WorldUtilities.tryPlaceFluid(fluidHandler.getFluidInTank(0), pPlayer, pLevel, blockpos2, blockhitresult)) {
+						fluidHandler.drain(1000, FluidAction.EXECUTE);
+						
 						if (pPlayer instanceof ServerPlayer) {
 							CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) pPlayer, blockpos2, itemstack);
 						}
@@ -179,73 +172,6 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 				return InteractionResultHolder.fail(itemstack);
 			}
 		}
-	}
-
-	public boolean placeFluid(IFluidHandler fluidHandler, @Nullable Player p_150716_, Level p_150717_, BlockPos p_150718_, @Nullable BlockHitResult p_150719_) {
-		if (fluidHandler.drain(1000, FluidAction.SIMULATE).getAmount() != 1000) {
-			return false;
-		}
-
-		Fluid content = fluidHandler.getFluidInTank(0).getFluid();
-		BlockState blockstate = p_150717_.getBlockState(p_150718_);
-		Block block = blockstate.getBlock();
-		Material material = blockstate.getMaterial();
-		boolean flag = blockstate.canBeReplaced(content);
-		boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(p_150717_, p_150718_, blockstate, content);
-		if (!flag1) {
-			return p_150719_ != null && placeFluid(fluidHandler, p_150716_, p_150717_, p_150719_.getBlockPos().relative(p_150719_.getDirection()), (BlockHitResult) null);
-		} else if (p_150717_.dimensionType().ultraWarm() && content.is(FluidTags.WATER)) {
-			int i = p_150718_.getX();
-			int j = p_150718_.getY();
-			int k = p_150718_.getZ();
-			p_150717_.playSound(p_150716_, p_150718_, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.5F, 2.6F + (p_150717_.random.nextFloat() - p_150717_.random.nextFloat()) * 0.8F);
-
-			for (int l = 0; l < 8; ++l) {
-				p_150717_.addParticle(ParticleTypes.LARGE_SMOKE, (double) i + Math.random(), (double) j + Math.random(), (double) k + Math.random(), 0.0D, 0.0D, 0.0D);
-			}
-			fluidHandler.drain(1000, FluidAction.EXECUTE);
-			return true;
-		} else if (block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(p_150717_, p_150718_, blockstate, content)) {
-			((LiquidBlockContainer) block).placeLiquid(p_150717_, p_150718_, blockstate, ((FlowingFluid) content).getSource(false));
-			this.playEmptySound(fluidHandler, p_150716_, p_150717_, p_150718_);
-			fluidHandler.drain(1000, FluidAction.EXECUTE);
-			return true;
-		} else {
-			if (!p_150717_.isClientSide && flag && !material.isLiquid()) {
-				p_150717_.destroyBlock(p_150718_, true);
-			}
-
-			if (!p_150717_.setBlock(p_150718_, content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
-				return false;
-			} else {
-				this.playEmptySound(fluidHandler, p_150716_, p_150717_, p_150718_);
-				fluidHandler.drain(1000, FluidAction.EXECUTE);
-				return true;
-			}
-		}
-	}
-
-	protected void playFillSound(FluidStack incomingFluid, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
-		Fluid content = incomingFluid.getFluid();
-		SoundEvent soundevent = content.getAttributes().getFillSound();
-		if (soundevent == null)
-			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_EMPTY_LAVA;
-		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
-		pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
-	}
-
-	protected void playEmptySound(IFluidHandler fluidHandler, @Nullable Player pPlayer, LevelAccessor pLevel, BlockPos pPos) {
-		Fluid content = fluidHandler.getFluidInTank(0).getFluid();
-		SoundEvent soundevent = content.getAttributes().getEmptySound();
-		if (soundevent == null)
-			soundevent = content.is(FluidTags.LAVA) ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY;
-		pLevel.playSound(pPlayer, pPos, soundevent, SoundSource.BLOCKS, 1.0F, 1.0F);
-		pLevel.gameEvent(pPlayer, GameEvent.FLUID_PLACE, pPos);
-	}
-
-	private boolean canBlockContainFluid(IFluidHandler fluidHandler, Level worldIn, BlockPos posIn, BlockState blockstate) {
-		Fluid content = fluidHandler.getFluidInTank(0).getFluid();
-		return blockstate.getBlock() instanceof LiquidBlockContainer && ((LiquidBlockContainer) blockstate.getBlock()).canPlaceLiquid(worldIn, posIn, blockstate, content);
 	}
 
 	@Override

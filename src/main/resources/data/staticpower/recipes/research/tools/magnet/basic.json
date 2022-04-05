@@ -7,7 +7,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/battery/basic"
+		"staticpower:research/tools/saw/basic"
 	],
 	"requirements": [
 		{

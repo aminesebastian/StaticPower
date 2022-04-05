@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/squeezer"
+		"staticpower:research/machines/former"
 	],
 	"requirements": [
 		{

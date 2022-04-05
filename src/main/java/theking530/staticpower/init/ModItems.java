@@ -17,6 +17,7 @@ import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusA
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
+import theking530.staticpower.cables.attachments.drain.DrainAttachment;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
@@ -499,6 +500,7 @@ public class ModItems {
 	public static DigistoreLight DigistoreLightAttachment;
 
 	public static SprinklerAttachment SprinklerAttachment;
+	public static DrainAttachment DrainAttachment;
 
 	public static DigistorePatternCard PatternCard;
 	public static DigistoreWirelessTerminal DigistoreWirelessTerminal;
@@ -1025,6 +1027,7 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DigistoreWirelessTerminal = new DigistoreWirelessTerminal("digistore_wireless_terminal"));
 
 		StaticPowerRegistry.preRegisterItem(SprinklerAttachment = new SprinklerAttachment("cable_attachment_sprinkler", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));
+		StaticPowerRegistry.preRegisterItem(DrainAttachment = new DrainAttachment("cable_attachment_drain", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.DRAIN));
 
 		// Digistore Misc.
 		StaticPowerRegistry.preRegisterItem(PatternCard = new DigistorePatternCard("digistore_pattern_card"));
