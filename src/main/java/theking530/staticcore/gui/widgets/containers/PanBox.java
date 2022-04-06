@@ -79,6 +79,31 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		return this;
 	}
 
+	public PanBox setTargetPan(Vector2D pan) {
+		this.targetPan = pan;
+		if (targetPan.getX() < maxBounds.getX()) {
+			targetPan.setX(maxBounds.getX());
+		} else if (targetPan.getX() > maxBounds.getZ()) {
+			targetPan.setX(maxBounds.getZ());
+		}
+
+		// Limit the Y.
+		if (targetPan.getY() < maxBounds.getY()) {
+			targetPan.setY(maxBounds.getY());
+		} else if (targetPan.getY() > maxBounds.getW()) {
+			targetPan.setY(maxBounds.getW());
+		}
+		return this;
+	}
+
+	public PanBox addPanOffset(float x, float y) {
+		Vector2D newTarget = new Vector2D();
+		newTarget.setX(targetPan.getX() + (float) x * targetZoom);
+		newTarget.setY(targetPan.getY() + (float) y * targetZoom);
+		setTargetPan(newTarget);
+		return this;
+	}
+
 	public void tick() {
 
 	}
@@ -119,23 +144,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 	}
 
 	public EInputResult mouseDragged(double mouseX, double mouseY, int p_mouseDragged_5_, double p_mouseDragged_6_, double p_mouseDragged_8_) {
-//		if (isHovered()) {
-		this.targetPan.setX(targetPan.getX() + (float) p_mouseDragged_6_ * targetZoom);
-		this.targetPan.setY(targetPan.getY() + (float) p_mouseDragged_8_ * targetZoom);
-
-		// Limit the X.
-		if (targetPan.getX() < maxBounds.getX()) {
-			targetPan.setX(maxBounds.getX());
-		} else if (targetPan.getX() > maxBounds.getZ()) {
-			targetPan.setX(maxBounds.getZ());
-		}
-
-		// Limit the Y.
-		if (targetPan.getY() < maxBounds.getY()) {
-			targetPan.setY(maxBounds.getY());
-		} else if (targetPan.getY() > maxBounds.getW()) {
-			targetPan.setY(maxBounds.getW());
-		}
+		addPanOffset((float) p_mouseDragged_6_, (float) p_mouseDragged_8_);
 		return super.mouseDragged(mouseX, mouseY, p_mouseDragged_5_, p_mouseDragged_6_, p_mouseDragged_8_);
 	}
 

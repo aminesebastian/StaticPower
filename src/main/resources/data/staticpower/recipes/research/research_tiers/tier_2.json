@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:research",
-	"title": "research.basic_research.title",
-	"description": "research.basic_research.description",
+	"title": "research.tier_2.title",
+	"description": "research.tier_2.description",
 	"visualOffset": [
 		0,
 		0.5

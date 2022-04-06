@@ -168,6 +168,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 	protected void initializeResearchNodes() {
 		// Remove existing nodes.
+		boolean isFirstTime = nodePanBox.getChildren().size() == 0;
 		nodePanBox.clearChildren();
 		researchNodes.clear();
 
@@ -176,6 +177,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		nodePanBox.setPosition(105, 25);
 		nodePanBox.setSize(screenWidth - 105, screenHeight - 25);
+		Vector2D targetPan = new Vector2D(0, 0);
+		boolean lockTargetPan = false;
 
 		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
 		for (int y = 0; y < levels.getLevels().size(); y++) {
@@ -202,8 +205,26 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 					ResearchNodeWidget widget = new ResearchNodeWidget(researchNode, relative.getX() + ((screenWidth - 130) + 24) / 2, relative.getY() + 24, 24, 24);
 					researchNodes.put(researchNode, widget);
 					nodePanBox.registerWidget(widget);
+
+					// Capture the largest y value for the last completed research.
+					// If we are actively researching, then capture the
+					if (!lockTargetPan) {
+						if (getResearchManager().getCompletedResearch().indexOf(research.getId()) == getResearchManager().getCompletedResearch().size() - 1) {
+							targetPan = relative.copy();
+						} else if (getResearchManager().hasSelectedResearch() && getResearchManager().getSelectedResearch().getTrackedResearch().getId().equals(research.getId())) {
+							targetPan = relative.copy();
+							lockTargetPan = true;
+						}
+					}
 				}
 			}
+		}
+
+		// Only move the camera to the current node IF this is the first time this GUI
+		// is opened. In other words, do NOT do this when refreshing the UI while its
+		// open.
+		if (isFirstTime) {
+			nodePanBox.setTargetPan(new Vector2D(-Math.min(0, (targetPan.getX() - nodePanBox.getWidth() / 4)), -Math.max(0, (targetPan.getY() - nodePanBox.getHeight() / 2))));
 		}
 	}
 
