@@ -1,17 +1,13 @@
 {
 	"type": "staticpower:research",
-	"title": "research.soldering_iron_electric.title",
-	"description": "research.soldering_iron_electric.description",
-	"icon": {
-		"item": "staticpower:soldering_iron_electric"
-	},
-	"sortOrder": 500,
+	"title": "research.staticpower.magnet_advanced.title",
+	"description": "research.staticpower.magnet_advanced.description",
 	"visualOffset": [
-		4.5,
+		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/research_tiers/tier_3"
+		"staticpower:research/tools/soldering/electric_soldering_iron"
 	],
 	"requirements": [
 		{
@@ -30,7 +26,10 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/tools/electric_soldering_iron"
+			"target": "staticpower:crafting/magnets/advanced_magnet"
 		}
-	]
+	],
+	"icon": {
+		"item": "staticpower:magnet_advanced"
+	}
 }

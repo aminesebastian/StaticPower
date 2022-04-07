@@ -2,6 +2,9 @@
 	"type": "staticpower:research",
 	"title": "staticpower.research.basic_chest.title",
 	"description": "staticpower.research.basic_chest.description",
+	"icon": {
+		"item": "staticpower:chest_basic"
+	},
 	"visualOffset": [
 		0,
 		0
@@ -17,12 +20,8 @@
 	],
 	"unlocks": [
 		{
-			"displayKey": "aluminum",
 			"type": "crafting",
 			"target": "staticpower:crafting/chests/chest_basic"
 		}
-	],
-	"icon": {
-		"item": "staticpower:chest_basic"
-	}
+	]
 }

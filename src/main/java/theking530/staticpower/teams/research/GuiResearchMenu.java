@@ -81,7 +81,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-		nodePanBox.setMaxZoom(2.0f);
+		nodePanBox.setMaxZoom(3.0f);
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
@@ -224,7 +224,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		// is opened. In other words, do NOT do this when refreshing the UI while its
 		// open.
 		if (isFirstTime) {
-			nodePanBox.setTargetPan(new Vector2D(-Math.min(0, (targetPan.getX() - nodePanBox.getWidth() / 4)), -Math.max(0, (targetPan.getY() - nodePanBox.getHeight() / 2))));
+			nodePanBox.setTargetPan(new Vector2D(-Math.min(0, targetPan.getX()), -Math.max(0, (targetPan.getY() - nodePanBox.getHeight() / 2))));
 		}
 	}
 

@@ -1,17 +1,16 @@
 {
 	"type": "staticpower:research",
-	"title": "research.soldering_iron_electric.title",
-	"description": "research.soldering_iron_electric.description",
+	"title": "research.staticpower.chainsaw_advanced.title",
+	"description": "research.staticpower.chainsaw_advanced.description",
 	"icon": {
-		"item": "staticpower:soldering_iron_electric"
+		"item": "staticpower:chainsaw_advanced"
 	},
-	"sortOrder": 500,
 	"visualOffset": [
-		4.5,
+		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/research_tiers/tier_3"
+		"staticpower:research/tools/magnet/advanced"
 	],
 	"requirements": [
 		{
@@ -30,7 +29,7 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/tools/electric_soldering_iron"
+			"target": "staticpower:crafting/tools/chainsaws/chainsaw_advanced"
 		}
 	]
 }
