@@ -63,6 +63,8 @@ public abstract class AbstractGuiWidget<T extends AbstractGuiWidget<?>> {
 		lastMousePosition = new Vector2D(0.0f, 0.0f);
 		isVisible = true;
 		isEnabled = true;
+		shouldRenderThisFrame = true; // We set this to true at first so that anything that manually renders this
+										// widget without calling #updateBeforeRender can still draw.
 		clipType = WidgetClipType.FREE;
 		zLevel = 0.0f;
 		autoHandleTooltipBounds = true;

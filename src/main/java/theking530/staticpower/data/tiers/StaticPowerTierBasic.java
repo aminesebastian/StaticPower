@@ -266,4 +266,13 @@ public class StaticPowerTierBasic extends StaticPowerTier {
 		return 2;
 	}
 
+	@Override
+	protected float getDrillSpeedMultiplier() {
+		return 0.5f;
+	}
+
+	@Override
+	protected float getChainsawSpeedMultiplier() {
+		return 0.5f;
+	}
 }

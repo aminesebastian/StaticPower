@@ -22,7 +22,7 @@ public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill
 	private ItemStackHandler inventory;
 
 	public GuiMiningDrill(ContainerMiningDrill container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 142);
+		super(container, invPlayer, name, 176, 152);
 		StaticVoltHandler svHandler = (StaticVoltHandler) getItemStack().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
 		if (svHandler != null) {
 			registerWidget(new GuiPowerBarFromEnergyStorage(svHandler, 8, 8, 16, 46));

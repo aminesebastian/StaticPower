@@ -276,4 +276,13 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 		return 8;
 	}
 
+	@Override
+	protected float getDrillSpeedMultiplier() {
+		return 2f;
+	}
+
+	@Override
+	protected float getChainsawSpeedMultiplier() {
+		return 2f;
+	}
 }

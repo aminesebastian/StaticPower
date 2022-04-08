@@ -22,7 +22,7 @@ public class GuiChainsaw extends StaticPowerItemStackGui<ContainerChainsaw, Chai
 	private ItemStackHandler inventory;
 
 	public GuiChainsaw(ContainerChainsaw container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 142);
+		super(container, invPlayer, name, 176, 152);
 		StaticVoltHandler svHandler = (StaticVoltHandler) getItemStack().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
 		if (svHandler != null) {
 			registerWidget(new GuiPowerBarFromEnergyStorage(svHandler, 8, 8, 16, 46));

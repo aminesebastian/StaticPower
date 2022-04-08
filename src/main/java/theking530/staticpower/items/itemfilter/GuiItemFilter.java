@@ -32,7 +32,7 @@ public class GuiItemFilter extends StaticPowerItemStackGui<ContainerItemFilter, 
 	private SpriteButton modButton;
 
 	public GuiItemFilter(ContainerItemFilter container, Inventory invPlayer, Component name) {
-		super(container, invPlayer, name, 176, 151);
+		super(container, invPlayer, name, 176, 156);
 	}
 
 	@Override

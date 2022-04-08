@@ -265,4 +265,14 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	protected int getMagnetRadius() {
 		return 3;
 	}
+	
+	@Override
+	protected float getDrillSpeedMultiplier() {
+		return 0.75f;
+	}
+
+	@Override
+	protected float getChainsawSpeedMultiplier() {
+		return 0.75f;
+	}
 }

@@ -94,7 +94,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
-
+		
 		float experience = recipe.getExperience();
 		if (experience > 0) {
 			TranslatableComponent experienceString = new TranslatableComponent("gui.staticpower.experience", experience);

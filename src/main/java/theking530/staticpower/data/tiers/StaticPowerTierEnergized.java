@@ -265,7 +265,7 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	protected int getTurbineBladeDurabilityTicks() {
 		return 864000;
 	}
-	
+
 	@Override
 	protected long getMagnetPowerCapacity() {
 		return getPortableBatteryCapacity() * 2;
@@ -274,5 +274,15 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	@Override
 	protected int getMagnetRadius() {
 		return 6;
+	}
+
+	@Override
+	protected float getDrillSpeedMultiplier() {
+		return 1.5f;
+	}
+
+	@Override
+	protected float getChainsawSpeedMultiplier() {
+		return 1.5f;
 	}
 }
