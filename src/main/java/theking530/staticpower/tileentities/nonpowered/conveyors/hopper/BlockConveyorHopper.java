@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +25,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorBlock;
 
@@ -38,8 +40,8 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(PASSED_FILTER_SHAPE, Block.box(0, 0, 12, 16, 8, 16), BooleanOp.OR);
 	}
 
-	public BlockConveyorHopper(String name, boolean filtered) {
-		super(name);
+	public BlockConveyorHopper(String name, ResourceLocation tier, boolean filtered) {
+		super(name, tier);
 		this.filtered = filtered;
 	}
 
@@ -91,7 +93,32 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return filtered ? TileEntityConveyorHopper.FILTERED_TYPE.create(pos, state) : TileEntityConveyorHopper.TYPE.create(pos, state);
+		if (filtered) {
+			if (tier == StaticPowerTiers.BASIC) {
+				return TileEntityConveyorHopper.FILTERED_TYPE_BASIC.create(pos, state);
+			} else if (tier == StaticPowerTiers.ADVANCED) {
+				return TileEntityConveyorHopper.FILTERED_TYPE_ADVANCED.create(pos, state);
+			} else if (tier == StaticPowerTiers.STATIC) {
+				return TileEntityConveyorHopper.FILTERED_TYPE_STATIC.create(pos, state);
+			} else if (tier == StaticPowerTiers.ENERGIZED) {
+				return TileEntityConveyorHopper.FILTERED_TYPE_ENERGIZED.create(pos, state);
+			} else if (tier == StaticPowerTiers.LUMUM) {
+				return TileEntityConveyorHopper.FILTERED_TYPE_LUMUM.create(pos, state);
+			}
+		} else {
+			if (tier == StaticPowerTiers.BASIC) {
+				return TileEntityConveyorHopper.TYPE_BASIC.create(pos, state);
+			} else if (tier == StaticPowerTiers.ADVANCED) {
+				return TileEntityConveyorHopper.TYPE_ADVANCED.create(pos, state);
+			} else if (tier == StaticPowerTiers.STATIC) {
+				return TileEntityConveyorHopper.TYPE_STATIC.create(pos, state);
+			} else if (tier == StaticPowerTiers.ENERGIZED) {
+				return TileEntityConveyorHopper.TYPE_ENERGIZED.create(pos, state);
+			} else if (tier == StaticPowerTiers.LUMUM) {
+				return TileEntityConveyorHopper.TYPE_LUMUM.create(pos, state);
+			}
+		}
+		return null;
 	}
 
 	@Override

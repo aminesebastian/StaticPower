@@ -2,6 +2,7 @@ package theking530.staticpower.tileentities.nonpowered.conveyors.extractor;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -9,9 +10,9 @@ import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
@@ -19,19 +20,30 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorTileEntity;
 
-public class TileEntityConveyorExtractor extends TileEntityConfigurable {
+public class TileEntityConveyorExtractor extends AbstractConveyorTileEntity {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityConveyorExtractor(pos, state),
-			ModBlocks.ConveyorExtractor);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorExtractorBasic);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorExtractorAdvanced);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorExtractorStatic);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorExtractorEnergized);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorExtractorLumum);
 
 	public final InventoryComponent internalInventory;
-	protected final ConveyorMotionComponent conveyor;
 	protected AABB importBox;
 
-	public TileEntityConveyorExtractor(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state);
-		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(-0.075f, 0f, 0f)).setShouldAffectEntitiesAbove(false));
+	public TileEntityConveyorExtractor(BlockEntityTypeAllocator<TileEntityConveyorExtractor> type, BlockPos pos, BlockState state, ResourceLocation tier) {
+		super(type, pos, state, tier);
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Input) {
 			public int getSlotLimit(int slot) {
 				return 1;
@@ -68,10 +80,10 @@ public class TileEntityConveyorExtractor extends TileEntityConfigurable {
 	}
 
 	@Override
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		super.postInit(world, pos, state);
-		conveyor.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
-
+	protected void configureConveyorComponent(ConveyorMotionComponent component, Level world, BlockPos pos, BlockState state) {
+		component.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		component.setShouldAffectEntitiesAbove(false);
+		component.setVelocity(new Vector3D(-0.075f, 0f, 0f));
 		// Make sure the front is input only.
 		Direction facing = getFacingDirection();
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, facing), MachineSideMode.Input);

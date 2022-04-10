@@ -26,18 +26,21 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 	private boolean affectEntitiesAbove;
 	private Predicate<Entity> filter;
 
-	public ConveyorMotionComponent(String name, Vector3D velocity) {
-		this(name, 0.05f, velocity, 0.075);
+	public ConveyorMotionComponent(String name) {
+		this(name, 0.05f, 0.075);
 	}
 
-	public ConveyorMotionComponent(String name, double centerChannelWidth, Vector3D velocity, double compensationRate) {
+	public ConveyorMotionComponent(String name, double centerChannelWidth, double compensationRate) {
 		super(name);
 		this.compensationRate = compensationRate;
-		this.velocity = velocity;
 		this.affectEntitiesAbove = false;
 		SDMath.clamp(0.5 - centerChannelWidth, 0, 1);
 		SDMath.clamp(0.5 + centerChannelWidth, 0, 1);
 		this.filter = (entity) -> true;
+	}
+
+	public void setVelocity(Vector3D velocity) {
+		this.velocity = velocity;
 	}
 
 	@Override

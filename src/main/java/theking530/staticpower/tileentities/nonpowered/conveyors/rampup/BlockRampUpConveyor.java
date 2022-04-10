@@ -10,17 +10,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorBlock;
 
 public class BlockRampUpConveyor extends AbstractConveyorBlock {
-	public BlockRampUpConveyor(String name) {
-		super(name, Properties.of(Material.METAL, MaterialColor.COLOR_BLACK).noOcclusion());
+	public BlockRampUpConveyor(String name, ResourceLocation tier) {
+		super(name, tier, Properties.of(Material.METAL, MaterialColor.COLOR_BLACK).noOcclusion());
 	}
 
 	@Override
@@ -35,7 +37,18 @@ public class BlockRampUpConveyor extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityRampUpConveyor.TYPE.create(pos, state);
+		if (tier == StaticPowerTiers.BASIC) {
+			return TileEntityRampUpConveyor.TYPE_BASIC.create(pos, state);
+		} else if (tier == StaticPowerTiers.ADVANCED) {
+			return TileEntityRampUpConveyor.TYPE_ADVANCED.create(pos, state);
+		} else if (tier == StaticPowerTiers.STATIC) {
+			return TileEntityRampUpConveyor.TYPE_STATIC.create(pos, state);
+		} else if (tier == StaticPowerTiers.ENERGIZED) {
+			return TileEntityRampUpConveyor.TYPE_ENERGIZED.create(pos, state);
+		} else if (tier == StaticPowerTiers.LUMUM) {
+			return TileEntityRampUpConveyor.TYPE_LUMUM.create(pos, state);
+		}
+		return null;
 	}
 
 	@Override

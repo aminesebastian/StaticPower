@@ -3,7 +3,7 @@
 	"title": "research.conveyor_basic.title",
 	"description": "research.conveyor_basic.description",
 	"icon": {
-		"item": "staticpower:conveyor_straight"
+		"item": "staticpower:conveyor_straight_basic"
 	},
 	"sortOrder": 0,
 	"visualOffset": [
@@ -26,15 +26,15 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/conveyors/conveyor_straight"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_straight"
 		},
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/conveyors/conveyor_supplier"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_supplier"
 		},
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/conveyors/conveyor_extractor"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_extractor"
 		}
 	]
 }

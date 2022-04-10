@@ -3,7 +3,7 @@
 	"title": "research.conveyor_basic_sloped.title",
 	"description": "research.conveyor_basic_sloped.description",
 	"icon": {
-		"item": "staticpower:conveyor_ramp_up"
+		"item": "staticpower:conveyor_ramp_up_basic"
 	},
 	"visualOffset": [
 		0,
@@ -25,11 +25,11 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/conveyors/conveyor_ramp_up"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_ramp_up"
 		},
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/conveyors/conveyor_ramp_down"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_ramp_down"
 		}
 	]
 }

@@ -1,33 +1,42 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors.rampup;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
+import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorTileEntity;
 
-public class TileEntityRampUpConveyor extends TileEntityBase {
+public class TileEntityRampUpConveyor extends AbstractConveyorTileEntity {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRampUpConveyor(pos, state), ModBlocks.RampUpConveyor);
+	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.RampUpConveyorBasic);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.RampUpConveyorAdvanced);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.RampUpConveyorStatic);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.RampUpConveyorEnergized);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.RampUpConveyorLumum);
 
-	protected final ConveyorMotionComponent conveyor;
-
-	public TileEntityRampUpConveyor(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state);
-		this.registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.15f, 0.1f, 0f))
-				.setShouldAffectEntitiesAbove(false));
+	public TileEntityRampUpConveyor(BlockEntityTypeAllocator<TileEntityRampUpConveyor> type, BlockPos pos, BlockState state, ResourceLocation tier) {
+		super(type, pos, state, tier);
 	}
 
 	@Override
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		super.postInit(world, pos, state);
-		conveyor.updateBounds(
-				new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
+	protected void configureConveyorComponent(ConveyorMotionComponent component, Level world, BlockPos pos, BlockState state) {
+		component.setVelocity(new Vector3D(0.15f, 0.1f, 0f));
+		component.updateBounds(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
 	}
 }

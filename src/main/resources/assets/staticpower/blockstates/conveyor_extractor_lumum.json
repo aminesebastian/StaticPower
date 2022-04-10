@@ -1,0 +1,8 @@
+{
+    "variants": {
+		"facing=north": { "model": "staticpower:block/conveyors/conveyor_extractor_lumum" },
+        "facing=south": { "model": "staticpower:block/conveyors/conveyor_extractor_lumum", "y": 180 },
+        "facing=west":  { "model": "staticpower:block/conveyors/conveyor_extractor_lumum", "y": 270 },
+        "facing=east":  { "model": "staticpower:block/conveyors/conveyor_extractor_lumum", "y": 90 }
+    }
+}

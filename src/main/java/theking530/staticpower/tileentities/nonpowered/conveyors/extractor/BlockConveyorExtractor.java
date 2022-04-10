@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -18,12 +19,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorBlock;
 
 public class BlockConveyorExtractor extends AbstractConveyorBlock {
 
-	public BlockConveyorExtractor(String name) {
-		super(name);
+	public BlockConveyorExtractor(String name, ResourceLocation tier) {
+		super(name, tier);
 	}
 
 	@Override
@@ -59,7 +61,18 @@ public class BlockConveyorExtractor extends AbstractConveyorBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return TileEntityConveyorExtractor.TYPE.create(pos, state);
+		if (tier == StaticPowerTiers.BASIC) {
+			return TileEntityConveyorExtractor.TYPE_BASIC.create(pos, state);
+		} else if (tier == StaticPowerTiers.ADVANCED) {
+			return TileEntityConveyorExtractor.TYPE_ADVANCED.create(pos, state);
+		} else if (tier == StaticPowerTiers.STATIC) {
+			return TileEntityConveyorExtractor.TYPE_STATIC.create(pos, state);
+		} else if (tier == StaticPowerTiers.ENERGIZED) {
+			return TileEntityConveyorExtractor.TYPE_ENERGIZED.create(pos, state);
+		} else if (tier == StaticPowerTiers.LUMUM) {
+			return TileEntityConveyorExtractor.TYPE_LUMUM.create(pos, state);
+		}
+		return null;
 	}
 
 	@Override

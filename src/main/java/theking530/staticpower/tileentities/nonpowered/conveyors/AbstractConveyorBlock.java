@@ -5,6 +5,7 @@ import java.util.Map;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,26 +29,27 @@ import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock implements IConveyorBlock {
 	protected final Map<Direction, VoxelShape> ENTITY_SHAPES = new HashMap<>();
 	protected final Map<Direction, VoxelShape> INTERACTION_SHAPES = new HashMap<>();
+	protected final ResourceLocation tier;
 
-	protected AbstractConveyorBlock(String name) {
+	protected AbstractConveyorBlock(String name, ResourceLocation tier) {
 		super(name);
+		this.tier = tier;
 		cacheVoxelShapes();
 	}
 
-	protected AbstractConveyorBlock(String name, Properties properies) {
+	protected AbstractConveyorBlock(String name, ResourceLocation tier, Properties properies) {
 		super(name, properies);
+		this.tier = tier;
 		cacheVoxelShapes();
 	}
 
 	@Override
-	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer,
-			ItemStack stack) {
+	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		world.setBlock(pos, state.setValue(FACING, placer.getDirection()), 2);
 	}
 
 	@Override
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
-			InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
 	}
 
@@ -60,8 +62,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		cacheVoxelShapes();
 		// Get the appropriate shape.
-		if (context instanceof EntityCollisionContext
-				&& ((EntityCollisionContext) context).getEntity() instanceof Player) {
+		if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player) {
 			return INTERACTION_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
 		} else {
 			return ENTITY_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
@@ -74,8 +75,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	}
 
 	@Override
-	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world,
-			BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		// We only rotate here, no need to check the mode of the wrench.
 		if (facing != Direction.UP && facing != Direction.DOWN) {
 			if (facing != world.getBlockState(pos).getValue(FACING)) {
@@ -87,8 +87,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		return InteractionResult.SUCCESS;
 	}
 
-	public static VoxelShape generateSlantedBoundingBox(Direction facingDirection, float precision, float yStartOffset,
-			float yEndOffset, float thickness, float angle, boolean upwards) {
+	public static VoxelShape generateSlantedBoundingBox(Direction facingDirection, float precision, float yStartOffset, float yEndOffset, float thickness, float angle, boolean upwards) {
 		// Create an empty bounding box initially.
 		VoxelShape output = Block.box(0, 0, 0, 0, 0, 0);
 
@@ -135,8 +134,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 				maxZ = 16 - forwardEnd;
 			}
 
-			output = Shapes.joinUnoptimized(output, Block.box(Math.min(minX, maxX), Math.min(minY, maxY),
-					Math.min(minZ, maxZ), Math.max(minX, maxX), Math.max(minY, maxY), Math.max(minZ, maxZ)),
+			output = Shapes.joinUnoptimized(output, Block.box(Math.min(minX, maxX), Math.min(minY, maxY), Math.min(minZ, maxZ), Math.max(minX, maxX), Math.max(minY, maxY), Math.max(minZ, maxZ)),
 					BooleanOp.OR);
 		}
 

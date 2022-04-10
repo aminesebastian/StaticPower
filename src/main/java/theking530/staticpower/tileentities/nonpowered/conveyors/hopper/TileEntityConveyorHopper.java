@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -17,43 +18,63 @@ import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.items.itemfilter.ItemFilter;
-import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.OutputServoComponent;
+import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorTileEntity;
 import theking530.staticpower.tileentities.nonpowered.conveyors.IConveyorBlock;
 
-public class TileEntityConveyorHopper extends TileEntityConfigurable {
+public class TileEntityConveyorHopper extends AbstractConveyorTileEntity {
+
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, false), ModBlocks.ConveyorHopper);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE_BASIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.BASIC, false), ModBlocks.ConveyorHopperBasic);
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, true),
-			ModBlocks.ConveyorFilteredHopper);
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.ADVANCED, false), ModBlocks.ConveyorHopperAdvanced);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE_STATIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.STATIC, false), ModBlocks.ConveyorHopperStatic);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.ENERGIZED, false), ModBlocks.ConveyorHopperEnergized);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.LUMUM, false), ModBlocks.ConveyorHopperLumum);
+
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE_BASIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.BASIC, true), ModBlocks.ConveyorFilteredHopperBasic);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.ADVANCED, true), ModBlocks.ConveyorFilteredHopperAdvanced);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE_STATIC = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.STATIC, true), ModBlocks.ConveyorFilteredHopperStatic);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.ENERGIZED, true), ModBlocks.ConveyorFilteredHopperEnergized);
+	@TileEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<TileEntityConveyorHopper> FILTERED_TYPE_LUMUM = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new TileEntityConveyorHopper(type, pos, state, StaticPowerTiers.LUMUM, true), ModBlocks.ConveyorFilteredHopperLumum);
 
 	public final InventoryComponent internalInventory;
 	public final InventoryComponent filterInventory;
-	protected final ConveyorMotionComponent conveyor;
 	protected AABB hopperBox;
 	protected boolean filtered;
 
-	public TileEntityConveyorHopper(BlockEntityTypeAllocator<TileEntityConveyorHopper> type, BlockPos pos,
-			BlockState state, boolean filtered) {
-		super(type, pos, state);
+	public TileEntityConveyorHopper(BlockEntityTypeAllocator<TileEntityConveyorHopper> type, BlockPos pos, BlockState state, ResourceLocation tier, boolean filtered) {
+		super(type, pos, state, tier);
 		this.filtered = filtered;
-		registerComponent(conveyor = new ConveyorMotionComponent("Conveyor", new Vector3D(0.075f, 0f, 0f))
-				.setShouldAffectEntitiesAbove(false));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output)
-				.setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
-		registerComponent(filterInventory = new InventoryComponent("FilterInventory", 1, MachineSideMode.Never)
-				.setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1, MachineSideMode.Output).setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
+		registerComponent(filterInventory = new InventoryComponent("FilterInventory", 1, MachineSideMode.Never).setCapabilityExtractEnabled(false).setCapabilityInsertEnabled(false));
 		registerComponent(new OutputServoComponent("OutputServo", 0, internalInventory));
 	}
 
@@ -120,13 +141,11 @@ public class TileEntityConveyorHopper extends TileEntityConfigurable {
 	}
 
 	@Override
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		super.postInit(world, pos, state);
-		hopperBox = new AABB(pos.getX() + .25, pos.getY(), pos.getZ() + .25, pos.getX() + .75, pos.getY() + 0.1,
-				pos.getZ() + .75);
-		conveyor.updateBounds(
-				new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
-
+	protected void configureConveyorComponent(ConveyorMotionComponent component, Level world, BlockPos pos, BlockState state) {
+		hopperBox = new AABB(pos.getX() + .25, pos.getY(), pos.getZ() + .25, pos.getX() + .75, pos.getY() + 0.1, pos.getZ() + .75);
+		component.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
+		component.setShouldAffectEntitiesAbove(false);
+		component.setVelocity(new Vector3D(0.075f, 0f, 0f));
 		// Make sure the front is output only.
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(Direction.DOWN, MachineSideMode.Output);
 	}

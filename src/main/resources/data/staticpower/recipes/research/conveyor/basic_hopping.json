@@ -3,7 +3,7 @@
 	"title": "research.conveyor_hopper_basic.title",
 	"description": "research.conveyor_hopper_basic.description",
 	"icon": {
-		"item": "staticpower:conveyor_hopper"
+		"item": "staticpower:conveyor_hopper_basic"
 	},
 	"visualOffset": [
 		0,
@@ -25,21 +25,21 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/conveyors/conveyor_hopper"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_hopper"
 		},
 		{
 			"type": "crafting",
 			"hidden": true,
-			"target": "staticpower:crafting/machines/conveyors/conveyor_hopper_from_existing"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_hopper_from_existing"
 		},
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/conveyors/conveyor_hopper_filtered"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_hopper_filtered"
 		},
 		{
 			"type": "crafting",
 			"hidden": true,
-			"target": "staticpower:crafting/machines/conveyors/conveyor_hopper_filtered_from_existing"
+			"target": "staticpower:crafting/machines/conveyors/basic/conveyor_hopper_filtered_from_existing"
 		}
 	]
 }

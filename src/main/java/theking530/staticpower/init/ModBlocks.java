@@ -262,13 +262,47 @@ public class ModBlocks {
 	public static BlockRefinery Refinery;
 	public static BlockLaboratory Laboratory;
 
-	public static BlockStraightConveyor StraightConveyor;
-	public static BlockRampUpConveyor RampUpConveyor;
-	public static BlockRampDownConveyor RampDownConveyor;
-	public static BlockConveyorSupplier ConveyorSupplier;
-	public static BlockConveyorExtractor ConveyorExtractor;
-	public static BlockConveyorHopper ConveyorHopper;
-	public static BlockConveyorHopper ConveyorFilteredHopper;
+	public static BlockStraightConveyor StraightConveyorBasic;
+	public static BlockStraightConveyor StraightConveyorAdvanced;
+	public static BlockStraightConveyor StraightConveyorStatic;
+	public static BlockStraightConveyor StraightConveyorEnergized;
+	public static BlockStraightConveyor StraightConveyorLumum;
+
+	public static BlockRampUpConveyor RampUpConveyorBasic;
+	public static BlockRampUpConveyor RampUpConveyorAdvanced;
+	public static BlockRampUpConveyor RampUpConveyorStatic;
+	public static BlockRampUpConveyor RampUpConveyorEnergized;
+	public static BlockRampUpConveyor RampUpConveyorLumum;
+
+	public static BlockRampDownConveyor RampDownConveyorBasic;
+	public static BlockRampDownConveyor RampDownConveyorAdvanced;
+	public static BlockRampDownConveyor RampDownConveyorStatic;
+	public static BlockRampDownConveyor RampDownConveyorEnergized;
+	public static BlockRampDownConveyor RampDownConveyorLumum;
+
+	public static BlockConveyorSupplier ConveyorSupplierBasic;
+	public static BlockConveyorSupplier ConveyorSupplierAdvanced;
+	public static BlockConveyorSupplier ConveyorSupplierStatic;
+	public static BlockConveyorSupplier ConveyorSupplierEnergized;
+	public static BlockConveyorSupplier ConveyorSupplierLumum;
+
+	public static BlockConveyorExtractor ConveyorExtractorBasic;
+	public static BlockConveyorExtractor ConveyorExtractorAdvanced;
+	public static BlockConveyorExtractor ConveyorExtractorStatic;
+	public static BlockConveyorExtractor ConveyorExtractorEnergized;
+	public static BlockConveyorExtractor ConveyorExtractorLumum;
+
+	public static BlockConveyorHopper ConveyorHopperBasic;
+	public static BlockConveyorHopper ConveyorHopperAdvanced;
+	public static BlockConveyorHopper ConveyorHopperStatic;
+	public static BlockConveyorHopper ConveyorHopperEnergized;
+	public static BlockConveyorHopper ConveyorHopperLumum;
+
+	public static BlockConveyorHopper ConveyorFilteredHopperBasic;
+	public static BlockConveyorHopper ConveyorFilteredHopperAdvanced;
+	public static BlockConveyorHopper ConveyorFilteredHopperStatic;
+	public static BlockConveyorHopper ConveyorFilteredHopperEnergized;
+	public static BlockConveyorHopper ConveyorFilteredHopperLumum;
 
 	public static BlockHeatSink AluminumHeatSink;
 	public static BlockHeatSink CopperHeatSink;
@@ -470,7 +504,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BlockRawEnergizedMetal = new StaticPowerBlock("block_raw_energized_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
 		StaticPowerRegistry.preRegisterBlock(BlockRawLumumMetal = new StaticPowerBlock("block_raw_lumum_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
 
-		// Machine Blocks 
+		// Machine Blocks
 		StaticPowerRegistry.preRegisterBlock(MachineBlockAluminum = new StaticPowerCutoutBlock("machine_block_aluminum", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
 		StaticPowerRegistry.preRegisterBlock(MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
@@ -534,13 +568,47 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Refinery = new BlockRefinery("machine_refinery"));
 		StaticPowerRegistry.preRegisterBlock(Laboratory = new BlockLaboratory("laboratory"));
 
-		StaticPowerRegistry.preRegisterBlock(StraightConveyor = new BlockStraightConveyor("conveyor_straight"));
-		StaticPowerRegistry.preRegisterBlock(RampUpConveyor = new BlockRampUpConveyor("conveyor_ramp_up"));
-		StaticPowerRegistry.preRegisterBlock(RampDownConveyor = new BlockRampDownConveyor("conveyor_ramp_down"));
-		StaticPowerRegistry.preRegisterBlock(ConveyorSupplier = new BlockConveyorSupplier("conveyor_supplier"));
-		StaticPowerRegistry.preRegisterBlock(ConveyorExtractor = new BlockConveyorExtractor("conveyor_extractor"));
-		StaticPowerRegistry.preRegisterBlock(ConveyorHopper = new BlockConveyorHopper("conveyor_hopper", false));
-		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopper = new BlockConveyorHopper("conveyor_hopper_filtered", true));
+		StaticPowerRegistry.preRegisterBlock(StraightConveyorBasic = new BlockStraightConveyor("conveyor_straight_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(StraightConveyorAdvanced = new BlockStraightConveyor("conveyor_straight_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(StraightConveyorStatic = new BlockStraightConveyor("conveyor_straight_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(StraightConveyorEnergized = new BlockStraightConveyor("conveyor_straight_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(StraightConveyorLumum = new BlockStraightConveyor("conveyor_straight_lumum", StaticPowerTiers.LUMUM));
+
+		StaticPowerRegistry.preRegisterBlock(RampUpConveyorBasic = new BlockRampUpConveyor("conveyor_ramp_up_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(RampUpConveyorAdvanced = new BlockRampUpConveyor("conveyor_ramp_up_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(RampUpConveyorStatic = new BlockRampUpConveyor("conveyor_ramp_up_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(RampUpConveyorEnergized = new BlockRampUpConveyor("conveyor_ramp_up_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(RampUpConveyorLumum = new BlockRampUpConveyor("conveyor_ramp_up_lumum", StaticPowerTiers.LUMUM));
+
+		StaticPowerRegistry.preRegisterBlock(RampDownConveyorBasic = new BlockRampDownConveyor("conveyor_ramp_down_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(RampDownConveyorAdvanced = new BlockRampDownConveyor("conveyor_ramp_down_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(RampDownConveyorStatic = new BlockRampDownConveyor("conveyor_ramp_down_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(RampDownConveyorEnergized = new BlockRampDownConveyor("conveyor_ramp_down_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(RampDownConveyorLumum = new BlockRampDownConveyor("conveyor_ramp_down_lumum", StaticPowerTiers.LUMUM));
+
+		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierBasic = new BlockConveyorSupplier("conveyor_supplier_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierAdvanced = new BlockConveyorSupplier("conveyor_supplier_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierStatic = new BlockConveyorSupplier("conveyor_supplier_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierEnergized = new BlockConveyorSupplier("conveyor_supplier_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierLumum = new BlockConveyorSupplier("conveyor_supplier_lumum", StaticPowerTiers.LUMUM));
+
+		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorBasic = new BlockConveyorExtractor("conveyor_extractor_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorAdvanced = new BlockConveyorExtractor("conveyor_extractor_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorStatic = new BlockConveyorExtractor("conveyor_extractor_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorEnergized = new BlockConveyorExtractor("conveyor_extractor_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorLumum = new BlockConveyorExtractor("conveyor_extractor_lumum", StaticPowerTiers.LUMUM));
+
+		StaticPowerRegistry.preRegisterBlock(ConveyorHopperBasic = new BlockConveyorHopper("conveyor_hopper_basic", StaticPowerTiers.BASIC, false));
+		StaticPowerRegistry.preRegisterBlock(ConveyorHopperAdvanced = new BlockConveyorHopper("conveyor_hopper_advanced", StaticPowerTiers.ADVANCED, false));
+		StaticPowerRegistry.preRegisterBlock(ConveyorHopperStatic = new BlockConveyorHopper("conveyor_hopper_static", StaticPowerTiers.STATIC, false));
+		StaticPowerRegistry.preRegisterBlock(ConveyorHopperEnergized = new BlockConveyorHopper("conveyor_hopper_energized", StaticPowerTiers.ENERGIZED, false));
+		StaticPowerRegistry.preRegisterBlock(ConveyorHopperLumum = new BlockConveyorHopper("conveyor_hopper_lumum", StaticPowerTiers.LUMUM, false));
+
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperBasic = new BlockConveyorHopper("conveyor_hopper_filtered_basic", StaticPowerTiers.BASIC, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperAdvanced = new BlockConveyorHopper("conveyor_hopper_filtered_advanced", StaticPowerTiers.ADVANCED, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperStatic = new BlockConveyorHopper("conveyor_hopper_filtered_static", StaticPowerTiers.STATIC, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperEnergized = new BlockConveyorHopper("conveyor_hopper_filtered_energized", StaticPowerTiers.ENERGIZED, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperLumum = new BlockConveyorHopper("conveyor_hopper_filtered_lumum", StaticPowerTiers.LUMUM, true));
 
 		StaticPowerRegistry.preRegisterBlock(AluminumHeatSink = new BlockHeatSink("heat_sink_aluminum", StaticPowerTiers.ALUMINUM));
 		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));
