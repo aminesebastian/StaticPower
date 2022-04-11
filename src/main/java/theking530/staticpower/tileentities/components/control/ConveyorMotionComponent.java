@@ -89,6 +89,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 
 			// Move the entity.
 			moveEntity(entity, facing, rotatedVelocity, compensationRate, coordinate);
+			
 			// If the entity is an item but NOT a conveyor item, convert it to a
 			// ConveyorBeltItem.
 			if (entity instanceof ItemEntity && !(entity instanceof ConveyorBeltEntity)) {

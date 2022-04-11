@@ -14,6 +14,8 @@ import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
@@ -71,12 +73,21 @@ public class TileEntityConveyorSupplier extends AbstractConveyorTileEntity {
 				// Get the item entity.
 				ConveyorBeltEntity conveyorEntity = (ConveyorBeltEntity) entity;
 
-				// Transfer the item into the internal inventory.
-				ItemStack stack = conveyorEntity.getItem().copy();
-				ItemStack remaining = internalInventory.insertItem(0, stack, false);
+				// Create a copy of the item and calculate the amount to supply.
+				ItemStack stackToSupply = conveyorEntity.getItem().copy();
+				int amountToSupply = Math.min(StaticPowerConfig.getTier(tier).conveyorSupplierStackSize.get(), stackToSupply.getCount());
+				stackToSupply.setCount(amountToSupply);
+
+				// Calculate how many items would be left over IF the insert is 100% successful.
+				int leftover = conveyorEntity.getItem().getCount() - amountToSupply;
+
+				// Perform the insert, then update the entity with how many were NOT
+				// successfully inserted PLUS any leftover.
+				ItemStack remaining = internalInventory.insertItem(0, stackToSupply, false);
+				conveyorEntity.getItem().setCount(leftover + remaining.getCount());
 
 				// Update or remove the item entity.
-				if (remaining.isEmpty()) {
+				if (conveyorEntity.getItem().isEmpty()) {
 					conveyorEntity.remove(RemovalReason.DISCARDED);
 				} else {
 					conveyorEntity.setItem(remaining.copy());
@@ -86,13 +97,13 @@ public class TileEntityConveyorSupplier extends AbstractConveyorTileEntity {
 	}
 
 	@Override
-	protected void configureConveyorComponent(ConveyorMotionComponent component, Level world, BlockPos pos, BlockState state) {
+	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticPowerTier tier, Level world, BlockPos pos, BlockState state) {
 		float conveyorLength = 0.9f;
 		float inverseConveyorLength = 1.0f - conveyorLength;
-		
+
 		component.setShouldAffectEntitiesAbove(false);
-		component.setVelocity(new Vector3D(0.075f, 0f, 0f));
-		
+		component.setVelocity(new Vector3D((float) (0.05f * tier.conveyorSpeedMultiplier.get()), 0f, 0f));
+
 		Direction facing = getFacingDirection();
 		if (facing == Direction.EAST) {
 			importBox = new AABB(pos.getX() + conveyorLength, pos.getY() + 0.5, pos.getZ(), pos.getX() + 1.0, pos.getY() + 0.9, pos.getZ() + 1);

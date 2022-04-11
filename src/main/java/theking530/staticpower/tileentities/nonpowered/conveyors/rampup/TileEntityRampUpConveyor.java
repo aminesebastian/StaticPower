@@ -8,6 +8,7 @@ import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.components.control.ConveyorMotionComponent;
@@ -35,8 +36,8 @@ public class TileEntityRampUpConveyor extends AbstractConveyorTileEntity {
 	}
 
 	@Override
-	protected void configureConveyorComponent(ConveyorMotionComponent component, Level world, BlockPos pos, BlockState state) {
-		component.setVelocity(new Vector3D(0.15f, 0.1f, 0f));
+	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticPowerTier tier, Level world, BlockPos pos, BlockState state) {
+		component.setVelocity(new Vector3D((float) (0.1f * tier.conveyorSpeedMultiplier.get()), (float) (0.05f * tier.conveyorSpeedMultiplier.get()), 0f));
 		component.updateBounds(new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1.0, pos.getY() + 1.5, pos.getZ() + 1.0));
 	}
 }

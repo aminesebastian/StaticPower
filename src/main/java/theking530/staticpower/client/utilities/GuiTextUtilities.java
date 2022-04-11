@@ -277,6 +277,10 @@ public class GuiTextUtilities {
 		return new TextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
 	}
 
+	public static MutableComponent formatNumberAsPercentStringOneDecimal(double number) {
+		return new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
+	}
+
 	public static MutableComponent createTooltipBulletpoint(String localizationKey, ChatFormatting color) {
 		return new TextComponent(color.toString() + "• " + new TranslatableComponent(localizationKey).getString() + " ");
 	}

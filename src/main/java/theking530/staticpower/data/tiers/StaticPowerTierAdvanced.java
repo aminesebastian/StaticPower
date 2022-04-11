@@ -265,7 +265,7 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	protected int getMagnetRadius() {
 		return 3;
 	}
-	
+
 	@Override
 	protected float getDrillSpeedMultiplier() {
 		return 0.75f;
@@ -274,5 +274,20 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	@Override
 	protected float getChainsawSpeedMultiplier() {
 		return 0.75f;
+	}
+
+	@Override
+	protected double getConveyorSpeedMultiplier() {
+		return 1.5;
+	}
+
+	@Override
+	protected int getConveyorSupplierStackSize() {
+		return 8;
+	}
+
+	@Override
+	protected int getConveyorExtractorStackSize() {
+		return 8;
 	}
 }

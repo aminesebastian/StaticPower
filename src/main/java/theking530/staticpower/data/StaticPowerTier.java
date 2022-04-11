@@ -3,6 +3,7 @@ package theking530.staticpower.data;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 import theking530.staticpower.StaticPower;
 
@@ -95,6 +96,13 @@ public abstract class StaticPowerTier {
 	public final LongValue defaultMachinePowerCapacity;
 	public final LongValue defaultMachinePowerInput;
 	public final LongValue defaultMachinePowerOutput;
+
+	/**********
+	 * Conveyer
+	 **********/
+	public final ConfigValue<Double> conveyorSpeedMultiplier;
+	public final IntValue conveyorSupplierStackSize;
+	public final IntValue conveyorExtractorStackSize;
 
 	/********************
 	 * Processing Upgrade
@@ -199,6 +207,18 @@ public abstract class StaticPowerTier {
 
 		defaultTankCapacity = builder.comment("The base amount of fluid a machine of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "defaultTankCapacity")
 				.define("DefaultTankCapacity", this.getDefaultTankCapacity());
+
+		builder.push("Conveyor");
+		conveyorSpeedMultiplier = builder.comment("The speed multitplier applied to conveyors of this tier.").translation(StaticPower.MOD_ID + ".config." + "conveyorSpeedMultiplier")
+				.defineInRange("ConveyorSpeedMultiplier", getConveyorSpeedMultiplier(), 0, Double.MAX_VALUE);
+
+		conveyorSupplierStackSize = builder.comment("The maximum stack size suppliers of this tier can consume at a time.").translation(StaticPower.MOD_ID + ".config." + "conveyorSupplierStackSize")
+				.defineInRange("ConveyorSupplierStackSize", getConveyorSupplierStackSize(), 0, Integer.MAX_VALUE);
+
+		conveyorExtractorStackSize = builder.comment("The maximum stack size that an extractor of this tier can extract from an adjacent inventory.")
+				.translation(StaticPower.MOD_ID + ".config." + "conveyorExtractorStackSize").defineInRange("ConveyorExtractorStackSize", getConveyorExtractorStackSize(), 0, Integer.MAX_VALUE);
+
+		builder.pop();
 
 		builder.push("Battery");
 		batteryCapacity = builder.comment("The amount of power that a non-portable battery of this tier can store (in mSV [1SV = 1000mSV]).")
@@ -499,6 +519,18 @@ public abstract class StaticPowerTier {
 
 	protected long getDefaultMachinePowerOutput() {
 		return 0;
+	}
+
+	protected double getConveyorSpeedMultiplier() {
+		return 1;
+	}
+
+	protected int getConveyorSupplierStackSize() {
+		return 1;
+	}
+
+	protected int getConveyorExtractorStackSize() {
+		return 1;
 	}
 
 	protected double getHeatSinkElectricHeatGeneration() {

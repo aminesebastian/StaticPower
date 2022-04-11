@@ -285,4 +285,19 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	protected float getChainsawSpeedMultiplier() {
 		return 2f;
 	}
+
+	@Override
+	protected double getConveyorSpeedMultiplier() {
+		return 4;
+	}
+
+	@Override
+	protected int getConveyorSupplierStackSize() {
+		return 64;
+	}
+
+	@Override
+	protected int getConveyorExtractorStackSize() {
+		return 64;
+	}
 }

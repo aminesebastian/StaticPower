@@ -1033,6 +1033,7 @@
 	"gui.staticpower.retriever_tooltip": "Pulls items from any connected inventories. Why push when you can pull!",
 	"gui.staticpower.retriever_rate_format": "Extracts every %1$d ticks",
 	"gui.staticpower.retriever_stack_size": "%1$d items per Extraction",
+	"gui.staticpower.conveyor_speed_multiplier": "Speed: ",
 	"gui.staticpower.digistore_terminal_tooltip": "Take a look at your digistore network's contents. You see everything....EVERYTHING!",
 	"gui.staticpower.digistore_crafting_terminal_tooltip": "Craft straight from your digistore network! Use it to craft a crafting table, I dare you, you luddite.",
 	"gui.staticpower.digistore_pattern_encoder": "Why craft when your soon-to-be robot overlords can do it for you? Teach them how to do it! Encode auto-crafting patterns.",

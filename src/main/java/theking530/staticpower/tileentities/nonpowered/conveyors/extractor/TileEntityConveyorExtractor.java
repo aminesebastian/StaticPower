@@ -10,6 +10,8 @@ import net.minecraft.world.phys.AABB;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 import theking530.staticpower.init.ModBlocks;
@@ -66,7 +68,7 @@ public class TileEntityConveyorExtractor extends AbstractConveyorTileEntity {
 		}
 
 		// Extract the stored item.
-		ItemStack extracted = internalInventory.extractItem(0, 1, false);
+		ItemStack extracted = internalInventory.extractItem(0, StaticPowerConfig.getTier(tier).conveyorExtractorStackSize.get(), false);
 
 		// Get the facing direction.
 		Direction facing = getFacingDirection();
@@ -80,10 +82,10 @@ public class TileEntityConveyorExtractor extends AbstractConveyorTileEntity {
 	}
 
 	@Override
-	protected void configureConveyorComponent(ConveyorMotionComponent component, Level world, BlockPos pos, BlockState state) {
+	protected void configureConveyorComponent(ConveyorMotionComponent component, StaticPowerTier tier, Level world, BlockPos pos, BlockState state) {
 		component.updateBounds(new AABB(pos.getX(), pos.getY() + 0.5, pos.getZ(), pos.getX() + 1, pos.getY() + 0.55, pos.getZ() + 1));
 		component.setShouldAffectEntitiesAbove(false);
-		component.setVelocity(new Vector3D(-0.075f, 0f, 0f));
+		component.setVelocity(new Vector3D(-(float) (0.05f * tier.conveyorSpeedMultiplier.get()), 0f, 0f));
 		// Make sure the front is input only.
 		Direction facing = getFacingDirection();
 		ioSideConfiguration.setWorldSpaceDirectionConfiguration(SideConfigurationUtilities.getDirectionFromSide(BlockSide.FRONT, facing), MachineSideMode.Input);

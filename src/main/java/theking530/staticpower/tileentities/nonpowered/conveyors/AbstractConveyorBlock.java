@@ -1,10 +1,17 @@
 package theking530.staticpower.tileentities.nonpowered.conveyors;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Nullable;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -23,8 +30,11 @@ import net.minecraft.world.phys.shapes.EntityCollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import theking530.api.wrench.RegularWrenchMode;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.StaticPowerTier;
 
 public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock implements IConveyorBlock {
 	protected final Map<Direction, VoxelShape> ENTITY_SHAPES = new HashMap<>();
@@ -72,6 +82,19 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	@Override
 	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
 		return ENTITY_SHAPES.get(state.getValue(StaticPowerTileEntityBlock.FACING));
+	}
+
+	@Override
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		if (!isShowingAdvanced) {
+			StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+			tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.conveyor_speed_multiplier"))
+					.append(GuiTextUtilities.formatNumberAsPercentStringOneDecimal(tierObject.conveyorSpeedMultiplier.get()).withStyle(ChatFormatting.GREEN)));
+		}
+	}
+
+	@Override
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 	}
 
 	@Override

@@ -285,4 +285,19 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	protected float getChainsawSpeedMultiplier() {
 		return 1.0f;
 	}
+
+	@Override
+	protected double getConveyorSpeedMultiplier() {
+		return 2;
+	}
+
+	@Override
+	protected int getConveyorSupplierStackSize() {
+		return 16;
+	}
+
+	@Override
+	protected int getConveyorExtractorStackSize() {
+		return 16;
+	}
 }
