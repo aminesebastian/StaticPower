@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/conveyor/basic"
+		"staticpower:research/conveyor/basic/straight"
 	],
 	"requirements": [
 		{

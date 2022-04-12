@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"r  ",
+		"gr ",
+		"igr"
+	],
+	"key": {
+		"r": {
+			"tag": "forge:plates/rubber"
+		},
+		"g": {
+			"tag": "forge:gears/brass"
+		},
+		"i": {
+			"tag": "forge:ingots/brass"
+		}
+	},
+	"result": {
+		"item": "staticpower:conveyor_ramp_down_advanced"
+	}
+}

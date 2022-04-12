@@ -1,0 +1,28 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" cp",
+		"rrr",
+		"igi"
+	],
+	"key": {
+		"r": {
+			"tag": "forge:plates/rubber"
+		},
+		"g": {
+			"tag": "forge:gears/brass"
+		},
+		"i": {
+			"tag": "forge:ingots/brass"
+		},
+		"c": {
+			"tag": "forge:chests/wooden"
+		},
+		"p": {
+			"item": "staticpower:io_port"
+		}
+	},
+	"result": {
+		"item": "staticpower:conveyor_extractor_advanced"
+	}
+}

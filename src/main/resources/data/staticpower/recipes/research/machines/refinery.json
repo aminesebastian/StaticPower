@@ -1,16 +1,16 @@
 {
 	"type": "staticpower:research",
-	"title": "research.heatsink_aluminum.title",
-	"description": "research.heatsink_aluminum.description",
+	"title": "research.staticpower.refinery.title",
+	"description": "research.staticpower.refinery.description",
 	"icon": {
-		"item": "staticpower:heat_sink_aluminum"
+		"item": "staticpower:machine_refinery"
 	},
 	"visualOffset": [
 		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/transport/heat/aluminum"
+		"staticpower:research/machines/battery/advanced"
 	],
 	"requirements": [
 		{
@@ -29,7 +29,7 @@
 	"unlocks": [
 		{
 			"type": "crafting",
-			"target": "staticpower:crafting/machines/heatsinks/aluminum_heatsink"
+			"target": "staticpower:crafting/machines/refinery"
 		}
 	]
 }

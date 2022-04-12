@@ -8,10 +8,10 @@
 	"sortOrder": 0,
 	"visualOffset": [
 		0,
-		0
+		1
 	],
 	"prerequisites": [
-		"staticpower:research/research_tiers/tier_3"
+		"staticpower:research/machines/misc/advanced_processor"
 	],
 	"requirements": [
 		{

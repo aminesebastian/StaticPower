@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/mixer"
+		"staticpower:research/machines/industrial_crafter"
 	],
 	"requirements": [
 		{

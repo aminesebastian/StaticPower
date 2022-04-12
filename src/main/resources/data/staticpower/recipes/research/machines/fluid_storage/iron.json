@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:research",
-	"title": "research.staticpower.fluid_storage.title",
-	"description": "research.staticpower.fluid_storage.description",
+	"title": "research.staticpower.fluid_storage_iron.title",
+	"description": "research.staticpower.fluid_storage_iron.description",
 	"icon": {
 		"item": "staticpower:tank_iron"
 	},

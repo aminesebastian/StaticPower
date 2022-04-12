@@ -2,13 +2,16 @@
 	"type": "staticpower:research",
 	"title": "research.staticpower.transport_advanced.title",
 	"description": "research.staticpower.transport_advanced.description",
+	"icon": {
+		"item": "staticpower:cable_item_advanced"
+	},
 	"sortOrder": -500,
 	"visualOffset": [
-		-4.5,
-		0
+		-4,
+		0.5
 	],
 	"prerequisites": [
-		"staticpower:research/research_tiers/tier_3"
+		"staticpower:research/machines/misc/advanced_processor"
 	],
 	"requirements": [
 		{
@@ -45,8 +48,5 @@
 			"type": "crafting",
 			"target": "staticpower:crafting/cables/fluid/regular/fluid_cable_advanced_plate"
 		}
-	],
-	"icon": {
-		"item": "staticpower:cable_item_advanced"
-	}
+	]
 }

@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:research",
-	"title": "research.heatsink_copper.title",
-	"description": "research.heatsink_copper.description",
+	"title": "research.heatsink_basic.title",
+	"description": "research.heatsink_basic.description",
 	"icon": {
 		"item": "staticpower:heat_sink_copper"
 	},
@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/transport/heat/copper"
+		"staticpower:research/machines/solar_panels/advanced"
 	],
 	"requirements": [
 		{
@@ -29,7 +29,15 @@
 	"unlocks": [
 		{
 			"type": "crafting",
+			"target": "staticpower:crafting/machines/heatsinks/aluminum_heatsink"
+		},
+		{
+			"type": "crafting",
 			"target": "staticpower:crafting/machines/heatsinks/copper_heatsink"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/machines/heatsinks/tin_heatsink"
 		}
 	]
 }

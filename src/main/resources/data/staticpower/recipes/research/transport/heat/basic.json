@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:research",
-	"title": "research.staticpower.transport_heat_copper.title",
-	"description": "research.staticpower.transport_heat_copper.description",
+	"title": "research.staticpower.transport_heat_basic.title",
+	"description": "research.staticpower.transport_heat_basic.description",
 	"icon": {
 		"item": "staticpower:cable_heat_copper"
 	},
@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/solid_fueled_miner"
+		"staticpower:research/machines/solar_panels/advanced"
 	],
 	"requirements": [
 		{
@@ -29,7 +29,15 @@
 	"unlocks": [
 		{
 			"type": "crafting",
+			"target": "staticpower:crafting/cables/heat/heat_cable_aluminum"
+		},
+		{
+			"type": "crafting",
 			"target": "staticpower:crafting/cables/heat/heat_cable_copper"
+		},
+		{
+			"type": "crafting",
+			"target": "staticpower:crafting/cables/heat/heat_cable_tin"
 		}
 	]
 }

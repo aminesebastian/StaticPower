@@ -81,7 +81,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-		nodePanBox.setMaxZoom(3.0f);
+		nodePanBox.setMaxZoom(2.0f);
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
