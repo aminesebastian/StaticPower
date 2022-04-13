@@ -10,7 +10,7 @@
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/industrial_crafter"
+		"staticpower:research/machines/machine_blocks/advanced"
 	],
 	"requirements": [
 		{

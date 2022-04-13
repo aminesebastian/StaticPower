@@ -1,16 +1,19 @@
 {
 	"type": "staticpower:research",
-	"title": "research.staticpower.fermenter.title",
-	"description": "research.staticpower.fermenter.description",
+	"title": "research.tier_4.title",
+	"description": "research.tier_4.description",
 	"icon": {
-		"item": "staticpower:machine_fermenter"
+		"item": "staticpower:research_tier_4"
 	},
 	"visualOffset": [
 		0,
 		0
 	],
 	"prerequisites": [
-		"staticpower:research/machines/machine_blocks/advanced"
+		"staticpower:research/machines/solid_fueled_miner",
+		"staticpower:research/machines/auto_smith",
+		"staticpower:research/machines/fermenter",
+		"staticpower:research/machines/industrial_crafter"
 	],
 	"requirements": [
 		{
@@ -27,9 +30,5 @@
 		}
 	],
 	"unlocks": [
-		{
-			"type": "crafting",
-			"target": "staticpower:crafting/machines/fermenter"
-		}
 	]
 }

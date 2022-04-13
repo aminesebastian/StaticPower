@@ -53,6 +53,7 @@ import theking530.staticpower.tileentities.nonpowered.experiencehopper.BlockExpe
 import theking530.staticpower.tileentities.nonpowered.miner.BlockMiner;
 import theking530.staticpower.tileentities.nonpowered.placer.BlockAutomaticPlacer;
 import theking530.staticpower.tileentities.nonpowered.randomitem.BlockRandomItemGenerator;
+import theking530.staticpower.tileentities.nonpowered.researchcheater.BlockResearchCheater;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.BlockSolderingTable;
 import theking530.staticpower.tileentities.nonpowered.tank.BlockTank;
 import theking530.staticpower.tileentities.nonpowered.vacuumchest.BlockVacuumChest;
@@ -261,6 +262,7 @@ public class ModBlocks {
 	public static BlockEnchanter Enchanter;
 	public static BlockRefinery Refinery;
 	public static BlockLaboratory Laboratory;
+	public static BlockResearchCheater ResearchCheater;
 
 	public static BlockStraightConveyor StraightConveyorBasic;
 	public static BlockStraightConveyor StraightConveyorAdvanced;
@@ -567,6 +569,7 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Enchanter = new BlockEnchanter("machine_enchanter"));
 		StaticPowerRegistry.preRegisterBlock(Refinery = new BlockRefinery("machine_refinery"));
 		StaticPowerRegistry.preRegisterBlock(Laboratory = new BlockLaboratory("laboratory"));
+		StaticPowerRegistry.preRegisterBlock(ResearchCheater = new BlockResearchCheater("research_cheater"));
 
 		StaticPowerRegistry.preRegisterBlock(StraightConveyorBasic = new BlockStraightConveyor("conveyor_straight_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(StraightConveyorAdvanced = new BlockStraightConveyor("conveyor_straight_advanced", StaticPowerTiers.ADVANCED));

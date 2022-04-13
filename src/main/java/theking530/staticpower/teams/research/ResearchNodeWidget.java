@@ -278,7 +278,7 @@ public class ResearchNodeWidget extends AbstractGuiWidget<ResearchNodeWidget> {
 		boolean isCompleted = manager.hasCompletedResearch(research.getId());
 
 		// Get the tile color and lighten it on hover.
-		tileColor = research.getColor().copy().desaturate(0.2f);
+		tileColor = research.getColor().copy();
 		if (!isAvailable && !manager.hasCompletedResearch(research.getId())) {
 			tileColor = new Color(0.075f, 0.075f, 0.075f);
 		}
