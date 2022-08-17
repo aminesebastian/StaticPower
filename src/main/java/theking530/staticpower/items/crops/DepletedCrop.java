@@ -22,8 +22,8 @@ import theking530.staticpower.items.StaticPowerItem;
 
 public class DepletedCrop extends StaticPowerItem {
 
-	public DepletedCrop(String name) {
-		super(name);
+	public DepletedCrop() {
+		super();
 	}
 
 	@Override

@@ -9,74 +9,52 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModBlocks;
 
 public class ModOres {
-	public static final OreGenerationResult ZINC = OreRegistrationBuilder.createOre("ore_zinc")
-			.source(ModBlocks.OreZinc).levelRange(30, 70).veinSize(4).rarity(8).register();
-	public static final OreGenerationResult MAGENSIUM = OreRegistrationBuilder.createOre("ore_magnesium")
-			.source(ModBlocks.OreMagnesium).levelRange(30, 70).veinSize(4).rarity(8).register();
-	public static final OreGenerationResult TIN = OreRegistrationBuilder.createOre("ore_tin").source(ModBlocks.OreTin)
-			.levelRange(40, 128).veinSize(10).rarity(18).register();
-	public static final OreGenerationResult LEAD = OreRegistrationBuilder.createOre("ore_lead")
-			.source(ModBlocks.OreLead).levelRange(0, 35).veinSize(4).rarity(10).register();
-	public static final OreGenerationResult SILVER = OreRegistrationBuilder.createOre("ore_silver")
-			.source(ModBlocks.OreSilver).levelRange(0, 40).veinSize(4).rarity(12).register();
-	public static final OreGenerationResult TUNGSTEN = OreRegistrationBuilder.createOre("ore_tungsten")
-			.source(ModBlocks.OreTungsten).levelRange(0, 20).veinSize(4).rarity(8).register();
-	public static final OreGenerationResult PLATINUM = OreRegistrationBuilder.createOre("ore_platinum")
-			.source(ModBlocks.OrePlatinum).levelRange(0, 30).veinSize(4).rarity(10).register();
-	public static final OreGenerationResult ALUMINUM = OreRegistrationBuilder.createOre("ore_aluminum")
-			.source(ModBlocks.OreAluminum).levelRange(50, 200).veinSize(4).rarity(12).register();
-	public static final OreGenerationResult SAPPHIRE = OreRegistrationBuilder.createOre("ore_sapphire")
-			.source(ModBlocks.OreSapphire).levelRange(0, 20).veinSize(4).rarity(5).register();
-	public static final OreGenerationResult RUBY = OreRegistrationBuilder.createOre("ore_ruby")
-			.source(ModBlocks.OreRuby).levelRange(0, 20).veinSize(4).rarity(5).register();
-	public static final OreGenerationResult RUSTY_IRON_ORE = OreRegistrationBuilder.createOre("ore_rusty_iron")
-			.source(ModBlocks.OreRustyIron).levelRange(50, 150).veinSize(4).rarity(8).register();
+	public static final OreGenerationResult ZINC = OreRegistrationBuilder.createOre("ore_zinc").source(ModBlocks.OreZinc.get()).levelRange(30, 70).veinSize(4).rarity(8).register();
+	public static final OreGenerationResult MAGENSIUM = OreRegistrationBuilder.createOre("ore_magnesium").source(ModBlocks.OreMagnesium.get()).levelRange(30, 70).veinSize(4)
+			.rarity(8).register();
+	public static final OreGenerationResult TIN = OreRegistrationBuilder.createOre("ore_tin").source(ModBlocks.OreTin.get()).levelRange(40, 128).veinSize(10).rarity(18).register();
+	public static final OreGenerationResult LEAD = OreRegistrationBuilder.createOre("ore_lead").source(ModBlocks.OreLead.get()).levelRange(0, 35).veinSize(4).rarity(10).register();
+	public static final OreGenerationResult SILVER = OreRegistrationBuilder.createOre("ore_silver").source(ModBlocks.OreSilver.get()).levelRange(0, 40).veinSize(4).rarity(12)
+			.register();
+	public static final OreGenerationResult TUNGSTEN = OreRegistrationBuilder.createOre("ore_tungsten").source(ModBlocks.OreTungsten.get()).levelRange(0, 20).veinSize(4).rarity(8)
+			.register();
+	public static final OreGenerationResult PLATINUM = OreRegistrationBuilder.createOre("ore_platinum").source(ModBlocks.OrePlatinum.get()).levelRange(0, 30).veinSize(4).rarity(10)
+			.register();
+	public static final OreGenerationResult ALUMINUM = OreRegistrationBuilder.createOre("ore_aluminum").source(ModBlocks.OreAluminum.get()).levelRange(50, 200).veinSize(4)
+			.rarity(12).register();
+	public static final OreGenerationResult SAPPHIRE = OreRegistrationBuilder.createOre("ore_sapphire").source(ModBlocks.OreSapphire.get()).levelRange(0, 20).veinSize(4).rarity(5)
+			.register();
+	public static final OreGenerationResult RUBY = OreRegistrationBuilder.createOre("ore_ruby").source(ModBlocks.OreRuby.get()).levelRange(0, 20).veinSize(4).rarity(5).register();
+	public static final OreGenerationResult RUSTY_IRON_ORE = OreRegistrationBuilder.createOre("ore_rusty_iron").source(ModBlocks.OreRustyIron.get()).levelRange(50, 150).veinSize(4)
+			.rarity(8).register();
 
 	public static final OreGenerationResult DEEPSLATE_ZINC = OreRegistrationBuilder.createOre("ore_deepslate_zinc")
-			.source(ModBlocks.OreDeepslateZinc, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-32, 10).veinSize(4)
-			.rarity(8).register();
-	public static final OreGenerationResult DEEPSLATE_MAGENSIUM = OreRegistrationBuilder
-			.createOre("ore_deepslate_magnesium")
-			.source(ModBlocks.OreDeepslateMagnesium, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-32, 10)
-			.veinSize(4).rarity(8).register();
+			.source(ModBlocks.OreDeepslateZinc.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-32, 10).veinSize(4).rarity(8).register();
+	public static final OreGenerationResult DEEPSLATE_MAGENSIUM = OreRegistrationBuilder.createOre("ore_deepslate_magnesium")
+			.source(ModBlocks.OreDeepslateMagnesium.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-32, 10).veinSize(4).rarity(8).register();
 	public static final OreGenerationResult DEEPSLATE_TIN = OreRegistrationBuilder.createOre("ore_deepslate_tin")
-			.source(ModBlocks.OreDeepslateTin, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-16, 30).veinSize(10)
-			.rarity(18).register();
+			.source(ModBlocks.OreDeepslateTin.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-16, 30).veinSize(10).rarity(18).register();
 	public static final OreGenerationResult DEEPSLATE_LEAD = OreRegistrationBuilder.createOre("ore_deepslate_lead")
-			.source(ModBlocks.OreDeepslateLead, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4)
-			.rarity(10).register();
+			.source(ModBlocks.OreDeepslateLead.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4).rarity(10).register();
 	public static final OreGenerationResult DEEPSLATE_SILVER = OreRegistrationBuilder.createOre("ore_deepslate_silver")
-			.source(ModBlocks.OreDeepslateSilver, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4)
-			.rarity(12).register();
-	public static final OreGenerationResult DEEPSLATE_TUNGSTEN = OreRegistrationBuilder
-			.createOre("ore_deepslate_tungsten")
-			.source(ModBlocks.OreDeepslateTungsten, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0)
-			.veinSize(4).rarity(8).register();
-	public static final OreGenerationResult DEEPSLATE_PLATINUM = OreRegistrationBuilder
-			.createOre("ore_deepslate_platinum")
-			.source(ModBlocks.OreDeepslatePlatinum, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0)
-			.veinSize(4).rarity(10).register();
-	public static final OreGenerationResult DEEPSLATE_ALUMINUM = OreRegistrationBuilder
-			.createOre("ore_deepslate_aluminum")
-			.source(ModBlocks.OreDeepslateAluminum, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-12, 30)
-			.veinSize(4).rarity(12).register();
-	public static final OreGenerationResult DEEPSLATE_SAPPHIRE = OreRegistrationBuilder
-			.createOre("ore_deepslate_sapphire")
-			.source(ModBlocks.OreDeepslateSapphire, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0)
-			.veinSize(4).rarity(5).register();
+			.source(ModBlocks.OreDeepslateSilver.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4).rarity(12).register();
+	public static final OreGenerationResult DEEPSLATE_TUNGSTEN = OreRegistrationBuilder.createOre("ore_deepslate_tungsten")
+			.source(ModBlocks.OreDeepslateTungsten.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4).rarity(8).register();
+	public static final OreGenerationResult DEEPSLATE_PLATINUM = OreRegistrationBuilder.createOre("ore_deepslate_platinum")
+			.source(ModBlocks.OreDeepslatePlatinum.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4).rarity(10).register();
+	public static final OreGenerationResult DEEPSLATE_ALUMINUM = OreRegistrationBuilder.createOre("ore_deepslate_aluminum")
+			.source(ModBlocks.OreDeepslateAluminum.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-12, 30).veinSize(4).rarity(12).register();
+	public static final OreGenerationResult DEEPSLATE_SAPPHIRE = OreRegistrationBuilder.createOre("ore_deepslate_sapphire")
+			.source(ModBlocks.OreDeepslateSapphire.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4).rarity(5).register();
 	public static final OreGenerationResult DEEPSLATE_RUBY = OreRegistrationBuilder.createOre("ore_deepslate_ruby")
-			.source(ModBlocks.OreDeepslateRuby, OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4)
-			.rarity(5).register();
+			.source(ModBlocks.OreDeepslateRuby.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-64, 0).veinSize(4).rarity(5).register();
 
 	public static final OreGenerationResult NETHER_SILVER = OreRegistrationBuilder.createOre("ore_nether_silver")
-			.source(ModBlocks.OreNetherSilver, OreFeatures.NETHER_ORE_REPLACEABLES).levelRange(0, 100).veinSize(5)
-			.rarity(12).register();
+			.source(ModBlocks.OreNetherSilver.get(), OreFeatures.NETHER_ORE_REPLACEABLES).levelRange(0, 100).veinSize(5).rarity(12).register();
 	public static final OreGenerationResult NETHER_PLATINUM = OreRegistrationBuilder.createOre("ore_nether_platinum")
-			.source(ModBlocks.OreNetherPlatinum, OreFeatures.NETHER_ORE_REPLACEABLES).levelRange(0, 100).veinSize(5)
-			.rarity(12).register();
+			.source(ModBlocks.OreNetherPlatinum.get(), OreFeatures.NETHER_ORE_REPLACEABLES).levelRange(0, 100).veinSize(5).rarity(12).register();
 	public static final OreGenerationResult NETHER_TUNGSTEN = OreRegistrationBuilder.createOre("ore_nether_tungsten")
-			.source(ModBlocks.OreNetherTungsten, OreFeatures.NETHER_ORE_REPLACEABLES).levelRange(0, 100).veinSize(5)
-			.rarity(12).register();
+			.source(ModBlocks.OreNetherTungsten.get(), OreFeatures.NETHER_ORE_REPLACEABLES).levelRange(0, 100).veinSize(5).rarity(12).register();
 
 	public static void addOreGenFeatures(BiomeLoadingEvent event) {
 		// Overworld
@@ -119,8 +97,7 @@ public class ModOres {
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_ZINC.getFeature());
 		}
 		if (StaticPowerConfig.SERVER.generateDeepslateMagnesiumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES,
-					DEEPSLATE_MAGENSIUM.getFeature());
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_MAGENSIUM.getFeature());
 		}
 		if (StaticPowerConfig.SERVER.generateDeepslateTinOre.get()) {
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_TIN.getFeature());
@@ -132,20 +109,16 @@ public class ModOres {
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_SILVER.getFeature());
 		}
 		if (StaticPowerConfig.SERVER.generateDeepslateTungstenOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES,
-					DEEPSLATE_TUNGSTEN.getFeature());
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_TUNGSTEN.getFeature());
 		}
 		if (StaticPowerConfig.SERVER.generateDeepslatePlatinumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES,
-					DEEPSLATE_PLATINUM.getFeature());
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_PLATINUM.getFeature());
 		}
 		if (StaticPowerConfig.SERVER.generateDeepslateAluminumOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES,
-					DEEPSLATE_ALUMINUM.getFeature());
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_ALUMINUM.getFeature());
 		}
 		if (StaticPowerConfig.SERVER.generateDeepslateSapphireOre.get()) {
-			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES,
-					DEEPSLATE_SAPPHIRE.getFeature());
+			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_SAPPHIRE.getFeature());
 		}
 		if (StaticPowerConfig.SERVER.generateDeepslateRubyOre.get()) {
 			event.getGeneration().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, DEEPSLATE_RUBY.getFeature());

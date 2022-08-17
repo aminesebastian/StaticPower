@@ -31,7 +31,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutomaticPlacer extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityAutomaticPlacer> TYPE = new BlockEntityTypeAllocator<TileEntityAutomaticPlacer>(
-			(type, pos, state) -> new TileEntityAutomaticPlacer(pos, state), ModBlocks.AutomaticPlacer);
+			(type, pos, state) -> new TileEntityAutomaticPlacer(pos, state), ModBlocks.AutomaticPlacer.get());
 	public static final int PLACE_DELAY = 4;
 
 	public final InventoryComponent inventory;

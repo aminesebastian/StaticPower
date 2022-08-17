@@ -42,11 +42,11 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	private static boolean canProvidePower;
 	private final String color;
 
-	public BlockRedstoneCable(String name) {
-		super(name, new BasicRedstoneCableBoundsCache(name.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)), name.contains("naked") ? 1.0f : 1.5f);
+	public BlockRedstoneCable(String color) {
+		super(new BasicRedstoneCableBoundsCache(color.contains("naked") ? 0.75D : 1.25D, new Vector3D(2.0f, 2.0f, 2.0f), new Vector3D(2.0f, 2.0f, 2.0f)),color.contains("naked") ? 1.0f : 1.5f);
 
 		// String the color from the last section of the registry name.
-		this.color = name.substring(name.indexOf("_", name.indexOf("_", name.indexOf("_") + 1) + 1) + 1);
+		this.color = color;
 		canProvidePower = true;
 	}
 

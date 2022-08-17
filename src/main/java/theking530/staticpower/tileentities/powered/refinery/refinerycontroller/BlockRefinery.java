@@ -11,10 +11,6 @@ import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
 public class BlockRefinery extends StaticPowerMachineBlock {
 
-	public BlockRefinery(String name) {
-		super(name);
-	}
-
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;

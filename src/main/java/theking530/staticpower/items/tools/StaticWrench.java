@@ -24,8 +24,8 @@ import theking530.staticpower.items.StaticPowerItem;
 
 public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 
-	public StaticWrench(String name) {
-		super(name, new Item.Properties().stacksTo(1).setNoRepair());
+	public StaticWrench() {
+		super(new Item.Properties().stacksTo(1).setNoRepair());
 	}
 
 	@Override

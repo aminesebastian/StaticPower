@@ -36,7 +36,7 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntitySolidGenerator(pos, state), ModBlocks.SolidGenerator);
+	public static final BlockEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntitySolidGenerator(pos, state), ModBlocks.SolidGenerator.get());
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;

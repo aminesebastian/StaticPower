@@ -15,8 +15,8 @@ public class PumpTube extends StaticPowerBlock {
 	protected static final VoxelShape SHAPE = Shapes.join(Block.box(4.5, 0, 4.5, 11.5, 16, 11.5),
 			Shapes.join(Block.box(3.5, 0, 3.5, 12.5, 4, 12.5), Block.box(3.5, 12, 3.5, 12.5, 16, 12.5), BooleanOp.OR), BooleanOp.OR);
 
-	public PumpTube(String name) {
-		super(name, Material.METAL);
+	public PumpTube() {
+		super(Material.METAL);
 	}
 
 	@Override

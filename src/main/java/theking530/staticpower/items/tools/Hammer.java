@@ -2,6 +2,7 @@ package theking530.staticpower.items.tools;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -42,17 +43,17 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class Hammer extends StaticPowerItem {
 	private final ResourceLocation tier;
-	private final Item repairItem;
+	private final Supplier<Item> repairItem;
 
-	public Hammer(String name, ResourceLocation tier, Item repairItem) {
-		super(name, new Item.Properties().stacksTo(1));
+	public Hammer(ResourceLocation tier, Supplier<Item> repairItem) {
+		super(new Item.Properties().stacksTo(1));
 		this.tier = tier;
 		this.repairItem = repairItem;
 	}
 
 	@Override
 	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-		if (repair.getItem() == repairItem) {
+		if (repair.getItem() == repairItem.get()) {
 			return true;
 		}
 		return false;
@@ -124,9 +125,12 @@ public class Hammer extends StaticPowerItem {
 						if (craftRecipe(stack, (Player) player, pos, recipe.get())) {
 							entity.getItem().shrink(recipe.get().getInputItem().getCount());
 							entity.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 0.5F, (float) (0.8F + Math.random() * 0.3));
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.00D);
-							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D, 0.1D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.CRIT, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
+									0.00D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.SMOKE, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D,
+									0.0D, 0.00D);
+							((ServerLevel) entity.getCommandSenderWorld()).sendParticles(ParticleTypes.LAVA, entity.getX(), entity.getY() + 0.1, entity.getZ(), 1, 0.0D, 0.0D, 0.0D,
+									0.1D);
 							crafted = true;
 							break;
 						}

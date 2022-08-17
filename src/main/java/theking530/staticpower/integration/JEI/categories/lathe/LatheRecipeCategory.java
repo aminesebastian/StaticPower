@@ -54,9 +54,9 @@ public class LatheRecipeCategory extends BaseJEIRecipeCategory<LatheRecipe> {
 
 	public LatheRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Lathe.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Lathe.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Lathe));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Lathe.get()));
 		pBar = new ArrowProgressBar(91, 6);
 	}
 

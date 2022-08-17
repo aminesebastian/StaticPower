@@ -48,9 +48,9 @@ public class PackagerRecipeCategory extends BaseJEIRecipeCategory<PackagerRecipe
 
 	public PackagerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Packager.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Packager.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(100, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Packager));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Packager.get()));
 		pBar = new ArrowProgressBar(50, 22);
 	}
 

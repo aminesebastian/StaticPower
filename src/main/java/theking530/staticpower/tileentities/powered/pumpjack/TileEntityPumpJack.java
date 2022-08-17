@@ -27,7 +27,7 @@ import theking530.staticpower.tileentities.powered.pump.TileEntityPump;
 public class TileEntityPumpJack extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPumpJack> TYPE = new BlockEntityTypeAllocator<TileEntityPumpJack>(
-			(type, pos, state) -> new TileEntityPumpJack(type, pos, state, StaticPowerTiers.IRON), ModBlocks.PumpJack);
+			(type, pos, state) -> new TileEntityPumpJack(type, pos, state, StaticPowerTiers.IRON), ModBlocks.PumpJack.get());
 
 	public final MachineProcessingComponent processingComponent;
 	public final BatteryInventoryComponent batteryInventory;

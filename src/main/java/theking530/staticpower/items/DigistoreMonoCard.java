@@ -21,12 +21,12 @@ import theking530.staticpower.client.rendering.items.DigistoreMonoCardItemModel;
 
 public class DigistoreMonoCard extends DigistoreCard implements ICustomModelSupplier {
 
-	public DigistoreMonoCard(String name, ResourceLocation tierType, ResourceLocation model) {
-		this(name, tierType, model, false);
+	public DigistoreMonoCard(ResourceLocation tierType, ResourceLocation model) {
+		this(tierType, model, false);
 	}
 
-	public DigistoreMonoCard(String name, ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
-		super(name, tierType, model, shouldGlow);
+	public DigistoreMonoCard(ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
+		super(tierType, model, shouldGlow);
 	}
 
 	@Override

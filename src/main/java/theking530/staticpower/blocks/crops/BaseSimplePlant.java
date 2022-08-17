@@ -56,9 +56,8 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 * 
 	 * @param name The registry name for this block sans namespace.
 	 */
-	public BaseSimplePlant(String name, Supplier<Item> seedSupplier) {
+	public BaseSimplePlant(Supplier<Item> seedSupplier) {
 		super(Block.Properties.of(Material.PLANT).noCollission().randomTicks().strength(0.0f).sound(SoundType.CROP));
-		setRegistryName(name);
 		SHAPES = getShapesByAge();
 		this.seedSupplier = seedSupplier;
 	}

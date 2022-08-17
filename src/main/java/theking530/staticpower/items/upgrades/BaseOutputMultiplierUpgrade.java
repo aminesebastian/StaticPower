@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BaseOutputMultiplierUpgrade extends BaseUpgrade {
 
-	public BaseOutputMultiplierUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, new Properties().stacksTo(8), UpgradeType.OUTPUT_MULTIPLIER);
+	public BaseOutputMultiplierUpgrade(ResourceLocation tier) {
+		super(tier, new Properties().stacksTo(8), UpgradeType.OUTPUT_MULTIPLIER);
 	}
 
 	@Override

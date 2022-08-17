@@ -10,10 +10,12 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Flowing;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;
+import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.StaticPowerFluidBucket;
 
@@ -27,7 +29,8 @@ public class StaticPowerFluidBundle {
 	private final StaticPowerFluidBuilder builder;
 	private Item cachedBucketItem;
 
-	public StaticPowerFluidBundle(String name, TagKey<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid, Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
+	public StaticPowerFluidBundle(String name, TagKey<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid, Flowing flowingFluid, Supplier<Item> bucketSupplier,
+			StaticPowerFluidBuilder builder) {
 		this.name = name;
 		Tag = tag;
 		FluidBlock = fluidBlock;
@@ -53,7 +56,7 @@ public class StaticPowerFluidBundle {
 		private String textureName;
 		private Supplier<Item> bucketSupplier;
 		private Consumer<FluidAttributes.Builder> extraAttributes;
-		private StaticPowerFluidBucket autoBucket;
+		private RegistryObject<StaticPowerFluidBucket> autoBucket;
 		private boolean shouldRegisterBucketItem;
 
 		private Color fogColor;
@@ -78,8 +81,8 @@ public class StaticPowerFluidBundle {
 		}
 
 		public StaticPowerFluidBuilder addAutoBucket(boolean dynamicModel, ResourceLocation bucketMask) {
-			autoBucket = new StaticPowerFluidBucket(dynamicModel, bucketMask, "bucket_" + name, () -> fluid);
-			bucketSupplier = () -> autoBucket;
+			autoBucket = ModFluids.BUCKET_ITEMS.register("bucket_" + name, () -> new StaticPowerFluidBucket(dynamicModel, bucketMask, () -> fluid));
+			bucketSupplier = () -> autoBucket.get();
 			shouldRegisterBucketItem = true;
 			return this;
 		}
@@ -138,9 +141,10 @@ public class StaticPowerFluidBundle {
 				}
 			};
 
-			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, fogColor, overlayColor, attributes);
-			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, fogColor, overlayColor,
-					attributes);
+			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, fogColor,
+					overlayColor, attributes);
+			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag,
+					fogColor, overlayColor, attributes);
 
 			return new StaticPowerFluidBundle(name, tag, fluidBlock, fluid, flowingFluid, bucketSupplier, this);
 

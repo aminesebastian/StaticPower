@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BaseSpeedUpgrade extends BaseUpgrade {
 
-	public BaseSpeedUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, UpgradeType.SPEED);
+	public BaseSpeedUpgrade(ResourceLocation tier) {
+		super(tier, UpgradeType.SPEED);
 	}
 
 	@Override

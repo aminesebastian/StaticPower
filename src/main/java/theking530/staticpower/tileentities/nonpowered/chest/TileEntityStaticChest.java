@@ -23,19 +23,19 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 public class TileEntityStaticChest extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> BASIC_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.BASIC, 36, pos, state), ModBlocks.BasicChest);
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.BASIC, 36, pos, state), ModBlocks.BasicChest.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> ADVANCED_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ADVANCED, 45, pos, state), ModBlocks.AdvancedChest);
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ADVANCED, 45, pos, state), ModBlocks.AdvancedChest.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> STATIC_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.STATIC, 54, pos, state), ModBlocks.StaticChest);
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.STATIC, 54, pos, state), ModBlocks.StaticChest.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> ENERGIZED_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ENERGIZED, 72, pos, state), ModBlocks.EnergizedChest);
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ENERGIZED, 72, pos, state), ModBlocks.EnergizedChest.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> LUMUM_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.LUMUM, 81, pos, state), ModBlocks.LumumChest);
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.LUMUM, 81, pos, state), ModBlocks.LumumChest.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

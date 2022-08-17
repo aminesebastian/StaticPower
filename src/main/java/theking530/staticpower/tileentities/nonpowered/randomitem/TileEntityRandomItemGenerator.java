@@ -25,7 +25,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityRandomItemGenerator extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRandomItemGenerator> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRandomItemGenerator(pos, state), ModBlocks.RandomItemGenerator);
+			(type, pos, state) -> new TileEntityRandomItemGenerator(pos, state), ModBlocks.RandomItemGenerator.get());
 	private static final float GENERATION_RATE = 1;
 	public final InventoryComponent inventory;
 	private float timer;

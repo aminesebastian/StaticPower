@@ -24,16 +24,16 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 	private final ResourceLocation tier;
 	private final Set<UpgradeType> upgradeTypes;
 
-	public BaseUpgrade(String name, Properties properties, UpgradeType... upgradeTypes) {
-		this(name, null, properties, upgradeTypes);
+	public BaseUpgrade(Properties properties, UpgradeType... upgradeTypes) {
+		this(null, properties, upgradeTypes);
 	}
 
-	public BaseUpgrade(String name, ResourceLocation tier, UpgradeType... upgradeTypes) {
-		this(name, tier, new Properties().stacksTo(16), upgradeTypes);
+	public BaseUpgrade(ResourceLocation tier, UpgradeType... upgradeTypes) {
+		this(tier, new Properties().stacksTo(16), upgradeTypes);
 	}
 
-	public BaseUpgrade(String name, ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
-		super(name, properties);
+	public BaseUpgrade(ResourceLocation tier, Properties properties, UpgradeType... upgradeTypes) {
+		super(properties);
 		this.tier = tier;
 		this.upgradeTypes = new HashSet<UpgradeType>();
 

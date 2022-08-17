@@ -33,8 +33,8 @@ public class HeatedIngot extends StaticPowerItem implements ICustomModelSupplier
 	public static final String HEATED_TAG = "heated_time";
 	private final Supplier<Item> cooledVariantSupplier;
 
-	public HeatedIngot(String name, Supplier<Item> cooledVariantSupplier) {
-		super(name);
+	public HeatedIngot(Supplier<Item> cooledVariantSupplier) {
+		super();
 		this.cooledVariantSupplier = cooledVariantSupplier;
 	}
 

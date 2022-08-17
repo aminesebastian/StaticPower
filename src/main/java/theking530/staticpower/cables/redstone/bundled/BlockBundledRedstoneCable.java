@@ -24,8 +24,8 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 
 public class BlockBundledRedstoneCable extends AbstractCableBlock {
-	public BlockBundledRedstoneCable(String name) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
+	public BlockBundledRedstoneCable() {
+		super(new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -33,8 +33,8 @@ public class BlockBattery extends StaticPowerMachineBlock {
 
 	public ResourceLocation tier;
 
-	public BlockBattery(String name, ResourceLocation tier) {
-		super(name);
+	public BlockBattery(ResourceLocation tier) {
+		super();
 		this.tier = tier;
 	}
 

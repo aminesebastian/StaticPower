@@ -36,8 +36,8 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockFluidCable extends AbstractCableBlock {
 	private ResourceLocation tier;
 
-	public BlockFluidCable(String name, ResourceLocation tier) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
+	public BlockFluidCable(ResourceLocation tier) {
+		super(new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
 		this.tier = tier;
 	}
 
@@ -45,7 +45,7 @@ public class BlockFluidCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TranslatableComponent("gui.staticpower.max_fluid_rate"));
-		tooltip.add(new TextComponent("• ")
+		tooltip.add(new TextComponent("ï¿½ ")
 				.append(new TextComponent(ChatFormatting.AQUA + GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableFluidCapacity.get()).getString())));
 	}
 

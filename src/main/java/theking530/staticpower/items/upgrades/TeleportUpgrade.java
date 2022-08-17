@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class TeleportUpgrade extends BaseUpgrade {
 
-	public TeleportUpgrade(String name) {
-		super(name, new Properties().stacksTo(1));
+	public TeleportUpgrade() {
+		super(new Properties().stacksTo(1));
 	}
 
 	@Override

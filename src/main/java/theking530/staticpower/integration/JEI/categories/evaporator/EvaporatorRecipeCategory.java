@@ -43,9 +43,9 @@ public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRe
 
 	public EvaporatorRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Evaporator.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Evaporator.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Evaporator));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Evaporator.get()));
 	}
 
 	@Override

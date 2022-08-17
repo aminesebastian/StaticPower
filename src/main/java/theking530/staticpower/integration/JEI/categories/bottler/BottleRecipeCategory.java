@@ -46,9 +46,9 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 
 	public BottleRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Bottler.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Bottler.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Bottler));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Bottler.get()));
 	}
 
 	@Override

@@ -51,9 +51,9 @@ public class PoweredGrinderRecipeCategory extends BaseJEIRecipeCategory<GrinderR
 
 	public PoweredGrinderRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.PoweredGrinder.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.PoweredGrinder.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.PoweredGrinder));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.PoweredGrinder.get()));
 		pBar = new GrinderProgressBar(79, 26);
 	}
 

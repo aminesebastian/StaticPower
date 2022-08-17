@@ -17,8 +17,8 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorBlock;
 
 public class BlockStraightConveyor extends AbstractConveyorBlock {
-	public BlockStraightConveyor(String name, ResourceLocation tier) {
-		super(name, tier);
+	public BlockStraightConveyor(ResourceLocation tier) {
+		super(tier);
 	}
 
 	@Override

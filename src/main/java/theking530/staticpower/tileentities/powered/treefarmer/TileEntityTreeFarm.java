@@ -72,7 +72,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class TileEntityTreeFarm extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTreeFarm> TYPE = new BlockEntityTypeAllocator<TileEntityTreeFarm>(
-			(type, pos, state) -> new TileEntityTreeFarm(pos, state), ModBlocks.TreeFarmer);
+			(type, pos, state) -> new TileEntityTreeFarm(pos, state), ModBlocks.TreeFarmer.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

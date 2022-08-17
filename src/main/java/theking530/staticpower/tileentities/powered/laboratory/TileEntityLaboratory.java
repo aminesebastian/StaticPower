@@ -39,7 +39,7 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 
 public class TileEntityLaboratory extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLaboratory(pos, state), ModBlocks.Laboratory);
+	public static final BlockEntityTypeAllocator<TileEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLaboratory(pos, state), ModBlocks.Laboratory.get());
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the
@@ -63,19 +63,19 @@ public class TileEntityLaboratory extends TileEntityMachine {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				switch (slot) {
 				case 0:
-					return stack.getItem() == ModItems.ResearchTier1;
+					return stack.getItem() == ModItems.ResearchTier1.get();
 				case 1:
-					return stack.getItem() == ModItems.ResearchTier2;
+					return stack.getItem() == ModItems.ResearchTier2.get();
 				case 2:
-					return stack.getItem() == ModItems.ResearchTier3;
+					return stack.getItem() == ModItems.ResearchTier3.get();
 				case 3:
-					return stack.getItem() == ModItems.ResearchTier4;
+					return stack.getItem() == ModItems.ResearchTier4.get();
 				case 4:
-					return stack.getItem() == ModItems.ResearchTier5;
+					return stack.getItem() == ModItems.ResearchTier5.get();
 				case 5:
-					return stack.getItem() == ModItems.ResearchTier6;
+					return stack.getItem() == ModItems.ResearchTier6.get();
 				case 6:
-					return stack.getItem() == ModItems.ResearchTier7;
+					return stack.getItem() == ModItems.ResearchTier7.get();
 				default:
 					return false;
 				}

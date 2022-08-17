@@ -49,9 +49,9 @@ public class TumblerRecipeCategory extends BaseJEIRecipeCategory<TumblerRecipe> 
 
 	public TumblerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Tumbler.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Tumbler.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(70, 70);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Tumbler));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Tumbler.get()));
 		pBar = new GrinderProgressBar(39, 26);
 	}
 

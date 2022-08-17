@@ -55,9 +55,9 @@ public class RefineryRecipeCategory extends BaseJEIRecipeCategory<RefineryRecipe
 
 	public RefineryRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Refinery.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Refinery.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(170, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Refinery));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Refinery.get()));
 		fluidBar1 = new FluidProgressBar(75, 27, 24, 4);
 		fluidBar2 = new FluidProgressBar(75, 32, 24, 4);
 		fluidBar3 = new FluidProgressBar(75, 42, 24, 4);

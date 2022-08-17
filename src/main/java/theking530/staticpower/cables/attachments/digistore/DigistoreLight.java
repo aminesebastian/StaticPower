@@ -15,8 +15,8 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistoreLight extends DigistoreScreen {
 
-	public DigistoreLight(String name) {
-		super(name);
+	public DigistoreLight() {
+		super();
 	}
 
 	@Override

@@ -10,9 +10,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
 public class BlockAutoCraftingTable extends StaticPowerMachineBlock {
-	public BlockAutoCraftingTable(String name) {
-		super(name);
-	}
 
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {

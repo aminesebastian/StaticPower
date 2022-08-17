@@ -21,8 +21,8 @@ public class JuiceBottleItem extends StaticPowerItem {
 	public final int foodAmount;
 	public final float saturation;
 
-	public JuiceBottleItem(String name, int drinkDuration, int foodAmount, float saturation) {
-		super(name, new Item.Properties().stacksTo(16));
+	public JuiceBottleItem(int drinkDuration, int foodAmount, float saturation) {
+		super(new Item.Properties().stacksTo(16));
 		this.drinkDuration = drinkDuration;
 		this.foodAmount = foodAmount;
 		this.saturation = saturation;

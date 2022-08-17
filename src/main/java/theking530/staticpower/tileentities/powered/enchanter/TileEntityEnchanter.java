@@ -41,7 +41,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class TileEntityEnchanter extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityEnchanter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityEnchanter(pos, state), ModBlocks.Enchanter);
+	public static final BlockEntityTypeAllocator<TileEntityEnchanter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityEnchanter(pos, state), ModBlocks.Enchanter.get());
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent enchantableInventory;

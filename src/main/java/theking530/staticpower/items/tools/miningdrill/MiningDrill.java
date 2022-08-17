@@ -77,8 +77,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	private static final List<AbstractMultiPartSlot> PARTS = new ArrayList<AbstractMultiPartSlot>();
 	public final ResourceLocation tier;
 
-	public MiningDrill(String name, float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
-		super(new Item.Properties().setNoRepair(), name, attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL));
+	public MiningDrill(float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
+		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.MINEABLE_WITH_SHOVEL));
 		this.tier = tier;
 		PARTS.add(MultiPartSlots.DRILL_BIT);
 	}
@@ -157,7 +157,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	@Override
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience,
+			boolean isCreative) {
 		// If the player is in creative, do nothing.
 		if (isCreative) {
 			return;
@@ -201,8 +202,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem);
 	}
 
-	protected boolean handleGrindingAttribute(GrindingAttributeDefenition grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
-			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleGrindingAttribute(GrindingAttributeDefenition grindingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was ground.
 		boolean wasAnythingGround = false;
@@ -245,8 +246,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		return wasAnythingGround;
 	}
 
-	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
-			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
@@ -258,7 +259,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), player.getLevel());
+				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]),
+						player.getLevel());
 
 				// Replace the spot the droppable list with the smelting output if it exists.
 				if (recipe.isPresent()) {

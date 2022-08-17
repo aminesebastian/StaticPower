@@ -17,56 +17,56 @@ public class TileEntityPowerCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, false, StaticPowerTiers.BASIC),
-			ModBlocks.PowerCableBasic);
+			ModBlocks.PowerCableBasic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, false,
 					StaticPowerTiers.ADVANCED),
-			ModBlocks.PowerCableAdvanced);
+			ModBlocks.PowerCableAdvanced.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, false, StaticPowerTiers.STATIC),
-			ModBlocks.PowerCableStatic);
+			ModBlocks.PowerCableStatic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, false,
 					StaticPowerTiers.ENERGIZED),
-			ModBlocks.PowerCableEnergized);
+			ModBlocks.PowerCableEnergized.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, false, StaticPowerTiers.LUMUM),
-			ModBlocks.PowerCableLumum);
+			ModBlocks.PowerCableLumum.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, false,
 					StaticPowerTiers.CREATIVE),
-			ModBlocks.PowerCableCreative);
+			ModBlocks.PowerCableCreative.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_BASIC = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, true, StaticPowerTiers.BASIC),
-			ModBlocks.IndustrialPowerCableBasic);
+			ModBlocks.IndustrialPowerCableBasic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_ADVANCED = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, true, StaticPowerTiers.ADVANCED),
-			ModBlocks.IndustrialPowerCableAdvanced);
+			ModBlocks.IndustrialPowerCableAdvanced.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_STATIC = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, true, StaticPowerTiers.STATIC),
-			ModBlocks.IndustrialPowerCableStatic);
+			ModBlocks.IndustrialPowerCableStatic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_ENERGIZED = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, true,
 					StaticPowerTiers.ENERGIZED),
-			ModBlocks.IndustrialPowerCableEnergized);
+			ModBlocks.IndustrialPowerCableEnergized.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_LUMUM = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, true, StaticPowerTiers.LUMUM),
-			ModBlocks.IndustrialPowerCableLumum);
+			ModBlocks.IndustrialPowerCableLumum.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerCable> TYPE_INDUSTRIAL_CREATIVE = new BlockEntityTypeAllocator<TileEntityPowerCable>(
 			(allocator, pos, state) -> new TileEntityPowerCable(allocator, pos, state, true, StaticPowerTiers.CREATIVE),
-			ModBlocks.IndustrialPowerCableCreative);
+			ModBlocks.IndustrialPowerCableCreative.get());
 
 	public final PowerCableComponent powerCableComponent;
 

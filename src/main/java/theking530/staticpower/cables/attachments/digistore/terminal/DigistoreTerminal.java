@@ -17,8 +17,8 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Abstract
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
 public class DigistoreTerminal extends AbstractDigistoreTerminalAttachment {
-	public DigistoreTerminal(String name) {
-		super(name, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT);
+	public DigistoreTerminal() {
+		super( StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_TERMINAL_ATTACHMENT);
 	}
 
 	@Override

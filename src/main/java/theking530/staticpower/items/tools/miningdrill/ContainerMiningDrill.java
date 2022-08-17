@@ -45,7 +45,7 @@ public class ContainerMiningDrill extends StaticPowerItemContainer<MiningDrill> 
 		});
 
 		// Drill Bit
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit), 0.3f, inventory, 0, 80, 24) {
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit.get()), 0.3f, inventory, 0, 80, 24) {
 			@Override
 			public void setChanged() {
 				super.setChanged();

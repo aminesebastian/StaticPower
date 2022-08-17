@@ -20,8 +20,8 @@ import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 
 public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
-	public BlockDigistoreNetworkWire(String name) {
-		super(name, new CableBoundsCache(1.5D, new Vector3D(4.0f, 4.0f, 1.0f)), 1.75f);
+	public BlockDigistoreNetworkWire() {
+		super(new CableBoundsCache(1.5D, new Vector3D(4.0f, 4.0f, 1.0f)), 1.75f);
 
 	}
 

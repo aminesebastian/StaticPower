@@ -21,6 +21,7 @@ import net.minecraftforge.client.event.ColorHandlerEvent;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerRegistry;
@@ -52,7 +53,7 @@ public class StaticPowerForgeEventsProxy {
 		// If the block does not request the standard solid render type, set the new
 		// render type for the block.
 		LOGGER.info("Initializing Block Render Layers!");
-		for (Block block : StaticPowerRegistry.BLOCKS) {
+		for (Block block : ForgeRegistries.BLOCKS) {
 			// Check and update the render type as needed.
 			if (block instanceof IRenderLayerProvider) {
 				IRenderLayerProvider renderLayerProvider = (IRenderLayerProvider) block;
@@ -98,7 +99,7 @@ public class StaticPowerForgeEventsProxy {
 
 	public static void onModelBakeEvent(ModelBakeEvent event) {
 		// Loop through all the blocks, and check to see if they are a model supplier.
-		for (Block block : StaticPowerRegistry.BLOCKS) {
+		for (Block block : ForgeRegistries.BLOCKS) {
 			if (block instanceof ICustomModelSupplier) {
 
 				// Get the supplier.
@@ -121,7 +122,7 @@ public class StaticPowerForgeEventsProxy {
 				}
 			}
 		}
-		for (Item item : StaticPowerRegistry.ITEMS) {
+		for (Item item : ForgeRegistries.ITEMS) {
 			if (item instanceof ICustomModelSupplier) {
 
 				// Get the supplier.
@@ -145,13 +146,13 @@ public class StaticPowerForgeEventsProxy {
 	}
 
 	public static void onItemColorBakeEvent(ColorHandlerEvent.Item event) {
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.IronFluidCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.BasicFluidCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.AdvancedFluidCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.StaticFluidCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.EnergizedFluidCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.LumumFluidCapsule);
-		event.getItemColors().register(new CapsuleColorProvider(), ModItems.CreativeFluidCapsule);
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.IronFluidCapsule.get());
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.BasicFluidCapsule.get());
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.AdvancedFluidCapsule.get());
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.StaticFluidCapsule.get());
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.EnergizedFluidCapsule.get());
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.LumumFluidCapsule.get());
+		event.getItemColors().register(new CapsuleColorProvider(), ModItems.CreativeFluidCapsule.get());
 	}
 
 	public static void onTextureStitchEvent(TextureStitchEvent.Pre event) {

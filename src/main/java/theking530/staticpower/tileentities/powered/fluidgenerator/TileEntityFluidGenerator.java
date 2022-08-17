@@ -37,7 +37,7 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 public class TileEntityFluidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidGenerator> TYPE = new BlockEntityTypeAllocator<TileEntityFluidGenerator>((type, pos, state) -> new TileEntityFluidGenerator(pos, state),
-			ModBlocks.FluidGenerator);
+			ModBlocks.FluidGenerator.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

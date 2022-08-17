@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StackUpgrade extends BaseUpgrade {
 
-	public StackUpgrade(String name) {
-		super(name, new Properties().stacksTo(1), UpgradeType.DIGISTORE_ATTACHMENT);
+	public StackUpgrade() {
+		super(new Properties().stacksTo(1), UpgradeType.DIGISTORE_ATTACHMENT);
 	}
 
 	@Override

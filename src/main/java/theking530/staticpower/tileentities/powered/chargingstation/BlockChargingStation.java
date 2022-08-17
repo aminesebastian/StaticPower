@@ -11,8 +11,8 @@ import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
 public class BlockChargingStation extends StaticPowerMachineBlock {
 
-	public BlockChargingStation(String name) {
-		super(name);
+	public BlockChargingStation() {
+		super();
 	}
 
 	@Override

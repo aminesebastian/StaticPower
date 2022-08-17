@@ -35,9 +35,9 @@ public class SolderingTableRecipeCategory extends BaseJEIRecipeCategory<Solderin
 
 	public SolderingTableRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.SolderingTable.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.SolderingTable.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.SolderingTable));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.SolderingTable.get()));
 	}
 
 	@Override

@@ -17,7 +17,7 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 public class TileEntityPatternStorage extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPatternStorage> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityPatternStorage(pos, state), ModBlocks.PatternStorage);
+			(type, pos, state) -> new TileEntityPatternStorage(pos, state), ModBlocks.PatternStorage.get());
 
 	public final InventoryComponent patternInventory;
 

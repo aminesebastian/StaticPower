@@ -22,7 +22,7 @@ import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreI
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreServerRack>(
-			(type, pos, state) -> new TileEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack);
+			(type, pos, state) -> new TileEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack.get());
 
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<ServerRackRenderingState> CARD_RENDERING_STATE = new ModelProperty<ServerRackRenderingState>();

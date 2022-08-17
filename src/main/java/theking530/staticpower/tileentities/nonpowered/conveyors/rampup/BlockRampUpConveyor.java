@@ -18,8 +18,8 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyorBlock;
 
 public class BlockRampUpConveyor extends AbstractConveyorBlock {
-	public BlockRampUpConveyor(String name, ResourceLocation tier) {
-		super(name, tier, Properties.of(Material.METAL, MaterialColor.COLOR_BLACK).noOcclusion());
+	public BlockRampUpConveyor(ResourceLocation tier) {
+		super(tier, Properties.of(Material.METAL, MaterialColor.COLOR_BLACK).noOcclusion());
 	}
 
 	@Override
@@ -47,7 +47,6 @@ public class BlockRampUpConveyor extends AbstractConveyorBlock {
 		}
 		return null;
 	}
-
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {

@@ -16,14 +16,14 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractDigist
 	private final ResourceLocation model;
 	private final ResourceLocation noManagerModel;
 
-	public AbstractDigistoreTerminalAttachment(String name, ResourceLocation model, ResourceLocation noManagerModel) {
-		super(name);
+	public AbstractDigistoreTerminalAttachment(ResourceLocation model, ResourceLocation noManagerModel) {
+		super();
 		this.model = model;
 		this.noManagerModel = noManagerModel;
 	}
 
-	public AbstractDigistoreTerminalAttachment(String name, ResourceLocation model) {
-		this(name, model, model);
+	public AbstractDigistoreTerminalAttachment(ResourceLocation model) {
+		this(model, model);
 	}
 
 	@Override

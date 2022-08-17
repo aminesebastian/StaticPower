@@ -30,8 +30,8 @@ public class DrainAttachment extends AbstractCableAttachment {
 	private final ResourceLocation model;
 	private final ResourceLocation tierType;
 
-	public DrainAttachment(String name, ResourceLocation tierType, ResourceLocation model) {
-		super(name);
+	public DrainAttachment(ResourceLocation tierType, ResourceLocation model) {
+		super();
 		this.model = model;
 		this.tierType = tierType;
 	}

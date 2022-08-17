@@ -11,8 +11,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
  *
  */
 public class StaticPowerCutoutBlock extends StaticPowerBlock {
-	public StaticPowerCutoutBlock(String name, Properties properties) {
-		super(name, properties);
+	public StaticPowerCutoutBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override

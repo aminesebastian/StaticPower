@@ -31,9 +31,8 @@ public class CableCover extends Item implements ICustomModelSupplier {
 	public static final String COVER_BLOCK_STATE_TAG = "target";
 	public static final TranslatableComponent COVER_TRANSLATION_COMPONENT = new TranslatableComponent("item.staticpower.cover");
 
-	public CableCover(String name) {
+	public CableCover() {
 		super(new Item.Properties());
-		setRegistryName(name);
 	}
 
 	@Override

@@ -43,12 +43,12 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 
 	protected boolean shouldDropContents;
 
-	protected StaticPowerTileEntityBlock(String name) {
-		this(name, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL));
+	protected StaticPowerTileEntityBlock() {
+		this(Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL));
 	}
 
-	protected StaticPowerTileEntityBlock(String name, Properties properies) {
-		super(name, properies);
+	protected StaticPowerTileEntityBlock(Properties properies) {
+		super(properies);
 		this.shouldDropContents = true;
 		if (shouldHaveFacingProperty()) {
 			this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH));
@@ -88,8 +88,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 	 * @param placer
 	 * @param stack
 	 */
-	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer,
-			ItemStack stack) {
+	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		if (shouldHaveFacingProperty()) {
 			world.setBlock(pos, state.setValue(FACING, placer.getDirection().getOpposite()), 2);
 		}
@@ -102,8 +101,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 	}
 
 	@Override
-	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player,
-			InteractionHand hand, BlockHitResult hit) {
+	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		BlockEntity tileEntity = world.getBlockEntity(pos);
 
 		// Check to ensure this is a tile entity base and the gui type indicates the
@@ -137,8 +135,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 
 	@Override
 	@Nullable
-	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state,
-			BlockEntityType<T> type) {
+	public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
 		return TileEntityBase::tick;
 	}
 
@@ -156,8 +153,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 	 * @param hit
 	 * @return
 	 */
-	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player,
-			InteractionHand hand, BlockHitResult hit) {
+	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (!world.isClientSide) {
 			NetworkHooks.openGui((ServerPlayer) player, tileEntity, pos);
 		}
@@ -179,14 +175,12 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 	 * @param hit
 	 * @return
 	 */
-	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player,
-			InteractionHand hand, BlockHitResult hit) {
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.NEVER;
 	}
 
 	@Override
-	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world,
-			BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		if (mode == RegularWrenchMode.ROTATE && shouldHaveFacingProperty()) {
 			if (facing != Direction.UP && facing != Direction.DOWN) {
 				if (facing != world.getBlockState(pos).getValue(FACING)) {
@@ -199,8 +193,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 		} else {
 			TileEntityBase TE = (TileEntityBase) world.getBlockEntity(pos);
 			if (TE.hasComponentOfType(SideConfigurationComponent.class)) {
-				TE.getComponent(SideConfigurationComponent.class).modulateWorldSpaceSideMode(facing,
-						SideIncrementDirection.FORWARD);
+				TE.getComponent(SideConfigurationComponent.class).modulateWorldSpaceSideMode(facing, SideIncrementDirection.FORWARD);
 				return InteractionResult.SUCCESS;
 			}
 			return super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
@@ -208,8 +201,7 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 	}
 
 	@Override
-	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world,
-			BlockPos pos, Direction facing, boolean returnDrops) {
+	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		// If we're on the server and this machine has a tile entity of type
 		// IBreakSerializeable.
 		if (!world.isClientSide && world.getBlockEntity(pos) instanceof IBreakSerializeable) {

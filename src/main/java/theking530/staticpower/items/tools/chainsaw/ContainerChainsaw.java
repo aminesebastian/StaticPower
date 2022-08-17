@@ -47,7 +47,7 @@ public class ContainerChainsaw extends StaticPowerItemContainer<Chainsaw> {
 
 		// Drill Bit
 		this.addSlot(
-				new StaticPowerContainerSlot(new ItemStack(ModItems.IronChainsawBlade), 0.3f, inventory, 0, 80, 24) {
+				new StaticPowerContainerSlot(new ItemStack(ModItems.IronChainsawBlade.get()), 0.3f, inventory, 0, 80, 24) {
 					@Override
 					public void setChanged() {
 						super.setChanged();

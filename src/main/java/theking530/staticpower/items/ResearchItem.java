@@ -26,8 +26,8 @@ public class ResearchItem extends StaticPowerItem {
 	private final Color color;
 	private final int researchTier;
 
-	public ResearchItem(String name, Color color, int tier) {
-		super(name);
+	public ResearchItem(Color color, int tier) {
+		super();
 		this.color = color;
 		this.researchTier = tier;
 	}
@@ -69,9 +69,9 @@ public class ResearchItem extends StaticPowerItem {
 				if (manager.hasSelectedResearch() && !manager.getSelectedResearch().isCompleted()) {
 					int index = manager.getSelectedResearch().getRequirementIndexFullfilledByItem(stack);
 					if (index >= 0) {
-						if(!worldIn.isClientSide()) {
+						if (!worldIn.isClientSide()) {
 							manager.addProgressToSelectedResearch(index, 1);
-						}	
+						}
 						stack.shrink(1);
 						player.getCooldowns().addCooldown(stack.getItem(), 8);
 						worldIn.playSound(null, player.getOnPos(), SoundEvents.BOOK_PAGE_TURN, SoundSource.MASTER, 1.0f, 1.5f);

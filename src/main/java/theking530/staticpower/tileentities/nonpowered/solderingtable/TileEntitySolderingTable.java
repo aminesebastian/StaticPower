@@ -15,7 +15,7 @@ import theking530.staticpower.init.ModBlocks;
 public class TileEntitySolderingTable extends AbstractSolderingTable {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolderingTable> TYPE = new BlockEntityTypeAllocator<TileEntitySolderingTable>(
-			(type, pos, state) -> new TileEntitySolderingTable(pos, state), ModBlocks.SolderingTable);
+			(type, pos, state) -> new TileEntitySolderingTable(pos, state), ModBlocks.SolderingTable.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

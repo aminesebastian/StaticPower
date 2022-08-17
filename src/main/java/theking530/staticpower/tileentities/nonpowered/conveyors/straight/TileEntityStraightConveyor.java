@@ -24,19 +24,19 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class TileEntityStraightConveyor extends AbstractConveyorTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.StraightConveyorBasic);
+			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.StraightConveyorBasic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.StraightConveyorAdvanced);
+			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.StraightConveyorAdvanced.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StraightConveyorStatic);
+			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StraightConveyorStatic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.StraightConveyorEnergized);
+			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.StraightConveyorEnergized.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStraightConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.StraightConveyorLumum);
+			(type, pos, state) -> new TileEntityStraightConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.StraightConveyorLumum.get());
 
 	public final InventoryComponent inventory;
 

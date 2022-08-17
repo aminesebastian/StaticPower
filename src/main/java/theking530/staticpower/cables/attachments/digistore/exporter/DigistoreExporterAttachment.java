@@ -28,7 +28,7 @@ import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCabl
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.init.ModUpgrades;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.CraftingUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
@@ -38,8 +38,8 @@ public class DigistoreExporterAttachment extends AbstractDigistoreCableAttachmen
 	public static final String CURRENT_CRAFTING_ID_TAG = "current_crafting_request";
 	public static final String EXPORT_TIMER_TAG = "export_timer";
 
-	public DigistoreExporterAttachment(String name) {
-		super(name);
+	public DigistoreExporterAttachment() {
+		super();
 	}
 
 	/**
@@ -198,7 +198,7 @@ public class DigistoreExporterAttachment extends AbstractDigistoreCableAttachmen
 	protected int getExportRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModItems.AcceleratorUpgrade.get().getMaxStackSize());
 			return (int) (StaticPowerConfig.SERVER.digistoreExporterRate.get() / accelerationAmount);
 		} else {
 			return StaticPowerConfig.SERVER.digistoreExporterRate.get();

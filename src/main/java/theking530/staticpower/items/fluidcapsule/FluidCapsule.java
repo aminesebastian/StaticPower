@@ -49,8 +49,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplier {
 	public final ResourceLocation tier;
 
-	public FluidCapsule(String name, ResourceLocation tier) {
-		super(name, new Properties().stacksTo(1).setNoRepair());
+	public FluidCapsule(ResourceLocation tier) {
+		super(new Properties().stacksTo(1).setNoRepair());
 		this.tier = tier;
 	}
 
@@ -58,7 +58,8 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		FluidUtil.getFluidHandler(stack).ifPresent(fluidHandler -> {
-			tooltip.add(new TextComponent(ChatFormatting.WHITE.toString()).append(GuiTextUtilities.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));
+			tooltip.add(new TextComponent(ChatFormatting.WHITE.toString())
+					.append(GuiTextUtilities.formatFluidToString(fluidHandler.getFluidInTank(0).getAmount(), fluidHandler.getTankCapacity(0))));
 		});
 	}
 
@@ -157,7 +158,7 @@ public class FluidCapsule extends StaticPowerItem implements ICustomModelSupplie
 					BlockPos blockpos2 = WorldUtilities.canBlockContainFluid(fluidHandler, pLevel, blockpos, blockstate) ? blockpos : blockpos1;
 					if (WorldUtilities.tryPlaceFluid(fluidHandler.getFluidInTank(0), pPlayer, pLevel, blockpos2, blockhitresult)) {
 						fluidHandler.drain(1000, FluidAction.EXECUTE);
-						
+
 						if (pPlayer instanceof ServerPlayer) {
 							CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer) pPlayer, blockpos2, itemstack);
 						}

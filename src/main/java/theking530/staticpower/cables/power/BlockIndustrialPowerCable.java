@@ -33,8 +33,8 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	private ResourceLocation tier;
 
-	public BlockIndustrialPowerCable(String name, ResourceLocation tier) {
-		super(name, new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)), 4.5f);
+	public BlockIndustrialPowerCable(ResourceLocation tier) {
+		super(new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)), 4.5f);
 		this.tier = tier;
 	}
 
@@ -47,9 +47,9 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TranslatableComponent("gui.staticpower.power_cable_max_rate"));
-		tooltip.add(new TextComponent("• ").append(new TextComponent(
+		tooltip.add(new TextComponent("ï¿½ ").append(new TextComponent(
 				ChatFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerDelivery.get()).getString())));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(ChatFormatting.RED)));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(ChatFormatting.RED)));
 	}
 
 	@Override

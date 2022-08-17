@@ -27,7 +27,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityMiner(pos, state), ModBlocks.Miner);
+	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityMiner(pos, state), ModBlocks.Miner.get());
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;

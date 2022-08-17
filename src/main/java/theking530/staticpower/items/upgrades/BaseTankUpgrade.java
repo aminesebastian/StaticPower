@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BaseTankUpgrade extends BaseUpgrade {
 
-	public BaseTankUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, UpgradeType.TANK);
+	public BaseTankUpgrade(ResourceLocation tier) {
+		super(tier, UpgradeType.TANK);
 	}
 
 	@Override

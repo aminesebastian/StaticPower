@@ -10,7 +10,7 @@ import theking530.staticpower.items.itemfilter.ItemFilter;
 public class FilterItemSlot extends StaticPowerContainerSlot {
 
 	public FilterItemSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-		super(new ItemStack(ModItems.BasicFilter), 0.3f, itemHandler, index, xPosition, yPosition);
+		super(new ItemStack(ModItems.BasicFilter.get()), 0.3f, itemHandler, index, xPosition, yPosition);
 	}
 
 	@Override

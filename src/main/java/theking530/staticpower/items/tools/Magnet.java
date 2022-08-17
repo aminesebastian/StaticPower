@@ -34,8 +34,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	private static final String ACTIVATED_TAG = "activated";
 	private final ResourceLocation tier;
 
-	public Magnet(String name, ResourceLocation tier) {
-		super(name, 0);
+	public Magnet(ResourceLocation tier) {
+		super(0);
 		this.tier = tier;
 	}
 
@@ -117,8 +117,10 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		tooltip.add(new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive").withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.radius")).append(" " + ChatFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
+		tooltip.add(new TranslatableComponent(isActivated(stack) ? "gui.staticpower.active" : "gui.staticpower.inactive")
+				.withStyle(isActivated(stack) ? ChatFormatting.GREEN : ChatFormatting.RED));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.radius"))
+				.append(" " + ChatFormatting.GREEN.toString() + String.valueOf(getRadius(stack))));
 
 		tooltip.add(new TextComponent(""));
 

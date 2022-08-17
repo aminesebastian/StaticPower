@@ -42,8 +42,8 @@ public class ItemFilter extends StaticPowerItem {
 
 	public ResourceLocation filterTier;
 
-	public ItemFilter(String name, ResourceLocation tier) {
-		super(name, new Properties().stacksTo(1));
+	public ItemFilter(ResourceLocation tier) {
+		super(new Properties().stacksTo(1));
 		filterTier = tier;
 	}
 

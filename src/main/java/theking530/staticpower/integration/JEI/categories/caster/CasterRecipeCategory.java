@@ -54,9 +54,9 @@ public class CasterRecipeCategory extends BaseJEIRecipeCategory<CastingRecipe> {
 
 	public CasterRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Caster.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Caster.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Caster));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Caster.get()));
 		pBar = new ArrowProgressBar(50, 14);
 	}
 

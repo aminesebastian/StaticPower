@@ -77,8 +77,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	private Ingredient woodIngredient;
 	public final ResourceLocation tier;
 
-	public Chainsaw(String name, float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
-		super(new Item.Properties().setNoRepair(), name, attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_AXE));
+	public Chainsaw(float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
+		super(new Item.Properties().setNoRepair(), attackDamageIn, attackSpeedIn, Arrays.asList(BlockTags.MINEABLE_WITH_AXE));
 		this.tier = tier;
 		PARTS.add(MultiPartSlots.CHAINSAW_BLADE);
 	}
@@ -156,7 +156,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		return InteractionResultHolder.pass(item);
 	}
 
-	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected void harvestBlockDrops(BlockState state, Block block, BlockPos pos, ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience,
+			boolean isCreative) {
 		// If the player is in creative, do nothing.
 		if (isCreative) {
 			return;
@@ -192,8 +193,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		state.spawnAfterBreak((ServerLevel) player.getCommandSenderWorld(), pos, heldItem);
 	}
 
-	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos, ServerPlayer player,
-			BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
+	protected boolean handleSmeltingAttribute(SmeltingAttributeDefenition smeltingAttribute, List<ItemStack> droppableItems, BlockState state, Block block, BlockPos pos,
+			ServerPlayer player, BlockEntity tileEntity, ItemStack heldItem, int experience, boolean isCreative) {
 
 		// Allocate a flag to check if anything was smelted.
 		boolean wasAnythingSmelted = false;
@@ -205,7 +206,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 				// Get the droppable stack and get the furnace recipe for it if it exists.
 				ItemStack droppableStack = droppableItems.get(i);
 				RecipeMatchParameters matchParameters = new RecipeMatchParameters(droppableStack);
-				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), player.getLevel());
+				Optional<SmeltingRecipe> recipe = player.getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]),
+						player.getLevel());
 
 				// Replace the spot the droppable list with the smelting output if it exists.
 				if (recipe.isPresent()) {

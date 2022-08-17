@@ -37,7 +37,6 @@ import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModNetworkMessages;
 import theking530.staticpower.init.ModRecipeSerializers;
-import theking530.staticpower.init.ModUpgrades;
 import theking530.staticpower.world.trees.ModTrees;
 
 @Mod(StaticPower.MOD_ID)
@@ -82,13 +81,14 @@ public class StaticPower {
 			StaticCoreRegistry.preInitialize();
 			ModRecipeSerializers.init();
 			ModBlocks.init(eventBus);
-			ModItems.init();
-			ModUpgrades.init();
-			ModFluids.init();
+			ModItems.init(eventBus);
+			ModFluids.init(eventBus);
 			ModNetworkMessages.init();
 			ModTrees.init();
 			ModEntities.init();
 			StaticCoreRegistry.postInitialize();
+//			
+//			MinecraftForge.EVENT_BUS.register(this);
 		} catch (Exception e) {
 			LOGGER.error("An error occured during Static Power initialization.", e);
 		}

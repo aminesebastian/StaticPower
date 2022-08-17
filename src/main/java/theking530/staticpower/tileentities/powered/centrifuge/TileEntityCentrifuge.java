@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCentrifuge extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCentrifuge(pos, state), ModBlocks.Centrifuge);
+	public static final BlockEntityTypeAllocator<TileEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCentrifuge(pos, state), ModBlocks.Centrifuge.get());
 
 	public final InventoryComponent inputInventory;
 

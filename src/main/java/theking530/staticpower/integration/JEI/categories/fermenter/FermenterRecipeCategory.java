@@ -48,9 +48,9 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 	public FermenterRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Fermenter.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Fermenter.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Fermenter));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Fermenter.get()));
 	}
 
 	@Override
@@ -127,7 +127,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		ingredients.setInputIngredients(input);
 
 		// Set the output ingredients.
-		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(ModItems.DistilleryGrain));
+		ingredients.setOutput(VanillaTypes.ITEM, new ItemStack(ModItems.DistilleryGrain.get()));
 
 		// Set the output fluid.
 		ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutputFluidStack());
@@ -147,6 +147,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 
 		powerTimer = guiHelper.createTickTimer(StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
 				(int) (StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get()), true);
-		processingTimer = guiHelper.createTickTimer(StaticPowerConfig.SERVER.fermenterProcessingTime.get(), (int) StaticPowerConfig.SERVER.fermenterPowerUsage.get().longValue(), false);
+		processingTimer = guiHelper.createTickTimer(StaticPowerConfig.SERVER.fermenterProcessingTime.get(), (int) StaticPowerConfig.SERVER.fermenterPowerUsage.get().longValue(),
+				false);
 	}
 }

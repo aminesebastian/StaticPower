@@ -30,7 +30,7 @@ import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCabl
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.init.ModUpgrades;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.upgrades.AcceleratorUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -39,8 +39,8 @@ import theking530.staticpower.utilities.ItemUtilities;
 public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	public static final String REGULATOR_TIMER_TAG = "regulator_timer";
 
-	public DigistoreIOBusAttachment(String name) {
-		super(name);
+	public DigistoreIOBusAttachment() {
+		super();
 	}
 
 	/**
@@ -258,7 +258,7 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	protected int getIOBusRate(ItemStack attachment) {
 		float acceleratorCardCount = getUpgradeCount(attachment, AcceleratorUpgrade.class);
 		if (acceleratorCardCount > 0) {
-			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModUpgrades.AcceleratorUpgrade.getMaxStackSize());
+			double accelerationAmount = StaticPowerConfig.SERVER.acceleratorCardImprovment.get() * (acceleratorCardCount / ModItems.AcceleratorUpgrade.get().getMaxStackSize());
 			return (int) (StaticPowerConfig.SERVER.digistoreIOBusRate.get() / accelerationAmount);
 		} else {
 			return StaticPowerConfig.SERVER.digistoreIOBusRate.get();

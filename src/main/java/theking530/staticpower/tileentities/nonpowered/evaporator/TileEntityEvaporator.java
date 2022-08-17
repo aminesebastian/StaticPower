@@ -34,7 +34,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 public class TileEntityEvaporator extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityEvaporator> TYPE = new BlockEntityTypeAllocator<TileEntityEvaporator>((type, pos, state) -> new TileEntityEvaporator(pos, state),
-			ModBlocks.Evaporator);
+			ModBlocks.Evaporator.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

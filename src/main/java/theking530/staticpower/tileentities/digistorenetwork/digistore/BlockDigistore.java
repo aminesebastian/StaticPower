@@ -16,8 +16,8 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistore extends BaseDigistoreBlock {
 
-	public BlockDigistore(String name) {
-		super(name);
+	public BlockDigistore() {
+		super();
 	}
 
 	@Override

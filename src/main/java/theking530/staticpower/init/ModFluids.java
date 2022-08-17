@@ -6,15 +6,21 @@ import java.util.Map;
 import java.util.Set;
 
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.MinecraftColor;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.fluid.StaticPowerFluidBundle.StaticPowerFluidBuilder;
 
 public class ModFluids {
+	public static final DeferredRegister<Item> BUCKET_ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StaticPower.MOD_ID);
+	
 	public static final Set<StaticPowerFluidBundle> FLUID_BUNDLES = new LinkedHashSet<>();
 	public static StaticPowerFluidBundle StaticFluid;
 	public static StaticPowerFluidBundle EnergizedFluid;
@@ -63,7 +69,9 @@ public class ModFluids {
 	public static StaticPowerFluidBundle HeavyOil;
 	public static StaticPowerFluidBundle Fuel;
 
-	public static void init() {
+	public static void init(IEventBus eventBus) {
+		BUCKET_ITEMS.register(eventBus);
+		
 		registerFluidBundle(StaticFluid = new StaticPowerFluidBuilder("fluid_static", new Color(0.2f, 0.9f, 0.2f)).addAutoBucket().addAttributes(builder -> {
 			builder.luminosity(15);
 		}).build());

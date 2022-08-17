@@ -22,27 +22,27 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 public class TileEntitySolarPanel extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.BASIC), ModBlocks.SolarPanelBasic);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.BASIC), ModBlocks.SolarPanelBasic.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.SolarPanelAdvanced);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.SolarPanelAdvanced.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.STATIC), ModBlocks.SolarPanelStatic);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.STATIC), ModBlocks.SolarPanelStatic.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.SolarPanelEnergized);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.SolarPanelEnergized.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.LUMUM), ModBlocks.SolarPanelLumum);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.LUMUM), ModBlocks.SolarPanelLumum.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
-			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.SolarPanelCreative);
+			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.SolarPanelCreative.get());
 
 	public EnergyStorageComponent energyStorage;
 	public SideConfigurationComponent sideConfiguration;

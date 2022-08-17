@@ -46,9 +46,9 @@ public class VulcanizerRecipeCategory extends BaseJEIRecipeCategory<VulcanizerRe
 
 	public VulcanizerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Vulcanizer.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Vulcanizer.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Vulcanizer));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Vulcanizer.get()));
 	}
 
 	@Override

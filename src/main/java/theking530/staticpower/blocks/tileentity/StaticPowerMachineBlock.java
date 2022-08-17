@@ -20,13 +20,12 @@ public abstract class StaticPowerMachineBlock extends StaticPowerTileEntityBlock
 	 */
 	public static final BooleanProperty IS_ON = BooleanProperty.create("is_on");
 
-	protected StaticPowerMachineBlock(String name) {
-		super(name);
+	protected StaticPowerMachineBlock() {
 		this.registerDefaultState(stateDefinition.any().setValue(IS_ON, false));
 	}
 
-	protected StaticPowerMachineBlock(String name, Properties properies) {
-		super(name, properies);
+	protected StaticPowerMachineBlock(Properties properies) {
+		super(properies);
 		this.registerDefaultState(stateDefinition.any().setValue(IS_ON, false));
 	}
 

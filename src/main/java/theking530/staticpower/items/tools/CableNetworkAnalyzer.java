@@ -15,13 +15,12 @@ import theking530.staticpower.items.StaticPowerItem;
 
 public class CableNetworkAnalyzer extends StaticPowerItem {
 
-	public CableNetworkAnalyzer(String name) {
-		super(name, new Item.Properties().stacksTo(1).setNoRepair());
+	public CableNetworkAnalyzer() {
+		super(new Item.Properties().stacksTo(1).setNoRepair());
 	}
 
 	@Override
-	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos,
-			Direction face, Player player, ItemStack item) {
+	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		// If on the server.
 		if (!world.isClientSide) {
 			// If we right clicked on a cable.

@@ -20,6 +20,6 @@ public class EncodedPatternSlot extends StaticPowerContainerSlot {
 		if (stack.isEmpty()) {
 			return false;
 		}
-		return stack.getItem() == ModItems.PatternCard;
+		return stack.getItem() == ModItems.PatternCard.get();
 	}
 }

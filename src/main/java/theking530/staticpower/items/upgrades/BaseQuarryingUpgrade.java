@@ -13,8 +13,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BaseQuarryingUpgrade extends BaseUpgrade {
 
-	public BaseQuarryingUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, new Properties().stacksTo(1));
+	public BaseQuarryingUpgrade(ResourceLocation tier) {
+		super(tier, new Properties().stacksTo(1));
 	}
 
 	@Override

@@ -11,8 +11,8 @@ import theking530.staticpower.cables.network.ServerCable;
 
 public abstract class BaseDigistoreBlock extends StaticPowerMachineBlock {
 
-	public BaseDigistoreBlock(String name) {
-		super(name);
+	public BaseDigistoreBlock() {
+		super();
 	}
 
 	@Override

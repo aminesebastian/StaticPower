@@ -11,12 +11,12 @@ import theking530.staticpower.StaticPowerConfig;
 
 public class DigistoreStackedCard extends DigistoreCard {
 
-	public DigistoreStackedCard(String name, ResourceLocation tierType, ResourceLocation model) {
-		this(name, tierType, model, false);
+	public DigistoreStackedCard(ResourceLocation tierType, ResourceLocation model) {
+		this(tierType, model, false);
 	}
 
-	public DigistoreStackedCard(String name, ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
-		super(name, tierType, model, shouldGlow);
+	public DigistoreStackedCard(ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
+		super(tierType, model, shouldGlow);
 	}
 
 	/**

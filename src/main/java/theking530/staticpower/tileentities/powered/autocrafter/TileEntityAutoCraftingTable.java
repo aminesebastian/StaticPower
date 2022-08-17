@@ -39,7 +39,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoCraftingTable>(
-			(type, pos, state) -> new TileEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable);
+			(type, pos, state) -> new TileEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

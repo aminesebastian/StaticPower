@@ -30,8 +30,8 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockHeatSink extends StaticPowerTileEntityBlock {
 	public final ResourceLocation tier;
 
-	public BlockHeatSink(String name, ResourceLocation tier) {
-		super(name, Block.Properties.of(Material.METAL).strength(3.5f));
+	public BlockHeatSink(ResourceLocation tier) {
+		super(Block.Properties.of(Material.METAL).strength(3.5f));
 		this.tier = tier;
 	}
 

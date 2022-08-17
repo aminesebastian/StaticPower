@@ -50,15 +50,15 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockTank extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 	private final ResourceLocation tier;
 
-	public BlockTank(String name, ResourceLocation tier) {
-		super(name, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
+	public BlockTank(ResourceLocation tier) {
+		super(Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
 		this.tier = tier;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "• Capacity ").append(
+		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "ï¿½ Capacity ").append(
 				GuiTextUtilities.formatFluidToString(SDMath.multiplyRespectingOverflow(StaticPowerConfig.getTier(tier).defaultTankCapacity.get(), TileEntityTank.MACHINE_TANK_CAPACITY_MULTIPLIER))));
 
 		// Check to see if the stack has the serialized nbt.If it does, add the stored
@@ -68,7 +68,7 @@ public class BlockTank extends StaticPowerTileEntityBlock implements ICustomMode
 			CompoundTag tankTag = stack.getTag().getCompound("SerializableNbt").getCompound("FluidTank");
 			CompoundTag fluidTank = tankTag.getCompound("fluidStorage");
 			FluidStack fluid = FluidStack.loadFluidStackFromNBT(fluidTank.getCompound("tank"));
-			tooltip.add(new TextComponent(ChatFormatting.AQUA.toString() + "• Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
+			tooltip.add(new TextComponent(ChatFormatting.AQUA.toString() + "ï¿½ Stored ").append(GuiTextUtilities.formatFluidToString(fluid.getAmount())));
 		}
 	}
 

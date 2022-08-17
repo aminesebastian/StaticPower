@@ -42,8 +42,8 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	private static final String TERMINAL_POSITION_KEY = "terminal_position";
 	private static final String TERMINAL_SIDE_KEY = "terminal_side";
 
-	public DigistoreWirelessTerminal(String name) {
-		super(name, 0);
+	public DigistoreWirelessTerminal() {
+		super(0);
 	}
 
 	public boolean isBound(Level world, ItemStack wirelessDevice) {

@@ -110,7 +110,7 @@ public class StaticPowerModEventsCommon {
 
 		// Register composter recipes.
 		event.enqueueWork(() -> {
-			ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.asItem(), 0.6f);
+			ComposterBlock.COMPOSTABLES.put(ModBlocks.RubberTreeLeaves.get().asItem(), 0.6f);
 		});
 
 		// Register data classes.
@@ -186,15 +186,6 @@ public class StaticPowerModEventsCommon {
 		StaticCoreRegistry.registerBlockEntityRenderers(event);
 	}
 
-	@SubscribeEvent
-	public static void registerItems(RegistryEvent.Register<Item> event) {
-		StaticPowerRegistry.onRegisterItems(event);
-	}
-
-	@SubscribeEvent
-	public static void registerBlocks(RegistryEvent.Register<Block> event) {
-		StaticPowerRegistry.onRegisterBlocks(event);
-	}
 
 	@SubscribeEvent
 	public static void registerFluids(RegistryEvent.Register<Fluid> event) {

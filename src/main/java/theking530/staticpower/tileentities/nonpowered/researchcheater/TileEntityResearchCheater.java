@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.components.items.OutputServoComponent
 public class TileEntityResearchCheater extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityResearchCheater> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityResearchCheater(pos, state),
-			ModBlocks.ResearchCheater);
+			ModBlocks.ResearchCheater.get());
 	private static final float GENERATION_RATE = 1;
 	public final InventoryComponent inventory;
 	private float timer;
@@ -54,12 +54,12 @@ public class TileEntityResearchCheater extends TileEntityConfigurable implements
 	}
 
 	private void populateResearch() {
-		inventory.setStackInSlot(0, new ItemStack(ModItems.ResearchTier1, 64));
-		inventory.setStackInSlot(1, new ItemStack(ModItems.ResearchTier2, 64));
-		inventory.setStackInSlot(2, new ItemStack(ModItems.ResearchTier3, 64));
-		inventory.setStackInSlot(3, new ItemStack(ModItems.ResearchTier4, 64));
-		inventory.setStackInSlot(4, new ItemStack(ModItems.ResearchTier5, 64));
-		inventory.setStackInSlot(5, new ItemStack(ModItems.ResearchTier6, 64));
-		inventory.setStackInSlot(6, new ItemStack(ModItems.ResearchTier7, 64));
+		inventory.setStackInSlot(0, new ItemStack(ModItems.ResearchTier1.get(), 64));
+		inventory.setStackInSlot(1, new ItemStack(ModItems.ResearchTier2.get(), 64));
+		inventory.setStackInSlot(2, new ItemStack(ModItems.ResearchTier3.get(), 64));
+		inventory.setStackInSlot(3, new ItemStack(ModItems.ResearchTier4.get(), 64));
+		inventory.setStackInSlot(4, new ItemStack(ModItems.ResearchTier5.get(), 64));
+		inventory.setStackInSlot(5, new ItemStack(ModItems.ResearchTier6.get(), 64));
+		inventory.setStackInSlot(6, new ItemStack(ModItems.ResearchTier7.get(), 64));
 	}
 }

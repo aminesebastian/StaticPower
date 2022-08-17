@@ -28,7 +28,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFusionFurnace(pos, state), ModBlocks.FusionFurnace);
+	public static final BlockEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFusionFurnace(pos, state), ModBlocks.FusionFurnace.get());
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

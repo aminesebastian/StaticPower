@@ -49,8 +49,8 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	 * @param coverHoleSize        The size of the hole to render in a cover when
 	 *                             this cable passes through a cover.
 	 */
-	public AbstractCableBlock(String name, CableBoundsCache cableBoundsGenerator, float coverHoleSize) {
-		super(name, Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
+	public AbstractCableBlock(CableBoundsCache cableBoundsGenerator, float coverHoleSize) {
+		super(Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
 		cableBoundsCache = cableBoundsGenerator;
 		this.coverHoleSize = coverHoleSize;
 	}

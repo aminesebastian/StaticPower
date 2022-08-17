@@ -25,12 +25,12 @@ public class DigistoreCard extends StaticPowerItem {
 	public final ResourceLocation model;
 	private final boolean shouldGlow;
 
-	public DigistoreCard(String name, ResourceLocation tierType, ResourceLocation model) {
-		this(name, tierType, model, false);
+	public DigistoreCard(ResourceLocation tierType, ResourceLocation model) {
+		this(tierType, model, false);
 	}
 
-	public DigistoreCard(String name, ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
-		super(name, new Item.Properties().stacksTo(1));
+	public DigistoreCard(ResourceLocation tierType, ResourceLocation model, boolean shouldGlow) {
+		super(new Item.Properties().stacksTo(1));
 		this.tierType = tierType;
 		this.model = model;
 		this.shouldGlow = shouldGlow;

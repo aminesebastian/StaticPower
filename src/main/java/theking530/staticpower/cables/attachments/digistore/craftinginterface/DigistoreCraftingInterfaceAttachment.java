@@ -37,8 +37,8 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	public static final String CRAFTING_INTERFACE_TIMER_TAG = "crafting_interface_timer";
 	public static final String RECIPE_ITEM_TAG = "recipe_items";
 
-	public DigistoreCraftingInterfaceAttachment(String name) {
-		super(name);
+	public DigistoreCraftingInterfaceAttachment() {
+		super();
 	}
 
 	/**

@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BaseRangeUpgrade extends BaseUpgrade {
 
-	public BaseRangeUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, new Properties().stacksTo(1), UpgradeType.RANGE);
+	public BaseRangeUpgrade(ResourceLocation tier) {
+		super(tier, new Properties().stacksTo(1), UpgradeType.RANGE);
 	}
 
 	@Override

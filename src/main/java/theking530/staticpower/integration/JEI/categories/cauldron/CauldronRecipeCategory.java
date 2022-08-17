@@ -59,9 +59,9 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 
 	public CauldronRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.RustyCauldron.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.RustyCauldron.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 55);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.RustyCauldron));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.RustyCauldron.get()));
 		arrow = new ArrowProgressBar(57, 16);
 	}
 
@@ -76,6 +76,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	public Component getTitle() {
 		return locTitle;
 	}
+
 	@Override
 	@Nonnull
 	public IDrawable getBackground() {
@@ -119,7 +120,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			blockStack.scale(scale, scale, 16);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
 
-			BlockState blockState = ModBlocks.RustyCauldron.defaultBlockState();
+			BlockState blockState = ModBlocks.RustyCauldron.get().defaultBlockState();
 			Minecraft mc = Minecraft.getInstance();
 			BlockRenderDispatcher blockRenderer = mc.getBlockRenderer();
 			blockRenderer.renderSingleBlock(blockState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
@@ -151,8 +152,8 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			blockStack.translate(location.getX() + 43, location.getY() + 17.8f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
-			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL), fluidColor,
-					blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
+			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL),
+					fluidColor, blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
 			blockStack.popPose();
 		}
 
@@ -170,8 +171,8 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
-			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL), fluidColor,
-					blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
+			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL),
+					fluidColor, blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
 			blockStack.popPose();
 		}
 	}

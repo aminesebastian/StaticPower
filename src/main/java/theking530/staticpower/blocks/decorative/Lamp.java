@@ -7,7 +7,7 @@ import theking530.staticpower.blocks.StaticPowerBlock;
 
 public class Lamp extends StaticPowerBlock {
 
-	public Lamp(String name) {
-		super(name, Block.Properties.of(Material.BUILDABLE_GLASS).sound(SoundType.GLASS).lightLevel((state) -> 15));
+	public Lamp() {
+		super(Block.Properties.of(Material.BUILDABLE_GLASS).sound(SoundType.GLASS).lightLevel((state) -> 15));
 	}
 }

@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class VoidUpgrade extends BaseUpgrade {
 
-	public VoidUpgrade(String name) {
-		super(name, new Properties().stacksTo(1));
+	public VoidUpgrade() {
+		super(new Properties().stacksTo(1));
 	}
 
 	@Override

@@ -33,8 +33,8 @@ public class CropSeeds extends StaticPowerItem implements IPlantable {
 	 * @param name      The registry name of the seed without namespace.
 	 * @param blockCrop The block this crop should plant.
 	 */
-	public CropSeeds(String name, Block blockCrop) {
-		super(name);
+	public CropSeeds(Block blockCrop) {
+		super();
 		CROP_BLOCK = blockCrop;
 	}
 
@@ -44,8 +44,8 @@ public class CropSeeds extends StaticPowerItem implements IPlantable {
 	@Override
 	public InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		BlockState state = world.getBlockState(pos);
-		if (context.getClickedFace() == Direction.UP && player.mayUseItemAt(pos.relative(face), face, item) && state.getBlock().canSustainPlant(state, world, pos, Direction.UP, this)
-				&& world.isEmptyBlock(pos.above())) {
+		if (context.getClickedFace() == Direction.UP && player.mayUseItemAt(pos.relative(face), face, item)
+				&& state.getBlock().canSustainPlant(state, world, pos, Direction.UP, this) && world.isEmptyBlock(pos.above())) {
 			world.setBlockAndUpdate(pos.above(), this.CROP_BLOCK.defaultBlockState());
 			item.setCount(item.getCount() - 1);
 			return InteractionResult.SUCCESS;

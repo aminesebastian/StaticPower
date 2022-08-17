@@ -34,7 +34,7 @@ public class ContainerCaster extends StaticPowerTileEntityContainer<TileEntityCa
 	@Override
 	public void initializeContainer() {
 		// Input Mold
-		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.MoldBlank), 0.3f, getTileEntity().inputInventory, 0, 86, 34));
+		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.MoldBlank.get()), 0.3f, getTileEntity().inputInventory, 0, 86, 34));
 
 		// Output
 		addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 126, 52));

@@ -36,10 +36,6 @@ public class BlockExperienceHopper extends StaticPowerTileEntityBlock {
 	private static final VoxelShape DOWN_SHAPE = Shapes.or(BASE_SHAPE, Block.box(6.0D, 0.0D, 6.0D, 10.0D, 4.0D, 10.0D));
 	private static final VoxelShape DOWN_RAYTRACE_SHAPE = Hopper.INSIDE;
 
-	public BlockExperienceHopper(String name) {
-		super(name);
-	}
-
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
 		return DOWN_SHAPE;
 	}
@@ -73,6 +69,6 @@ public class BlockExperienceHopper extends StaticPowerTileEntityBlock {
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.experience_hopper_description")).withStyle(ChatFormatting.BLUE));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.experience_hopper_description")).withStyle(ChatFormatting.BLUE));
 	}
 }

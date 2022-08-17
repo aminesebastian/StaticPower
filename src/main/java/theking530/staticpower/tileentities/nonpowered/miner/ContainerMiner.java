@@ -36,7 +36,7 @@ public class ContainerMiner extends StaticPowerTileEntityContainer<TileEntityMin
 		this.addSlot(new StaticPowerContainerSlot(new ItemStack(Items.COAL), 0.3f, getTileEntity().fuelInventory, 0, 18, 32));
 
 		// Drill Bit Slot
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit), 0.3f, getTileEntity().drillBitInventory, 0, 142, 32));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit.get()), 0.3f, getTileEntity().drillBitInventory, 0, 142, 32));
 
 		// Output
 		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 80, 32));

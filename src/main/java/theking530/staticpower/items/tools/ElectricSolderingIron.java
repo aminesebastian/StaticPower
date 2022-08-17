@@ -18,8 +18,8 @@ import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implements ISolderingIron {
 
-	public ElectricSolderingIron(String name, long capacity) {
-		super(name, capacity);
+	public ElectricSolderingIron(long capacity) {
+		super(capacity);
 	}
 
 	@Override

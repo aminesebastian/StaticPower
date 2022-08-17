@@ -16,8 +16,8 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
 
 public class BlockScaffoldCable extends AbstractCableBlock {
-	public BlockScaffoldCable(String name) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.0f);
+	public BlockScaffoldCable() {
+		super(new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.0f);
 	}
 
 	@Override

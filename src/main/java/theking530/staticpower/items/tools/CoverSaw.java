@@ -16,8 +16,8 @@ import theking530.staticpower.items.StaticPowerItem;
 
 public class CoverSaw extends StaticPowerItem {
 
-	public CoverSaw(String name, int maxUses) {
-		super(name, new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair());
+	public CoverSaw(int maxUses) {
+		super(new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair());
 	}
 
 	@Override

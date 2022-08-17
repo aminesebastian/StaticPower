@@ -10,11 +10,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
 public class BlockMixer extends StaticPowerMachineBlock {
-
-	public BlockMixer(String name) {
-		super(name);
-	}
-
+	
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;

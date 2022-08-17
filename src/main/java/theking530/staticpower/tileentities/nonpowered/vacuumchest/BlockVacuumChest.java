@@ -16,8 +16,8 @@ import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 public class BlockVacuumChest extends StaticPowerTileEntityBlock {
 	protected static final VoxelShape SHAPE = Block.box(3, 3, 3, 13, 13, 13);
 
-	public BlockVacuumChest(String name) {
-		super(name);
+	public BlockVacuumChest() {
+		super();
 	}
 
 	@Override

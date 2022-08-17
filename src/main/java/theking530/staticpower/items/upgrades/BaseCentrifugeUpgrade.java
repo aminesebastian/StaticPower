@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BaseCentrifugeUpgrade extends BaseUpgrade {
 
-	public BaseCentrifugeUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, new Properties().stacksTo(1), UpgradeType.CENTRIFUGE);
+	public BaseCentrifugeUpgrade(ResourceLocation tier) {
+		super(tier, new Properties().stacksTo(1), UpgradeType.CENTRIFUGE);
 	}
 
 	@Override

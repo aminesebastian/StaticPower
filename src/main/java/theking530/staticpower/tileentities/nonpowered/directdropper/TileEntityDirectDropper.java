@@ -20,7 +20,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityDirectDropper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityDirectDropper> TYPE = new BlockEntityTypeAllocator<TileEntityDirectDropper>(
-			(type, pos, state) -> new TileEntityDirectDropper(pos, state), ModBlocks.DirectDropper);
+			(type, pos, state) -> new TileEntityDirectDropper(pos, state), ModBlocks.DirectDropper.get());
 	public static final int DROP_DELAY = 4;
 
 	public final InventoryComponent inventory;

@@ -16,7 +16,7 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityDigistoreManager(pos, state), ModBlocks.DigistoreManager);
+			(type, pos, state) -> new TileEntityDigistoreManager(pos, state), ModBlocks.DigistoreManager.get());
 
 	public static final int ENERGY_STORAGE = 1000000;
 

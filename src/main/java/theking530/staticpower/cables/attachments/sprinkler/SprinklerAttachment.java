@@ -41,8 +41,8 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 	private final ResourceLocation model;
 	private final ResourceLocation tierType;
 
-	public SprinklerAttachment(String name, ResourceLocation tierType, ResourceLocation model) {
-		super(name);
+	public SprinklerAttachment(ResourceLocation tierType, ResourceLocation model) {
+		super();
 		this.model = model;
 		this.tierType = tierType;
 	}
@@ -244,8 +244,8 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.sprinkler_description")).withStyle(ChatFormatting.BLUE));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.sprinkler_experience_description")).withStyle(ChatFormatting.GREEN));
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.redstone_control_enabled")).withStyle(ChatFormatting.DARK_RED));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.sprinkler_description")).withStyle(ChatFormatting.BLUE));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.sprinkler_experience_description")).withStyle(ChatFormatting.GREEN));
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.redstone_control_enabled")).withStyle(ChatFormatting.DARK_RED));
 	}
 }

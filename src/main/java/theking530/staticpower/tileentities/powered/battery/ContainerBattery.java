@@ -35,7 +35,7 @@ public class ContainerBattery extends StaticPowerTileEntityContainer<TileEntityB
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
 		// Charging
-		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.BasicMiningDrill), getTileEntity().chargingInventory, 0, 152, 64));
+		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.BasicMiningDrill.get()), getTileEntity().chargingInventory, 0, 152, 64));
 
 		addAllPlayerSlots();
 	}

@@ -15,8 +15,8 @@ import theking530.staticpower.StaticPowerConfig;
 
 public class AcceleratorUpgrade extends BaseUpgrade {
 
-	public AcceleratorUpgrade(String name) {
-		super(name, new Properties().stacksTo(8), UpgradeType.DIGISTORE_ATTACHMENT);
+	public AcceleratorUpgrade() {
+		super(new Properties().stacksTo(8), UpgradeType.DIGISTORE_ATTACHMENT);
 	}
 
 	@Override
@@ -27,7 +27,8 @@ public class AcceleratorUpgrade extends BaseUpgrade {
 
 		double percentIncrease = StaticPowerConfig.SERVER.acceleratorCardImprovment.get();
 		percentIncrease *= (float) stack.getCount() / stack.getMaxStackSize();
-		tooltip.add(new TextComponent(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(percentIncrease * 100) + "%" + ChatFormatting.GREEN + " Transfer Speed"));
+		tooltip.add(
+				new TextComponent(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(percentIncrease * 100) + "%" + ChatFormatting.GREEN + " Transfer Speed"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

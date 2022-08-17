@@ -1,6 +1,7 @@
 package theking530.staticpower.items.tools;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
@@ -17,17 +18,17 @@ import theking530.staticpower.items.StaticPowerItem;
 
 public class WireCutters extends StaticPowerItem {
 	private final ResourceLocation tier;
-	private final Item repairItem;
+	private final Supplier<Item> repairItem;
 
-	public WireCutters(String name, ResourceLocation tier, Item repairItem) {
-		super(name, new Item.Properties().stacksTo(1));
+	public WireCutters(ResourceLocation tier, Supplier<Item> repairItem) {
+		super(new Item.Properties().stacksTo(1));
 		this.tier = tier;
 		this.repairItem = repairItem;
 	}
 
 	@Override
 	public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
-		if (repair.getItem() == repairItem) {
+		if (repair.getItem() == repairItem.get()) {
 			return true;
 		}
 		return false;

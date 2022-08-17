@@ -30,7 +30,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 public class TileEntityExperienceHopper extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityExperienceHopper> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityExperienceHopper(pos, state), ModBlocks.ExperienceHopper);
+			(type, pos, state) -> new TileEntityExperienceHopper(pos, state), ModBlocks.ExperienceHopper.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

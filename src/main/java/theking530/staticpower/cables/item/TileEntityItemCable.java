@@ -18,27 +18,27 @@ public class TileEntityItemCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.BASIC),
-			ModBlocks.ItemCableBasic);
+			ModBlocks.ItemCableBasic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.ADVANCED),
-			ModBlocks.ItemCableAdvanced);
+			ModBlocks.ItemCableAdvanced.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.STATIC),
-			ModBlocks.ItemCableStatic);
+			ModBlocks.ItemCableStatic.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.ENERGIZED),
-			ModBlocks.ItemCableEnergized);
+			ModBlocks.ItemCableEnergized.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.LUMUM),
-			ModBlocks.ItemCableLumum);
+			ModBlocks.ItemCableLumum.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityItemCable>(
 			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.CREATIVE),
-			ModBlocks.ItemCableCreative);
+			ModBlocks.ItemCableCreative.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

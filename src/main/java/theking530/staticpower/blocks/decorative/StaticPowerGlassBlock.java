@@ -18,8 +18,8 @@ public class StaticPowerGlassBlock extends StaticPowerBlock {
 	 * 
 	 * @param name The registry name of the block sans namespace.
 	 */
-	public StaticPowerGlassBlock(String name) {
-		super(name, Block.Properties.copy(Blocks.GLASS).strength(4.0F).sound(SoundType.GLASS).noOcclusion());
+	public StaticPowerGlassBlock() {
+		super(Block.Properties.copy(Blocks.GLASS).strength(4.0F).sound(SoundType.GLASS).noOcclusion());
 	}
 
 	@Override

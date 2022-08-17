@@ -10,8 +10,8 @@ import theking530.staticpower.client.StaticPowerAdditionalModels;
 public class DigistoreScreen extends AbstractDigistoreCableAttachment {
 	private static final Vector3D BOUNDS = new Vector3D(6.0f, 6.0f, 2.0f);
 
-	public DigistoreScreen(String name) {
-		super(name);
+	public DigistoreScreen() {
+		super();
 	}
 
 	@Override

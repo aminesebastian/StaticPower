@@ -10,7 +10,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
 public class TileEntityBundledRedstoneCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBundledRedstoneCable> TYPE = new BlockEntityTypeAllocator<TileEntityBundledRedstoneCable>(
-			(allocator, pos, state) -> new TileEntityBundledRedstoneCable(allocator, pos, state), ModBlocks.BundledRedstoneCable);
+			(allocator, pos, state) -> new TileEntityBundledRedstoneCable(allocator, pos, state), ModBlocks.BundledRedstoneCable.get());
 
 	public final BundledRedstoneCableComponent cableComponent;
 

@@ -23,8 +23,8 @@ import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
 
 public class BlockPumpJack extends StaticPowerTileEntityBlock {
 
-	public BlockPumpJack(String name) {
-		super(name, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
+	public BlockPumpJack() {
+		super(Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
 	}
 
 	@Override

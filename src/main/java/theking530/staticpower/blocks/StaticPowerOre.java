@@ -24,35 +24,33 @@ public class StaticPowerOre extends StaticPowerBlock {
 	/**
 	 * Creates a static power ore.
 	 * 
-	 * @param name     The registry name of the ore sans namespace.
 	 * @param hardness The hardness of this ore.
 	 */
-	public StaticPowerOre(String name, float hardness) {
-		this(name, hardness, 0, 0);
+	public StaticPowerOre(float hardness) {
+		this(hardness, 0, 0);
 	}
 
 	/**
 	 * Creates a static power ore.
 	 * 
-	 * @param name         The registry name of the ore sans namespace.
 	 * @param tool         The tool that must be used to harvest this ore.
 	 * @param harvestLevel The harvest level of this ore.
 	 * @param hardness     The hardness of this ore.
 	 * @param minimumXP    The minimum amount of XP to spawn when this ore is mined.
 	 * @param maximumXP    The maximum amount of XP to spawn when this ore is mined.
 	 */
-	public StaticPowerOre(String name, float hardness, int minimumXP, int maximumXP) {
-		this(name, Block.Properties.of(Material.STONE).strength(hardness).sound(SoundType.STONE), 0, 0);
+	public StaticPowerOre(float hardness, int minimumXP, int maximumXP) {
+		this(Block.Properties.of(Material.STONE).strength(hardness).sound(SoundType.STONE), 0, 0);
 
 	}
 
-	public StaticPowerOre(String name, Block.Properties properties) {
-		this(name, properties, 0, 0);
+	public StaticPowerOre(Block.Properties properties) {
+		this(properties, 0, 0);
 
 	}
 
-	public StaticPowerOre(String name, Block.Properties properties, int minimumXP, int maximumXP) {
-		super(name, properties);
+	public StaticPowerOre(Block.Properties properties, int minimumXP, int maximumXP) {
+		super(properties);
 		this.minimumXP = minimumXP;
 		this.maximumXP = maximumXP;
 	}

@@ -49,9 +49,9 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 
 	public PoweredFurnaceRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.PoweredFurnace.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.PoweredFurnace.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(120, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.PoweredFurnace));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.PoweredFurnace.get()));
 		pBar = new ArrowProgressBar(62, 19);
 	}
 

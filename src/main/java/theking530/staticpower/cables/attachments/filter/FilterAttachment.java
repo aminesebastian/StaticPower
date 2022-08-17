@@ -32,8 +32,8 @@ public class FilterAttachment extends AbstractCableAttachment {
 	private final ResourceLocation model;
 	private final ResourceLocation tierType;
 
-	public FilterAttachment(String name, ResourceLocation tierType, ResourceLocation model) {
-		super(name);
+	public FilterAttachment(ResourceLocation tierType, ResourceLocation model) {
+		super();
 		this.model = model;
 		this.tierType = tierType;
 	}
@@ -44,7 +44,8 @@ public class FilterAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableFilterSlots.get()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt)
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableFilterSlots.get()));
 	}
 
 	public boolean doesItemPassFilter(ItemStack attachment, ItemStack itemToTest, AbstractCableProviderComponent cableComponent) {

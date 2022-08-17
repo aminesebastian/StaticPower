@@ -38,8 +38,8 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	private final ResourceLocation model;
 	private final ResourceLocation tierType;
 
-	public RetrieverAttachment(String name, ResourceLocation tierType, ResourceLocation model) {
-		super(name);
+	public RetrieverAttachment(ResourceLocation tierType, ResourceLocation model) {
+		super();
 		this.model = model;
 		this.tierType = tierType;
 	}
@@ -158,11 +158,11 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		tooltip.add(new TextComponent(""));
 		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_rate_format", ChatFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalRate.get()));
-		tooltip.add(new TextComponent("• ").append(
+		tooltip.add(new TextComponent("ï¿½ ").append(
 				new TranslatableComponent("gui.staticpower.retriever_stack_size", ChatFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get())));
 
 		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableRetrievedItemInitialSpeed.get();
-		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.cable_transfer_rate",
+		tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.cable_transfer_rate",
 				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslatableComponent("gui.staticpower.blocks").getString())));
 	}
 

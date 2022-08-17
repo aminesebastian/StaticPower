@@ -36,25 +36,25 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_IRON = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronTank.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicTank.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedTank.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticTank.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedTank.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumTank.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativeTank);
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativeTank.get());
 
 	public static final int MACHINE_TANK_CAPACITY_MULTIPLIER = 4;
 

@@ -10,7 +10,7 @@ import theking530.staticpower.tileentities.TileEntityBase;
 public class TileEntityScaffoldCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityScaffoldCable> TYPE = new BlockEntityTypeAllocator<TileEntityScaffoldCable>(
-			(allocator, pos, state) -> new TileEntityScaffoldCable(allocator, pos, state), ModBlocks.ScaffoldCable);
+			(allocator, pos, state) -> new TileEntityScaffoldCable(allocator, pos, state), ModBlocks.ScaffoldCable.get());
 
 	public TileEntityScaffoldCable(BlockEntityTypeAllocator<TileEntityScaffoldCable> allocator, BlockPos pos,
 			BlockState state) {

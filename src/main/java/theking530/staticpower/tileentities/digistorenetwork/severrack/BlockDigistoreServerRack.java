@@ -25,8 +25,8 @@ import theking530.staticpower.client.rendering.blocks.ServerRackModel;
 
 public class BlockDigistoreServerRack extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
 
-	public BlockDigistoreServerRack(String name) {
-		super(name, Block.Properties.of(Material.METAL));
+	public BlockDigistoreServerRack() {
+		super(Block.Properties.of(Material.METAL));
 	}
 
 	@Override

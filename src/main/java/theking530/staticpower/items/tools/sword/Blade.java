@@ -31,8 +31,8 @@ import theking530.staticpower.utilities.MetricConverter;
 public class Blade extends AbstractToolPart {
 	public final Tiers miningTier;
 
-	public Blade(String name, Tiers miningTier, ResourceLocation tier) {
-		super(name, tier, new Item.Properties().stacksTo(1).durability(1));
+	public Blade(Tiers miningTier, ResourceLocation tier) {
+		super(tier, new Item.Properties().stacksTo(1).durability(1));
 		this.miningTier = miningTier;
 	}
 

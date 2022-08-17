@@ -31,8 +31,8 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	private static final String ACTIVATED_TAG = "activated";
 	public final ResourceLocation tier;
 
-	public BatteryPack(String name, ResourceLocation tier) {
-		super(name, 0);
+	public BatteryPack(ResourceLocation tier) {
+		super(0);
 		this.tier = tier;
 	}
 

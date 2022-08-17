@@ -33,7 +33,7 @@ public class ContainerElectricMiner extends StaticPowerTileEntityContainer<TileE
 	@Override
 	public void initializeContainer() {
 		// Drill Bit Slot
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit), 0.3f, getTileEntity().drillBitInventory, 0, 142, 32));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.IronDrillBit.get()), 0.3f, getTileEntity().drillBitInventory, 0, 142, 32));
 
 		// Battery
 		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));

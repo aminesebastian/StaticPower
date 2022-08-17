@@ -11,8 +11,8 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockPatternStorage extends BaseDigistoreBlock {
 
-	public BlockPatternStorage(String name) {
-		super(name);
+	public BlockPatternStorage() {
+		super();
 	}
 
 	@Override

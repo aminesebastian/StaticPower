@@ -31,8 +31,7 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	public static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 3.5D, 16.0D);
 	public final ResourceLocation tierType;
 
-	public BlockSolarPanel(String name, ResourceLocation tierType) {
-		super(name);
+	public BlockSolarPanel(ResourceLocation tierType) {
 		this.tierType = tierType;
 	}
 
@@ -49,7 +48,7 @@ public class BlockSolarPanel extends StaticPowerTileEntityBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "• Generation ")
+		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + "ï¿½ Generation ")
 				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tierType).solarPanelPowerGeneration.get())));
 	}
 

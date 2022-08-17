@@ -73,7 +73,7 @@ public class CoverRecipe extends CustomRecipe {
 		// If we can make a cover for this block, return that cover. Otherwise, return
 		// an empty itemstack.
 		if (CableCover.isValidForCover(((BlockItem) target).getBlock())) {
-			ItemStack output = ModItems.CableCover.makeCoverForBlock(((BlockItem) target).getBlock().defaultBlockState());
+			ItemStack output = ModItems.CableCover.get().makeCoverForBlock(((BlockItem) target).getBlock().defaultBlockState());
 			output.setCount(8);
 			return output;
 		} else {

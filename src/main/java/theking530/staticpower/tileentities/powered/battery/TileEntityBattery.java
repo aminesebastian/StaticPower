@@ -32,32 +32,32 @@ public class TileEntityBattery extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityBattery>(
 			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.BASIC),
-			ModBlocks.BatteryBasic);
+			ModBlocks.BatteryBasic.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityBattery>(
 			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.ADVANCED),
-			ModBlocks.BatteryAdvanced);
+			ModBlocks.BatteryAdvanced.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityBattery>(
 			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.STATIC),
-			ModBlocks.BatteryStatic);
+			ModBlocks.BatteryStatic.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityBattery>(
 			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.ENERGIZED),
-			ModBlocks.BatteryEnergized);
+			ModBlocks.BatteryEnergized.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityBattery>(
 			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.LUMUM),
-			ModBlocks.BatteryLumum);
+			ModBlocks.BatteryLumum.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityBattery>(
 			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.CREATIVE),
-			ModBlocks.BatteryCreative);
+			ModBlocks.BatteryCreative.get());
 
 	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
 

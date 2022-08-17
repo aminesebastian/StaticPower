@@ -15,10 +15,11 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class StaticPlantCrop extends StaticPowerItem {
-	
-	public StaticPlantCrop(String name, FoodProperties food) {
-		super(name, new Item.Properties().food(food));
-	}		
+
+	public StaticPlantCrop(FoodProperties food) {
+		super(new Item.Properties().food(food));
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
@@ -26,6 +27,3 @@ public class StaticPlantCrop extends StaticPowerItem {
 		tooltip.add(new TextComponent("Energy...Yummy"));
 	}
 }
-		
-
-

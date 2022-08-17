@@ -26,25 +26,25 @@ import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
-	private final Block strippedVariant;
+	private final Supplier<Block> strippedVariant;
 	private final Supplier<Integer> minBark;
 	private final Supplier<Integer> maxBark;
 	private final Supplier<Item> barkItemSupplier;
 
-	public StaticPowerTreeLog(String name, Block strippedVariant, Properties properties, Supplier<Integer> minBark, Supplier<Integer> maxBark, Supplier<Item> barkItem) {
-		super(name, properties);
+	public StaticPowerTreeLog(Supplier<Block> strippedVariant, Properties properties, Supplier<Integer> minBark, Supplier<Integer> maxBark, Supplier<Item> barkItem) {
+		super(properties);
 		this.strippedVariant = strippedVariant;
 		this.minBark = minBark;
 		this.maxBark = maxBark;
 		this.barkItemSupplier = barkItem;
 	}
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Block strippedVariant, Properties properties) {
-		this(name, strippedVariant, properties, () -> 0, () -> 0, () -> null);
+	public StaticPowerTreeLog(Supplier<Block> strippedVariant, Properties properties) {
+		this(strippedVariant, properties, () -> 0, () -> 0, () -> null);
 	}
 
-	public StaticPowerTreeLog(String name, MaterialColor verticalColorIn, Properties properties) {
-		this(name, null, properties, () -> 0, () -> 0, () -> null);
+	public StaticPowerTreeLog(Properties properties) {
+		this(null, properties, () -> 0, () -> 0, () -> null);
 	}
 
 	public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
@@ -56,7 +56,7 @@ public class StaticPowerTreeLog extends StaticPowerRotatePillarBlock {
 					// If the player is holding an axe.
 					if (player.getItemInHand(handIn).isCorrectToolForDrops(state)) {
 						// Update to the stripped variant.
-						worldIn.setBlockAndUpdate(pos, strippedVariant.defaultBlockState());
+						worldIn.setBlockAndUpdate(pos, strippedVariant.get().defaultBlockState());
 
 						// Play the strip sound.
 						worldIn.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F);

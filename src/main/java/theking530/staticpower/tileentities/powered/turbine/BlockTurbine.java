@@ -17,10 +17,6 @@ import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 
 public class BlockTurbine extends StaticPowerMachineBlock {
 
-	public BlockTurbine(String name) {
-		super(name);
-	}
-
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;

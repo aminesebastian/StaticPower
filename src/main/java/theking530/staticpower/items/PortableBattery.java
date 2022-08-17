@@ -13,8 +13,8 @@ import theking530.staticpower.client.rendering.items.PortableBatteryItemModel;
 public class PortableBattery extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {
 	public final ResourceLocation tier;
 
-	public PortableBattery(String name, ResourceLocation tier) {
-		super(name, 0);
+	public PortableBattery(ResourceLocation tier) {
+		super(0);
 		this.tier = tier;
 	}
 

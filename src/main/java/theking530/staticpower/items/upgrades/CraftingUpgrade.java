@@ -14,8 +14,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class CraftingUpgrade extends BaseUpgrade {
 
-	public CraftingUpgrade(String name) {
-		super(name, new Properties().stacksTo(1), UpgradeType.DIGISTORE_ATTACHMENT);
+	public CraftingUpgrade() {
+		super(new Properties().stacksTo(1), UpgradeType.DIGISTORE_ATTACHMENT);
 	}
 
 	@Override

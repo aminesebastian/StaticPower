@@ -23,8 +23,8 @@ import theking530.staticpower.client.rendering.items.PatternCardItemModel;
 public class DigistorePatternCard extends StaticPowerItem implements ICustomModelSupplier {
 	public static final String ENCODED_PATTERN_TAG = "pattern";
 
-	public DigistorePatternCard(String name) {
-		super(name);
+	public DigistorePatternCard() {
+		super();
 	}
 
 	@Override
@@ -57,14 +57,14 @@ public class DigistorePatternCard extends StaticPowerItem implements ICustomMode
 			tooltip.add(new TextComponent("Inputs: "));
 			for (ItemStack input : pattern.getInputs()) {
 				if (!input.isEmpty()) {
-					tooltip.add(new TextComponent("  •").append(input.getHoverName()));
+					tooltip.add(new TextComponent("  ï¿½").append(input.getHoverName()));
 				}
 			}
 
 			// Add outputs.
 			tooltip.add(new TextComponent("Output: "));
 			if (!pattern.getOutput().isEmpty()) {
-				MutableComponent outputTooltip = new TextComponent("  •").append(pattern.getOutput().getHoverName());
+				MutableComponent outputTooltip = new TextComponent("  ï¿½").append(pattern.getOutput().getHoverName());
 				if (pattern.getOutput().getCount() > 1) {
 					outputTooltip.append(new TextComponent(" x" + pattern.getOutput().getCount()));
 				}

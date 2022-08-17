@@ -61,7 +61,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityBasicFarmer extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBasicFarmer> TYPE = new BlockEntityTypeAllocator<TileEntityBasicFarmer>(
-			(allocator, pos, state) -> new TileEntityBasicFarmer(pos, state), ModBlocks.BasicFarmer);
+			(allocator, pos, state) -> new TileEntityBasicFarmer(pos, state), ModBlocks.BasicFarmer.get());
 	private static final Map<Class<?>, IFarmerHarvester> HARVETERS = new LinkedHashMap<Class<?>, IFarmerHarvester>();
 
 	static {

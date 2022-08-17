@@ -54,9 +54,9 @@ public class FusionFurnaceRecipeCategory extends BaseJEIRecipeCategory<FusionFur
 
 	public FusionFurnaceRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.FusionFurnace.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.FusionFurnace.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(160, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.FusionFurnace));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.FusionFurnace.get()));
 		pBar = new FusionProgressBar(79, 19);
 	}
 

@@ -31,9 +31,8 @@ public class StaticPowerSapling extends BushBlock implements BonemealableBlock, 
 	protected static final VoxelShape SHAPE = Block.box(2.0D, 0.0D, 2.0D, 14.0D, 12.0D, 14.0D);
 	private final Supplier<AbstractTreeGrower> tree;
 
-	public StaticPowerSapling(String name, Supplier<AbstractTreeGrower> treeIn, Properties properties) {
+	public StaticPowerSapling(Supplier<AbstractTreeGrower> treeIn, Properties properties) {
 		super(properties);
-		this.setRegistryName(name);
 		this.tree = treeIn;
 	}
 

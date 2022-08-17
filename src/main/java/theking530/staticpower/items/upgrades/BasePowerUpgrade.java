@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BasePowerUpgrade extends BaseUpgrade {
 
-	public BasePowerUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, UpgradeType.POWER);
+	public BasePowerUpgrade(ResourceLocation tier) {
+		super(tier, UpgradeType.POWER);
 	}
 
 	@Override

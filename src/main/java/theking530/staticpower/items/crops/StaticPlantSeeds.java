@@ -14,9 +14,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class StaticPlantSeeds extends CropSeeds {
 
-    public StaticPlantSeeds(String name, Block blockCrop) {
-        super(name, blockCrop);
-    }
+	public StaticPlantSeeds(Block blockCrop) {
+		super(blockCrop);
+	}
+
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {

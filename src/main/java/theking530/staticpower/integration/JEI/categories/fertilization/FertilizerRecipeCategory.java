@@ -38,7 +38,7 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 		super(guiHelper);
 		locTitle = new TranslatableComponent("gui.staticpower.fertlization");
 		background = guiHelper.createBlankDrawable(130, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.BasicFarmer));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.BasicFarmer.get()));
 	}
 
 	@Override

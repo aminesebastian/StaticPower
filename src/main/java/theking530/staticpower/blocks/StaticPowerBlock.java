@@ -63,12 +63,32 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	/**
 	 * Constructor for a static power block.
 	 * 
-	 * @param name       The registry name of this block sans namespace.
 	 * @param properties The block properties to be used when defining this block.
 	 */
-	public StaticPowerBlock(String name, Block.Properties properties) {
+	public StaticPowerBlock(Block.Properties properties) {
 		super(properties);
-		setRegistryName(name);
+	}
+
+	/**
+	 * Basic constructor for a static power block with a specific material type.
+	 * 
+	 * @param material The {@link Material} this block is made of.
+	 */
+	public StaticPowerBlock(Material material) {
+		this(material, 1.0f);
+	}
+
+	/**
+	 * Basic constructor for a static power block with a specific material type,
+	 * tool type, harvest level, and hardness/resistance.
+	 * 
+	 * @param material              The {@link Material} this block is made of.
+	 * @param tool                  The {@link ToolType} this block should be
+	 *                              harvested by.
+	 * @param hardnessAndResistance The hardness and resistance of this block.
+	 */
+	public StaticPowerBlock(Material material, float hardnessAndResistance) {
+		this(Block.Properties.of(material).strength(hardnessAndResistance));
 	}
 
 	@Override
@@ -83,30 +103,6 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 	public Component getDisplayName(ItemStack stack) {
 		return new TranslatableComponent(getDescriptionId());
-	}
-
-	/**
-	 * Basic constructor for a static power block with a specific material type.
-	 * 
-	 * @param name     The registry name of this block sans namespace.
-	 * @param material The {@link Material} this block is made of.
-	 */
-	public StaticPowerBlock(String name, Material material) {
-		this(name, material, 1.0f);
-	}
-
-	/**
-	 * Basic constructor for a static power block with a specific material type,
-	 * tool type, harvest level, and hardness/resistance.
-	 * 
-	 * @param name                  The registry name of this block sans namespace.
-	 * @param material              The {@link Material} this block is made of.
-	 * @param tool                  The {@link ToolType} this block should be
-	 *                              harvested by.
-	 * @param hardnessAndResistance The hardness and resistance of this block.
-	 */
-	public StaticPowerBlock(String name, Material material, float hardnessAndResistance) {
-		this(name, Block.Properties.of(material).strength(hardnessAndResistance));
 	}
 
 	/**

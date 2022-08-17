@@ -34,8 +34,8 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	public static final String REDSTONE_MODE_TAG = "redstone_mode";
 	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);
 
-	public AbstractCableAttachment(String name) {
-		super(name);
+	public AbstractCableAttachment() {
+		super();
 	}
 
 	@Override

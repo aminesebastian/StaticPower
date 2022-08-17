@@ -9,7 +9,7 @@ import theking530.staticpower.init.ModItems;
 
 public class ResearchProvider extends AbstractResearchProvider {
 
-	public final Research TestResearch = this.register(ResearchBuilder.Create("test", "test").description("this is a test").visualOffset(5, 7).icon(ModItems.AdvancedBlade)
+	public final Research TestResearch = this.register(ResearchBuilder.Create("test", "test").description("this is a test").visualOffset(5, 7).icon(ModItems.AdvancedBlade.get())
 			.preReqs(new ResourceLocation(StaticPower.MOD_ID, "basic_research")).tier1(20));
 
 	public ResearchProvider(DataGenerator dataGeneratorIn) {

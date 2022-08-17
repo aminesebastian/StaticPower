@@ -7,8 +7,8 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreBlock;
 
 public class BlockDigistoreIOPort extends BaseDigistoreBlock {
 
-	public BlockDigistoreIOPort(String name) {
-		super(name);
+	public BlockDigistoreIOPort() {
+		super();
 	}
 
 	@Override

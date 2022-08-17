@@ -53,9 +53,9 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 	public CentrifugeRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Centrifuge.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Centrifuge.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(150, 70);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Centrifuge));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Centrifuge.get()));
 		pBar = new CentrifugeProgressBar(79, 26);
 	}
 

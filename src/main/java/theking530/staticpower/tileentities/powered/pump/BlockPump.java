@@ -31,8 +31,8 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockPump extends StaticPowerTileEntityBlock {
 	private final ResourceLocation tier;
 
-	public BlockPump(String name, ResourceLocation tier) {
-		super(name, Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
+	public BlockPump(ResourceLocation tier) {
+		super(Block.Properties.of(Material.METAL).strength(3.5f, 5.0f).sound(SoundType.METAL).noOcclusion());
 		this.tier = tier;
 	}
 

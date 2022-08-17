@@ -11,72 +11,72 @@ public class TileEntityRedstoneCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_NAKED = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "naked"),
-			ModBlocks.BasicRedstoneCableNaked);
+			ModBlocks.BasicRedstoneCableNaked.get());
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_BLACK = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "black"),
-			ModBlocks.BasicRedstoneCableBlack);
+			ModBlocks.BasicRedstoneCableBlack.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_DARK_BLUE = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "dark_blue"),
-			ModBlocks.BasicRedstoneCableDarkBlue);
+			ModBlocks.BasicRedstoneCableDarkBlue.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_DARK_GREEN = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "dark_green"),
-			ModBlocks.BasicRedstoneCableDarkGreen);
+			ModBlocks.BasicRedstoneCableDarkGreen.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_DARK_AQUA = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "dark_aqua"),
-			ModBlocks.BasicRedstoneCableDarkAqua);
+			ModBlocks.BasicRedstoneCableDarkAqua.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_DARK_RED = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "dark_red"),
-			ModBlocks.BasicRedstoneCableDarkRed);
+			ModBlocks.BasicRedstoneCableDarkRed.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_DARK_PURPLE = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "dark_purple"),
-			ModBlocks.BasicRedstoneCableDarkPurple);
+			ModBlocks.BasicRedstoneCableDarkPurple.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_GOLD = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "gold"),
-			ModBlocks.BasicRedstoneCableGold);
+			ModBlocks.BasicRedstoneCableGold.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_GRAY = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "gray"),
-			ModBlocks.BasicRedstoneCableGray);
+			ModBlocks.BasicRedstoneCableGray.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_DARK_GRAY = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "dark_gray"),
-			ModBlocks.BasicRedstoneCableDarkGray);
+			ModBlocks.BasicRedstoneCableDarkGray.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_BLUE = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "blue"),
-			ModBlocks.BasicRedstoneCableBlue);
+			ModBlocks.BasicRedstoneCableBlue.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_GREEN = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "green"),
-			ModBlocks.BasicRedstoneCableGreen);
+			ModBlocks.BasicRedstoneCableGreen.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_AQUA = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "aqua"),
-			ModBlocks.BasicRedstoneCableAqua);
+			ModBlocks.BasicRedstoneCableAqua.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_RED = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "red"),
-			ModBlocks.BasicRedstoneCableRed);
+			ModBlocks.BasicRedstoneCableRed.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_LIGHT_PURPLE = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "light_purple"),
-			ModBlocks.BasicRedstoneCableLightPurple);
+			ModBlocks.BasicRedstoneCableLightPurple.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_YELLOW = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "yellow"),
-			ModBlocks.BasicRedstoneCableYellow);
+			ModBlocks.BasicRedstoneCableYellow.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRedstoneCable> TYPE_BASIC_WHITE = new BlockEntityTypeAllocator<TileEntityRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityRedstoneCable(allocator, pos, state, "white"),
-			ModBlocks.BasicRedstoneCableWhite);
+			ModBlocks.BasicRedstoneCableWhite.get());
 
 	public final RedstoneCableComponent cableComponent;
 

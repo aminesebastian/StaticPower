@@ -7,9 +7,8 @@ import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 
 public class StaticPowerTreeLeaves extends LeavesBlock implements IItemBlockProvider {
 
-	public StaticPowerTreeLeaves(String name, Properties properties) {
+	public StaticPowerTreeLeaves(Properties properties) {
 		super(properties);
-		this.setRegistryName(name);
 	}
 
 	@Override

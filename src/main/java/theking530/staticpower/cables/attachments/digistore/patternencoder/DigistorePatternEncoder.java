@@ -31,8 +31,8 @@ public class DigistorePatternEncoder extends AbstractDigistoreTerminalAttachment
 	public static final int RECIPE_OUTPUT_SLOT = 9;
 	public static final int RECIPE_SINGLE_SLOT = 9;
 
-	public DigistorePatternEncoder(String name) {
-		super(name, StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT);
+	public DigistorePatternEncoder() {
+		super(StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT_ON, StaticPowerAdditionalModels.CABLE_DIGISTORE_PATTERN_ENCODER_ATTACHMENT);
 	}
 
 	@Override

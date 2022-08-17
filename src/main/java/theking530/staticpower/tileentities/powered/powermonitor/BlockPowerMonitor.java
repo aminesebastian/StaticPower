@@ -33,8 +33,8 @@ public class BlockPowerMonitor extends StaticPowerMachineBlock {
 	protected static final VoxelShape Z_AXIS_SHAPE = Block.box(0.0D, 3D, 3.5D, 16.0D, 13.0D, 12.5D);
 	protected static final VoxelShape X_AXIS_SHAPE = Block.box(3.5D, 3D, 0.0D, 12.5D, 13.0D, 16.0D);
 
-	public BlockPowerMonitor(String name) {
-		super(name);
+	public BlockPowerMonitor() {
+	
 	}
 
 	@Override

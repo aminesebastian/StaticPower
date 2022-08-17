@@ -37,8 +37,8 @@ public class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	 * @param name     The registry name of the item sans namespace.
 	 * @param capacity The amount of energy that can be stored by this item.
 	 */
-	public StaticPowerEnergyStoringItem(String name, long capacity) {
-		super(name, new Item.Properties().stacksTo(1).setNoRepair());
+	public StaticPowerEnergyStoringItem(long capacity) {
+		super(new Item.Properties().stacksTo(1).setNoRepair());
 		this.capacity = capacity;
 	}
 

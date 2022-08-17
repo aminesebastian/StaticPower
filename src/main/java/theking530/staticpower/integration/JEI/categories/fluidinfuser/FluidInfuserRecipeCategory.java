@@ -54,9 +54,9 @@ public class FluidInfuserRecipeCategory extends BaseJEIRecipeCategory<FluidInfus
 
 	public FluidInfuserRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.FluidInfuser.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.FluidInfuser.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.FluidInfuser));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.FluidInfuser.get()));
 		pBar = new ArrowProgressBar(51, 17);
 	}
 

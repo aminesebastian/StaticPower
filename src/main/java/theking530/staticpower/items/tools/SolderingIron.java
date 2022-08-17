@@ -17,8 +17,8 @@ import theking530.staticpower.items.StaticPowerItem;
 
 public class SolderingIron extends StaticPowerItem implements ISolderingIron {
 
-	public SolderingIron(String name, int maxUses) {
-		super(name, new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair());
+	public SolderingIron(int maxUses) {
+		super(new Item.Properties().stacksTo(1).durability(maxUses).setNoRepair());
 	}
 
 	@Override

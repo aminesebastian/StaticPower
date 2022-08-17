@@ -36,8 +36,7 @@ public class BlockCauldron extends StaticPowerTileEntityBlock {
 			box(4.0D, 0.0D, 0.0D, 12.0D, 3.0D, 16.0D), box(2.0D, 0.0D, 2.0D, 14.0D, 3.0D, 14.0D), INSIDE), BooleanOp.ONLY_FIRST);
 	private final boolean isClean;
 
-	public BlockCauldron(String name, boolean isClean) {
-		super(name);
+	public BlockCauldron(boolean isClean) {
 		this.isClean = isClean;
 	}
 
@@ -115,9 +114,9 @@ public class BlockCauldron extends StaticPowerTileEntityBlock {
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (isClean) {
-			tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.clean_cauldron_description")).withStyle(ChatFormatting.YELLOW));
+			tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.clean_cauldron_description")).withStyle(ChatFormatting.YELLOW));
 		} else {
-			tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.rusty_cauldron_description")).withStyle(ChatFormatting.BLUE));
+			tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.rusty_cauldron_description")).withStyle(ChatFormatting.BLUE));
 		}
 	}
 }

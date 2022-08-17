@@ -27,8 +27,8 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockHeatCable extends AbstractCableBlock {
 	public final ResourceLocation tier;
 
-	public BlockHeatCable(String name, ResourceLocation tier) {
-		super(name, new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
+	public BlockHeatCable(ResourceLocation tier) {
+		super(new CableBoundsCache(2.0D, new Vector3D(3.0f, 3.0f, 3.0f)), 2.5f);
 		this.tier = tier;
 	}
 

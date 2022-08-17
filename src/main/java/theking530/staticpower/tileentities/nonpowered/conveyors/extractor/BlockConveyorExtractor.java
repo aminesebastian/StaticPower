@@ -21,8 +21,8 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyor
 
 public class BlockConveyorExtractor extends AbstractConveyorBlock {
 
-	public BlockConveyorExtractor(String name, ResourceLocation tier) {
-		super(name, tier);
+	public BlockConveyorExtractor(ResourceLocation tier) {
+		super(tier);
 	}
 
 	@Override

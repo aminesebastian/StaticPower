@@ -26,11 +26,11 @@ public class RubberTree extends AbstractStaticPowerTree {
 	public static final String NAME = new ResourceLocation(StaticPower.MOD_ID, "rubber_wood").toString();
 
 	public static final Holder<ConfiguredFeature<TreeConfiguration, ?>> RUBBER_WOOD = FeatureUtils.register(NAME,
-			Feature.TREE, createStraightBlobTree(ModBlocks.RubberTreeLog, ModBlocks.RubberTreeLeaves, 4, 2, 0, 2)
+			Feature.TREE, createStraightBlobTree(ModBlocks.RubberTreeLog.get(), ModBlocks.RubberTreeLeaves.get(), 4, 2, 0, 2)
 					.ignoreVines().build());
 
 	public static final Holder<PlacedFeature> RUBBER_WOOD_CHECKED = PlacementUtils.register(NAME, RUBBER_WOOD,
-			PlacementUtils.filteredByBlockSurvival(ModBlocks.RubberTreeSapling));
+			PlacementUtils.filteredByBlockSurvival(ModBlocks.RubberTreeSapling.get()));
 
 	public static final Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> RUBBER_WOOD_SPAWN = FeatureUtils
 			.register(NAME, Feature.RANDOM_SELECTOR, new RandomFeatureConfiguration(

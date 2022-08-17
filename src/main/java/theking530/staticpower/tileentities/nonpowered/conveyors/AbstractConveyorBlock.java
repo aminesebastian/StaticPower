@@ -41,14 +41,13 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	protected final Map<Direction, VoxelShape> INTERACTION_SHAPES = new HashMap<>();
 	protected final ResourceLocation tier;
 
-	protected AbstractConveyorBlock(String name, ResourceLocation tier) {
-		super(name);
+	protected AbstractConveyorBlock(ResourceLocation tier) {
 		this.tier = tier;
 		cacheVoxelShapes();
 	}
 
-	protected AbstractConveyorBlock(String name, ResourceLocation tier, Properties properies) {
-		super(name, properies);
+	protected AbstractConveyorBlock(ResourceLocation tier, Properties properies) {
+		super(properies);
 		this.tier = tier;
 		cacheVoxelShapes();
 	}
@@ -88,7 +87,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		if (!isShowingAdvanced) {
 			StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-			tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.conveyor_speed_multiplier"))
+			tooltip.add(new TextComponent("ï¿½ ").append(new TranslatableComponent("gui.staticpower.conveyor_speed_multiplier"))
 					.append(GuiTextUtilities.formatNumberAsPercentStringOneDecimal(tierObject.conveyorSpeedMultiplier.get()).withStyle(ChatFormatting.GREEN)));
 		}
 	}

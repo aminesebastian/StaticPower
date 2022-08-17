@@ -26,15 +26,14 @@ public class StaticPowerFluidBucket extends BucketItem implements ICustomModelSu
 	private final boolean useDynamicModel;
 	private final ResourceLocation fluidMaskSprite;
 
-	public StaticPowerFluidBucket(boolean useDynamicModel, ResourceLocation fluidMaskSprite, String name, Supplier<? extends Fluid> supplier) {
+	public StaticPowerFluidBucket(boolean useDynamicModel, ResourceLocation fluidMaskSprite, Supplier<? extends Fluid> supplier) {
 		super(supplier, new Properties().stacksTo(1).tab(StaticPower.CREATIVE_TAB));
-		setRegistryName(name);
 		this.useDynamicModel = useDynamicModel;
 		this.fluidMaskSprite = fluidMaskSprite;
 	}
 
-	public StaticPowerFluidBucket(String name, Supplier<? extends Fluid> supplier) {
-		this(false, null, name, supplier);
+	public StaticPowerFluidBucket(Supplier<? extends Fluid> supplier) {
+		this(false, null, supplier);
 	}
 
 	@Override

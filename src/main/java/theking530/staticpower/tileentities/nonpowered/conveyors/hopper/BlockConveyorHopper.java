@@ -37,8 +37,8 @@ public class BlockConveyorHopper extends AbstractConveyorBlock {
 		PASSED_FILTER_SHAPE = Shapes.joinUnoptimized(PASSED_FILTER_SHAPE, Block.box(0, 0, 12, 16, 8, 16), BooleanOp.OR);
 	}
 
-	public BlockConveyorHopper(String name, ResourceLocation tier, boolean filtered) {
-		super(name, tier);
+	public BlockConveyorHopper(ResourceLocation tier, boolean filtered) {
+		super(tier);
 		this.filtered = filtered;
 	}
 

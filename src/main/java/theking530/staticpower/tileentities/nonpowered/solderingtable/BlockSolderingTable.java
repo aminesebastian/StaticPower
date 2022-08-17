@@ -27,8 +27,8 @@ public class BlockSolderingTable extends StaticPowerTileEntityBlock {
 		SHAPE = top;
 	}
 
-	public BlockSolderingTable(String name) {
-		super(name, Block.Properties.of(Material.METAL).noOcclusion().strength(3.5f));
+	public BlockSolderingTable() {
+		super(Block.Properties.of(Material.METAL).noOcclusion().strength(3.5f));
 	}
 
 	@Override

@@ -32,7 +32,7 @@ public abstract class AbstractContainerSolderingTable<T extends AbstractSolderin
 		}
 
 		// Add the soldering iron slot.
-		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.SolderingIron), 0.3f, getTileEntity().solderingIronInventory, 0, 8, 20).setEnabledState(enableSolderingIronSlot));
+		addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.SolderingIron.get()), 0.3f, getTileEntity().solderingIronInventory, 0, 8, 20).setEnabledState(enableSolderingIronSlot));
 
 		addOutputSlot();
 

@@ -11,10 +11,6 @@ import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
 public class BlockLaboratory extends StaticPowerMachineBlock {
 
-	public BlockLaboratory(String name) {
-		super(name);
-	}
-
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		return HasGuiType.ALWAYS;

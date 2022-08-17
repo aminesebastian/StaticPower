@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityDigistoreIOPort(pos, state), ModBlocks.DigistoreIOPort);
+			(type, pos, state) -> new TileEntityDigistoreIOPort(pos, state), ModBlocks.DigistoreIOPort.get());
 
 	public TileEntityDigistoreIOPort(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 5000);

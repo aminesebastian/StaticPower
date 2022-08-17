@@ -273,37 +273,37 @@ public class Research extends AbstractStaticPowerRecipe {
 		}
 
 		public ResearchBuilder tier1(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier1), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier1.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier2(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier2), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier2.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier3(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier3), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier3.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier4(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier4), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier4.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier5(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier5), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier5.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier6(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier6), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier6.get()), count));
 			return this;
 		}
 
 		public ResearchBuilder tier7(int count) {
-			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier7), count));
+			requirements.add(new StaticPowerIngredient(new ItemStack(ModItems.ResearchTier7.get()), count));
 			return this;
 		}
 

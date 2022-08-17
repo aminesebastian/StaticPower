@@ -15,8 +15,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 public class BaseHeatCapacityUpgrade extends BaseUpgrade {
 
-	public BaseHeatCapacityUpgrade(String name, ResourceLocation tier) {
-		super(name, tier, UpgradeType.HEAT_CAPACITY);
+	public BaseHeatCapacityUpgrade(ResourceLocation tier) {
+		super(tier, UpgradeType.HEAT_CAPACITY);
 	}
 
 	@Override

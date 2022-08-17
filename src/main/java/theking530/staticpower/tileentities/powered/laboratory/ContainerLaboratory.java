@@ -32,13 +32,13 @@ public class ContainerLaboratory extends StaticPowerTileEntityContainer<TileEnti
 	@Override
 	public void initializeContainer() {
 		// Input
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier1), getTileEntity().inputInventory, 0, 32, 34));
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier2), getTileEntity().inputInventory, 1, 51, 34));
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier3), getTileEntity().inputInventory, 2, 70, 34));
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier4), getTileEntity().inputInventory, 3, 89, 34));
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier5), getTileEntity().inputInventory, 4, 108, 34));
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier6), getTileEntity().inputInventory, 5, 127, 34));
-		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier7), getTileEntity().inputInventory, 6, 146, 34));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier1.get()), getTileEntity().inputInventory, 0, 32, 34));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier2.get()), getTileEntity().inputInventory, 1, 51, 34));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier3.get()), getTileEntity().inputInventory, 2, 70, 34));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier4.get()), getTileEntity().inputInventory, 3, 89, 34));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier5.get()), getTileEntity().inputInventory, 4, 108, 34));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier6.get()), getTileEntity().inputInventory, 5, 127, 34));
+		this.addSlot(new StaticPowerContainerSlot(new ItemStack(ModItems.ResearchTier7.get()), getTileEntity().inputInventory, 6, 146, 34));
 
 		// Battery
 		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));

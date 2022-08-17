@@ -50,25 +50,25 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 public class TileEntityPump extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_IRON = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronPump);
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronPump.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicPump);
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicPump.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedPump);
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedPump.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticPump);
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticPump.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedPump);
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedPump.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumPump);
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumPump.get());
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativePump);
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativePump.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -209,7 +209,7 @@ public class TileEntityPump extends TileEntityMachine {
 						getLevel().setBlockAndUpdate(position, Blocks.AIR.defaultBlockState());
 						// If this position is under the pump, place a tube block there.
 						if (position.getX() == this.getBlockPos().getX() && position.getZ() == this.getBlockPos().getZ()) {
-							this.getLevel().setBlock(position, ModBlocks.PumpTube.defaultBlockState(), 2);
+							this.getLevel().setBlock(position, ModBlocks.PumpTube.get().defaultBlockState(), 2);
 						}
 					}
 

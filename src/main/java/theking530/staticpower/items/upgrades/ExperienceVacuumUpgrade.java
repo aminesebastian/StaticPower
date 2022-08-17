@@ -15,8 +15,8 @@ import theking530.api.IUpgradeItem;
 
 public class ExperienceVacuumUpgrade extends BaseUpgrade implements IUpgradeItem {
 
-	public ExperienceVacuumUpgrade(String name) {
-		super(name, new Properties().stacksTo(1));
+	public ExperienceVacuumUpgrade() {
+		super(new Properties().stacksTo(1));
 	}
 
 	@Override

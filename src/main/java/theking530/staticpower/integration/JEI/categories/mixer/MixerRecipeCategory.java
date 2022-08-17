@@ -55,9 +55,9 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 
 	public MixerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Mixer.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Mixer.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(146, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Mixer));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Mixer.get()));
 		mixerPBar = new MixerProgressBar(54, 20);
 		pBar = new FluidProgressBar(100, 23, 24, 8);
 	}

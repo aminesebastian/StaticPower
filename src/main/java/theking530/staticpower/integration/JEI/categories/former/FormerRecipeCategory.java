@@ -50,9 +50,9 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 
 	public FormerRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
-		locTitle = new TranslatableComponent(ModBlocks.Former.getDescriptionId());
+		locTitle = new TranslatableComponent(ModBlocks.Former.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Former));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Former.get()));
 		pBar = new ArrowProgressBar(84, 19);
 	}
 

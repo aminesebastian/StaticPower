@@ -38,8 +38,8 @@ import theking530.staticpower.utilities.MetricConverter;
 public class ChainsawBlade extends AbstractToolPart {
 	public final Tier miningTier;
 
-	public ChainsawBlade(String name, Tier miningTier, ResourceLocation tier) {
-		super(name, tier, new Item.Properties().stacksTo(1).durability(1));
+	public ChainsawBlade(Tier miningTier, ResourceLocation tier) {
+		super(tier, new Item.Properties().stacksTo(1).durability(1));
 		this.miningTier = miningTier;
 	}
 

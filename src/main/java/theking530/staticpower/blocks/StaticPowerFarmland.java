@@ -27,8 +27,8 @@ import net.minecraftforge.common.PlantType;
 public class StaticPowerFarmland extends StaticPowerBlock {
 	protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 15.0D, 16.0D);
 
-	public StaticPowerFarmland(String name) {
-		super(name, Block.Properties.of(Material.DIRT).dynamicShape().randomTicks());
+	public StaticPowerFarmland() {
+		super(Block.Properties.of(Material.DIRT).dynamicShape().randomTicks());
 	}
 
 	@Override

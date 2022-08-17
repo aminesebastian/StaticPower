@@ -39,7 +39,7 @@ import theking530.staticpower.tileentities.components.serialization.SaveSerializ
 public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerMetricsSyncConsumer {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPowerMonitor> TYPE = new BlockEntityTypeAllocator<TileEntityPowerMonitor>(
-			(allocator, pos, state) -> new TileEntityPowerMonitor(allocator, pos, state), ModBlocks.PowerMonitor);
+			(allocator, pos, state) -> new TileEntityPowerMonitor(allocator, pos, state), ModBlocks.PowerMonitor.get());
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

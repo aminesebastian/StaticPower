@@ -23,8 +23,7 @@ public class BlockStaticChest extends StaticPowerTileEntityBlock {
 	protected static final VoxelShape AABB = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 	public final ResourceLocation tier;
 
-	public BlockStaticChest(String name, ResourceLocation tier) {
-		super(name);
+	public BlockStaticChest(ResourceLocation tier) {
 		this.tier = tier;
 	}
 
