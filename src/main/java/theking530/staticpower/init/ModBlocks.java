@@ -1,11 +1,18 @@
 package theking530.staticpower.init;
 
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.material.MaterialColor;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.EnergizedGrass;
@@ -97,6 +104,8 @@ import theking530.staticpower.tileentities.powered.vulcanizer.BlockVulcanizer;
 import theking530.staticpower.world.trees.RubberTree;
 
 public class ModBlocks {
+	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS,
+			StaticPower.MOD_ID);
 	// Decorative
 	public static Lamp StaticLamp;
 	public static Lamp EnergizedLamp;
@@ -409,13 +418,19 @@ public class ModBlocks {
 	public static StaticPowerTreeLeaves RubberTreeLeaves;
 	public static StaticPowerSapling RubberTreeSapling;
 
-	public static void init() {
+	private static <T extends Block>RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block, CreativeModeTab tab) {
+		
+	}
+	
+	public static void init(IEventBus eventBus) {
+		BLOCKS.register(eventBus);
 		// Decorative
 		StaticPowerRegistry.preRegisterBlock(StaticLamp = new Lamp("lamp_static"));
 		StaticPowerRegistry.preRegisterBlock(EnergizedLamp = new Lamp("lamp_energized"));
 		StaticPowerRegistry.preRegisterBlock(LumumLamp = new Lamp("lamp_lumum"));
 		StaticPowerRegistry.preRegisterBlock(ObsidianGlass = new StaticPowerGlassBlock("glass_obsidian"));
-		StaticPowerRegistry.preRegisterBlock(SmeepWool = new StaticPowerBlock("smeep_wool", Properties.copy(Blocks.LIME_WOOL)));
+		StaticPowerRegistry
+				.preRegisterBlock(SmeepWool = new StaticPowerBlock("smeep_wool", Properties.copy(Blocks.LIME_WOOL)));
 
 		StaticPowerRegistry.preRegisterBlock(StaticFarmland = new StaticPowerFarmland("farmland_static"));
 		StaticPowerRegistry.preRegisterBlock(EnergizedFarmland = new StaticPowerFarmland("farmland_energized"));
@@ -425,109 +440,188 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(EnergizedGrass = new EnergizedGrass("grass_energized"));
 
 		// Plants
-		StaticPowerRegistry.preRegisterBlock(StaticPlant = new BaseSimplePlant("plant_static", () -> ModItems.StaticSeeds));
-		StaticPowerRegistry.preRegisterBlock(EnergizedPlant = new BaseSimplePlant("plant_energized", () -> ModItems.EnergizedSeeds));
-		StaticPowerRegistry.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum", () -> ModItems.LumumSeeds));
+		StaticPowerRegistry
+				.preRegisterBlock(StaticPlant = new BaseSimplePlant("plant_static", () -> ModItems.StaticSeeds));
+		StaticPowerRegistry.preRegisterBlock(
+				EnergizedPlant = new BaseSimplePlant("plant_energized", () -> ModItems.EnergizedSeeds));
+		StaticPowerRegistry
+				.preRegisterBlock(LumumPlant = new BaseSimplePlant("plant_lumum", () -> ModItems.LumumSeeds));
 
 		// Wood
-		StaticPowerRegistry.preRegisterBlock(StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.copy(Blocks.OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized", Block.Properties.copy(Blocks.OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.copy(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(
+				StaticLog = new StaticPowerRotatePillarBlock("log_static", Block.Properties.copy(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(EnergizedLog = new StaticPowerRotatePillarBlock("log_energized",
+				Block.Properties.copy(Blocks.OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(
+				LumumLog = new StaticPowerRotatePillarBlock("log_lumum", Block.Properties.copy(Blocks.OAK_LOG)));
 
 		// Planks
-		StaticPowerRegistry.preRegisterBlock(StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.copy(Blocks.OAK_PLANKS)));
-		StaticPowerRegistry.preRegisterBlock(EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.copy(Blocks.OAK_PLANKS)));
-		StaticPowerRegistry.preRegisterBlock(LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.copy(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(
+				StaticPlanks = new StaticPowerBlock("planks_static", Block.Properties.copy(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(
+				EnergizedPlanks = new StaticPowerBlock("planks_energized", Block.Properties.copy(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(
+				LumumPlanks = new StaticPowerBlock("planks_lumum", Block.Properties.copy(Blocks.OAK_PLANKS)));
 
 		// Ore
-		StaticPowerRegistry.preRegisterBlock(OreTin = new StaticPowerOre("ore_tin", Block.Properties.copy(Blocks.COPPER_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreZinc = new StaticPowerOre("ore_zinc", Block.Properties.copy(Blocks.IRON_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreAluminum = new StaticPowerOre("ore_aluminum", Block.Properties.copy(Blocks.COPPER_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreMagnesium = new StaticPowerOre("ore_magnesium", Block.Properties.copy(Blocks.IRON_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreSilver = new StaticPowerOre("ore_silver", Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
-		StaticPowerRegistry.preRegisterBlock(OreLead = new StaticPowerOre("ore_lead", Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
-		StaticPowerRegistry.preRegisterBlock(OrePlatinum = new StaticPowerOre("ore_platinum", Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
-		StaticPowerRegistry.preRegisterBlock(OreRuby = new StaticPowerOre("ore_ruby", Block.Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
-		StaticPowerRegistry.preRegisterBlock(OreSapphire = new StaticPowerOre("ore_sapphire", Block.Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
-		StaticPowerRegistry.preRegisterBlock(OreTungsten = new StaticPowerOre("ore_tungsten", Block.Properties.copy(Blocks.ANCIENT_DEBRIS)));
-		StaticPowerRegistry.preRegisterBlock(OreRustyIron = new StaticPowerOre("ore_rusty_iron", Block.Properties.copy(Blocks.COAL_ORE), 1, 3));
+		StaticPowerRegistry.preRegisterBlock(
+				OreTin = new StaticPowerOre("ore_tin", Block.Properties.copy(Blocks.COPPER_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(
+				OreZinc = new StaticPowerOre("ore_zinc", Block.Properties.copy(Blocks.IRON_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(
+				OreAluminum = new StaticPowerOre("ore_aluminum", Block.Properties.copy(Blocks.COPPER_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(
+				OreMagnesium = new StaticPowerOre("ore_magnesium", Block.Properties.copy(Blocks.IRON_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(
+				OreSilver = new StaticPowerOre("ore_silver", Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
+		StaticPowerRegistry.preRegisterBlock(
+				OreLead = new StaticPowerOre("ore_lead", Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
+		StaticPowerRegistry.preRegisterBlock(
+				OrePlatinum = new StaticPowerOre("ore_platinum", Block.Properties.copy(Blocks.GOLD_ORE), 2, 4));
+		StaticPowerRegistry.preRegisterBlock(
+				OreRuby = new StaticPowerOre("ore_ruby", Block.Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
+		StaticPowerRegistry.preRegisterBlock(
+				OreSapphire = new StaticPowerOre("ore_sapphire", Block.Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
+		StaticPowerRegistry.preRegisterBlock(
+				OreTungsten = new StaticPowerOre("ore_tungsten", Block.Properties.copy(Blocks.ANCIENT_DEBRIS)));
+		StaticPowerRegistry.preRegisterBlock(
+				OreRustyIron = new StaticPowerOre("ore_rusty_iron", Block.Properties.copy(Blocks.COAL_ORE), 1, 3));
 
 		// Deepslate Ore
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateTin = new StaticPowerOre("ore_deepslate_tin", Block.Properties.copy(Blocks.DEEPSLATE_COPPER_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateZinc = new StaticPowerOre("ore_deepslate_zinc", Block.Properties.copy(Blocks.DEEPSLATE_IRON_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateAluminum = new StaticPowerOre("ore_deepslate_aluminum", Block.Properties.copy(Blocks.DEEPSLATE_COPPER_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateMagnesium = new StaticPowerOre("ore_deepslate_magnesium", Block.Properties.copy(Blocks.DEEPSLATE_IRON_ORE), 1, 2));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateSilver = new StaticPowerOre("ore_deepslate_silver", Block.Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateLead = new StaticPowerOre("ore_deepslate_lead", Block.Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslatePlatinum = new StaticPowerOre("ore_deepslate_platinum", Block.Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateRuby = new StaticPowerOre("ore_deepslate_ruby", Block.Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateSapphire = new StaticPowerOre("ore_deepslate_sapphire", Block.Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
-		StaticPowerRegistry.preRegisterBlock(OreDeepslateTungsten = new StaticPowerOre("ore_deepslate_tungsten", Block.Properties.copy(Blocks.ANCIENT_DEBRIS)));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateTin = new StaticPowerOre("ore_deepslate_tin",
+				Block.Properties.copy(Blocks.DEEPSLATE_COPPER_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateZinc = new StaticPowerOre("ore_deepslate_zinc",
+				Block.Properties.copy(Blocks.DEEPSLATE_IRON_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateAluminum = new StaticPowerOre("ore_deepslate_aluminum",
+				Block.Properties.copy(Blocks.DEEPSLATE_COPPER_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateMagnesium = new StaticPowerOre("ore_deepslate_magnesium",
+				Block.Properties.copy(Blocks.DEEPSLATE_IRON_ORE), 1, 2));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateSilver = new StaticPowerOre("ore_deepslate_silver",
+				Block.Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateLead = new StaticPowerOre("ore_deepslate_lead",
+				Block.Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslatePlatinum = new StaticPowerOre("ore_deepslate_platinum",
+				Block.Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateRuby = new StaticPowerOre("ore_deepslate_ruby",
+				Block.Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateSapphire = new StaticPowerOre("ore_deepslate_sapphire",
+				Block.Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
+		StaticPowerRegistry.preRegisterBlock(OreDeepslateTungsten = new StaticPowerOre("ore_deepslate_tungsten",
+				Block.Properties.copy(Blocks.ANCIENT_DEBRIS)));
 
 		// Nether Ores
-		StaticPowerRegistry.preRegisterBlock(OreNetherSilver = new StaticPowerOre("ore_nether_silver", Block.Properties.copy(Blocks.NETHER_GOLD_ORE)));
-		StaticPowerRegistry.preRegisterBlock(OreNetherTungsten = new StaticPowerOre("ore_nether_tungsten", Block.Properties.copy(Blocks.NETHER_GOLD_ORE)));
-		StaticPowerRegistry.preRegisterBlock(OreNetherPlatinum = new StaticPowerOre("ore_nether_platinum", Block.Properties.copy(Blocks.NETHER_GOLD_ORE)));
+		StaticPowerRegistry.preRegisterBlock(OreNetherSilver = new StaticPowerOre("ore_nether_silver",
+				Block.Properties.copy(Blocks.NETHER_GOLD_ORE)));
+		StaticPowerRegistry.preRegisterBlock(OreNetherTungsten = new StaticPowerOre("ore_nether_tungsten",
+				Block.Properties.copy(Blocks.NETHER_GOLD_ORE)));
+		StaticPowerRegistry.preRegisterBlock(OreNetherPlatinum = new StaticPowerOre("ore_nether_platinum",
+				Block.Properties.copy(Blocks.NETHER_GOLD_ORE)));
 
 		// Metal Blocks
-		StaticPowerRegistry.preRegisterBlock(BlockTin = new StaticPowerBlock("block_tin", Block.Properties.of(Material.METAL).strength(1.7f)));
-		StaticPowerRegistry.preRegisterBlock(BlockZinc = new StaticPowerBlock("block_zinc", Block.Properties.of(Material.METAL).strength(1.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockAluminum = new StaticPowerBlock("block_aluminum", Block.Properties.of(Material.METAL).strength(1.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockMagnesium = new StaticPowerBlock("block_magnesium", Block.Properties.of(Material.METAL).strength(2.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockSilver = new StaticPowerBlock("block_silver", Block.Properties.of(Material.METAL).strength(1.5f)));
-		StaticPowerRegistry.preRegisterBlock(BlockLead = new StaticPowerBlock("block_lead", Block.Properties.of(Material.METAL).strength(1.5f)));
-		StaticPowerRegistry.preRegisterBlock(BlockPlatinum = new StaticPowerBlock("block_platinum", Block.Properties.of(Material.METAL).strength(2.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRuby = new StaticPowerBlock("block_ruby", Block.Properties.of(Material.METAL).strength(3.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockSapphire = new StaticPowerBlock("block_sapphire", Block.Properties.of(Material.METAL).strength(3.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockTungsten = new StaticPowerBlock("block_tungsten", Block.Properties.of(Material.METAL).strength(4.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockBrass = new StaticPowerBlock("block_brass", Block.Properties.of(Material.METAL).strength(1.7f)));
-		StaticPowerRegistry.preRegisterBlock(BlockBronze = new StaticPowerBlock("block_bronze", Block.Properties.of(Material.METAL).strength(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockTin = new StaticPowerBlock("block_tin", Block.Properties.of(Material.METAL).strength(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockZinc = new StaticPowerBlock("block_zinc", Block.Properties.of(Material.METAL).strength(1.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockAluminum = new StaticPowerBlock("block_aluminum",
+				Block.Properties.of(Material.METAL).strength(1.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockMagnesium = new StaticPowerBlock("block_magnesium",
+				Block.Properties.of(Material.METAL).strength(2.0f)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockSilver = new StaticPowerBlock("block_silver", Block.Properties.of(Material.METAL).strength(1.5f)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockLead = new StaticPowerBlock("block_lead", Block.Properties.of(Material.METAL).strength(1.5f)));
+		StaticPowerRegistry.preRegisterBlock(BlockPlatinum = new StaticPowerBlock("block_platinum",
+				Block.Properties.of(Material.METAL).strength(2.0f)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockRuby = new StaticPowerBlock("block_ruby", Block.Properties.of(Material.METAL).strength(3.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockSapphire = new StaticPowerBlock("block_sapphire",
+				Block.Properties.of(Material.METAL).strength(3.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockTungsten = new StaticPowerBlock("block_tungsten",
+				Block.Properties.of(Material.METAL).strength(4.0f)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockBrass = new StaticPowerBlock("block_brass", Block.Properties.of(Material.METAL).strength(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockBronze = new StaticPowerBlock("block_bronze", Block.Properties.of(Material.METAL).strength(1.7f)));
 
-		StaticPowerRegistry.preRegisterBlock(BlockRedstoneAlloy = new StaticPowerBlock("block_redstone_alloy", Block.Properties.of(Material.METAL).strength(1.7f)));
-		StaticPowerRegistry.preRegisterBlock(BlockInertInfusion = new StaticPowerBlock("block_inert_infusion", Block.Properties.of(Material.METAL).strength(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRedstoneAlloy = new StaticPowerBlock("block_redstone_alloy",
+				Block.Properties.of(Material.METAL).strength(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(BlockInertInfusion = new StaticPowerBlock("block_inert_infusion",
+				Block.Properties.of(Material.METAL).strength(1.7f)));
 
-		StaticPowerRegistry.preRegisterBlock(BlockStaticMetal = new StaticPowerBlock("block_static_metal", Block.Properties.of(Material.METAL).strength(2.5f)));
-		StaticPowerRegistry.preRegisterBlock(BlockEnergizedMetal = new StaticPowerBlock("block_energized_metal", Block.Properties.of(Material.METAL).strength(3.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockLumumMetal = new StaticPowerBlock("block_lumum_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockStaticMetal = new StaticPowerBlock("block_static_metal",
+				Block.Properties.of(Material.METAL).strength(2.5f)));
+		StaticPowerRegistry.preRegisterBlock(BlockEnergizedMetal = new StaticPowerBlock("block_energized_metal",
+				Block.Properties.of(Material.METAL).strength(3.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockLumumMetal = new StaticPowerBlock("block_lumum_metal",
+				Block.Properties.of(Material.METAL).strength(4.0f)));
 
-		StaticPowerRegistry.preRegisterBlock(BlockLatex = new StaticPowerSlimeBlock("block_latex", Block.Properties.copy(Blocks.SLIME_BLOCK)));
-		StaticPowerRegistry.preRegisterBlock(BlockRubber = new StaticPowerSlimeBlock("block_rubber", Block.Properties.copy(Blocks.SLIME_BLOCK)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockLatex = new StaticPowerSlimeBlock("block_latex", Block.Properties.copy(Blocks.SLIME_BLOCK)));
+		StaticPowerRegistry.preRegisterBlock(
+				BlockRubber = new StaticPowerSlimeBlock("block_rubber", Block.Properties.copy(Blocks.SLIME_BLOCK)));
 
 		// Raw Material Blocks
-		StaticPowerRegistry.preRegisterBlock(BlockRawTin = new StaticPowerBlock("block_raw_tin", Block.Properties.of(Material.METAL).strength(1.7f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawZinc = new StaticPowerBlock("block_raw_zinc", Block.Properties.of(Material.METAL).strength(1.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawAluminum = new StaticPowerBlock("block_raw_aluminum", Block.Properties.of(Material.METAL).strength(1.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawMagnesium = new StaticPowerBlock("block_raw_magnesium", Block.Properties.of(Material.METAL).strength(2.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawSilver = new StaticPowerBlock("block_raw_silver", Block.Properties.of(Material.METAL).strength(1.5f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawLead = new StaticPowerBlock("block_raw_lead", Block.Properties.of(Material.METAL).strength(1.5f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawPlatinum = new StaticPowerBlock("block_raw_platinum", Block.Properties.of(Material.METAL).strength(2.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawTungsten = new StaticPowerBlock("block_raw_tungsten", Block.Properties.of(Material.METAL).strength(4.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawStaticMetal = new StaticPowerBlock("block_raw_static_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawEnergizedMetal = new StaticPowerBlock("block_raw_energized_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
-		StaticPowerRegistry.preRegisterBlock(BlockRawLumumMetal = new StaticPowerBlock("block_raw_lumum_metal", Block.Properties.of(Material.METAL).strength(4.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawTin = new StaticPowerBlock("block_raw_tin",
+				Block.Properties.of(Material.METAL).strength(1.7f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawZinc = new StaticPowerBlock("block_raw_zinc",
+				Block.Properties.of(Material.METAL).strength(1.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawAluminum = new StaticPowerBlock("block_raw_aluminum",
+				Block.Properties.of(Material.METAL).strength(1.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawMagnesium = new StaticPowerBlock("block_raw_magnesium",
+				Block.Properties.of(Material.METAL).strength(2.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawSilver = new StaticPowerBlock("block_raw_silver",
+				Block.Properties.of(Material.METAL).strength(1.5f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawLead = new StaticPowerBlock("block_raw_lead",
+				Block.Properties.of(Material.METAL).strength(1.5f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawPlatinum = new StaticPowerBlock("block_raw_platinum",
+				Block.Properties.of(Material.METAL).strength(2.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawTungsten = new StaticPowerBlock("block_raw_tungsten",
+				Block.Properties.of(Material.METAL).strength(4.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawStaticMetal = new StaticPowerBlock("block_raw_static_metal",
+				Block.Properties.of(Material.METAL).strength(4.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawEnergizedMetal = new StaticPowerBlock("block_raw_energized_metal",
+				Block.Properties.of(Material.METAL).strength(4.0f)));
+		StaticPowerRegistry.preRegisterBlock(BlockRawLumumMetal = new StaticPowerBlock("block_raw_lumum_metal",
+				Block.Properties.of(Material.METAL).strength(4.0f)));
 
 		// Machine Blocks
-		StaticPowerRegistry.preRegisterBlock(MachineBlockAluminum = new StaticPowerCutoutBlock("machine_block_aluminum", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
-		StaticPowerRegistry.preRegisterBlock(MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum", Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockAluminum = new StaticPowerCutoutBlock("machine_block_aluminum",
+				Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockBasic = new StaticPowerCutoutBlock("machine_block_basic",
+				Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockAdvanced = new StaticPowerCutoutBlock("machine_block_advanced",
+				Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockStatic = new StaticPowerCutoutBlock("machine_block_static",
+				Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
+		StaticPowerRegistry
+				.preRegisterBlock(MachineBlockEnergized = new StaticPowerCutoutBlock("machine_block_energized",
+						Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
+		StaticPowerRegistry.preRegisterBlock(MachineBlockLumum = new StaticPowerCutoutBlock("machine_block_lumum",
+				Block.Properties.of(Material.METAL).sound(SoundType.METAL)));
 
 		// Machines
 		StaticPowerRegistry.preRegisterBlock(VacuumChest = new BlockVacuumChest("chest_vacuum"));
 		StaticPowerRegistry.preRegisterBlock(BasicChest = new BlockStaticChest("chest_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(AdvancedChest = new BlockStaticChest("chest_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(StaticChest = new BlockStaticChest("chest_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(EnergizedChest = new BlockStaticChest("chest_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(AdvancedChest = new BlockStaticChest("chest_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry
+				.preRegisterBlock(StaticChest = new BlockStaticChest("chest_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry
+				.preRegisterBlock(EnergizedChest = new BlockStaticChest("chest_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(LumumChest = new BlockStaticChest("chest_lumum", StaticPowerTiers.LUMUM));
 
-		StaticPowerRegistry.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(SolarPanelAdvanced = new BlockSolarPanel("solar_panel_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(SolarPanelStatic = new BlockSolarPanel("solar_panel_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(SolarPanelEnergized = new BlockSolarPanel("solar_panel_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(SolarPanelLumum = new BlockSolarPanel("solar_panel_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterBlock(SolarPanelCreative = new BlockSolarPanel("solar_panel_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry
+				.preRegisterBlock(SolarPanelBasic = new BlockSolarPanel("solar_panel_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(
+				SolarPanelAdvanced = new BlockSolarPanel("solar_panel_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(
+				SolarPanelStatic = new BlockSolarPanel("solar_panel_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(
+				SolarPanelEnergized = new BlockSolarPanel("solar_panel_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(SolarPanelLumum = new BlockSolarPanel("solar_panel_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				SolarPanelCreative = new BlockSolarPanel("solar_panel_creative", StaticPowerTiers.CREATIVE));
 
 		StaticPowerRegistry.preRegisterBlock(ChargingStation = new BlockChargingStation("machine_charging_station"));
 		StaticPowerRegistry.preRegisterBlock(PoweredFurnace = new BlockPoweredFurnace("machine_powered_furnace"));
@@ -543,8 +637,10 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(Squeezer = new BlockSqueezer("machine_squeezer"));
 		StaticPowerRegistry.preRegisterBlock(Bottler = new BlockBottler("machine_bottler"));
 		StaticPowerRegistry.preRegisterBlock(SolderingTable = new BlockSolderingTable("soldering_table"));
-		StaticPowerRegistry.preRegisterBlock(AutoSolderingTable = new BlockAutoSolderingTable("machine_industrial_soldering_table"));
-		StaticPowerRegistry.preRegisterBlock(AutoCraftingTable = new BlockAutoCraftingTable("machine_industrial_crafting_table"));
+		StaticPowerRegistry.preRegisterBlock(
+				AutoSolderingTable = new BlockAutoSolderingTable("machine_industrial_soldering_table"));
+		StaticPowerRegistry
+				.preRegisterBlock(AutoCraftingTable = new BlockAutoCraftingTable("machine_industrial_crafting_table"));
 		StaticPowerRegistry.preRegisterBlock(FluidInfuser = new BlockFluidInfuser("machine_fluid_infuser"));
 		StaticPowerRegistry.preRegisterBlock(Centrifuge = new BlockCentrifuge("machine_centrifuge"));
 		StaticPowerRegistry.preRegisterBlock(FusionFurnace = new BlockFusionFurnace("machine_fusion_furnace"));
@@ -565,65 +661,122 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(CleanCauldron = new BlockCauldron("clean_cauldron", true));
 		StaticPowerRegistry.preRegisterBlock(DirectDropper = new BlockDirectDropper("direct_dropper"));
 		StaticPowerRegistry.preRegisterBlock(AutomaticPlacer = new BlockAutomaticPlacer("automatic_placer"));
-		StaticPowerRegistry.preRegisterBlock(RandomItemGenerator = new BlockRandomItemGenerator("random_item_generator"));
+		StaticPowerRegistry
+				.preRegisterBlock(RandomItemGenerator = new BlockRandomItemGenerator("random_item_generator"));
 		StaticPowerRegistry.preRegisterBlock(Enchanter = new BlockEnchanter("machine_enchanter"));
 		StaticPowerRegistry.preRegisterBlock(Refinery = new BlockRefinery("machine_refinery"));
 		StaticPowerRegistry.preRegisterBlock(Laboratory = new BlockLaboratory("laboratory"));
 		StaticPowerRegistry.preRegisterBlock(ResearchCheater = new BlockResearchCheater("research_cheater"));
 
-		StaticPowerRegistry.preRegisterBlock(StraightConveyorBasic = new BlockStraightConveyor("conveyor_straight_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(StraightConveyorAdvanced = new BlockStraightConveyor("conveyor_straight_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(StraightConveyorStatic = new BlockStraightConveyor("conveyor_straight_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(StraightConveyorEnergized = new BlockStraightConveyor("conveyor_straight_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(StraightConveyorLumum = new BlockStraightConveyor("conveyor_straight_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				StraightConveyorBasic = new BlockStraightConveyor("conveyor_straight_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry
+				.preRegisterBlock(StraightConveyorAdvanced = new BlockStraightConveyor("conveyor_straight_advanced",
+						StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry
+				.preRegisterBlock(StraightConveyorStatic = new BlockStraightConveyor("conveyor_straight_static",
+						StaticPowerTiers.STATIC));
+		StaticPowerRegistry
+				.preRegisterBlock(StraightConveyorEnergized = new BlockStraightConveyor("conveyor_straight_energized",
+						StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(
+				StraightConveyorLumum = new BlockStraightConveyor("conveyor_straight_lumum", StaticPowerTiers.LUMUM));
 
-		StaticPowerRegistry.preRegisterBlock(RampUpConveyorBasic = new BlockRampUpConveyor("conveyor_ramp_up_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(RampUpConveyorAdvanced = new BlockRampUpConveyor("conveyor_ramp_up_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(RampUpConveyorStatic = new BlockRampUpConveyor("conveyor_ramp_up_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(RampUpConveyorEnergized = new BlockRampUpConveyor("conveyor_ramp_up_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(RampUpConveyorLumum = new BlockRampUpConveyor("conveyor_ramp_up_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				RampUpConveyorBasic = new BlockRampUpConveyor("conveyor_ramp_up_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry
+				.preRegisterBlock(RampUpConveyorAdvanced = new BlockRampUpConveyor("conveyor_ramp_up_advanced",
+						StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(
+				RampUpConveyorStatic = new BlockRampUpConveyor("conveyor_ramp_up_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry
+				.preRegisterBlock(RampUpConveyorEnergized = new BlockRampUpConveyor("conveyor_ramp_up_energized",
+						StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(
+				RampUpConveyorLumum = new BlockRampUpConveyor("conveyor_ramp_up_lumum", StaticPowerTiers.LUMUM));
 
-		StaticPowerRegistry.preRegisterBlock(RampDownConveyorBasic = new BlockRampDownConveyor("conveyor_ramp_down_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(RampDownConveyorAdvanced = new BlockRampDownConveyor("conveyor_ramp_down_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(RampDownConveyorStatic = new BlockRampDownConveyor("conveyor_ramp_down_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(RampDownConveyorEnergized = new BlockRampDownConveyor("conveyor_ramp_down_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(RampDownConveyorLumum = new BlockRampDownConveyor("conveyor_ramp_down_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				RampDownConveyorBasic = new BlockRampDownConveyor("conveyor_ramp_down_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry
+				.preRegisterBlock(RampDownConveyorAdvanced = new BlockRampDownConveyor("conveyor_ramp_down_advanced",
+						StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry
+				.preRegisterBlock(RampDownConveyorStatic = new BlockRampDownConveyor("conveyor_ramp_down_static",
+						StaticPowerTiers.STATIC));
+		StaticPowerRegistry
+				.preRegisterBlock(RampDownConveyorEnergized = new BlockRampDownConveyor("conveyor_ramp_down_energized",
+						StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(
+				RampDownConveyorLumum = new BlockRampDownConveyor("conveyor_ramp_down_lumum", StaticPowerTiers.LUMUM));
 
-		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierBasic = new BlockConveyorSupplier("conveyor_supplier_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierAdvanced = new BlockConveyorSupplier("conveyor_supplier_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierStatic = new BlockConveyorSupplier("conveyor_supplier_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierEnergized = new BlockConveyorSupplier("conveyor_supplier_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(ConveyorSupplierLumum = new BlockConveyorSupplier("conveyor_supplier_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				ConveyorSupplierBasic = new BlockConveyorSupplier("conveyor_supplier_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorSupplierAdvanced = new BlockConveyorSupplier("conveyor_supplier_advanced",
+						StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorSupplierStatic = new BlockConveyorSupplier("conveyor_supplier_static",
+						StaticPowerTiers.STATIC));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorSupplierEnergized = new BlockConveyorSupplier("conveyor_supplier_energized",
+						StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(
+				ConveyorSupplierLumum = new BlockConveyorSupplier("conveyor_supplier_lumum", StaticPowerTiers.LUMUM));
 
-		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorBasic = new BlockConveyorExtractor("conveyor_extractor_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorAdvanced = new BlockConveyorExtractor("conveyor_extractor_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorStatic = new BlockConveyorExtractor("conveyor_extractor_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorEnergized = new BlockConveyorExtractor("conveyor_extractor_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorLumum = new BlockConveyorExtractor("conveyor_extractor_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorExtractorBasic = new BlockConveyorExtractor("conveyor_extractor_basic",
+						StaticPowerTiers.BASIC));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorExtractorAdvanced = new BlockConveyorExtractor("conveyor_extractor_advanced",
+						StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorExtractorStatic = new BlockConveyorExtractor("conveyor_extractor_static",
+						StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(ConveyorExtractorEnergized = new BlockConveyorExtractor(
+				"conveyor_extractor_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorExtractorLumum = new BlockConveyorExtractor("conveyor_extractor_lumum",
+						StaticPowerTiers.LUMUM));
 
-		StaticPowerRegistry.preRegisterBlock(ConveyorHopperBasic = new BlockConveyorHopper("conveyor_hopper_basic", StaticPowerTiers.BASIC, false));
-		StaticPowerRegistry.preRegisterBlock(ConveyorHopperAdvanced = new BlockConveyorHopper("conveyor_hopper_advanced", StaticPowerTiers.ADVANCED, false));
-		StaticPowerRegistry.preRegisterBlock(ConveyorHopperStatic = new BlockConveyorHopper("conveyor_hopper_static", StaticPowerTiers.STATIC, false));
-		StaticPowerRegistry.preRegisterBlock(ConveyorHopperEnergized = new BlockConveyorHopper("conveyor_hopper_energized", StaticPowerTiers.ENERGIZED, false));
-		StaticPowerRegistry.preRegisterBlock(ConveyorHopperLumum = new BlockConveyorHopper("conveyor_hopper_lumum", StaticPowerTiers.LUMUM, false));
+		StaticPowerRegistry.preRegisterBlock(
+				ConveyorHopperBasic = new BlockConveyorHopper("conveyor_hopper_basic", StaticPowerTiers.BASIC, false));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorHopperAdvanced = new BlockConveyorHopper("conveyor_hopper_advanced",
+						StaticPowerTiers.ADVANCED, false));
+		StaticPowerRegistry.preRegisterBlock(ConveyorHopperStatic = new BlockConveyorHopper("conveyor_hopper_static",
+				StaticPowerTiers.STATIC, false));
+		StaticPowerRegistry
+				.preRegisterBlock(ConveyorHopperEnergized = new BlockConveyorHopper("conveyor_hopper_energized",
+						StaticPowerTiers.ENERGIZED, false));
+		StaticPowerRegistry.preRegisterBlock(
+				ConveyorHopperLumum = new BlockConveyorHopper("conveyor_hopper_lumum", StaticPowerTiers.LUMUM, false));
 
-		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperBasic = new BlockConveyorHopper("conveyor_hopper_filtered_basic", StaticPowerTiers.BASIC, true));
-		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperAdvanced = new BlockConveyorHopper("conveyor_hopper_filtered_advanced", StaticPowerTiers.ADVANCED, true));
-		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperStatic = new BlockConveyorHopper("conveyor_hopper_filtered_static", StaticPowerTiers.STATIC, true));
-		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperEnergized = new BlockConveyorHopper("conveyor_hopper_filtered_energized", StaticPowerTiers.ENERGIZED, true));
-		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperLumum = new BlockConveyorHopper("conveyor_hopper_filtered_lumum", StaticPowerTiers.LUMUM, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperBasic = new BlockConveyorHopper(
+				"conveyor_hopper_filtered_basic", StaticPowerTiers.BASIC, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperAdvanced = new BlockConveyorHopper(
+				"conveyor_hopper_filtered_advanced", StaticPowerTiers.ADVANCED, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperStatic = new BlockConveyorHopper(
+				"conveyor_hopper_filtered_static", StaticPowerTiers.STATIC, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperEnergized = new BlockConveyorHopper(
+				"conveyor_hopper_filtered_energized", StaticPowerTiers.ENERGIZED, true));
+		StaticPowerRegistry.preRegisterBlock(ConveyorFilteredHopperLumum = new BlockConveyorHopper(
+				"conveyor_hopper_filtered_lumum", StaticPowerTiers.LUMUM, true));
 
-		StaticPowerRegistry.preRegisterBlock(AluminumHeatSink = new BlockHeatSink("heat_sink_aluminum", StaticPowerTiers.ALUMINUM));
-		StaticPowerRegistry.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));
+		StaticPowerRegistry.preRegisterBlock(
+				AluminumHeatSink = new BlockHeatSink("heat_sink_aluminum", StaticPowerTiers.ALUMINUM));
+		StaticPowerRegistry
+				.preRegisterBlock(CopperHeatSink = new BlockHeatSink("heat_sink_copper", StaticPowerTiers.COPPER));
 		StaticPowerRegistry.preRegisterBlock(TinHeatSink = new BlockHeatSink("heat_sink_tin", StaticPowerTiers.TIN));
-		StaticPowerRegistry.preRegisterBlock(SilverHeatSink = new BlockHeatSink("heat_sink_silver", StaticPowerTiers.SILVER));
+		StaticPowerRegistry
+				.preRegisterBlock(SilverHeatSink = new BlockHeatSink("heat_sink_silver", StaticPowerTiers.SILVER));
 		StaticPowerRegistry.preRegisterBlock(GoldHeatSink = new BlockHeatSink("heat_sink_gold", StaticPowerTiers.GOLD));
 
 		StaticPowerRegistry.preRegisterBlock(IronTank = new BlockTank("tank_iron", StaticPowerTiers.IRON));
 		StaticPowerRegistry.preRegisterBlock(BasicTank = new BlockTank("tank_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(AdvancedTank = new BlockTank("tank_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterBlock(StaticTank = new BlockTank("tank_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(EnergizedTank = new BlockTank("tank_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(EnergizedTank = new BlockTank("tank_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(LumumTank = new BlockTank("tank_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(CreativeTank = new BlockTank("tank_creative", StaticPowerTiers.CREATIVE));
 
@@ -633,7 +786,8 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(BasicPump = new BlockPump("pump_basic", StaticPowerTiers.BASIC));
 		StaticPowerRegistry.preRegisterBlock(AdvancedPump = new BlockPump("pump_advanced", StaticPowerTiers.ADVANCED));
 		StaticPowerRegistry.preRegisterBlock(StaticPump = new BlockPump("pump_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(EnergizedPump = new BlockPump("pump_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(EnergizedPump = new BlockPump("pump_energized", StaticPowerTiers.ENERGIZED));
 		StaticPowerRegistry.preRegisterBlock(LumumPump = new BlockPump("pump_lumum", StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterBlock(CreativePump = new BlockPump("pump_creative", StaticPowerTiers.CREATIVE));
 		StaticPowerRegistry.preRegisterBlock(PumpJack = new BlockPumpJack("pump_jack"));
@@ -641,91 +795,160 @@ public class ModBlocks {
 		StaticPowerRegistry.preRegisterBlock(DigistoreManager = new BlockDigistoreManager("digistore_manager"));
 		StaticPowerRegistry.preRegisterBlock(DigistoreIOPort = new BlockDigistoreIOPort("digistore_io_port"));
 		StaticPowerRegistry.preRegisterBlock(Digistore = new BlockDigistore("digistore"));
-		StaticPowerRegistry.preRegisterBlock(DigistoreServerRack = new BlockDigistoreServerRack("digistore_server_rack"));
+		StaticPowerRegistry
+				.preRegisterBlock(DigistoreServerRack = new BlockDigistoreServerRack("digistore_server_rack"));
 		StaticPowerRegistry.preRegisterBlock(PatternStorage = new BlockPatternStorage("digistore_pattern_storage"));
 
 		// Cables
 		StaticPowerRegistry.preRegisterBlock(DigistoreWire = new BlockDigistoreNetworkWire("cable_digistore"));
 
-		StaticPowerRegistry.preRegisterBlock(PowerCableBasic = new BlockPowerCable("cable_power_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(PowerCableAdvanced = new BlockPowerCable("cable_power_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(PowerCableStatic = new BlockPowerCable("cable_power_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(PowerCableEnergized = new BlockPowerCable("cable_power_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(PowerCableLumum = new BlockPowerCable("cable_power_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterBlock(PowerCableCreative = new BlockPowerCable("cable_power_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry
+				.preRegisterBlock(PowerCableBasic = new BlockPowerCable("cable_power_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(
+				PowerCableAdvanced = new BlockPowerCable("cable_power_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(
+				PowerCableStatic = new BlockPowerCable("cable_power_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(
+				PowerCableEnergized = new BlockPowerCable("cable_power_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(PowerCableLumum = new BlockPowerCable("cable_power_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				PowerCableCreative = new BlockPowerCable("cable_power_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableBasic = new BlockIndustrialPowerCable("cable_industrial_power_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableAdvanced = new BlockIndustrialPowerCable("cable_industrial_power_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableStatic = new BlockIndustrialPowerCable("cable_industrial_power_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableEnergized = new BlockIndustrialPowerCable("cable_industrial_power_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableLumum = new BlockIndustrialPowerCable("cable_industrial_power_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableCreative = new BlockIndustrialPowerCable("cable_industrial_power_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableBasic = new BlockIndustrialPowerCable(
+				"cable_industrial_power_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableAdvanced = new BlockIndustrialPowerCable(
+				"cable_industrial_power_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableStatic = new BlockIndustrialPowerCable(
+				"cable_industrial_power_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableEnergized = new BlockIndustrialPowerCable(
+				"cable_industrial_power_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableLumum = new BlockIndustrialPowerCable(
+				"cable_industrial_power_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(IndustrialPowerCableCreative = new BlockIndustrialPowerCable(
+				"cable_industrial_power_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(ItemCableBasic = new BlockItemCable("cable_item_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(ItemCableAdvanced = new BlockItemCable("cable_item_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(ItemCableStatic = new BlockItemCable("cable_item_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(ItemCableEnergized = new BlockItemCable("cable_item_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(ItemCableLumum = new BlockItemCable("cable_item_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterBlock(ItemCableCreative = new BlockItemCable("cable_item_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry
+				.preRegisterBlock(ItemCableBasic = new BlockItemCable("cable_item_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(
+				ItemCableAdvanced = new BlockItemCable("cable_item_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry
+				.preRegisterBlock(ItemCableStatic = new BlockItemCable("cable_item_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(
+				ItemCableEnergized = new BlockItemCable("cable_item_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(ItemCableLumum = new BlockItemCable("cable_item_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				ItemCableCreative = new BlockItemCable("cable_item_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(FluidCableBasic = new BlockFluidCable("cable_fluid_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(FluidCableAdvanced = new BlockFluidCable("cable_fluid_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(FluidCableStatic = new BlockFluidCable("cable_fluid_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(FluidCableEnergized = new BlockFluidCable("cable_fluid_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(FluidCableLumum = new BlockFluidCable("cable_fluid_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterBlock(FluidCableCreative = new BlockFluidCable("cable_fluid_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry
+				.preRegisterBlock(FluidCableBasic = new BlockFluidCable("cable_fluid_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(
+				FluidCableAdvanced = new BlockFluidCable("cable_fluid_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(
+				FluidCableStatic = new BlockFluidCable("cable_fluid_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(
+				FluidCableEnergized = new BlockFluidCable("cable_fluid_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(FluidCableLumum = new BlockFluidCable("cable_fluid_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				FluidCableCreative = new BlockFluidCable("cable_fluid_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableBasic = new BlockIndustrialFluidCable("cable_industrial_fluid_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableAdvanced = new BlockIndustrialFluidCable("cable_industrial_fluid_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableStatic = new BlockIndustrialFluidCable("cable_industrial_fluid_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableEnergized = new BlockIndustrialFluidCable("cable_industrial_fluid_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableLumum = new BlockIndustrialFluidCable("cable_industrial_fluid_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableCreative = new BlockIndustrialFluidCable("cable_industrial_fluid_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableBasic = new BlockIndustrialFluidCable(
+				"cable_industrial_fluid_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableAdvanced = new BlockIndustrialFluidCable(
+				"cable_industrial_fluid_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableStatic = new BlockIndustrialFluidCable(
+				"cable_industrial_fluid_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableEnergized = new BlockIndustrialFluidCable(
+				"cable_industrial_fluid_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableLumum = new BlockIndustrialFluidCable(
+				"cable_industrial_fluid_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(IndustrialFluidCableCreative = new BlockIndustrialFluidCable(
+				"cable_industrial_fluid_creative", StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterBlock(CopperHeatCable = new BlockHeatCable("cable_heat_copper", StaticPowerTiers.COPPER));
+		StaticPowerRegistry
+				.preRegisterBlock(CopperHeatCable = new BlockHeatCable("cable_heat_copper", StaticPowerTiers.COPPER));
 		StaticPowerRegistry.preRegisterBlock(TinHeatCable = new BlockHeatCable("cable_heat_tin", StaticPowerTiers.TIN));
-		StaticPowerRegistry.preRegisterBlock(SilverHeatCable = new BlockHeatCable("cable_heat_silver", StaticPowerTiers.SILVER));
-		StaticPowerRegistry.preRegisterBlock(GoldHeatCable = new BlockHeatCable("cable_heat_gold", StaticPowerTiers.GOLD));
-		StaticPowerRegistry.preRegisterBlock(AluminumHeatCable = new BlockHeatCable("cable_heat_aluminum", StaticPowerTiers.ALUMINUM));
+		StaticPowerRegistry
+				.preRegisterBlock(SilverHeatCable = new BlockHeatCable("cable_heat_silver", StaticPowerTiers.SILVER));
+		StaticPowerRegistry
+				.preRegisterBlock(GoldHeatCable = new BlockHeatCable("cable_heat_gold", StaticPowerTiers.GOLD));
+		StaticPowerRegistry.preRegisterBlock(
+				AluminumHeatCable = new BlockHeatCable("cable_heat_aluminum", StaticPowerTiers.ALUMINUM));
 
 		StaticPowerRegistry.preRegisterBlock(ScaffoldCable = new BlockScaffoldCable("cable_scaffold"));
 
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableNaked = new BlockRedstoneCable("cable_redstone_basic_naked"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableBlack = new BlockRedstoneCable("cable_redstone_basic_black"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkBlue = new BlockRedstoneCable("cable_redstone_basic_dark_blue"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkGreen = new BlockRedstoneCable("cable_redstone_basic_dark_green"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkAqua = new BlockRedstoneCable("cable_redstone_basic_dark_aqua"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkRed = new BlockRedstoneCable("cable_redstone_basic_dark_red"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkPurple = new BlockRedstoneCable("cable_redstone_basic_dark_purple"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableGold = new BlockRedstoneCable("cable_redstone_basic_gold"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableGray = new BlockRedstoneCable("cable_redstone_basic_gray"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableDarkGray = new BlockRedstoneCable("cable_redstone_basic_dark_gray"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableBlue = new BlockRedstoneCable("cable_redstone_basic_blue"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableGreen = new BlockRedstoneCable("cable_redstone_basic_green"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableAqua = new BlockRedstoneCable("cable_redstone_basic_aqua"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableRed = new BlockRedstoneCable("cable_redstone_basic_red"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableLightPurple = new BlockRedstoneCable("cable_redstone_basic_light_purple"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableYellow = new BlockRedstoneCable("cable_redstone_basic_yellow"));
-		StaticPowerRegistry.preRegisterBlock(BasicRedstoneCableWhite = new BlockRedstoneCable("cable_redstone_basic_white"));
-		StaticPowerRegistry.preRegisterBlock(BundledRedstoneCable = new BlockBundledRedstoneCable("cable_bundled_redstone"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableNaked = new BlockRedstoneCable("cable_redstone_basic_naked"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableBlack = new BlockRedstoneCable("cable_redstone_basic_black"));
+		StaticPowerRegistry.preRegisterBlock(
+				BasicRedstoneCableDarkBlue = new BlockRedstoneCable("cable_redstone_basic_dark_blue"));
+		StaticPowerRegistry.preRegisterBlock(
+				BasicRedstoneCableDarkGreen = new BlockRedstoneCable("cable_redstone_basic_dark_green"));
+		StaticPowerRegistry.preRegisterBlock(
+				BasicRedstoneCableDarkAqua = new BlockRedstoneCable("cable_redstone_basic_dark_aqua"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableDarkRed = new BlockRedstoneCable("cable_redstone_basic_dark_red"));
+		StaticPowerRegistry.preRegisterBlock(
+				BasicRedstoneCableDarkPurple = new BlockRedstoneCable("cable_redstone_basic_dark_purple"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableGold = new BlockRedstoneCable("cable_redstone_basic_gold"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableGray = new BlockRedstoneCable("cable_redstone_basic_gray"));
+		StaticPowerRegistry.preRegisterBlock(
+				BasicRedstoneCableDarkGray = new BlockRedstoneCable("cable_redstone_basic_dark_gray"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableBlue = new BlockRedstoneCable("cable_redstone_basic_blue"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableGreen = new BlockRedstoneCable("cable_redstone_basic_green"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableAqua = new BlockRedstoneCable("cable_redstone_basic_aqua"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableRed = new BlockRedstoneCable("cable_redstone_basic_red"));
+		StaticPowerRegistry.preRegisterBlock(
+				BasicRedstoneCableLightPurple = new BlockRedstoneCable("cable_redstone_basic_light_purple"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableYellow = new BlockRedstoneCable("cable_redstone_basic_yellow"));
+		StaticPowerRegistry
+				.preRegisterBlock(BasicRedstoneCableWhite = new BlockRedstoneCable("cable_redstone_basic_white"));
+		StaticPowerRegistry
+				.preRegisterBlock(BundledRedstoneCable = new BlockBundledRedstoneCable("cable_bundled_redstone"));
 
-		StaticPowerRegistry.preRegisterBlock(BatteryBasic = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
-		StaticPowerRegistry.preRegisterBlock(BatteryAdvanced = new BlockBattery("battery_block_advanced", StaticPowerTiers.ADVANCED));
-		StaticPowerRegistry.preRegisterBlock(BatteryStatic = new BlockBattery("battery_block_static", StaticPowerTiers.STATIC));
-		StaticPowerRegistry.preRegisterBlock(BatteryEnergized = new BlockBattery("battery_block_energized", StaticPowerTiers.ENERGIZED));
-		StaticPowerRegistry.preRegisterBlock(BatteryLumum = new BlockBattery("battery_block_lumum", StaticPowerTiers.LUMUM));
-		StaticPowerRegistry.preRegisterBlock(BatteryCreative = new BlockBattery("battery_block_creative", StaticPowerTiers.CREATIVE));
+		StaticPowerRegistry
+				.preRegisterBlock(BatteryBasic = new BlockBattery("battery_block_basic", StaticPowerTiers.BASIC));
+		StaticPowerRegistry.preRegisterBlock(
+				BatteryAdvanced = new BlockBattery("battery_block_advanced", StaticPowerTiers.ADVANCED));
+		StaticPowerRegistry
+				.preRegisterBlock(BatteryStatic = new BlockBattery("battery_block_static", StaticPowerTiers.STATIC));
+		StaticPowerRegistry.preRegisterBlock(
+				BatteryEnergized = new BlockBattery("battery_block_energized", StaticPowerTiers.ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterBlock(BatteryLumum = new BlockBattery("battery_block_lumum", StaticPowerTiers.LUMUM));
+		StaticPowerRegistry.preRegisterBlock(
+				BatteryCreative = new BlockBattery("battery_block_creative", StaticPowerTiers.CREATIVE));
 
 		StaticPowerRegistry.preRegisterBlock(PowerMonitor = new BlockPowerMonitor("power_monitor"));
 
-		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood", MaterialColor.WOOD, Block.Properties.copy(Blocks.STRIPPED_OAK_WOOD)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedLog = new StaticPowerTreeLog("rubber_tree_stripped_log", MaterialColor.WOOD, Block.Properties.copy(Blocks.STRIPPED_OAK_LOG)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood", RubberTreeStrippedWood, Block.Properties.copy(Blocks.OAK_LOG),
-				() -> StaticPowerConfig.SERVER.minRubberWoodBarkPerStrip.get(), () -> StaticPowerConfig.SERVER.maxRubberWoodBarkPerStrip.get(), () -> ModItems.RubberWoodBark));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log", RubberTreeStrippedLog, Block.Properties.copy(Blocks.OAK_LOG),
-				() -> StaticPowerConfig.SERVER.minRubberWoodBarkPerStrip.get(), () -> StaticPowerConfig.SERVER.maxRubberWoodBarkPerStrip.get(), () -> ModItems.RubberWoodBark));
-		StaticPowerRegistry.preRegisterBlock(RubberTreePlanks = new StaticPowerBlock("rubber_tree_planks", Block.Properties.copy(Blocks.OAK_PLANKS)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeLeaves = new StaticPowerTreeLeaves("rubber_tree_leaves", Block.Properties.copy(Blocks.OAK_LEAVES)));
-		StaticPowerRegistry.preRegisterBlock(RubberTreeSapling = new StaticPowerSapling("rubber_tree_sapling", () -> new RubberTree(), Block.Properties.copy(Blocks.OAK_SAPLING)));
+		StaticPowerRegistry
+				.preRegisterBlock(RubberTreeStrippedWood = new StaticPowerTreeLog("rubber_tree_stripped_wood",
+						MaterialColor.WOOD, Block.Properties.copy(Blocks.STRIPPED_OAK_WOOD)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeStrippedLog = new StaticPowerTreeLog("rubber_tree_stripped_log",
+				MaterialColor.WOOD, Block.Properties.copy(Blocks.STRIPPED_OAK_LOG)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeWood = new StaticPowerTreeLog("rubber_tree_wood",
+				RubberTreeStrippedWood, Block.Properties.copy(Blocks.OAK_LOG),
+				() -> StaticPowerConfig.SERVER.minRubberWoodBarkPerStrip.get(),
+				() -> StaticPowerConfig.SERVER.maxRubberWoodBarkPerStrip.get(), () -> ModItems.RubberWoodBark));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLog = new StaticPowerTreeLog("rubber_tree_log",
+				RubberTreeStrippedLog, Block.Properties.copy(Blocks.OAK_LOG),
+				() -> StaticPowerConfig.SERVER.minRubberWoodBarkPerStrip.get(),
+				() -> StaticPowerConfig.SERVER.maxRubberWoodBarkPerStrip.get(), () -> ModItems.RubberWoodBark));
+		StaticPowerRegistry.preRegisterBlock(RubberTreePlanks = new StaticPowerBlock("rubber_tree_planks",
+				Block.Properties.copy(Blocks.OAK_PLANKS)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeLeaves = new StaticPowerTreeLeaves("rubber_tree_leaves",
+				Block.Properties.copy(Blocks.OAK_LEAVES)));
+		StaticPowerRegistry.preRegisterBlock(RubberTreeSapling = new StaticPowerSapling("rubber_tree_sapling",
+				() -> new RubberTree(), Block.Properties.copy(Blocks.OAK_SAPLING)));
 	}
 }

@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.utilities.Color;
@@ -103,9 +104,10 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 
 		if (recipe.isBlockType()) {
 			// Allocate the inputs block array.
-			ItemStack[] inputBlocks = new ItemStack[recipe.getInputTag().getValues().size()];
+			List<Block> blocks = ForgeRegistries.BLOCKS.tags().getTag(recipe.getInputTag()).stream().toList();
+			ItemStack[] inputBlocks = new ItemStack[blocks.size()];
 			int index = 0;
-			for (Block block : recipe.getInputTag().getValues()) {
+			for (Block block :  blocks) {
 				inputBlocks[index] = new ItemStack(block);
 				index++;
 			}

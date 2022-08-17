@@ -5,8 +5,10 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ForgeMod;
+import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.tiers.StaticPowerTierAdvanced;
@@ -47,6 +49,8 @@ public class StaticPower {
 
 	public StaticPower() {
 		try {
+			IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
+				
 			// Enable forge's milk.
 			ForgeMod.enableMilkFluid();
 			
@@ -77,7 +81,7 @@ public class StaticPower {
 
 			StaticCoreRegistry.preInitialize();
 			ModRecipeSerializers.init();
-			ModBlocks.init();
+			ModBlocks.init(eventBus);
 			ModItems.init();
 			ModUpgrades.init();
 			ModFluids.init();

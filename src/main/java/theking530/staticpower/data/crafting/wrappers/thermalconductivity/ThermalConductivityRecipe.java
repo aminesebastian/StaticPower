@@ -1,15 +1,18 @@
 package theking530.staticpower.data.crafting.wrappers.thermalconductivity;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.init.ModTags;
 
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	public static final RecipeType<ThermalConductivityRecipe> RECIPE_TYPE = RecipeType.register("thermal_conducitity");
@@ -23,8 +26,9 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	private final float heatAmount;
 	private final boolean isAirRecipe;
 
-	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids, BlockState overheatedBlock, ProbabilityItemStackOutput overheatedItemStack,
-			float overheatedTemperature, float thermalConductivity, float heatAmount) {
+	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids,
+			BlockState overheatedBlock, ProbabilityItemStackOutput overheatedItemStack, float overheatedTemperature,
+			float thermalConductivity, float heatAmount) {
 		super(name);
 		this.blocks = blocks;
 		this.fluids = fluids;
@@ -116,7 +120,8 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		if (blocks != null && blocks.length > 0 && matchParams.hasBlocks()) {
 			Block block = matchParams.getBlocks()[0].getBlock();
 			for (ResourceLocation blockTag : blocks) {
-				if (block.getRegistryName().equals(blockTag) || block.getTags().contains(blockTag)) {
+				TagKey<Block> tag = ForgeRegistries.BLOCKS.tags().createTagKey(blockTag);
+				if (block.getRegistryName().equals(blockTag) || ModTags.tagContainsBlock(tag, block)) {
 					return true;
 				}
 			}

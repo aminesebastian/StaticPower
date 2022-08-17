@@ -11,7 +11,8 @@ import javax.annotation.Nullable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.items.IItemHandler;
@@ -21,6 +22,7 @@ import theking530.staticpower.cables.attachments.digistore.patternencoder.Digist
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
+import theking530.staticpower.init.ModTags;
 import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
@@ -101,7 +103,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		return true;
 	}
 
-	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending) {
+	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType,
+			boolean sortDescending) {
 		this(module, filter, sortType, sortDescending, true);
 	}
 
@@ -117,7 +120,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 		craftingItemPatterns.addAll(otherSnapshot.craftingItemPatterns);
 	}
 
-	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType, boolean sortDescending, boolean simulated) {
+	public DigistoreInventorySnapshot(DigistoreNetworkModule module, String filter, DigistoreInventorySortType sortType,
+			boolean sortDescending, boolean simulated) {
 		this.module = module;
 		this.sortType = sortType;
 		this.sortDescending = sortDescending;
@@ -198,7 +202,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 		// Add the machine craftable items.
 		for (CraftingInterfaceWrapper craftingInterface : module.getCraftingInterfaces()) {
-			List<EncodedDigistorePattern> patterns = DigistoreCraftingInterfaceAttachment.getAllPaternsInInterface(craftingInterface.getAttachment());
+			List<EncodedDigistorePattern> patterns = DigistoreCraftingInterfaceAttachment
+					.getAllPaternsInInterface(craftingInterface.getAttachment());
 			for (EncodedDigistorePattern pattern : patterns) {
 				// Get the first output (as that's the only one that matters).
 				ItemStack output = pattern.getOutput();
@@ -219,7 +224,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				// Skip items that don't match the filter.
 				if (filterString.length() > 0) {
 					if (filterString.startsWith("@") && filterString.length() > 1) {
-						if (!stack.getItem().getRegistryName().getNamespace().toLowerCase().contains(filterString.substring(1))) {
+						if (!stack.getItem().getRegistryName().getNamespace().toLowerCase()
+								.contains(filterString.substring(1))) {
 							stacks.remove(i);
 						}
 					} else if (filterString.startsWith("$") && filterString.length() > 1) {
@@ -227,8 +233,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 						boolean found = false;
 
 						// Loop through the tags and indicate if we find a match.
-						for (ResourceLocation tag : stack.getItem().getTags()) {
-							if (tag.getPath().toLowerCase().contains(filterString.substring(1))) {
+						for (TagKey<Item> tag : ModTags.getTags(stack)) {
+							if (tag.toString().contains(filterString.substring(1))) {
 								found = true;
 								break;
 							}
@@ -251,7 +257,9 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 					@Override
 					public int compare(ItemStack o1, ItemStack o2) {
 						int comparison = (o2.getCount() - o1.getCount()) * sortModifier;
-						return comparison != 0 ? comparison : (o1.getHoverName().getString().compareToIgnoreCase(o2.getHoverName().getString())) * sortModifier;
+						return comparison != 0 ? comparison
+								: (o1.getHoverName().getString().compareToIgnoreCase(o2.getHoverName().getString()))
+										* sortModifier;
 					}
 				});
 			} else {
@@ -259,7 +267,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 				stacks.sort(new Comparator<ItemStack>() {
 					@Override
 					public int compare(ItemStack o1, ItemStack o2) {
-						return (o1.getHoverName().getString().compareToIgnoreCase(o2.getHoverName().getString())) * sortModifier;
+						return (o1.getHoverName().getString().compareToIgnoreCase(o2.getHoverName().getString()))
+								* sortModifier;
 					}
 				});
 			}
@@ -336,8 +345,8 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 			if (ItemUtilities.areItemStacksStackable(cache.item, item)) {
 				return cache.recipes;
 			} else {
-				for (ResourceLocation resource : item.getItem().getTags()) {
-					if (cache.item.getItem().getTags().contains(resource)) {
+				for (TagKey<Item> tag : ModTags.getTags(item)) {
+					if (ModTags.getTags(cache.item).contains(tag)) {
 						return cache.recipes;
 					}
 				}
@@ -403,9 +412,11 @@ public class DigistoreInventorySnapshot implements IItemHandler {
 
 	@Override
 	public String toString() {
-		return "DigistoreInventorySnapshot [stacks=" + stacks + ", craftingItemPatterns=" + craftingItemPatterns + ", filterString=" + filterString + ", sortType=" + sortType
-				+ ", sortDescending=" + sortDescending + ", simulated=" + simulated + ", isEmpty=" + isEmpty + ", usedCapacity=" + usedCapacity + ", maxCapacity=" + maxCapacity
-				+ ", usedTypes=" + usedTypes + ", maxTypes=" + maxTypes + ", module=" + module + "]";
+		return "DigistoreInventorySnapshot [stacks=" + stacks + ", craftingItemPatterns=" + craftingItemPatterns
+				+ ", filterString=" + filterString + ", sortType=" + sortType + ", sortDescending=" + sortDescending
+				+ ", simulated=" + simulated + ", isEmpty=" + isEmpty + ", usedCapacity=" + usedCapacity
+				+ ", maxCapacity=" + maxCapacity + ", usedTypes=" + usedTypes + ", maxTypes=" + maxTypes + ", module="
+				+ module + "]";
 	}
 
 	protected void cacheCraftable(ItemStack stack, EncodedDigistorePattern pattern) {

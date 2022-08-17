@@ -12,7 +12,7 @@ public class ModTrees {
 
 	public static void addTreeFeatures(BiomeLoadingEvent event) {
 		for (AbstractStaticPowerTree tree : StaticPowerRegistry.TREES) {
-			tree.addToBiome(event);
+			tree.growTree(event);
 		}
 	}
 }

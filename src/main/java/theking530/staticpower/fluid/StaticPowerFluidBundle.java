@@ -4,8 +4,7 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.tags.Tag.Named;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -15,11 +14,12 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Flowing;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;
+import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class StaticPowerFluidBundle {
 	public final String name;
-	public final Named<Fluid> Tag;
+	public final TagKey<Fluid> Tag;
 	public final StaticPowerFluidBlock FluidBlock;
 	public final AbstractStaticPowerFluid.Source Fluid;
 	public final AbstractStaticPowerFluid.Flowing FlowingFluid;
@@ -27,7 +27,7 @@ public class StaticPowerFluidBundle {
 	private final StaticPowerFluidBuilder builder;
 	private Item cachedBucketItem;
 
-	public StaticPowerFluidBundle(String name, Named<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid, Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
+	public StaticPowerFluidBundle(String name, TagKey<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid, Flowing flowingFluid, Supplier<Item> bucketSupplier, StaticPowerFluidBuilder builder) {
 		this.name = name;
 		Tag = tag;
 		FluidBlock = fluidBlock;
@@ -126,7 +126,7 @@ public class StaticPowerFluidBundle {
 		public StaticPowerFluidBundle build() {
 			String stillTexture = "blocks/fluids/" + textureName + "_still";
 			String flowingTexture = "blocks/fluids/" + textureName + "_flowing";
-			Named<Fluid> tag = FluidTags.bind(new ResourceLocation(StaticPower.MOD_ID, name).toString());
+			TagKey<Fluid> tag = ModTags.createFluidWrapper(new ResourceLocation(StaticPower.MOD_ID, name));
 			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.of(Material.WATER));
 
 			// Handle some default attributes.

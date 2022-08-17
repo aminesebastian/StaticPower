@@ -20,6 +20,7 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 		this.setRegistryName(registryName);
 	}
 
+	@Override
 	public boolean place(FeaturePlaceContext<StaticPowerLakeFeatureConfiguration> configContext) {
 		BlockPos blockpos = configContext.origin();
 		WorldGenLevel worldgenlevel = configContext.level();

@@ -26,6 +26,7 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.IFluidBlock;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.init.ModTags;
 import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
@@ -164,7 +165,7 @@ public class ProbabilityItemStackHelper implements IIngredientHelper<Probability
 
 	@Override
 	public Collection<ResourceLocation> getTags(ProbabilityItemStackOutput ingredient) {
-		return ingredient.getItem().getItem().getTags();
+		return ModTags.getTags(ingredient.getItem()).stream().map((key) -> key.location()).toList();
 	}
 
 	@Override

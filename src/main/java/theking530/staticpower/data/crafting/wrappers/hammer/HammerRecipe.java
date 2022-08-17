@@ -1,16 +1,17 @@
 package theking530.staticpower.data.crafting.wrappers.hammer;
 
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import net.minecraftforge.common.Tags.IOptionalNamedTag;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.init.ModTags;
 
 public class HammerRecipe extends AbstractStaticPowerRecipe {
 	public static final RecipeType<HammerRecipe> RECIPE_TYPE = RecipeType.register("hammer");
@@ -18,21 +19,23 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 	private final Ingredient hammer;
 	private final StaticPowerIngredient inputItem;
 	private final ResourceLocation block;
-	private final IOptionalNamedTag<Block> blockTag;
+	private final TagKey<Block> blockTag;
 	private final ProbabilityItemStackOutput outputItem;
 	private final boolean isBlockType;
 
-	public HammerRecipe(ResourceLocation name, Ingredient hammer, ResourceLocation block, ProbabilityItemStackOutput outputItem) {
+	public HammerRecipe(ResourceLocation name, Ingredient hammer, ResourceLocation block,
+			ProbabilityItemStackOutput outputItem) {
 		super(name);
 		this.hammer = hammer;
 		this.block = block;
-		this.blockTag = BlockTags.createOptional(block);
+		this.blockTag = ForgeRegistries.BLOCKS.tags().createTagKey(block);
 		this.outputItem = outputItem;
 		this.isBlockType = true;
 		this.inputItem = null;
 	}
 
-	public HammerRecipe(ResourceLocation name, Ingredient hammer, StaticPowerIngredient inputItem, ProbabilityItemStackOutput outputItem) {
+	public HammerRecipe(ResourceLocation name, Ingredient hammer, StaticPowerIngredient inputItem,
+			ProbabilityItemStackOutput outputItem) {
 		super(name);
 		this.hammer = hammer;
 		this.inputItem = inputItem;
@@ -46,7 +49,7 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 		return outputItem;
 	}
 
-	public IOptionalNamedTag<Block> getInputTag() {
+	public TagKey<Block> getInputTag() {
 		return blockTag;
 	}
 
@@ -71,7 +74,7 @@ public class HammerRecipe extends AbstractStaticPowerRecipe {
 		// Check blocks.
 		if (isBlockType()) {
 			if (matchParams.shouldVerifyBlocks() && matchParams.hasBlocks()) {
-				return blockTag.contains(matchParams.getBlocks()[0].getBlock());
+				return ModTags.tagContainsBlock(blockTag, matchParams.getBlocks()[0].getBlock());
 			}
 		} else {
 			if (matchParams.shouldVerifyItems() && matchParams.hasItems()) {

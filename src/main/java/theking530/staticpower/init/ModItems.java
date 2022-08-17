@@ -1,10 +1,16 @@
 package theking530.staticpower.init;
 
 import net.minecraft.world.food.Foods;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Tiers;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticcore.utilities.MinecraftColor;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.attachments.cover.CableCover;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
@@ -60,255 +66,258 @@ import theking530.staticpower.items.tools.miningdrill.MiningDrill;
 import theking530.staticpower.items.tools.sword.Blade;
 
 public class ModItems {
-	public static StaticPowerItem DistilleryGrain;
-	public static StaticPowerItem BedFrame;
 
-	public static StaticPowerItem WheatFlour;
-	public static StaticPowerItem PotatoFlour;
-	public static StaticPowerItem PotatoBread;
-	public static StaticPowerItem ApplePie;
-	public static StaticPowerItem StaticPie;
-	public static StaticPowerItem EnergizedPie;
-	public static StaticPowerItem LumumPie;
-	public static StaticPowerFood RawSmutton;
-	public static StaticPowerFood CookedSmutton;
-	public static StaticPowerFood RawEeef;
-	public static StaticPowerFood CookedEeef;
-	public static StaticPowerItem Eather;
+	public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, StaticPower.MOD_ID);
+	public static final RegistryObject<StaticPowerItem> DistilleryGrain = ITEMS.register("distillery_grain", () -> new StaticPowerItem());
 
-	public static StaticPowerItem MoldBlank;
-	public static StaticPowerItem MoldPlate;
-	public static StaticPowerItem MoldWire;
-	public static StaticPowerItem MoldGear;
-	public static StaticPowerItem MoldBlade;
-	public static StaticPowerItem MoldIngot;
-	public static StaticPowerItem MoldNugget;
-	public static StaticPowerItem MoldBlock;
-	public static StaticPowerItem MoldDrillBit;
-	public static StaticPowerItem MoldRod;
+	public static final RegistryObject<StaticPowerItem> BedFrame = ITEMS.register("bed_frame", () -> new StaticPowerItem());
 
-	public static StaticPowerItem RawRustyIron;
-	public static StaticPowerItem RawTin;
-	public static StaticPowerItem RawZinc;
-	public static StaticPowerItem RawSilver;
-	public static StaticPowerItem RawLead;
-	public static StaticPowerItem RawTungsten;
-	public static StaticPowerItem RawMagnesium;
-	public static StaticPowerItem RawPlatinum;
-	public static StaticPowerItem RawAluminum;
-	public static StaticPowerItem RawStatic;
-	public static StaticPowerItem RawEnergized;
-	public static StaticPowerItem RawLumum;
+	public static final RegistryObject<StaticPowerItem> WheatFlour;
+	public static final RegistryObject<StaticPowerItem> PotatoFlour;
+	public static final RegistryObject<StaticPowerItem> PotatoBread;
+	public static final RegistryObject<StaticPowerItem> ApplePie;
+	public static final RegistryObject<StaticPowerItem> StaticPie;
+	public static final RegistryObject<StaticPowerItem> EnergizedPie;
+	public static final RegistryObject<StaticPowerItem> LumumPie;
+	public static final RegistryObject<StaticPowerItem> RawSmutton;
+	public static final RegistryObject<StaticPowerItem> CookedSmutton;
+	public static final RegistryObject<StaticPowerItem> RawEeef;
+	public static final RegistryObject<StaticPowerItem> CookedEeef;
+	public static final RegistryObject<StaticPowerItem> Eather;
 
-	public static StaticPowerItem IngotTin;
-	public static StaticPowerItem IngotZinc;
-	public static StaticPowerItem IngotSilver;
-	public static StaticPowerItem IngotLead;
-	public static StaticPowerItem IngotTungsten;
-	public static StaticPowerItem IngotMagnesium;
-	public static StaticPowerItem IngotPlatinum;
-	public static StaticPowerItem IngotAluminum;
-	public static StaticPowerItem IngotStatic;
-	public static StaticPowerItem IngotEnergized;
-	public static StaticPowerItem IngotLumum;
-	public static StaticPowerItem IngotInertInfusion;
-	public static StaticPowerItem IngotRedstoneAlloy;
-	public static StaticPowerItem IngotBrass;
-	public static StaticPowerItem IngotBronze;
+	public static final RegistryObject<StaticPowerItem> MoldBlank;
+	public static final RegistryObject<StaticPowerItem> MoldPlate;
+	public static final RegistryObject<StaticPowerItem> MoldWire;
+	public static final RegistryObject<StaticPowerItem> MoldGear;
+	public static final RegistryObject<StaticPowerItem> MoldBlade;
+	public static final RegistryObject<StaticPowerItem> MoldIngot;
+	public static final RegistryObject<StaticPowerItem> MoldNugget;
+	public static final RegistryObject<StaticPowerItem> MoldBlock;
+	public static final RegistryObject<StaticPowerItem> MoldDrillBit;
+	public static final RegistryObject<StaticPowerItem> MoldRod;
 
-	public static StaticPowerItem IngotTinHeated;
-	public static StaticPowerItem IngotZincHeated;
-	public static StaticPowerItem IngotSilverHeated;
-	public static StaticPowerItem IngotLeadHeated;
-	public static StaticPowerItem IngotTungstenHeated;
-	public static StaticPowerItem IngotMagnesiumHeated;
-	public static StaticPowerItem IngotPlatinumHeated;
-	public static StaticPowerItem IngotAluminumHeated;
-	public static StaticPowerItem IngotStaticHeated;
-	public static StaticPowerItem IngotEnergizedHeated;
-	public static StaticPowerItem IngotLumumHeated;
-	public static StaticPowerItem IngotInertInfusionHeated;
-	public static StaticPowerItem IngotRedstoneAlloyHeated;
-	public static StaticPowerItem IngotBrassHeated;
-	public static StaticPowerItem IngotBronzeHeated;
+	public static final RegistryObject<StaticPowerItem> RawRustyIron;
+	public static final RegistryObject<StaticPowerItem> RawTin;
+	public static final RegistryObject<StaticPowerItem> RawZinc;
+	public static final RegistryObject<StaticPowerItem> RawSilver;
+	public static final RegistryObject<StaticPowerItem> RawLead;
+	public static final RegistryObject<StaticPowerItem> RawTungsten;
+	public static final RegistryObject<StaticPowerItem> RawMagnesium;
+	public static final RegistryObject<StaticPowerItem> RawPlatinum;
+	public static final RegistryObject<StaticPowerItem> RawAluminum;
+	public static final RegistryObject<StaticPowerItem> RawStatic;
+	public static final RegistryObject<StaticPowerItem> RawEnergized;
+	public static final RegistryObject<StaticPowerItem> RawLumum;
 
-	public static StaticPowerItem IngotIronHeated;
-	public static StaticPowerItem IngotCopperHeated;
-	public static StaticPowerItem IngotGoldHeated;
+	public static final RegistryObject<StaticPowerItem> IngotTin;
+	public static final RegistryObject<StaticPowerItem> IngotZinc;
+	public static final RegistryObject<StaticPowerItem> IngotSilver;
+	public static final RegistryObject<StaticPowerItem> IngotLead;
+	public static final RegistryObject<StaticPowerItem> IngotTungsten;
+	public static final RegistryObject<StaticPowerItem> IngotMagnesium;
+	public static final RegistryObject<StaticPowerItem> IngotPlatinum;
+	public static final RegistryObject<StaticPowerItem> IngotAluminum;
+	public static final RegistryObject<StaticPowerItem> IngotStatic;
+	public static final RegistryObject<StaticPowerItem> IngotEnergized;
+	public static final RegistryObject<StaticPowerItem> IngotLumum;
+	public static final RegistryObject<StaticPowerItem> IngotInertInfusion;
+	public static final RegistryObject<StaticPowerItem> IngotRedstoneAlloy;
+	public static final RegistryObject<StaticPowerItem> IngotBrass;
+	public static final RegistryObject<StaticPowerItem> IngotBronze;
 
-	public static StaticPowerItem NuggetCopper;
-	public static StaticPowerItem NuggetTin;
-	public static StaticPowerItem NuggetZinc;
-	public static StaticPowerItem NuggetSilver;
-	public static StaticPowerItem NuggetLead;
-	public static StaticPowerItem NuggetTungsten;
-	public static StaticPowerItem NuggetMagnesium;
-	public static StaticPowerItem NuggetPlatinum;
-	public static StaticPowerItem NuggetAluminum;
-	public static StaticPowerItem NuggetStatic;
-	public static StaticPowerItem NuggetEnergized;
-	public static StaticPowerItem NuggetLumum;
-	public static StaticPowerItem NuggetInertInfusion;
-	public static StaticPowerItem NuggetRedstoneAlloy;
-	public static StaticPowerItem NuggetBrass;
-	public static StaticPowerItem NuggetBronze;
+	public static final RegistryObject<StaticPowerItem> IngotTinHeated;
+	public static final RegistryObject<StaticPowerItem> IngotZincHeated;
+	public static final RegistryObject<StaticPowerItem> IngotSilverHeated;
+	public static final RegistryObject<StaticPowerItem> IngotLeadHeated;
+	public static final RegistryObject<StaticPowerItem> IngotTungstenHeated;
+	public static final RegistryObject<StaticPowerItem> IngotMagnesiumHeated;
+	public static final RegistryObject<StaticPowerItem> IngotPlatinumHeated;
+	public static final RegistryObject<StaticPowerItem> IngotAluminumHeated;
+	public static final RegistryObject<StaticPowerItem> IngotStaticHeated;
+	public static final RegistryObject<StaticPowerItem> IngotEnergizedHeated;
+	public static final RegistryObject<StaticPowerItem> IngotLumumHeated;
+	public static final RegistryObject<StaticPowerItem> IngotInertInfusionHeated;
+	public static final RegistryObject<StaticPowerItem> IngotRedstoneAlloyHeated;
+	public static final RegistryObject<StaticPowerItem> IngotBrassHeated;
+	public static final RegistryObject<StaticPowerItem> IngotBronzeHeated;
 
-	public static StaticPowerItem PlateIron;
-	public static StaticPowerItem PlateGold;
-	public static StaticPowerItem PlateCopper;
-	public static StaticPowerItem PlateTin;
-	public static StaticPowerItem PlateZinc;
-	public static StaticPowerItem PlateSilver;
-	public static StaticPowerItem PlateLead;
-	public static StaticPowerItem PlateTungsten;
-	public static StaticPowerItem PlateMagnesium;
-	public static StaticPowerItem PlatePlatinum;
-	public static StaticPowerItem PlateAluminum;
-	public static StaticPowerItem PlateStatic;
-	public static StaticPowerItem PlateEnergized;
-	public static StaticPowerItem PlateLumum;
-	public static StaticPowerItem PlateInertInfusion;
-	public static StaticPowerItem PlateRedstoneAlloy;
-	public static StaticPowerItem PlateBrass;
-	public static StaticPowerItem PlateBronze;
-	public static StaticPowerItem RustyIronScrap;
+	public static final RegistryObject<StaticPowerItem> IngotIronHeated;
+	public static final RegistryObject<StaticPowerItem> IngotCopperHeated;
+	public static final RegistryObject<StaticPowerItem> IngotGoldHeated;
 
-	public static StaticPowerItem GearCopper;
-	public static StaticPowerItem GearTin;
-	public static StaticPowerItem GearZinc;
-	public static StaticPowerItem GearSilver;
-	public static StaticPowerItem GearLead;
-	public static StaticPowerItem GearTungsten;
-	public static StaticPowerItem GearMagnesium;
-	public static StaticPowerItem GearPlatinum;
-	public static StaticPowerItem GearAluminum;
-	public static StaticPowerItem GearStatic;
-	public static StaticPowerItem GearEnergized;
-	public static StaticPowerItem GearLumum;
-	public static StaticPowerItem GearInertInfusion;
-	public static StaticPowerItem GearRedstoneAlloy;
-	public static StaticPowerItem GearIron;
-	public static StaticPowerItem GearGold;
-	public static StaticPowerItem GearBrass;
-	public static StaticPowerItem GearBronze;
+	public static final RegistryObject<StaticPowerItem> NuggetCopper;
+	public static final RegistryObject<StaticPowerItem> NuggetTin;
+	public static final RegistryObject<StaticPowerItem> NuggetZinc;
+	public static final RegistryObject<StaticPowerItem> NuggetSilver;
+	public static final RegistryObject<StaticPowerItem> NuggetLead;
+	public static final RegistryObject<StaticPowerItem> NuggetTungsten;
+	public static final RegistryObject<StaticPowerItem> NuggetMagnesium;
+	public static final RegistryObject<StaticPowerItem> NuggetPlatinum;
+	public static final RegistryObject<StaticPowerItem> NuggetAluminum;
+	public static final RegistryObject<StaticPowerItem> NuggetStatic;
+	public static final RegistryObject<StaticPowerItem> NuggetEnergized;
+	public static final RegistryObject<StaticPowerItem> NuggetLumum;
+	public static final RegistryObject<StaticPowerItem> NuggetInertInfusion;
+	public static final RegistryObject<StaticPowerItem> NuggetRedstoneAlloy;
+	public static final RegistryObject<StaticPowerItem> NuggetBrass;
+	public static final RegistryObject<StaticPowerItem> NuggetBronze;
 
-	public static StaticPowerItem GearBoxCopper;
-	public static StaticPowerItem GearBoxTin;
-	public static StaticPowerItem GearBoxZinc;
-	public static StaticPowerItem GearBoxSilver;
-	public static StaticPowerItem GearBoxLead;
-	public static StaticPowerItem GearBoxTungsten;
-	public static StaticPowerItem GearBoxMagnesium;
-	public static StaticPowerItem GearBoxPlatinum;
-	public static StaticPowerItem GearBoxAluminum;
-	public static StaticPowerItem GearBoxStatic;
-	public static StaticPowerItem GearBoxEnergized;
-	public static StaticPowerItem GearBoxLumum;
-	public static StaticPowerItem GearBoxInertInfusion;
-	public static StaticPowerItem GearBoxRedstoneAlloy;
-	public static StaticPowerItem GearBoxIron;
-	public static StaticPowerItem GearBoxGold;
-	public static StaticPowerItem GearBoxBrass;
-	public static StaticPowerItem GearBoxBronze;
+	public static final RegistryObject<StaticPowerItem> PlateIron;
+	public static final RegistryObject<StaticPowerItem> PlateGold;
+	public static final RegistryObject<StaticPowerItem> PlateCopper;
+	public static final RegistryObject<StaticPowerItem> PlateTin;
+	public static final RegistryObject<StaticPowerItem> PlateZinc;
+	public static final RegistryObject<StaticPowerItem> PlateSilver;
+	public static final RegistryObject<StaticPowerItem> PlateLead;
+	public static final RegistryObject<StaticPowerItem> PlateTungsten;
+	public static final RegistryObject<StaticPowerItem> PlateMagnesium;
+	public static final RegistryObject<StaticPowerItem> PlatePlatinum;
+	public static final RegistryObject<StaticPowerItem> PlateAluminum;
+	public static final RegistryObject<StaticPowerItem> PlateStatic;
+	public static final RegistryObject<StaticPowerItem> PlateEnergized;
+	public static final RegistryObject<StaticPowerItem> PlateLumum;
+	public static final RegistryObject<StaticPowerItem> PlateInertInfusion;
+	public static final RegistryObject<StaticPowerItem> PlateRedstoneAlloy;
+	public static final RegistryObject<StaticPowerItem> PlateBrass;
+	public static final RegistryObject<StaticPowerItem> PlateBronze;
+	public static final RegistryObject<StaticPowerItem> RustyIronScrap;
 
-	public static StaticPowerItem DustCopper;
-	public static StaticPowerItem DustTin;
-	public static StaticPowerItem DustZinc;
-	public static StaticPowerItem DustSilver;
-	public static StaticPowerItem DustLead;
-	public static StaticPowerItem DustTungsten;
-	public static StaticPowerItem DustMagnesium;
-	public static StaticPowerItem DustPlatinum;
-	public static StaticPowerItem DustAluminum;
-	public static StaticPowerItem DustStatic;
-	public static StaticPowerItem DustEnergized;
-	public static StaticPowerItem DustLumum;
-	public static StaticPowerItem DustInertInfusion;
-	public static StaticPowerItem DustRedstoneAlloy;
-	public static StaticPowerItem DustBrass;
-	public static StaticPowerItem DustBronze;
+	public static RegistryObject<StaticPowerItem> GearCopper;
+	public static RegistryObject<StaticPowerItem> GearTin;
+	public static RegistryObject<StaticPowerItem> GearZinc;
+	public static RegistryObject<StaticPowerItem> GearSilver;
+	public static RegistryObject<StaticPowerItem> GearLead;
+	public static RegistryObject<StaticPowerItem> GearTungsten;
+	public static RegistryObject<StaticPowerItem> GearMagnesium;
+	public static RegistryObject<StaticPowerItem> GearPlatinum;
+	public static RegistryObject<StaticPowerItem> GearAluminum;
+	public static RegistryObject<StaticPowerItem> GearStatic;
+	public static RegistryObject<StaticPowerItem> GearEnergized;
+	public static RegistryObject<StaticPowerItem> GearLumum;
+	public static RegistryObject<StaticPowerItem> GearInertInfusion;
+	public static RegistryObject<StaticPowerItem> GearRedstoneAlloy;
+	public static RegistryObject<StaticPowerItem> GearIron;
+	public static RegistryObject<StaticPowerItem> GearGold;
+	public static RegistryObject<StaticPowerItem> GearBrass;
+	public static RegistryObject<StaticPowerItem> GearBronze;
 
-	public static StaticPowerItem DustCoal;
-	public static StaticPowerItem DustObsidian;
-	public static StaticPowerItem DustGold;
-	public static StaticPowerItem DustIron;
-	public static StaticPowerItem DustRuby;
-	public static StaticPowerItem DustSapphire;
-	public static StaticPowerItem DustEmerald;
-	public static StaticPowerItem DustDiamond;
-	public static StaticPowerItem DustSulfur;
-	public static StaticPowerItem DustSaltpeter;
-	public static StaticPowerItem DustCharcoal;
+	public static RegistryObject<StaticPowerItem> GearBoxCopper;
+	public static RegistryObject<StaticPowerItem> GearBoxTin;
+	public static RegistryObject<StaticPowerItem> GearBoxZinc;
+	public static RegistryObject<StaticPowerItem> GearBoxSilver;
+	public static RegistryObject<StaticPowerItem> GearBoxLead;
+	public static RegistryObject<StaticPowerItem> GearBoxTungsten;
+	public static RegistryObject<StaticPowerItem> GearBoxMagnesium;
+	public static RegistryObject<StaticPowerItem> GearBoxPlatinum;
+	public static RegistryObject<StaticPowerItem> GearBoxAluminum;
+	public static RegistryObject<StaticPowerItem> GearBoxStatic;
+	public static RegistryObject<StaticPowerItem> GearBoxEnergized;
+	public static RegistryObject<StaticPowerItem> GearBoxLumum;
+	public static RegistryObject<StaticPowerItem> GearBoxInertInfusion;
+	public static RegistryObject<StaticPowerItem> GearBoxRedstoneAlloy;
+	public static RegistryObject<StaticPowerItem> GearBoxIron;
+	public static RegistryObject<StaticPowerItem> GearBoxGold;
+	public static RegistryObject<StaticPowerItem> GearBoxBrass;
+	public static RegistryObject<StaticPowerItem> GearBoxBronze;
 
-	public static StaticPowerItem ChunksCopper;
-	public static StaticPowerItem ChunksTin;
-	public static StaticPowerItem ChunksZinc;
-	public static StaticPowerItem ChunksSilver;
-	public static StaticPowerItem ChunksLead;
-	public static StaticPowerItem ChunksTungsten;
-	public static StaticPowerItem ChunksMagnesium;
-	public static StaticPowerItem ChunksPlatinum;
-	public static StaticPowerItem ChunksAluminum;
-	public static StaticPowerItem ChunksCoal;
-	public static StaticPowerItem ChunksGold;
-	public static StaticPowerItem ChunksIron;
-	public static StaticPowerItem ChunksRuby;
-	public static StaticPowerItem ChunksSapphire;
-	public static StaticPowerItem ChunksEmerald;
-	public static StaticPowerItem ChunksDiamond;
-	public static StaticPowerItem ChunksLapis;
-	public static StaticPowerItem ChunksRedstone;
-	public static StaticPowerItem ChunksQuartz;
+	public static RegistryObject<StaticPowerItem> DustCopper;
+	public static RegistryObject<StaticPowerItem> DustTin;
+	public static RegistryObject<StaticPowerItem> DustZinc;
+	public static RegistryObject<StaticPowerItem> DustSilver;
+	public static RegistryObject<StaticPowerItem> DustLead;
+	public static RegistryObject<StaticPowerItem> DustTungsten;
+	public static RegistryObject<StaticPowerItem> DustMagnesium;
+	public static RegistryObject<StaticPowerItem> DustPlatinum;
+	public static RegistryObject<StaticPowerItem> DustAluminum;
+	public static RegistryObject<StaticPowerItem> DustStatic;
+	public static RegistryObject<StaticPowerItem> DustEnergized;
+	public static RegistryObject<StaticPowerItem> DustLumum;
+	public static RegistryObject<StaticPowerItem> DustInertInfusion;
+	public static RegistryObject<StaticPowerItem> DustRedstoneAlloy;
+	public static RegistryObject<StaticPowerItem> DustBrass;
+	public static RegistryObject<StaticPowerItem> DustBronze;
 
-	public static StaticPowerItem RodCopper;
-	public static StaticPowerItem RodTin;
-	public static StaticPowerItem RodZinc;
-	public static StaticPowerItem RodSilver;
-	public static StaticPowerItem RodLead;
-	public static StaticPowerItem RodTungsten;
-	public static StaticPowerItem RodMagnesium;
-	public static StaticPowerItem RodPlatinum;
-	public static StaticPowerItem RodAluminum;
-	public static StaticPowerItem RodStatic;
-	public static StaticPowerItem RodEnergized;
-	public static StaticPowerItem RodLumum;
-	public static StaticPowerItem RodInertInfusion;
-	public static StaticPowerItem RodRedstoneAlloy;
-	public static StaticPowerItem RodBrass;
-	public static StaticPowerItem RodBronze;
-	public static StaticPowerItem RodCoal;
-	public static StaticPowerItem RodGold;
-	public static StaticPowerItem RodIron;
-	public static StaticPowerItem RodRuby;
-	public static StaticPowerItem RodSapphire;
-	public static StaticPowerItem RodEmerald;
-	public static StaticPowerItem RodDiamond;
-	public static StaticPowerItem RodQuartz;
-	public static StaticPowerItem RodLapis;
-	public static StaticPowerItem RodLatex;
+	public static RegistryObject<StaticPowerItem> DustCoal;
+	public static RegistryObject<StaticPowerItem> DustObsidian;
+	public static RegistryObject<StaticPowerItem> DustGold;
+	public static RegistryObject<StaticPowerItem> DustIron;
+	public static RegistryObject<StaticPowerItem> DustRuby;
+	public static RegistryObject<StaticPowerItem> DustSapphire;
+	public static RegistryObject<StaticPowerItem> DustEmerald;
+	public static RegistryObject<StaticPowerItem> DustDiamond;
+	public static RegistryObject<StaticPowerItem> DustSulfur;
+	public static RegistryObject<StaticPowerItem> DustSaltpeter;
+	public static RegistryObject<StaticPowerItem> DustCharcoal;
 
-	public static StaticPowerItem GemRuby;
-	public static StaticPowerItem GemSapphire;
+	public static RegistryObject<StaticPowerItem> ChunksCopper;
+	public static RegistryObject<StaticPowerItem> ChunksTin;
+	public static RegistryObject<StaticPowerItem> ChunksZinc;
+	public static RegistryObject<StaticPowerItem> ChunksSilver;
+	public static RegistryObject<StaticPowerItem> ChunksLead;
+	public static RegistryObject<StaticPowerItem> ChunksTungsten;
+	public static RegistryObject<StaticPowerItem> ChunksMagnesium;
+	public static RegistryObject<StaticPowerItem> ChunksPlatinum;
+	public static RegistryObject<StaticPowerItem> ChunksAluminum;
+	public static RegistryObject<StaticPowerItem> ChunksCoal;
+	public static RegistryObject<StaticPowerItem> ChunksGold;
+	public static RegistryObject<StaticPowerItem> ChunksIron;
+	public static RegistryObject<StaticPowerItem> ChunksRuby;
+	public static RegistryObject<StaticPowerItem> ChunksSapphire;
+	public static RegistryObject<StaticPowerItem> ChunksEmerald;
+	public static RegistryObject<StaticPowerItem> ChunksDiamond;
+	public static RegistryObject<StaticPowerItem> ChunksLapis;
+	public static RegistryObject<StaticPowerItem> ChunksRedstone;
+	public static RegistryObject<StaticPowerItem> ChunksQuartz;
 
-	public static StaticPowerItem RawSilicon;
-	public static StaticPowerItem Silicon;
-	public static StaticPowerItem StaticDopedSilicon;
-	public static StaticPowerItem EnergizedDopedSilicon;
-	public static StaticPowerItem LumumDopedSilicon;
-	public static StaticPowerItem CrystalStatic;
-	public static StaticPowerItem CrystalEnergized;
-	public static StaticPowerItem CrystalLumum;
-	public static StaticPowerItem DustWood;
-	public static StaticPowerItem LatexChunk;
-	public static StaticPowerItem RubberWoodBark;
-	public static StaticPowerItem PortableSmeltingCore;
-	public static StaticPowerItem Slag;
+	public static RegistryObject<StaticPowerItem> RodCopper;
+	public static RegistryObject<StaticPowerItem> RodTin;
+	public static RegistryObject<StaticPowerItem> RodZinc;
+	public static RegistryObject<StaticPowerItem> RodSilver;
+	public static RegistryObject<StaticPowerItem> RodLead;
+	public static RegistryObject<StaticPowerItem> RodTungsten;
+	public static RegistryObject<StaticPowerItem> RodMagnesium;
+	public static RegistryObject<StaticPowerItem> RodPlatinum;
+	public static RegistryObject<StaticPowerItem> RodAluminum;
+	public static RegistryObject<StaticPowerItem> RodStatic;
+	public static RegistryObject<StaticPowerItem> RodEnergized;
+	public static RegistryObject<StaticPowerItem> RodLumum;
+	public static RegistryObject<StaticPowerItem> RodInertInfusion;
+	public static RegistryObject<StaticPowerItem> RodRedstoneAlloy;
+	public static RegistryObject<StaticPowerItem> RodBrass;
+	public static RegistryObject<StaticPowerItem> RodBronze;
+	public static RegistryObject<StaticPowerItem> RodCoal;
+	public static RegistryObject<StaticPowerItem> RodGold;
+	public static RegistryObject<StaticPowerItem> RodIron;
+	public static RegistryObject<StaticPowerItem> RodRuby;
+	public static RegistryObject<StaticPowerItem> RodSapphire;
+	public static RegistryObject<StaticPowerItem> RodEmerald;
+	public static RegistryObject<StaticPowerItem> RodDiamond;
+	public static RegistryObject<StaticPowerItem> RodQuartz;
+	public static RegistryObject<StaticPowerItem> RodLapis;
+	public static RegistryObject<StaticPowerItem> RodLatex;
 
-	public static StaticPowerItem BasicCard;
-	public static StaticPowerItem AdvancedCard;
-	public static StaticPowerItem StaticCard;
-	public static StaticPowerItem EnergizedCard;
-	public static StaticPowerItem LumumCard;
+	public static RegistryObject<StaticPowerItem> GemRuby;
+	public static RegistryObject<StaticPowerItem> GemSapphire;
+
+	public static RegistryObject<StaticPowerItem> RawSilicon;
+	public static RegistryObject<StaticPowerItem> Silicon;
+	public static RegistryObject<StaticPowerItem> StaticDopedSilicon;
+	public static RegistryObject<StaticPowerItem> EnergizedDopedSilicon;
+	public static RegistryObject<StaticPowerItem> LumumDopedSilicon;
+	public static RegistryObject<StaticPowerItem> CrystalStatic;
+	public static RegistryObject<StaticPowerItem> CrystalEnergized;
+	public static RegistryObject<StaticPowerItem> CrystalLumum;
+	public static RegistryObject<StaticPowerItem> DustWood;
+	public static RegistryObject<StaticPowerItem> LatexChunk;
+	public static RegistryObject<StaticPowerItem> RubberWoodBark;
+	public static RegistryObject<StaticPowerItem> PortableSmeltingCore;
+	public static RegistryObject<StaticPowerItem> Slag;
+
+	public static RegistryObject<StaticPowerItem> BasicCard;
+	public static RegistryObject<StaticPowerItem> AdvancedCard;
+	public static RegistryObject<StaticPowerItem> StaticCard;
+	public static RegistryObject<StaticPowerItem> EnergizedCard;
+	public static RegistryObject<StaticPowerItem> LumumCard;
 
 	public static TurbineBlades WoodTurbineBlades;
 	public static TurbineBlades BasicTurbineBlades;
@@ -318,27 +327,27 @@ public class ModItems {
 	public static TurbineBlades LumumTurbineBlades;
 	public static TurbineBlades CreativeTurbineBlades;
 
-	public static StaticPowerItem BasicProcessor;
-	public static StaticPowerItem AdvancedProcessor;
-	public static StaticPowerItem StaticProcessor;
-	public static StaticPowerItem EnergizedProcessor;
-	public static StaticPowerItem LumumProcessor;
+	public static RegistryObject<StaticPowerItem> BasicProcessor;
+	public static RegistryObject<StaticPowerItem> AdvancedProcessor;
+	public static RegistryObject<StaticPowerItem> StaticProcessor;
+	public static RegistryObject<StaticPowerItem> EnergizedProcessor;
+	public static RegistryObject<StaticPowerItem> LumumProcessor;
 
-	public static StaticPowerItem RubberBar;
-	public static StaticPowerItem RubberSheet;
-	public static StaticPowerItem IOPort;
-	public static StaticPowerItem WireCopper;
-	public static StaticPowerItem WireTin;
-	public static StaticPowerItem WireSilver;
-	public static StaticPowerItem WireGold;
-	public static StaticPowerItem WirePlatinum;
-	public static StaticPowerItem WireAluminum;
-	public static StaticPowerItem CoilCopper;
-	public static StaticPowerItem CoilSilver;
-	public static StaticPowerItem CoilGold;
-	public static StaticPowerItem CoilPlatinum;
-	public static StaticPowerItem CoilAluminum;
-	public static StaticPowerItem CoilTin;
+	public static RegistryObject<StaticPowerItem> RubberBar;
+	public static RegistryObject<StaticPowerItem> RubberSheet;
+	public static RegistryObject<StaticPowerItem> IOPort;
+	public static RegistryObject<StaticPowerItem> WireCopper;
+	public static RegistryObject<StaticPowerItem> WireTin;
+	public static RegistryObject<StaticPowerItem> WireSilver;
+	public static RegistryObject<StaticPowerItem> WireGold;
+	public static RegistryObject<StaticPowerItem> WirePlatinum;
+	public static RegistryObject<StaticPowerItem> WireAluminum;
+	public static RegistryObject<StaticPowerItem> CoilCopper;
+	public static RegistryObject<StaticPowerItem> CoilSilver;
+	public static RegistryObject<StaticPowerItem> CoilGold;
+	public static RegistryObject<StaticPowerItem> CoilPlatinum;
+	public static RegistryObject<StaticPowerItem> CoilAluminum;
+	public static RegistryObject<StaticPowerItem> CoilTin;
 
 	public static DrillBit IronDrillBit;
 	public static DrillBit BronzeDrillBit;
@@ -367,17 +376,17 @@ public class ModItems {
 	public static ChainsawBlade LumumChainsawBlade;
 	public static ChainsawBlade CreativeChainsawBlade;
 
-	public static StaticPowerItem MemoryChip;
-	public static StaticPowerItem LogicGatePowerSync;
-	public static StaticPowerItem InvertedLogicGatePowerSync;
-	public static StaticPowerItem Servo;
-	public static StaticPowerItem Diode;
-	public static StaticPowerItem Transistor;
-	public static StaticPowerItem InternalClock;
-	public static StaticPowerItem Motor;
-	public static StaticPowerItem Plug;
-	public static StaticPowerItem DigistoreCore;
-	public static StaticPowerItem GrinderComponent;
+	public static RegistryObject<StaticPowerItem> MemoryChip;
+	public static RegistryObject<StaticPowerItem> LogicGatePowerSync;
+	public static RegistryObject<StaticPowerItem> InvertedLogicGatePowerSync;
+	public static RegistryObject<StaticPowerItem> Servo;
+	public static RegistryObject<StaticPowerItem> Diode;
+	public static RegistryObject<StaticPowerItem> Transistor;
+	public static RegistryObject<StaticPowerItem> InternalClock;
+	public static RegistryObject<StaticPowerItem> Motor;
+	public static RegistryObject<StaticPowerItem> Plug;
+	public static RegistryObject<StaticPowerItem> DigistoreCore;
+	public static RegistryObject<StaticPowerItem> GrinderComponent;
 
 	public static FluidCapsule IronFluidCapsule;
 	public static FluidCapsule BasicFluidCapsule;
@@ -387,11 +396,11 @@ public class ModItems {
 	public static FluidCapsule LumumFluidCapsule;
 	public static FluidCapsule CreativeFluidCapsule;
 
-	public static StaticPowerItem BasicUpgradePlate;
-	public static StaticPowerItem AdvancedUpgradePlate;
-	public static StaticPowerItem StaticUpgradePlate;
-	public static StaticPowerItem EnergizedUpgradePlate;
-	public static StaticPowerItem LumumUpgradePlate;
+	public static RegistryObject<StaticPowerItem> BasicUpgradePlate;
+	public static RegistryObject<StaticPowerItem> AdvancedUpgradePlate;
+	public static RegistryObject<StaticPowerItem> StaticUpgradePlate;
+	public static RegistryObject<StaticPowerItem> EnergizedUpgradePlate;
+	public static RegistryObject<StaticPowerItem> LumumUpgradePlate;
 
 	public static PortableBattery BasicPortableBattery;
 	public static PortableBattery AdvancedPortableBattery;
@@ -450,7 +459,7 @@ public class ModItems {
 	public static StaticWrench EnergizedWrench;
 	public static StaticWrench LumumWrench;
 
-	public static StaticPowerItem WeakMagnet;
+	public static RegistryObject<StaticPowerItem> WeakMagnet;
 	public static Magnet BasicMagnet;
 	public static Magnet AdvancedMagnet;
 	public static Magnet StaticMagnet;
@@ -536,15 +545,16 @@ public class ModItems {
 	public static JuiceBottleItem BeetJuiceBottle;
 	public static JuiceBottleItem BerryJuiceBottle;
 
-	public static StaticPowerItem ResearchTier1;
-	public static StaticPowerItem ResearchTier2;
-	public static StaticPowerItem ResearchTier3;
-	public static StaticPowerItem ResearchTier4;
-	public static StaticPowerItem ResearchTier5;
-	public static StaticPowerItem ResearchTier6;
-	public static StaticPowerItem ResearchTier7;
+	public static RegistryObject<StaticPowerItem> ResearchTier1;
+	public static RegistryObject<StaticPowerItem> ResearchTier2;
+	public static RegistryObject<StaticPowerItem> ResearchTier3;
+	public static RegistryObject<StaticPowerItem> ResearchTier4;
+	public static RegistryObject<StaticPowerItem> ResearchTier5;
+	public static RegistryObject<StaticPowerItem> ResearchTier6;
+	public static RegistryObject<StaticPowerItem> ResearchTier7;
 
-	public static void init() {
+	public static void init(IEventBus eventBus) {
+		ITEMS.register(eventBus);
 		// Misc.
 		StaticPowerRegistry.preRegisterItem(DistilleryGrain = new StaticPowerItem("distillery_grain"));
 		StaticPowerRegistry.preRegisterItem(BedFrame = new StaticPowerItem("bed_frame"));
@@ -664,12 +674,18 @@ public class ModItems {
 
 		// Turbine Blades
 		StaticPowerRegistry.preRegisterItem(WoodTurbineBlades = new TurbineBlades("turbine_blades_wood", StaticPowerTiers.WOOD, StaticPowerAdditionalModels.TURBINE_BLADES_WOOD));
-		StaticPowerRegistry.preRegisterItem(BasicTurbineBlades = new TurbineBlades("turbine_blades_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.TURBINE_BLADES_BASIC));
-		StaticPowerRegistry.preRegisterItem(AdvancedTurbineBlades = new TurbineBlades("turbine_blades_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
-		StaticPowerRegistry.preRegisterItem(StaticTurbineBlades = new TurbineBlades("turbine_blades_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.TURBINE_BLADES_STATIC));
-		StaticPowerRegistry.preRegisterItem(EnergizedTurbineBlades = new TurbineBlades("turbine_blades_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
-		StaticPowerRegistry.preRegisterItem(LumumTurbineBlades = new TurbineBlades("turbine_blades_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.TURBINE_BLADES_LUMUM));
-		StaticPowerRegistry.preRegisterItem(CreativeTurbineBlades = new TurbineBlades("turbine_blades_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
+		StaticPowerRegistry
+				.preRegisterItem(BasicTurbineBlades = new TurbineBlades("turbine_blades_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.TURBINE_BLADES_BASIC));
+		StaticPowerRegistry.preRegisterItem(
+				AdvancedTurbineBlades = new TurbineBlades("turbine_blades_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.TURBINE_BLADES_ADVANCED));
+		StaticPowerRegistry
+				.preRegisterItem(StaticTurbineBlades = new TurbineBlades("turbine_blades_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.TURBINE_BLADES_STATIC));
+		StaticPowerRegistry.preRegisterItem(
+				EnergizedTurbineBlades = new TurbineBlades("turbine_blades_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.TURBINE_BLADES_ENERGIZED));
+		StaticPowerRegistry
+				.preRegisterItem(LumumTurbineBlades = new TurbineBlades("turbine_blades_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.TURBINE_BLADES_LUMUM));
+		StaticPowerRegistry.preRegisterItem(
+				CreativeTurbineBlades = new TurbineBlades("turbine_blades_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.TURBINE_BLADES_CREATIVE));
 
 		// Processors
 		StaticPowerRegistry.preRegisterItem(BasicCard = new StaticPowerItem("card_basic"));
@@ -981,38 +997,38 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(LumumChainsawBlade = new ChainsawBlade("chainsaw_blade_lumum", Tiers.NETHERITE, StaticPowerTiers.LUMUM));
 		StaticPowerRegistry.preRegisterItem(CreativeChainsawBlade = new ChainsawBlade("chainsaw_blade_creative", Tiers.NETHERITE, StaticPowerTiers.CREATIVE));
 
-		StaticPowerRegistry.preRegisterItem(
-				BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(BasicExtractorAttachment = new ExtractorAttachment("cable_attachment_basic_extractor", StaticPowerTiers.BASIC,
+				StaticPowerAdditionalModels.CABLE_BASIC_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(AdvancedExtractorAttachment = new ExtractorAttachment("cable_attachment_advanced_extractor", StaticPowerTiers.ADVANCED,
 				StaticPowerAdditionalModels.CABLE_ADVANCED_EXTRACTOR_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(
-				StaticExtractorAttachment = new ExtractorAttachment("cable_attachment_static_extractor", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(StaticExtractorAttachment = new ExtractorAttachment("cable_attachment_static_extractor", StaticPowerTiers.STATIC,
+				StaticPowerAdditionalModels.CABLE_STATIC_EXTRACTOR_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(EnergizedExtractorAttachment = new ExtractorAttachment("cable_attachment_energized_extractor", StaticPowerTiers.ENERGIZED,
 				StaticPowerAdditionalModels.CABLE_ENERGIZED_EXTRACTOR_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(
-				LumumExtractorAttachment = new ExtractorAttachment("cable_attachment_lumum_extractor", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
-
-		StaticPowerRegistry
-				.preRegisterItem(BasicFilterAttachment = new FilterAttachment("cable_attachment_basic_filter", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(
-				AdvancedFilterAttachment = new FilterAttachment("cable_attachment_advanced_filter", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.CABLE_ADVANCED_FILTER_ATTACHMENT));
-		StaticPowerRegistry
-				.preRegisterItem(StaticFilterAttachment = new FilterAttachment("cable_attachment_static_filter", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(
-				EnergizedFilterAttachment = new FilterAttachment("cable_attachment_energized_filter", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
-		StaticPowerRegistry
-				.preRegisterItem(LumumFilterAttachment = new FilterAttachment("cable_attachment_lumum_filter", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(LumumExtractorAttachment = new ExtractorAttachment("cable_attachment_lumum_extractor", StaticPowerTiers.LUMUM,
+				StaticPowerAdditionalModels.CABLE_LUMUM_EXTRACTOR_ATTACHMENT));
 
 		StaticPowerRegistry.preRegisterItem(
-				BasicRetrieverAttachment = new RetrieverAttachment("cable_attachment_basic_retriever", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_RETRIEVER_ATTACHMENT));
+				BasicFilterAttachment = new FilterAttachment("cable_attachment_basic_filter", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.CABLE_BASIC_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(AdvancedFilterAttachment = new FilterAttachment("cable_attachment_advanced_filter", StaticPowerTiers.ADVANCED,
+				StaticPowerAdditionalModels.CABLE_ADVANCED_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(StaticFilterAttachment = new FilterAttachment("cable_attachment_static_filter", StaticPowerTiers.STATIC,
+				StaticPowerAdditionalModels.CABLE_STATIC_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(EnergizedFilterAttachment = new FilterAttachment("cable_attachment_energized_filter", StaticPowerTiers.ENERGIZED,
+				StaticPowerAdditionalModels.CABLE_ENERGIZED_FILTER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(
+				LumumFilterAttachment = new FilterAttachment("cable_attachment_lumum_filter", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_FILTER_ATTACHMENT));
+
+		StaticPowerRegistry.preRegisterItem(BasicRetrieverAttachment = new RetrieverAttachment("cable_attachment_basic_retriever", StaticPowerTiers.BASIC,
+				StaticPowerAdditionalModels.CABLE_BASIC_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(AdvancedRetrieverAttachment = new RetrieverAttachment("cable_attachment_advanced_retriever", StaticPowerTiers.ADVANCED,
 				StaticPowerAdditionalModels.CABLE_ADVANCED_RETRIEVER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(
-				StaticRetrieverAttachment = new RetrieverAttachment("cable_attachment_static_retriever", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(StaticRetrieverAttachment = new RetrieverAttachment("cable_attachment_static_retriever", StaticPowerTiers.STATIC,
+				StaticPowerAdditionalModels.CABLE_STATIC_RETRIEVER_ATTACHMENT));
 		StaticPowerRegistry.preRegisterItem(EnergizedRetrieverAttachment = new RetrieverAttachment("cable_attachment_energized_retriever", StaticPowerTiers.ENERGIZED,
 				StaticPowerAdditionalModels.CABLE_ENERGIZED_RETRIEVER_ATTACHMENT));
-		StaticPowerRegistry.preRegisterItem(
-				LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
+		StaticPowerRegistry.preRegisterItem(LumumRetrieverAttachment = new RetrieverAttachment("cable_attachment_lumum_retriever", StaticPowerTiers.LUMUM,
+				StaticPowerAdditionalModels.CABLE_LUMUM_RETRIEVER_ATTACHMENT));
 
 		StaticPowerRegistry.preRegisterItem(ExporterAttachment = new DigistoreExporterAttachment("cable_attachment_digistore_exporter"));
 		StaticPowerRegistry.preRegisterItem(ImporterAttachment = new DigistoreImporterAttachment("cable_attachment_digistore_importer"));
@@ -1026,43 +1042,50 @@ public class ModItems {
 		StaticPowerRegistry.preRegisterItem(DigistoreLightAttachment = new DigistoreLight("cable_attachment_digistore_light"));
 		StaticPowerRegistry.preRegisterItem(DigistoreWirelessTerminal = new DigistoreWirelessTerminal("digistore_wireless_terminal"));
 
-		StaticPowerRegistry.preRegisterItem(SprinklerAttachment = new SprinklerAttachment("cable_attachment_sprinkler", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));
+		StaticPowerRegistry
+				.preRegisterItem(SprinklerAttachment = new SprinklerAttachment("cable_attachment_sprinkler", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.SPRINKLER));
 		StaticPowerRegistry.preRegisterItem(DrainAttachment = new DrainAttachment("cable_attachment_drain", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.DRAIN));
 
 		// Digistore Misc.
 		StaticPowerRegistry.preRegisterItem(PatternCard = new DigistorePatternCard("digistore_pattern_card"));
 
 		// Digistore Cards
-		StaticPowerRegistry.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
-		StaticPowerRegistry.preRegisterItem(AdvancedDigistoreCard = new DigistoreCard("digistore_card_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
-		StaticPowerRegistry.preRegisterItem(StaticDigistoreCard = new DigistoreCard("digistore_card_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
-		StaticPowerRegistry.preRegisterItem(EnergizedDigistoreCard = new DigistoreCard("digistore_card_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
-		StaticPowerRegistry.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
-		StaticPowerRegistry.preRegisterItem(CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
-
 		StaticPowerRegistry
-				.preRegisterItem(BasicStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
+				.preRegisterItem(BasicDigistoreCard = new DigistoreCard("digistore_card_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
-				AdvancedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
+				AdvancedDigistoreCard = new DigistoreCard("digistore_card_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
 		StaticPowerRegistry
-				.preRegisterItem(StaticStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
+				.preRegisterItem(StaticDigistoreCard = new DigistoreCard("digistore_card_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
-				EnergizedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
+				EnergizedDigistoreCard = new DigistoreCard("digistore_card_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
 		StaticPowerRegistry
-				.preRegisterItem(LumumStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
+				.preRegisterItem(LumumDigistoreCard = new DigistoreCard("digistore_card_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
-				CreativeStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
+				CreativeDigistoreCard = new DigistoreCard("digistore_card_creative", StaticPowerTiers.CREATIVE, StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
 
 		StaticPowerRegistry.preRegisterItem(
-				BasicSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
+				BasicStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_basic", StaticPowerTiers.BASIC, StaticPowerAdditionalModels.BASIC_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(AdvancedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_advanced", StaticPowerTiers.ADVANCED,
+				StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
-				AdvancedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_advanced", StaticPowerTiers.ADVANCED, StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
+				StaticStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(EnergizedStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_energized", StaticPowerTiers.ENERGIZED,
+				StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_CARD));
 		StaticPowerRegistry.preRegisterItem(
-				StaticSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_static", StaticPowerTiers.STATIC, StaticPowerAdditionalModels.STATIC_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(
-				EnergizedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED, StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
-		StaticPowerRegistry.preRegisterItem(
-				LumumSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
+				LumumStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_lumum", StaticPowerTiers.LUMUM, StaticPowerAdditionalModels.LUMUM_DIGISTORE_CARD));
+		StaticPowerRegistry.preRegisterItem(CreativeStackedDigistoreCard = new DigistoreStackedCard("digistore_card_stacked_creative", StaticPowerTiers.CREATIVE,
+				StaticPowerAdditionalModels.CREATIVE_DIGISTORE_CARD, true));
+
+		StaticPowerRegistry.preRegisterItem(BasicSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_basic", StaticPowerTiers.BASIC,
+				StaticPowerAdditionalModels.BASIC_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(AdvancedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_advanced", StaticPowerTiers.ADVANCED,
+				StaticPowerAdditionalModels.ADVANCVED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(StaticSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_static", StaticPowerTiers.STATIC,
+				StaticPowerAdditionalModels.STATIC_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(EnergizedSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_energized", StaticPowerTiers.ENERGIZED,
+				StaticPowerAdditionalModels.ENERGIZED_DIGISTORE_SINGULAR_CARD));
+		StaticPowerRegistry.preRegisterItem(LumumSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_lumum", StaticPowerTiers.LUMUM,
+				StaticPowerAdditionalModels.LUMUM_DIGISTORE_SINGULAR_CARD));
 		StaticPowerRegistry.preRegisterItem(CreativeSingularDigistoreCard = new DigistoreMonoCard("digistore_card_singular_creative", StaticPowerTiers.CREATIVE,
 				StaticPowerAdditionalModels.CREATIVE_DIGISTORE_SINGULAR_CARD, true));
 

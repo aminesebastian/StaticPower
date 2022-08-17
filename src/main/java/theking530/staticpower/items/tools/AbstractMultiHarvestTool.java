@@ -13,7 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -40,9 +40,9 @@ import theking530.staticpower.StaticPower;
 public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	protected float attackDamage;
 	protected Multimap<Attribute, AttributeModifier> toolAttributes;
-	protected List<Tag<Block>> mineableTags;
+	protected List<TagKey<Block>> mineableTags;
 
-	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn, List<Tag<Block>> tags) {
+	public AbstractMultiHarvestTool(Item.Properties properties, String name, float attackDamageIn, float attackSpeedIn, List<TagKey<Block>> tags) {
 		super(name, properties.stacksTo(1));
 		this.attackDamage = attackDamageIn + 2.0f;
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
@@ -317,7 +317,7 @@ public abstract class AbstractMultiHarvestTool extends AbstractMultiPartItem {
 	public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
 		// Check to make sure one of the tags contains this.
 		boolean mineable = false;
-		for (Tag<Block> tag : mineableTags) {
+		for (TagKey<Block> tag : mineableTags) {
 			if (state.is(tag)) {
 				mineable = true;
 				break;

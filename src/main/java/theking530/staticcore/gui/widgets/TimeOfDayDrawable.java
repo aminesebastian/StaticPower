@@ -104,7 +104,7 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 
 	protected boolean isSnowing() {
 		if (world.isRaining()) {
-			if (world.getBiome(pos).shouldSnow(world, pos)) {
+			if (world.getBiome(pos).value().shouldSnow(world, pos)) {
 				return true;
 			}
 		}
@@ -113,7 +113,7 @@ public class TimeOfDayDrawable extends AbstractGuiWidget<TimeOfDayDrawable> {
 
 	protected boolean isRaining() {
 		if (world.isRaining()) {
-			if (!world.getBiome(pos).shouldSnow(world, pos)) {
+			if (!world.getBiome(pos).value().shouldSnow(world, pos)) {
 				return true;
 			}
 		}
