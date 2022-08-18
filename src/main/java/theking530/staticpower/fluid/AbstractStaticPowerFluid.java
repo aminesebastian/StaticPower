@@ -1,60 +1,31 @@
 package theking530.staticpower.fluid;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.LiquidBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition.Builder;
-import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
-import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
-public abstract class AbstractStaticPowerFluid extends FlowingFluid implements IRenderLayerProvider {
+public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid implements IRenderLayerProvider {
 
-	public Supplier<Item> Bucket;
-	public Supplier<StaticPowerFluidBlock> FluidBlock;
-	public Supplier<Source> StillFluid;
-	public Supplier<Flowing> FlowingFluid;
-	public Consumer<FluidAttributes.Builder> AdditionalAtrributesDelegate;
-	public String StillTexture;
-	public String FlowingTexture;
 	public TagKey<Fluid> Tag;
-
 	private Color fogColor;
 	private Color overlayColor;
 
-	public AbstractStaticPowerFluid(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-			String flowingTexture, TagKey<Fluid> tag, Color fogColor, Color overlayColor, Consumer<FluidAttributes.Builder> attributes) {
-		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, name));
-		Bucket = bucket;
-		FluidBlock = fluidBlock;
-		StillFluid = stillFluid;
-		FlowingFluid = flowingFluid;
-		StillTexture = stillTexture;
-		FlowingTexture = flowingTexture;
+	public AbstractStaticPowerFluid(Properties properties, TagKey<Fluid> tag, Color fogColor, Color overlayColor) {
+		super(properties);
 		this.fogColor = fogColor;
 		this.overlayColor = overlayColor;
 		Tag = tag;
-		AdditionalAtrributesDelegate = attributes;
 	}
 
 	public Color getFogColor() {
@@ -74,64 +45,8 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 	}
 
 	@Override
-	public Fluid getFlowing() {
-		return FlowingFluid.get();
-	}
-
-	@Override
-	public Fluid getSource() {
-		return StillFluid.get();
-	}
-
-	@Override
-	public Item getBucket() {
-		return Bucket.get();
-	}
-
-	@Override
-	protected boolean canConvertToSource() {
-		return false;
-	}
-
-	@Override
-	protected void beforeDestroyingBlock(LevelAccessor worldIn, BlockPos pos, BlockState state) {
-		BlockEntity tileentity = state.getBlock() instanceof EntityBlock ? worldIn.getBlockEntity(pos) : null;
-		Block.dropResources(state, worldIn, pos, tileentity);
-	}
-
-	@Override
-	protected int getSlopeFindDistance(LevelReader worldIn) {
-		return 4;
-	}
-
-	@Override
-	protected int getDropOff(LevelReader worldIn) {
-		return 1;
-	}
-
-	@Override
-	protected boolean canBeReplacedWith(FluidState fluidState, BlockGetter blockReader, BlockPos pos, Fluid fluid, Direction direction) {
-		return blockReader.getBlockState(pos).getBlock() == Blocks.AIR;
-	}
-
-	@Override
 	public int getTickDelay(LevelReader reader) {
 		return getAttributes().getViscosity() / 200;
-	}
-
-	@Override
-	protected float getExplosionResistance() {
-		return 100;
-	}
-
-	@Override
-	protected BlockState createLegacyBlock(FluidState state) {
-		return FluidBlock.get().defaultBlockState().setValue(LiquidBlock.LEVEL, Integer.valueOf(getLegacyLevel(state)));
-	}
-
-	@Override
-	public boolean isSame(Fluid fluidIn) {
-		return fluidIn == getFlowing() || fluidIn == getSource();
 	}
 
 	@Override
@@ -172,21 +87,10 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 		return RenderType.translucent();
 	}
 
-	@Override
-	protected FluidAttributes createAttributes() {
-		FluidAttributes.Builder attributes = FluidAttributes.builder(new ResourceLocation(StaticPower.MOD_ID, StillTexture), new ResourceLocation(StaticPower.MOD_ID, FlowingTexture))
-				.translationKey(FluidBlock.get().getDescriptionId().replace("block", "fluid"));
-		if (AdditionalAtrributesDelegate != null) {
-			AdditionalAtrributesDelegate.accept(attributes);
-		}
-		return attributes.build(this);
-	}
-
 	public static class Source extends AbstractStaticPowerFluid {
 
-		public Source(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-				String flowingTexture, TagKey<Fluid> tag, Color fogColor, Color overlayColor, Consumer<FluidAttributes.Builder> attributes) {
-			super(name, bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, fogColor, overlayColor, attributes);
+		public Source(Properties properties,TagKey<Fluid> tag, Color fogColor, Color overlayColor) {
+			super(properties, tag, fogColor, overlayColor);
 		}
 
 		@Override
@@ -195,16 +99,15 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 		}
 
 		@Override
-		public int getAmount(FluidState p_207192_1_) {
-			return 8;
+		public int getAmount(FluidState state) {
+            return state.getValue(LEVEL);
 		}
 	}
 
 	public static class Flowing extends AbstractStaticPowerFluid {
 
-		public Flowing(String name, Supplier<Item> bucket, Supplier<StaticPowerFluidBlock> fluidBlock, Supplier<Source> stillFluid, Supplier<Flowing> flowingFluid, String stillTexture,
-				String flowingTexture, TagKey<Fluid> tag, Color fogColor, Color overlayColor, Consumer<FluidAttributes.Builder> attributes) {
-			super(name + "_flowing", bucket, fluidBlock, stillFluid, flowingFluid, stillTexture, flowingTexture, tag, fogColor, overlayColor, attributes);
+		public Flowing(Properties properties,TagKey<Fluid> tag, Color fogColor, Color overlayColor) {
+			super(properties, tag, fogColor, overlayColor);
 		}
 
 		@Override
@@ -220,7 +123,7 @@ public abstract class AbstractStaticPowerFluid extends FlowingFluid implements I
 
 		@Override
 		public int getAmount(FluidState state) {
-			return state.getValue(AbstractStaticPowerFluid.LEVEL);
+            return state.getValue(LEVEL);
 		}
 	}
 }

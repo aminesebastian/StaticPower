@@ -1,7 +1,5 @@
 package theking530.staticpower.items;
 
-import java.util.function.Supplier;
-
 import javax.annotation.Nullable;
 
 import net.minecraft.client.resources.model.BakedModel;
@@ -18,6 +16,7 @@ import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
+import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.rendering.items.DynamicBucketItemModel;
@@ -26,13 +25,13 @@ public class StaticPowerFluidBucket extends BucketItem implements ICustomModelSu
 	private final boolean useDynamicModel;
 	private final ResourceLocation fluidMaskSprite;
 
-	public StaticPowerFluidBucket(boolean useDynamicModel, ResourceLocation fluidMaskSprite, Supplier<? extends Fluid> supplier) {
+	public StaticPowerFluidBucket(boolean useDynamicModel, ResourceLocation fluidMaskSprite, RegistryObject<? extends Fluid> supplier) {
 		super(supplier, new Properties().stacksTo(1).tab(StaticPower.CREATIVE_TAB));
 		this.useDynamicModel = useDynamicModel;
 		this.fluidMaskSprite = fluidMaskSprite;
 	}
 
-	public StaticPowerFluidBucket(Supplier<? extends Fluid> supplier) {
+	public StaticPowerFluidBucket(RegistryObject<? extends Fluid> supplier) {
 		this(false, null, supplier);
 	}
 

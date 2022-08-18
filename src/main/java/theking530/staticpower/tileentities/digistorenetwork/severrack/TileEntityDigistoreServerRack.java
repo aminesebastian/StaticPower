@@ -22,7 +22,7 @@ import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreI
 public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityDigistoreServerRack> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreServerRack>(
-			(type, pos, state) -> new TileEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack.get());
+			(type, pos, state) -> new TileEntityDigistoreServerRack(pos, state), ModBlocks.DigistoreServerRack);
 
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<ServerRackRenderingState> CARD_RENDERING_STATE = new ModelProperty<ServerRackRenderingState>();
@@ -30,8 +30,7 @@ public class TileEntityDigistoreServerRack extends BaseDigistoreTileEntity {
 
 	public TileEntityDigistoreServerRack(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 5000);
-		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8)
-				.setShiftClickEnabled(true));
+		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 8).setShiftClickEnabled(true));
 		inventory.setModifiedCallback((type, stack, comp) -> {
 			if (type != InventoryChangeType.MODIFIED) {
 				if (!getLevel().isClientSide()) {

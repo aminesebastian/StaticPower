@@ -18,8 +18,8 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityDigistoreIOPort(pos, state), ModBlocks.DigistoreIOPort.get());
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreIOPort> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityDigistoreIOPort(pos, state),
+			ModBlocks.DigistoreIOPort);
 
 	public TileEntityDigistoreIOPort(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 5000);
@@ -27,53 +27,49 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	}
 
 	@Override
-	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand,
-			BlockHitResult hit) {
+	public InteractionResult onBlockActivated(BlockState state, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (getLevel().isClientSide) {
 			return InteractionResult.CONSUME;
 		}
 
-		digistoreCableProvider
-				.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)
-				.ifPresent(module -> {
-					// Do nothing if there is no manager.
-					if (!module.isManagerPresent()) {
-						return;
-					}
+		digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
+			// Do nothing if there is no manager.
+			if (!module.isManagerPresent()) {
+				return;
+			}
 
-					// Keep track of if any items changed.
-					boolean itemInserted = false;
+			// Keep track of if any items changed.
+			boolean itemInserted = false;
 
-					// Loop through the whole inventory.
-					for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
-						// Skip empty slots.
-						if (player.getInventory().getItem(i).isEmpty()) {
-							continue;
-						}
-						// Get the item in the slot.
-						ItemStack currentItem = player.getInventory().getItem(i).copy();
+			// Loop through the whole inventory.
+			for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+				// Skip empty slots.
+				if (player.getInventory().getItem(i).isEmpty()) {
+					continue;
+				}
+				// Get the item in the slot.
+				ItemStack currentItem = player.getInventory().getItem(i).copy();
 
-						// Skip any items that are not currently in the digistore system.
-						if (!module.containsItem(currentItem)) {
-							continue;
-						}
+				// Skip any items that are not currently in the digistore system.
+				if (!module.containsItem(currentItem)) {
+					continue;
+				}
 
-						// Insert it into the network.
-						ItemStack remaining = module.insertItem(currentItem, false);
+				// Insert it into the network.
+				ItemStack remaining = module.insertItem(currentItem, false);
 
-						// Update the slot contents.
-						if (currentItem.getCount() != remaining.getCount()) {
-							itemInserted = true;
-							player.getInventory().setItem(i, remaining);
-						}
-					}
+				// Update the slot contents.
+				if (currentItem.getCount() != remaining.getCount()) {
+					itemInserted = true;
+					player.getInventory().setItem(i, remaining);
+				}
+			}
 
-					// IF an item was inserted and the world is remote, play a sound.
-					if (level.isClientSide && itemInserted) {
-						level.playSound(player, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS,
-								1.0f, 1.0f);
-					}
-				});
+			// IF an item was inserted and the world is remote, play a sound.
+			if (level.isClientSide && itemInserted) {
+				level.playSound(player, worldPosition, SoundEvents.ARMOR_EQUIP_LEATHER, SoundSource.PLAYERS, 1.0f, 1.0f);
+			}
+		});
 
 		return InteractionResult.SUCCESS;
 	}

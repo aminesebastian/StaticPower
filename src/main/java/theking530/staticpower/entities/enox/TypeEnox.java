@@ -14,8 +14,8 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
 
 public class TypeEnox extends AbstractSpawnableMobType<EntityEnox> {
-	public TypeEnox(String name) {
-		super(name, Color.EIGHT_BIT_WHITE, new Color(16, 100, 180), EntityType.Builder.of(EntityEnox::new, MobCategory.CREATURE).sized(0.9f, 1.3f));
+	public TypeEnox() {
+		super(Color.EIGHT_BIT_WHITE, new Color(16, 100, 180), EntityType.Builder.of(EntityEnox::new, MobCategory.CREATURE).sized(0.9f, 1.3f));
 	}
 
 	@Override

@@ -43,7 +43,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutoSmith extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityAutoSmith> TYPE = new BlockEntityTypeAllocator<TileEntityAutoSmith>((allocator, pos, state) -> new TileEntityAutoSmith(pos, state),
-			ModBlocks.AutoSmith.get());
+			ModBlocks.AutoSmith);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;

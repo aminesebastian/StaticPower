@@ -1,77 +1,65 @@
 package theking530.staticpower.fluid;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.fluids.FluidAttributes;
+import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.fluid.AbstractStaticPowerFluid.Flowing;
-import theking530.staticpower.fluid.AbstractStaticPowerFluid.Source;
+import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class StaticPowerFluidBundle {
-	public final String name;
-	public final TagKey<Fluid> Tag;
-	public final StaticPowerFluidBlock FluidBlock;
-	public final AbstractStaticPowerFluid.Source Fluid;
-	public final AbstractStaticPowerFluid.Flowing FlowingFluid;
-	private final Supplier<Item> bucketSupplier;
-	private final StaticPowerFluidBuilder builder;
-	private Item cachedBucketItem;
+	public static final ResourceLocation WATER_OVERLAY_RL = new ResourceLocation("block/water_overlay");
 
-	public StaticPowerFluidBundle(String name, TagKey<Fluid> tag, StaticPowerFluidBlock fluidBlock, Source fluid, Flowing flowingFluid, Supplier<Item> bucketSupplier,
-			StaticPowerFluidBuilder builder) {
-		this.name = name;
-		Tag = tag;
-		FluidBlock = fluidBlock;
-		Fluid = fluid;
-		FlowingFluid = flowingFluid;
-		this.bucketSupplier = bucketSupplier;
-		this.builder = builder;
+	public final TagKey<Fluid> tag;
+	public final RegistryObject<StaticPowerFluidBlock> block;
+	public final RegistryObject<AbstractStaticPowerFluid.Source> source;
+	public final RegistryObject<AbstractStaticPowerFluid.Flowing> flowing;
+	private final RegistryObject<Item> bucket;
+
+	public StaticPowerFluidBundle(TagKey<Fluid> tag, RegistryObject<StaticPowerFluidBlock> block, RegistryObject<AbstractStaticPowerFluid.Source> source,
+			RegistryObject<AbstractStaticPowerFluid.Flowing> flowing, RegistryObject<Item> bucket) {
+		this.tag = tag;
+		this.block = block;
+		this.source = source;
+		this.flowing = flowing;
+		this.bucket = bucket;
 	}
 
 	public Item getBucket() {
-		if (cachedBucketItem == null) {
-			cachedBucketItem = bucketSupplier.get();
-		}
-		return cachedBucketItem;
-	}
-
-	public StaticPowerFluidBuilder getSourceBuilder() {
-		return builder;
+		return bucket.get();
 	}
 
 	public static class StaticPowerFluidBuilder {
 		public String name;
 		private String textureName;
-		private Supplier<Item> bucketSupplier;
 		private Consumer<FluidAttributes.Builder> extraAttributes;
-		private RegistryObject<StaticPowerFluidBucket> autoBucket;
 		private boolean shouldRegisterBucketItem;
 
 		private Color fogColor;
 		private Color overlayColor;
-		private float opacity;
 
-		private AbstractStaticPowerFluid.Source fluid;
-		private AbstractStaticPowerFluid.Flowing flowingFluid;
-		private StaticPowerFluidBlock fluidBlock;
+		private ForgeFlowingFluid.Properties properties;
+		private RegistryObject<AbstractStaticPowerFluid.Source> source;
+		private RegistryObject<AbstractStaticPowerFluid.Flowing> flowing;
+		private RegistryObject<StaticPowerFluidBlock> block;
+		private RegistryObject<Item> bucket;
 
 		public StaticPowerFluidBuilder(String name, Color color) {
 			this.name = name;
 			this.textureName = name;
 			this.shouldRegisterBucketItem = true;
-			this.opacity = 0.9f;
 			this.setFogColor(color);
 		}
 
@@ -81,19 +69,13 @@ public class StaticPowerFluidBundle {
 		}
 
 		public StaticPowerFluidBuilder addAutoBucket(boolean dynamicModel, ResourceLocation bucketMask) {
-			autoBucket = ModFluids.BUCKET_ITEMS.register("bucket_" + name, () -> new StaticPowerFluidBucket(dynamicModel, bucketMask, () -> fluid));
-			bucketSupplier = () -> autoBucket.get();
+			bucket = ModItems.ITEMS.register("bucket_" + name, () -> new StaticPowerFluidBucket(dynamicModel, bucketMask, source));
 			shouldRegisterBucketItem = true;
 			return this;
 		}
 
 		public StaticPowerFluidBuilder addAutoBucket() {
 			return addAutoBucket(false, null);
-		}
-
-		public StaticPowerFluidBuilder setOpacity(float opacity) {
-			this.opacity = opacity;
-			return this;
 		}
 
 		public StaticPowerFluidBuilder setFogColor(Color color) {
@@ -112,41 +94,30 @@ public class StaticPowerFluidBundle {
 			return this;
 		}
 
-		public StaticPowerFluidBuilder addBucketSupplier(Supplier<Item> bucketSupplier) {
-			this.bucketSupplier = bucketSupplier;
-			return this;
-		}
-
 		public StaticPowerFluidBuilder setTextureName(String textureName) {
 			this.textureName = textureName;
 			return this;
-		}
-
-		public boolean getShouldRegisterBucket() {
-			return shouldRegisterBucketItem;
 		}
 
 		public StaticPowerFluidBundle build() {
 			String stillTexture = "blocks/fluids/" + textureName + "_still";
 			String flowingTexture = "blocks/fluids/" + textureName + "_flowing";
 			TagKey<Fluid> tag = ModTags.createFluidWrapper(new ResourceLocation(StaticPower.MOD_ID, name));
-			fluidBlock = new StaticPowerFluidBlock(name, () -> fluid, Block.Properties.of(Material.WATER));
 
-			// Handle some default attributes.
-			Consumer<FluidAttributes.Builder> attributes = (builder) -> {
-				// builder.color(Color.EIGHT_BIT_WHITE.encodeInInteger());
-				builder.overlay(new ResourceLocation(StaticPower.MOD_ID, "textures/misc/underfluid.png"));
-				if (extraAttributes != null) {
-					extraAttributes.accept(builder);
-				}
-			};
+			source = ModFluids.FLUIDS.register(name, () -> new AbstractStaticPowerFluid.Source(properties, tag, fogColor, overlayColor));
+			flowing = ModFluids.FLUIDS.register(name + "_flowing", () -> new AbstractStaticPowerFluid.Flowing(properties, tag, fogColor, overlayColor));
+			block = ModBlocks.BLOCKS.register(name, () -> new StaticPowerFluidBlock(source, BlockBehaviour.Properties.of(Material.WATER).noCollission().strength(100f).noDrops()));
 
-			fluid = new AbstractStaticPowerFluid.Source(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag, fogColor,
-					overlayColor, attributes);
-			flowingFluid = new AbstractStaticPowerFluid.Flowing(name, bucketSupplier, () -> fluidBlock, () -> fluid, () -> flowingFluid, stillTexture, flowingTexture, tag,
-					fogColor, overlayColor, attributes);
+			FluidAttributes.Builder attrbiuteBuilder = FluidAttributes
+					.builder(new ResourceLocation(StaticPower.MOD_ID, stillTexture), new ResourceLocation(StaticPower.MOD_ID, flowingTexture)).overlay(WATER_OVERLAY_RL);
+			if (extraAttributes != null) {
+				extraAttributes.accept(attrbiuteBuilder);
+			}
 
-			return new StaticPowerFluidBundle(name, tag, fluidBlock, fluid, flowingFluid, bucketSupplier, this);
+			properties = new ForgeFlowingFluid.Properties(() -> source.get(), () -> flowing.get(), attrbiuteBuilder).slopeFindDistance(2).levelDecreasePerBlock(2)
+					.block(() -> block.get()).bucket(() -> bucket.get());
+
+			return new StaticPowerFluidBundle(tag, block, source, flowing, bucket);
 
 		}
 	}

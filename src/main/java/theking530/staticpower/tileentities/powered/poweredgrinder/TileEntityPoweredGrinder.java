@@ -33,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityPoweredGrinder extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityPoweredGrinder> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPoweredGrinder(pos, state), ModBlocks.PoweredGrinder.get());
+	public static final BlockEntityTypeAllocator<TileEntityPoweredGrinder> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPoweredGrinder(pos, state), ModBlocks.PoweredGrinder);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

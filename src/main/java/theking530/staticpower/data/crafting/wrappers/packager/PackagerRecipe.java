@@ -8,9 +8,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class PackagerRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<PackagerRecipe> RECIPE_TYPE = RecipeType.register("packager");
+	public static final String ID = "packager";
+	public static final RecipeType<PackagerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<PackagerRecipe>();
 
 	private final StaticPowerIngredient inputItem;
 	private final ProbabilityItemStackOutput outputItem;

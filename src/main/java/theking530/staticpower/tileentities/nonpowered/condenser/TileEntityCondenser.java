@@ -30,8 +30,8 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityCondenser extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCondenser> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityCondenser(pos, state), ModBlocks.Condenser.get());
+	public static final BlockEntityTypeAllocator<TileEntityCondenser> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCondenser(pos, state),
+			ModBlocks.Condenser);
 
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final float DEFAULT_HEAT_GENERATION = 50.0f;
@@ -49,26 +49,21 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.STATIC);
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent",
-				DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-						.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted)
-						.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
+				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory)
+				.setRedstoneControlComponent(redstoneControlComponent));
 
-		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank",
-				tierObject.defaultTankCapacity.get(), (fluidStack) -> {
-					return isValidInput(fluidStack, true);
-				}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
+			return isValidInput(fluidStack, true);
+		}).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
 		inputTankComponent.setCanDrain(false);
 
-		registerComponent(
-				outputTankComponent = new FluidTankComponent("OutputFluidTank", tierObject.defaultTankCapacity.get())
-						.setCapabilityExposedModes(MachineSideMode.Output).setUpgradeInventory(upgradesInventory));
+		registerComponent(outputTankComponent = new FluidTankComponent("OutputFluidTank", tierObject.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Output)
+				.setUpgradeInventory(upgradesInventory));
 		outputTankComponent.setCanFill(false);
 
-		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent,
-				MachineSideMode.Input));
-		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent,
-				MachineSideMode.Output));
+		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
+		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));
 
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 500.0f, 1.0f));
 	}
@@ -80,19 +75,16 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 			CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 			// Check if the output fluid matches the already exists fluid if one exists.
-			if (!outputTankComponent.getFluid().isEmpty()
-					&& !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
+			if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
 			}
 			// Check the fluid capacity.
-			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent
-					.getCapacity()) {
+			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
 				return ProcessingCheckState.outputTankCannotTakeFluid();
 			}
 
 			// Check the heat level.
-			if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage()
-					.getMaximumHeat()) {
+			if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getMaximumHeat()) {
 				return ProcessingCheckState.error("Machine is too hot!");
 			}
 
@@ -130,16 +122,13 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 		// Check the heat level.
-		if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage()
-				.getMaximumHeat()) {
+		if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getMaximumHeat()) {
 			return ProcessingCheckState.error("Machine is too hot!");
 		}
 
 		// If we can't store the filled output in the output slot, return false.
-		if (!(outputTankComponent.getFluid().isEmpty()
-				|| outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
-				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent
-						.getCapacity()) {
+		if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
+				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 

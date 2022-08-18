@@ -20,11 +20,8 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class FluidInfusionRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FluidInfusionRecipe> {
 	public static final FluidInfusionRecipeSerializer INSTANCE = new FluidInfusionRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fluid_infusion_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(FluidInfusionRecipeSerializer.class);
-
-	private FluidInfusionRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fluid_infusion_recipe"));
-	}
 
 	@Override
 	public FluidInfusionRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

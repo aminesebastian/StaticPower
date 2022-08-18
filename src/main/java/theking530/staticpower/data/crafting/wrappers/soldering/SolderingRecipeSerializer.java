@@ -18,10 +18,10 @@ import theking530.staticpower.StaticPower;
 public class SolderingRecipeSerializer extends net.minecraftforge.registries.ForgeRegistryEntry<RecipeSerializer<?>>
 		implements RecipeSerializer<SolderingRecipe> {
 	public static final SolderingRecipeSerializer INSTANCE = new SolderingRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "soldering_recipe");
 	private final JsonElement solderingIronTag;
 
 	public SolderingRecipeSerializer() {
-		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "soldering_recipe"));
 		solderingIronTag = GsonHelper.parse("{ \"tag\":\"staticpower:soldering_iron\" }");
 	}
 

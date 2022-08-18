@@ -9,14 +9,16 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class VulcanizerRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<VulcanizerRecipe> RECIPE_TYPE = RecipeType.register("vulcanizer");
+	public static final String ID = "vulcanizer";
+	public static final RecipeType<VulcanizerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<VulcanizerRecipe>();
 
 	private final FluidStack inputFluid;
 	private final ProbabilityItemStackOutput output;
 
-	public VulcanizerRecipe(ResourceLocation name,  FluidStack inputFluid, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
+	public VulcanizerRecipe(ResourceLocation name, FluidStack inputFluid, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.output = output;
 		this.inputFluid = inputFluid;

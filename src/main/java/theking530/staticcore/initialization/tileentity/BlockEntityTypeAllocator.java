@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.registries.RegistryObject;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.client.rendering.tileentity.StaticPowerTileEntitySpecialRenderer;
 import theking530.staticpower.tileentities.TileEntityBase;
@@ -30,14 +31,13 @@ public class BlockEntityTypeAllocator<T extends TileEntityBase> {
 	public BlockEntityRendererProvider<T> rendererFactory;
 
 	public final TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory;
-	public final Block[] blocks;
+	public final RegistryObject<? extends Block> block;
 	protected BlockEntityType<T> type;
 	private boolean registered;
 
-	public BlockEntityTypeAllocator(TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory,
-			Block... blocks) {
+	public BlockEntityTypeAllocator(TriFunction<BlockEntityTypeAllocator<T>, BlockPos, BlockState, T> factory, RegistryObject<? extends Block> block) {
 		this.factory = factory;
-		this.blocks = blocks;
+		this.block = block;
 		this.registered = false;
 	}
 
@@ -47,8 +47,7 @@ public class BlockEntityTypeAllocator<T extends TileEntityBase> {
 	}
 
 	@OnlyIn(Dist.CLIENT)
-	public BlockEntityTypeAllocator<T> setTileEntitySpecialRenderer(
-			Function<BlockEntityRendererProvider.Context, StaticPowerTileEntitySpecialRenderer<T>> supplier) {
+	public BlockEntityTypeAllocator<T> setTileEntitySpecialRenderer(Function<BlockEntityRendererProvider.Context, StaticPowerTileEntitySpecialRenderer<T>> supplier) {
 		this.rendererFactory = (context) -> supplier.apply(context);
 		return this;
 	}
@@ -67,8 +66,8 @@ public class BlockEntityTypeAllocator<T extends TileEntityBase> {
 			throw new RuntimeException("Attempted to register an already registered TileEntityTypeAllocator!");
 		} else {
 			TileEntityInitializer<T> initializer = new TileEntityInitializer<T>(this);
-			type = BlockEntityType.Builder.of(initializer, blocks).build(null);
-			type.setRegistryName(blocks[0].getRegistryName());
+			type = BlockEntityType.Builder.of(initializer, block.get()).build(null);
+			type.setRegistryName(block.get().getRegistryName());
 			event.getRegistry().register(type);
 			initializer.setType(type);
 			registered = true;

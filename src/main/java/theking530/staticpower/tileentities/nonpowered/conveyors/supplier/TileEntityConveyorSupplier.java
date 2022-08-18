@@ -31,19 +31,19 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyor
 public class TileEntityConveyorSupplier extends AbstractConveyorTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE_BASIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorSupplierBasic.get());
+			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorSupplierBasic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorSupplierAdvanced.get());
+			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorSupplierAdvanced);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE_STATIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorSupplierStatic.get());
+			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorSupplierStatic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorSupplierEnergized.get());
+			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorSupplierEnergized);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorSupplier> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorSupplierLumum.get());
+			(type, pos, state) -> new TileEntityConveyorSupplier(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorSupplierLumum);
 
 	public final InventoryComponent internalInventory;
 	protected AABB importBox;

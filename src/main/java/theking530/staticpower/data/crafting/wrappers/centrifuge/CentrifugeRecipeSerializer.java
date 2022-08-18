@@ -16,10 +16,7 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CentrifugeRecipe> {
 	public static final CentrifugeRecipeSerializer INSTANCE = new CentrifugeRecipeSerializer();
-
-	private CentrifugeRecipeSerializer() {
-		setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "centrifuge_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge_recipe");
 
 	@Override
 	public CentrifugeRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

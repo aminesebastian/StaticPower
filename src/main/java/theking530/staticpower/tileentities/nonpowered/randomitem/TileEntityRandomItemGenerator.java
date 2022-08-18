@@ -25,15 +25,14 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityRandomItemGenerator extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRandomItemGenerator> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRandomItemGenerator(pos, state), ModBlocks.RandomItemGenerator.get());
+			(type, pos, state) -> new TileEntityRandomItemGenerator(pos, state), ModBlocks.RandomItemGenerator);
 	private static final float GENERATION_RATE = 1;
 	public final InventoryComponent inventory;
 	private float timer;
 
 	public TileEntityRandomItemGenerator(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		registerComponent(
-				inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output).setShiftClickEnabled(true));
+		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output).setShiftClickEnabled(true));
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
 	}
 

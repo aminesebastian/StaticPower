@@ -16,7 +16,6 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;

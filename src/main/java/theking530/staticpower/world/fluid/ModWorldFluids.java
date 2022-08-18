@@ -17,8 +17,7 @@ import theking530.staticpower.world.features.StaticPowerLakeFeatureConfiguration
 
 public class ModWorldFluids {
 	public static final Holder<PlacedFeature> LAKE_OIL_SURFACE = PlacementUtils.register("lake_oil_surface",
-			new WorldFluidConfigBuilder("lake_oil", ModFluids.CrudeOil,
-					BlockStateProvider.simple(Blocks.MOSSY_COBBLESTONE)).build());
+			new WorldFluidConfigBuilder("lake_oil", ModFluids.CrudeOil, BlockStateProvider.simple(Blocks.MOSSY_COBBLESTONE)).build());
 
 	public static void addFluidGenFeatures(BiomeLoadingEvent event) {
 		event.getGeneration().addFeature(GenerationStep.Decoration.LAKES, LAKE_OIL_SURFACE);
@@ -36,10 +35,8 @@ public class ModWorldFluids {
 		}
 
 		public Holder<ConfiguredFeature<StaticPowerLakeFeatureConfiguration, ?>> build() {
-			return FeatureUtils.register(name, ModFeatures.STATIC_LAKE,
-					new StaticPowerLakeFeatureConfiguration(
-							BlockStateProvider.simple(fluid.FluidBlock.defaultBlockState()), barrier,
-							UniformInt.of(2, 10), UniformInt.of(30, 100)));
+			return FeatureUtils.register(name, ModFeatures.STATIC_LAKE, new StaticPowerLakeFeatureConfiguration(BlockStateProvider.simple(fluid.block.get().defaultBlockState()),
+					barrier, UniformInt.of(2, 10), UniformInt.of(30, 100)));
 		}
 	}
 }

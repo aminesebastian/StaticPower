@@ -20,11 +20,8 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<Research> {
 	public static final ResearchSerializer INSTANCE = new ResearchSerializer();
-
-	private ResearchSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "research"));
-	}
-
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "research");
+	
 	@Override
 	public Research fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Get the title and description.

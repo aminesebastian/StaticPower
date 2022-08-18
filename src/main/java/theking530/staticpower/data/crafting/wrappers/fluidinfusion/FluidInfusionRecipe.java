@@ -9,9 +9,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class FluidInfusionRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<FluidInfusionRecipe> RECIPE_TYPE = RecipeType.register("fluid_infusion");
+	public static final String ID = "fluid_infusion";
+	public static final RecipeType<FluidInfusionRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FluidInfusionRecipe>();
 
 	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output;

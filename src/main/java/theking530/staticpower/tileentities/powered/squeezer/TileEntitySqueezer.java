@@ -37,7 +37,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntitySqueezer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntitySqueezer> TYPE = new BlockEntityTypeAllocator<TileEntitySqueezer>((type, pos, state) -> new TileEntitySqueezer(pos, state), ModBlocks.Squeezer.get());
+	public static final BlockEntityTypeAllocator<TileEntitySqueezer> TYPE = new BlockEntityTypeAllocator<TileEntitySqueezer>((type, pos, state) -> new TileEntitySqueezer(pos, state), ModBlocks.Squeezer);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

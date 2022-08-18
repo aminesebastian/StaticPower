@@ -23,19 +23,19 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 public class TileEntityStaticChest extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> BASIC_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.BASIC, 36, pos, state), ModBlocks.BasicChest.get());
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.BASIC, 36, pos, state), ModBlocks.BasicChest);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> ADVANCED_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ADVANCED, 45, pos, state), ModBlocks.AdvancedChest.get());
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ADVANCED, 45, pos, state), ModBlocks.AdvancedChest);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> STATIC_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.STATIC, 54, pos, state), ModBlocks.StaticChest.get());
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.STATIC, 54, pos, state), ModBlocks.StaticChest);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> ENERGIZED_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ENERGIZED, 72, pos, state), ModBlocks.EnergizedChest.get());
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.ENERGIZED, 72, pos, state), ModBlocks.EnergizedChest);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityStaticChest> LUMUM_TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.LUMUM, 81, pos, state), ModBlocks.LumumChest.get());
+			(type, pos, state) -> new TileEntityStaticChest(type, StaticPowerTiers.LUMUM, 81, pos, state), ModBlocks.LumumChest);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -60,7 +60,7 @@ public class TileEntityStaticChest extends TileEntityBase {
 
 	@Override
 	public void process() {
-		// This is run on the game thread, so @ 20hz. 
+		// This is run on the game thread, so @ 20hz.
 		if (isOpen()) {
 			openAlpha = Math.min(openAlpha + 0.1f, 1);
 		} else {

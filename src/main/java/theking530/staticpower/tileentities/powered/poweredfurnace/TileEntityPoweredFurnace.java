@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class TileEntityPoweredFurnace extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPoweredFurnace(pos, state), ModBlocks.PoweredFurnace.get());
+	public static final BlockEntityTypeAllocator<TileEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPoweredFurnace(pos, state), ModBlocks.PoweredFurnace);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the

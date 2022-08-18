@@ -20,11 +20,8 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class LatheRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LatheRecipe> {
 	public static final LatheRecipeSerializer INSTANCE = new LatheRecipeSerializer();
-
-	private LatheRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "lathe_recipe"));
-	}
-
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "lathe_recipe");
+	
 	@Override
 	public LatheRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredients.

@@ -18,10 +18,7 @@ import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.R
 
 public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AutoSmithRecipe> {
 	public static final AutoSmithRecipeSerializer INSTANCE = new AutoSmithRecipeSerializer();
-
-	private AutoSmithRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "auto_smith_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith_recipe");
 
 	@Override
 	public AutoSmithRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

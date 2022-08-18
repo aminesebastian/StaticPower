@@ -50,25 +50,25 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 public class TileEntityPump extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_IRON = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronPump.get());
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronPump);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicPump.get());
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicPump);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedPump.get());
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedPump);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticPump.get());
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticPump);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedPump.get());
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedPump);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumPump.get());
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumPump);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityPump> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityPump>(
-			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativePump.get());
+			(type, pos, state) -> new TileEntityPump(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativePump);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

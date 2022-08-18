@@ -9,9 +9,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class TumblerRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<TumblerRecipe> RECIPE_TYPE = RecipeType.register("tumbler");
+	public static final String ID = "tumbler";
+	public static final RecipeType<TumblerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<TumblerRecipe>();
 
 	private final ProbabilityItemStackOutput output;
 	private final StaticPowerIngredient inputItem;

@@ -17,10 +17,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class LumberMillRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LumberMillRecipe> {
 	public static final LumberMillRecipeSerializer INSTANCE = new LumberMillRecipeSerializer();
-
-	private LumberMillRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "lumber_mill_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill_recipe");
 
 	@Override
 	public LumberMillRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

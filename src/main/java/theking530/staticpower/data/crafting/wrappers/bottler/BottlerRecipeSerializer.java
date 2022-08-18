@@ -14,10 +14,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class BottlerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BottleRecipe> {
 	public static final BottlerRecipeSerializer INSTANCE = new BottlerRecipeSerializer();
-
-	private BottlerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "bottler_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "bottler_recipe");
 
 	@Override
 	public BottleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

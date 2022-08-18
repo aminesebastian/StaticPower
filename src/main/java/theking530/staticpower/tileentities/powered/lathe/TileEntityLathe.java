@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityLathe extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityLathe> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLathe(pos, state), ModBlocks.Lathe.get());
+	public static final BlockEntityTypeAllocator<TileEntityLathe> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLathe(pos, state), ModBlocks.Lathe);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent mainOutputInventory;

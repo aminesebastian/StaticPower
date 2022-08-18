@@ -14,7 +14,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
@@ -24,6 +23,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.RecipesUpdatedEvent;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
@@ -99,13 +99,14 @@ public class StaticPowerForgeEventsCommon {
 	@SubscribeEvent
 	public static void onServerAboutToStart(ServerAboutToStartEvent serverStarted) {
 		DATA_PATH = serverStarted.getServer().getWorldPath(new LevelResource("data"));
-
-		ReloadableResourceManager resourceManager = (ReloadableResourceManager) serverStarted.getServer().getResourceManager();
-		resourceManager.registerReloadListener(new RecipeReloadListener(serverStarted.getServer().getRecipeManager()));
 		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
-		StaticPower.LOGGER.info("Server resource reload listener created!");
-
 		StaticPowerGameDataManager.clearAllGameData();
+	}
+
+	@SubscribeEvent
+	public static void addReloadListenerEvent(AddReloadListenerEvent reloadEvent) {
+		reloadEvent.addListener(new RecipeReloadListener(reloadEvent.getServerResources().getRecipeManager()));
+		StaticPower.LOGGER.info("Server resource reload listener created!");
 	}
 
 	@SubscribeEvent

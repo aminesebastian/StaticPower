@@ -16,65 +16,41 @@ import theking530.staticpower.tileentities.TileEntityBase;
 public class TileEntityFluidCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false,
-					StaticPowerTiers.BASIC),
-			ModBlocks.FluidCableBasic.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false, StaticPowerTiers.BASIC), ModBlocks.FluidCableBasic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false,
-					StaticPowerTiers.ADVANCED),
-			ModBlocks.FluidCableAdvanced.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false, StaticPowerTiers.ADVANCED), ModBlocks.FluidCableAdvanced);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false,
-					StaticPowerTiers.STATIC),
-			ModBlocks.FluidCableStatic.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false, StaticPowerTiers.STATIC), ModBlocks.FluidCableStatic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false,
-					StaticPowerTiers.ENERGIZED),
-			ModBlocks.FluidCableEnergized.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false, StaticPowerTiers.ENERGIZED), ModBlocks.FluidCableEnergized);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false,
-					StaticPowerTiers.LUMUM),
-			ModBlocks.FluidCableLumum.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false, StaticPowerTiers.LUMUM), ModBlocks.FluidCableLumum);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false,
-					StaticPowerTiers.CREATIVE),
-			ModBlocks.FluidCableCreative.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 2.0f / 16.0f, false, StaticPowerTiers.CREATIVE), ModBlocks.FluidCableCreative);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_INDUSTRIAL_BASIC = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true,
-					StaticPowerTiers.BASIC),
-			ModBlocks.IndustrialFluidCableBasic.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true, StaticPowerTiers.BASIC), ModBlocks.IndustrialFluidCableBasic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_INDUSTRIAL_ADVANCED = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true,
-					StaticPowerTiers.ADVANCED),
-			ModBlocks.IndustrialFluidCableAdvanced.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true, StaticPowerTiers.ADVANCED), ModBlocks.IndustrialFluidCableAdvanced);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_INDUSTRIAL_STATIC = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true,
-					StaticPowerTiers.STATIC),
-			ModBlocks.IndustrialFluidCableStatic.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true, StaticPowerTiers.STATIC), ModBlocks.IndustrialFluidCableStatic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_INDUSTRIAL_ENERGIZED = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true,
-					StaticPowerTiers.ENERGIZED),
-			ModBlocks.IndustrialFluidCableEnergized.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true, StaticPowerTiers.ENERGIZED), ModBlocks.IndustrialFluidCableEnergized);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_INDUSTRIAL_LUMUM = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true,
-					StaticPowerTiers.LUMUM),
-			ModBlocks.IndustrialFluidCableLumum.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true, StaticPowerTiers.LUMUM), ModBlocks.IndustrialFluidCableLumum);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidCable> TYPE_INDUSTRIAL_CREATIVE = new BlockEntityTypeAllocator<TileEntityFluidCable>(
-			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true,
-					StaticPowerTiers.CREATIVE),
-			ModBlocks.IndustrialFluidCableCreative.get());
+			(allocator, pos, state) -> new TileEntityFluidCable(allocator, pos, state, 3.5f / 16.0f, true, StaticPowerTiers.CREATIVE), ModBlocks.IndustrialFluidCableCreative);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -97,12 +73,11 @@ public class TileEntityFluidCable extends TileEntityBase {
 	public FluidCableComponent fluidCableComponent;
 	public float fluidRenderRadius;
 
-	public TileEntityFluidCable(BlockEntityTypeAllocator<TileEntityFluidCable> allocator, BlockPos pos,
-			BlockState state, float radius, boolean isIndustrial, ResourceLocation tier) {
+	public TileEntityFluidCable(BlockEntityTypeAllocator<TileEntityFluidCable> allocator, BlockPos pos, BlockState state, float radius, boolean isIndustrial,
+			ResourceLocation tier) {
 		super(allocator, pos, state);
 		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial,
-				isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()
-						: StaticPowerConfig.getTier(tier).cableFluidCapacity.get()));
+				isIndustrial ? StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get() : StaticPowerConfig.getTier(tier).cableFluidCapacity.get()));
 		fluidRenderRadius = radius;
 	}
 }

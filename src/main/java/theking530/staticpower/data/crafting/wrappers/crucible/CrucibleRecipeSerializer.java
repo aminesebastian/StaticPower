@@ -20,11 +20,8 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrucibleRecipe> {
 	public static final CrucibleRecipeSerializer INSTANCE = new CrucibleRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "crucible_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(CrucibleRecipeSerializer.class);
-
-	private CrucibleRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "crucible_recipe"));
-	}
 
 	@Override
 	public CrucibleRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

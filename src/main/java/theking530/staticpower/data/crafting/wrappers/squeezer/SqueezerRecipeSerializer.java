@@ -20,11 +20,8 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class SqueezerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<SqueezerRecipe> {
 	public static final SqueezerRecipeSerializer INSTANCE = new SqueezerRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "squeezer_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(SqueezerRecipeSerializer.class);
-
-	private SqueezerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "squeezer_recipe"));
-	}
 
 	@Override
 	public SqueezerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

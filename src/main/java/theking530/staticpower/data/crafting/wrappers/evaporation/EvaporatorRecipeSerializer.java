@@ -15,10 +15,7 @@ import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvapo
 
 public class EvaporatorRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<EvaporatorRecipe> {
 	public static final EvaporatorRecipeSerializer INSTANCE = new EvaporatorRecipeSerializer();
-
-	private EvaporatorRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "evaporation_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "evaporation_recipe");
 
 	@Override
 	public EvaporatorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

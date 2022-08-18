@@ -7,7 +7,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.world.item.crafting.Recipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
@@ -18,7 +17,6 @@ import theking530.staticpower.data.research.Research;
 import theking530.staticpower.data.research.ResearchIcon;
 import theking530.staticpower.data.research.ResearchUnlock;
 import theking530.staticpower.data.research.ResearchUnlockUtilities;
-import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 
 public class ResearchHistoryWidget extends AbstractGuiWidget<ResearchHistoryWidget> {
 	private final SimpleProgressBar progressBar;

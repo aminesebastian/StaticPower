@@ -8,9 +8,11 @@ import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class FermenterRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<FermenterRecipe> RECIPE_TYPE = RecipeType.register("fermenter");
+	public static final String ID = "fermenter";
+	public static final RecipeType<FermenterRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FermenterRecipe>();
 
 	private final FluidStack outputFluidStack;
 	private final StaticPowerIngredient input;

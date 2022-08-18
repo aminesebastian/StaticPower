@@ -15,10 +15,7 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<PackagerRecipe> {
 	public static final PackagerRecipeSerializer INSTANCE = new PackagerRecipeSerializer();
-
-	private PackagerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "packager_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "packager_recipe");
 
 	@Override
 	public PackagerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

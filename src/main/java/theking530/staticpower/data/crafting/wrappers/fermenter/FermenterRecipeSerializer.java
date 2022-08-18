@@ -15,10 +15,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class FermenterRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FermenterRecipe> {
 	public static final FermenterRecipeSerializer INSTANCE = new FermenterRecipeSerializer();
-
-	private FermenterRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fermenter_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fermenter_recipe");
 
 	@Override
 	public FermenterRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

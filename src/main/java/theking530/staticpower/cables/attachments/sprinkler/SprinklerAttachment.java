@@ -87,7 +87,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 	protected boolean handleExperience(ItemStack attachment, Direction side, FluidStack fluidContained, FluidCableComponent fluidCable) {
 		// Check to make sure the fluid is experience.
-		if (fluidContained.getFluid() != ModFluids.LiquidExperience.Fluid) {
+		if (fluidContained.getFluid() != ModFluids.LiquidExperience.source.get()) {
 			return false;
 		}
 

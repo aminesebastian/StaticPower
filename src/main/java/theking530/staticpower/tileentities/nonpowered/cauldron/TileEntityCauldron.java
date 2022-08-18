@@ -35,10 +35,10 @@ import theking530.staticpower.tileentities.components.heat.HeatStorageComponent.
 public class TileEntityCauldron extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityCauldron> RUSTY = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityCauldron(type, pos, state), ModBlocks.RustyCauldron.get());
+			(type, pos, state) -> new TileEntityCauldron(type, pos, state), ModBlocks.RustyCauldron);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityCauldron> CLEAN = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityCauldron(type, pos, state), ModBlocks.CleanCauldron.get());
+			(type, pos, state) -> new TileEntityCauldron(type, pos, state), ModBlocks.CleanCauldron);
 	public static final int BOILING_TEMP = 100;
 
 	static {

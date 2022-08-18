@@ -14,12 +14,16 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.wrappers.condensation.CondensationRecipe;
 import theking530.staticpower.data.research.ResearchUnlock.ResearchUnlockType;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.ResearchItem;
 
 public class Research extends AbstractStaticPowerRecipe {
-	public static final RecipeType<Research> RECIPE_TYPE = RecipeType.register("research");
+	public static final String ID = "research";
+	public static final RecipeType<Research> RECIPE_TYPE = new StaticPowerRecipeType<Research>();
+	
 	private final String title;
 	private final String description;
 	private final Vector2D visualOffset;

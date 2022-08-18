@@ -19,10 +19,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 public class CauldronRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CauldronRecipe> {
 	public static final CauldronRecipeSerializer INSTANCE = new CauldronRecipeSerializer();
 	private static final Logger LOGGER = LogManager.getLogger(CauldronRecipeSerializer.class);
-
-	private CauldronRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "cauldron_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "cauldron_recipe");
 
 	@Override
 	public CauldronRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

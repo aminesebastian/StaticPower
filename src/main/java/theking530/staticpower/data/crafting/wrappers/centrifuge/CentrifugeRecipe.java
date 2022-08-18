@@ -11,10 +11,12 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class CentrifugeRecipe extends AbstractMachineRecipe {
 	public static final String SPEED_PROPERTY = "Speed";
-	public static final RecipeType<CentrifugeRecipe> RECIPE_TYPE = RecipeType.register("centrifuge");
+	public static final String ID = "centrifuge";
+	public static final RecipeType<CentrifugeRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CentrifugeRecipe>();
 
 	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output1;

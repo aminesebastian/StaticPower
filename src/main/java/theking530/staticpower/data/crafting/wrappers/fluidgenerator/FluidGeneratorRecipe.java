@@ -6,9 +6,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class FluidGeneratorRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<FluidGeneratorRecipe> RECIPE_TYPE = RecipeType.register("fluid_generator");
+	public static final String ID = "fluid_generator";
+	public static final RecipeType<FluidGeneratorRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FluidGeneratorRecipe>();
 
 	private final FluidStack fluid;
 	private final int powerGeneration;

@@ -7,10 +7,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class SolidFuelRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<SolidFuelRecipe> RECIPE_TYPE = RecipeType.register("solid_fuel");
+	public static final String ID = "solid_fuel";
+	public static final RecipeType<SolidFuelRecipe> RECIPE_TYPE = new StaticPowerRecipeType<SolidFuelRecipe>();
 
 	private final ItemStack item;
 	private final int fuelAmount;

@@ -34,7 +34,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityMixer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityMixer> TYPE = new BlockEntityTypeAllocator<TileEntityMixer>((type, pos, state) -> new TileEntityMixer(pos, state), ModBlocks.Mixer.get());
+	public static final BlockEntityTypeAllocator<TileEntityMixer> TYPE = new BlockEntityTypeAllocator<TileEntityMixer>((type, pos, state) -> new TileEntityMixer(pos, state), ModBlocks.Mixer);
 
 	public final InventoryComponent input1Inventory;
 	public final InventoryComponent input2Inventory;

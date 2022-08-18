@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityVulcanizer extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityVulcanizer> TYPE = new BlockEntityTypeAllocator<TileEntityVulcanizer>(
-			(type, pos, state) -> new TileEntityVulcanizer(pos, state), ModBlocks.Vulcanizer.get());
+			(type, pos, state) -> new TileEntityVulcanizer(pos, state), ModBlocks.Vulcanizer);
 
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;

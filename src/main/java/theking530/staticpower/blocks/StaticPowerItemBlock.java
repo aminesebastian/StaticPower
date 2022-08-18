@@ -36,7 +36,6 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 	public StaticPowerItemBlock(Block block, Item.Properties properties) {
 		super(block, properties.stacksTo(64).tab(StaticPower.CREATIVE_TAB));
 		OWNING_BLOCK = block;
-		setRegistryName(block.getRegistryName());
 	}
 
 	@Override

@@ -15,10 +15,7 @@ import theking530.staticpower.tileentities.nonpowered.condenser.TileEntityConden
 
 public class CondensationRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CondensationRecipe> {
 	public static final CondensationRecipeSerializer INSTANCE = new CondensationRecipeSerializer();
-
-	private CondensationRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "condensation_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "condensation_recipe");
 
 	@Override
 	public CondensationRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

@@ -16,10 +16,7 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class FormerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FormerRecipe> {
 	public static final FormerRecipeSerializer INSTANCE = new FormerRecipeSerializer();
-
-	private FormerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "former_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "former_recipe");
 
 	@Override
 	public FormerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

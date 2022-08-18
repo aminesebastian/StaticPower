@@ -41,8 +41,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class TileEntityDigistore extends BaseDigistoreTileEntity implements IItemHandler {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistore> TYPE = new BlockEntityTypeAllocator<TileEntityDigistore>((type, pos, state) -> new TileEntityDigistore(pos, state),
-			ModBlocks.Digistore.get());
+	public static final BlockEntityTypeAllocator<TileEntityDigistore> TYPE = new BlockEntityTypeAllocator<TileEntityDigistore>(
+			(type, pos, state) -> new TileEntityDigistore(pos, state), ModBlocks.Digistore);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

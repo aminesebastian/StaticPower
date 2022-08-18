@@ -16,21 +16,20 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityPatternStorage extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityPatternStorage> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityPatternStorage(pos, state), ModBlocks.PatternStorage.get());
+	public static final BlockEntityTypeAllocator<TileEntityPatternStorage> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPatternStorage(pos, state),
+			ModBlocks.PatternStorage);
 
 	public final InventoryComponent patternInventory;
 
 	public TileEntityPatternStorage(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 10000);
 
-		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 18).setShiftClickEnabled(true)
-				.setFilter(new ItemStackHandlerFilter() {
-					@Override
-					public boolean canInsertItem(int slot, ItemStack stack) {
-						return DigistorePatternCard.hasPattern(stack);
-					}
-				}));
+		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 18).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+			@Override
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return DigistorePatternCard.hasPattern(stack);
+			}
+		}));
 	}
 
 	@Override

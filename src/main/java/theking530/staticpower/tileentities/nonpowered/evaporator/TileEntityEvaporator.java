@@ -33,8 +33,8 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityEvaporator extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityEvaporator> TYPE = new BlockEntityTypeAllocator<TileEntityEvaporator>((type, pos, state) -> new TileEntityEvaporator(pos, state),
-			ModBlocks.Evaporator.get());
+	public static final BlockEntityTypeAllocator<TileEntityEvaporator> TYPE = new BlockEntityTypeAllocator<TileEntityEvaporator>(
+			(type, pos, state) -> new TileEntityEvaporator(pos, state), ModBlocks.Evaporator);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -59,8 +59,9 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.STATIC);
 
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess, this::processingCompleted, true)
-				.setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", DEFAULT_PROCESSING_TIME, this::canProcess, this::canProcess,
+				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingStartedCallback(this::processingStarted).setUpgradeInventory(upgradesInventory)
+				.setRedstoneControlComponent(redstoneControlComponent));
 
 		registerComponent(inputTankComponent = new FluidTankComponent("InputFluidTank", tierObject.defaultTankCapacity.get(), (fluidStack) -> {
 			return isValidInput(fluidStack, true);

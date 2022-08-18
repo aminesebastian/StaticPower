@@ -17,10 +17,7 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class GrinderRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<GrinderRecipe> {
 	public static final GrinderRecipeSerializer INSTANCE = new GrinderRecipeSerializer();
-
-	private GrinderRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "grinder_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "grinder_recipe");
 
 	@Override
 	public GrinderRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

@@ -16,10 +16,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class VulcanizerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<VulcanizerRecipe> {
 	public static final VulcanizerRecipeSerializer INSTANCE = new VulcanizerRecipeSerializer();
-
-	private VulcanizerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "vulcanizer_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "vulcanizer_recipe");
 
 	@Override
 	public VulcanizerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

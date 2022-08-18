@@ -26,6 +26,8 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.moddiscovery.ModFileInfo;
 import net.minecraftforge.forgespi.language.ModFileScanData.AnnotationData;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
 import theking530.api.attributes.modifiers.AbstractAttributeModifier;
 import theking530.api.attributes.registration.AttributeModifierRegistration;
@@ -36,6 +38,7 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.tileentities.TileEntityBase;
 
 // TODO: Clean up exceptions.
@@ -43,6 +46,9 @@ public class StaticCoreRegistry {
 	protected static final Logger LOGGER = LogManager.getLogger("StaticCore");
 	protected static final List<BlockEntityTypeAllocator<? extends BlockEntity>> TILE_ENTITY_ALLOCATORS = new LinkedList<>();
 	protected static final List<ContainerTypeAllocator<? extends AbstractContainerMenu, ? extends Screen>> CONTAINER_ALLOCATORS = new LinkedList<>();
+
+	public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, StaticPower.MOD_ID);
+	
 	private static boolean preInitialized;
 	private static boolean initialized;
 

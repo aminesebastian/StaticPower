@@ -39,7 +39,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutoCraftingTable extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoCraftingTable>(
-			(type, pos, state) -> new TileEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable.get());
+			(type, pos, state) -> new TileEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -71,8 +71,8 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(moveComponent = MachineProcessingComponent
 				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
 				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(), this::canProcess, this::canProcess,
-				this::processingCompleted, true).setShouldControlBlockState(true).setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get()));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(), this::canProcess,
+				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get()));
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);

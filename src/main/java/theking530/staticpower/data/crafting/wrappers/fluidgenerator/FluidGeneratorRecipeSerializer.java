@@ -12,10 +12,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class FluidGeneratorRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FluidGeneratorRecipe> {
 	public static final FluidGeneratorRecipeSerializer INSTANCE = new FluidGeneratorRecipeSerializer();
-
-	private FluidGeneratorRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fluid_generator_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fluid_generator_recipe");
 
 	@Override
 	public FluidGeneratorRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

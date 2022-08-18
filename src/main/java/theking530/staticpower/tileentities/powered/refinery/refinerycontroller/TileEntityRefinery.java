@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityRefinery extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRefinery> TYPE = new BlockEntityTypeAllocator<TileEntityRefinery>((type, pos, state) -> new TileEntityRefinery(pos, state),
-			ModBlocks.Refinery.get());
+			ModBlocks.Refinery);
 
 	public final InventoryComponent catalystInventory;
 	public final InventoryComponent internalInventory;

@@ -9,9 +9,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class SqueezerRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<SqueezerRecipe> RECIPE_TYPE = RecipeType.register("squeezer");
+	public static final String ID = "squeezer";
+	public static final RecipeType<SqueezerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<SqueezerRecipe>();
 
 	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput output;

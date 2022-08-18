@@ -15,8 +15,8 @@ import theking530.staticpower.tileentities.digistorenetwork.BaseDigistoreTileEnt
 
 public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityDigistoreManager(pos, state), ModBlocks.DigistoreManager.get());
+	public static final BlockEntityTypeAllocator<TileEntityDigistoreManager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityDigistoreManager(pos, state),
+			ModBlocks.DigistoreManager);
 
 	public static final int ENERGY_STORAGE = 1000000;
 
@@ -27,10 +27,8 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	public TileEntityDigistoreManager(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, 10000);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", ENERGY_STORAGE,
-				ENERGY_STORAGE, ENERGY_STORAGE).setUpgradeInventory(upgradesInventory));
-		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", ENERGY_STORAGE, ENERGY_STORAGE, ENERGY_STORAGE).setUpgradeInventory(upgradesInventory));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
 	}
 
 	@Override

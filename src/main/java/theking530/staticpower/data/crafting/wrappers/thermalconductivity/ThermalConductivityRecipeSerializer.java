@@ -18,10 +18,7 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 
 public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ThermalConductivityRecipe> {
 	public static final ThermalConductivityRecipeSerializer INSTANCE = new ThermalConductivityRecipeSerializer();
-
-	private ThermalConductivityRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "thermal_conducitity"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conducitity");
 
 	@Override
 	public ThermalConductivityRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

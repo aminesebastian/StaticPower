@@ -36,25 +36,25 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 public class TileEntityTank extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_IRON = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronTank.get());
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.IRON), ModBlocks.IronTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicTank.get());
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.BasicTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedTank.get());
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.AdvancedTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticTank.get());
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.StaticTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedTank.get());
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.EnergizedTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumTank.get());
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.LumumTank);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityTank> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityTank>(
-			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativeTank.get());
+			(type, pos, state) -> new TileEntityTank(type, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.CreativeTank);
 
 	public static final int MACHINE_TANK_CAPACITY_MULTIPLIER = 4;
 
@@ -91,7 +91,7 @@ public class TileEntityTank extends TileEntityBase {
 				return stack.getItem() instanceof VoidUpgrade;
 			}
 		});
-		
+
 		// Add the tank component.
 		int capacity = SDMath.multiplyRespectingOverflow(tierObject.defaultTankCapacity.get(), MACHINE_TANK_CAPACITY_MULTIPLIER);
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", capacity).setCapabilityExposedModes(MachineSideMode.Input, MachineSideMode.Output));
@@ -107,7 +107,8 @@ public class TileEntityTank extends TileEntityBase {
 
 		// Add the inventory for the fluid containers.
 		registerComponent(inputFluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent));
-		registerComponent(outputFluidContainerComponent = new FluidContainerInventoryComponent("FluidDrainContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
+		registerComponent(
+				outputFluidContainerComponent = new FluidContainerInventoryComponent("FluidDrainContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Add the two components to auto input and output fluids.
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", fluidTankComponent.getCapacity() / 100, fluidTankComponent, MachineSideMode.Input));

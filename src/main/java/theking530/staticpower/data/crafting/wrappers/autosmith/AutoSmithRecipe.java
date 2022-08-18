@@ -20,9 +20,11 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class AutoSmithRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<AutoSmithRecipe> RECIPE_TYPE = RecipeType.register("auto_smith");
+	public static final String ID = "auto_smith";
+	public static final RecipeType<AutoSmithRecipe> RECIPE_TYPE = new StaticPowerRecipeType<AutoSmithRecipe>();
 
 	@Nullable
 	private final StaticPowerIngredient smithTarget;
@@ -261,4 +263,5 @@ public class AutoSmithRecipe extends AbstractMachineRecipe {
 			return modifier;
 		}
 	}
+
 }

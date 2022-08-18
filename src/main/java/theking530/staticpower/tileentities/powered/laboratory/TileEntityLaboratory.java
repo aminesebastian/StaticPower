@@ -39,7 +39,7 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 
 public class TileEntityLaboratory extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLaboratory(pos, state), ModBlocks.Laboratory.get());
+	public static final BlockEntityTypeAllocator<TileEntityLaboratory> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityLaboratory(pos, state), ModBlocks.Laboratory);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the

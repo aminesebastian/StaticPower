@@ -6,9 +6,6 @@ import java.util.Set;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
-import net.minecraft.data.worldgen.placement.VegetationPlacements;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.biome.Biome;
@@ -16,8 +13,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
@@ -29,7 +24,6 @@ import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.init.ModBlocks;
 
 @SuppressWarnings("deprecation")
 public abstract class AbstractStaticPowerTree extends AbstractTreeGrower {
@@ -72,7 +66,7 @@ public abstract class AbstractStaticPowerTree extends AbstractTreeGrower {
 
 	public abstract TreeGenerationBundle getGenerationBundle();
 
-	protected static TreeConfiguration.TreeConfigurationBuilder createStraightBlobTree(Block trunk, Block leaves,
+	public static TreeConfiguration.TreeConfigurationBuilder createStraightBlobTree(Block trunk, Block leaves,
 			int p_195149_, int p_195150_, int p_195151_, int p_195152_) {
 		return new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(trunk),
 				new StraightTrunkPlacer(p_195149_, p_195150_, p_195151_), BlockStateProvider.simple(leaves),

@@ -79,13 +79,13 @@ public class StaticPower {
 			StaticPowerConfig.registerTier(StaticPowerTiers.EMERALD, StaticPowerTierEmerald::new);
 
 			StaticCoreRegistry.preInitialize();
-			ModRecipeSerializers.init();
+			ModRecipeSerializers.init(eventBus);
 			ModBlocks.init(eventBus);
 			ModItems.init(eventBus);
 			ModFluids.init(eventBus);
 			ModNetworkMessages.init();
 			ModTrees.init();
-			ModEntities.init();
+			ModEntities.init(eventBus);
 			StaticCoreRegistry.postInitialize();
 //			
 //			MinecraftForge.EVENT_BUS.register(this);

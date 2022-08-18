@@ -14,8 +14,8 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
 
 public class TypeSmeep extends AbstractSpawnableMobType<EntitySmeep> {
-	public TypeSmeep(String name) {
-		super(name, Color.EIGHT_BIT_WHITE, new Color(54, 239, 88), EntityType.Builder.of(EntitySmeep::new, MobCategory.CREATURE).sized(0.9f, 1.3f));
+	public TypeSmeep() {
+		super(Color.EIGHT_BIT_WHITE, new Color(54, 239, 88), EntityType.Builder.of(EntitySmeep::new, MobCategory.CREATURE).sized(0.9f, 1.3f));
 	}
 
 	@Override

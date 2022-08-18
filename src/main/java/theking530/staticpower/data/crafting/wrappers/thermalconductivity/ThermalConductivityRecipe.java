@@ -12,11 +12,13 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.init.ModTags;
 
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<ThermalConductivityRecipe> RECIPE_TYPE = RecipeType.register("thermal_conducitity");
-
+	public static final String ID = "thermal_conducitity";
+	public static final RecipeType<ThermalConductivityRecipe> RECIPE_TYPE = new StaticPowerRecipeType<ThermalConductivityRecipe>();
+	
 	private final ResourceLocation[] blocks;
 	private final ResourceLocation[] fluids;
 	private final BlockState overheatedBlock;

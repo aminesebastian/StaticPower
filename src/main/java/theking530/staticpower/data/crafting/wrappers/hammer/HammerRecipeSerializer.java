@@ -15,13 +15,13 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class HammerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HammerRecipe> {
 	public static final HammerRecipeSerializer INSTANCE = new HammerRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "hammer_recipe");
 	private final JsonElement hammerTag;
-
+	
 	private HammerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "hammer_recipe"));
 		hammerTag = GsonHelper.parse("{ \"tag\":\"staticpower:hammer\" }");
 	}
-
+	
 	@Override
 	public HammerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Create the hammer ingredient.

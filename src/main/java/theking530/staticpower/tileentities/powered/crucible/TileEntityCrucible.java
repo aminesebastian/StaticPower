@@ -36,7 +36,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCrucible extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCrucible(pos, state), ModBlocks.Crucible.get());
+	public static final BlockEntityTypeAllocator<TileEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCrucible(pos, state), ModBlocks.Crucible);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;

@@ -8,13 +8,10 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ComposterBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ColorHandlerEvent;
@@ -52,9 +49,10 @@ import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModu
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;
-import theking530.staticpower.entities.AbstractEntityType;
+import theking530.staticpower.entities.AbstractEntityBuilder;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.tileentities.powered.cropfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.CactusCropHarvester;
@@ -130,6 +128,7 @@ public class StaticPowerModEventsCommon {
 		CapabilityAttributable.register(event);
 		CapabilityStaticPowerPlayerData.register(event);
 	}
+
 	@SubscribeEvent
 	public static void enqueueIMC(InterModEnqueueEvent event) {
 		LOGGER.info("Static Power IMC Messages Enqueued!");
@@ -175,21 +174,12 @@ public class StaticPowerModEventsCommon {
 	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void registerEntityRenders(EntityRenderersEvent.RegisterRenderers event) throws Exception {
-		// Regsiter entity renderers.
 		LOGGER.info("Registering Entity Renderers!");
-		for (AbstractEntityType<?> type : StaticPowerRegistry.ENTITIES) {
-			type.registerRenderers(event);
-		}
+		ModEntities.registerEntityRenders(event);
 
 		// Register the tile entity special renderers.
 		LOGGER.info("Registering Tile Entity Special Renderers!");
 		StaticCoreRegistry.registerBlockEntityRenderers(event);
-	}
-
-
-	@SubscribeEvent
-	public static void registerFluids(RegistryEvent.Register<Fluid> event) {
-		StaticPowerRegistry.onRegisterFluids(event);
 	}
 
 	@SubscribeEvent
@@ -204,7 +194,7 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void registerEntities(final RegistryEvent.Register<EntityType<?>> event) {
-		StaticPowerRegistry.onRegisterEntities(event);
+		ModEntities.onRegisterEntities(event);
 	}
 
 	@SubscribeEvent
@@ -214,7 +204,7 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void onAttributeCreate(EntityAttributeCreationEvent event) {
-		StaticPowerRegistry.onRegisterEntityAttributes(event);
+		ModEntities.onRegisterEntityAttributes(event);
 	}
 
 	@SubscribeEvent

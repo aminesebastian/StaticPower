@@ -19,14 +19,15 @@ import theking530.staticpower.items.tools.CoverSaw;
 
 public class CoverRecipe extends CustomRecipe {
 	public static final SimpleRecipeSerializer<CoverRecipe> SERIALIZER_INSTANCE;
+	public static final String ID = "cover_recipe";
+	public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(StaticPower.MOD_ID, "cover_recipe");
 
 	static {
-		SERIALIZER_INSTANCE = new SimpleRecipeSerializer<>(id -> new CoverRecipe(id));
-		SERIALIZER_INSTANCE.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "cover_recipe"));
+		SERIALIZER_INSTANCE = new SimpleRecipeSerializer<>(name -> new CoverRecipe(name));
 	}
 
-	public CoverRecipe(ResourceLocation id) {
-		super(id);
+	public CoverRecipe(ResourceLocation name) {
+		super(name);
 	}
 
 	@Override

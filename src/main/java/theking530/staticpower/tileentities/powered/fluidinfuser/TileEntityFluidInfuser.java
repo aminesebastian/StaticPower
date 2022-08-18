@@ -37,7 +37,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityFluidInfuser extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<TileEntityFluidInfuser>((type, pos, state) -> new TileEntityFluidInfuser(pos, state),
-			ModBlocks.FluidInfuser.get());
+			ModBlocks.FluidInfuser);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

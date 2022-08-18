@@ -15,10 +15,8 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class TumblerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<TumblerRecipe> {
 	public static final TumblerRecipeSerializer INSTANCE = new TumblerRecipeSerializer();
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "tumbler_recipe");
 
-	private TumblerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "tumbler_recipe"));
-	}
 
 	@Override
 	public TumblerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

@@ -2,7 +2,6 @@ package theking530.staticpower.init;
 
 import java.util.function.Supplier;
 
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
@@ -99,7 +98,7 @@ import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.tileentities.powered.tumbler.BlockTumbler;
 import theking530.staticpower.tileentities.powered.turbine.BlockTurbine;
 import theking530.staticpower.tileentities.powered.vulcanizer.BlockVulcanizer;
-import theking530.staticpower.world.trees.RubberTree;
+import theking530.staticpower.world.trees.rubbertree.RubberTreePlacer;
 
 public class ModBlocks {
 	public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, StaticPower.MOD_ID);
@@ -299,47 +298,79 @@ public class ModBlocks {
 	public static final RegistryObject<BlockLaboratory> Laboratory = registerBlock("laboratory", () -> new BlockLaboratory());
 	public static final RegistryObject<BlockResearchCheater> ResearchCheater = registerBlock("research_cheater", () -> new BlockResearchCheater());
 
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorBasic = registerBlock("conveyor_straight_basic", () -> new BlockStraightConveyor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorAdvanced = registerBlock("conveyor_straight_advanced", () -> new BlockStraightConveyor(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorStatic = registerBlock("conveyor_straight_static", () -> new BlockStraightConveyor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorEnergized = registerBlock("conveyor_straight_energized", () -> new BlockStraightConveyor(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockStraightConveyor> StraightConveyorLumum = registerBlock("conveyor_straight_lumum", () -> new BlockStraightConveyor(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockStraightConveyor> StraightConveyorBasic = registerBlock("conveyor_straight_basic",
+			() -> new BlockStraightConveyor(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockStraightConveyor> StraightConveyorAdvanced = registerBlock("conveyor_straight_advanced",
+			() -> new BlockStraightConveyor(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockStraightConveyor> StraightConveyorStatic = registerBlock("conveyor_straight_static",
+			() -> new BlockStraightConveyor(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockStraightConveyor> StraightConveyorEnergized = registerBlock("conveyor_straight_energized",
+			() -> new BlockStraightConveyor(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockStraightConveyor> StraightConveyorLumum = registerBlock("conveyor_straight_lumum",
+			() -> new BlockStraightConveyor(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorBasic = registerBlock("conveyor_ramp_up_basic", () -> new BlockRampUpConveyor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorAdvanced = registerBlock("conveyor_ramp_up_advanced", () -> new BlockRampUpConveyor(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorAdvanced = registerBlock("conveyor_ramp_up_advanced",
+			() -> new BlockRampUpConveyor(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorStatic = registerBlock("conveyor_ramp_up_static", () -> new BlockRampUpConveyor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorEnergized = registerBlock("conveyor_ramp_up_energized", () -> new BlockRampUpConveyor(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorEnergized = registerBlock("conveyor_ramp_up_energized",
+			() -> new BlockRampUpConveyor(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BlockRampUpConveyor> RampUpConveyorLumum = registerBlock("conveyor_ramp_up_lumum", () -> new BlockRampUpConveyor(StaticPowerTiers.LUMUM));
 
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorBasic = registerBlock("conveyor_ramp_down_basic", () -> new BlockRampDownConveyor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorAdvanced = registerBlock("conveyor_ramp_down_advanced", () -> new BlockRampDownConveyor(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorStatic = registerBlock("conveyor_ramp_down_static", () -> new BlockRampDownConveyor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorEnergized = registerBlock("conveyor_ramp_down_energized", () -> new BlockRampDownConveyor(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorLumum = registerBlock("conveyor_ramp_down_lumum", () -> new BlockRampDownConveyor(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorBasic = registerBlock("conveyor_ramp_down_basic",
+			() -> new BlockRampDownConveyor(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorAdvanced = registerBlock("conveyor_ramp_down_advanced",
+			() -> new BlockRampDownConveyor(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorStatic = registerBlock("conveyor_ramp_down_static",
+			() -> new BlockRampDownConveyor(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorEnergized = registerBlock("conveyor_ramp_down_energized",
+			() -> new BlockRampDownConveyor(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockRampDownConveyor> RampDownConveyorLumum = registerBlock("conveyor_ramp_down_lumum",
+			() -> new BlockRampDownConveyor(StaticPowerTiers.LUMUM));
 
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierBasic = registerBlock("conveyor_supplier_basic", () -> new BlockConveyorSupplier(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierAdvanced = registerBlock("conveyor_supplier_advanced", () -> new BlockConveyorSupplier(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierStatic = registerBlock("conveyor_supplier_static", () -> new BlockConveyorSupplier(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierEnergized = registerBlock("conveyor_supplier_energized", () -> new BlockConveyorSupplier(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierLumum = registerBlock("conveyor_supplier_lumum", () -> new BlockConveyorSupplier(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierBasic = registerBlock("conveyor_supplier_basic",
+			() -> new BlockConveyorSupplier(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierAdvanced = registerBlock("conveyor_supplier_advanced",
+			() -> new BlockConveyorSupplier(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierStatic = registerBlock("conveyor_supplier_static",
+			() -> new BlockConveyorSupplier(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierEnergized = registerBlock("conveyor_supplier_energized",
+			() -> new BlockConveyorSupplier(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockConveyorSupplier> ConveyorSupplierLumum = registerBlock("conveyor_supplier_lumum",
+			() -> new BlockConveyorSupplier(StaticPowerTiers.LUMUM));
 
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorBasic = registerBlock("conveyor_extractor_basic", () -> new BlockConveyorExtractor(StaticPowerTiers.BASIC));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorAdvanced = registerBlock("conveyor_extractor_advanced", () -> new BlockConveyorExtractor(StaticPowerTiers.ADVANCED));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorStatic = registerBlock("conveyor_extractor_static", () -> new BlockConveyorExtractor(StaticPowerTiers.STATIC));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorEnergized = registerBlock("conveyor_extractor_energized", () -> new BlockConveyorExtractor(StaticPowerTiers.ENERGIZED));
-	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorLumum = registerBlock("conveyor_extractor_lumum", () -> new BlockConveyorExtractor(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorBasic = registerBlock("conveyor_extractor_basic",
+			() -> new BlockConveyorExtractor(StaticPowerTiers.BASIC));
+	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorAdvanced = registerBlock("conveyor_extractor_advanced",
+			() -> new BlockConveyorExtractor(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorStatic = registerBlock("conveyor_extractor_static",
+			() -> new BlockConveyorExtractor(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorEnergized = registerBlock("conveyor_extractor_energized",
+			() -> new BlockConveyorExtractor(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BlockConveyorExtractor> ConveyorExtractorLumum = registerBlock("conveyor_extractor_lumum",
+			() -> new BlockConveyorExtractor(StaticPowerTiers.LUMUM));
 
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperBasic = registerBlock("conveyor_hopper_basic", () -> new BlockConveyorHopper(StaticPowerTiers.BASIC, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperAdvanced = registerBlock("conveyor_hopper_advanced", () -> new BlockConveyorHopper(StaticPowerTiers.ADVANCED, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperStatic = registerBlock("conveyor_hopper_static", () -> new BlockConveyorHopper(StaticPowerTiers.STATIC, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperEnergized = registerBlock("conveyor_hopper_energized", () -> new BlockConveyorHopper(StaticPowerTiers.ENERGIZED, false));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperLumum = registerBlock("conveyor_hopper_lumum", () -> new BlockConveyorHopper(StaticPowerTiers.LUMUM, false));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperBasic = registerBlock("conveyor_hopper_basic",
+			() -> new BlockConveyorHopper(StaticPowerTiers.BASIC, false));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperAdvanced = registerBlock("conveyor_hopper_advanced",
+			() -> new BlockConveyorHopper(StaticPowerTiers.ADVANCED, false));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperStatic = registerBlock("conveyor_hopper_static",
+			() -> new BlockConveyorHopper(StaticPowerTiers.STATIC, false));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperEnergized = registerBlock("conveyor_hopper_energized",
+			() -> new BlockConveyorHopper(StaticPowerTiers.ENERGIZED, false));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorHopperLumum = registerBlock("conveyor_hopper_lumum",
+			() -> new BlockConveyorHopper(StaticPowerTiers.LUMUM, false));
 
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperBasic = registerBlock("conveyor_hopper_filtered_basic", () -> new BlockConveyorHopper(StaticPowerTiers.BASIC, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperAdvanced = registerBlock("conveyor_hopper_filtered_advanced", () -> new BlockConveyorHopper(StaticPowerTiers.ADVANCED, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperStatic = registerBlock("conveyor_hopper_filtered_static", () -> new BlockConveyorHopper(StaticPowerTiers.STATIC, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperEnergized = registerBlock("conveyor_hopper_filtered_energized", () -> new BlockConveyorHopper(StaticPowerTiers.ENERGIZED, true));
-	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperLumum = registerBlock("conveyor_hopper_filtered_lumum", () -> new BlockConveyorHopper(StaticPowerTiers.LUMUM, true));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperBasic = registerBlock("conveyor_hopper_filtered_basic",
+			() -> new BlockConveyorHopper(StaticPowerTiers.BASIC, true));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperAdvanced = registerBlock("conveyor_hopper_filtered_advanced",
+			() -> new BlockConveyorHopper(StaticPowerTiers.ADVANCED, true));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperStatic = registerBlock("conveyor_hopper_filtered_static",
+			() -> new BlockConveyorHopper(StaticPowerTiers.STATIC, true));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperEnergized = registerBlock("conveyor_hopper_filtered_energized",
+			() -> new BlockConveyorHopper(StaticPowerTiers.ENERGIZED, true));
+	public static final RegistryObject<BlockConveyorHopper> ConveyorFilteredHopperLumum = registerBlock("conveyor_hopper_filtered_lumum",
+			() -> new BlockConveyorHopper(StaticPowerTiers.LUMUM, true));
 
 	public static final RegistryObject<BlockHeatSink> AluminumHeatSink = registerBlock("heat_sink_aluminum", () -> new BlockHeatSink(StaticPowerTiers.ALUMINUM));
 	public static final RegistryObject<BlockHeatSink> CopperHeatSink = registerBlock("heat_sink_copper", () -> new BlockHeatSink(StaticPowerTiers.COPPER));
@@ -468,7 +499,7 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerTreeLeaves> RubberTreeLeaves = registerBlock("rubber_tree_leaves",
 			() -> new StaticPowerTreeLeaves(Block.Properties.copy(Blocks.OAK_LEAVES)));
 	public static final RegistryObject<StaticPowerSapling> RubberTreeSapling = registerBlock("rubber_tree_sapling",
-			() -> new StaticPowerSapling(() -> new RubberTree(), Block.Properties.copy(Blocks.OAK_SAPLING)));
+			() -> new StaticPowerSapling(() -> new RubberTreePlacer(), Block.Properties.copy(Blocks.OAK_SAPLING)));
 
 	public static void init(IEventBus eventBus) {
 		BLOCKS.register(eventBus);
@@ -480,7 +511,13 @@ public class ModBlocks {
 		return toReturn;
 	}
 
-	private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {
-		return ModItems.ITEMS.register(name, () -> new StaticPowerItemBlock(block.get()));
+	private static <T extends Block> void registerBlockItem(String name, RegistryObject<T> block) {
+		ModItems.ITEMS.register(name, () -> {
+			Block lazyBlock = block.get();
+			if (lazyBlock instanceof StaticPowerBlock) {
+				return ((StaticPowerBlock) lazyBlock).getItemBlock();
+			}
+			return new StaticPowerItemBlock(lazyBlock);
+		});
 	}
 }

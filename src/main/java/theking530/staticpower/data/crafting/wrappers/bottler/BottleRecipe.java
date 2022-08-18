@@ -7,10 +7,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class BottleRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<BottleRecipe> RECIPE_TYPE = RecipeType.register("bottler");
+	public static final String ID = "bottler";
+	public static final RecipeType<BottleRecipe> RECIPE_TYPE = new StaticPowerRecipeType<BottleRecipe>();
 
 	private final ItemStack filledBottle;
 	private final ItemStack emptyBottle;

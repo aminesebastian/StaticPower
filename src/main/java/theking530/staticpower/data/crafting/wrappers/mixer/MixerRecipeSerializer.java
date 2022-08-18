@@ -15,10 +15,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class MixerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<MixerRecipe> {
 	public static final MixerRecipeSerializer INSTANCE = new MixerRecipeSerializer();
-
-	private MixerRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "mixer_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "mixer_recipe");
 
 	@Override
 	public MixerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

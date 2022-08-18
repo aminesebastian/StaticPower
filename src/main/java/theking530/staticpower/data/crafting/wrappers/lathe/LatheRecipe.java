@@ -28,9 +28,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class LatheRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<LatheRecipe> RECIPE_TYPE = RecipeType.register("lathe");
+	public static final String ID = "lathe";
+	public static final RecipeType<LatheRecipe> RECIPE_TYPE = new StaticPowerRecipeType<LatheRecipe>();
 
 	protected static final int MAX_WIDTH = 3;
 	protected static final int MAX_HEIGHT = 3;

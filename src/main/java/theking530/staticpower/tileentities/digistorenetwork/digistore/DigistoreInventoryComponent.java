@@ -10,7 +10,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticpower.items.DigistoreCard;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 

@@ -28,7 +28,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFormer extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityFormer> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFormer(pos, state), ModBlocks.Former.get());
+	public static final BlockEntityTypeAllocator<TileEntityFormer> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFormer(pos, state), ModBlocks.Former);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent moldInventory;

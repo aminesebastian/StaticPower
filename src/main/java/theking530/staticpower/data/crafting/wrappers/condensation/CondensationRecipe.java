@@ -7,9 +7,11 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class CondensationRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<CondensationRecipe> RECIPE_TYPE = RecipeType.register("condensation");
+	public static final String ID = "condensation";
+	public static final RecipeType<CondensationRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CondensationRecipe>();
 
 	private final FluidStack inputFluid;
 	private final FluidStack outputFluid;

@@ -28,19 +28,19 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 public class TileEntityHeatSink extends TileEntityMachine implements MenuProvider {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_ALUMINUM = new BlockEntityTypeAllocator<TileEntityHeatSink>(
-			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.ALUMINUM), ModBlocks.AluminumHeatSink.get());
+			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.ALUMINUM), ModBlocks.AluminumHeatSink);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_COPPER = new BlockEntityTypeAllocator<TileEntityHeatSink>(
-			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.COPPER), ModBlocks.CopperHeatSink.get());
+			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.COPPER), ModBlocks.CopperHeatSink);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_TIN = new BlockEntityTypeAllocator<TileEntityHeatSink>(
-			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.TIN), ModBlocks.TinHeatSink.get());
+			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.TIN), ModBlocks.TinHeatSink);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_SILVER = new BlockEntityTypeAllocator<TileEntityHeatSink>(
-			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.SILVER), ModBlocks.SilverHeatSink.get());
+			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.SILVER), ModBlocks.SilverHeatSink);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatSink> TYPE_GOLD = new BlockEntityTypeAllocator<TileEntityHeatSink>(
-			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.GOLD), ModBlocks.GoldHeatSink.get());
+			(allocator, pos, state) -> new TileEntityHeatSink(allocator, pos, state, StaticPowerTiers.GOLD), ModBlocks.GoldHeatSink);
 
 	public final HeatCableComponent cableComponent;
 

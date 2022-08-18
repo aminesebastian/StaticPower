@@ -35,7 +35,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class TileEntityPackager extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityPackager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPackager(pos, state), ModBlocks.Packager.get());
+	public static final BlockEntityTypeAllocator<TileEntityPackager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityPackager(pos, state), ModBlocks.Packager);
 
 	/** The input inventory containing the items to pack. */
 	public final InventoryComponent inputInventory;

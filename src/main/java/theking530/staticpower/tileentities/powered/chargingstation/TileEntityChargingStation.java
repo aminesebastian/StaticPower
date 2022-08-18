@@ -29,7 +29,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityChargingStation extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityChargingStation> TYPE = new BlockEntityTypeAllocator<TileEntityChargingStation>((type, pos, state) -> new TileEntityChargingStation(pos, state),
-			ModBlocks.ChargingStation.get());
+			ModBlocks.ChargingStation);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

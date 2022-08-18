@@ -13,10 +13,7 @@ import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 
 public class TurbineRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<TurbineRecipe> {
 	public static final TurbineRecipeSerializer INSTANCE = new TurbineRecipeSerializer();
-
-	private TurbineRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "turbine_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "turbine_recipe");
 
 	@Override
 	public TurbineRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

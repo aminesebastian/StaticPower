@@ -31,7 +31,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityAutoSolderingTable> TYPE = new BlockEntityTypeAllocator<TileEntityAutoSolderingTable>((type, pos, state) -> new TileEntityAutoSolderingTable(pos, state),
-			ModBlocks.AutoSolderingTable.get());
+			ModBlocks.AutoSolderingTable);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

@@ -24,7 +24,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
-import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
@@ -64,7 +63,7 @@ public class StaticPowerForgeEventsProxy {
 		}
 
 		LOGGER.info("Initializing Fluid Render Layers!");
-		for (Fluid fluid : StaticPowerRegistry.FLUIDS) {
+		for (Fluid fluid : ForgeRegistries.FLUIDS) {
 			// Check and update the render type as needed.
 			if (fluid instanceof IRenderLayerProvider) {
 				IRenderLayerProvider renderLayerProvider = (IRenderLayerProvider) fluid;

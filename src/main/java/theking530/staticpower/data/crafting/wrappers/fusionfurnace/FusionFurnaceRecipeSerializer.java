@@ -19,10 +19,7 @@ import theking530.staticpower.data.crafting.StaticPowerIngredient;
 
 public class FusionFurnaceRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FusionFurnaceRecipe> {
 	public static final FusionFurnaceRecipeSerializer INSTANCE = new FusionFurnaceRecipeSerializer();
-
-	private FusionFurnaceRecipeSerializer() {
-		this.setRegistryName(new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace_recipe"));
-	}
+	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "fusion_furnace_recipe");
 
 	@Override
 	public FusionFurnaceRecipe fromJson(ResourceLocation recipeId, JsonObject json) {

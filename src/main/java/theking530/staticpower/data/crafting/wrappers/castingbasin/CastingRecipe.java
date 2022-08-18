@@ -10,9 +10,11 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class CastingRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<CastingRecipe> RECIPE_TYPE = RecipeType.register("casting");
+	public static final String ID = "casting";
+	public static final RecipeType<CastingRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CastingRecipe>();
 
 	private FluidStack inputFluid;
 	private Ingredient requiredMold;

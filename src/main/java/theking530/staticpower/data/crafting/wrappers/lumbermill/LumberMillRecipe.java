@@ -13,9 +13,11 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class LumberMillRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<LumberMillRecipe> RECIPE_TYPE = RecipeType.register("lumber_mill");
+	public static final String ID = "lumber_mill";
+	public static final RecipeType<LumberMillRecipe> RECIPE_TYPE = new StaticPowerRecipeType<LumberMillRecipe>();
 
 	private final StaticPowerIngredient input;
 	private final ProbabilityItemStackOutput primaryOutput;

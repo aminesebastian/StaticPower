@@ -17,28 +17,22 @@ import theking530.staticpower.tileentities.TileEntityBase;
 public class TileEntityItemCable extends TileEntityBase {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityItemCable>(
-			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.BASIC),
-			ModBlocks.ItemCableBasic.get());
+			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.BASIC), ModBlocks.ItemCableBasic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityItemCable>(
-			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.ADVANCED),
-			ModBlocks.ItemCableAdvanced.get());
+			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ItemCableAdvanced);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityItemCable>(
-			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.STATIC),
-			ModBlocks.ItemCableStatic.get());
+			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.STATIC), ModBlocks.ItemCableStatic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityItemCable>(
-			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.ENERGIZED),
-			ModBlocks.ItemCableEnergized.get());
+			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ItemCableEnergized);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityItemCable>(
-			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.LUMUM),
-			ModBlocks.ItemCableLumum.get());
+			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ItemCableLumum);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityItemCable> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityItemCable>(
-			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.CREATIVE),
-			ModBlocks.ItemCableCreative.get());
+			(allocator, pos, state) -> new TileEntityItemCable(allocator, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.ItemCableCreative);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -53,12 +47,10 @@ public class TileEntityItemCable extends TileEntityBase {
 
 	public final ItemCableComponent cableComponent;
 
-	public TileEntityItemCable(BlockEntityTypeAllocator<TileEntityItemCable> allocator, BlockPos pos, BlockState state,
-			ResourceLocation tier) {
+	public TileEntityItemCable(BlockEntityTypeAllocator<TileEntityItemCable> allocator, BlockPos pos, BlockState state, ResourceLocation tier) {
 		super(allocator, pos, state);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", tier,
-				tierObject.itemCableMaxSpeed.get(), tierObject.itemCableFriction.get(),
+		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", tier, tierObject.itemCableMaxSpeed.get(), tierObject.itemCableFriction.get(),
 				1.0f / Math.max(tierObject.itemCableAcceleration.get(), 0.00000001f)));
 	}
 }

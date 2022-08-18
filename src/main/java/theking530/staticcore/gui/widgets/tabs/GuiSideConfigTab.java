@@ -3,7 +3,6 @@ package theking530.staticcore.gui.widgets.tabs;
 import java.util.Collections;
 
 import com.mojang.blaze3d.platform.Lighting;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Quaternion;
@@ -29,8 +28,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.IModelData;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.RectangleBounds;
-import theking530.staticcore.utilities.RenderingUtilities;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.init.ModKeyBindings;

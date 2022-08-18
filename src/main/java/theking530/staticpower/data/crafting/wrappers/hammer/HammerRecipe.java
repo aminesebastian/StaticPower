@@ -11,10 +11,12 @@ import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.init.ModTags;
 
 public class HammerRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<HammerRecipe> RECIPE_TYPE = RecipeType.register("hammer");
+	public static final String ID = "hammer";
+	public static final RecipeType<HammerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<HammerRecipe>();
 
 	private final Ingredient hammer;
 	private final StaticPowerIngredient inputItem;

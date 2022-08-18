@@ -31,7 +31,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 public class TileEntityAutomaticPlacer extends TileEntityConfigurable {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityAutomaticPlacer> TYPE = new BlockEntityTypeAllocator<TileEntityAutomaticPlacer>(
-			(type, pos, state) -> new TileEntityAutomaticPlacer(pos, state), ModBlocks.AutomaticPlacer.get());
+			(type, pos, state) -> new TileEntityAutomaticPlacer(pos, state), ModBlocks.AutomaticPlacer);
 	public static final int PLACE_DELAY = 4;
 
 	public final InventoryComponent inventory;
@@ -40,8 +40,8 @@ public class TileEntityAutomaticPlacer extends TileEntityConfigurable {
 	public TileEntityAutomaticPlacer(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		registerComponent(inventory = new InventoryComponent("Inventory", 9).setShiftClickEnabled(true));
-		registerComponent(pulseControl = new RedstonePulseReactorComponent("PulseControl", PLACE_DELAY, this::place)
-				.shouldControlOnState(true).setProcessingGate(() -> !InventoryUtilities.isInventoryEmpty(inventory)));
+		registerComponent(pulseControl = new RedstonePulseReactorComponent("PulseControl", PLACE_DELAY, this::place).shouldControlOnState(true)
+				.setProcessingGate(() -> !InventoryUtilities.isInventoryEmpty(inventory)));
 	}
 
 	protected boolean place() {
@@ -59,14 +59,12 @@ public class TileEntityAutomaticPlacer extends TileEntityConfigurable {
 			// method.
 			FakePlayer player = FakePlayerFactory.getMinecraft((ServerLevel) getLevel());
 			player.setItemInHand(InteractionHand.MAIN_HAND, itemToPlace.copy());
-			InteractionResult placementResult = itemToPlace.useOn(
-					new UseOnContext(player, InteractionHand.MAIN_HAND, new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f),
-							Direction.DOWN, worldPosition.relative(getFacingDirection()), false)));
+			InteractionResult placementResult = itemToPlace.useOn(new UseOnContext(player, InteractionHand.MAIN_HAND,
+					new BlockHitResult(new Vec3(0.0f, 1.0f, 0.0f), Direction.DOWN, worldPosition.relative(getFacingDirection()), false)));
 
 			// If successful, extract the item. Otherwise, just return false.
 			if (placementResult.consumesAction()) {
-				getLevel().playSound(null, getBlockPos(), SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 0.5f,
-						1.0f);
+				getLevel().playSound(null, getBlockPos(), SoundEvents.DISPENSER_DISPENSE, SoundSource.BLOCKS, 0.5f, 1.0f);
 				inventory.extractItem(slotToUse, 1, false);
 				return true;
 			} else {

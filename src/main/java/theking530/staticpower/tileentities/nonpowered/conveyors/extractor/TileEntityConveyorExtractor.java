@@ -27,19 +27,19 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyor
 public class TileEntityConveyorExtractor extends AbstractConveyorTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorExtractorBasic.get());
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.ConveyorExtractorBasic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorExtractorAdvanced.get());
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.ConveyorExtractorAdvanced);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorExtractorStatic.get());
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.ConveyorExtractorStatic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorExtractorEnergized.get());
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.ConveyorExtractorEnergized);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityConveyorExtractor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorExtractorLumum.get());
+			(type, pos, state) -> new TileEntityConveyorExtractor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.ConveyorExtractorLumum);
 
 	public final InventoryComponent internalInventory;
 	protected AABB importBox;
@@ -76,7 +76,8 @@ public class TileEntityConveyorExtractor extends AbstractConveyorTileEntity {
 		offset.multiply(0.3f);
 
 		// Create the entity and spawn it.
-		ConveyorBeltEntity newEntity = new ConveyorBeltEntity(level, getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.5f, getBlockPos().getZ() + 0.5f + offset.getZ(), extracted);
+		ConveyorBeltEntity newEntity = new ConveyorBeltEntity(level, getBlockPos().getX() + 0.5f + offset.getX(), getBlockPos().getY() + 0.5f,
+				getBlockPos().getZ() + 0.5f + offset.getZ(), extracted);
 		newEntity.setDeltaMovement(0, 0, 0);
 		level.addFreshEntity(newEntity);
 	}

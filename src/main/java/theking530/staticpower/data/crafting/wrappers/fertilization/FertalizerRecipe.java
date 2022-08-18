@@ -6,9 +6,12 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class FertalizerRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<FertalizerRecipe> RECIPE_TYPE = RecipeType.register("farming_fertalizer");
+	public static final String ID = "farming_fertalizer";
+	public static final RecipeType<FertalizerRecipe> RECIPE_TYPE = new StaticPowerRecipeType<FertalizerRecipe>();
+	
 	private final FluidStack inputFluid;
 	private final float fertalizationAmount;
 

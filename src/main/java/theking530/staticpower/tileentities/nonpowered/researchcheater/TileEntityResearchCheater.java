@@ -19,7 +19,7 @@ import theking530.staticpower.tileentities.components.items.OutputServoComponent
 public class TileEntityResearchCheater extends TileEntityConfigurable implements MenuProvider {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityResearchCheater> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityResearchCheater(pos, state),
-			ModBlocks.ResearchCheater.get());
+			ModBlocks.ResearchCheater);
 	private static final float GENERATION_RATE = 1;
 	public final InventoryComponent inventory;
 	private float timer;

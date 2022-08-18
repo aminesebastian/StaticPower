@@ -8,9 +8,11 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class RefineryRecipe extends AbstractMachineRecipe {
-	public static final RecipeType<RefineryRecipe> RECIPE_TYPE = RecipeType.register("refinery");
+	public static final String ID = "refinery";
+	public static final RecipeType<RefineryRecipe> RECIPE_TYPE = new StaticPowerRecipeType<RefineryRecipe>();
 
 	private final StaticPowerIngredient catalyst;
 	private final FluidStack inputFluid1;

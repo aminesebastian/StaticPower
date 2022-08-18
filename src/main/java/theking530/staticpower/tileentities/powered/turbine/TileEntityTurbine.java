@@ -51,7 +51,7 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 
 public class TileEntityTurbine extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityTurbine> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTurbine(pos, state), ModBlocks.Turbine.get());
+	public static final BlockEntityTypeAllocator<TileEntityTurbine> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTurbine(pos, state), ModBlocks.Turbine);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {

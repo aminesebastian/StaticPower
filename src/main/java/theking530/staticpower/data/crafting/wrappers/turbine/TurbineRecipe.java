@@ -6,9 +6,11 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 
 public class TurbineRecipe extends AbstractStaticPowerRecipe {
-	public static final RecipeType<TurbineRecipe> RECIPE_TYPE = RecipeType.register("turbine");
+	public static final String ID = "turbine";
+	public static final RecipeType<TurbineRecipe> RECIPE_TYPE = new StaticPowerRecipeType<TurbineRecipe>();
 
 	private final FluidStack input;
 	private final FluidStack output;

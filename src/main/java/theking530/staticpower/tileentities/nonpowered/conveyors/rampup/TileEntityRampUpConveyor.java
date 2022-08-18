@@ -17,19 +17,19 @@ import theking530.staticpower.tileentities.nonpowered.conveyors.AbstractConveyor
 public class TileEntityRampUpConveyor extends AbstractConveyorTileEntity {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_BASIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.RampUpConveyorBasic.get());
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.BASIC), ModBlocks.RampUpConveyorBasic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_ADVANCED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.RampUpConveyorAdvanced.get());
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.RampUpConveyorAdvanced);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_STATIC = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.RampUpConveyorStatic.get());
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.STATIC), ModBlocks.RampUpConveyorStatic);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_ENERGIZED = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.RampUpConveyorEnergized.get());
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.RampUpConveyorEnergized);
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityRampUpConveyor> TYPE_LUMUM = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.RampUpConveyorLumum.get());
+			(type, pos, state) -> new TileEntityRampUpConveyor(type, pos, state, StaticPowerTiers.LUMUM), ModBlocks.RampUpConveyorLumum);
 
 	public TileEntityRampUpConveyor(BlockEntityTypeAllocator<TileEntityRampUpConveyor> type, BlockPos pos, BlockState state, ResourceLocation tier) {
 		super(type, pos, state, tier);

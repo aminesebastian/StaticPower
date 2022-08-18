@@ -27,7 +27,7 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 
 public class TileEntityMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityMiner(pos, state), ModBlocks.Miner.get());
+	public static final BlockEntityTypeAllocator<TileEntityMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityMiner(pos, state), ModBlocks.Miner);
 
 	private static final int DEFAULT_FUEL_MOVE_TIME = 4;
 	public final InventoryComponent fuelInventory;
@@ -39,10 +39,11 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 		super(TYPE, pos, state);
 		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
 		registerComponent(fuelBurningInventory = new InventoryComponent("FuelBurningInventory", 1, MachineSideMode.Never));
-		registerComponent(fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
-				.setRedstoneControlComponent(redstoneControlComponent));
-		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel, this::fuelProcessingCompleted, true)
-				.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(
+				fuelMoveComponent = new MachineProcessingComponent("FuelMoveComponent", DEFAULT_FUEL_MOVE_TIME, this::canMoveFuel, this::canMoveFuel, this::moveFuel, true)
+						.setRedstoneControlComponent(redstoneControlComponent));
+		registerComponent(fuelComponent = new MachineProcessingComponent("FuelComponent", 0, this::canStartProcessingFuel, this::canContinueProcessingFuel,
+				this::fuelProcessingCompleted, true).setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(new InputServoComponent("FuelInputServo", 20, fuelInventory));
 	}
 
@@ -62,10 +63,10 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 
 				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
 				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
-						0.0f);
-				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
-						0.0f);
+				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
+						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
+				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
+						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
 			}
 		}
 	}
