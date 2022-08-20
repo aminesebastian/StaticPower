@@ -36,7 +36,6 @@ import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
-import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeProvider.ThermalConductivityJEIRecipeWrapper;
 
 public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<ThermalConductivityJEIRecipeWrapper> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity");
@@ -63,7 +62,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	public Component getTitle() {
 		return locTitle;
 	}
-	
+
 	@Override
 	@Nonnull
 	public IDrawable getBackground() {

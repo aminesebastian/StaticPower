@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "staticpower:mash"
+    "staticpower:mash",
+    "staticpower:mash_flowing"
   ]
 }

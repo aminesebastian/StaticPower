@@ -38,11 +38,10 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeProvider.AutoSmithRecipeJEIWrapper;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecipeJEIWrapper> {
+public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipeJEIWrapper> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith");
 	private static final int INTPUT_SLOT = 0;
 	private static final int MODIFIER_SLOT = 1;
@@ -84,8 +83,8 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	}
 
 	@Override
-	public Class<? extends AutoSmithRecipeJEIWrapper> getRecipeClass() {
-		return AutoSmithRecipeJEIWrapper.class;
+	public Class<? extends SmithingRecipeJEIWrapper> getRecipeClass() {
+		return SmithingRecipeJEIWrapper.class;
 	}
 
 	@Override
@@ -94,7 +93,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	}
 
 	@Override
-	public void draw(AutoSmithRecipeJEIWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+	public void draw(SmithingRecipeJEIWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 50, 0, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 80, 20, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 48, 40, 0);
@@ -162,7 +161,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	}
 
 	@Override
-	public List<Component> getTooltipStrings(AutoSmithRecipeJEIWrapper recipe, double mouseX, double mouseY) {
+	public List<Component> getTooltipStrings(SmithingRecipeJEIWrapper recipe, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			output.add(new TextComponent("Usage: ").append(GuiTextUtilities.formatEnergyToString(recipe.getRecipe().getPowerCost() * recipe.getRecipe().getProcessingTime())));
@@ -182,7 +181,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	}
 
 	@Override
-	public void setIngredients(AutoSmithRecipeJEIWrapper recipe, IIngredients ingredients) {
+	public void setIngredients(SmithingRecipeJEIWrapper recipe, IIngredients ingredients) {
 		// Add the input item.
 		List<Ingredient> input = new ArrayList<Ingredient>();
 		input.add(recipe.getInput());
@@ -197,7 +196,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<AutoSmithRecip
 	}
 
 	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, AutoSmithRecipeJEIWrapper recipe, IIngredients ingredients) {
+	public void setRecipe(IRecipeLayout recipeLayout, SmithingRecipeJEIWrapper recipe, IIngredients ingredients) {
 		// Add the input and output slots.
 		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
 		guiItemStacks.init(INTPUT_SLOT, true, 49, -1);

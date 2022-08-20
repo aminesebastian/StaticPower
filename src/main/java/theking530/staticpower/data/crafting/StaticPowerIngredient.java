@@ -7,6 +7,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
+/**
+ * TODO: Better way to handle the "counts". Perhaps a custom JEI renderer.
+ * @author amine
+ *
+ */
 public class StaticPowerIngredient {
 	public static final StaticPowerIngredient EMPTY = new StaticPowerIngredient(Ingredient.EMPTY, 0);
 	private final Ingredient ingredient;
@@ -15,9 +20,6 @@ public class StaticPowerIngredient {
 	public StaticPowerIngredient(Ingredient ingredient, int count) {
 		this.ingredient = ingredient;
 		this.count = count;
-		for (ItemStack stack : ingredient.getItems()) {
-			stack.setCount(count);
-		}
 	}
 
 	public StaticPowerIngredient(ItemStack stack, int count) {
@@ -41,10 +43,16 @@ public class StaticPowerIngredient {
 	}
 
 	public boolean test(ItemStack stackToTest) {
+		for (ItemStack stack : ingredient.getItems()) {
+			stack.setCount(count);
+		}
 		return ingredient.test(stackToTest);
 	}
 
 	public boolean test(ItemStack stackToTest, boolean verifyCounts) {
+		for (ItemStack stack : ingredient.getItems()) {
+			stack.setCount(count);
+		}
 		if (verifyCounts) {
 			return testWithCount(stackToTest);
 		} else {
@@ -53,6 +61,9 @@ public class StaticPowerIngredient {
 	}
 
 	public boolean testWithCount(ItemStack stackToTest) {
+		for (ItemStack stack : ingredient.getItems()) {
+			stack.setCount(count);
+		}
 		return ingredient.test(stackToTest) && stackToTest.getCount() >= count;
 	}
 

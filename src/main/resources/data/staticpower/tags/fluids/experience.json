@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
-    "staticpower:experience"
+    "staticpower:experience",
+    "staticpower:experience_flowing"
   ]
 }
