@@ -8,11 +8,11 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class BottlerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<BottleRecipe> {
+public class BottlerRecipeSerializer extends StaticPowerRecipeSerializer<BottleRecipe> {
 	public static final BottlerRecipeSerializer INSTANCE = new BottlerRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "bottler_recipe");
 
@@ -48,5 +48,15 @@ public class BottlerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer
 		buffer.writeItem(recipe.getEmptyBottle());
 		buffer.writeItem(recipe.getFilledBottle());
 		buffer.writeFluidStack(recipe.getFluid());
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

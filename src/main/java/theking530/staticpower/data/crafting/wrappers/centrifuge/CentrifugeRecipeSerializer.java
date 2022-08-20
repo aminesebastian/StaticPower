@@ -7,14 +7,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CentrifugeRecipe> {
+public class CentrifugeRecipeSerializer extends StaticPowerRecipeSerializer<CentrifugeRecipe> {
 	public static final CentrifugeRecipeSerializer INSTANCE = new CentrifugeRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "centrifuge_recipe");
 
@@ -73,5 +73,15 @@ public class CentrifugeRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		recipe.getOutput2().writeToBuffer(buffer);
 		recipe.getOutput3().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

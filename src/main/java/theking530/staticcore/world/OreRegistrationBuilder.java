@@ -76,12 +76,10 @@ public class OreRegistrationBuilder {
 			targets.add(OreConfiguration.target(pair.getLocation(), pair.getBlockState()));
 		}
 
-		Holder<ConfiguredFeature<OreConfiguration, ?>> configuration = FeatureUtils.register(name, Feature.ORE,
-				new OreConfiguration(targets, maxVeinSize));
+		Holder<ConfiguredFeature<OreConfiguration, ?>> configuration = FeatureUtils.register(name, Feature.ORE, new OreConfiguration(targets, maxVeinSize));
 
 		Holder<PlacedFeature> feature = PlacementUtils.register(name + "_placed", configuration,
-				ModOrePlacement.commonOrePlacement(rarity, HeightRangePlacement
-						.triangle(VerticalAnchor.aboveBottom(minLevel), VerticalAnchor.aboveBottom(maxLevel))));
+				ModOrePlacement.commonOrePlacement(rarity, HeightRangePlacement.triangle(VerticalAnchor.aboveBottom(minLevel), VerticalAnchor.aboveBottom(maxLevel))));
 
 		return new OreGenerationResult(targets, configuration, feature);
 	}
@@ -91,8 +89,7 @@ public class OreRegistrationBuilder {
 		private final Holder<ConfiguredFeature<OreConfiguration, ?>> configuration;
 		private final Holder<PlacedFeature> feature;
 
-		public OreGenerationResult(List<TargetBlockState> targets,
-				Holder<ConfiguredFeature<OreConfiguration, ?>> configuration, Holder<PlacedFeature> feature) {
+		public OreGenerationResult(List<TargetBlockState> targets, Holder<ConfiguredFeature<OreConfiguration, ?>> configuration, Holder<PlacedFeature> feature) {
 			this.targets = targets;
 			this.configuration = configuration;
 			this.feature = feature;
@@ -108,7 +105,7 @@ public class OreRegistrationBuilder {
 
 		public Holder<PlacedFeature> getFeature() {
 			return feature;
-		}	
+		}
 	}
 
 	protected class OreGenerationPair {

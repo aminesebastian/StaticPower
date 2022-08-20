@@ -12,11 +12,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<ThermalConductivityRecipe> {
+public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerializer<ThermalConductivityRecipe> {
 	public static final ThermalConductivityRecipeSerializer INSTANCE = new ThermalConductivityRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conducitity");
 
@@ -79,8 +79,8 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<Reci
 					blockNBT = TagParser.parseTag(overheatingElement.get("block").toString());
 					overheatedBlock = NbtUtils.readBlockState(blockNBT);
 				} catch (CommandSyntaxException e) {
-					StaticPower.LOGGER.error(String.format("An error occured when attempting to deserialize the value: %1$s into a BlockState.", overheatingElement.get("block").toString()),
-							e);
+					StaticPower.LOGGER.error(
+							String.format("An error occured when attempting to deserialize the value: %1$s into a BlockState.", overheatingElement.get("block").toString()), e);
 				}
 			}
 
@@ -146,5 +146,15 @@ public class ThermalConductivityRecipeSerializer extends ForgeRegistryEntry<Reci
 		for (ResourceLocation tag : recipe.getFluidTags()) {
 			buffer.writeUtf(tag.toString());
 		}
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

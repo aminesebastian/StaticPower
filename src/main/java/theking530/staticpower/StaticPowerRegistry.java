@@ -4,11 +4,9 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.event.RegistryEvent;
 import theking530.staticcore.initialization.StaticCoreRegistry;
-import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.world.trees.AbstractStaticPowerTree;
 
 /**
@@ -38,9 +36,5 @@ public class StaticPowerRegistry {
 
 	public static void onRegisterContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
 		StaticCoreRegistry.registerContainerTypes(event);
-	}
-
-	public static void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-		ModRecipeSerializers.onRegisterRecipeSerializers(event);
 	}
 }

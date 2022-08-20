@@ -8,6 +8,8 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraftforge.common.BiomeDictionary;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.world.ModConfiguredFeatures;
+import theking530.staticpower.world.ModPlacedFeatures;
 import theking530.staticpower.world.trees.AbstractStaticPowerTree;
 
 @SuppressWarnings("deprecation")
@@ -24,11 +26,11 @@ public class RubberTreePlacer extends AbstractStaticPowerTree {
 
 	@Override
 	protected Holder<? extends ConfiguredFeature<?, ?>> getConfiguredFeature(Random random, boolean p_204330_) {
-		return RubberTreeFeature.RUBBER_WOOD_TREE;
+		return ModConfiguredFeatures.RUBBER_WOOD_TREE;
 	}
 
 	@Override
-	public boolean isSpawningEnabled(BiomeLoadingEvent event, Set<BiomeDictionary.Type> biomeTypes) {
+	public boolean shouldAddToBiome(BiomeLoadingEvent event, Set<BiomeDictionary.Type> biomeTypes) {
 		if (!StaticPowerConfig.SERVER.generateRubberTrees.get()) {
 			return false;
 		}
@@ -38,12 +40,12 @@ public class RubberTreePlacer extends AbstractStaticPowerTree {
 			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	@Override
 	public TreeGenerationBundle getGenerationBundle() {
-		return new TreeGenerationBundle(RubberTreeFeature.RUBBER_WOOD_TREE, RubberTreeFeature.RUBBER_WOOD_TREE_CHECKED, RubberTreeFeature.RUBBER_WOOD_TREE_SPAWN,
-				RubberTreeFeature.RUBBER_WOOD_TREE_PLACED);
+		return new TreeGenerationBundle(ModConfiguredFeatures.RUBBER_WOOD_TREE, ModConfiguredFeatures.RUBBER_WOOD_TREE_CHECKED, ModConfiguredFeatures.RUBBER_WOOD_TREE_SPAWN,
+				ModPlacedFeatures.RUBBER_WOOD_TREE_PLACED);
 	}
 }

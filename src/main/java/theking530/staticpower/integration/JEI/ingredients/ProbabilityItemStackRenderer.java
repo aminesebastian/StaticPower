@@ -35,9 +35,9 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			Lighting.setupForFlatItems();
 			Minecraft minecraft = Minecraft.getInstance();
 			Font font = getFontRenderer(minecraft, ingredient);
-			itemRenderer.renderAndDecorateItem(ingredient.getItem(), xPosition, yPosition);
-			itemRenderer.renderGuiItemDecorations(font, ingredient.getItem(), xPosition, yPosition, null);
 
+			GuiDrawUtilities.drawItem(matrixStack, ingredient.getItem(), xPosition, yPosition, 0.0f);
+			
 			// Draw the percentage string manually.
 			if (ingredient.getOutputChance() != 1.0f) {
 				String percentageString = GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";

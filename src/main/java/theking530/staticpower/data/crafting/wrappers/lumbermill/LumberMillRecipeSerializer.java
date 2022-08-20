@@ -7,15 +7,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class LumberMillRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LumberMillRecipe> {
+public class LumberMillRecipeSerializer extends StaticPowerRecipeSerializer<LumberMillRecipe> {
 	public static final LumberMillRecipeSerializer INSTANCE = new LumberMillRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill_recipe");
 
@@ -66,5 +66,15 @@ public class LumberMillRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 		recipe.getSecondaryOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

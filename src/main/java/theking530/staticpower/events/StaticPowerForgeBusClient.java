@@ -123,7 +123,7 @@ public class StaticPowerForgeBusClient {
 			Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
 			if (fluid instanceof AbstractStaticPowerFluid) {
 				AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;
-				GuiDrawUtilities.drawScreenOverlay(fluid.getAttributes().getOverlayTexture(), abstractFluid.getOverlayColor(), 0.3f, 512, 512);
+				GuiDrawUtilities.drawScreenOverlay(fluid.getAttributes().getOverlayTexture(), abstractFluid.getOverlayColor(), 0.75f, 512, 512);
 			}
 		}
 	}

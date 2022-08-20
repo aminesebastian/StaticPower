@@ -7,13 +7,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 import theking530.staticpower.tileentities.nonpowered.condenser.TileEntityCondenser;
 
-public class CondensationRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CondensationRecipe> {
+public class CondensationRecipeSerializer extends StaticPowerRecipeSerializer<CondensationRecipe> {
 	public static final CondensationRecipeSerializer INSTANCE = new CondensationRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "condensation_recipe");
 
@@ -55,5 +55,15 @@ public class CondensationRecipeSerializer extends ForgeRegistryEntry<RecipeSeria
 		buffer.writeFluidStack(recipe.getInputFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

@@ -110,34 +110,34 @@ public class ModRecipeSerializers {
 	}
 
 	public static void onRegisterRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-		Registry.register(Registry.RECIPE_TYPE, AutoSmithRecipeSerializer.ID, AutoSmithRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, BottlerRecipeSerializer.ID, BottleRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CastingRecipeSerializer.ID, CastingRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CauldronRecipeSerializer.ID, CauldronRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CentrifugeRecipeSerializer.ID, CentrifugeRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CondensationRecipeSerializer.ID, CondensationRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, AutoSmithRecipe.ID, AutoSmithRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, BottleRecipe.ID, BottleRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, CastingRecipe.ID, CastingRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, CauldronRecipe.ID, CauldronRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, CentrifugeRecipe.ID, CentrifugeRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, CondensationRecipe.ID, CondensationRecipe.RECIPE_TYPE);
 //		Registry.register(Registry.RECIPE_TYPE, CoverRecipe.ID, CoverRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, CrucibleRecipeSerializer.ID, CrucibleRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, EnchanterRecipeSerializer.ID, EnchanterRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, EvaporatorRecipeSerializer.ID, EvaporatorRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FermenterRecipeSerializer.ID, FermenterRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FertalizerRecipeSerializer.ID, FertalizerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FluidGeneratorRecipeSerializer.ID, FluidGeneratorRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FluidInfusionRecipeSerializer.ID, FluidInfusionRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FormerRecipeSerializer.ID, FormerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, FusionFurnaceRecipeSerializer.ID, FusionFurnaceRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, GrinderRecipeSerializer.ID, GrinderRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, HammerRecipeSerializer.ID, HammerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, LatheRecipeSerializer.ID, LatheRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, LumberMillRecipeSerializer.ID, LumberMillRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, MixerRecipeSerializer.ID, MixerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, RefineryRecipeSerializer.ID, RefineryRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, ResearchSerializer.ID, Research.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, SolderingRecipeSerializer.ID, SolderingRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, SqueezerRecipeSerializer.ID, SqueezerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, ThermalConductivityRecipeSerializer.ID, ThermalConductivityRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, TumblerRecipeSerializer.ID, TumblerRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, TurbineRecipeSerializer.ID, TurbineRecipe.RECIPE_TYPE);
-		Registry.register(Registry.RECIPE_TYPE, VulcanizerRecipeSerializer.ID, VulcanizerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, CrucibleRecipe.ID, CrucibleRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, EnchanterRecipe.ID, EnchanterRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, EvaporatorRecipe.ID, EvaporatorRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, FermenterRecipe.ID, FermenterRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, FertalizerRecipe.ID, FertalizerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, FluidGeneratorRecipe.ID, FluidGeneratorRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, FluidInfusionRecipe.ID, FluidInfusionRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, FormerRecipe.ID, FormerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, FusionFurnaceRecipe.ID, FusionFurnaceRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, GrinderRecipe.ID, GrinderRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, HammerRecipe.ID, HammerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, LatheRecipe.ID, LatheRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, LumberMillRecipe.ID, LumberMillRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, MixerRecipe.ID, MixerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, RefineryRecipe.ID, RefineryRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, Research.ID, Research.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, SolderingRecipe.ID, SolderingRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, SqueezerRecipe.ID, SqueezerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, ThermalConductivityRecipe.ID, ThermalConductivityRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, TumblerRecipe.ID, TumblerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, TurbineRecipe.ID, TurbineRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, VulcanizerRecipe.ID, VulcanizerRecipe.RECIPE_TYPE);
 	}
 }

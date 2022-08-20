@@ -9,11 +9,11 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class FertalizerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FertalizerRecipe> {
+public class FertalizerRecipeSerializer extends StaticPowerRecipeSerializer<FertalizerRecipe> {
 	public static final FertalizerRecipeSerializer INSTANCE = new FertalizerRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "farming_fertalizer_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(FertalizerRecipeSerializer.class);
@@ -48,5 +48,15 @@ public class FertalizerRecipeSerializer extends ForgeRegistryEntry<RecipeSeriali
 	public void toNetwork(FriendlyByteBuf buffer, FertalizerRecipe recipe) {
 		buffer.writeFluidStack(recipe.getRequiredFluid());
 		buffer.writeFloat(recipe.getFertalizationAmount());
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

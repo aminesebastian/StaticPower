@@ -8,20 +8,20 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class HammerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<HammerRecipe> {
+public class HammerRecipeSerializer extends StaticPowerRecipeSerializer<HammerRecipe> {
 	public static final HammerRecipeSerializer INSTANCE = new HammerRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "hammer_recipe");
 	private final JsonElement hammerTag;
-	
+
 	private HammerRecipeSerializer() {
 		hammerTag = GsonHelper.parse("{ \"tag\":\"staticpower:hammer\" }");
 	}
-	
+
 	@Override
 	public HammerRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Create the hammer ingredient.
@@ -66,5 +66,15 @@ public class HammerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<
 		} else {
 			recipe.getInputItem().write(buffer);
 		}
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

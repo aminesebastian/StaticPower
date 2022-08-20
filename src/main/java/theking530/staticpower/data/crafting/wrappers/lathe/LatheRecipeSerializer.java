@@ -10,18 +10,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class LatheRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<LatheRecipe> {
+public class LatheRecipeSerializer extends StaticPowerRecipeSerializer<LatheRecipe> {
 	public static final LatheRecipeSerializer INSTANCE = new LatheRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "lathe_recipe");
-	
+
 	@Override
 	public LatheRecipe fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Capture the input ingredients.
@@ -32,7 +32,8 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?
 		NonNullList<StaticPowerIngredient> inputs = LatheRecipe.deserializeIngredients(astring, map, width, height);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.latheProcessingTime.get(), StaticPowerConfig.SERVER.lathePowerUsage.get(), json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.latheProcessingTime.get(),
+				StaticPowerConfig.SERVER.lathePowerUsage.get(), json);
 
 		// Get the outputs.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
@@ -84,5 +85,15 @@ public class LatheRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?
 		recipe.getSecondaryOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

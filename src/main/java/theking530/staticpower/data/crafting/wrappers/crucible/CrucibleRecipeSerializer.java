@@ -10,15 +10,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<CrucibleRecipe> {
+public class CrucibleRecipeSerializer extends StaticPowerRecipeSerializer<CrucibleRecipe> {
 	public static final CrucibleRecipeSerializer INSTANCE = new CrucibleRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "crucible_recipe");
 	private static final Logger LOGGER = LogManager.getLogger(CrucibleRecipeSerializer.class);
@@ -36,8 +36,8 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		}
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.crucibleProcessingTime.get(), StaticPowerConfig.SERVER.cruciblePowerUsage.get(),
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.crucibleProcessingTime.get(),
+				StaticPowerConfig.SERVER.cruciblePowerUsage.get(), json);
 
 		// Get the outputs object.
 		JsonObject outputs = GsonHelper.getAsJsonObject(json, "outputs");
@@ -89,5 +89,15 @@ public class CrucibleRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		recipe.getOutput().writeToBuffer(buffer);
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

@@ -81,7 +81,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		registerWidget(nodePanBox = new PanBox(105, 20, 0, 0));
 		nodePanBox.setMaxBounds(new Vector4D(-10000, -10000, 10000, 10000));
-		nodePanBox.setMaxZoom(2.0f);
+		nodePanBox.setMaxZoom(4.0f);
 
 		registerWidget(sideBarScrollBox = new ScrollBox(0, 105, 105, 800).setZLevel(100));
 
@@ -326,10 +326,10 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				index++;
 
 				Vector3D expandedPosition = outerNode.getPosition().promote();
-				expandedPosition.add(11, 2, 100);
+				expandedPosition.add(12.5f, 2, 100);
 
 				Vector3D preReqPosition = node.getPosition().promote();
-				preReqPosition.add(11, 20f, 100);
+				preReqPosition.add(12.5f, 20f, 100);
 
 				Color startLineColor = new Color(1.0f, 1.0f, 1.0f, 0.5f);
 				Color endLineColor = startLineColor;

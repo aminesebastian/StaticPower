@@ -33,49 +33,38 @@ public abstract class AbstractStaticPowerTree extends AbstractTreeGrower {
 		biomeRules = new HashSet<>();
 	}
 
-	public boolean growTree(BiomeLoadingEvent event) {
+	public boolean addTreeToBiome(BiomeLoadingEvent event) {
 		// Check to make sure we're in the correct biome.
 		ResourceKey<Biome> key = ResourceKey.create(Registry.BIOME_REGISTRY, event.getName());
 		Set<BiomeDictionary.Type> types = BiomeDictionary.getTypes(key);
-		if (!isSpawningEnabled(event, types)) {
+		if (!shouldAddToBiome(event, types)) {
 			return false;
 		}
 
-		// Check to make sure all the biome rules are met.
+		// Check to make sure this is a valid biome.
+		boolean biomeFound = false;
 		for (BiomeDictionary.Type type : biomeRules) {
-			if (!types.contains(type)) {
-				return false;
+			if (types.contains(type)) {
+				biomeFound = true;
+				break;
 			}
 		}
+		if (!biomeFound) {
+			return false;
+		}
 
-		// Calculate the bonus chance. // Add the trees with bonus.
-		int difference = StaticPowerConfig.SERVER.maxRubberTreeCount.get()
-				- StaticPowerConfig.SERVER.minRubberTreeCount.get();
-		int maxBonus = SDMath.getRandomIntInRange(0, difference);
-		int actualBonus = SDMath.diceRoll(StaticPowerConfig.SERVER.rubberTreeSpawnChance.get()) ? Math.max(0, maxBonus)
-				: 0;
-
-		List<Holder<PlacedFeature>> base = event.getGeneration()
-				.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
+		List<Holder<PlacedFeature>> base = event.getGeneration().getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION);
 		base.add(getGenerationBundle().treePlacedFeature);
-
 		return true;
 	}
 
-	public abstract boolean isSpawningEnabled(BiomeLoadingEvent event, Set<BiomeDictionary.Type> biomeTypes);
+	public abstract boolean shouldAddToBiome(BiomeLoadingEvent event, Set<BiomeDictionary.Type> biomeTypes);
 
 	public abstract TreeGenerationBundle getGenerationBundle();
 
-	public static TreeConfiguration.TreeConfigurationBuilder createStraightBlobTree(Block trunk, Block leaves,
-			int p_195149_, int p_195150_, int p_195151_, int p_195152_) {
-		return new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(trunk),
-				new StraightTrunkPlacer(p_195149_, p_195150_, p_195151_), BlockStateProvider.simple(leaves),
-				new BlobFoliagePlacer(ConstantInt.of(p_195152_), ConstantInt.of(0), 3),
-				new TwoLayersFeatureSize(1, 0, 1));
-	}
-
-	public static class TreeGenerationBuilder {
-
+	public static TreeConfiguration.TreeConfigurationBuilder createStraightBlobTree(Block trunk, Block leaves, int p_195149_, int p_195150_, int p_195151_, int p_195152_) {
+		return new TreeConfiguration.TreeConfigurationBuilder(BlockStateProvider.simple(trunk), new StraightTrunkPlacer(p_195149_, p_195150_, p_195151_),
+				BlockStateProvider.simple(leaves), new BlobFoliagePlacer(ConstantInt.of(p_195152_), ConstantInt.of(0), 3), new TwoLayersFeatureSize(1, 0, 1));
 	}
 
 	public class TreeGenerationBundle {
@@ -84,10 +73,8 @@ public abstract class AbstractStaticPowerTree extends AbstractTreeGrower {
 		public Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> treeSpawnFeature;
 		public Holder<PlacedFeature> treePlacedFeature;
 
-		public TreeGenerationBundle(Holder<ConfiguredFeature<TreeConfiguration, ?>> treeFeature,
-				Holder<PlacedFeature> treePlacedFeatureChecked,
-				Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> treeSpawnFeature,
-				Holder<PlacedFeature> treePlacedFeature) {
+		public TreeGenerationBundle(Holder<ConfiguredFeature<TreeConfiguration, ?>> treeFeature, Holder<PlacedFeature> treePlacedFeatureChecked,
+				Holder<ConfiguredFeature<RandomFeatureConfiguration, ?>> treeSpawnFeature, Holder<PlacedFeature> treePlacedFeature) {
 			super();
 			this.treeFeature = treeFeature;
 			this.treePlacedFeatureChecked = treePlacedFeatureChecked;

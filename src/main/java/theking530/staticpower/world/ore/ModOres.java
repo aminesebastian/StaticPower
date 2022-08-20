@@ -9,24 +9,25 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModBlocks;
 
 public class ModOres {
-	public static final OreGenerationResult ZINC = OreRegistrationBuilder.createOre("ore_zinc").source(ModBlocks.OreZinc.get()).levelRange(30, 70).veinSize(4).rarity(8).register();
-	public static final OreGenerationResult MAGENSIUM = OreRegistrationBuilder.createOre("ore_magnesium").source(ModBlocks.OreMagnesium.get()).levelRange(30, 70).veinSize(4)
-			.rarity(8).register();
-	public static final OreGenerationResult TIN = OreRegistrationBuilder.createOre("ore_tin").source(ModBlocks.OreTin.get()).levelRange(40, 128).veinSize(10).rarity(18).register();
-	public static final OreGenerationResult LEAD = OreRegistrationBuilder.createOre("ore_lead").source(ModBlocks.OreLead.get()).levelRange(0, 35).veinSize(4).rarity(10).register();
+	public static final OreGenerationResult ZINC = OreRegistrationBuilder.createOre("ore_zinc").source(ModBlocks.OreZinc.get()).levelRange(30, 100).veinSize(8).rarity(14)
+			.register();
+	public static final OreGenerationResult MAGENSIUM = OreRegistrationBuilder.createOre("ore_magnesium").source(ModBlocks.OreMagnesium.get()).levelRange(30, 100).veinSize(8)
+			.rarity(14).register();
+	public static final OreGenerationResult TIN = OreRegistrationBuilder.createOre("ore_tin").source(ModBlocks.OreTin.get()).levelRange(40, 128).veinSize(10).rarity(20).register();
+	public static final OreGenerationResult LEAD = OreRegistrationBuilder.createOre("ore_lead").source(ModBlocks.OreLead.get()).levelRange(0, 35).veinSize(4).rarity(12).register();
 	public static final OreGenerationResult SILVER = OreRegistrationBuilder.createOre("ore_silver").source(ModBlocks.OreSilver.get()).levelRange(0, 40).veinSize(4).rarity(12)
 			.register();
-	public static final OreGenerationResult TUNGSTEN = OreRegistrationBuilder.createOre("ore_tungsten").source(ModBlocks.OreTungsten.get()).levelRange(0, 20).veinSize(4).rarity(8)
+	public static final OreGenerationResult TUNGSTEN = OreRegistrationBuilder.createOre("ore_tungsten").source(ModBlocks.OreTungsten.get()).levelRange(0, 20).veinSize(6).rarity(8)
 			.register();
-	public static final OreGenerationResult PLATINUM = OreRegistrationBuilder.createOre("ore_platinum").source(ModBlocks.OrePlatinum.get()).levelRange(0, 30).veinSize(4).rarity(10)
+	public static final OreGenerationResult PLATINUM = OreRegistrationBuilder.createOre("ore_platinum").source(ModBlocks.OrePlatinum.get()).levelRange(0, 30).veinSize(6).rarity(8)
 			.register();
-	public static final OreGenerationResult ALUMINUM = OreRegistrationBuilder.createOre("ore_aluminum").source(ModBlocks.OreAluminum.get()).levelRange(50, 200).veinSize(4)
-			.rarity(12).register();
-	public static final OreGenerationResult SAPPHIRE = OreRegistrationBuilder.createOre("ore_sapphire").source(ModBlocks.OreSapphire.get()).levelRange(0, 20).veinSize(4).rarity(5)
+	public static final OreGenerationResult ALUMINUM = OreRegistrationBuilder.createOre("ore_aluminum").source(ModBlocks.OreAluminum.get()).levelRange(50, 200).veinSize(8)
+			.rarity(18).register();
+	public static final OreGenerationResult SAPPHIRE = OreRegistrationBuilder.createOre("ore_sapphire").source(ModBlocks.OreSapphire.get()).levelRange(0, 20).veinSize(4).rarity(8)
 			.register();
-	public static final OreGenerationResult RUBY = OreRegistrationBuilder.createOre("ore_ruby").source(ModBlocks.OreRuby.get()).levelRange(0, 20).veinSize(4).rarity(5).register();
+	public static final OreGenerationResult RUBY = OreRegistrationBuilder.createOre("ore_ruby").source(ModBlocks.OreRuby.get()).levelRange(0, 20).veinSize(4).rarity(8).register();
 	public static final OreGenerationResult RUSTY_IRON_ORE = OreRegistrationBuilder.createOre("ore_rusty_iron").source(ModBlocks.OreRustyIron.get()).levelRange(50, 150).veinSize(4)
-			.rarity(8).register();
+			.rarity(24).register();
 
 	public static final OreGenerationResult DEEPSLATE_ZINC = OreRegistrationBuilder.createOre("ore_deepslate_zinc")
 			.source(ModBlocks.OreDeepslateZinc.get(), OreFeatures.DEEPSLATE_ORE_REPLACEABLES).levelRange(-32, 10).veinSize(4).rarity(8).register();

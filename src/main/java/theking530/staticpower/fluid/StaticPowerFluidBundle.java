@@ -20,7 +20,7 @@ import theking530.staticpower.init.ModTags;
 import theking530.staticpower.items.StaticPowerFluidBucket;
 
 public class StaticPowerFluidBundle {
-	public static final ResourceLocation WATER_OVERLAY_RL = new ResourceLocation("block/water_overlay");
+	public static final ResourceLocation OVERLAY_TEXTURE = new ResourceLocation(StaticPower.MOD_ID, "textures/misc/underfluid.png");
 
 	public final TagKey<Fluid> tag;
 	public final RegistryObject<StaticPowerFluidBlock> block;
@@ -109,7 +109,7 @@ public class StaticPowerFluidBundle {
 			block = ModBlocks.BLOCKS.register(name, () -> new StaticPowerFluidBlock(source, BlockBehaviour.Properties.of(Material.WATER).noCollission().strength(100f).noDrops()));
 
 			FluidAttributes.Builder attrbiuteBuilder = FluidAttributes
-					.builder(new ResourceLocation(StaticPower.MOD_ID, stillTexture), new ResourceLocation(StaticPower.MOD_ID, flowingTexture)).overlay(WATER_OVERLAY_RL);
+					.builder(new ResourceLocation(StaticPower.MOD_ID, stillTexture), new ResourceLocation(StaticPower.MOD_ID, flowingTexture)).overlay(OVERLAY_TEXTURE);
 			if (extraAttributes != null) {
 				extraAttributes.accept(attrbiuteBuilder);
 			}

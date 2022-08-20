@@ -8,16 +8,20 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.placement.BiomeFilter;
+import net.minecraft.world.level.levelgen.placement.InSquarePlacement;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.RarityFilter;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import theking530.staticpower.fluid.StaticPowerFluidBundle;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.world.ModFeatures;
+import theking530.staticpower.world.ModConfiguredFeatures;
 import theking530.staticpower.world.features.StaticPowerLakeFeatureConfiguration;
 
 public class ModWorldFluids {
 	public static final Holder<PlacedFeature> LAKE_OIL_SURFACE = PlacementUtils.register("lake_oil_surface",
-			new WorldFluidConfigBuilder("lake_oil", ModFluids.CrudeOil, BlockStateProvider.simple(Blocks.MOSSY_COBBLESTONE)).build());
+			new WorldFluidConfigBuilder("lake_oil", ModFluids.CrudeOil, BlockStateProvider.simple(Blocks.MOSSY_COBBLESTONE)).build(), RarityFilter.onAverageOnceEvery(200),
+			InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
 
 	public static void addFluidGenFeatures(BiomeLoadingEvent event) {
 		event.getGeneration().addFeature(GenerationStep.Decoration.LAKES, LAKE_OIL_SURFACE);
@@ -35,8 +39,8 @@ public class ModWorldFluids {
 		}
 
 		public Holder<ConfiguredFeature<StaticPowerLakeFeatureConfiguration, ?>> build() {
-			return FeatureUtils.register(name, ModFeatures.STATIC_LAKE, new StaticPowerLakeFeatureConfiguration(BlockStateProvider.simple(fluid.block.get().defaultBlockState()),
-					barrier, UniformInt.of(2, 10), UniformInt.of(30, 100)));
+			return FeatureUtils.register(name, ModConfiguredFeatures.STATIC_LAKE, new StaticPowerLakeFeatureConfiguration(
+					BlockStateProvider.simple(fluid.block.get().defaultBlockState()), barrier, UniformInt.of(2, 10), UniformInt.of(30, 100)));
 		}
 	}
 }

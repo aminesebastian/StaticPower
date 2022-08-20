@@ -94,13 +94,13 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 		}
 
 		@Override
-		public boolean isSource(FluidState state) {
-			return true;
-		}
+        public int getAmount(FluidState state) {
+            return 8;
+        }
 
 		@Override
-		public int getAmount(FluidState state) {
-            return state.getValue(LEVEL);
+		public boolean isSource(FluidState state) {
+			return true;
 		}
 	}
 
@@ -115,15 +115,16 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 			super.createFluidStateDefinition(builder);
 			builder.add(LEVEL);
 		}
+		
+		@Override
+		public int getAmount(FluidState state) {
+            return state.getValue(LEVEL);
+		}
 
 		@Override
 		public boolean isSource(FluidState state) {
 			return false;
 		}
 
-		@Override
-		public int getAmount(FluidState state) {
-            return state.getValue(LEVEL);
-		}
 	}
 }

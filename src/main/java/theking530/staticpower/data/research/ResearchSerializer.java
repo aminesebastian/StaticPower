@@ -12,16 +12,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<Research> {
+public class ResearchSerializer extends StaticPowerRecipeSerializer<Research> {
 	public static final ResearchSerializer INSTANCE = new ResearchSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "research");
-	
+
 	@Override
 	public Research fromJson(ResourceLocation recipeId, JsonObject json) {
 		// Get the title and description.
@@ -222,5 +222,15 @@ public class ResearchSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> 
 
 		buffer.writeBoolean(recipe.isHiddenUntilAvailable());
 		recipe.getColor().toBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

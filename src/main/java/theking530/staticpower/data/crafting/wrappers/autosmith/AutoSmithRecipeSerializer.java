@@ -8,15 +8,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe.RecipeModifierWrapper;
 
-public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<AutoSmithRecipe> {
+public class AutoSmithRecipeSerializer extends StaticPowerRecipeSerializer<AutoSmithRecipe> {
 	public static final AutoSmithRecipeSerializer INSTANCE = new AutoSmithRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith_recipe");
 
@@ -111,5 +111,15 @@ public class AutoSmithRecipeSerializer extends ForgeRegistryEntry<RecipeSerializ
 		}
 
 		recipe.getProcessingSection().writeToBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+	
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

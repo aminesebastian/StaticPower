@@ -6,14 +6,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
 
-public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<PackagerRecipe> {
+public class PackagerRecipeSerializer extends StaticPowerRecipeSerializer<PackagerRecipe> {
 	public static final PackagerRecipeSerializer INSTANCE = new PackagerRecipeSerializer();
 	public static final ResourceLocation ID = new ResourceLocation(StaticPower.MOD_ID, "packager_recipe");
 
@@ -24,8 +24,8 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		StaticPowerIngredient input = StaticPowerIngredient.deserialize(inputElement);
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(),
-				json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.packagerProcessingTime.get(),
+				StaticPowerConfig.SERVER.packagerPowerUsage.get(), json);
 
 		// Get the recipe size.
 		int size = json.get("size").getAsInt();
@@ -53,5 +53,15 @@ public class PackagerRecipeSerializer extends ForgeRegistryEntry<RecipeSerialize
 		recipe.getInputIngredient().write(buffer);
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
+	}
+
+	@Override
+	public RecipeSerializer<?> setRegistryName(ResourceLocation name) {
+		return INSTANCE;
+	}
+
+	@Override
+	public ResourceLocation getRegistryName() {
+		return ID;
 	}
 }

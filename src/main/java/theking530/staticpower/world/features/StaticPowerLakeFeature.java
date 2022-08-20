@@ -46,7 +46,7 @@ public class StaticPowerLakeFeature extends Feature<StaticPowerLakeFeatureConfig
 				}
 				continue;
 			}
-
+			
 			// Don't let it go below the world.
 			if (configContext.origin().getY() - y <= worldgenlevel.getMinBuildHeight()) {
 				break;

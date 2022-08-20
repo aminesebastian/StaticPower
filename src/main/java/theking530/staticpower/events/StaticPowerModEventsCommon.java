@@ -49,10 +49,10 @@ import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModu
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;
-import theking530.staticpower.entities.AbstractEntityBuilder;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModEntities;
+import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.tileentities.powered.cropfarmer.TileEntityBasicFarmer;
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.CactusCropHarvester;
@@ -60,7 +60,7 @@ import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.Generic
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.NetherWartCropHarvester;
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.StemCropHarvester;
 import theking530.staticpower.tileentities.powered.cropfarmer.harvesters.SugarCaneCropHarvester;
-import theking530.staticpower.world.ModFeatures;
+import theking530.staticpower.world.ModConfiguredFeatures;
 
 @Mod.EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class StaticPowerModEventsCommon {
@@ -199,7 +199,7 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void registerFeatures(final RegistryEvent.Register<Feature<?>> event) {
-		ModFeatures.registerFeatures(event);
+		ModConfiguredFeatures.registerFeatures(event);
 	}
 
 	@SubscribeEvent
@@ -209,7 +209,7 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-		StaticPowerRegistry.onRegisterRecipeSerializers(event);
+		ModRecipeSerializers.onRegisterRecipeSerializers(event);
 		LOGGER.info("Static Power Reipce Serializers registered!");
 	}
 
