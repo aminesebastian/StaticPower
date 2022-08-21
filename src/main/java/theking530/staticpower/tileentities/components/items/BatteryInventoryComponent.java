@@ -28,7 +28,7 @@ public class BatteryInventoryComponent extends InventoryComponent {
 			return;
 		}
 
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			if (EnergyStorage.getStoredPower() < EnergyStorage.getCapacity()) {
 				ItemStack candidate = getStackInSlot(0);
 				if (candidate != null) {

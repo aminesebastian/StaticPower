@@ -741,7 +741,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	 */
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		LOGGER.error(String.format("TileEntity: %1$s did not override the method #createMenu. The container for this TE is broken.", getDisplayName().getString()));
+		LOGGER.error(String.format("TileEntity: %1$s did not override the method #createMenu. The container for this TE is missing.", getDisplayName().getString()));
 		return null;
 	}
 

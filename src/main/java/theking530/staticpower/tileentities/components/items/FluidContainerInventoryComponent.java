@@ -68,7 +68,7 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 		}
 
 		// Only do work on the server.
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			return;
 		}
 
@@ -114,8 +114,8 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
 					float maxSound = minSound + 0.1f;
 					// Play the sound.
-					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.35f,
-							SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
+					getLevel().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.35f,
+							SDMath.clamp(getLevel().getRandom().nextFloat(), minSound, maxSound));
 				}
 
 				// If the container is empty, transfer it to the empty container slot.
@@ -151,8 +151,8 @@ public class FluidContainerInventoryComponent extends InventoryComponent {
 					float minSound = Math.max(1.0f - (float) fluidHandler.getFluidInTank(0).getAmount() / fluidHandler.getTankCapacity(0), 0.55f) * 1.1f;
 					float maxSound = minSound + 0.1f;
 					// Play the sound.
-					getWorld().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.35f,
-							SDMath.clamp(getWorld().getRandom().nextFloat(), minSound, maxSound));
+					getLevel().playSound(null, getPos(), simulatedDrain.getFluid() == Fluids.LAVA ? SoundEvents.BUCKET_EMPTY_LAVA : SoundEvents.BUCKET_EMPTY, SoundSource.BLOCKS, 0.35f,
+							SDMath.clamp(getLevel().getRandom().nextFloat(), minSound, maxSound));
 				}
 
 				// If the container is empty, transfer it to the empty container slot.

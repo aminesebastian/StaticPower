@@ -55,7 +55,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		// Check redstone signal.
-		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getLevel().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
@@ -95,7 +95,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 		if (fluid.isEmpty()) {
 			return false;
 		}
-		return WorldUtilities.tryPlaceFluid(fluid, null, cable.getWorld(), cable.getPos().relative(side), null);
+		return WorldUtilities.tryPlaceFluid(fluid, null, cable.getLevel(), cable.getPos().relative(side), null);
 	}
 
 	@Override

@@ -72,7 +72,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	@Override
 	public void preProcessUpdate() {
 		// Do nothing on the client.
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			// Check for upgrades.
 			checkUpgrades();
 		}
@@ -80,7 +80,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			// Handle sync.
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we
@@ -103,7 +103,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 			heatStorage.captureHeatTransferMetric();
 
 			// Cool off the heat storage.
-			heatStorage.transferWithSurroundings(getWorld(), getPos());
+			heatStorage.transferWithSurroundings(getLevel(), getPos());
 		}
 	}
 
@@ -145,9 +145,9 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	 * clients within a 64 block radius.
 	 */
 	public void syncToClient() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			PacketHeatStorageComponent syncPacket = new PacketHeatStorageComponent(this, getPos(), this.getComponentName());
-			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 32, syncPacket);
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, syncPacket);
 		} else {
 			throw new RuntimeException("This method should only be called on the server!");
 		}

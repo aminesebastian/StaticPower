@@ -43,7 +43,7 @@ public class RedstoneControlComponent extends AbstractTileEntityComponent {
 	 * @return True if the redstone check passes, false otherwise.
 	 */
 	public boolean passesRedstoneCheck() {
-		return RedstoneMode.evaluateRedstoneMode(redstoneMode, getWorld(), getPos());
+		return RedstoneMode.evaluateRedstoneMode(redstoneMode, getLevel(), getPos());
 	}
 
 	/**

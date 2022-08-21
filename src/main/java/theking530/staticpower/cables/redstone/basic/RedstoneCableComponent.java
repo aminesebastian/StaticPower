@@ -56,7 +56,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null) {
 			if (otherProvider.areCableCompatible(this, side)) {
 				if (!otherProvider.isSideDisabled(side.getOpposite())) {
@@ -68,7 +68,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ? CableConnectionState.TILE_ENTITY : CableConnectionState.NONE;
 			}
 		} else if (!firstWorldLoaded && otherProvider == null) {
-			if (canConnectTo(getWorld(), getPos(), side.getOpposite())) {
+			if (canConnectTo(getLevel(), getPos(), side.getOpposite())) {
 				return CableConnectionState.TILE_ENTITY;
 			}
 		}
@@ -140,15 +140,15 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	public void updateConfiguration(RedstoneCableConfiguration configuration) {
 		this.configuration = configuration;
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			// Send a packet to the server with the updated values.
 			PacketUpdateRedstoneCableConfiguration msg = new PacketUpdateRedstoneCableConfiguration(getPos(), configuration);
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
 			getTileEntity().addRenderingUpdateRequest();
 		} else {
-			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
-				CableNetworkManager.get(getWorld()).getCable(getPos()).setProperty(CONFIGURATION_KEY, configuration.serializeNBT());
-				getWorld().updateNeighborsAt(this.getPos(), getWorld().getBlockState(getPos()).getBlock());
+			if (CableNetworkManager.get(getLevel()).isTrackingCable(getPos())) {
+				CableNetworkManager.get(getLevel()).getCable(getPos()).setProperty(CONFIGURATION_KEY, configuration.serializeNBT());
+				getLevel().updateNeighborsAt(this.getPos(), getLevel().getBlockState(getPos()).getBlock());
 			}
 		}
 	}
@@ -161,7 +161,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 		nbt.put("config", configuration.serializeNBT());
 
 		// Use this as a way to sync the client side value of the power level.
-		if (getWorld() != null && !getWorld().isClientSide) {
+		if (getLevel() != null && !getLevel().isClientSide) {
 			nbt.putByte("power", (byte) clientSidePowerLevel);
 		}
 
@@ -178,7 +178,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 		configuration = sideConfig;
 
 		// Use this as a way to sync the client side value of the power level.
-		if (getWorld() != null && getWorld().isClientSide) {
+		if (getLevel() != null && getLevel().isClientSide) {
 			clientSidePowerLevel = (int) nbt.getByte("power");
 		}
 	}

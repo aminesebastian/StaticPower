@@ -232,7 +232,7 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 	public Optional<T> getRecipe(RecipeMatchParameters matchParameters) {
 		// Check for the recipe.
 		if (recipeType == RecipeType.SMELTING) {
-			return (Optional<T>) getWorld().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), getWorld());
+			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), getLevel());
 		} else {
 			RecipeType<AbstractStaticPowerRecipe> spRecipe = (RecipeType<AbstractStaticPowerRecipe>) recipeType;
 			if (spRecipe != null) {

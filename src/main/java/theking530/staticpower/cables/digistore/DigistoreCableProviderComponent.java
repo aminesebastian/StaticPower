@@ -75,7 +75,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		// Check to see if the manager is present. If not, update the tile entity.
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
@@ -112,7 +112,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		boolean superResult = super.attachAttachment(attachment, side);
 
 		// Update the power usage on the server.
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			updatePowerUsage();
 		}
 
@@ -122,7 +122,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	@Override
 	public ItemStack removeAttachment(Direction side) {
 		ItemStack superResult = super.removeAttachment(side);
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			updatePowerUsage();
 		}
 		return superResult;
@@ -130,9 +130,9 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	public void updatePowerUsage() {
 		// Update the power usage on the server.
-		if (!getWorld().isClientSide()) {
-			if (CableNetworkManager.get(getWorld()).isTrackingCable(getPos())) {
-				updatePowerUsage(CableNetworkManager.get(getWorld()).getCable(getPos()));
+		if (!getLevel().isClientSide()) {
+			if (CableNetworkManager.get(getLevel()).isTrackingCable(getPos())) {
+				updatePowerUsage(CableNetworkManager.get(getLevel()).getCable(getPos()));
 			}
 		} else {
 			StaticPower.LOGGER
@@ -187,7 +187,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 
 	@Override
 	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 
 		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
@@ -203,11 +203,11 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	protected void setIsOnBlockState(boolean on) {
-		if (!getWorld().isClientSide && shouldControlOnBlockState) {
-			BlockState currentState = getWorld().getBlockState(getPos());
+		if (!getLevel().isClientSide && shouldControlOnBlockState) {
+			BlockState currentState = getLevel().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != on) {
-					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
+					getLevel().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
 				}
 			}
 		}
@@ -217,7 +217,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		if (!shouldControlOnBlockState) {
 			return false;
 		}
-		BlockState currentState = getWorld().getBlockState(getPos());
+		BlockState currentState = getLevel().getBlockState(getPos());
 		if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 			return currentState.getValue(StaticPowerMachineBlock.IS_ON);
 		}

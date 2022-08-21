@@ -62,7 +62,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getWorld().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
+		if (cable.getLevel().isClientSide || !cable.doesAttachmentPassRedstoneTest(attachment)) {
 			return;
 		}
 
@@ -72,7 +72,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		}
 
 		// Get the tile entity on the inserting side, return if it is null.
-		BlockEntity adjacentEntity = cable.getWorld().getBlockEntity(cable.getPos().relative(side));
+		BlockEntity adjacentEntity = cable.getLevel().getBlockEntity(cable.getPos().relative(side));
 		if (adjacentEntity == null || adjacentEntity.isRemoved()) {
 			return;
 		}

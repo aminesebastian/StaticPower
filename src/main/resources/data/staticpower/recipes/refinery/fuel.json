@@ -2,10 +2,10 @@
 	"type": "staticpower:refinery_recipe",
 	"fluid_input_1": {
 		"fluid": "staticpower:oil_crude",
-		"volume": 10
+		"volume": 100
 	},
 	"output_3": {
 		"fluid": "staticpower:fuel",
-		"volume": 5
+		"volume": 50
 	}
 }

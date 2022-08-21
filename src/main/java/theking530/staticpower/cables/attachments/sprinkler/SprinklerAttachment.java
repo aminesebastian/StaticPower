@@ -92,17 +92,17 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 		}
 
 		// Use fluid and spawn the experience orb.
-		if (!fluidCable.getWorld().isClientSide) {
+		if (!fluidCable.getLevel().isClientSide) {
 			fluidCable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				int drained = network.getFluidStorage().drain(5, FluidAction.EXECUTE).getAmount();
 				Vector3D direction = new Vector3D(side);
 
 				// Create the XP Orb Entity.
-				ExperienceOrb orb = new ExperienceOrb(fluidCable.getWorld(), fluidCable.getPos().getX() + 0.5f + direction.getX(),
+				ExperienceOrb orb = new ExperienceOrb(fluidCable.getLevel(), fluidCable.getPos().getX() + 0.5f + direction.getX(),
 						fluidCable.getPos().getY() + 0.5f + direction.getY(), fluidCable.getPos().getZ() + 0.5f + direction.getZ(), drained);
 
 				// Set a random X and Z velocity.
-				float random = fluidCable.getWorld().getRandom().nextFloat();
+				float random = fluidCable.getLevel().getRandom().nextFloat();
 				random *= 2;
 				random -= 1;
 				random *= 0.02;
@@ -111,7 +111,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 				orb.setDeltaMovement(random, 0.25, random);
 
 				// Add the entity orb to the world.
-				fluidCable.getWorld().addFreshEntity(orb);
+				fluidCable.getLevel().addFreshEntity(orb);
 			});
 
 		}
@@ -135,11 +135,11 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 		}
 
 		// Spawn the particles on the client, fertilize and use the fluid on the server.
-		if (fluidCable.getWorld().isClientSide) {
+		if (fluidCable.getLevel().isClientSide) {
 			// Only render particles half of the time.
 			if (SDMath.diceRoll(0.5f)) {
 				// Get a random offset.
-				float random = fluidCable.getWorld().getRandom().nextFloat();
+				float random = fluidCable.getLevel().getRandom().nextFloat();
 				random *= 2;
 				random -= 1;
 				random /= 5;
@@ -153,7 +153,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 				velocity.multiply(0.5f);
 
 				// Spawn the particle.
-				fluidCable.getWorld().addParticle(ParticleTypes.FALLING_WATER, fluidCable.getPos().getX() + random + 0.5f + direction.getX(),
+				fluidCable.getLevel().addParticle(ParticleTypes.FALLING_WATER, fluidCable.getPos().getX() + random + 0.5f + direction.getX(),
 						fluidCable.getPos().getY() + random + 0.5f + direction.getY(), fluidCable.getPos().getZ() + random + 0.5f + direction.getZ(), velocity.getX(), velocity.getY(),
 						velocity.getZ());
 			}
@@ -177,7 +177,7 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 			// Check for the first solid block.
 			for (int i = 1; i < 10; i++) {
 				BlockPos testTarget = fluidCable.getPos().relative(Direction.DOWN, i);
-				if (!fluidCable.getWorld().getBlockState(testTarget).isAir()) {
+				if (!fluidCable.getLevel().getBlockState(testTarget).isAir()) {
 					target = testTarget;
 					break;
 				}
@@ -189,14 +189,14 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 			}
 
 			// Check if we should add moisture to the block or the block below.
-			BlockState belowBlock = fluidCable.getWorld().getBlockState(target.relative(Direction.DOWN));
-			BlockState cropState = fluidCable.getWorld().getBlockState(target);
+			BlockState belowBlock = fluidCable.getLevel().getBlockState(target.relative(Direction.DOWN));
+			BlockState cropState = fluidCable.getLevel().getBlockState(target);
 
 			// Perform the moisturization.
 			if (belowBlock.hasProperty(FarmBlock.MOISTURE) && belowBlock.getValue(FarmBlock.MOISTURE) < 7) {
-				fluidCable.getWorld().setBlock(target.relative(Direction.DOWN), belowBlock.setValue(FarmBlock.MOISTURE, 7), 1 | 2);
+				fluidCable.getLevel().setBlock(target.relative(Direction.DOWN), belowBlock.setValue(FarmBlock.MOISTURE, 7), 1 | 2);
 			} else if (cropState.hasProperty(FarmBlock.MOISTURE) && cropState.getValue(FarmBlock.MOISTURE) < 7) {
-				fluidCable.getWorld().setBlock(target, cropState.setValue(FarmBlock.MOISTURE, 7), 1 | 2);
+				fluidCable.getLevel().setBlock(target, cropState.setValue(FarmBlock.MOISTURE, 7), 1 | 2);
 			}
 
 			// If it passes, determine the farm ground level.
@@ -207,10 +207,10 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 					BonemealableBlock tempCrop = (BonemealableBlock) cropState.getBlock();
 
 					// If we can grow this, grow it.
-					if (tempCrop.isValidBonemealTarget(fluidCable.getWorld(), target, cropState, false)) {
-						tempCrop.performBonemeal((ServerLevel) fluidCable.getWorld(), fluidCable.getWorld().random, target, cropState);
+					if (tempCrop.isValidBonemealTarget(fluidCable.getLevel(), target, cropState, false)) {
+						tempCrop.performBonemeal((ServerLevel) fluidCable.getLevel(), fluidCable.getLevel().random, target, cropState);
 						// Spawn some fertilziation particles.
-						((ServerLevel) fluidCable.getWorld()).sendParticles(ParticleTypes.HAPPY_VILLAGER, target.getX() + 0.5D, target.getY() + 1.0D, target.getZ() + 0.5D, 1, 0.0D, 0.0D,
+						((ServerLevel) fluidCable.getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, target.getX() + 0.5D, target.getY() + 1.0D, target.getZ() + 0.5D, 1, 0.0D, 0.0D,
 								0.0D, 0.0D);
 					}
 				}

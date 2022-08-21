@@ -33,7 +33,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 	@SuppressWarnings("resource")
 	@Override
 	public void preProcessUpdate() {
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			return;
 		}
 		if (energyStorage != null && getTileEntity() != null) {

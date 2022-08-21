@@ -32,7 +32,7 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 	@SuppressWarnings("deprecation")
 	public void preProcessUpdate() {
 		// Only operate on the server.
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			return;
 		}
 
@@ -45,10 +45,10 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 		// Get the redstone level but skip empty blocks.
 		int redstoneLevel = 0;
 		for (Direction dir : Direction.values()) {
-			if (getWorld().getBlockState(getPos().relative(dir)).isAir()) {
+			if (getLevel().getBlockState(getPos().relative(dir)).isAir()) {
 				continue;
 			}
-			int value = getWorld().getBestNeighborSignal(getPos().relative(dir));
+			int value = getLevel().getBestNeighborSignal(getPos().relative(dir));
 			if (value > redstoneLevel) {
 				redstoneLevel = value;
 			}
@@ -90,10 +90,10 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 		isTickingToEvent = true;
 		tickTimer = 0;
 		if (shouldControlBlockStateOnProperty) {
-			BlockState currentState = getWorld().getBlockState(getPos());
+			BlockState currentState = getLevel().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != true) {
-					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, true), 2);
+					getLevel().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, true), 2);
 				}
 			}
 		}
@@ -103,10 +103,10 @@ public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
 		isTickingToEvent = false;
 		tickTimer = 0;
 		if (shouldControlBlockStateOnProperty) {
-			BlockState currentState = getWorld().getBlockState(getPos());
+			BlockState currentState = getLevel().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != false) {
-					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, false), 2);
+					getLevel().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, false), 2);
 				}
 			}
 		}

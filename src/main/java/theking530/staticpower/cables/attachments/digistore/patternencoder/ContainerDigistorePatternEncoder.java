@@ -111,7 +111,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	@Override
 	public void consumeJEITransferRecipe(Player player, ItemStack[][] recipe) {
 		clearRecipe();
-		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
+		if (!getCableComponent().getLevel().isClientSide && getCableComponent().isManagerPresent()) {
 			for (int i = 0; i < recipe.length; i++) {
 				// Get the options.
 				ItemStack[] options = recipe[i];
@@ -143,7 +143,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 	 */
 	protected void updateOutputSlot() {
 		// This can only happen on the server.
-		if (getCableComponent().getWorld().isClientSide) {
+		if (getCableComponent().getLevel().isClientSide) {
 			return;
 		}
 
@@ -159,7 +159,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		}
 
 		// Check for a recipe.
-		Optional<CraftingRecipe> optional = getCableComponent().getWorld().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getCableComponent().getWorld());
+		Optional<CraftingRecipe> optional = getCableComponent().getLevel().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getCableComponent().getLevel());
 
 		// If the recipe exists, update the output slots.
 		if (optional.isPresent()) {
@@ -230,7 +230,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 
 	public void attemptEncode() {
 		// Do nothing on the client!
-		if (getCableComponent().getWorld().isClientSide) {
+		if (getCableComponent().getLevel().isClientSide) {
 			return;
 		}
 
@@ -262,7 +262,7 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 		ItemStack encodedRecipe = ItemStack.EMPTY;
 
 		// Get the pattern id.
-		long id = CableNetworkManager.get(getCableComponent().getWorld()).getCurrentPatternId();
+		long id = CableNetworkManager.get(getCableComponent().getLevel()).getCurrentPatternId();
 
 		// If we're in crafting mode, also cache the recipe Id. If not, just use the
 		// inputs and outputs.
@@ -274,14 +274,14 @@ public class ContainerDigistorePatternEncoder extends AbstractContainerDigistore
 			}
 
 			// Check for a recipe.
-			CraftingRecipe recipe = getCableComponent().getWorld().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getCableComponent().getWorld()).orElse(null);
+			CraftingRecipe recipe = getCableComponent().getLevel().getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getCableComponent().getLevel()).orElse(null);
 			if (recipe != null) {
 				encodedRecipe = ModItems.PatternCard.get().getPatternForRecipe(new EncodedDigistorePattern(id, inputs, recipe));
-				CableNetworkManager.get(getCableComponent().getWorld()).incrementCurrentPatternId();
+				CableNetworkManager.get(getCableComponent().getLevel()).incrementCurrentPatternId();
 			}
 		} else {
 			encodedRecipe = ModItems.PatternCard.get().getPatternForRecipe(new EncodedDigistorePattern(id, inputs, output, currentRecipeType));
-			CableNetworkManager.get(getCableComponent().getWorld()).incrementCurrentPatternId();
+			CableNetworkManager.get(getCableComponent().getLevel()).incrementCurrentPatternId();
 		}
 
 		// Check to make sure the output slot can stack with this encoded recipe (odd

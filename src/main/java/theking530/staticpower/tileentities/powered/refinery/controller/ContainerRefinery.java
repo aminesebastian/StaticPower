@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.refinery.refinerycontroller;
+package theking530.staticpower.tileentities.powered.refinery.controller;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
@@ -12,7 +12,7 @@ import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
 public class ContainerRefinery extends StaticPowerTileEntityContainer<TileEntityRefinery> {
 	@ContainerTypePopulator
-	public static final ContainerTypeAllocator<ContainerRefinery, GuiRefinery> TYPE = new ContainerTypeAllocator<>("machine_refinery", ContainerRefinery::new);
+	public static final ContainerTypeAllocator<ContainerRefinery, GuiRefinery> TYPE = new ContainerTypeAllocator<>("machine_refinery_controller", ContainerRefinery::new);
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
 			TYPE.setScreenFactory(GuiRefinery::new);

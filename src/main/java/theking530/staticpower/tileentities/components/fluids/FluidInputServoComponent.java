@@ -62,7 +62,7 @@ public class FluidInputServoComponent extends AbstractTileEntityComponent {
 
 	public void suckFluid(Direction side) {
 		// Check for the tile entity on the provided side. If null, return early.
-		BlockEntity te = getWorld().getBlockEntity(getPos().relative(side));
+		BlockEntity te = getLevel().getBlockEntity(getPos().relative(side));
 		if (te == null) {
 			return;
 		}

@@ -56,7 +56,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
 				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
 				shouldUpdate |= network.getHeatStorage().getMaximumHeat() != clientSideHeatCapacity;
@@ -70,7 +70,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	public void updateClientValues() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
 				clientSideHeat = network.getHeatStorage().getCurrentHeat();
 				clientSideHeatCapacity = network.getHeatStorage().getMaximumHeat();
@@ -78,7 +78,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
 				HeatCableUpdatePacket packet = new HeatCableUpdatePacket(getPos(), clientSideHeat, clientSideHeatCapacity);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 32, packet);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
 			});
 		}
 	}
@@ -89,7 +89,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	public void generateHeat(HeatNetworkModule networkModule) {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			if (energyStorageComponent != null && heatGeneration != 0.0f) {
 				double transferableHeat = networkModule.getHeatStorage().getMaximumHeat() - networkModule.getHeatStorage().getCurrentHeat();
 				transferableHeat = Math.min(transferableHeat, heatGeneration);
@@ -194,7 +194,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
@@ -213,7 +213,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isClientSide) {
+				if (getLevel().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					Optional<ServerCable> cable = getCable();

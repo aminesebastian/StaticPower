@@ -56,7 +56,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				boolean shouldUpdate = !network.getFluidStorage().getFluid().isFluidEqual(lastUpdateFluidStack);
 				shouldUpdate |= Math.abs(lastUpdateFilledPercentage - getFilledPercentage()) > UPDATE_THRESHOLD;
@@ -78,7 +78,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	public void updateClientRenderValues() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				lastUpdateFluidStack = network.getFluidStorage().getFluid();
 				lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
@@ -86,20 +86,20 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
 				FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, packet);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 64, packet);
 			});
 		}
 	}
 
 	public void recieveUpdateRenderValues(FluidStack stack, float fluidAmount) {
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			lastUpdateFluidStack = stack;
 			lastUpdateFilledPercentage = Math.min(1.0f, fluidAmount);
 		}
 	}
 
 	public float getFilledPercentage() {
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			return lastUpdateFilledPercentage;
 		} else {
 			AtomicReference<Float> output = new AtomicReference<Float>(0.0f);
@@ -199,7 +199,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isClientSide) {
+				if (getLevel().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
@@ -226,7 +226,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;

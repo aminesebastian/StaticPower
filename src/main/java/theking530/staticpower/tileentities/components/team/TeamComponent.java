@@ -31,7 +31,7 @@ public class TeamComponent extends AbstractTileEntityComponent {
 	}
 
 	public void setTeam(String teamId) {
-		if (getWorld().isClientSide()) {
+		if (getLevel().isClientSide()) {
 			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketSetTeamComponentTeam(getTileEntity(), teamId));
 		} else {
 			this.teamId = teamId;

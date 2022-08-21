@@ -2,22 +2,22 @@
 	"type": "staticpower:refinery_recipe",
 	"fluid_input_1": {
 		"fluid": "staticpower:oil_crude",
-		"volume": 10
+		"volume": 100
 	},
 	"fluid_input_2": {
 		"fluid": "minecraft:water",
-		"volume": 5
+		"volume": 50
 	},
 	"output_1": {
 		"fluid": "staticpower:oil_heavy",
-		"volume": 2
+		"volume": 20
 	},
 	"output_2": {
 		"fluid": "staticpower:oil_light",
-		"volume": 3
+		"volume": 30
 	},
 	"output_3": {
 		"fluid": "staticpower:fuel",
-		"volume": 5
+		"volume": 50
 	}
 }

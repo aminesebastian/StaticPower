@@ -90,7 +90,8 @@ import theking530.staticpower.tileentities.powered.powermonitor.BlockPowerMonito
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
 import theking530.staticpower.tileentities.powered.pump.PumpTube;
 import theking530.staticpower.tileentities.powered.pumpjack.BlockPumpJack;
-import theking530.staticpower.tileentities.powered.refinery.refinerycontroller.BlockRefinery;
+import theking530.staticpower.tileentities.powered.refinery.controller.BlockRefinery;
+import theking530.staticpower.tileentities.powered.refinery.powertap.BlockRefineryPowerTap;
 import theking530.staticpower.tileentities.powered.solarpanels.BlockSolarPanel;
 import theking530.staticpower.tileentities.powered.solidgenerator.BlockSolidGenerator;
 import theking530.staticpower.tileentities.powered.squeezer.BlockSqueezer;
@@ -295,6 +296,7 @@ public class ModBlocks {
 	public static final RegistryObject<BlockRandomItemGenerator> RandomItemGenerator = registerBlock("random_item_generator", () -> new BlockRandomItemGenerator());
 	public static final RegistryObject<BlockEnchanter> Enchanter = registerBlock("machine_enchanter", () -> new BlockEnchanter());
 	public static final RegistryObject<BlockRefinery> Refinery = registerBlock("machine_refinery", () -> new BlockRefinery());
+	public static final RegistryObject<BlockRefineryPowerTap> RefineryPowerTap = registerBlock("machine_refinery_power_tap", () -> new BlockRefineryPowerTap());
 	public static final RegistryObject<BlockLaboratory> Laboratory = registerBlock("laboratory", () -> new BlockLaboratory());
 	public static final RegistryObject<BlockResearchCheater> ResearchCheater = registerBlock("research_cheater", () -> new BlockResearchCheater());
 

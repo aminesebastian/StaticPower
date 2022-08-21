@@ -72,7 +72,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 			for (int i = 0; i < patternInv.getSlots(); i++) {
 				ItemStack upgrade = patternInv.getStackInSlot(i);
 				if (!upgrade.isEmpty()) {
-					WorldUtilities.dropItem(cable.getWorld(), cable.getPos(), upgrade);
+					WorldUtilities.dropItem(cable.getLevel(), cable.getPos(), upgrade);
 				}
 			}
 		}
@@ -95,12 +95,12 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 
 	@Override
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
-		if (cable.getWorld().isClientSide) {
+		if (cable.getLevel().isClientSide) {
 			return;
 		}
 
 		// Get the tile entity on the pulling side, return if it is null.
-		BlockEntity te = cable.getWorld().getBlockEntity(cable.getPos().relative(side));
+		BlockEntity te = cable.getLevel().getBlockEntity(cable.getPos().relative(side));
 		if (te == null || te.isRemoved()) {
 			return;
 		}

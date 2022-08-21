@@ -97,12 +97,12 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	@SuppressWarnings("resource")
 	public void preProcessUpdate() {
 		// Check for upgrades on the server.
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			checkUpgrades();
 		}
 
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isClientSide) {
+		if (serverOnly && getLevel().isClientSide) {
 			return;
 		}
 
@@ -229,7 +229,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	 */
 	public void startProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isClientSide) {
+		if (serverOnly && getLevel().isClientSide) {
 			return;
 		}
 
@@ -249,7 +249,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public void pauseProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isClientSide) {
+		if (serverOnly && getLevel().isClientSide) {
 			return;
 		}
 		setIsOnBlockState(false);
@@ -258,7 +258,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public void continueProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isClientSide) {
+		if (serverOnly && getLevel().isClientSide) {
 			return;
 		}
 		setIsOnBlockState(true);
@@ -267,7 +267,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public void cancelProcessing() {
 		// If we should only run on the server, do nothing.
-		if (serverOnly && getWorld().isClientSide) {
+		if (serverOnly && getLevel().isClientSide) {
 			return;
 		}
 		currentProcessingTime = 0;
@@ -556,11 +556,11 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	@SuppressWarnings("resource")
 	protected void setIsOnBlockState(boolean on) {
-		if (!getWorld().isClientSide && shouldControlOnBlockState) {
-			BlockState currentState = getWorld().getBlockState(getPos());
+		if (!getLevel().isClientSide && shouldControlOnBlockState) {
+			BlockState currentState = getLevel().getBlockState(getPos());
 			if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 				if (currentState.getValue(StaticPowerMachineBlock.IS_ON) != on) {
-					getWorld().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
+					getLevel().setBlock(getPos(), currentState.setValue(StaticPowerMachineBlock.IS_ON, on), 2);
 				}
 			}
 		}
@@ -570,7 +570,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		if (!shouldControlOnBlockState) {
 			return false;
 		}
-		BlockState currentState = getWorld().getBlockState(getPos());
+		BlockState currentState = getLevel().getBlockState(getPos());
 		if (currentState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
 			return currentState.getValue(StaticPowerMachineBlock.IS_ON);
 		}

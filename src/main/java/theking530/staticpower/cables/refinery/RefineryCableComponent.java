@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.scaffold;
+package theking530.staticpower.cables.refinery;
 
 import javax.annotation.Nullable;
 
@@ -11,9 +11,9 @@ import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
-public class ScaffoldCableComponent extends AbstractCableProviderComponent {
-	public ScaffoldCableComponent(String name) {
-		super(name, CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE);
+public class RefineryCableComponent extends AbstractCableProviderComponent {
+	public RefineryCableComponent(String name) {
+		super(name, CableNetworkModuleTypes.REFINERY_NETWORK_MODULE);
 	}
 
 	@Override

@@ -158,7 +158,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 
 	@Override
 	public ItemStack quickMoveStack(Player player, int slotIndex) {
-		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
+		if (!getCableComponent().getLevel().isClientSide && getCableComponent().isManagerPresent()) {
 			AtomicReference<ItemStack> output = new AtomicReference<ItemStack>(ItemStack.EMPTY);
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				// Get the targeted item.
@@ -303,7 +303,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		DigistoreTerminal.setSearchMode(getAttachment(), mode);
 
 		// If on the client, send an update to the server to update these values too.
-		if (getCableComponent().getWorld().isClientSide) {
+		if (getCableComponent().getLevel().isClientSide) {
 			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketDigistoreTerminalFilters(containerId, filter, mode, sortType, sortDescending));
 		}
 	}
@@ -377,12 +377,12 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 	 */
 	public Optional<DigistoreNetworkModule> getDigistoreNetwork() {
 		// Make sure we only call this on the server.
-		if (getCableComponent().getWorld().isClientSide) {
+		if (getCableComponent().getLevel().isClientSide) {
 			throw new RuntimeException("Attempted to get the Digistore Network from client code.");
 		}
 
 		// Get the server cable for this manager.
-		ServerCable cable = CableNetworkManager.get(getCableComponent().getWorld()).getCable(getCableComponent().getPos());
+		ServerCable cable = CableNetworkManager.get(getCableComponent().getLevel()).getCable(getCableComponent().getPos());
 
 		// If it or it's network are null, return null.
 		if (cable == null || cable.getNetwork() == null) {

@@ -2,25 +2,25 @@
 	"type": "staticpower:refinery_recipe",
 	"fluid_input_1": {
 		"fluid": "staticpower:oil_heavy",
-		"volume": 3
+		"volume": 30
 	},
 	"fluid_input_2": {
 		"fluid": "staticpower:steam",
-		"volume": 5
+		"volume": 50
 	},
 	"catalyst": {
 		"item": "minecraft:coal"
 	},
 	"output_1": {
 		"fluid": "staticpower:oil_heavy",
-		"volume": 9
+		"volume": 90
 	},
 	"output_2": {
 		"fluid": "staticpower:oil_light",
-		"volume": 2
+		"volume": 20
 	},
 	"output_3": {
 		"fluid": "staticpower:fuel",
-		"volume": 1
+		"volume": 10
 	}
 }

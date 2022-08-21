@@ -88,7 +88,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 		// item
 		if (slots.get(slotIndex).container == craftResult && !slots.get(slotIndex).getItem().isEmpty()) {
 			// Then, make sure we're on the server.
-			if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
+			if (!getCableComponent().getLevel().isClientSide && getCableComponent().isManagerPresent()) {
 				// Get the digistore module.
 				getDigistoreNetwork().ifPresent(digistoreModule -> {
 					// Get what the output item is
@@ -112,7 +112,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 							// Last resort, if we were unable to insert the rest into the digistore network,
 							// drop it in the world.
 							if (!remaining.isEmpty()) {
-								WorldUtilities.dropItem(getCableComponent().getWorld(), getCableComponent().getPos(),
+								WorldUtilities.dropItem(getCableComponent().getLevel(), getCableComponent().getPos(),
 										remaining);
 							}
 							// Stop crafting.
@@ -141,7 +141,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	@Override
 	public void consumeJEITransferRecipe(Player playerIn, ItemStack[][] recipe) {
 		clearCraftingSlots(playerIn);
-		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
+		if (!getCableComponent().getLevel().isClientSide && getCableComponent().isManagerPresent()) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				for (int i = 0; i < recipe.length; i++) {
 					ItemStack[] options = recipe[i];
@@ -180,7 +180,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	 */
 	@Override
 	public void slotsChanged(Container inventoryIn) {
-		if (!getCableComponent().getWorld().isClientSide && getCableComponent().isManagerPresent()) {
+		if (!getCableComponent().getLevel().isClientSide && getCableComponent().isManagerPresent()) {
 			// Update the output slot.
 			updateOutputSlot(getPlayerInventory().player.level, getPlayerInventory().player, this.craftMatrix,
 					this.craftResult);
@@ -191,7 +191,7 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 	public void clearCraftingSlots(@Nullable Player playerIn) {
 		// Clear the crafting slots back into the network. Do this part only on the
 		// server. The client should just visually clear the slots.
-		if (!getCableComponent().getWorld().isClientSide) {
+		if (!getCableComponent().getLevel().isClientSide) {
 			getDigistoreNetwork().ifPresent(digistoreModule -> {
 				for (int i = 0; i < craftMatrix.getContainerSize(); i++) {
 					// Skip empty slots.
@@ -229,11 +229,11 @@ public class ContainerDigistoreCraftingTerminal extends AbstractContainerDigisto
 							if (InventoryUtilities.canPartiallyInsertItemIntoPlayerInventory(leftover,
 									playerIn.getInventory())) {
 								if (!playerIn.addItem(leftover)) {
-									WorldUtilities.dropItem(getCableComponent().getWorld(), playerIn.blockPosition(),
+									WorldUtilities.dropItem(getCableComponent().getLevel(), playerIn.blockPosition(),
 											leftover);
 								}
 							} else {
-								WorldUtilities.dropItem(getCableComponent().getWorld(),
+								WorldUtilities.dropItem(getCableComponent().getLevel(),
 										playerIn != null ? playerIn.blockPosition() : getCableComponent().getPos(),
 										leftover);
 

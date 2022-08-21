@@ -13,6 +13,8 @@ public class CableNetworkModuleTypes {
 	public static final ResourceLocation HEAT_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_heat_network");
 	public static final ResourceLocation SCAFFOLD_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_scaffold_network");
 
+	public static final ResourceLocation REFINERY_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_refiney_network");
+	
 	public static final ResourceLocation BUNDLED_REDSTONE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_bundled_redstone_network");
 	public static final ResourceLocation REDSTONE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_redstone_network");
 

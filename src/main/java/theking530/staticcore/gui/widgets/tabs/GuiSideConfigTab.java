@@ -132,7 +132,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 					matrix.translate(0.5f, 0.5f, 0.5f);
 					matrix.mulPose(result.getDirection().getRotation());
 					matrix.translate(-0.5f, -0.5f, -0.5f);
-					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.25f, 1.025f, 0.25f), new Vector3f(0.5f, 0.2f, 0.5f), color, matrix);
+					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.3f, 1.01f, 0.3f), new Vector3f(0.4f, 0.025f, 0.4f), color, matrix);
 					matrix.popPose();
 				} else {
 					highlightedSide = null; // Clear out the highlighted side if its a disabled side.

@@ -135,12 +135,16 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 	 * 
 	 * @param energy
 	 */
-	public void addPowerIgnoreTransferRate(long energy) {
+	public long addPowerIgnoreTransferRate(long energy) {
 		try {
-			storedPower = SDMath.clamp(Math.addExact(storedPower, energy), 0, capacity);
+			long remiainigCapacity = capacity - storedPower;
+			long toAdd = Math.min(remiainigCapacity, Math.addExact(storedPower, energy));
+			storedPower = SDMath.clamp(toAdd, 0, capacity);
+			return toAdd;
 		} catch (Exception e) {
 			storedPower = Long.MAX_VALUE;
 		}
+		return 0;
 	}
 
 	public void usePowerIgnoreTransferRate(long energy) {

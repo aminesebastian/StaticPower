@@ -13,6 +13,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -195,7 +196,7 @@ public class TileEntityPump extends TileEntityMachine {
 					}
 
 					// Play the sound.
-					getLevel().playSound(null, getBlockPos(), fluidState.getType() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
+					getLevel().playSound(null, getBlockPos(), fluidState.getType() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.5f, 1.0f);
 
 					// Use the power.
 					energyStorage.useBulkPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
@@ -204,8 +205,8 @@ public class TileEntityPump extends TileEntityMachine {
 					FluidStack pumpedStack = new FluidStack(fluidState.getType(), FluidAttributes.BUCKET_VOLUME);
 					fluidTankComponent.fill(pumpedStack, FluidAction.EXECUTE);
 
-					// Do not suck away the source block if this is a creative pump.
-					if (getTier() != StaticPowerTiers.CREATIVE) {
+					// Do not suck away the source block if this is a creative pump or its sucking water.
+					if (getTier() != StaticPowerTiers.CREATIVE && !fluidState.is(FluidTags.WATER)) {
 						getLevel().setBlockAndUpdate(position, Blocks.AIR.defaultBlockState());
 						// If this position is under the pump, place a tube block there.
 						if (position.getX() == this.getBlockPos().getX() && position.getZ() == this.getBlockPos().getZ()) {

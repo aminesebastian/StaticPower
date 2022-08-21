@@ -50,9 +50,6 @@ public class StaticPowerIngredient {
 	}
 
 	public boolean test(ItemStack stackToTest, boolean verifyCounts) {
-		for (ItemStack stack : ingredient.getItems()) {
-			stack.setCount(count);
-		}
 		if (verifyCounts) {
 			return testWithCount(stackToTest);
 		} else {

@@ -49,6 +49,54 @@
 				"up": {"uv": [7, 0.75, 9, 4.75], "rotation": 180, "texture": "#cable_texture"},
 				"down": {"uv": [7, 11.25, 9, 15.25], "rotation": 180, "texture": "#cable_texture"}
 			}
+		},
+		{
+			"name": "FourthSection inverted",
+			"from": [9.5, 9.5, 16],
+			"to": [6.5, 6.5, 12],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
+			"faces": {
+				"east": {"uv": [11.25, 9, 15.25, 7], "texture": "#cable_texture"},
+				"west": {"uv": [0.75, 9, 4.75, 7], "texture": "#cable_texture"},
+				"up": {"uv": [9, 11.25, 7, 15.25], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [9, 0.75, 7, 4.75], "rotation": 180, "texture": "#cable_texture"}
+			}
+		},
+		{
+			"name": "FirstSection inverted",
+			"from": [9.5, 9.5, 4],
+			"to": [6.5, 6.5, 0],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
+			"faces": {
+				"east": {"uv": [11.25, 9, 15.25, 7], "texture": "#cable_texture"},
+				"west": {"uv": [0.75, 9, 4.75, 7], "texture": "#cable_texture"},
+				"up": {"uv": [9, 11.25, 7, 15.25], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [9, 0.75, 7, 4.75], "rotation": 180, "texture": "#cable_texture"}
+			}
+		},
+		{
+			"name": "SecondSection inverted",
+			"from": [9.5, 9.5, 8],
+			"to": [6.5, 6.5, 4],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
+			"faces": {
+				"east": {"uv": [11.25, 9, 15.25, 7], "texture": "#cable_texture"},
+				"west": {"uv": [0.75, 9, 4.75, 7], "texture": "#cable_texture"},
+				"up": {"uv": [9, 11.25, 7, 15.25], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [9, 0.75, 7, 4.75], "rotation": 180, "texture": "#cable_texture"}
+			}
+		},
+		{
+			"name": "ThirdSection inverted",
+			"from": [9.5, 9.5, 12],
+			"to": [6.5, 6.5, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 9, 8]},
+			"faces": {
+				"east": {"uv": [11.25, 9, 15.25, 7], "texture": "#cable_texture"},
+				"west": {"uv": [0.75, 9, 4.75, 7], "texture": "#cable_texture"},
+				"up": {"uv": [9, 11.25, 7, 15.25], "rotation": 180, "texture": "#cable_texture"},
+				"down": {"uv": [9, 0.75, 7, 4.75], "rotation": 180, "texture": "#cable_texture"}
+			}
 		}
 	]
 }

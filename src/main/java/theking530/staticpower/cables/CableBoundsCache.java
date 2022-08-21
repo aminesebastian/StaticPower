@@ -332,7 +332,7 @@ public class CableBoundsCache {
 					} else if (cable.hasAttachment(dir)) {
 						shape = Shapes.or(shape, getAttachmentShapeForSide(entity.getCommandSenderWorld(), pos, cable.getAttachment(dir), dir));
 					} else if (cable.getConnectionState(dir) == CableConnectionState.TILE_ENTITY && !cable.hasAttachment(dir)) {
-						shape = Shapes.or(shape, getAttachmentShapeForSide(cable.getWorld(), pos, null, dir));
+						shape = Shapes.or(shape, getAttachmentShapeForSide(cable.getLevel(), pos, null, dir));
 					}
 				}
 			}

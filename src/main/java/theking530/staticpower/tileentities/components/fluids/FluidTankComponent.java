@@ -80,7 +80,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void preProcessUpdate() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			// Check for upgrades.
 			checkUpgrades();
 		}
@@ -88,7 +88,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			// Handle sync.
 			if (issueSyncPackets) {
 				// Get the current delta between the amount of power we have and the power we
@@ -182,9 +182,9 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	 * clients within a 64 block radius.
 	 */
 	public void syncToClient() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			PacketFluidTankComponent syncPacket = new PacketFluidTankComponent(this, getPos(), this.getComponentName());
-			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), 64, syncPacket);
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 64, syncPacket);
 		} else {
 			throw new RuntimeException("This method should only be called on the server!");
 		}

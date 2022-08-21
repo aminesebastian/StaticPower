@@ -40,7 +40,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void postProcessUpdate() {
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			// Tick down the start cooldown so we don't spawn with start messages.
 			if (soundStartCooldown > 0) {
 				soundStartCooldown--;
@@ -51,7 +51,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 				soundStopCooldown--;
 				if (soundStopCooldown <= 0) {
 					LoopingSoundPacketStop syncPacket = new LoopingSoundPacketStop(this);
-					StaticPowerMessageHandler.sendToAllPlayersInDimension(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), syncPacket);
+					StaticPowerMessageHandler.sendToAllPlayersInDimension(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), syncPacket);
 					shouldBeStopping = false;
 					soundStopCooldown = 0;
 				}
@@ -60,12 +60,12 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 	}
 
 	public void startPlayingSound(ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
-		if (getWorld().isClientSide) {
-			proxy.startPlayingSound(getWorld(), soundIdIn, categoryIn, volumeIn, pitchIn, pos, blockRadius);
+		if (getLevel().isClientSide) {
+			proxy.startPlayingSound(getLevel(), soundIdIn, categoryIn, volumeIn, pitchIn, pos, blockRadius);
 		} else {
 			if (soundStartCooldown == 0) {
 				LoopingSoundPacketStart syncPacket = new LoopingSoundPacketStart(this, soundIdIn, categoryIn, volumeIn, pitchIn, pos);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getWorld(), getPos(), blockRadius, syncPacket);
+				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), blockRadius, syncPacket);
 				shouldBeStopping = false;
 				soundStartCooldown = soundReactionTime;
 			}
@@ -73,8 +73,8 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 	}
 
 	public void stopPlayingSound() {
-		if (getWorld().isClientSide) {
-			proxy.stopPlayingSound(getWorld());
+		if (getLevel().isClientSide) {
+			proxy.stopPlayingSound(getLevel());
 		} else {
 			if (!shouldBeStopping) {
 				shouldBeStopping = true;

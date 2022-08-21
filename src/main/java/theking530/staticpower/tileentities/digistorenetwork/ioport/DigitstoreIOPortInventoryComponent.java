@@ -35,7 +35,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityCompon
 	@Override
 	public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
 		// Do nothing on the client.
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			return stack;
 		}
 
@@ -68,12 +68,12 @@ public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityCompon
 
 	public Optional<DigistoreNetworkModule> getDigistoreNetworkModule() {
 		// If on the client, always return empty.
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			return Optional.empty();
 		}
 
 		// Get the module if it exists.
-		ServerCable cable = CableNetworkManager.get(getWorld()).getCable(getPos());
+		ServerCable cable = CableNetworkManager.get(getLevel()).getCable(getPos());
 		if (cable.getNetwork() != null && cable.getNetwork().hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
 			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
 		}

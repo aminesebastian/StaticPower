@@ -107,12 +107,16 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 				});
 
 				// If this is also a manager, set the manager present to true.
+				// If we already had a manager set, ignore this.
+				// TODO: Error message to show that there are multiple managers attached.
 				if (te instanceof TileEntityDigistoreManager) {
-					manager = (TileEntityDigistoreManager) te;
+					if(manager == null) {
+						manager = (TileEntityDigistoreManager) te;
+					}
 				}
 			}
 		}
-
+		
 		// Update the transaction manager.
 		transactionManager.updateDigistoreList(digistores);
 	}

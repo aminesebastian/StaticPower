@@ -98,7 +98,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	@Override
 	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
 		if (firstTimePlaced) {
-			setToDefault(true);
+			setToDefault(false);
 		}
 	}
 

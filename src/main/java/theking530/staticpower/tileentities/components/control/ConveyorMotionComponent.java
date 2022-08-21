@@ -54,7 +54,7 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 		Direction facing = getTileEntity().getFacingDirection();
 
 		// Get all entities in the block space above this block.
-		List<Entity> entities = getWorld().getEntitiesOfClass(Entity.class, entitySearchBounds);
+		List<Entity> entities = getLevel().getEntitiesOfClass(Entity.class, entitySearchBounds);
 		for (Entity entity : entities) {
 			// Skip any entities are not considered to be ON this block (prevents two
 			// conveyors from fighting for an entity).
@@ -94,10 +94,10 @@ public class ConveyorMotionComponent extends AbstractTileEntityComponent {
 			// ConveyorBeltItem.
 			if (entity instanceof ItemEntity && !(entity instanceof ConveyorBeltEntity)) {
 				ItemEntity item = (ItemEntity) entity;
-				ConveyorBeltEntity conveyorEntity = new ConveyorBeltEntity(this.getWorld(), entity.getX(), entity.getY(), entity.getZ(), item.getItem().copy());
+				ConveyorBeltEntity conveyorEntity = new ConveyorBeltEntity(this.getLevel(), entity.getX(), entity.getY(), entity.getZ(), item.getItem().copy());
 				conveyorEntity.setPickUpDelay(30); // Set this value initially a little high!
 				conveyorEntity.setDeltaMovement(0, 0, 0);
-				getWorld().addFreshEntity(conveyorEntity);
+				getLevel().addFreshEntity(conveyorEntity);
 
 				// Clear the old item.
 				item.setItem(ItemStack.EMPTY);

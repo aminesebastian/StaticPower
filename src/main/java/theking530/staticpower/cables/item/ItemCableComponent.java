@@ -73,7 +73,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		// Only do this on the client.
-		if (getWorld().isClientSide) {
+		if (getLevel().isClientSide) {
 			for (ItemRoutingParcelClient packet : containedPackets.values()) {
 				packet.incrementMoveTimer();
 			}
@@ -83,11 +83,11 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	@Override
 	public void onOwningTileEntityRemoved() {
 		// Only perform the following on the server.
-		if (!getWorld().isClientSide) {
+		if (!getLevel().isClientSide) {
 			// Get the network.
-			CableNetwork network = CableNetworkManager.get(getWorld()).getCable(getPos()).getNetwork();
+			CableNetwork network = CableNetworkManager.get(getLevel()).getCable(getPos()).getNetwork();
 			if (network == null) {
-				CableNetworkManager.get(getWorld()).removeCable(getPos());
+				CableNetworkManager.get(getLevel()).removeCable(getPos());
 				throw new RuntimeException(String.format("Encountered a null network for an ItemCableComponent at position: %1$s.", getPos()));
 			}
 
@@ -107,16 +107,16 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 	public void addTransferingItem(ItemRoutingParcelClient routingPacket) {
 		containedPackets.put(routingPacket.getId(), routingPacket);
-		if (!getWorld().isClientSide) {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableAddedPacket(this, routingPacket));
+		if (!getLevel().isClientSide) {
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())), new ItemCableAddedPacket(this, routingPacket));
 		}
 		getTileEntity().setChanged();
 	}
 
 	public void removeTransferingItem(long parcelId) {
 		containedPackets.remove(parcelId);
-		if (!getWorld().isClientSide) {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getWorld().getChunkAt(getPos())), new ItemCableRemovedPacket(this, parcelId));
+		if (!getLevel().isClientSide) {
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())), new ItemCableRemovedPacket(this, parcelId));
 		}
 		getTileEntity().setChanged();
 	}
@@ -156,7 +156,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		// Check to see if there is a cable on this side that can connect to this one.
 		// If true, connect. If not, check if there is a TE that we can connect to. If
 		// not, return non.
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
@@ -175,7 +175,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != null) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isClientSide) {
+				if (getLevel().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is

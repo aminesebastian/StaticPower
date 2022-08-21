@@ -104,11 +104,11 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 				}
 			}
 		}
-
+		
 		// Check items.
 		if (matchParams.shouldVerifyItems() && !catalyst.isEmpty()) {
 			// Check items either way.
-			if (!matchParams.hasItems() && catalyst.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
+			if (!matchParams.hasItems() || !catalyst.test(matchParams.getItems()[0], matchParams.shouldVerifyItemCounts())) {
 				return false;
 			}
 		}

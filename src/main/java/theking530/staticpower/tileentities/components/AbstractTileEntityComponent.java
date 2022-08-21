@@ -198,7 +198,7 @@ public abstract class AbstractTileEntityComponent {
 		return getTileEntity().getBlockPos();
 	}
 
-	public Level getWorld() {
+	public Level getLevel() {
 		return getTileEntity().getLevel();
 	}
 }

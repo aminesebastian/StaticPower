@@ -197,7 +197,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (cap == CapabilityEnergy.ENERGY || cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getWorld().isClientSide) {
+				if (getLevel().isClientSide) {
 					disabled = isSideDisabled(side);
 				} else {
 					Optional<ServerCable> cable = getCable();
@@ -222,7 +222,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
-		if (!this.getWorld().isClientSide) {
+		if (!this.getLevel().isClientSide) {
 			getPowerNetworkModule().ifPresent(module -> {
 				CompoundTag powerCableNBT = new CompoundTag();
 				powerCableNBT.putLong("power", module.getEnergyStorage().getStoredPower());
@@ -253,7 +253,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getWorld(), blockPosition);
+		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;

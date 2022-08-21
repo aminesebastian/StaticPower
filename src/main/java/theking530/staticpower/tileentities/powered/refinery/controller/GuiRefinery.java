@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.powered.refinery.refinerycontroller;
+package theking530.staticpower.tileentities.powered.refinery.controller;
 
 import java.util.Optional;
 
