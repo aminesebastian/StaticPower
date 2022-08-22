@@ -1,0 +1,6 @@
+{
+    "parent": "staticpower:block/machines/machine_refinery_controller",
+    "textures": {
+		"front_overlay": "staticpower:blocks/machines/refinery_controller_face_on"
+    }
+}

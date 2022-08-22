@@ -5,7 +5,9 @@ import java.util.Map;
 
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.utilities.Color;
@@ -17,7 +19,8 @@ import theking530.staticpower.fluid.StaticPowerFluidBundle.StaticPowerFluidBuild
 
 public class ModFluids {
 	public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, StaticPower.MOD_ID);
-
+	public static final FluidStack WILDCARD = new FluidStack(Fluids.EMPTY, 1);
+	
 	public static final StaticPowerFluidBundle StaticFluid = new StaticPowerFluidBuilder("fluid_static", new Color(0.2f, 0.9f, 0.2f)).addAutoBucket().addAttributes(builder -> {
 		builder.luminosity(15);
 	}).build();

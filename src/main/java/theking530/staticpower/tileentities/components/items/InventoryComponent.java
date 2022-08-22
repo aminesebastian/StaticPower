@@ -263,7 +263,7 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 				// Otherwise, check to make sure this inventory's mode is equal to the
 				// configured side's mode.
 				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
-				if (!sideConfig.isPresent() || sideConfig.get().getWorldSpaceDirectionConfiguration(side) == inventoryMode) {
+				if (!sideConfig.isPresent() || (side != null && sideConfig.get().getWorldSpaceDirectionConfiguration(side) == inventoryMode)) {
 					return LazyOptional.of(() -> capabilityInterface).cast();
 				}
 			}

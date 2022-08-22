@@ -157,7 +157,6 @@ public class PluginJEI implements IModPlugin {
 	@Nullable
 	private RefineryRecipeCategory refineryRecipeCategory;
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEIContainerHandler());
@@ -426,7 +425,7 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer.get()), FertilizerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment.get()), FertilizerRecipeCategory.UID);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Refinery.get()), RefineryRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RefineryController.get()), RefineryRecipeCategory.UID);
 	}
 
 	@Override

@@ -231,7 +231,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
 			}
-		} else if (te != null && otherProvider == null) {
+		} else if (te != null) { // This used to have a otherProvider == null check as well, but removed it for
+									// the refinery.
 			if (te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
 			}

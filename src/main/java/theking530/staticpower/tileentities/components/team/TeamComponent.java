@@ -18,6 +18,7 @@ public class TeamComponent extends AbstractTileEntityComponent {
 
 	public TeamComponent(String name) {
 		super(name);
+		teamId = "missing";
 	}
 
 	@Override
@@ -39,7 +40,7 @@ public class TeamComponent extends AbstractTileEntityComponent {
 	}
 
 	public Team getOwningTeam() {
-		if (teamId == null) {
+		if (teamId == "missing") {
 			return null;
 		}
 		return TeamManager.get().getTeamById(teamId);

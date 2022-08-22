@@ -9,6 +9,7 @@ import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.init.ModFluids;
 
 public class RefineryRecipe extends AbstractMachineRecipe {
 	public static final String ID = "refinery";
@@ -86,15 +87,14 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 
 			// Check fluids either way.
 			boolean straightMatch = true;
-			straightMatch &= matchParams.getFluids()[0].equals(inputFluid1);
-			straightMatch &= matchParams.getFluids()[1].equals(inputFluid2);
-			if (!straightMatch) {
-				matched &= matchParams.getFluids()[1].equals(inputFluid1);
-				matched &= matchParams.getFluids()[0].equals(inputFluid2);
+			straightMatch &= matchParams.getFluids()[0].equals(inputFluid1) || matchParams.getFluids()[0] == ModFluids.WILDCARD;
+			straightMatch &= matchParams.getFluids()[1].equals(inputFluid2) || matchParams.getFluids()[1] == ModFluids.WILDCARD;
+			if(!straightMatch) {
+				return false;
 			}
-
+			
 			// Verify the amounts.
-			if (matched && matchParams.shouldVerifyFluidAmounts()) {
+			if (straightMatch && matchParams.shouldVerifyFluidAmounts()) {
 				if (straightMatch) {
 					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount();
 					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount();

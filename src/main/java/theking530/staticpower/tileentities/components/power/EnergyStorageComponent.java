@@ -309,6 +309,33 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		return LazyOptional.empty();
 	}
 
+	/**
+	 * Ignores any checks that would hide the capability (like if the component is
+	 * enabled, or if capabilities are disabled).
+	 * 
+	 * @param <T>
+	 * @param cap
+	 * @param side
+	 * @return
+	 */
+	public <T> LazyOptional<T> manuallyGetCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
+			if (side != null) {
+				return LazyOptional.of(() -> staticVoltAccessors.get(side)).cast();
+			} else {
+				return LazyOptional.of(() -> energyInterface).cast();
+			}
+		} else if (cap == CapabilityEnergy.ENERGY) {
+			if (side != null) {
+				return LazyOptional.of(() -> feAccessors.get(side)).cast();
+			} else {
+				return LazyOptional.of(() -> energyInterface).cast();
+			}
+		}
+
+		return LazyOptional.empty();
+	}
+
 	public class FECapabilityAccess implements IEnergyStorage {
 		private final Direction side;
 

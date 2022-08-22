@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "staticpower:machine_refinery"
+          "name": "staticpower:machine_refinery_controller"
         }
       ],
       "conditions": [

@@ -1,5 +1,5 @@
 {
-    "parent": "staticpower:block/machines/machine_refinery",
+    "parent": "staticpower:block/machines/machine_refinery_power_tap",
 	"textures": {
 		"io_frame": "staticpower:blocks/empty_texture"
 	}
