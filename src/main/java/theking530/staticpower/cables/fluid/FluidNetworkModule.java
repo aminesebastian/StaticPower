@@ -17,6 +17,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
@@ -42,13 +43,22 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		if (networkTank.getFluid().isEmpty()) {
 			return;
 		}
+		
+		// Correct the fluid amount if we somehow ended up going over.
+		if(networkTank.getFluidAmount() > networkTank.getCapacity()) {
+			FluidStack existing = networkTank.getFluid();
+			existing.setAmount(networkTank.getCapacity());
+			networkTank.setFluid(existing);
+			StaticPower.LOGGER.warn("Encountered an over-filled fluid network!");
+		}
 
 		// Get a map of all the applicable destination that support the fluid we have in
 		// our tank and are not full.
 		HashMap<BlockPos, DestinationWrapper> destinations = new HashMap<BlockPos, DestinationWrapper>();
 		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
 			if (wrapper.supportsType(DestinationType.FLUID)) {
-				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, wrapper.getFirstConnectedDestinationSide()).orElse(null);
+				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, wrapper.getFirstConnectedDestinationSide())
+						.orElse(null);
 				if (handler != null && handler.fill(networkTank.getFluid(), FluidAction.SIMULATE) > 0) {
 					destinations.put(pos, wrapper);
 				}

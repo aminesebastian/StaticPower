@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.RegistryManager;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
@@ -36,46 +37,56 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 
 		// Iterate through all the recipes.
 		for (ThermalConductivityRecipe recipe : originalRecipes) {
-			// Skip air recipe.
-			if (recipe.isAirRecipe()) {
-				continue;
-			}
-
-			// Create the recipe (may be dropped).
-			ThermalConductivityJEIRecipeWrapper jeiRecipe;
-
-			// If this is a fire input recipe, mark it.
-			if (recipe.getBlockTags().length > 0 && recipe.getBlockTags()[0].toString().equals("minecraft:fire")) {
-				jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe, true);
-			} else {
-				jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe);
-			}
-
-			// Add blocks.
-			if (recipe.getBlockTags().length > 0) {
-				RECIPES.add(jeiRecipe);
-
-				// Add all the potential inputs.
-				for (Entry<ResourceKey<Block>, Block> block : RegistryManager.ACTIVE.getRegistry(Block.class).getEntries()) {
-					RecipeMatchParameters matchParams = new RecipeMatchParameters(block.getValue().defaultBlockState());
-					if (recipe.isValid(matchParams)) {
-						jeiRecipe.addInput(new ItemStack(block.getValue()));
-					}
-				}
-				// Finalize the recipe.
-				jeiRecipe.finalize();
-			} else if (recipe.getFluidTags().length > 0) {
-				RECIPES.add(jeiRecipe);
-				// Add all the potential inputs.
-				for (Entry<ResourceKey<Fluid>, Fluid> fluid : RegistryManager.ACTIVE.getRegistry(Fluid.class).getEntries()) {
-					RecipeMatchParameters matchParams = new RecipeMatchParameters(new FluidStack(fluid.getValue(), 1));
-					if (recipe.isValid(matchParams)) {
-						jeiRecipe.setFluidStack(new FluidStack(fluid.getValue(), 1000));
-					}
+			try {
+				// Skip air recipe.
+				if (recipe.isAirRecipe()) {
+					continue;
 				}
 
-				// Finalize the recipe.
-				jeiRecipe.finalize();
+				// Create the recipe (may be dropped).
+				ThermalConductivityJEIRecipeWrapper jeiRecipe;
+
+				// If this is a fire input recipe, mark it.
+				if (recipe.getBlockTags().length > 0 && recipe.getBlockTags()[0].toString().equals("minecraft:fire")) {
+					jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe, true);
+				} else {
+					try {
+						jeiRecipe = new ThermalConductivityJEIRecipeWrapper(recipe);
+					} catch (Throwable e) {
+						StaticPower.LOGGER.warn(e);
+						continue;
+					}
+
+				}
+
+				// Add blocks.
+				if (recipe.getBlockTags().length > 0) {
+					RECIPES.add(jeiRecipe);
+
+					// Add all the potential inputs.
+					for (Entry<ResourceKey<Block>, Block> block : RegistryManager.ACTIVE.getRegistry(Block.class).getEntries()) {
+						RecipeMatchParameters matchParams = new RecipeMatchParameters(block.getValue().defaultBlockState());
+						if (recipe.isValid(matchParams)) {
+							jeiRecipe.addInput(new ItemStack(block.getValue()));
+						}
+					}
+					// Finalize the recipe.
+					jeiRecipe.finalize();
+				} else if (recipe.getFluidTags().length > 0) {
+					RECIPES.add(jeiRecipe);
+					// Add all the potential inputs.
+					for (Entry<ResourceKey<Fluid>, Fluid> fluid : RegistryManager.ACTIVE.getRegistry(Fluid.class).getEntries()) {
+						RecipeMatchParameters matchParams = new RecipeMatchParameters(new FluidStack(fluid.getValue(), 1));
+						if (recipe.isValid(matchParams)) {
+							jeiRecipe.setFluidStack(new FluidStack(fluid.getValue(), 1000));
+						}
+					}
+
+					// Finalize the recipe.
+					jeiRecipe.finalize();
+				}
+			} catch (Exception e) {
+				StaticPower.LOGGER.warn(e);
 			}
 		}
 		return RECIPES;

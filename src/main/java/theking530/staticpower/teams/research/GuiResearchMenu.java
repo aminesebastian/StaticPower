@@ -68,14 +68,26 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 
 		// Initialize the selected research widget.
 		registerWidget(selectedResearchWidget = new SelectedResearchWidget(0, 0, 109, 0).setZLevel(500));
+		Research research = getResearchManager().getLastCompletedResearch();
+		ResearchInstance researchInstance = null;
+
 		if (getResearchManager().hasSelectedResearch()) {
-			selectedResearchWidget.setResearch(getResearchManager().getSelectedResearch().getTrackedResearch(), getResearchManager().getSelectedResearch());
-			currentResearch = getResearchManager().getSelectedResearch().getId();
+			researchInstance = getResearchManager().getSelectedResearch();
+			research = researchInstance.getTrackedResearch();
 		} else {
 			Collection<ResearchInstance> activeResearch = getResearchManager().getAllActiveResearch().values();
-			selectedResearchWidget.setResearch(getResearchManager().getLastCompletedResearch(), activeResearch.size() > 0 ? Iterables.getLast(activeResearch) : null);
-			currentResearch = getResearchManager().getLastCompletedResearch().getId();
+			ResearchInstance lastInstance = activeResearch.size() > 0 ? Iterables.getLast(activeResearch) : null;
+			if (lastInstance != null) {
+				researchInstance = lastInstance;
+				research = researchInstance.getTrackedResearch();
+			} else {
+				researchInstance = null;
+				research = getResearchManager().getLastCompletedResearch();
+			}
 		}
+		
+		selectedResearchWidget.setResearch(research, researchInstance);
+		currentResearch = research.getId();
 
 		registerWidget(new TimeOfDayDrawable(56, 1f, 20, Minecraft.getInstance().player.level, Minecraft.getInstance().player.getOnPos()).setZLevel(200));
 
@@ -242,7 +254,8 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 				Research research = StaticPowerRecipeRegistry.getRecipe(Research.RECIPE_TYPE, completed.get(i)).orElse(null);
 				if (research != null) {
 					float tint = index % 2 == 0 ? 0.5f : 0.0f;
-					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f)).setDrawBackground(true);
+					ResearchHistoryWidget historyWidget = new ResearchHistoryWidget(research, 0, 0, 105, HISTORY_HEIGHT).setBackgroundColor(new Color(tint, tint, tint, 0.35f))
+							.setDrawBackground(true);
 					historyWidgets.add(historyWidget);
 					sideBarScrollBox.registerWidget(historyWidget);
 					index++;

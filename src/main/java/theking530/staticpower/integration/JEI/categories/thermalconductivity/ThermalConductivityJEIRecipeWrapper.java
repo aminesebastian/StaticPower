@@ -14,10 +14,11 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 
 public class ThermalConductivityJEIRecipeWrapper implements Recipe<Container> {
-	public static final RecipeType<ThermalConductivityJEIRecipeWrapper> RECIPE_TYPE = RecipeType.register("thermal_conductivity_jei");
+	public static final RecipeType<ThermalConductivityJEIRecipeWrapper> RECIPE_TYPE = new StaticPowerRecipeType<ThermalConductivityJEIRecipeWrapper>();
 	private final boolean isFireInput;
 	private final boolean hasFireOutput;
 	private final ResourceLocation id;

@@ -52,6 +52,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	protected final ItemStack[] covers;
 	/** List of valid attachment classes. */
 	private final HashSet<Class<? extends AbstractCableAttachment>> validAttachments;
+	private boolean isInitializeWithCableManager;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
@@ -68,6 +69,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		disabledSides = new boolean[] { false, false, false, false, false, false };
 		attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
+		isInitializeWithCableManager = false;
 	}
 
 	@Override
@@ -155,6 +157,23 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	/**
+	 * This is a hacky way for us to be able to set the initial disabled state. If
+	 * calling this, it's likely you'll have to also call
+	 * {@link #ServerCable.setDisabledStateOnSide(Direction, boolean)} on the
+	 * {@link ServerCable} as well.
+	 * 
+	 * @param side
+	 * @param disabledState
+	 */
+	protected void silentlySetSideDisabledState(Direction side, boolean disabledState) {
+		if (isInitializeWithCableManager) {
+			throw new RuntimeException(
+					"Setting the disabled state with fromInitialization set to true should only be done before the cable is initialized with the cable manager.");
+		}
+		disabledSides[side.ordinal()] = disabledState;
+	}
+
+	/**
 	 * Gets the connection state on the provided side.
 	 * 
 	 * @param side
@@ -225,7 +244,19 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				// this is just a failsafe.
 				initializeCableProperties(manager.getCable(getPos()));
 			}
+			synchronizeServerToClient();
 		}
+
+		isInitializeWithCableManager = true;
+	}
+
+	/**
+	 * This method is called when we want to synchronize variables over from the
+	 * server to the client. The implementation of how this is handled is left to
+	 * the implementer.
+	 */
+	protected void synchronizeServerToClient() {
+
 	}
 
 	/**

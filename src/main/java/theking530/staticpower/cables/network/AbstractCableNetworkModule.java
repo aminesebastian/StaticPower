@@ -49,6 +49,10 @@ public abstract class AbstractCableNetworkModule {
 
 	}
 
+	public boolean canAcceptCable(ServerCable currentNetworkCable, ServerCable newCable) {
+		return true;
+	}
+
 	public abstract void getReaderOutput(List<Component> components);
 
 	public abstract void tick(Level world);

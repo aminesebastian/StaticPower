@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -84,12 +85,12 @@ public abstract class AbstractTileEntityComponent {
 	/**
 	 * This method is called when the owning tile entity is first placed in the
 	 * world.
-	 * 
+	 * @param context TODO
 	 * @param state
 	 * @param placer
 	 * @param stack
 	 */
-	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	public void onPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 
 	}
 

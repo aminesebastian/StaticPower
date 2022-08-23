@@ -74,7 +74,7 @@ public class TileEntityRefineryController extends BaseRefineryTileEntity {
 		StaticPowerTier tier = StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED);
 
 		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage", tier.defaultMachinePowerCapacity.get(), tier.defaultMachinePowerInput.get(),
-				tier.defaultMachinePowerOutput.get()));
+				tier.defaultMachinePowerOutput.get()).setExposedAsCapability(false));
 
 		// Setup the inventories.
 		registerComponent(catalystInventory = new InventoryComponent("CatalystInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));

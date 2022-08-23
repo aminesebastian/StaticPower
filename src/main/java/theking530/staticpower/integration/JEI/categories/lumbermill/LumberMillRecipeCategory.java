@@ -1,5 +1,8 @@
 package theking530.staticpower.integration.JEI.categories.lumbermill;
 
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,20 +11,18 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -30,7 +31,6 @@ import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -39,6 +39,8 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 
 public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill");
+	public static final RecipeType<LumberMillRecipe> TYPE = new RecipeType<>(UID, LumberMillRecipe.class);
+
 	private static final int INTPUT_SLOT = 0;
 	private static final int PRIMARY_OUTPUT_SLOT = 1;
 	private static final int SECONDARY_OUTPUT_SLOT = 2;
@@ -75,6 +77,11 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	@Nonnull
 	public IDrawable getBackground() {
 		return background;
+	}
+
+	@Override
+	public RecipeType<LumberMillRecipe> getRecipeType() {
+		return TYPE;
 	}
 
 	@Override
@@ -123,45 +130,18 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 	}
 
 	@Override
-	public void setIngredients(LumberMillRecipe recipe, IIngredients ingredients) {
-		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInput().getIngredient());
-		ingredients.setInputIngredients(input);
+	public void setRecipe(IRecipeLayoutBuilder builder, LumberMillRecipe recipe, IFocusGroup ingredients) {
+		builder.addSlot(INPUT, 41, 19).addIngredients(recipe.getInput().getIngredient());
+		builder.addSlot(OUTPUT, 91, 19).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getPrimaryOutput());
 
-		// Set the output items.
-		List<ProbabilityItemStackOutput> outputs = new ArrayList<ProbabilityItemStackOutput>();
-		outputs.add(recipe.getPrimaryOutput());
 		if (!recipe.getSecondaryOutput().isEmpty()) {
-			outputs.add(recipe.getSecondaryOutput());
+			builder.addSlot(OUTPUT, 121, 19).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getSecondaryOutput());
 		}
-
-		ingredients.setOutputs(PluginJEI.PROBABILITY_ITEM_STACK, outputs);
-
-		// Set the output fluids.
-		if (recipe.hasOutputFluid()) {
-			ingredients.setOutput(VanillaTypes.FLUID, recipe.getOutputFluid());
-		}
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, LumberMillRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(INTPUT_SLOT, true, 40, 18);
-		guiItemStacks.set(ingredients);
-
-		// Set the outputs.
-		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-		probabilityStacks.init(PRIMARY_OUTPUT_SLOT, false, 91, 19);
-		if (!recipe.getSecondaryOutput().isEmpty()) {
-			probabilityStacks.init(SECONDARY_OUTPUT_SLOT, false, 121, 19);
-		}
-		probabilityStacks.set(ingredients);
 
 		// Add the fluid.
 		if (recipe.hasOutputFluid()) {
-			IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-			fluids.init(3, false, 153, 6, 16, 48, getFluidTankDisplaySize(recipe.getOutputFluid()), false, null);
-			fluids.set(ingredients);
+			builder.addSlot(OUTPUT, 153, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid()).setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false,
+					16, 48);
 		}
 
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);

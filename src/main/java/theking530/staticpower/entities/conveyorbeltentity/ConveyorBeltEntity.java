@@ -8,6 +8,7 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -94,6 +95,11 @@ public class ConveyorBeltEntity extends ItemEntity {
 				remove(RemovalReason.DISCARDED);
 			}
 		}
+	}
+
+	@Override
+	public boolean hurt(DamageSource p_32013_, float p_32014_) {
+		return false;
 	}
 
 	@Override

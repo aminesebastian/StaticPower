@@ -34,6 +34,7 @@ import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistorePatternCard;
 import theking530.staticpower.items.DigistoreStackedCard;
+import theking530.staticpower.items.GearBox;
 import theking530.staticpower.items.HeatedIngot;
 import theking530.staticpower.items.JuiceBottleItem;
 import theking530.staticpower.items.MilkBottleItem;
@@ -214,24 +215,24 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> GearTungsten = ITEMS.register("gear_tungsten", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> GearZinc = ITEMS.register("gear_zinc", () -> new StaticPowerItem());
 
-	public static final RegistryObject<StaticPowerItem> GearBoxAluminum = ITEMS.register("gear_box_aluminum", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxBrass = ITEMS.register("gear_box_brass", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxBronze = ITEMS.register("gear_box_bronze", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxCopper = ITEMS.register("gear_box_copper", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxEnergized = ITEMS.register("gear_box_energized", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxGold = ITEMS.register("gear_box_gold", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxInertInfusion = ITEMS.register("gear_box_inert_infusion", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxIron = ITEMS.register("gear_box_iron", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxLead = ITEMS.register("gear_box_lead", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxLumum = ITEMS.register("gear_box_lumum", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxMagnesium = ITEMS.register("gear_box_magnesium", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxPlatinum = ITEMS.register("gear_box_platinum", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxRedstoneAlloy = ITEMS.register("gear_box_redstone_alloy", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxSilver = ITEMS.register("gear_box_silver", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxStatic = ITEMS.register("gear_box_static", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxTin = ITEMS.register("gear_box_tin", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxTungsten = ITEMS.register("gear_box_tungsten", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GearBoxZinc = ITEMS.register("gear_box_zinc", () -> new StaticPowerItem());
+	public static final RegistryObject<GearBox> GearBoxAluminum = ITEMS.register("gear_box_aluminum", () -> new GearBox(GearAluminum));
+	public static final RegistryObject<GearBox> GearBoxBrass = ITEMS.register("gear_box_brass", () -> new GearBox(GearBrass));
+	public static final RegistryObject<GearBox> GearBoxBronze = ITEMS.register("gear_box_bronze", () -> new GearBox(GearBronze));
+	public static final RegistryObject<GearBox> GearBoxCopper = ITEMS.register("gear_box_copper", () -> new GearBox(GearCopper));
+	public static final RegistryObject<GearBox> GearBoxEnergized = ITEMS.register("gear_box_energized", () -> new GearBox(GearEnergized));
+	public static final RegistryObject<GearBox> GearBoxGold = ITEMS.register("gear_box_gold", () -> new GearBox(GearGold));
+	public static final RegistryObject<GearBox> GearBoxInertInfusion = ITEMS.register("gear_box_inert_infusion", () -> new GearBox(GearInertInfusion));
+	public static final RegistryObject<GearBox> GearBoxIron = ITEMS.register("gear_box_iron", () -> new GearBox(GearIron));
+	public static final RegistryObject<GearBox> GearBoxLead = ITEMS.register("gear_box_lead", () -> new GearBox(GearLead));
+	public static final RegistryObject<GearBox> GearBoxLumum = ITEMS.register("gear_box_lumum", () -> new GearBox(GearLumum));
+	public static final RegistryObject<GearBox> GearBoxMagnesium = ITEMS.register("gear_box_magnesium", () -> new GearBox(GearMagnesium));
+	public static final RegistryObject<GearBox> GearBoxPlatinum = ITEMS.register("gear_box_platinum", () -> new GearBox(GearPlatinum));
+	public static final RegistryObject<GearBox> GearBoxRedstoneAlloy = ITEMS.register("gear_box_redstone_alloy", () -> new GearBox(GearRedstoneAlloy));
+	public static final RegistryObject<GearBox> GearBoxSilver = ITEMS.register("gear_box_silver", () -> new GearBox(GearSilver));
+	public static final RegistryObject<GearBox> GearBoxStatic = ITEMS.register("gear_box_static", () -> new GearBox(GearStatic));
+	public static final RegistryObject<GearBox> GearBoxTin = ITEMS.register("gear_box_tin", () -> new GearBox(GearTin));
+	public static final RegistryObject<GearBox> GearBoxTungsten = ITEMS.register("gear_box_tungsten", () -> new GearBox(GearTungsten));
+	public static final RegistryObject<GearBox> GearBoxZinc = ITEMS.register("gear_box_zinc", () -> new GearBox(GearZinc));
 
 	public static final RegistryObject<StaticPowerItem> DustAluminum = ITEMS.register("dust_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustBrass = ITEMS.register("dust_brass", () -> new StaticPowerItem());
@@ -335,7 +336,6 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> Motor = ITEMS.register("motor", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> Plug = ITEMS.register("plug", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DigistoreCore = ITEMS.register("digistore_core", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> GrinderComponent = ITEMS.register("grinder_component", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> BasicCard = ITEMS.register("card_basic", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> AdvancedCard = ITEMS.register("card_advanced", () -> new StaticPowerItem());

@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -83,6 +84,11 @@ public class AnvilForgeEntity extends ItemEntity {
 				}
 			}
 		}
+	}
+
+	@Override
+	public boolean hurt(DamageSource p_32013_, float p_32014_) {
+		return false;
 	}
 
 	public boolean isOnAnvil() {

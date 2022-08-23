@@ -36,7 +36,6 @@ import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.StaticPowerRegistry;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModuleFactory;
 import theking530.staticpower.cables.fluid.FluidNetworkModuleFactory;
 import theking530.staticpower.cables.heat.HeatNetworkModuleFactory;
@@ -184,12 +183,12 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void registerTileEntityTypes(RegistryEvent.Register<BlockEntityType<?>> event) {
-		StaticPowerRegistry.onRegisterTileEntityTypes(event);
+		StaticCoreRegistry.registerTileEntityTypes(event);
 	}
 
 	@SubscribeEvent
 	public static void registerContainerTypes(RegistryEvent.Register<MenuType<?>> event) {
-		StaticPowerRegistry.onRegisterContainerTypes(event);
+		StaticCoreRegistry.registerContainerTypes(event);
 	}
 
 	@SubscribeEvent

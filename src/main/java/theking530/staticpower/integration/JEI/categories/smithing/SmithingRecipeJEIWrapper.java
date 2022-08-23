@@ -8,10 +8,12 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
+import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityJEIRecipeWrapper;
 
 public class SmithingRecipeJEIWrapper implements Recipe<Container> {
-	public static final RecipeType<SmithingRecipeJEIWrapper> RECIPE_TYPE = RecipeType.register("auto_smith_jei");
+	public static final RecipeType<SmithingRecipeJEIWrapper> RECIPE_TYPE = new StaticPowerRecipeType<SmithingRecipeJEIWrapper>();
 	public final ResourceLocation id;
 	public final AutoSmithRecipe recipe;
 	public final Ingredient inputIng;

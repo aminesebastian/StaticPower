@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.fluid;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -10,7 +12,11 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -25,6 +31,7 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
 	public static final String FLUID_CAPACITY_DATA_TAG_KEY = "fluid_capacity";
@@ -62,7 +69,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				shouldUpdate |= Math.abs(lastUpdateFilledPercentage - getFilledPercentage()) > UPDATE_THRESHOLD;
 				shouldUpdate |= lastUpdateFilledPercentage > 0 && this.getFluidInTank(0).isEmpty();
 				if (shouldUpdate) {
-					updateClientRenderValues();
+					synchronizeServerToClient();
 				}
 			});
 		}
@@ -77,7 +84,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		}
 	}
 
-	public void updateClientRenderValues() {
+	protected void synchronizeServerToClient() {
 		if (!getLevel().isClientSide) {
 			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
 				lastUpdateFluidStack = network.getFluidStorage().getFluid();
@@ -95,6 +102,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (getLevel().isClientSide) {
 			lastUpdateFluidStack = stack;
 			lastUpdateFilledPercentage = Math.min(1.0f, fluidAmount);
+			getTileEntity().requestModelDataUpdate();
+			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		}
 	}
 
@@ -218,16 +227,71 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
+	public void onOwningTileEntityPostInit(boolean isInitialPlacement) {
+		super.onOwningTileEntityPostInit(isInitialPlacement);
+	}
+
+	@Override
+	public void onPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		List<Direction> sidesToDisable = new ArrayList<>();
+
+		FluidStack existingStack = FluidStack.EMPTY;
+		boolean multipleFluids = false;
+		for (Direction dir : Direction.values()) {
+			BlockEntity te = getLevel().getBlockEntity(getPos().relative(dir));
+			if (te == null) {
+				continue;
+			}
+
+			IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()).orElse(null);
+			if (handler == null || handler.getTanks() <= 0) {
+				continue;
+
+			}
+
+			for (int i = 0; i < handler.getTanks(); i++) {
+				if (handler.getFluidInTank(i).isEmpty()) {
+					continue;
+				}
+
+				if (existingStack.isEmpty()) {
+					existingStack = handler.getFluidInTank(0);
+				} else if (!existingStack.isFluidEqual(handler.getFluidInTank(i))) {
+					multipleFluids = true;
+				}
+
+				// We'll allow the pipe to connect to another fluid source if the player
+				// indicated that's what they want.
+				if (dir.getOpposite() != context.getClickedFace()) {
+					sidesToDisable.add(dir);
+				}
+			}
+		}
+
+		if (multipleFluids) {
+			for (Direction dir : sidesToDisable) {
+				silentlySetSideDisabledState(dir, true);
+			}
+		}
+	}
+
+	@Override
 	protected void initializeCableProperties(ServerCable cable) {
 		cable.setProperty(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.setProperty(FLUID_RATE_DATA_TAG_KEY, capacity);
 		cable.setProperty(FLUID_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
+
+		// Initialize the disabled state.
+		for (Direction dir : Direction.values()) {
+			cable.setDisabledStateOnSide(dir, isSideDisabled(dir));
+		}
 	}
 
 	@Override
 	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
+			FluidCableComponent otherFluidCableComp = (FluidCableComponent) otherProvider;
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
 			}

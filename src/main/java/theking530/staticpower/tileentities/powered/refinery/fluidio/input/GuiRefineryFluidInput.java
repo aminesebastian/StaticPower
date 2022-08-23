@@ -21,7 +21,7 @@ public class GuiRefineryFluidInput extends StaticPowerTileEntityGui<ContainerRef
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().getTank(0), 32, 22, 16, 54, MachineSideMode.Input2, getTileEntity()));
-		registerWidget(new GuiFluidBarFromTank(getTileEntity().getTank(1), 54, 22, 16, 54, MachineSideMode.Input3, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().getTank(0), 67, 22, 16, 54, MachineSideMode.Input2, getTileEntity()));
+		registerWidget(new GuiFluidBarFromTank(getTileEntity().getTank(1), 91, 22, 16, 54, MachineSideMode.Input3, getTileEntity()));
 	}
 }

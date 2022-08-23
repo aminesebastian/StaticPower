@@ -223,6 +223,8 @@ public class ModBlocks {
 	// Machine blocks.
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockAluminum = registerBlock("machine_block_aluminum",
 			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
+	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockIndustrial = registerBlock("machine_block_industrial",
+			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockBasic = registerBlock("machine_block_basic",
 			() -> new StaticPowerCutoutBlock(Properties.copy(Blocks.IRON_DOOR)));
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockAdvanced = registerBlock("machine_block_advanced",

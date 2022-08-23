@@ -342,7 +342,7 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LumberMillRecipe.RECIPE_TYPE), LumberMillRecipeCategory.UID);
+		registration.addRecipes(LumberMillRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(LumberMillRecipe.RECIPE_TYPE));
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FormerRecipe.RECIPE_TYPE), FormerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.FURNACE_RECIPES.values(), PoweredFurnaceRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.UID);

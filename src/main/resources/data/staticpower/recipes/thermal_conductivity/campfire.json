@@ -1,0 +1,8 @@
+{
+	"type": "staticpower:thermal_conducitity",
+	"blocks": [
+		"minecraft:campfire"
+	],
+	"conductivity": "0.0",
+	"heating_amount": 7
+}

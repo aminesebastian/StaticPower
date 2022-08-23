@@ -1,0 +1,5 @@
+{
+    "variants": {
+        "": { "model": "staticpower:block/machines/base_blocks/machine_block_industrial_solo" }
+    }
+}

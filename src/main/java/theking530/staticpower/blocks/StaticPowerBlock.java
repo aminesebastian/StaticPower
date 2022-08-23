@@ -16,6 +16,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -149,7 +150,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		return InteractionResult.PASS;
 	}
 
-	public void onStaticPowerBlockPlaced(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void onStaticPowerBlockPlaced(BlockPlaceContext context,Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 
 	}
 
@@ -269,10 +270,14 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@Override
 	public void setPlacedBy(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		super.setPlacedBy(world, pos, state, placer, stack);
+
+	}
+
+	public void onPlacedInWorld(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onPlaced(state, placer, stack);
+			((TileEntityBase) world.getBlockEntity(pos)).onPlaced(context, state, placer, stack);
 		}
-		onStaticPowerBlockPlaced(world, pos, state, placer, stack);
+		onStaticPowerBlockPlaced(context,world, pos, state, placer, stack);
 	}
 
 	@SuppressWarnings("deprecation")

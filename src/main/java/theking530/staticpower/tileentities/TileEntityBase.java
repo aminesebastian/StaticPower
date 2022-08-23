@@ -32,6 +32,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -140,8 +141,8 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		// If an update is queued, perform the update.
 		if (updateRequestQueue.size() > 0) {
 			// Debug the update.
-			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getBlockPos().toString(), getLevel().getBlockState(getBlockPos()),
-					updateRequestQueue.size()));
+			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getBlockPos().toString(),
+					getLevel().getBlockState(getBlockPos()), updateRequestQueue.size()));
 
 			// Calculate the flag to use.
 			int flags = 0;
@@ -233,9 +234,9 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		}
 	}
 
-	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	public void onPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		for (AbstractTileEntityComponent comp : components.values()) {
-			comp.onPlaced(state, placer, stack);
+			comp.onPlaced(context, state, placer, stack);
 		}
 	}
 
@@ -330,8 +331,8 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	public Direction getFacingDirection() {
 		// If the world is null, return UP and log the error.
 		if (getLevel() == null) {
-			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.", getDisplayName().getString(),
-					worldPosition);
+			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
+					getDisplayName().getString(), worldPosition);
 			return Direction.UP;
 		}
 

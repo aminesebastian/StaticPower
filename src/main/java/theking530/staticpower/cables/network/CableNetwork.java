@@ -122,7 +122,8 @@ public class CableNetwork {
 			try {
 				module.onNetworkGraphUpdated(output, startingPosition);
 			} catch (Exception e) {
-				throw new RuntimeException(String.format("An error occured when attempting to update a network module of type: %1$s with a new graph.", module.getType().toString()), e);
+				throw new RuntimeException(
+						String.format("An error occured when attempting to update a network module of type: %1$s with a new graph.", module.getType().toString()), e);
 			}
 		}
 
@@ -158,9 +159,8 @@ public class CableNetwork {
 			try {
 				module.onNetworksSplitOff(newNetworks);
 			} catch (Exception e) {
-				throw new RuntimeException(
-						String.format("An error occured when attempting to let a network module of type: %1$s know of new networks that resulted from a split.", module.getType().toString()),
-						e);
+				throw new RuntimeException(String.format("An error occured when attempting to let a network module of type: %1$s know of new networks that resulted from a split.",
+						module.getType().toString()), e);
 			}
 		}
 	}
@@ -211,6 +211,15 @@ public class CableNetwork {
 
 	public boolean isEmpty() {
 		return Graph.getCables().isEmpty();
+	}
+
+	public boolean canAcceptCable(ServerCable currentNetworkCable, ServerCable newCable) {
+		for (AbstractCableNetworkModule module : Modules.values()) {
+			if (!module.canAcceptCable(currentNetworkCable, newCable)) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public void setWorld(Level world) {

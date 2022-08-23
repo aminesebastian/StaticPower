@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.Team;
@@ -22,7 +23,7 @@ public class TeamComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void onPlaced(BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	public void onPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 		if (placer instanceof Player) {
 			Team placerTeam = TeamManager.get().getTeamForPlayer((Player) placer);
 			if (placerTeam != null) {

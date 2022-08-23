@@ -10,16 +10,20 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
+import theking530.staticpower.cables.fluid.FluidNetworkModule;
+import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -95,7 +99,23 @@ public class DrainAttachment extends AbstractCableAttachment {
 		if (fluid.isEmpty()) {
 			return false;
 		}
-		return WorldUtilities.tryPlaceFluid(fluid, null, cable.getLevel(), cable.getPos().relative(side), null);
+		
+		FluidNetworkModule module = fluidCable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).orElse(null);
+		if(module == null) {
+			return false;
+		}
+		
+		FluidStack drained = module.getFluidStorage().drain(1000, FluidAction.SIMULATE);
+		if (drained.getAmount() < 1000) {
+			return false;
+		}
+
+		if (!WorldUtilities.tryPlaceFluid(fluid, null, cable.getLevel(), cable.getPos().relative(side), null)) {
+			return false;
+		}
+
+		module.getFluidStorage().drain(1000, FluidAction.EXECUTE);
+		return false;
 	}
 
 	@Override

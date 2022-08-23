@@ -40,6 +40,8 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	private long defaultMaxOutput;
 	@UpdateSerialize
 	private boolean issueSyncPackets;
+	@UpdateSerialize
+	private boolean exposeAsCapability;
 
 	private final Map<Direction, FECapabilityAccess> feAccessors;
 	private final Map<Direction, SVCapabilityAccess> staticVoltAccessors;
@@ -75,6 +77,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		issueSyncPackets = false;
 		defaultMaxInput = maxInput;
 		defaultMaxOutput = maxExtract;
+		exposeAsCapability = true;
 		// Create the interface.
 		energyInterface = new StaticVoltAutoConverter(EnergyStorage);
 	}
@@ -288,22 +291,19 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		this.filter = filter;
 	}
 
+	public boolean isExposedAsCapability() {
+		return exposeAsCapability;
+	}
+
+	public EnergyStorageComponent setExposedAsCapability(boolean exposeAsCapability) {
+		this.exposeAsCapability = exposeAsCapability;
+		return this;
+	}
+
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (isEnabled()) {
-			if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
-				if (side != null) {
-					return LazyOptional.of(() -> staticVoltAccessors.get(side)).cast();
-				} else {
-					return LazyOptional.of(() -> energyInterface).cast();
-				}
-			} else if (cap == CapabilityEnergy.ENERGY) {
-				if (side != null) {
-					return LazyOptional.of(() -> feAccessors.get(side)).cast();
-				} else {
-					return LazyOptional.of(() -> energyInterface).cast();
-				}
-			}
+		if (isEnabled() && exposeAsCapability) {
+			return manuallyGetCapability(cap, side);
 		}
 
 		return LazyOptional.empty();

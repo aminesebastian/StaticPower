@@ -9,6 +9,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -72,8 +73,8 @@ public class CauldronContainedEntity extends ItemEntity {
 
 			((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.SPLASH, getX() + randomOffset, getY() + 0.8, getZ() + randomOffset, 1, 0.0D, 0.0D, 0.0D, 0.0D);
 			if (SDMath.diceRoll(0.6)) {
-				((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.BUBBLE_COLUMN_UP, getX() + randomOffset, getY() + 0.9, getZ() + randomOffset, 1, 0.0D, 1.0D, 0.0D,
-						1.0D);
+				((ServerLevel) getCommandSenderWorld()).sendParticles(ParticleTypes.BUBBLE_COLUMN_UP, getX() + randomOffset, getY() + 0.9, getZ() + randomOffset, 1, 0.0D, 1.0D,
+						0.0D, 1.0D);
 			}
 			if (SDMath.diceRoll(0.15)) {
 				getCommandSenderWorld().playSound(null, this.blockPosition(), SoundEvents.BUBBLE_COLUMN_UPWARDS_AMBIENT, SoundSource.BLOCKS, 0.5f, 0.75f);
@@ -92,6 +93,7 @@ public class CauldronContainedEntity extends ItemEntity {
 				// Get the tile entity for the cauldron.
 				TileEntityCauldron cauldron = (TileEntityCauldron) te;
 				if (cauldron.getRecipe(getItem()).isPresent()) {
+					System.out.println(getEntityData().get(CURRENT_COOKING_TIME));
 					// See if we aged enough.
 					if (getEntityData().get(CURRENT_COOKING_TIME) >= getEntityData().get(TOTAL_COOKING_TIME)) {
 						// Reset the time spent cooking.
@@ -142,6 +144,11 @@ public class CauldronContainedEntity extends ItemEntity {
 			this.setPickUpDelay(0);
 		}
 		super.playerTouch(entityIn);
+	}
+
+	@Override
+	public boolean hurt(DamageSource p_32013_, float p_32014_) {
+		return false;
 	}
 
 	public void setCookTime(int time) {

@@ -17,9 +17,13 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.powered.refinery.BaseRefineryTileEntity;
+import theking530.staticpower.tileentities.powered.refinery.fluidio.input.ContainerRefineryFluidInput;
+import theking530.staticpower.tileentities.powered.refinery.fluidio.output.ContainerRefineryFluidOutput;
 
 public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implements IStaticVoltHandler {
 	@TileEntityTypePopulator()
@@ -39,6 +43,16 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public void process() {
 
+	}
+
+	@Override
+	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Input;
+	}
+
+	@Override
+	protected DefaultSideConfiguration getDefaultSideConfiguration() {
+		return SideConfigurationComponent.ALL_SIDES_INPUT;
 	}
 
 	@Override
@@ -102,7 +116,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 		}
 		return 0;
 	}
-	
+
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerRefineryPowerTap(windowId, inventory, this);

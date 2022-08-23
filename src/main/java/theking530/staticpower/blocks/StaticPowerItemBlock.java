@@ -7,13 +7,17 @@ import javax.annotation.Nullable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.utilities.ITooltipProvider;
@@ -36,6 +40,21 @@ public class StaticPowerItemBlock extends BlockItem implements ITooltipProvider 
 	public StaticPowerItemBlock(Block block, Item.Properties properties) {
 		super(block, properties.stacksTo(64).tab(StaticPower.CREATIVE_TAB));
 		OWNING_BLOCK = block;
+	}
+
+	@Override
+	public InteractionResult place(BlockPlaceContext context) {
+		InteractionResult superResult = super.place(context);
+		if (superResult != InteractionResult.FAIL) {
+			BlockPos blockpos = context.getClickedPos();
+			Level level = context.getLevel();
+			BlockState state = level.getBlockState(blockpos);
+			Block block = state.getBlock();
+			if (block instanceof StaticPowerBlock) {
+				((StaticPowerBlock) block).onPlacedInWorld(context, level, blockpos, state, context.getPlayer(), context.getItemInHand());
+			}
+		}
+		return superResult;
 	}
 
 	@Override

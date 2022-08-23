@@ -13,6 +13,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.api.attributes.capability.CapabilityAttributable;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 
@@ -110,8 +111,8 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 				if (recipe.applyToItemStack(outputItem) || recipe.performsRepair()) {
 					try {
 						output.add(new SmithingRecipeJEIWrapper(recipe, input, outputItem));
-					} catch (Exception e) {
-						System.out.println(e);
+					} catch (Throwable e) {
+						StaticPower.LOGGER.warn(e);
 					}
 
 				}

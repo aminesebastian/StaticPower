@@ -1,6 +1,6 @@
 {
-    "parent": "staticpower:block/machines/base_blocks/machine_block_advanced",
+    "parent": "staticpower:block/machines/base_refinery_block",
     "textures": {
-		"front_overlay": "staticpower:blocks/empty_texture"
+		"side_overlay": "staticpower:blocks/machines/machine_refinery_fluid_input"
     }
 }
