@@ -78,25 +78,29 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, renderingState.rotationAngle, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
-				
-				matrixStack.translate(0, 0.2, 0);
-				matrixStack.translate(0.5, 0, 0.5);
-				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
-				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
+						combinedOverlay, data);
 
 				matrixStack.translate(0, 0.2, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
+						combinedOverlay, data);
+
+				matrixStack.translate(0, 0.2, 0);
+				matrixStack.translate(0.5, 0, 0.5);
+				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
+				matrixStack.translate(-0.5, 0, -0.5);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
+						combinedOverlay, data);
 
 				matrixStack.translate(0, 0.22, 0);
 				matrixStack.translate(0.5, 0, 0.5);
 				matrixStack.mulPose(new Quaternion(0, 30, 0, true));
 				matrixStack.translate(-0.5, 0, -0.5);
-				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight, combinedOverlay, data);
+				blockRenderer.getModelRenderer().renderModel(matrixStack.last(), buffer.getBuffer(RenderType.solid()), state, model, 0.0f, 0.0f, 0.0f, combinedLight,
+						combinedOverlay, data);
 
 				// Pop the matrix we pushed.
 				matrixStack.popPose();
@@ -118,8 +122,8 @@ public class TileEntityRenderTurbine extends StaticPowerTileEntitySpecialRendere
 			float yPosition = 16.0f * TEXEL - (16f * TEXEL * height);
 
 			// Render the fluid.
-			CUBE_MODEL.drawPreviewCube(new Vector3f(1 * TEXEL, yPosition - (TEXEL * 1), 1 * TEXEL), new Vector3f(14f * TEXEL, 16f * TEXEL * height, 14f * TEXEL), fluidColor, matrixStack,
-					sprite, new Vector3D(1.0f, height, 1.0f));
+			CUBE_MODEL.drawPreviewCube(new Vector3f(1 * TEXEL, yPosition - (TEXEL * 1), 1 * TEXEL), new Vector3f(14f * TEXEL, 16f * TEXEL * height, 14f * TEXEL), fluidColor,
+					matrixStack, sprite, new Vector3D(1.0f, height, 1.0f));
 		}
 	}
 }

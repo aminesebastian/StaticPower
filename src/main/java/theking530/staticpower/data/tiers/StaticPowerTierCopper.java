@@ -38,7 +38,7 @@ public class StaticPowerTierCopper extends StaticPowerTier {
 
 	@Override
 	protected double getHeatCableConductivity() {
-		return 1.0;
+		return 0.15;
 	}
 
 	@Override

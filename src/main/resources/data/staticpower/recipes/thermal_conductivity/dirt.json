@@ -1,7 +1,8 @@
 {
 	"type": "staticpower:thermal_conducitity",
 	"blocks": [
-		"forge:dirt"
+		"minecraft:dirt",	
+		"minecraft:grass"
 	],
-	"conductivity": "1.0"
+	"thermal_offset": "-2.0"
 }

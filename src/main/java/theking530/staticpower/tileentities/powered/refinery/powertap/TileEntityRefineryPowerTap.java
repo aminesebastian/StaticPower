@@ -22,8 +22,6 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.powered.refinery.BaseRefineryTileEntity;
-import theking530.staticpower.tileentities.powered.refinery.fluidio.input.ContainerRefineryFluidInput;
-import theking530.staticpower.tileentities.powered.refinery.fluidio.output.ContainerRefineryFluidOutput;
 
 public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implements IStaticVoltHandler {
 	@TileEntityTypePopulator()

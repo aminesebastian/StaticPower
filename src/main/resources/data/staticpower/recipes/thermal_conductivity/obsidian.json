@@ -3,7 +3,7 @@
 	"blocks": [
 		"forge:obsidian"
 	],
-	"conductivity": "6.0",
+	"thermal_offset": "-6.0",
 	"overheating": {
 		"block": {
 			"Name": "minecraft:lava"

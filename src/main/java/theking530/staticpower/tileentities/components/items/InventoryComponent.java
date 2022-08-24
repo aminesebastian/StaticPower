@@ -49,6 +49,8 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	private boolean isShiftClickEnabled;
 	@UpdateSerialize
 	private int shiftClickPriority;
+	@UpdateSerialize
+	private boolean exposeAsCapability;
 
 	public InventoryComponent(String name, int size) {
 		this(name, size, MachineSideMode.Never);
@@ -75,6 +77,8 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		} else if (mode.isInputMode()) {
 			setCapabilityExtractEnabled(false);
 		}
+
+		exposeAsCapability = true;
 	}
 
 	/**
@@ -255,18 +259,34 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 		return new TileEntityInventoryIterator();
 	}
 
+	public boolean isExposedAsCapability() {
+		return exposeAsCapability;
+	}
+
+	public InventoryComponent setExposedAsCapability(boolean exposeAsCapability) {
+		this.exposeAsCapability = exposeAsCapability;
+		return this;
+	}
+
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
-			if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && inventoryMode != MachineSideMode.Never) {
+			if (inventoryMode != MachineSideMode.Never) {
 				// Check if the owner is side configurable. If it is not, just return this.
 				// Otherwise, check to make sure this inventory's mode is equal to the
 				// configured side's mode.
 				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
 				if (!sideConfig.isPresent() || (side != null && sideConfig.get().getWorldSpaceDirectionConfiguration(side) == inventoryMode)) {
-					return LazyOptional.of(() -> capabilityInterface).cast();
+					return manuallyProvideCapability(cap, side);
 				}
 			}
+		}
+		return LazyOptional.empty();
+	}
+
+	public <T> LazyOptional<T> manuallyProvideCapability(Capability<T> cap, Direction side) {
+		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY) {
+			return LazyOptional.of(() -> capabilityInterface).cast();
 		}
 		return LazyOptional.empty();
 	}

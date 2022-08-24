@@ -40,6 +40,10 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	private double heatConductivityMultiplier;
 	@UpdateSerialize
 	private boolean issueSyncPackets;
+	@UpdateSerialize
+	private boolean exposeAsCapability;
+	@UpdateSerialize
+	private boolean enableAutomaticHeatTransfer;
 
 	protected final HeatDissipationTiming dissipationTiming;
 	protected TriFunction<Double, Direction, HeatManipulationAction, Boolean> filter;
@@ -58,6 +62,8 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		defaultConductivity = maxConductivity;
 		issueSyncPackets = false;
 		heatStorage = new HeatStorage(maxHeat, maxConductivity);
+		exposeAsCapability = true;
+		enableAutomaticHeatTransfer = true;
 
 		// Create the accessors.
 		accessors = new HashMap<Direction, HeatComponentCapabilityAccess>();
@@ -103,7 +109,9 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 			heatStorage.captureHeatTransferMetric();
 
 			// Cool off the heat storage.
-			heatStorage.transferWithSurroundings(getLevel(), getPos());
+			if (enableAutomaticHeatTransfer) {
+				heatStorage.transferWithSurroundings(getLevel(), getPos());
+			}
 		}
 	}
 
@@ -169,8 +177,34 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		return this;
 	}
 
-	@Override
-	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+	public boolean isExposedAsCapability() {
+		return exposeAsCapability;
+	}
+
+	public HeatStorageComponent setExposedAsCapability(boolean exposeAsCapability) {
+		this.exposeAsCapability = exposeAsCapability;
+		return this;
+	}
+
+	public boolean getEnableAutomaticHeatTransfer() {
+		return enableAutomaticHeatTransfer;
+	}
+
+	public HeatStorageComponent setEnableAutomaticHeatTransfer(boolean enableAutomaticHeatTransfer) {
+		this.enableAutomaticHeatTransfer = enableAutomaticHeatTransfer;
+		return this;
+	}
+
+	/**
+	 * Ignores any checks that would hide the capability (like if the component is
+	 * enabled, or if capabilities are disabled).
+	 * 
+	 * @param <T>
+	 * @param cap
+	 * @param side
+	 * @return
+	 */
+	public <T> LazyOptional<T> manuallyGetCapability(Capability<T> cap, Direction side) {
 		if (isEnabled()) {
 			if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
 				if (side != null) {
@@ -179,6 +213,15 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 					return LazyOptional.of(() -> heatStorage).cast();
 				}
 			}
+		}
+
+		return LazyOptional.empty();
+	}
+
+	@Override
+	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		if (isEnabled() && exposeAsCapability) {
+			return manuallyGetCapability(cap, side);
 		}
 
 		return LazyOptional.empty();

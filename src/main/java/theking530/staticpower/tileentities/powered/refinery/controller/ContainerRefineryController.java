@@ -29,7 +29,7 @@ public class ContainerRefineryController extends StaticPowerTileEntityContainer<
 	@Override
 	public void initializeContainer() {
 		// Input
-		addSlot(new StaticPowerContainerSlot(getTileEntity().catalystInventory, 0, 79, 22));
+		addSlot(new StaticPowerContainerSlot(getTileEntity().catalystInventory, 0, 83, 22));
 
 		addAllPlayerSlots();
 	}

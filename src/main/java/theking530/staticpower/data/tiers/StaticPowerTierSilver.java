@@ -28,7 +28,7 @@ public class StaticPowerTierSilver extends StaticPowerTier {
 
 	@Override
 	protected double getHeatSinkConductivity() {
-		return 1.5;
+		return 2.0;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class StaticPowerTierSilver extends StaticPowerTier {
 
 	@Override
 	protected double getHeatCableConductivity() {
-		return 1.5;
+		return 0.2;
 	}
 
 	@Override

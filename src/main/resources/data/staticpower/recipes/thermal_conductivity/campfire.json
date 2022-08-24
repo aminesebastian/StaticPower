@@ -3,6 +3,5 @@
 	"blocks": [
 		"minecraft:campfire"
 	],
-	"conductivity": "0.0",
-	"heating_amount": 7
+	"thermal_offset": 6
 }

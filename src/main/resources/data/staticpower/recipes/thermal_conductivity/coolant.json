@@ -3,5 +3,5 @@
 	"fluids": [
 		"staticpower:coolant"
 	],
-	"conductivity": "8.0"
+	"thermal_offset": "-8.0"
 }

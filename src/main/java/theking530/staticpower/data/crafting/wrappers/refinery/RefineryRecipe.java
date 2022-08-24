@@ -22,8 +22,8 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 	private final FluidStack output2;
 	private final FluidStack output3;
 
-	public RefineryRecipe(ResourceLocation name, StaticPowerIngredient catalyst, FluidStack inputFluid1, FluidStack inputFluid2, FluidStack output1, FluidStack output2, FluidStack output3,
-			MachineRecipeProcessingSection processing) {
+	public RefineryRecipe(ResourceLocation name, StaticPowerIngredient catalyst, FluidStack inputFluid1, FluidStack inputFluid2, FluidStack output1, FluidStack output2,
+			FluidStack output3, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.catalyst = catalyst;
 		this.inputFluid1 = inputFluid1;
@@ -86,25 +86,19 @@ public class RefineryRecipe extends AbstractMachineRecipe {
 			}
 
 			// Check fluids either way.
-			boolean straightMatch = true;
-			straightMatch &= matchParams.getFluids()[0].equals(inputFluid1) || matchParams.getFluids()[0] == ModFluids.WILDCARD;
-			straightMatch &= matchParams.getFluids()[1].equals(inputFluid2) || matchParams.getFluids()[1] == ModFluids.WILDCARD;
-			if(!straightMatch) {
+			matched &= matchParams.getFluids()[0].equals(inputFluid1) || matchParams.getFluids()[0] == ModFluids.WILDCARD;
+			matched &= matchParams.getFluids()[1].equals(inputFluid2) || matchParams.getFluids()[1] == ModFluids.WILDCARD;
+			if (!matched) {
 				return false;
 			}
-			
+
 			// Verify the amounts.
-			if (straightMatch && matchParams.shouldVerifyFluidAmounts()) {
-				if (straightMatch) {
-					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount();
-				} else {
-					matched &= matchParams.getFluids()[1].getAmount() >= inputFluid1.getAmount();
-					matched &= matchParams.getFluids()[0].getAmount() >= inputFluid2.getAmount();
-				}
+			if (matched && matchParams.shouldVerifyFluidAmounts()) {
+				matched &= matchParams.getFluids()[0].getAmount() >= inputFluid1.getAmount() || matchParams.getFluids()[0] == ModFluids.WILDCARD;
+				matched &= matchParams.getFluids()[1].getAmount() >= inputFluid2.getAmount() || matchParams.getFluids()[1] == ModFluids.WILDCARD;
 			}
 		}
-		
+
 		// Check items.
 		if (matchParams.shouldVerifyItems() && !catalyst.isEmpty()) {
 			// Check items either way.

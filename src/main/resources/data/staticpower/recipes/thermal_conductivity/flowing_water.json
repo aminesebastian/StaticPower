@@ -3,5 +3,5 @@
 	"fluids": [
 		"minecraft:flowing_water"
 	],
-	"conductivity": "10.0"
+	"thermal_offset": "-10.0"
 }

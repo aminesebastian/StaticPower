@@ -66,15 +66,10 @@ public class CustomRenderer {
 
 		// Pop our stack entry.
 		matrixStack.popPose();
-
-		// Update the delta time.
-		float currentTime = Minecraft.getInstance().level.getGameTime();
-		deltaTime = currentTime - lastRenderTime;
-		lastRenderTime = currentTime;
 	}
 
 	public static float getDeltaTime() {
-		return deltaTime;
+		return Minecraft.getInstance().getDeltaFrameTime();
 	}
 
 	public static void addCubeRenderer(BlockEntity tileEntity, String key, Vector3f position, Vector3f scale, Color color) {

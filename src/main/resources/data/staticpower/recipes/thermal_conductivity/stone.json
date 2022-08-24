@@ -3,5 +3,5 @@
 	"blocks": [
 		"forge:stone"
 	],
-	"conductivity": "2.0"
+	"thermal_offset": "-2.0"
 }

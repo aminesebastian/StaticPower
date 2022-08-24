@@ -18,24 +18,21 @@ import theking530.staticpower.init.ModTags;
 public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 	public static final String ID = "thermal_conducitity";
 	public static final RecipeType<ThermalConductivityRecipe> RECIPE_TYPE = new StaticPowerRecipeType<ThermalConductivityRecipe>();
-	
+
 	private final ResourceLocation[] blocks;
 	private final ResourceLocation[] fluids;
 	private final BlockState overheatedBlock;
 	private final ProbabilityItemStackOutput overheatedItemStack;
 	private final float overheatedTemperature;
-	private final float thermalConductivity;
-	private final float heatAmount;
+	private final float appliedThermalOffset;
 	private final boolean isAirRecipe;
 
-	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids,
-			BlockState overheatedBlock, ProbabilityItemStackOutput overheatedItemStack, float overheatedTemperature,
-			float thermalConductivity, float heatAmount) {
+	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids, BlockState overheatedBlock,
+			ProbabilityItemStackOutput overheatedItemStack, float overheatedTemperature, float appliedThermalOffset) {
 		super(name);
 		this.blocks = blocks;
 		this.fluids = fluids;
-		this.thermalConductivity = thermalConductivity;
-		this.heatAmount = heatAmount;
+		this.appliedThermalOffset = appliedThermalOffset;
 		this.overheatedBlock = overheatedBlock;
 		this.overheatedItemStack = overheatedItemStack;
 		this.overheatedTemperature = overheatedTemperature;
@@ -62,12 +59,8 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return fluids;
 	}
 
-	public float getThermalConductivity() {
-		return thermalConductivity;
-	}
-
-	public float getHeatAmount() {
-		return heatAmount;
+	public float getThermalOffset() {
+		return appliedThermalOffset;
 	}
 
 	public BlockState getOverheatedBlock() {

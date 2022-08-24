@@ -2,6 +2,10 @@ package theking530.api.heat;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -15,6 +19,7 @@ import theking530.staticpower.data.crafting.wrappers.thermalconductivity.Thermal
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class HeatStorageUtilities {
+	public static final double ACTIVE_ENERGY_TRANSFER_RATIO = 1 / 10000.0;
 
 	/**
 	 * Transfers the heat stored in this storage to adjacent blocks. The transfered
@@ -34,9 +39,9 @@ public class HeatStorageUtilities {
 	}
 
 	/**
-	 * Transfers the heat stored in this storage to adjacent blocks passively. The
-	 * transfered amount is equal to the thermal conductivity of the adjacent
-	 * block/fluid multiplied by the thermal conductivity of this storage.
+	 * Transfers the heat stored in this storage to adjacent blocks passively. This
+	 * is using ThermalConductivity recipes and applies the #thermalOffset. Also
+	 * handles overheating.
 	 * 
 	 * @param world   The world access.
 	 * @param pos     The position at which to transfer the heat.
@@ -45,9 +50,6 @@ public class HeatStorageUtilities {
 	 * @param storage The heat storage.
 	 */
 	public static double transferHeatPassivelyWithBlockFromDirection(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
-		// Capture the total transfered amount.
-		double cooledAmount = 0;
-
 		// Get the offset position.
 		BlockPos offsetPos = pos.relative(side);
 
@@ -78,28 +80,30 @@ public class HeatStorageUtilities {
 								WorldUtilities.dropItem(world, offsetPos, output);
 							}
 						}
+						world.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.AMBIENT, 0.5f, SDMath.getRandomIntInRange(8, 12) / 10.0f);
+						world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5f, pos.getY() + 1.0f, pos.getZ() + 0.5f, 0.0f, 0.01f, 0.0f);
 					}
+					return 0.0; // We overheated, do nothing.
 				}
 			}
 
-			// Perform any passive heating.
-			if (recipe.getHeatAmount() > 0 && storage.getCurrentHeat() < storage.getMaximumHeat()) {
-				cooledAmount -= storage.heat(recipe.getHeatAmount() * storage.getConductivity(), false);
+			double delta = recipe.getThermalOffset() * storage.getConductivity();
+			if (delta > 0) {
+				return storage.heat(delta, false);
+			} else {
+				return storage.cool(-delta, false);
 			}
-
-			// Perform passive cooling.
-			if (storage.getCurrentHeat() > 0) {
-				cooledAmount += storage.cool(recipe.getThermalConductivity() * storage.getConductivity(), false);
-			}
+		} else {
+			// Everything without a recipe cools for 0.5 units (half of air).
+			return storage.cool(1, false);
 		}
-
-		return cooledAmount;
 	}
 
 	/**
 	 * Transfers the heat stored in this storage to adjacent tile entities actively.
 	 * The transfered amount is equal to the thermal conductivity of the adjacent
-	 * heat storage multiplied by the thermal conductivity of this storage.
+	 * heat storage multiplied by the thermal conductivity of this storage
+	 * multiplied by the heat in the storage. This is calculated per sq cm.
 	 * 
 	 * @param world   The world access.
 	 * @param pos     The position at which to transfer the heat.
@@ -108,9 +112,6 @@ public class HeatStorageUtilities {
 	 * @param storage The heat storage.
 	 */
 	public static double transferHeatActivelyWithBlockFromDirection(Level world, BlockPos pos, Direction side, IHeatStorage storage) {
-		// Capture the total transfered amount.
-		double cooledAmount = 0;
-
 		// Get the offset position.
 		BlockPos offsetPos = pos.relative(side);
 
@@ -124,10 +125,10 @@ public class HeatStorageUtilities {
 
 			// If that too exists, perform the transfer.
 			if (otherStorage != null) {
-				cooledAmount += transferHeatActivelyWithOtherStorage(storage, otherStorage);
+				return transferHeatActivelyWithOtherStorage(storage, otherStorage);
 			}
 		}
-		return cooledAmount;
+		return 0;
 	}
 
 	/**
@@ -139,7 +140,12 @@ public class HeatStorageUtilities {
 	 * @return
 	 */
 	public static double transferHeatActivelyWithOtherStorage(IHeatStorage storage, IHeatStorage otherStorage) {
-		double cooled = otherStorage.heat(storage.getCurrentHeat() * storage.getConductivity() * otherStorage.getConductivity(), false);
+		if (storage == otherStorage) {
+			return 0.0;
+		}
+
+		double energyToTransfer = storage.getConductivity() * otherStorage.getConductivity() * storage.getCurrentHeat();
+		double cooled = otherStorage.heat(energyToTransfer, false);
 		storage.cool(cooled, false);
 		return cooled;
 	}

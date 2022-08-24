@@ -53,13 +53,10 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 			throw new RuntimeException(String.format("Recipe: %1$s cannot define both blocks and fluids in the same recipe.", recipeId.toString()));
 		}
 
-		// Capture the conductivity.
-		float thermalConductivity = json.get("conductivity").getAsFloat();
-
 		// Capture the heating amount.
-		float heatAmount = 0.0f;
-		if (json.has("heating_amount")) {
-			heatAmount = json.get("heating_amount").getAsFloat();
+		float thermalOffset = 0.0f;
+		if (json.has("thermal_offset")) {
+			thermalOffset = json.get("thermal_offset").getAsFloat();
 		}
 
 		// Allocate the overheating values.
@@ -94,14 +91,13 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 		}
 
 		// Create the recipe.
-		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatedBlock, overheatedItemStack, overheatTemperature, thermalConductivity, heatAmount);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatedBlock, overheatedItemStack, overheatTemperature, thermalOffset);
 	}
 
 	@Override
 	public ThermalConductivityRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
 		// Read the float values.
-		float conductivity = buffer.readFloat();
-		float supply = buffer.readFloat();
+		float thermalOffset = buffer.readFloat();
 		// Read the over heat values.
 		float overheatTemp = buffer.readFloat();
 		ProbabilityItemStackOutput overheatedItemStack = ProbabilityItemStackOutput.readFromBuffer(buffer);
@@ -121,14 +117,13 @@ public class ThermalConductivityRecipeSerializer extends StaticPowerRecipeSerial
 			fluids[i] = new ResourceLocation(buffer.readUtf());
 		}
 
-		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatedBlock, overheatedItemStack, overheatTemp, conductivity, supply);
+		return new ThermalConductivityRecipe(recipeId, blocks, fluids, overheatedBlock, overheatedItemStack, overheatTemp, thermalOffset);
 	}
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, ThermalConductivityRecipe recipe) {
 		// Write the float values.
-		buffer.writeFloat(recipe.getThermalConductivity());
-		buffer.writeFloat(recipe.getHeatAmount());
+		buffer.writeFloat(recipe.getThermalOffset());
 
 		// Write the over heat values.
 		buffer.writeFloat(recipe.getOverheatedTemperature());

@@ -15,8 +15,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticpower.StaticPower;
 
 public class ModTags {
-	public static final TagKey<Item> LOG = createItemWrapper(new ResourceLocation("minecraft", "logs"));
-	public static final TagKey<Item> LEAVES = createItemWrapper(new ResourceLocation("minecraft", "leaves"));
 	public static final TagKey<Item> SAPLING = createItemWrapper(new ResourceLocation("minecraft", "saplings"));
 	public static final TagKey<Item> INGOT = createItemWrapper(new ResourceLocation("forge", "ingots"));
 	public static final TagKey<Item> COVER_SAW = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "saw"));
@@ -27,9 +25,14 @@ public class ModTags {
 	public static final TagKey<Item> SOLDERING_IRON = createItemWrapper(
 			new ResourceLocation(StaticPower.MOD_ID, "soldering_iron"));
 	public static final TagKey<Item> RESEARCH = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "research"));
-	public static final TagKey<Item> TILLABLE = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "tillable"));
+	
+	public static final TagKey<Block> LOG = createBlockWrapper(new ResourceLocation("minecraft", "logs"));
+	public static final TagKey<Block> LEAVES = createBlockWrapper(new ResourceLocation("minecraft", "leaves"));
+	public static final TagKey<Block> TILLABLE = createBlockWrapper(new ResourceLocation(StaticPower.MOD_ID, "tillable"));
 
 	public static final TagKey<Fluid> OIL = createFluidWrapper(new ResourceLocation("minecraft", "oil_crude"));
+	
+	public static final TagKey<Block> REFINERY_BLOCK = createBlockWrapper(new ResourceLocation(StaticPower.MOD_ID, "valid_refinery_block"));
 
 	public static boolean tagContainsItem(TagKey<Item> tag, Item item) {
 		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);
@@ -50,7 +53,9 @@ public class ModTags {
 	public static TagKey<Fluid> createFluidWrapper(ResourceLocation name) {
 		return TagKey.create(Registry.FLUID_REGISTRY, name);
 	}
-
+	public static TagKey<Block> createBlockWrapper(ResourceLocation name) {
+		return TagKey.create(Registry.BLOCK_REGISTRY, name);
+	}
 	public static List<ResourceLocation> getTags(Item item) {
 		Holder<Item> holder = ForgeRegistries.ITEMS.getHolder(item).orElse(null);
 		if (holder != null) {

@@ -8,7 +8,7 @@ import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.powered.refinery.controller.TileEntityRefineryController;
 
-public class BaseRefineryTileEntity extends TileEntityConfigurable {
+public class BaseRefineryTileEntity extends TileEntityConfigurable implements IRefineryBlockEntity {
 	private final ResourceLocation tier;
 	private TileEntityRefineryController controller;
 
@@ -21,40 +21,35 @@ public class BaseRefineryTileEntity extends TileEntityConfigurable {
 		return tier;
 	}
 
-	public void setController(TileEntityRefineryController controller) {
-		this.controller = controller;
-	}
-
-	public TileEntityRefineryController getController() {
-		return controller;
-	}
-
 	public boolean hasController() {
 		return controller != null;
 	}
 
 	@Override
+	public void setController(TileEntityRefineryController controller) {
+		this.controller = controller;
+	}
+
+	@Override
+	public TileEntityRefineryController getController() {
+		return controller;
+	}
+
+	@Override
 	public void setRemoved() {
-		// Call the super AFTER everything has been cleaned up.
 		super.setRemoved();
-		requestControllerRefresh();
+		refreshController();
 	}
 
 	@Override
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
 		super.onNeighborChanged(currentState, neighborPos, isMoving);
-		requestControllerRefresh();
+		refreshController();
 	}
 
 	@Override
 	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
 		super.onNeighborReplaced(state, direction, facingState, FacingPos);
-		requestControllerRefresh();
-	}
-
-	protected void requestControllerRefresh() {
-		if (controller != null) {
-			controller.requestMultiBlockRefresh();
-		}
+		refreshController();
 	}
 }

@@ -3,7 +3,7 @@
 	"fluids": [
 		"minecraft:water"
 	],
-	"conductivity": "4.0",
+	"thermal_offset": "-5.0",
 	"overheating": {
 		"block": {
 			"Name": "staticpower:steam"

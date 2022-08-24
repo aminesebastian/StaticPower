@@ -47,7 +47,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	public ThermalConductivityRecipeCategory(IGuiHelper guiHelper) {
 		super(guiHelper);
 		locTitle = new TranslatableComponent("gui.staticpower.heat");
-		background = guiHelper.createBlankDrawable(170, 65);
+		background = guiHelper.createBlankDrawable(170, 45);
 		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.CopperHeatSink.get()));
 	}
 
@@ -83,13 +83,11 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	@Override
 	public void draw(ThermalConductivityJEIRecipeWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 5, 5, 0);
-		GuiDrawUtilities.drawSlot(matrixStack, 135, 55, 30, 5, 0);
+		GuiDrawUtilities.drawSlot(matrixStack, 135, 35, 30, 5, 0);
 
-		String conductivity = new TextComponent("Heat Conductivity: ").append(ChatFormatting.BLUE.toString())
-				.append(GuiTextUtilities.formatConductivityToString(recipe.getRecipe().getThermalConductivity())).getString();
-
-		String heat = new TextComponent("Heat Generation: ").append(ChatFormatting.GOLD.toString())
-				.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getHeatAmount())).getString();
+		String prefix = recipe.getRecipe().getThermalOffset() > 0 ? "Heating: " : "Cooling: ";
+		String thermalOffset = new TextComponent(prefix).append(ChatFormatting.BLUE.toString())
+				.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getThermalOffset())).getString();
 
 		String overheatTemp = new TextComponent("<- Overheat: ").append(ChatFormatting.RED.toString())
 				.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
@@ -97,18 +95,12 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		int yPos = 15;
 		int xPos = 160;
 
-		if (recipe.getRecipe().getThermalConductivity() > 0) {
-			GuiDrawUtilities.drawString(matrixStack, conductivity, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
-			yPos += 10;
-		}
-
-		if (recipe.getRecipe().getHeatAmount() > 0) {
-			GuiDrawUtilities.drawString(matrixStack, heat, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
-		}
+		GuiDrawUtilities.drawString(matrixStack, thermalOffset, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+		yPos += 10;
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
-			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 32, 0);
-			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, 44f, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, 30f, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
 		if (!recipe.getFluidInput().isEmpty()) {
@@ -121,9 +113,9 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 		if (!recipe.getOutputFluid().isEmpty()) {
 			if (recipe.getOutputFluid().getFluid().getRegistryName().toString().contains("flowing")) {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 58, 0.0f, 0.5f, ChatFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Flowing)", 56f, 13, 0.0f, 0.5f, ChatFormatting.WHITE, false);
 			} else {
-				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 58, 0.0f, 0.5f, ChatFormatting.WHITE, false);
+				GuiDrawUtilities.drawStringWithSize(matrixStack, "(Still)", 51.5f, 13, 0.0f, 0.5f, ChatFormatting.WHITE, false);
 			}
 		}
 
@@ -133,25 +125,17 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 			BlockRenderDispatcher blockRenderer = mc.getBlockRenderer();
 			PoseStack blockStack = new PoseStack();
 
+			blockStack.pushPose();
 			if (recipe.getIsFireInput()) {
-				blockStack.pushPose();
-				blockStack.translate(-0.5, 4.7f, 0.0f);
-				blockStack.scale(0.7f, 0.7f, 0.7f);
-				blockStack.mulPose(new Quaternion(32, 45, 0, true));
-
-				BlockState fireState = Blocks.FIRE.defaultBlockState();
-				blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
-				blockStack.popPose();
+				blockStack.translate(1.8, -13.8f, -9.25f);
 			} else if (recipe.getHasFireOutput()) {
-				blockStack.pushPose();
-				blockStack.translate(1.4, -2.0f, -1.0f);
-				blockStack.scale(0.7f, 0.7f, 0.7f);
-				blockStack.mulPose(new Quaternion(32, 45, 0, true));
-
-				BlockState fireState = Blocks.FIRE.defaultBlockState();
-				blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
-				blockStack.popPose();
+				blockStack.translate(1.4, -1.0f, -9.25f);
 			}
+			blockStack.scale(0.7f, 0.7f, 0.7f);
+			blockStack.mulPose(new Quaternion(32, 45, 0, true));
+			BlockState fireState = Blocks.FIRE.defaultBlockState();
+			blockRenderer.renderSingleBlock(fireState, blockStack, mc.renderBuffers().bufferSource(), 15728880, OverlayTexture.NO_OVERLAY);
+			blockStack.popPose();
 		}
 	}
 
@@ -208,7 +192,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 
 		// Set the overheated block output.
 		if (!recipe.getOutputBlock().isEmpty()) {
-			guiItemStacks.init(2, false, 37, 34);
+			guiItemStacks.init(2, false, 37, 20);
 		}
 
 		guiItemStacks.set(ingredients);
@@ -216,14 +200,14 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		// Set the overheated item output.
 		if (!recipe.getOutputItem().isEmpty()) {
 			IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-			probabilityStacks.init(3, false, 37, 34);
+			probabilityStacks.init(3, false, 37, 18);
 			probabilityStacks.set(ingredients);
 		}
 
 		// Add the fluid.
 		if (!recipe.getOutputFluid().isEmpty()) {
 			IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-			fluids.init(4, false, 35, 32, 20, 20, recipe.getOutputFluid().getAmount(), false, null);
+			fluids.init(4, false, 35, 16, 20, 20, recipe.getOutputFluid().getAmount(), false, null);
 			fluids.set(ingredients);
 		}
 	}

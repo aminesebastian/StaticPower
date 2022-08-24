@@ -3,7 +3,7 @@
 	"blocks": [
 		"minecraft:planks"
 	],
-	"conductivity": "0.1",
+	"thermal_offset": "-0.5",
 	"overheating": {
 		"block": {
 			"Name": "minecraft:fire"

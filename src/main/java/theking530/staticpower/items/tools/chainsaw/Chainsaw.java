@@ -34,7 +34,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.Level;
@@ -74,7 +73,6 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSupplier {
 	private static final List<AbstractMultiPartSlot> PARTS = new ArrayList<AbstractMultiPartSlot>();
 	private static final int MAX_RECURSION = 100;
-	private Ingredient woodIngredient;
 	public final ResourceLocation tier;
 
 	public Chainsaw(float attackDamageIn, float attackSpeedIn, ResourceLocation tier) {
@@ -330,14 +328,10 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 		// Get the state and block here, and check if they are air.
 		BlockState state = player.getCommandSenderWorld().getBlockState(pos);
-		Block block = state.getBlock();
 		if (!state.isAir()) {
-			// Make an itemstack for the block.
-			ItemStack blockStack = new ItemStack(Item.byBlock(block));
-
 			// If not air, check to see if it is wood. If it is, and its harvestable,
 			// harvest it.
-			if (getLogTag().test(blockStack)) {
+			if (state.is(ModTags.LOG)) {
 				if (isCorrectToolForDrops(itemstack, state)) {
 					positions.add(pos);
 
@@ -353,13 +347,6 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	public boolean canPerformAction(ItemStack stack, ToolAction toolAction) {
 		return ToolActions.DEFAULT_AXE_ACTIONS.contains(toolAction);
-	}
-
-	private Ingredient getLogTag() {
-		if (woodIngredient == null) {
-			woodIngredient = Ingredient.of(ModTags.LOG);
-		}
-		return woodIngredient;
 	}
 
 	@Override

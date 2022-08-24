@@ -3,6 +3,5 @@
 	"fluids": [
 		"minecraft:lava"
 	],
-	"conductivity": "0.0",
-	"heating_amount": 10
+	"thermal_offset": 16
 }
