@@ -34,7 +34,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 			ModBlocks.Condenser);
 
 	public static final int DEFAULT_PROCESSING_TIME = 5;
-	public static final float DEFAULT_HEAT_GENERATION = 50.0f;
+	public static final int DEFAULT_HEAT_GENERATION = 50;
 
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
@@ -65,7 +65,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 500.0f, 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 500, 1.0f));
 	}
 
 	protected ProcessingCheckState canProcess() {
@@ -84,7 +84,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 			}
 
 			// Check the heat level.
-			if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getMaximumHeat()) {
+			if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getOverheatThreshold()) {
 				return ProcessingCheckState.error("Machine is too hot!");
 			}
 
@@ -122,7 +122,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 		// Check the heat level.
-		if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getMaximumHeat()) {
+		if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getOverheatThreshold()) {
 			return ProcessingCheckState.error("Machine is too hot!");
 		}
 

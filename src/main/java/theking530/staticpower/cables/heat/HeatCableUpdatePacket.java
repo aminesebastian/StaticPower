@@ -12,13 +12,13 @@ import theking530.staticpower.tileentities.components.ComponentUtilities;
 
 public class HeatCableUpdatePacket extends NetworkMessage {
 	private BlockPos position;
-	private float currentHeat;
-	private float capacity;
+	private int currentHeat;
+	private int capacity;
 
-	public HeatCableUpdatePacket(BlockPos position, double currentHeat, double capacity) {
+	public HeatCableUpdatePacket(BlockPos position, int currentHeat, int capacity) {
 		this.position = position;
-		this.currentHeat = (float) currentHeat;
-		this.capacity = (float) capacity;
+		this.currentHeat = currentHeat;
+		this.capacity = capacity;
 	}
 
 	public HeatCableUpdatePacket() {
@@ -35,8 +35,8 @@ public class HeatCableUpdatePacket extends NetworkMessage {
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		position = buffer.readBlockPos();
-		currentHeat = buffer.readFloat();
-		capacity = buffer.readFloat();
+		currentHeat = buffer.readInt();
+		capacity = buffer.readInt();
 	}
 
 	@Override

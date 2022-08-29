@@ -17,6 +17,7 @@ import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
+import theking530.api.heat.CapabilityHeatable;
 import theking530.api.power.CapabilityStaticVolt;
 import theking530.staticpower.data.StaticPowerTier;
 
@@ -129,12 +130,12 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> digistoreWirelessTerminalPowerCapacity;
 		public final ConfigValue<Integer> digistoreWirelessTerminalPowerUsage;
 
-		public final ConfigValue<Double> minerHeatGeneration;
+		public final ConfigValue<Integer> minerHeatGeneration;
 		public final ConfigValue<Integer> minerFuelUsage;
 		public final ConfigValue<Integer> minerRadius;
 		public final ConfigValue<Integer> minerProcessingTime;
 
-		public final ConfigValue<Double> electricMinerHeatGeneration;
+		public final ConfigValue<Integer> electricMinerHeatGeneration;
 		public final ConfigValue<Integer> electricMinerRadius;
 		public final ConfigValue<Integer> electricMinerProcessingTime;
 		public final LongValue electricMinerPowerUsage;
@@ -148,7 +149,7 @@ public class StaticPowerConfig {
 
 		public final LongValue cruciblePowerUsage;
 		public final LongValue crucibleHeatPowerUsage;
-		public final ConfigValue<Double> crucibleHeatGenerationPerTick;
+		public final ConfigValue<Integer> crucibleHeatGenerationPerTick;
 		public final ConfigValue<Integer> crucibleProcessingTime;
 
 		public final ConfigValue<Integer> basicFarmerFluidUsage;
@@ -233,7 +234,7 @@ public class StaticPowerConfig {
 
 		public final LongValue refineryPowerUsage;
 		public final ConfigValue<Integer> refineryProcessingTime;
-		public final ConfigValue<Double> refineryHeatGeneration;
+		public final ConfigValue<Integer> refineryHeatGeneration;
 
 		public final LongValue laboratoryPowerUsage;
 
@@ -431,7 +432,7 @@ public class StaticPowerConfig {
 				builder.push("Miner");
 				{
 					minerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by a regular miner.")
-							.translation(StaticPower.MOD_ID + ".config." + "minerHeatGeneration").define("MinerHeatGeneration", 60.0);
+							.translation(StaticPower.MOD_ID + ".config." + "minerHeatGeneration").define("MinerHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(100));
 					minerFuelUsage = builder.comment("Defines how much fuel value is used per tick by a regular miner.")
 							.translation(StaticPower.MOD_ID + ".config." + "minerFuelUsage").define("MinerFuelUsage", 1);
 					minerRadius = builder.comment("Defines the base radius of the regular miner.").translation(StaticPower.MOD_ID + ".config." + "minerRadius")
@@ -443,7 +444,8 @@ public class StaticPowerConfig {
 				{
 					builder.push("Electric Miner");
 					electricMinerHeatGeneration = builder.comment("Defines how much heat is produced when a block is broken by an electric miner.")
-							.translation(StaticPower.MOD_ID + ".config." + "electricMinerHeatGeneration").define("ElectricMinerHeatGeneration", 60.0);
+							.translation(StaticPower.MOD_ID + ".config." + "electricMinerHeatGeneration")
+							.define("ElectricMinerHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(100));
 					electricMinerRadius = builder.comment("Defines the base radius of the electric miner.").translation(StaticPower.MOD_ID + ".config." + "electricMinerRadius")
 							.define("ElectricMinerRadius", 3);
 					electricMinerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]).")
@@ -563,7 +565,8 @@ public class StaticPowerConfig {
 							.translation(StaticPower.MOD_ID + ".config." + "crucibleHeatPowerUsage")
 							.defineInRange("CrucibleHeatPowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
 					crucibleHeatGenerationPerTick = builder.comment("Controls the amount of heat that is generated per tick for in the Crucible.")
-							.translation(StaticPower.MOD_ID + ".config." + "crucibleHeatGenerationPerTick").define("CrucibleHeatGenerationPerTick", 5.0);
+							.translation(StaticPower.MOD_ID + ".config." + "crucibleHeatGenerationPerTick")
+							.define("CrucibleHeatGenerationPerTick", CapabilityHeatable.convertHeatToMilliHeat(5));
 					builder.pop();
 				}
 				{
@@ -773,7 +776,8 @@ public class StaticPowerConfig {
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime").define("RefineryProcessingTime", 200);
 					refineryHeatGeneration = builder.comment("Defines how much heat is produced by the refinery per tick ([1 Second = 20 Ticks]).")
-							.translation(StaticPower.MOD_ID + ".config." + "refineryHeatGeneration").define("RefineryHeatGeneration", 40.0);
+							.translation(StaticPower.MOD_ID + ".config." + "refineryHeatGeneration")
+							.define("RefineryHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(50));
 					builder.pop();
 				}
 				{

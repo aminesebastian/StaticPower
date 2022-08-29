@@ -234,16 +234,21 @@ public class StaticPowerForgeEventsCommon {
 				// Add the tooltip if the shift key is down.
 				StaticPowerRecipeRegistry.getRecipe(ThermalConductivityRecipe.RECIPE_TYPE, matchParameters).ifPresent(recipe -> {
 					// Add heat conductivity tooltip.
-					event.getToolTip().add(HeatTooltipUtilities.getThermalOffsetTooltip(recipe.getThermalOffset()));
+					event.getToolTip().add(HeatTooltipUtilities.getHeatConductivityTooltip(recipe.getConductivity()));
 
-					// Add heat generation tooltip.
-					if (recipe.getThermalOffset() > 0) {
-						event.getToolTip().add(HeatTooltipUtilities.getHeatGenerationTooltip(recipe.getThermalOffset()));
+					// Add temperature tooltip.
+					if (recipe.hasActiveTemperature()) {
+						event.getToolTip().add(HeatTooltipUtilities.getActiveTemperatureTooltip(recipe.getTemperature()));
 					}
 
 					// Add overheating tooltip.
 					if (recipe.hasOverheatingBehaviour()) {
 						event.getToolTip().add(HeatTooltipUtilities.getOverheatingTooltip(recipe.getOverheatedTemperature()));
+					}
+					
+					// Add freezing tooltip.
+					if (recipe.hasFreezeBehaviour()) {
+						event.getToolTip().add(HeatTooltipUtilities.getFreezingTooltip(recipe.getFreezingTemperature()));
 					}
 				});
 

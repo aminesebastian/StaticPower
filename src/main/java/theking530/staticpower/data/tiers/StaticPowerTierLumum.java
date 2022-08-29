@@ -182,12 +182,12 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
-	public double getHeatCapacityUpgrade() {
+	public float getHeatCapacityUpgrade() {
 		return 3.0f;
 	}
 
 	@Override
-	public double getHeatConductivityUpgrade() {
+	public float getHeatConductivityUpgrade() {
 		return 3.0f;
 	}
 

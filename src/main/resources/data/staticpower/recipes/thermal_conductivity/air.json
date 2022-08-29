@@ -3,5 +3,5 @@
 	"blocks": [
 		"minecraft:air"
 	],
-	"thermal_offset": "-1.0"
+	"conductivity": 1
 }

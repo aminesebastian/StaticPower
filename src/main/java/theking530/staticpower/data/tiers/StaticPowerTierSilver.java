@@ -22,28 +22,28 @@ public class StaticPowerTierSilver extends StaticPowerTier {
 	}
 
 	@Override
-	protected double getHeatSinkCapacity() {
-		return 256.0;
+	protected int getHeatSinkCapacity() {
+		return 256000;
 	}
 
 	@Override
-	protected double getHeatSinkConductivity() {
-		return 2.0;
+	protected float getHeatSinkConductivity() {
+		return 2.5f;
 	}
 
 	@Override
-	protected double getHeatCableCapacity() {
-		return 8.0;
+	protected int getHeatCableCapacity() {
+		return 128000;
 	}
 
 	@Override
-	protected double getHeatCableConductivity() {
-		return 0.2;
+	protected float getHeatCableConductivity() {
+		return 2.5f;
 	}
 
 	@Override
-	protected double getHeatSinkElectricHeatGeneration() {
-		return 16.0;
+	protected int getHeatSinkElectricHeatGeneration() {
+		return 16000;
 	}
 
 	@Override

@@ -31,13 +31,13 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	@UpdateSerialize
 	protected final HeatStorage heatStorage;
 	@UpdateSerialize
-	private double defaultCapacity;
+	private int defaultCapacity;
 	@UpdateSerialize
-	private double defaultConductivity;
+	private float defaultConductivity;
 	@UpdateSerialize
-	private double heatCapacityUpgradeMultiplier;
+	private float heatCapacityUpgradeMultiplier;
 	@UpdateSerialize
-	private double heatConductivityMultiplier;
+	private float heatConductivityMultiplier;
 	@UpdateSerialize
 	private boolean issueSyncPackets;
 	@UpdateSerialize
@@ -46,22 +46,22 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	private boolean enableAutomaticHeatTransfer;
 
 	protected final HeatDissipationTiming dissipationTiming;
-	protected TriFunction<Double, Direction, HeatManipulationAction, Boolean> filter;
+	protected TriFunction<Integer, Direction, HeatManipulationAction, Boolean> filter;
 
 	private UpgradeInventoryComponent upgradeInventory;
 	private final Map<Direction, HeatComponentCapabilityAccess> accessors;
 	private double lastSyncHeat;
 
-	public HeatStorageComponent(String name, double maxHeat, double maxTransferRate) {
-		this(name, maxHeat, maxTransferRate, HeatDissipationTiming.POST_PROCESS);
+	public HeatStorageComponent(String name, int maxHeat, float conducivity) {
+		this(name, maxHeat, conducivity, HeatDissipationTiming.POST_PROCESS);
 	}
 
-	public HeatStorageComponent(String name, double maxHeat, double maxConductivity, HeatDissipationTiming timing) {
+	public HeatStorageComponent(String name, int maxHeat, float conducivity, HeatDissipationTiming timing) {
 		super(name);
 		defaultCapacity = maxHeat;
-		defaultConductivity = maxConductivity;
+		defaultConductivity = conducivity;
 		issueSyncPackets = false;
-		heatStorage = new HeatStorage(maxHeat, maxConductivity);
+		heatStorage = new HeatStorage(maxHeat, conducivity);
 		exposeAsCapability = true;
 		enableAutomaticHeatTransfer = true;
 
@@ -96,7 +96,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 				// Determine if we should sync.
 				boolean shouldSync = delta > HEAT_SYNC_MAX_DELTA;
 				shouldSync |= heatStorage.getCurrentHeat() == 0 && lastSyncHeat != 0;
-				shouldSync |= heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat() && lastSyncHeat != heatStorage.getMaximumHeat();
+				shouldSync |= heatStorage.getCurrentHeat() == heatStorage.getOverheatThreshold() && lastSyncHeat != heatStorage.getOverheatThreshold();
 
 				// If we should sync, perform the sync.
 				if (shouldSync) {
@@ -115,13 +115,13 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 	}
 
-	public HeatStorageComponent setMaxHeat(double heat) {
+	public HeatStorageComponent setMaxHeat(int heat) {
 		this.defaultCapacity = heat;
 		return this;
 	}
 
-	public HeatStorageComponent setMaxConductivity(double heat) {
-		this.defaultConductivity = heat;
+	public HeatStorageComponent setMaxConductivity(float conducivity) {
+		this.defaultConductivity = conducivity;
 		return this;
 	}
 
@@ -172,7 +172,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	 * @param filter
 	 * @return
 	 */
-	public HeatStorageComponent setCapabiltiyFilter(TriFunction<Double, Direction, HeatManipulationAction, Boolean> filter) {
+	public HeatStorageComponent setCapabiltiyFilter(TriFunction<Integer, Direction, HeatManipulationAction, Boolean> filter) {
 		this.filter = filter;
 		return this;
 	}
@@ -259,7 +259,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		// Set the new values.
-		getStorage().setMaximumHeat(defaultCapacity * heatCapacityUpgradeMultiplier);
+		getStorage().setMaximumHeat((int) (defaultCapacity * heatCapacityUpgradeMultiplier));
 		getStorage().setConductivity(defaultConductivity * heatConductivityMultiplier);
 	}
 
@@ -271,33 +271,33 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public double heat(double amountToHeat, boolean simulate) {
+		public int heat(int amountToHeat, boolean simulate) {
 			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToHeat, side, HeatManipulationAction.HEAT)) {
-				return 0.0f;
+				return 0;
 			}
 			return HeatStorageComponent.this.getStorage().heat(amountToHeat, simulate);
 		}
 
 		@Override
-		public double cool(double amountToCool, boolean simulate) {
+		public int cool(int amountToCool, boolean simulate) {
 			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToCool, side, HeatManipulationAction.COOL)) {
-				return 0.0f;
+				return 0;
 			}
 			return HeatStorageComponent.this.getStorage().cool(amountToCool, simulate);
 		}
 
 		@Override
-		public double getCurrentHeat() {
+		public int getCurrentHeat() {
 			return HeatStorageComponent.this.getStorage().getCurrentHeat();
 		}
 
 		@Override
-		public double getMaximumHeat() {
-			return HeatStorageComponent.this.getStorage().getMaximumHeat();
+		public int getOverheatThreshold() {
+			return HeatStorageComponent.this.getStorage().getOverheatThreshold();
 		}
 
 		@Override
-		public double getConductivity() {
+		public float getConductivity() {
 			return HeatStorageComponent.this.getStorage().getConductivity();
 		}
 	}

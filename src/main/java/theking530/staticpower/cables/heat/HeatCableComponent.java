@@ -1,10 +1,9 @@
 package theking530.staticpower.cables.heat;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.annotation.Nullable;
-
-import com.google.common.util.concurrent.AtomicDouble;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,42 +15,27 @@ import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {
 	public static final String HEAT_CAPACITY_DATA_TAG_KEY = "heat_capacity";
 	public static final String HEAT_CONDUCTIVITY_TAG_KEY = "heat_transfer_rate";
-	public static final String HEAT_GENERATION_RATE = "heat_generation";
-	public static final String HEAT_GENERATION_POWER_USAGE = "heat_generation_power_cost";
 	private final double capacity;
-	private final double transferRate;
+	private final float transferRate;
 	@UpdateSerialize
-	private double clientSideHeat;
+	private int clientSideHeat;
 	@UpdateSerialize
-	private double clientSideHeatCapacity;
-	@UpdateSerialize
-	private double heatGeneration;
-	@UpdateSerialize
-	private int heatGenerationPowerUsage;
-	private EnergyStorageComponent energyStorageComponent;
+	private int clientSideHeatCapacity;
 
-	public HeatCableComponent(String name, double capacity, double transferRate) {
-		this(name, capacity, transferRate, 0.0f, 0);
-	}
-
-	public HeatCableComponent(String name, double capacity, double transferRate, double heatGeneration, int heatGenerationPowerUsage) {
+	public HeatCableComponent(String name, int capacity, float conductivity) {
 		super(name, CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
 		this.capacity = capacity;
-		this.transferRate = transferRate;
-		this.heatGeneration = heatGeneration;
-		this.heatGenerationPowerUsage = heatGenerationPowerUsage;
+		this.transferRate = conductivity;
 	}
 
 	@Override
@@ -60,7 +44,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		if (!getLevel().isClientSide) {
 			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
 				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
-				shouldUpdate |= network.getHeatStorage().getMaximumHeat() != clientSideHeatCapacity;
+				shouldUpdate |= network.getHeatStorage().getOverheatThreshold() != clientSideHeatCapacity;
 				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentHeat() > 0;
 				shouldUpdate |= clientSideHeat > 0 && network.getHeatStorage().getCurrentHeat() == 0;
 				if (shouldUpdate) {
@@ -74,7 +58,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		if (!getLevel().isClientSide) {
 			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
 				clientSideHeat = network.getHeatStorage().getCurrentHeat();
-				clientSideHeatCapacity = network.getHeatStorage().getMaximumHeat();
+				clientSideHeatCapacity = network.getHeatStorage().getOverheatThreshold();
 
 				// Only send the packet to nearby players since these packets get sent
 				// frequently.
@@ -84,36 +68,15 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		}
 	}
 
-	public HeatCableComponent setEnergyStorageComponent(EnergyStorageComponent energyComponent) {
-		energyStorageComponent = energyComponent;
-		return this;
-	}
-
-	public void generateHeat(HeatNetworkModule networkModule) {
-		if (!getLevel().isClientSide) {
-			if (energyStorageComponent != null && heatGeneration != 0.0f) {
-				double transferableHeat = networkModule.getHeatStorage().getMaximumHeat() - networkModule.getHeatStorage().getCurrentHeat();
-				transferableHeat = Math.min(transferableHeat, heatGeneration);
-
-				long maxPowerUsage = Math.min(heatGenerationPowerUsage, energyStorageComponent.getStorage().getStoredPower());
-				long powerUsage = (int) Math.max(1, maxPowerUsage * (transferableHeat / heatGeneration));
-				if (energyStorageComponent.hasEnoughPower(powerUsage)) {
-					energyStorageComponent.useBulkPower(powerUsage);
-					networkModule.getHeatStorage().heat(transferableHeat, false);
-				}
-			}
-		}
-	}
-
 	@Override
 	protected boolean canAttachAttachment(ItemStack attachment) {
 		return false;
 	}
 
 	@Override
-	public double getCurrentHeat() {
+	public int getCurrentHeat() {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicDouble recieve = new AtomicDouble(0);
+			AtomicInteger recieve = new AtomicInteger(0);
 			getHeatNetworkModule().ifPresent(module -> {
 				recieve.set(module.getHeatStorage().getCurrentHeat());
 			});
@@ -124,50 +87,41 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public double getMaximumHeat() {
+	public int getOverheatThreshold() {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicDouble recieve = new AtomicDouble(0);
-			getHeatNetworkModule().ifPresent(module -> {
-				recieve.set(module.getHeatStorage().getMaximumHeat());
-			});
-			return recieve.get();
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? module.getHeatStorage().getOverheatThreshold() : 0;
 		} else {
 			return clientSideHeatCapacity;
 		}
 	}
 
 	@Override
-	public double getConductivity() {
+	public float getConductivity() {
 		return transferRate;
 	}
 
 	@Override
-	public double heat(double amountToHeat, boolean simulate) {
+	public int heat(int amountToHeat, boolean simulate) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicDouble recieve = new AtomicDouble(0);
-			getHeatNetworkModule().ifPresent(module -> {
-				recieve.set(module.getHeatStorage().heat(amountToHeat, simulate));
-			});
-			return (float) recieve.get();
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? module.getHeatStorage().heat(amountToHeat, simulate) : 0;
 		} else {
 			return 0;
 		}
 	}
 
 	@Override
-	public double cool(double amountToCool, boolean simulate) {
+	public int cool(int amountToCool, boolean simulate) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicDouble recieve = new AtomicDouble(0);
-			getHeatNetworkModule().ifPresent(module -> {
-				recieve.set(module.getHeatStorage().cool(amountToCool, simulate));
-			});
-			return (float) recieve.get();
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? module.getHeatStorage().cool(amountToCool, simulate) : 0;
 		} else {
 			return 0;
 		}
 	}
 
-	public void updateFromNetworkUpdatePacket(double clientHeat, double clientCapacity) {
+	public void updateFromNetworkUpdatePacket(int clientHeat, int clientCapacity) {
 		this.clientSideHeat = clientHeat;
 		this.clientSideHeatCapacity = clientCapacity;
 	}
@@ -189,8 +143,6 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	protected void initializeCableProperties(ServerCable cable) {
 		cable.setProperty(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.setProperty(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
-		cable.setProperty(HEAT_GENERATION_RATE, heatGeneration);
-		cable.setProperty(HEAT_GENERATION_POWER_USAGE, heatGenerationPowerUsage);
 	}
 
 	@Override

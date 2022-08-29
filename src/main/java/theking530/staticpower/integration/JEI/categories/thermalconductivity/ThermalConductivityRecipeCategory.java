@@ -85,20 +85,19 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 5, 5, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 135, 35, 30, 5, 0);
 
-		String prefix = recipe.getRecipe().getThermalOffset() > 0 ? "Heating: " : "Cooling: ";
-		String thermalOffset = new TextComponent(prefix).append(ChatFormatting.BLUE.toString())
-				.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getThermalOffset())).getString();
-
-		String overheatTemp = new TextComponent("<- Overheat: ").append(ChatFormatting.RED.toString())
-				.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
-
 		int yPos = 15;
 		int xPos = 160;
 
-		GuiDrawUtilities.drawString(matrixStack, thermalOffset, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
-		yPos += 10;
+		if (recipe.getRecipe().hasActiveTemperature()) {
+			String temperature = new TextComponent("Temperature: ").append(ChatFormatting.BLUE.toString())
+					.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getTemperature())).getString();
+			GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			yPos += 10;
+		}
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
+			String overheatTemp = new TextComponent("<- Overheat: ").append(ChatFormatting.RED.toString())
+					.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
 			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
 			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, 30f, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}

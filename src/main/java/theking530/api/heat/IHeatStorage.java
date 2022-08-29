@@ -1,31 +1,40 @@
 package theking530.api.heat;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
 public interface IHeatStorage {
+	public static final int STONE_MELTING_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(1000);
+	public static final int WATER_BOILING_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(100);
+	public static final int ROOM_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(20);
+	public static final int WATER_FREEZING_TEMPERATURE = CapabilityHeatable.convertHeatToMilliHeat(0);
+
 	/**
 	 * Returns the amount of heat currently stored in this heatable entity.
 	 * 
 	 * @return
 	 */
-	public double getCurrentHeat();
+	public int getCurrentHeat();
 
 	/**
 	 * Returns the maximum amount of heat that can be stored in this heatable
-	 * entity.
+	 * entity. After this point, it can no longer take heat. Think of this as the
+	 * transition point where the storage could no longer exist in its current
+	 * state. Some possible uses for this could be to explode when over-heated or to
+	 * transition states.
 	 * 
 	 * @return
 	 */
-	public double getMaximumHeat();
-
+	public int getOverheatThreshold();
+	
 	/**
 	 * Gets the maximum rate that this heatable entity can transfer thermal energy.
 	 * 
 	 * @return
 	 */
-	public double getConductivity();
+	public default float getConductivity() {
+		return 1.0f;
+	}
 
 	/**
 	 * Adds heat to this heatable entity.
@@ -34,7 +43,7 @@ public interface IHeatStorage {
 	 * @param simulate
 	 * @return
 	 */
-	public double heat(double amountToHeat, boolean simulate);
+	public int heat(int amountToHeat, boolean simulate);
 
 	/**
 	 * Cools down this heatable entity.
@@ -43,7 +52,7 @@ public interface IHeatStorage {
 	 * @param simulate
 	 * @return
 	 */
-	public double cool(double amountToCool, boolean simulate);
+	public int cool(int amountToCool, boolean simulate);
 
 	/**
 	 * Transfers the heat stored in this storage to adjacent blocks. The transfered
@@ -54,9 +63,6 @@ public interface IHeatStorage {
 	 * @param currentPos The position of this heat storage.
 	 */
 	public default void transferWithSurroundings(Level world, BlockPos currentPos) {
-		for (Direction dir : Direction.values()) {
-			HeatStorageUtilities.transferHeatPassivelyWithBlockFromDirection(world, currentPos, dir, this);
-			HeatStorageUtilities.transferHeatActivelyWithBlockFromDirection(world, currentPos, dir, this);
-		}
+		HeatStorageUtilities.transferHeatWithSurroundings(this, world, currentPos);
 	}
 }

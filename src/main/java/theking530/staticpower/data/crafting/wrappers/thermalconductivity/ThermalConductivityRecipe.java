@@ -21,21 +21,36 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 	private final ResourceLocation[] blocks;
 	private final ResourceLocation[] fluids;
+
+	private final int overheatTemperature;
 	private final BlockState overheatedBlock;
 	private final ProbabilityItemStackOutput overheatedItemStack;
-	private final float overheatedTemperature;
-	private final float appliedThermalOffset;
+
+	private final int freezingTemperature;
+	private final BlockState freezingBlock;
+	private final ProbabilityItemStackOutput freezingItemStack;
+
+	private final int temperature;
+	private final boolean hasActiveTemperature;
+
+	private final float conductivity;
 	private final boolean isAirRecipe;
 
-	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids, BlockState overheatedBlock,
-			ProbabilityItemStackOutput overheatedItemStack, float overheatedTemperature, float appliedThermalOffset) {
+	public ThermalConductivityRecipe(ResourceLocation name, ResourceLocation[] blocks, ResourceLocation[] fluids, int overheatTemperature, BlockState overheatedBlock,
+			ProbabilityItemStackOutput overheatedItemStack, int freezingTemperature, BlockState freezingBlock, ProbabilityItemStackOutput freezingItemStack, int temperature,
+			boolean hasActiveTemperature, float conductivity) {
 		super(name);
 		this.blocks = blocks;
 		this.fluids = fluids;
-		this.appliedThermalOffset = appliedThermalOffset;
+		this.overheatTemperature = overheatTemperature;
 		this.overheatedBlock = overheatedBlock;
 		this.overheatedItemStack = overheatedItemStack;
-		this.overheatedTemperature = overheatedTemperature;
+		this.freezingTemperature = freezingTemperature;
+		this.freezingBlock = freezingBlock;
+		this.freezingItemStack = freezingItemStack;
+		this.temperature = temperature;
+		this.hasActiveTemperature = hasActiveTemperature;
+		this.conductivity = conductivity;
 
 		boolean flagIsAirRecipe = false;
 		for (ResourceLocation loc : blocks) {
@@ -45,6 +60,18 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 			}
 		}
 		this.isAirRecipe = flagIsAirRecipe;
+	}
+
+	public int getTemperature() {
+		return temperature;
+	}
+
+	public boolean hasActiveTemperature() {
+		return hasActiveTemperature;
+	}
+
+	public float getConductivity() {
+		return conductivity;
 	}
 
 	public boolean isAirRecipe() {
@@ -57,10 +84,6 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 
 	public ResourceLocation[] getFluidTags() {
 		return fluids;
-	}
-
-	public float getThermalOffset() {
-		return appliedThermalOffset;
 	}
 
 	public BlockState getOverheatedBlock() {
@@ -79,12 +102,36 @@ public class ThermalConductivityRecipe extends AbstractStaticPowerRecipe {
 		return !overheatedItemStack.isEmpty();
 	}
 
-	public float getOverheatedTemperature() {
-		return overheatedTemperature;
+	public int getOverheatedTemperature() {
+		return overheatTemperature;
 	}
 
 	public boolean hasOverheatingBehaviour() {
 		return hasOverheatedBlock() || hasOverheatedItem();
+	}
+
+	public BlockState getFreezingBlock() {
+		return freezingBlock;
+	}
+
+	public boolean hasFreezingBlock() {
+		return freezingBlock != Blocks.VOID_AIR.defaultBlockState();
+	}
+
+	public ProbabilityItemStackOutput getFreezingItem() {
+		return freezingItemStack;
+	}
+
+	public boolean hasFreezingItem() {
+		return !freezingItemStack.isEmpty();
+	}
+
+	public int getFreezingTemperature() {
+		return freezingTemperature;
+	}
+
+	public boolean hasFreezeBehaviour() {
+		return hasFreezingBlock() || hasFreezingItem();
 	}
 
 	@Override

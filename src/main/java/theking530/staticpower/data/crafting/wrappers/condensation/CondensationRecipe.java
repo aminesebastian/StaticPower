@@ -15,9 +15,9 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 
 	private final FluidStack inputFluid;
 	private final FluidStack outputFluid;
-	private final float heatGeneration;
+	private final int heatGeneration;
 
-	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float heatGeneration, MachineRecipeProcessingSection processing) {
+	public CondensationRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, int heatGeneration, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
@@ -32,7 +32,7 @@ public class CondensationRecipe extends AbstractMachineRecipe {
 		return outputFluid;
 	}
 
-	public float getHeatGeneration() {
+	public int getHeatGeneration() {
 		return heatGeneration;
 	}
 

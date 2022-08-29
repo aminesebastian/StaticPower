@@ -57,7 +57,7 @@ public class TileEntityCauldron extends TileEntityBase {
 				.setCapabilityExposedModes(MachineSideMode.Output).setAutoSyncPacketsEnabled(true));
 
 		// Only allow this to be heated by other sources.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 200.0f, 1.0f)
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 200, 1.0f)
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.HEAT));
 	}
 

@@ -3,6 +3,5 @@
 	"blocks": [
 		"minecraft:dirt",	
 		"minecraft:grass"
-	],
-	"thermal_offset": "-2.0"
+	]
 }

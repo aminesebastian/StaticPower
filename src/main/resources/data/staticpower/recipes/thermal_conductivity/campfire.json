@@ -3,5 +3,5 @@
 	"blocks": [
 		"minecraft:campfire"
 	],
-	"thermal_offset": 6
+	"temperature": 600000
 }

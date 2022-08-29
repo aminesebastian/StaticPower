@@ -3,7 +3,6 @@
 	"blocks": [
 		"minecraft:logs"
 	],
-	"thermal_offset": "-0.5",
 	"overheating": {
 		"block": {
 			"Name": "minecraft:fire"
@@ -13,6 +12,6 @@
 			"count": 1,
 			"chance": 0.95
 		},
-		"temperature": 500
+		"temperature": 500000
 	}
 }

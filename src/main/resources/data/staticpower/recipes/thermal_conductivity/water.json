@@ -3,11 +3,17 @@
 	"fluids": [
 		"minecraft:water"
 	],
-	"thermal_offset": "-5.0",
+	"conductivity": 10,
 	"overheating": {
 		"block": {
 			"Name": "staticpower:steam"
 		},
-		"temperature": 100
+		"temperature": 100000
+	},
+	"freezing": {
+		"block": {
+			"Name": "minecraft:ice"
+		},
+		"temperature": 0
 	}
 }

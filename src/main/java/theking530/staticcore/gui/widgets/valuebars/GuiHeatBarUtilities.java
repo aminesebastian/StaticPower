@@ -3,17 +3,12 @@ package theking530.staticcore.gui.widgets.valuebars;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -28,35 +23,33 @@ public class GuiHeatBarUtilities {
 	}
 
 	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, double currentHeat, double maxHeat) {
-		float u1 = (float) (currentHeat / maxHeat);
-		float k1 = u1 * height;
+		float percentFilled = (float) currentHeat / (float) maxHeat;
+		float filledHeight = percentFilled * height;
 
-		GuiDrawUtilities.drawSlot(stack, width, height, xpos, ypos, 0);
+		float sinInput = Minecraft.getInstance().getFrameTime() + Minecraft.getInstance().level.getGameTime();
+		float glowState = (float) (Math.sin((float) sinInput / 20.0f));
+		float inputMin = -1.0f;
+		float inputMax = 1.0f;
+		float glowMin = 0.75f;
+		float glowMax = 1.0f;
+		glowState = glowMin + ((glowMax - glowMin) / (inputMax - inputMin)) * (glowState - inputMin);
 
-		Tesselator tessellator = Tesselator.getInstance();
-		BufferBuilder vertexbuffer = tessellator.getBuilder();
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, GuiTextures.HEAT_BAR_BG);
-		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		vertexbuffer.vertex(stack.last().pose(), xpos + width, ypos + height, zLevel).uv(1, 0).endVertex();
-		vertexbuffer.vertex(stack.last().pose(), xpos + width, ypos, zLevel).uv(1.0f, 1.0f).endVertex();
-		vertexbuffer.vertex(stack.last().pose(), xpos, ypos, zLevel).uv(0.0f, 1.0f).endVertex();
-		vertexbuffer.vertex(stack.last().pose(), xpos, ypos + height, zLevel).uv(0, 0).endVertex();
-		tessellator.end();
+		stack.pushPose();
+		stack.translate(xpos, ypos, 0);
+		GuiDrawUtilities.drawSlot(stack, width, height, 0, 0, 0);
+		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_BG, width, height, 0, 0, 1, 1, Color.WHITE);
+		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_FG, width, filledHeight, 0, height - filledHeight, 0, 0, 1 - percentFilled, 1, 1, new Color(1, 1, 1, 1.0f));
 
-		float glowState = (float) (Math.sin((float) Minecraft.getInstance().level.getGameTime() / 10.0f));
-		glowState = Math.abs(glowState);
-		glowState *= 2.0f;
-		glowState += 8.0f;
-		glowState /= 2.0f;
+		stack.pushPose();
+		stack.translate(0, height - filledHeight, 0);
+		GuiDrawUtilities.drawRectangle(stack, width + 2, 1, -1, 0, 0, Color.GREY);
+		GuiDrawUtilities.drawRectangle(stack, 1, 5, -2, -2, 0, Color.GREY);
+		GuiDrawUtilities.drawRectangle(stack, 1, 5, width + 1, -2, 0, Color.GREY);
 
-		RenderSystem.setShader(GameRenderer::getPositionTexShader);
-		RenderSystem.setShaderTexture(0, GuiTextures.HEAT_BAR_FG);
-		vertexbuffer.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-		vertexbuffer.vertex(stack.last().pose(), xpos + width, ypos + height, zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, 0).endVertex();
-		vertexbuffer.vertex(stack.last().pose(), xpos + width, ypos + height - k1, zLevel).color(glowState, glowState, glowState, 1.0f).uv(1, u1).endVertex();
-		vertexbuffer.vertex(stack.last().pose(), xpos, ypos + height - k1, zLevel).color(glowState, glowState, glowState, 1.0f).uv(0, u1).endVertex();
-		vertexbuffer.vertex(stack.last().pose(), xpos, ypos + height, zLevel).color(glowState, glowState, glowState, 1.0f).uv(0, 0).endVertex();
-		tessellator.end();
+		stack.translate(width + 2, -2.5f, 0);
+//		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_INDICATOR_ARROW, 6, 6, 0, 0, 1, 1, Color.WHITE);
+		stack.popPose();
+
+		stack.popPose();
 	}
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -92,13 +93,13 @@ public class TileEntityRefineryController extends TileEntityMachine {
 
 		registerComponent(fluidTanks[0] = new FluidTankComponent("FluidTank0", tier.defaultTankCapacity.get(), (fluid) -> {
 			FluidStack otherFluid = getInputTank(1).isEmpty() ? ModFluids.WILDCARD : getInputTank(1).getFluid();
-			RecipeMatchParameters params = new RecipeMatchParameters().setFluids(fluid, otherFluid).ignoreItems();
+			RecipeMatchParameters params = new RecipeMatchParameters().setFluids(fluid, otherFluid).ignoreItems().ignoreFluidAmounts();
 			return processingComponent.getRecipe(params).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input2).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(fluidTanks[1] = new FluidTankComponent("FluidTank1", tier.defaultTankCapacity.get(), (fluid) -> {
 			FluidStack otherFluid = getInputTank(0).isEmpty() ? ModFluids.WILDCARD : getInputTank(0).getFluid();
-			RecipeMatchParameters params = new RecipeMatchParameters().setFluids(otherFluid, fluid).ignoreItems();
+			RecipeMatchParameters params = new RecipeMatchParameters().setFluids(otherFluid, fluid).ignoreItems().ignoreFluidAmounts();
 			return processingComponent.getRecipe(params).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input3).setUpgradeInventory(upgradesInventory));
 
@@ -119,7 +120,7 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		fluidTanks[4].setAutoSyncPacketsEnabled(true);
 
 		// Add the heat storage and the upgrade inventory to the heat component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 350.0f, 1)
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", CapabilityHeatable.convertHeatToMilliHeat(350), 2)
 				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL).setExposedAsCapability(false).setEnableAutomaticHeatTransfer(false));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 	}
@@ -133,9 +134,9 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		refreshMultiBlock = true;
 
 		if (!getLevel().isClientSide()) {
-			if (processingComponent.isPerformingWork()) {
+//			if (processingComponent.isPerformingWork()) {
 				heatStorage.getStorage().heat(getHeatGeneration(), false);
-			}
+			//}
 		}
 	}
 
@@ -143,8 +144,9 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		this.refreshMultiBlock = true;
 	}
 
-	public double getHeatGeneration() {
-		return StaticPowerConfig.SERVER.refineryHeatGeneration.get() * processingComponent.getCalculatedPowerUsageMultipler();
+	public int getHeatGeneration() {
+		return (int) (CapabilityHeatable.convertHeatToMilliHeat(10) * processingComponent.getCalculatedHeatGenerationMultiplier());
+//		return (int) (StaticPowerConfig.SERVER.refineryHeatGeneration.get() * processingComponent.getCalculatedHeatGenerationMultiplier());
 	}
 
 	private void refreshMultiBlock() {

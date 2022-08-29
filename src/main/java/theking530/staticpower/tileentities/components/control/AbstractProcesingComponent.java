@@ -377,6 +377,10 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return powerUsageIncreaseMultiplier;
 	}
 
+	public float getCalculatedHeatGenerationMultiplier() {
+		return powerUsageIncreaseMultiplier;
+	}
+
 	public void setMaxProcessingTime(int newTime) {
 		defaultProcessingTime = newTime;
 		processingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);

@@ -44,7 +44,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 
 	public static final int DEFAULT_PROCESSING_TIME = 5;
 	public static final int DEFAULT_TANK_SIZE = 5000;
-	public static final float DEFAULT_EVAPORATION_HEAT = 10.0f;
+	public static final int DEFAULT_EVAPORATION_HEAT = 10;
 
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
@@ -76,7 +76,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 500.0f, 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 500, 1.0f));
 	}
 
 	protected ProcessingCheckState canProcess() {

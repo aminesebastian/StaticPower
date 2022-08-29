@@ -3,11 +3,12 @@
 	"blocks": [
 		"minecraft:ice"
 	],
-	"thermal_offset": "-12.0",
+	"conductivity": 10,
+	"temperature": 0,
 	"overheating": {
 		"block": {
 			"Name": "minecraft:water"
 		},
-		"temperature": 100
+		"temperature": 100000
 	}
 }

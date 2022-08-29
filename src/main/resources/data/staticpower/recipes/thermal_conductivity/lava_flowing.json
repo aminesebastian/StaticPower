@@ -3,5 +3,5 @@
 	"fluids": [
 		"minecraft:flowing_lava"
 	],
-	"thermal_offset": 10
+	"temperature": 1000000
 }

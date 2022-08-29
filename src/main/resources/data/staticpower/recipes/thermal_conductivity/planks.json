@@ -3,11 +3,10 @@
 	"blocks": [
 		"minecraft:planks"
 	],
-	"thermal_offset": "-0.5",
 	"overheating": {
 		"block": {
 			"Name": "minecraft:fire"
 		},
-		"temperature": 300
+		"temperature": 300000
 	}
 }

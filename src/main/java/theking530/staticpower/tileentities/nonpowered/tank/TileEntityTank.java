@@ -120,7 +120,7 @@ public class TileEntityTank extends TileEntityBase {
 		// Creative tanks should automatically fill up with the first provided fluid.
 		if (getType() == TYPE_CREATIVE.getType() && fluidTankComponent.getFluidAmount() > 0) {
 			FluidStack existingStack = fluidTankComponent.getFluid();
-			existingStack.setAmount(fluidTankComponent.getCapacity());
+			existingStack.setAmount(fluidTankComponent.getCapacity() / 2);
 		}
 	}
 

@@ -7,16 +7,15 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class HeatTooltipUtilities {
 
-	public static MutableComponent getHeatConductivityTooltip(double heatDissipation) {
-		return new TextComponent(ChatFormatting.GRAY + "Heat Conductivity: ").append(GuiTextUtilities.formatConductivityToString(heatDissipation)).withStyle(ChatFormatting.BLUE);
+	public static MutableComponent getHeatConductivityTooltip(float conductivity) {
+		return new TextComponent(ChatFormatting.GRAY + "Heat Conductivity: ").append(GuiTextUtilities.formatConductivityToString(conductivity)).withStyle(ChatFormatting.BLUE);
 	}
 
-	public static MutableComponent getThermalOffsetTooltip(double heatGeneration) {
-		String prefix = heatGeneration > 0 ? "Heating: " : "Cooling: ";
-		return new TextComponent(ChatFormatting.GRAY + prefix).append(GuiTextUtilities.formatHeatRateToString(heatGeneration)).withStyle(ChatFormatting.GOLD);
+	public static MutableComponent getActiveTemperatureTooltip(int temperature) {
+		return new TextComponent(ChatFormatting.GRAY + "Temperature: ").append(GuiTextUtilities.formatHeatRateToString(temperature)).withStyle(ChatFormatting.GOLD);
 	}
 
-	public static MutableComponent getHeatGenerationTooltip(double heatGeneration) {
+	public static MutableComponent getHeatGenerationTooltip(int heatGeneration) {
 		return new TextComponent(ChatFormatting.GRAY + "Heat Generation: ").append(GuiTextUtilities.formatHeatRateToString(heatGeneration)).withStyle(ChatFormatting.GOLD);
 	}
 
@@ -24,7 +23,11 @@ public class HeatTooltipUtilities {
 		return new TextComponent(ChatFormatting.GRAY + "Heat Capacity: ").append(GuiTextUtilities.formatHeatToString(capacity)).withStyle(ChatFormatting.GREEN);
 	}
 
-	public static MutableComponent getOverheatingTooltip(double temperature) {
+	public static MutableComponent getOverheatingTooltip(int temperature) {
 		return new TextComponent(ChatFormatting.GRAY + "Overheats At: ").append(GuiTextUtilities.formatHeatToString(temperature)).withStyle(ChatFormatting.RED);
+	}
+
+	public static MutableComponent getFreezingTooltip(int temperature) {
+		return new TextComponent(ChatFormatting.GRAY + "Freezes At: ").append(GuiTextUtilities.formatHeatToString(temperature)).withStyle(ChatFormatting.RED);
 	}
 }

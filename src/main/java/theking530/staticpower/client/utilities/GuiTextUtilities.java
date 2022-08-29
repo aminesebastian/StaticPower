@@ -148,8 +148,8 @@ public class GuiTextUtilities {
 		if ((int) heat == Integer.MAX_VALUE) {
 			output = new TextComponent("∞");
 		} else {
-			MetricConverter metricEnergy = new MetricConverter(heat);
-			output = new TextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricEnergy.getValue()));
+			MetricConverter metricEnergy = new MetricConverter(heat, -1);
+			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
 
 			if (includeMetricUnit) {
 				output.append(metricEnergy.getSuffix());
@@ -170,8 +170,8 @@ public class GuiTextUtilities {
 		if ((int) heatTransferRate == Integer.MAX_VALUE) {
 			output = new TextComponent("∞");
 		} else {
-			MetricConverter metricRate = new MetricConverter(heatTransferRate);
-			output = new TextComponent(NUMBER_FORMATTER_TWO_DECIMAL.format(metricRate.getValue())).append(" ").append(metricRate.getSuffix());
+			MetricConverter metricRate = new MetricConverter(heatTransferRate, -1);
+			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(" ").append(metricRate.getSuffix());
 		}
 
 		return output.append(HEAT_RATE_TRANSLATION);

@@ -216,7 +216,7 @@ public class GuiDrawUtilities {
 	}
 
 	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float minU, float minV, float maxU, float maxV, Color color) {
-		drawTexture(pose, texture, width, height, 0, 0, 0, minU, minV, maxU, maxV);
+		drawTexture(pose, texture, width, height, 0, 0, 0, minU, minV, maxU, maxV, color);
 	}
 
 	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y, float z, float minU, float minV, float maxU, float maxV) {

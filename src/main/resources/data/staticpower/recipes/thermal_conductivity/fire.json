@@ -3,5 +3,5 @@
 	"blocks": [
 		"minecraft:fire"
 	],
-	"thermal_offset": 4
+	"temperature": 400000
 }

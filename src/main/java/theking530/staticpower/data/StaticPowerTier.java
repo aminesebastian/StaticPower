@@ -76,11 +76,12 @@ public abstract class StaticPowerTier {
 	/********************
 	 * Heat Configuration
 	 ********************/
-	public final ConfigValue<Double> heatCableCapacity;
-	public final ConfigValue<Double> heatCableConductivity;
-	public final ConfigValue<Double> heatSinkCapacity;
-	public final ConfigValue<Double> heatSinkConductivity;
-	public final ConfigValue<Double> heatSinkElectricHeatGeneration;
+	public final ConfigValue<Integer> heatCableCapacity;
+	public final ConfigValue<Float> heatCableConductivity;
+	public final ConfigValue<Integer> heatSinkCapacity;
+
+	public final ConfigValue<Float> heatSinkConductivity;
+	public final ConfigValue<Integer> heatSinkElectricHeatGeneration;
 	public final ConfigValue<Integer> heatSinkElectricHeatPowerUsage;
 
 	/*********************
@@ -129,12 +130,12 @@ public abstract class StaticPowerTier {
 	/************************
 	 * Heat Capacity Upgrade
 	 ************************/
-	public final ConfigValue<Double> heatCapacityUpgrade;
+	public final ConfigValue<Float> heatCapacityUpgrade;
 
 	/************************
 	 * Heat Conductivity Upgrade
 	 ************************/
-	public final ConfigValue<Double> heatConductivityUpgrade;
+	public final ConfigValue<Float> heatConductivityUpgrade;
 
 	/***************************
 	 * Output Multiplier Upgrade
@@ -184,11 +185,12 @@ public abstract class StaticPowerTier {
 
 	public StaticPowerTier(ForgeConfigSpec.Builder builder) {
 		// Establish field for the tier Id.
-		tierId = builder.comment("The unique id of the tier in the format of 'MOD_ID:TIER_NAME'.").translation(StaticPower.MOD_ID + ".config." + "tierId").define("TierId", getTierId().toString());
+		tierId = builder.comment("The unique id of the tier in the format of 'MOD_ID:TIER_NAME'.").translation(StaticPower.MOD_ID + ".config." + "tierId").define("TierId",
+				getTierId().toString());
 
 		// Establish a field for the unlocalized name.
-		unlocalizedTierName = builder.comment("The unlocalized name of the tier.").translation(StaticPower.MOD_ID + ".config." + "unlocalizedTierName").define("UnlocalizedTierName",
-				getUnlocalizedName());
+		unlocalizedTierName = builder.comment("The unlocalized name of the tier.").translation(StaticPower.MOD_ID + ".config." + "unlocalizedTierName")
+				.define("UnlocalizedTierName", getUnlocalizedName());
 
 		builder.push("Digistore");
 		digistoreCardCapacity = builder.comment("The number of items that can be contained in a regular digistore card of this tier.")
@@ -197,26 +199,33 @@ public abstract class StaticPowerTier {
 
 		builder.push("Machines");
 		defaultMachinePowerCapacity = builder.comment("The base amount of power a machine of this tier can store (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerCapacity").defineInRange("DefaultMachinePowerCapacity", this.getDefaultMachinePowerCapacity(), 0, Long.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerCapacity")
+				.defineInRange("DefaultMachinePowerCapacity", this.getDefaultMachinePowerCapacity(), 0, Long.MAX_VALUE);
 
-		defaultMachinePowerInput = builder.comment("The base amount of power a machine of this tier can consume from a power providing source (a cable or battery) (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerInput").defineInRange("DefaultMachinePowerInput", this.getDefaultMachinePowerInput(), 0, Long.MAX_VALUE);
+		defaultMachinePowerInput = builder
+				.comment("The base amount of power a machine of this tier can consume from a power providing source (a cable or battery) (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerInput")
+				.defineInRange("DefaultMachinePowerInput", this.getDefaultMachinePowerInput(), 0, Long.MAX_VALUE);
 
 		defaultMachinePowerOutput = builder.comment("The base amount of power that can be extracted or provided by a machine of this tier (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerOutput").defineInRange("DefaultMachinePowerOutput", this.getDefaultMachinePowerOutput(), 0, Long.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerOutput")
+				.defineInRange("DefaultMachinePowerOutput", this.getDefaultMachinePowerOutput(), 0, Long.MAX_VALUE);
 
 		defaultTankCapacity = builder.comment("The base amount of fluid a machine of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "defaultTankCapacity")
 				.define("DefaultTankCapacity", this.getDefaultTankCapacity());
 
 		builder.push("Conveyor");
-		conveyorSpeedMultiplier = builder.comment("The speed multitplier applied to conveyors of this tier.").translation(StaticPower.MOD_ID + ".config." + "conveyorSpeedMultiplier")
+		conveyorSpeedMultiplier = builder.comment("The speed multitplier applied to conveyors of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "conveyorSpeedMultiplier")
 				.defineInRange("ConveyorSpeedMultiplier", getConveyorSpeedMultiplier(), 0, Double.MAX_VALUE);
 
-		conveyorSupplierStackSize = builder.comment("The maximum stack size suppliers of this tier can consume at a time.").translation(StaticPower.MOD_ID + ".config." + "conveyorSupplierStackSize")
+		conveyorSupplierStackSize = builder.comment("The maximum stack size suppliers of this tier can consume at a time.")
+				.translation(StaticPower.MOD_ID + ".config." + "conveyorSupplierStackSize")
 				.defineInRange("ConveyorSupplierStackSize", getConveyorSupplierStackSize(), 0, Integer.MAX_VALUE);
 
 		conveyorExtractorStackSize = builder.comment("The maximum stack size that an extractor of this tier can extract from an adjacent inventory.")
-				.translation(StaticPower.MOD_ID + ".config." + "conveyorExtractorStackSize").defineInRange("ConveyorExtractorStackSize", getConveyorExtractorStackSize(), 0, Integer.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "conveyorExtractorStackSize")
+				.defineInRange("ConveyorExtractorStackSize", getConveyorExtractorStackSize(), 0, Integer.MAX_VALUE);
 
 		builder.pop();
 
@@ -231,14 +240,17 @@ public abstract class StaticPowerTier {
 
 		builder.push("Solar_Panel");
 		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration").defineInRange("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration")
+				.defineInRange("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
 
 		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage").defineInRange("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage")
+				.defineInRange("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
 		builder.pop();
 
 		builder.push("Pump");
-		pumpRate = builder.comment("The amount of ticks that will elapse between each pump operation. The higher this number, the slower the pump will operate (20 ticks == 1 second).")
+		pumpRate = builder
+				.comment("The amount of ticks that will elapse between each pump operation. The higher this number, the slower the pump will operate (20 ticks == 1 second).")
 				.translation(StaticPower.MOD_ID + ".config." + "pumpRate").define("PumpRate", this.getPumpRate());
 		builder.pop();
 
@@ -250,8 +262,8 @@ public abstract class StaticPowerTier {
 		builder.pop();
 
 		builder.push("Heatsink");
-		heatSinkCapacity = builder.comment("The amount of heat a heatsink of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "heatSinkCapacity").define("HeatSinkCapacity",
-				this.getHeatSinkCapacity());
+		heatSinkCapacity = builder.comment("The amount of heat a heatsink of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "heatSinkCapacity")
+				.define("HeatSinkCapacity", this.getHeatSinkCapacity());
 
 		heatSinkConductivity = builder.comment("The conductivity multiplier for a heatsink of this tier. The higher it is, the faster it is able to dissipate heat.")
 				.translation(StaticPower.MOD_ID + ".config." + "heatSinkConductivity").define("HeatSinkConductivity", this.getHeatSinkConductivity());
@@ -269,14 +281,14 @@ public abstract class StaticPowerTier {
 		cableExtractorRate = builder.comment("How many ticks inbetween each extraction. The lower, the more frequently it extracts. Lower values impact performance.")
 				.translation(StaticPower.MOD_ID + ".config." + "cableExtractorRate").define("CableExtractorRate", this.getCableExtractorRate());
 
-		cableExtractionStackSize = builder.comment("The number of items that are extracted per extraction.").translation(StaticPower.MOD_ID + ".config." + "cableExtractionStackSize")
-				.define("CableExtractionStackSize", this.getCableExtractionStackSize());
+		cableExtractionStackSize = builder.comment("The number of items that are extracted per extraction.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableExtractionStackSize").define("CableExtractionStackSize", this.getCableExtractionStackSize());
 
 		cableExtractionFluidRate = builder.comment("The amount of fluid extracted per extraction").translation(StaticPower.MOD_ID + ".config." + "cableExtractionFluidRate")
 				.define("CableExtractionFluidRate", this.getCableExtractionFluidRate());
 
-		cableExtractionFilterSlots = builder.comment("The number of filter slots available on an extractor of this tier.").translation(StaticPower.MOD_ID + ".config." + "cableExtractionFilterSlots")
-				.define("CableExtractionFilterSlots", this.getCableExtractionFilterSlots());
+		cableExtractionFilterSlots = builder.comment("The number of filter slots available on an extractor of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableExtractionFilterSlots").define("CableExtractionFilterSlots", this.getCableExtractionFilterSlots());
 
 		cableExtractedItemInitialSpeed = builder.comment("The initial speed of the item that is input into the tube when an extractor of this tier extracts an item.")
 				.translation(StaticPower.MOD_ID + ".config." + "cableExtractedItemInitialSpeed").define("CableExtractedItemInitialSpeed", this.getExtractedItemInitialSpeed());
@@ -297,8 +309,8 @@ public abstract class StaticPowerTier {
 		builder.pop();
 
 		builder.push("Filter");
-		cableFilterSlots = builder.comment("The number slots in a filter of this tier.").translation(StaticPower.MOD_ID + ".config." + "cableFilterSlots").define("CableFilterSlots",
-				this.getCableFilterSlots());
+		cableFilterSlots = builder.comment("The number slots in a filter of this tier.").translation(StaticPower.MOD_ID + ".config." + "cableFilterSlots")
+				.define("CableFilterSlots", this.getCableFilterSlots());
 		builder.pop();
 		builder.pop();
 
@@ -317,9 +329,12 @@ public abstract class StaticPowerTier {
 				.translation(StaticPower.MOD_ID + ".config." + "cablePowerDelivery").defineInRange("CablePowerDelivery", this.getCablePowerDelivery(), 0, Long.MAX_VALUE);
 
 		cableIndustrialPowerCapacity = builder.comment("The amount of power that an industrial power cable of this tier can store (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerCapacity").defineInRange("CableIndustrialPowerCapacity", this.getCableIndustrialPowerCapacity(), 0, Long.MAX_VALUE);
-		cableIndustrialPowerDelivery = builder.comment("The amount of power that an industrial power cable of this tier can supply to a single destination (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerDelivery").defineInRange("CableIndustrialPowerDelivery", this.getCableIndustrialPowerDelivery(), 0, Long.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerCapacity")
+				.defineInRange("CableIndustrialPowerCapacity", this.getCableIndustrialPowerCapacity(), 0, Long.MAX_VALUE);
+		cableIndustrialPowerDelivery = builder
+				.comment("The amount of power that an industrial power cable of this tier can supply to a single destination (in mSV [1SV = 1000mSV]).")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerDelivery")
+				.defineInRange("CableIndustrialPowerDelivery", this.getCableIndustrialPowerDelivery(), 0, Long.MAX_VALUE);
 
 		builder.pop();
 
@@ -342,8 +357,8 @@ public abstract class StaticPowerTier {
 		 * Fluid
 		 ********/
 		builder.push("Fluid");
-		cableFluidCapacity = builder.comment("The amount of fluid that can be stored in a regular fluid pipe of this tier.").translation(StaticPower.MOD_ID + ".config." + "cableFluidCapacity")
-				.define("CableFluidCapacity", this.getCableFluidCapacity());
+		cableFluidCapacity = builder.comment("The amount of fluid that can be stored in a regular fluid pipe of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableFluidCapacity").define("CableFluidCapacity", this.getCableFluidCapacity());
 
 		cableIndustrialFluidCapacity = builder.comment("The amount of fluid that can be stored in an industrial fluid pipe of this tier.")
 				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialFluidCapacity").define("CableIndustrialFluidCapacity", this.getCableIndustrialFluidCapacity());
@@ -356,7 +371,8 @@ public abstract class StaticPowerTier {
 		heatCableCapacity = builder.comment("The amount of heat that a heat pipe of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "heatCableCapacity")
 				.define("HeatCableCapacity", this.getHeatCableCapacity());
 
-		heatCableConductivity = builder.comment("The conductivity multiplier for a heat pipe of this tier. The higher it is, the faster it is able to dissipate heat. This value is PER BLOCK SIDE.")
+		heatCableConductivity = builder
+				.comment("The conductivity multiplier for a heat pipe of this tier. The higher it is, the faster it is able to dissipate heat. This value is PER BLOCK SIDE.")
 				.translation(StaticPower.MOD_ID + ".config." + "heatCableConductivity").define("HeatCableConductivity", this.getHeatCableConductivity());
 		builder.pop();
 		builder.pop();
@@ -365,11 +381,12 @@ public abstract class StaticPowerTier {
 		 * Items
 		 ********/
 		builder.push("Items");
-		capsuleCapacity = builder.comment("The amount of fluid that can be stored in a fluid capsule of this tier.").translation(StaticPower.MOD_ID + ".config." + "capsuleCapacity")
-				.define("CapsuleCapacity", this.getCapsuleCapacity());
+		capsuleCapacity = builder.comment("The amount of fluid that can be stored in a fluid capsule of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "capsuleCapacity").define("CapsuleCapacity", this.getCapsuleCapacity());
 
 		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").defineInRange("PortableBatteryCapacity", this.getPortableBatteryCapacity(), 0, Long.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity")
+				.defineInRange("PortableBatteryCapacity", this.getPortableBatteryCapacity(), 0, Long.MAX_VALUE);
 
 		itemFilterSlots = builder.comment("The number of slots that exist on an item filter of this tier (not the filter attachment, the actual item).")
 				.translation(StaticPower.MOD_ID + ".config." + "itemFilterSlots").define("ItemFilterSlots", this.getItemFilterSlots());
@@ -378,26 +395,28 @@ public abstract class StaticPowerTier {
 		 * Tools
 		 ********/
 		builder.push("Tools");
-		drillBitUses = builder.comment("The number of blocks that can be mined by a drill bit of this tier.").translation(StaticPower.MOD_ID + ".config." + "drillBitUses").define("DrillBitUses",
-				getDrillBitUses());
+		drillBitUses = builder.comment("The number of blocks that can be mined by a drill bit of this tier.").translation(StaticPower.MOD_ID + ".config." + "drillBitUses")
+				.define("DrillBitUses", getDrillBitUses());
 		drillSpeedMultiplier = builder.comment("The mining speed multiplier of drills of this tier.").translation(StaticPower.MOD_ID + ".config." + "drillSpeedMultiplier")
 				.define("DrillSpeedMultiplier", getDrillSpeedMultiplier());
 
-		chainsawBladeUses = builder.comment("The number of blocks that can be mined by a chainsaw blade of this tier.").translation(StaticPower.MOD_ID + ".config." + "chainsawBladeUses")
-				.define("ChainsawBladeUses", this.getChainsawBladeUses());
+		chainsawBladeUses = builder.comment("The number of blocks that can be mined by a chainsaw blade of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "chainsawBladeUses").define("ChainsawBladeUses", this.getChainsawBladeUses());
 		chainsawSpeedMultiplier = builder.comment("The mining speed multiplier of chainsaws of this tier.").translation(StaticPower.MOD_ID + ".config." + "chainsawSpeedMultiplier")
 				.define("ChainsawSpeedMultiplier", getChainsawSpeedMultiplier());
 
 		hardenedDurabilityBoost = builder.comment("The amount of durability gained when the diamond hardened modifier is added.")
 				.translation(StaticPower.MOD_ID + ".config." + "diamondHardenedDurabilityBoost").define("DiamondHardenedDurabilityBoost", this.getHardenedDurabilityBoost());
 		hardenedDurabilityBoostAdditive = builder.comment("Defines whether the hardened durability boost is additive or multaplicative.")
-				.translation(StaticPower.MOD_ID + ".config." + "hardenedDurabilityBoostAdditive").define("HardenedDurabilityBoostAdditive", this.isHardenedDurabilityBoostAdditive());
+				.translation(StaticPower.MOD_ID + ".config." + "hardenedDurabilityBoostAdditive")
+				.define("HardenedDurabilityBoostAdditive", this.isHardenedDurabilityBoostAdditive());
 
-		hammerUses = builder.comment("The number of blocks/items that can be processed by a hammer of this tier.").translation(StaticPower.MOD_ID + ".config." + "hammerUses").define("HammerUses",
-				this.getHammerUses());
+		hammerUses = builder.comment("The number of blocks/items that can be processed by a hammer of this tier.").translation(StaticPower.MOD_ID + ".config." + "hammerUses")
+				.define("HammerUses", this.getHammerUses());
 		hammerSwingSpeed = builder.comment("How fast a hammer of this tier swings.").translation(StaticPower.MOD_ID + ".config." + "hammerSwingSpeed").define("HammerSwingSpeed",
 				this.getHammerSwingSpeed());
-		hammerDamage = builder.comment("How much damage a hammer of this tier does.").translation(StaticPower.MOD_ID + ".config." + "hammerDamage").define("HammerDamage", this.getHammerDamage());
+		hammerDamage = builder.comment("How much damage a hammer of this tier does.").translation(StaticPower.MOD_ID + ".config." + "hammerDamage").define("HammerDamage",
+				this.getHammerDamage());
 		hammerCooldown = builder.comment("How long the cooldown is (in ticks) between each anvil based crafting operation performed by a hammer of this tier..")
 				.translation(StaticPower.MOD_ID + ".config." + "hammerCooldown").define("HammerCooldown", this.getHammerCooldown());
 
@@ -405,8 +424,8 @@ public abstract class StaticPowerTier {
 				.define("WireCutterUses", this.getWireCutterUses());
 		magnetPowerCapacity = builder.comment("The amount of power that can be stored in a magnet of this tier (in mSV [1SV = 1000mSV]).")
 				.translation(StaticPower.MOD_ID + ".config." + "magnetPowerCapacity").defineInRange("MagnetPowerCapacity", this.getMagnetPowerCapacity(), 0, Long.MAX_VALUE);
-		magnetRadius = builder.comment("The number of blocks away from which items will be pulled towards the wielder.").translation(StaticPower.MOD_ID + ".config." + "magnetRadius")
-				.define("MagnetRadius", this.getMagnetRadius());
+		magnetRadius = builder.comment("The number of blocks away from which items will be pulled towards the wielder.")
+				.translation(StaticPower.MOD_ID + ".config." + "magnetRadius").define("MagnetRadius", this.getMagnetRadius());
 		builder.pop();
 
 		builder.push("Upgrade");
@@ -418,8 +437,8 @@ public abstract class StaticPowerTier {
 		 * Heat Conductivity Upgrade
 		 ************************/
 		builder.push("Heat");
-		heatCapacityUpgrade = builder.comment("The heat capacity for a full upgrade stack of this tier (as a percentage 1.0+).").translation(StaticPower.MOD_ID + ".config." + "heatCapacityUpgrade")
-				.define("HeatCapacityUpgrade", this.getHeatCapacityUpgrade());
+		heatCapacityUpgrade = builder.comment("The heat capacity for a full upgrade stack of this tier (as a percentage 1.0+).")
+				.translation(StaticPower.MOD_ID + ".config." + "heatCapacityUpgrade").define("HeatCapacityUpgrade", this.getHeatCapacityUpgrade());
 
 		heatConductivityUpgrade = builder.comment("The heat conductivtiy boost for a full upgrade stack of this tier (as a percentage 1.0+).")
 				.translation(StaticPower.MOD_ID + ".config." + "heatConductivityUpgrade").define("HeatConductivityUpgrade", this.getHeatConductivityUpgrade());
@@ -440,8 +459,8 @@ public abstract class StaticPowerTier {
 		 * Power Upgrade
 		 ********************/
 		builder.push("Power");
-		powerUpgrade = builder.comment("The power upgrade multiplier of a power upgrade for a full stack of this tier.").translation(StaticPower.MOD_ID + ".config." + "powerUpgrade")
-				.define("PowerUpgrade", this.getPowerUpgrade());
+		powerUpgrade = builder.comment("The power upgrade multiplier of a power upgrade for a full stack of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "powerUpgrade").define("PowerUpgrade", this.getPowerUpgrade());
 
 		powerIOUpgrade = builder.comment("The power I/O (input/output) upgrade multiplier for a full stack of a power upgrade of this tier.")
 				.translation(StaticPower.MOD_ID + ".config." + "powerIOUpgrade").define("PowerIOUpgrade", this.getPowerIoUpgrade());
@@ -467,22 +486,25 @@ public abstract class StaticPowerTier {
 		 * Centrifuge Upgrade
 		 ********************/
 		builder.push("Centrifuge");
-		maxCentrifugeSpeedUpgrade = builder.comment("The new maximum speed set by a centrifuge upgrade of this tier.").translation(StaticPower.MOD_ID + ".config." + "maxCentrifugeSpeedUpgrade")
-				.define("MaxCentrifugeSpeedUpgrade", this.getMaxCentrifugeSpeedUpgrade());
+		maxCentrifugeSpeedUpgrade = builder.comment("The new maximum speed set by a centrifuge upgrade of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "maxCentrifugeSpeedUpgrade").define("MaxCentrifugeSpeedUpgrade", this.getMaxCentrifugeSpeedUpgrade());
 
 		centrifugeUpgradedPowerIncrease = builder.comment("The amount of increased power cost due to a centrifuge upgrade of this tier.")
-				.translation(StaticPower.MOD_ID + ".config." + "centrifugeUpgradedPowerIncrease").define("CentrifugeUpgradedPowerIncrease", this.getCentrifugeUpgradedPowerIncrease());
+				.translation(StaticPower.MOD_ID + ".config." + "centrifugeUpgradedPowerIncrease")
+				.define("CentrifugeUpgradedPowerIncrease", this.getCentrifugeUpgradedPowerIncrease());
 		builder.pop();
 
 		/********************
 		 * Output Upgrade
 		 ********************/
 		builder.push("Output_Multiplier");
-		outputMultiplierUpgrade = builder.comment("The multiplier applied to the output change of any probability outputs for a full stack of an output multiplier upgrade (as a percentage 1.0+).")
+		outputMultiplierUpgrade = builder
+				.comment("The multiplier applied to the output change of any probability outputs for a full stack of an output multiplier upgrade (as a percentage 1.0+).")
 				.translation(StaticPower.MOD_ID + ".config." + "outputMultiplierUpgrade").define("OutputMultiplierUpgrade", this.getOutputMultiplierUpgrade());
 
 		outputMultiplierPowerCostUpgrade = builder.comment("The power usage increase for a full stack of an output multiplier upgrade (as a percentage 1.0+).")
-				.translation(StaticPower.MOD_ID + ".config." + "outputMultiplierPowerCostUpgrade").define("OutputMultiplierPowerCostUpgrade", this.getOutputMultiplierPowerCostUpgrade());
+				.translation(StaticPower.MOD_ID + ".config." + "outputMultiplierPowerCostUpgrade")
+				.define("OutputMultiplierPowerCostUpgrade", this.getOutputMultiplierPowerCostUpgrade());
 		builder.pop();
 
 		builder.pop();
@@ -533,7 +555,7 @@ public abstract class StaticPowerTier {
 		return 1;
 	}
 
-	protected double getHeatSinkElectricHeatGeneration() {
+	protected int getHeatSinkElectricHeatGeneration() {
 		return 0;
 	}
 
@@ -557,11 +579,11 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	public double getHeatCapacityUpgrade() {
+	public float getHeatCapacityUpgrade() {
 		return 0;
 	}
 
-	public double getHeatConductivityUpgrade() {
+	public float getHeatConductivityUpgrade() {
 		return 0;
 	}
 
@@ -593,19 +615,19 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected double getHeatSinkCapacity() {
+	protected int getHeatSinkCapacity() {
 		return 0;
 	}
 
-	protected double getHeatSinkConductivity() {
+	protected float getHeatSinkConductivity() {
 		return 0;
 	}
 
-	protected double getHeatCableCapacity() {
+	protected int getHeatCableCapacity() {
 		return 0;
 	}
 
-	protected double getHeatCableConductivity() {
+	protected float getHeatCableConductivity() {
 		return 0;
 	}
 

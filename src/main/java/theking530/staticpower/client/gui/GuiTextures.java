@@ -21,6 +21,7 @@ public class GuiTextures {
 
 	public static final ResourceLocation HEAT_BAR_FG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/heat_bar_fg.png");
 	public static final ResourceLocation HEAT_BAR_BG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/heat_bar_bg.png");
+	public static final ResourceLocation HEAT_INDICATOR_ARROW = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/heat_indicator_arrow.png");
 
 	public static final ResourceLocation BUTTON_BG = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/button_bg.png");
 	public static final ResourceLocation ARROW_TEXTURES = new ResourceLocation(StaticPower.MOD_ID, "textures/gui/arrow_buttons.png");

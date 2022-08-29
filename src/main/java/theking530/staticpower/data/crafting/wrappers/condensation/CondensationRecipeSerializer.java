@@ -28,9 +28,9 @@ public class CondensationRecipeSerializer extends StaticPowerRecipeSerializer<Co
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Capture the heat cost.
-		float heatGeneration = TileEntityCondenser.DEFAULT_HEAT_GENERATION;
+		int heatGeneration = TileEntityCondenser.DEFAULT_HEAT_GENERATION;
 		if (GsonHelper.isValidNode(json, "heat")) {
-			heatGeneration = json.get("heat").getAsFloat();
+			heatGeneration = json.get("heat").getAsInt();
 		}
 
 		// Capture the processing and power costs.
@@ -41,7 +41,7 @@ public class CondensationRecipeSerializer extends StaticPowerRecipeSerializer<Co
 
 	@Override
 	public CondensationRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		float heat = buffer.readFloat();
+		int heat = buffer.readInt();
 		FluidStack input = buffer.readFluidStack();
 		FluidStack output = buffer.readFluidStack();
 
@@ -51,7 +51,7 @@ public class CondensationRecipeSerializer extends StaticPowerRecipeSerializer<Co
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, CondensationRecipe recipe) {
-		buffer.writeFloat(recipe.getHeatGeneration());
+		buffer.writeInt(recipe.getHeatGeneration());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);

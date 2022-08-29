@@ -36,7 +36,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCrucible extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCrucible(pos, state), ModBlocks.Crucible);
+	public static final BlockEntityTypeAllocator<TileEntityCrucible> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCrucible(pos, state),
+			ModBlocks.Crucible);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -70,7 +71,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Register the heate component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 5000.0f, 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 5000, 1.0f));
 		heatStorage.getStorage().setConductivity(10);
 
 		// Setup the processing component.
@@ -128,7 +129,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 
 		// Check the heat.
 		if (heatStorage.getStorage().getCurrentHeat() < recipe.getMinimumTemperature()) {
-			return ProcessingCheckState.error("Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()).getString() + " has not been reached!");
+			return ProcessingCheckState
+					.error("Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()).getString() + " has not been reached!");
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,
@@ -155,7 +157,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 
 		// Check the heat.
 		if (heatStorage.getStorage().getCurrentHeat() < recipe.getMinimumTemperature()) {
-			return ProcessingCheckState.error("Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()).getString() + " has not been reached!");
+			return ProcessingCheckState
+					.error("Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()).getString() + " has not been reached!");
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,

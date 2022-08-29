@@ -182,12 +182,12 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
-	public double getHeatCapacityUpgrade() {
+	public float getHeatCapacityUpgrade() {
 		return 2.0f;
 	}
 
 	@Override
-	public double getHeatConductivityUpgrade() {
+	public float getHeatConductivityUpgrade() {
 		return 2.0f;
 	}
 
