@@ -9,6 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -33,7 +34,7 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	@Override
 	public void process() {
 		if (hasController() && !getLevel().isClientSide()) {
-			getController().heatStorage.getStorage().transferWithSurroundings(getLevel(), getBlockPos());
+			HeatStorageUtilities.transferHeatWithSurroundings(getController().heatStorage.getStorage(), getLevel(), getBlockPos(), HeatTransferAction.EXECUTE);
 		}
 	}
 
@@ -50,7 +51,7 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
-			if (side != null && hasController()) {
+			if (hasController()) {
 				return getController().heatStorage.manuallyGetCapability(cap, side);
 			}
 		}
@@ -79,6 +80,14 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	}
 
 	@Override
+	public int getMaximumHeat() {
+		if (hasController()) {
+			return getController().heatStorage.getStorage().getMaximumHeat();
+		}
+		return 0;
+	}
+
+	@Override
 	public float getConductivity() {
 		if (hasController()) {
 			return getController().heatStorage.getStorage().getConductivity();
@@ -87,13 +96,13 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	}
 
 	@Override
-	public int heat(int amountToHeat, boolean simulate) {
+	public int heat(int amountToHeat, HeatTransferAction action) {
 		// Cannot heat directly through this.
 		return 0;
 	}
 
 	@Override
-	public int cool(int amountToCool, boolean simulate) {
+	public int cool(int amountToCool, HeatTransferAction action) {
 		// Cannot cool directly through this.
 		return 0;
 	}

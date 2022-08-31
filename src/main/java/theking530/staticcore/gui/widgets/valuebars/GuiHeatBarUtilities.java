@@ -5,25 +5,39 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class GuiHeatBarUtilities {
-	public static List<Component> getTooltip(double currentHeat, double maxHeat, double heatPerTick) {
+	public static List<Component> getTooltip(int currentTemp, int minimumTemp, int overheatTemp, int maximumTemp, double heatPerTick) {
 		List<Component> tooltip = new ArrayList<Component>();
 
 		// Show the total amount of energy remaining / total energy capacity.
-		tooltip.add(GuiTextUtilities.formatHeatToString(currentHeat, maxHeat));
+		tooltip.add(GuiTextUtilities.formatHeatToString(currentTemp, maximumTemp));
+		tooltip.add(new TextComponent("Overheat: ").withStyle(ChatFormatting.RED).append(GuiTextUtilities.formatHeatToString(overheatTemp)));
 
 		return tooltip;
 	}
 
-	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, double currentHeat, double maxHeat) {
-		float percentFilled = (float) currentHeat / (float) maxHeat;
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, int currentTemp, int maximumTemp) {
+		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.MINIMUM_TEMPERATURE, maximumTemp, maximumTemp);
+	}
+
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, int currentTemp, int overheatTemp, int maximumTemp) {
+		drawHeatBar(stack, xpos, ypos, width, height, zLevel, currentTemp, IHeatStorage.MINIMUM_TEMPERATURE, overheatTemp, maximumTemp);
+	}
+
+	public static void drawHeatBar(PoseStack stack, float xpos, float ypos, float width, float height, float zLevel, int currentTemp, int minimumTemp, int overheatTemp,
+			int maximumTemp) {
+		float totalHeight = maximumTemp - IHeatStorage.MINIMUM_TEMPERATURE;
+		float percentFilled = (currentTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight;
 		float filledHeight = percentFilled * height;
 
 		float sinInput = Minecraft.getInstance().getFrameTime() + Minecraft.getInstance().level.getGameTime();
@@ -39,17 +53,24 @@ public class GuiHeatBarUtilities {
 		GuiDrawUtilities.drawSlot(stack, width, height, 0, 0, 0);
 		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_BG, width, height, 0, 0, 1, 1, Color.WHITE);
 		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_FG, width, filledHeight, 0, height - filledHeight, 0, 0, 1 - percentFilled, 1, 1, new Color(1, 1, 1, 1.0f));
+		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - filledHeight - 5, zLevel, 0, 0, 1, 1, Color.GREY);
 
-		stack.pushPose();
-		stack.translate(0, height - filledHeight, 0);
-		GuiDrawUtilities.drawRectangle(stack, width + 2, 1, -1, 0, 0, Color.GREY);
-		GuiDrawUtilities.drawRectangle(stack, 1, 5, -2, -2, 0, Color.GREY);
-		GuiDrawUtilities.drawRectangle(stack, 1, 5, width + 1, -2, 0, Color.GREY);
+		if (overheatTemp != maximumTemp) {
+			float overheatHeight = ((overheatTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight) * height;
+			GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - overheatHeight - 5, zLevel, 0, 0, 1, 1, Color.RED);
+		}
 
-		stack.translate(width + 2, -2.5f, 0);
-//		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_INDICATOR_ARROW, 6, 6, 0, 0, 1, 1, Color.WHITE);
+		if (minimumTemp != IHeatStorage.MINIMUM_TEMPERATURE) {
+			float minimumHeight = ((minimumTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight) * height;
+			GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - minimumHeight - 5, zLevel, 0, 0, 1, 1, Color.GREEN);
+		}
+
 		stack.popPose();
+	}
 
-		stack.popPose();
+	public static void drawHeatLevelIndicator(PoseStack stack, float width, Color color) {
+		GuiDrawUtilities.drawRectangle(stack, width + 2, 1, -1, 0, 0, color);
+		GuiDrawUtilities.drawRectangle(stack, 1, 5, -2, -2, 0, color);
+		GuiDrawUtilities.drawRectangle(stack, 1, 5, width + 1, -2, 0, color);
 	}
 }

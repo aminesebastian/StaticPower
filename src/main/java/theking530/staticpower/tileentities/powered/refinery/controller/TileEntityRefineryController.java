@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -120,8 +121,10 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		fluidTanks[4].setAutoSyncPacketsEnabled(true);
 
 		// Add the heat storage and the upgrade inventory to the heat component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", CapabilityHeatable.convertHeatToMilliHeat(350), 2)
-				.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL).setExposedAsCapability(false).setEnableAutomaticHeatTransfer(false));
+		registerComponent(
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", CapabilityHeatable.convertHeatToMilliHeat(200), tier.defaultMachineOverheatTemperature.get(),
+						tier.defaultMachineMaximumTemperature.get(), 1).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL)
+						.setExposedAsCapability(false).setEnableAutomaticHeatTransfer(false).setMeltdownRecoveryTicks(100));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 	}
 
@@ -133,10 +136,16 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		}
 		refreshMultiBlock = true;
 
-		if (!getLevel().isClientSide()) {
-//			if (processingComponent.isPerformingWork()) {
-				heatStorage.getStorage().heat(getHeatGeneration(), false);
-			//}
+		if (!getLevel().isClientSide() && redstoneControlComponent.passesRedstoneCheck()) {
+			if (processingComponent.isPerformingWork()) {
+				heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
+			} else if (!heatStorage.isRecoveringFromMeltdown()) {
+				RefineryRecipe recipe = processingComponent.getCurrentProcessingRecipe().orElse(null);
+				if (recipe != null && energyStorage.hasEnoughPower(recipe.getPowerCost())) {
+					energyStorage.useBulkPower(recipe.getPowerCost());
+					heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
+				}
+			}
 		}
 	}
 
@@ -146,7 +155,8 @@ public class TileEntityRefineryController extends TileEntityMachine {
 
 	public int getHeatGeneration() {
 		return (int) (CapabilityHeatable.convertHeatToMilliHeat(10) * processingComponent.getCalculatedHeatGenerationMultiplier());
-//		return (int) (StaticPowerConfig.SERVER.refineryHeatGeneration.get() * processingComponent.getCalculatedHeatGenerationMultiplier());
+		// return (int) (StaticPowerConfig.SERVER.refineryHeatGeneration.get() *
+		// processingComponent.getCalculatedHeatGenerationMultiplier());
 	}
 
 	private void refreshMultiBlock() {
@@ -247,8 +257,15 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		if (getOutputTank(2).fill(recipe.getFluidOutput3(), FluidAction.SIMULATE) != recipe.getFluidOutput3().getAmount()) {
 			return ProcessingCheckState.outputTankCannotTakeFluid();
 		}
-		if (!heatStorage.getStorage().canFullyAbsorbHeat(this.getHeatGeneration())) {
-			return ProcessingCheckState.error("Not enough heat capacity (Requires " + GuiTextUtilities.formatHeatToString(getHeatGeneration()).getString() + ")");
+		if (heatStorage.isRecoveringFromMeltdown()) {
+			return ProcessingCheckState
+					.error("Machine recovering from overheat! (" + GuiTextUtilities.formatTicksToTimeUnit(this.heatStorage.getMeltdownRecoveryTicksRemaining()).getString() + ")");
+		}
+		if (heatStorage.isOverheated()) {
+			return ProcessingCheckState.error("Machine overheating!");
+		}
+		if (!heatStorage.isAboveMinimumHeat()) {
+			return ProcessingCheckState.error("Not enough heat!");
 		}
 		return ProcessingCheckState.ok();
 	}

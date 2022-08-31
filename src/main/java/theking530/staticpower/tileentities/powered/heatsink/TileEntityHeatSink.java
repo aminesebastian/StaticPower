@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import theking530.api.heat.IHeatStorage;
+import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
@@ -51,7 +52,8 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 		super(allocator, pos, state, StaticPowerTiers.BASIC);
 		this.heatSinkTier = heatSinkTier;
 		StaticPowerTier tier = StaticPowerConfig.getTier(heatSinkTier);
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.heatSinkCapacity.get(), tier.heatSinkConductivity.get()));
+		registerComponent(
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), 1.0f));
 		energyStorage.setMaxInput(tier.heatSinkElectricHeatPowerUsage.get() * 2);
 	}
 
@@ -101,7 +103,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 				long powerUsage = (int) Math.max(1, maxPowerUsage * ((float) transferableHeat / generation));
 				if (energyStorage.hasEnoughPower(powerUsage)) {
 					energyStorage.useBulkPower(powerUsage);
-					heatStorage.getStorage().heat(transferableHeat, false);
+					heatStorage.getStorage().heat(transferableHeat, HeatTransferAction.EXECUTE);
 				}
 			}
 		}

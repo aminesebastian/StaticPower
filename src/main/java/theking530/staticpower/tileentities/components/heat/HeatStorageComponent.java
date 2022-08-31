@@ -4,12 +4,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.IUpgradeItem.UpgradeType;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorage;
+import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
+import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
@@ -20,10 +24,6 @@ import theking530.staticpower.tileentities.components.serialization.UpdateSerial
 public class HeatStorageComponent extends AbstractTileEntityComponent {
 	public enum HeatManipulationAction {
 		COOL, HEAT
-	}
-
-	public enum HeatDissipationTiming {
-		PRE_PROCESS, POST_PROCESS
 	}
 
 	public static final float HEAT_SYNC_MAX_DELTA = 10;
@@ -44,24 +44,35 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	private boolean exposeAsCapability;
 	@UpdateSerialize
 	private boolean enableAutomaticHeatTransfer;
+	@UpdateSerialize
+	private int meltdownRecoveryTime;
+	@UpdateSerialize
+	private int remainingMeltdownTicks;
+	@UpdateSerialize
+	private boolean hasMeltdownBehavior;
+	@UpdateSerialize
+	private boolean enteredMeltdownState;
 
-	protected final HeatDissipationTiming dissipationTiming;
 	protected TriFunction<Integer, Direction, HeatManipulationAction, Boolean> filter;
 
 	private UpgradeInventoryComponent upgradeInventory;
 	private final Map<Direction, HeatComponentCapabilityAccess> accessors;
 	private double lastSyncHeat;
 
-	public HeatStorageComponent(String name, int maxHeat, float conducivity) {
-		this(name, maxHeat, conducivity, HeatDissipationTiming.POST_PROCESS);
+	public HeatStorageComponent(String name, int maxHeat, float conductivity) {
+		this(name, IHeatStorage.MINIMUM_TEMPERATURE, maxHeat, maxHeat, conductivity);
 	}
 
-	public HeatStorageComponent(String name, int maxHeat, float conducivity, HeatDissipationTiming timing) {
+	public HeatStorageComponent(String name, int overheatThreshold, int maxHeat, float conductivity) {
+		this(name, IHeatStorage.MINIMUM_TEMPERATURE, overheatThreshold, maxHeat, conductivity);
+	}
+
+	public HeatStorageComponent(String name, int minHeat, int overheatThreshold, int maxHeat, float conductivity) {
 		super(name);
 		defaultCapacity = maxHeat;
-		defaultConductivity = conducivity;
+		defaultConductivity = conductivity;
 		issueSyncPackets = false;
-		heatStorage = new HeatStorage(maxHeat, conducivity);
+		heatStorage = new HeatStorage(minHeat, overheatThreshold, maxHeat, conductivity);
 		exposeAsCapability = true;
 		enableAutomaticHeatTransfer = true;
 
@@ -70,9 +81,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		for (Direction dir : Direction.values()) {
 			accessors.put(dir, new HeatComponentCapabilityAccess(dir));
 		}
-
 		lastSyncHeat = 0.0f;
-		dissipationTiming = timing;
 	}
 
 	@Override
@@ -96,7 +105,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 				// Determine if we should sync.
 				boolean shouldSync = delta > HEAT_SYNC_MAX_DELTA;
 				shouldSync |= heatStorage.getCurrentHeat() == 0 && lastSyncHeat != 0;
-				shouldSync |= heatStorage.getCurrentHeat() == heatStorage.getOverheatThreshold() && lastSyncHeat != heatStorage.getOverheatThreshold();
+				shouldSync |= heatStorage.getCurrentHeat() == heatStorage.getMaximumHeat() && lastSyncHeat != heatStorage.getMaximumHeat();
 
 				// If we should sync, perform the sync.
 				if (shouldSync) {
@@ -108,9 +117,31 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 			// Capture heat transfer metrics.
 			heatStorage.captureHeatTransferMetric();
 
-			// Cool off the heat storage.
-			if (enableAutomaticHeatTransfer) {
-				heatStorage.transferWithSurroundings(getLevel(), getPos());
+			// Put us into meltdown mode if this ticker wants that.
+			if (hasMeltdownBehavior && heatStorage.getCurrentHeat() >= heatStorage.getOverheatThreshold()) {
+				// Only do the following ONCE after we started the meltdown.
+				if (!enteredMeltdownState) {
+					enteredMeltdownState = true;
+					getLevel().playSound(null, getPos(), SoundEvents.SHULKER_BULLET_HIT, SoundSource.BLOCKS, 1.0f, 0.75f);
+					getLevel().playSound(null, getPos(), SoundEvents.NOTE_BLOCK_BASEDRUM, SoundSource.BLOCKS, 0.5f, 1.5f);
+				}
+
+				// But allow the time to keep getting reset until we dip below the overheat
+				// threshold.
+				remainingMeltdownTicks = meltdownRecoveryTime;
+			}
+
+			// Tick down if we're in a meltdown.
+			if (isRecoveringFromMeltdown()) {
+				remainingMeltdownTicks--;
+				if (remainingMeltdownTicks <= 0) {
+					enteredMeltdownState = false;
+					remainingMeltdownTicks = 0;
+				}
+			}
+
+			if (this.getEnableAutomaticHeatTransfer()) {
+				HeatStorageUtilities.transferHeatWithSurroundings(getStorage(), getLevel(), getPos(), HeatTransferAction.EXECUTE);
 			}
 		}
 	}
@@ -146,6 +177,32 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 	 */
 	public HeatStorage getStorage() {
 		return heatStorage;
+	}
+
+	public boolean isRecoveringFromMeltdown() {
+		return remainingMeltdownTicks > 0;
+	}
+
+	public int getMeltdownRecoveryTicks() {
+		return meltdownRecoveryTime;
+	}
+
+	public HeatStorageComponent setMeltdownRecoveryTicks(int meltdownRecoveryTime) {
+		this.meltdownRecoveryTime = meltdownRecoveryTime;
+		this.hasMeltdownBehavior = meltdownRecoveryTime > 0;
+		return this;
+	}
+
+	public int getMeltdownRecoveryTicksRemaining() {
+		return remainingMeltdownTicks;
+	}
+
+	public boolean isOverheated() {
+		return this.heatStorage.getCurrentHeat() > this.heatStorage.getOverheatThreshold();
+	}
+
+	public boolean isAboveMinimumHeat() {
+		return this.heatStorage.getCurrentHeat() > this.heatStorage.getMinimumHeatThreshold();
 	}
 
 	/**
@@ -271,19 +328,19 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public int heat(int amountToHeat, boolean simulate) {
+		public int heat(int amountToHeat, HeatTransferAction action) {
 			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToHeat, side, HeatManipulationAction.HEAT)) {
 				return 0;
 			}
-			return HeatStorageComponent.this.getStorage().heat(amountToHeat, simulate);
+			return HeatStorageComponent.this.getStorage().heat(amountToHeat, action);
 		}
 
 		@Override
-		public int cool(int amountToCool, boolean simulate) {
+		public int cool(int amountToCool, HeatTransferAction action) {
 			if (HeatStorageComponent.this.filter != null && !HeatStorageComponent.this.filter.apply(amountToCool, side, HeatManipulationAction.COOL)) {
 				return 0;
 			}
-			return HeatStorageComponent.this.getStorage().cool(amountToCool, simulate);
+			return HeatStorageComponent.this.getStorage().cool(amountToCool, action);
 		}
 
 		@Override
@@ -292,13 +349,18 @@ public class HeatStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		@Override
-		public int getOverheatThreshold() {
-			return HeatStorageComponent.this.getStorage().getOverheatThreshold();
+		public int getMaximumHeat() {
+			return HeatStorageComponent.this.getStorage().getMaximumHeat();
 		}
 
 		@Override
 		public float getConductivity() {
 			return HeatStorageComponent.this.getStorage().getConductivity();
+		}
+
+		@Override
+		public int getOverheatThreshold() {
+			return HeatStorageComponent.this.getStorage().getOverheatThreshold();
 		}
 	}
 }

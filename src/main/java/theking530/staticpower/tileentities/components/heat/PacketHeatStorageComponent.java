@@ -19,9 +19,9 @@ public class PacketHeatStorageComponent extends NetworkMessage {
 	public PacketHeatStorageComponent() {
 	}
 
-	public PacketHeatStorageComponent(HeatStorageComponent energyComponent, BlockPos pos, String componentName) {
+	public PacketHeatStorageComponent(HeatStorageComponent heatComponent, BlockPos pos, String componentName) {
 		heatComponentNBT = new CompoundTag();
-		energyComponent.serializeUpdateNbt(heatComponentNBT, true);
+		heatComponent.serializeUpdateNbt(heatComponentNBT, true);
 		position = pos;
 		this.componentName = componentName;
 	}

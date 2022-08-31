@@ -2,6 +2,7 @@ package theking530.staticpower.data.tiers;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import theking530.api.heat.CapabilityHeatable;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.StaticPowerTier;
 
@@ -21,24 +22,26 @@ public class StaticPowerTierSilver extends StaticPowerTier {
 		return "tier.staticpower.silver";
 	}
 
-	@Override
-	protected int getHeatSinkCapacity() {
-		return 256000;
+	protected int getHeatsinkOverheatTemperature() {
+		return CapabilityHeatable.convertHeatToMilliHeat(2048);
 	}
 
+	protected int getHeatsinkMaximumTemperature() {
+		return CapabilityHeatable.convertHeatToMilliHeat(4096);
+	}
 	@Override
 	protected float getHeatSinkConductivity() {
-		return 2.5f;
+		return 12f;
 	}
 
 	@Override
 	protected int getHeatCableCapacity() {
-		return 128000;
+		return CapabilityHeatable.convertHeatToMilliHeat(1024);
 	}
 
 	@Override
 	protected float getHeatCableConductivity() {
-		return 2.5f;
+		return 12f;
 	}
 
 	@Override

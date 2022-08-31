@@ -235,6 +235,7 @@ public class StaticPowerConfig {
 		public final LongValue refineryPowerUsage;
 		public final ConfigValue<Integer> refineryProcessingTime;
 		public final ConfigValue<Integer> refineryHeatGeneration;
+		public final ConfigValue<Integer> refineryOverheatCooldownTime;
 
 		public final LongValue laboratoryPowerUsage;
 
@@ -778,6 +779,9 @@ public class StaticPowerConfig {
 					refineryHeatGeneration = builder.comment("Defines how much heat is produced by the refinery per tick ([1 Second = 20 Ticks]).")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryHeatGeneration")
 							.define("RefineryHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(50));
+					refineryOverheatCooldownTime = builder
+							.comment("Defines how long it takes (in ticks [1 Second = 20 Ticks]) after a refinery has overheated to start processing again.")
+							.translation(StaticPower.MOD_ID + ".config." + "refineryOverheatCooldownTime").define("RefineryOverheatCooldownTime", 100);
 					builder.pop();
 				}
 				{

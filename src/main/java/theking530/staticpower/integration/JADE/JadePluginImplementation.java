@@ -62,7 +62,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			BlockEntity tile = accessor.getBlockEntity();
 			if (tile != null) {
-				IStaticVoltHandler storage = tile.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
+				IStaticVoltHandler storage = tile.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, accessor.getSide()).orElse(null);
 				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
 					long stored, capacity;
 
@@ -88,13 +88,13 @@ public class JadePluginImplementation implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			BlockEntity tile = accessor.getBlockEntity();
 			if (tile != null) {
-				IHeatStorage storage = tile.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY).orElse(null);
+				IHeatStorage storage = tile.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, accessor.getSide()).orElse(null);
 				if (storage != null && (!accessor.isServerConnected() || accessor.getServerData().contains(JadeDataProviders.HEAT_TAG))) {
-					double stored, capacity;
+					int stored, capacity;
 					if (accessor.isServerConnected()) {
 						CompoundTag heatData = accessor.getServerData().getCompound(JadeDataProviders.HEAT_TAG);
-						stored = heatData.getDouble("value");
-						capacity = heatData.getDouble("max");
+						stored = heatData.getInt("value");
+						capacity = heatData.getInt("max");
 					} else {
 						stored = storage.getCurrentHeat();
 						capacity = storage.getOverheatThreshold();
@@ -113,8 +113,8 @@ public class JadePluginImplementation implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			if (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.PROCESSING_TAG)) {
 				CompoundTag processingData = accessor.getServerData().getCompound(JadeDataProviders.PROCESSING_TAG);
-				double remaining = processingData.getDouble("remaining");
-				double totalTime = processingData.getDouble("max");
+				int remaining = processingData.getInt("remaining");
+				int totalTime = processingData.getInt("max");
 
 				// Draw bar
 				if (remaining > 0) {

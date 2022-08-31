@@ -9,6 +9,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -65,7 +66,8 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		registerComponent(new FluidInputServoComponent("FluidInputServoComponent", 100, inputTankComponent, MachineSideMode.Input));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputTankComponent, MachineSideMode.Output));
 
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 500, 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tierObject.defaultMachineOverheatTemperature.get(),
+				tierObject.defaultMachineMaximumTemperature.get(), 1.0f));
 	}
 
 	protected ProcessingCheckState canProcess() {
@@ -139,7 +141,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		// Use the heat.
-		heatStorage.getStorage().heat(recipe.getHeatGeneration(), false);
+		heatStorage.getStorage().heat(recipe.getHeatGeneration(), HeatTransferAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
 

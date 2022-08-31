@@ -36,16 +36,17 @@ public class GuiHeatBarFromHeatStorage extends AbstractGuiWidget<GuiHeatBarFromH
 			delta = Math.max(delta, maxMovement);
 		}
 		interpolatedHeat += delta;
-		//System.out.println("Real: " + heatStorage.getCurrentHeat() + "   Interp: " + interpolatedHeat);
 	}
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
-		GuiHeatBarUtilities.drawHeatBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, interpolatedHeat, heatStorage.getOverheatThreshold());
+		GuiHeatBarUtilities.drawHeatBar(matrix, 0, 0, getSize().getX(), getSize().getY(), 0.0f, heatStorage.getCurrentHeat(), heatStorage.getMinimumHeatThreshold(),
+				heatStorage.getOverheatThreshold(), heatStorage.getMaximumHeat());
 	}
 
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		tooltips.addAll(GuiHeatBarUtilities.getTooltip(interpolatedHeat, heatStorage.getOverheatThreshold(), heatStorage.getConductivity()));
+		tooltips.addAll(GuiHeatBarUtilities.getTooltip(heatStorage.getCurrentHeat(), heatStorage.getMinimumHeatThreshold(), heatStorage.getOverheatThreshold(),
+				heatStorage.getMaximumHeat(), heatStorage.getConductivity()));
 	}
 }

@@ -87,6 +87,16 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
+	public int getMaximumHeat() {
+		if (!getTileEntity().getLevel().isClientSide) {
+			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
+			return module != null ? module.getHeatStorage().getMaximumHeat() : 0;
+		} else {
+			return clientSideHeatCapacity;
+		}
+	}
+
+	@Override
 	public int getOverheatThreshold() {
 		if (!getTileEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
@@ -102,20 +112,20 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	public int heat(int amountToHeat, boolean simulate) {
+	public int heat(int amountToHeat, HeatTransferAction action) {
 		if (!getTileEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().heat(amountToHeat, simulate) : 0;
+			return module != null ? module.getHeatStorage().heat(amountToHeat, action) : 0;
 		} else {
 			return 0;
 		}
 	}
 
 	@Override
-	public int cool(int amountToCool, boolean simulate) {
+	public int cool(int amountToCool, HeatTransferAction action) {
 		if (!getTileEntity().getLevel().isClientSide) {
 			HeatNetworkModule module = getHeatNetworkModule().orElse(null);
-			return module != null ? module.getHeatStorage().cool(amountToCool, simulate) : 0;
+			return module != null ? module.getHeatStorage().cool(amountToCool, action) : 0;
 		} else {
 			return 0;
 		}
@@ -180,5 +190,4 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		}
 		return LazyOptional.empty();
 	}
-
 }

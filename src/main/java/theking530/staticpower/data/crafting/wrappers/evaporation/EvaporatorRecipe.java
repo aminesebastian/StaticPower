@@ -15,9 +15,9 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 
 	private final FluidStack inputFluid;
 	private final FluidStack outputFluid;
-	private final float requiredHeat;
+	private final int requiredHeat;
 
-	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, float requiredHeat, MachineRecipeProcessingSection processing) {
+	public EvaporatorRecipe(ResourceLocation name, FluidStack inputFluid, FluidStack outputFluid, int requiredHeat, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.inputFluid = inputFluid;
 		this.outputFluid = outputFluid;
@@ -32,7 +32,7 @@ public class EvaporatorRecipe extends AbstractMachineRecipe {
 		return outputFluid;
 	}
 
-	public float getRequiredHeat() {
+	public int getRequiredHeat() {
 		return requiredHeat;
 	}
 

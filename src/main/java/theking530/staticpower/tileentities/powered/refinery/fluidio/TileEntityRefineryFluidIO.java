@@ -59,10 +59,14 @@ public class TileEntityRefineryFluidIO extends BaseRefineryTileEntity implements
 			tankInterfaces = new RefineryFluidInterface[2];
 
 			tankInterfaces[0] = new RefineryFluidInterface(0);
+			// We can both input and output of input tanks.
 			registerComponent(new FluidInputServoComponent("FluidInputServo0", 100, tankInterfaces[0], MachineSideMode.Input2));
+			registerComponent(new FluidInputServoComponent("FluidOutputServo0", 100, tankInterfaces[0], MachineSideMode.Output2));
 
 			tankInterfaces[1] = new RefineryFluidInterface(1);
+			// We can both input and output of input tanks.
 			registerComponent(new FluidInputServoComponent("FluidInputServo1", 100, tankInterfaces[1], MachineSideMode.Input3));
+			registerComponent(new FluidInputServoComponent("FluidOutputServo1", 100, tankInterfaces[1], MachineSideMode.Output3));
 		}
 
 		if (outputMode) {
@@ -70,8 +74,14 @@ public class TileEntityRefineryFluidIO extends BaseRefineryTileEntity implements
 					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3)
 							.setSide(BlockSide.FRONT, true, MachineSideMode.Output4).setSide(BlockSide.BOTTOM, true, MachineSideMode.Output2)
 							.setSide(BlockSide.LEFT, true, MachineSideMode.Output3).setSide(BlockSide.BACK, true, MachineSideMode.Output4));
-			ioSideConfiguration.setToDefault();
+
+		} else {
+			ioSideConfiguration.setDefaultConfiguration(
+					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2)
+							.setSide(BlockSide.FRONT, true, MachineSideMode.Input2).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input3)
+							.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3));
 		}
+		ioSideConfiguration.setToDefault();
 	}
 
 	@Override
@@ -84,7 +94,8 @@ public class TileEntityRefineryFluidIO extends BaseRefineryTileEntity implements
 		if (outputMode) {
 			return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output2 || mode == MachineSideMode.Output3 || mode == MachineSideMode.Output4;
 		} else {
-			return mode == MachineSideMode.Disabled || mode == MachineSideMode.Input2 || mode == MachineSideMode.Input3;
+			return mode == MachineSideMode.Disabled || mode == MachineSideMode.Input2 || mode == MachineSideMode.Input3 || mode == MachineSideMode.Output2
+					|| mode == MachineSideMode.Output3;
 		}
 	}
 
@@ -95,13 +106,6 @@ public class TileEntityRefineryFluidIO extends BaseRefineryTileEntity implements
 		} else {
 			return new ContainerRefineryFluidInput(windowId, inventory, this);
 		}
-	}
-
-	@Override
-	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2)
-				.setSide(BlockSide.FRONT, true, MachineSideMode.Input2).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input3)
-				.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3);
 	}
 
 	@Override
@@ -174,16 +178,24 @@ public class TileEntityRefineryFluidIO extends BaseRefineryTileEntity implements
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			if (side != null) {
 				MachineSideMode mode = getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side);
-				if (mode == MachineSideMode.Input2) {
-					return LazyOptional.of(() -> tankInterfaces[0]).cast();
-				} else if (mode == MachineSideMode.Input3) {
-					return LazyOptional.of(() -> tankInterfaces[1]).cast();
-				} else if (mode == MachineSideMode.Output2) {
-					return LazyOptional.of(() -> tankInterfaces[0]).cast();
-				} else if (mode == MachineSideMode.Output3) {
-					return LazyOptional.of(() -> tankInterfaces[1]).cast();
-				} else if (mode == MachineSideMode.Output4) {
-					return LazyOptional.of(() -> tankInterfaces[2]).cast();
+				if (outputMode) {
+					if (mode == MachineSideMode.Output2) {
+						return LazyOptional.of(() -> tankInterfaces[0]).cast();
+					} else if (mode == MachineSideMode.Output3) {
+						return LazyOptional.of(() -> tankInterfaces[1]).cast();
+					} else if (mode == MachineSideMode.Output4) {
+						return LazyOptional.of(() -> tankInterfaces[2]).cast();
+					}
+				} else {
+					if (mode == MachineSideMode.Input2) {
+						return LazyOptional.of(() -> tankInterfaces[0]).cast();
+					} else if (mode == MachineSideMode.Input3) {
+						return LazyOptional.of(() -> tankInterfaces[1]).cast();
+					} else if (mode == MachineSideMode.Output2) {
+						return LazyOptional.of(() -> tankInterfaces[0]).cast();
+					} else if (mode == MachineSideMode.Output3) {
+						return LazyOptional.of(() -> tankInterfaces[1]).cast();
+					}
 				}
 			}
 		}

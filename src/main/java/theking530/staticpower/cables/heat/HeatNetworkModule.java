@@ -13,6 +13,7 @@ import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.HeatStorage;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
+import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -29,7 +30,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	public HeatNetworkModule() {
 		super(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
 		// The actual input and output rates are controlled by the individual cables.
-		heatStorage = new HeatStorage(0, Float.MAX_VALUE);
+		heatStorage = new HeatStorage(0, 0, Float.MAX_VALUE);
 	}
 
 	public HeatStorage getHeatStorage() {
@@ -85,7 +86,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 			heatStorage.setConductivity(cableConductivity);
 
 			// Execute any heating/cooling.
-			HeatStorageUtilities.transferHeatWithSurroundings(heatStorage, world, cable.getPos());
+			HeatStorageUtilities.transferHeatWithSurroundings(heatStorage, world, cable.getPos(), HeatTransferAction.EXECUTE);
 		}
 
 		// Reset the conductivity.
@@ -113,11 +114,11 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 						int toSupply = (int) Math.min(cableConductivity * wrapper.getConductivity(), outputPerDestination);
 
 						// Limit that to the max amount we currently have.
-						int supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), false);
+						int supplied = wrapper.heat(Math.min(toSupply, heatStorage.getCurrentHeat()), HeatTransferAction.EXECUTE);
 
 						// If the supplied amount is > 0, supply it.
 						if (supplied > 0) {
-							heatStorage.cool(supplied, false);
+							heatStorage.cool(supplied, HeatTransferAction.EXECUTE);
 						}
 					}
 				}
@@ -129,17 +130,20 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		// Allocate the total capacity.
 		int total = 0;
+		int count = 0;
 
 		// Get all the cables in the network and get their cable components.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If they have a heat cable component, get the capacity.
 			if (cable.containsProperty(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY)) {
 				total += cable.getIntProperty(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY);
+				count++;
 			}
 		}
 
-		// Set the capacity of the heat storage to the provided capacity.
-		heatStorage.setMaximumHeat(total);
+		// Set the capacity of the heat storage to the average of the network.
+		float average = (float) total / Math.max(total, 1);
+		heatStorage.setMaximumHeat((int) average);
 	}
 
 	@Override
@@ -147,7 +151,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		super.onAddedToNetwork(other);
 		if (other.hasModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE)) {
 			HeatNetworkModule module = (HeatNetworkModule) other.getModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
-			module.getHeatStorage().heat(heatStorage.getCurrentHeat(), false);
+			module.getHeatStorage().heat(heatStorage.getCurrentHeat(), HeatTransferAction.EXECUTE);
 		}
 	}
 
@@ -164,7 +168,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 			if (wrapper.hasTileEntity() && wrapper.supportsType(DestinationType.HEAT) && !Network.getGraph().getCables().containsKey(pos)) {
 				IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getFirstConnectedDestinationSide())
 						.orElse(null);
-				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), true) > 0) {
+				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), HeatTransferAction.SIMULATE) > 0) {
 					destinations.put(otherHeatStorage, wrapper);
 				}
 			}

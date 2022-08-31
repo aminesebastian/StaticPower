@@ -57,10 +57,14 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		// Only provide the energy capability if we are not disabled on that side.
 		if (cap == CapabilityEnergy.ENERGY || cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
-			if (side != null && hasController()) {
-				MachineSideMode mode = getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side);
-				if (mode == MachineSideMode.Input) {
-					return getController().energyStorage.manuallyGetCapability(cap, side);
+			if (hasController()) {
+				if(side != null) {
+					MachineSideMode mode = getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side);
+					if (mode == MachineSideMode.Input) {
+						return getController().energyStorage.manuallyGetCapability(cap, side);
+					}
+				}else {
+					return getController().energyStorage.manuallyGetCapability(cap, side);					
 				}
 			}
 		}

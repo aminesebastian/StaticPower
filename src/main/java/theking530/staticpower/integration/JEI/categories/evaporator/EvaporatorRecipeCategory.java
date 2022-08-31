@@ -82,7 +82,7 @@ public class EvaporatorRecipeCategory extends BaseJEIRecipeCategory<EvaporatorRe
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getInputFluid(), 0, 0, 50, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 		GuiFluidBarUtilities.drawFluidBar(matrixStack, recipe.getOutputFluid(), 0, 0, 104, 56, 1.0f, 16, 52, MachineSideMode.Never, true);
 
-		GuiHeatBarUtilities.drawHeatBar(matrixStack, 8, 4, 16, 52, 1.0f, recipe.getRequiredHeat(), recipe.getRequiredHeat());
+		GuiHeatBarUtilities.drawHeatBar(matrixStack, 8, 4, 16, 52, 1.0f, recipe.getRequiredHeat(), 0, recipe.getRequiredHeat());
 
 		// Draw the progress bar as a fluid.
 		GuiDrawUtilities.drawSlot(matrixStack, 28, 5, 70, 23, 0);

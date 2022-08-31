@@ -57,6 +57,10 @@ public class GuiTextUtilities {
 		NUMBER_FORMATTER_NO_DECIMAL.setMaximumFractionDigits(0);
 	}
 
+	public static MutableComponent formatTicksToTimeUnit(int ticks) {
+		return new TranslatableComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(ticks / 20.0)).append(new TranslatableComponent("gui.staticpower.seconds.short"));
+	}
+
 	/**
 	 * Formats the provided energy into a string for display in the UI. Example,
 	 * energy 50000 turns into 50kSV. Uses localization.
@@ -131,16 +135,16 @@ public class GuiTextUtilities {
 		return output.append(ENERGY_RATE_TRANSLATION);
 	}
 
-	public static MutableComponent formatHeatToString(double currentHeat, double capacity) {
+	public static MutableComponent formatHeatToString(int currentHeat, int capacity) {
 		return formatHeatToString(currentHeat, false, true).append("/").append(formatHeatToString(capacity));
 
 	}
 
-	public static MutableComponent formatHeatToString(double heat) {
+	public static MutableComponent formatHeatToString(int heat) {
 		return formatHeatToString(heat, true, true);
 	}
 
-	public static MutableComponent formatHeatToString(double heat, boolean includeUnits, boolean includeMetricUnit) {
+	public static MutableComponent formatHeatToString(int heat, boolean includeUnits, boolean includeMetricUnit) {
 		// Allocate the text component.
 		MutableComponent output;
 

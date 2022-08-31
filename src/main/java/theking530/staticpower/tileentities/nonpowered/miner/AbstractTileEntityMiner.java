@@ -15,12 +15,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.tools.miningdrill.DrillBit;
 import theking530.staticpower.tileentities.TileEntityConfigurable;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -56,17 +60,22 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		disableFaceInteraction();
 		blocks = new ArrayList<BlockPos>();
 
+		// Get the tier.
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.STATIC);
+
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return stack.getItem() instanceof DrillBit;
-			}
-		}));
+		registerComponent(
+				drillBitInventory = new InventoryComponent("DrillBitInventory", 1, MachineSideMode.Never).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return stack.getItem() instanceof DrillBit;
+					}
+				}));
 
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64, MachineSideMode.Never));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3).setModifiedCallback(this::upgradeInventoryChanged));
 
-		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess, this::processingCompleted, true));
+		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", getProcessingTime(), this::canProcess, this::canProcess,
+				this::processingCompleted, true));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setProcessingPowerUsage(getFuelUsage());
@@ -75,7 +84,8 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		registerComponent(miningSoundComponent = new LoopingSoundComponent("MiningSoundComponent", 20));
 
 		// Add the heat storage and the upgrade inventory to the heat component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 350, 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tierObject.defaultMachineOverheatTemperature.get(),
+				tierObject.defaultMachineMaximumTemperature.get(), 1.0f).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
@@ -104,7 +114,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 			if (processingComponent.isPerformingWork()) {
 				heatStorage.getStorage().setCanHeat(true);
-				heatStorage.getStorage().heat(getHeatGeneration(), false);
+				heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
 				heatStorage.getStorage().setCanHeat(false);
 			}
 
@@ -205,7 +215,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 
 			// We need to perform this here too, otherwise we'll skip a tick per generation.
 			heatStorage.getStorage().setCanHeat(true);
-			heatStorage.getStorage().heat(getHeatGeneration(), false);
+			heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
 			heatStorage.getStorage().setCanHeat(false);
 
 			// Get the block to mine.

@@ -78,9 +78,11 @@ public abstract class StaticPowerTier {
 	 ********************/
 	public final ConfigValue<Integer> heatCableCapacity;
 	public final ConfigValue<Float> heatCableConductivity;
-	public final ConfigValue<Integer> heatSinkCapacity;
 
+	public final ConfigValue<Integer> heatSinkOverheatTemperature;
+	public final ConfigValue<Integer> heatSinkMaximumTemperature;
 	public final ConfigValue<Float> heatSinkConductivity;
+
 	public final ConfigValue<Integer> heatSinkElectricHeatGeneration;
 	public final ConfigValue<Integer> heatSinkElectricHeatPowerUsage;
 
@@ -97,6 +99,9 @@ public abstract class StaticPowerTier {
 	public final LongValue defaultMachinePowerCapacity;
 	public final LongValue defaultMachinePowerInput;
 	public final LongValue defaultMachinePowerOutput;
+
+	public final IntValue defaultMachineOverheatTemperature;
+	public final IntValue defaultMachineMaximumTemperature;
 
 	/**********
 	 * Conveyer
@@ -211,6 +216,14 @@ public abstract class StaticPowerTier {
 				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerOutput")
 				.defineInRange("DefaultMachinePowerOutput", this.getDefaultMachinePowerOutput(), 0, Long.MAX_VALUE);
 
+		defaultMachineOverheatTemperature = builder.comment("The temperature at which a machine of this tier overheats and stops processing (in mC [1C = 1000mC]).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineOverheatTemperature")
+				.defineInRange("DefaultMachineOverheatTemperature", this.getDefaultMachineOverheatTemperature(), 0, Integer.MAX_VALUE);
+
+		defaultMachineMaximumTemperature = builder.comment("The maximum amount of heat a machine of this tier can contain (in mC [1C = 1000mC]).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineMaximumTemperature")
+				.defineInRange("DefaultMachineMaximumTemperature", this.getDefaultMachineMaximumTemperature(), 0, Integer.MAX_VALUE);
+
 		defaultTankCapacity = builder.comment("The base amount of fluid a machine of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "defaultTankCapacity")
 				.define("DefaultTankCapacity", this.getDefaultTankCapacity());
 
@@ -262,8 +275,11 @@ public abstract class StaticPowerTier {
 		builder.pop();
 
 		builder.push("Heatsink");
-		heatSinkCapacity = builder.comment("The amount of heat a heatsink of this tier can store.").translation(StaticPower.MOD_ID + ".config." + "heatSinkCapacity")
-				.define("HeatSinkCapacity", this.getHeatSinkCapacity());
+		heatSinkOverheatTemperature = builder.comment("The temperature above which this heatsink can no longer cool down other entities.")
+				.translation(StaticPower.MOD_ID + ".config." + "heatSinkOverheatTemperature").define("HeatSinkOverheatTemperature", this.getHeatsinkOverheatTemperature());
+
+		heatSinkMaximumTemperature = builder.comment("The temperature above which this heatsink will be destroyed.")
+				.translation(StaticPower.MOD_ID + ".config." + "heatSinkMaximumTemperature").define("HeatSinkMaximumTemperature", this.getHeatsinkMaximumTemperature());
 
 		heatSinkConductivity = builder.comment("The conductivity multiplier for a heatsink of this tier. The higher it is, the faster it is able to dissipate heat.")
 				.translation(StaticPower.MOD_ID + ".config." + "heatSinkConductivity").define("HeatSinkConductivity", this.getHeatSinkConductivity());
@@ -543,6 +559,14 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
+	protected int getDefaultMachineOverheatTemperature() {
+		return 0;
+	}
+
+	protected int getDefaultMachineMaximumTemperature() {
+		return 0;
+	}
+
 	protected double getConveyorSpeedMultiplier() {
 		return 1;
 	}
@@ -615,7 +639,11 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected int getHeatSinkCapacity() {
+	protected int getHeatsinkOverheatTemperature() {
+		return 0;
+	}
+
+	protected int getHeatsinkMaximumTemperature() {
 		return 0;
 	}
 

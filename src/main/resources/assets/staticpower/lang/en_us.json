@@ -919,7 +919,7 @@
 	"gui.staticpower.energy_unit_per_tick": "V/t",
 	"gui.staticpower.fluid_unit": "B",
 	"gui.staticpower.fluid_unit_per_tick": "B/t",
-	"gui.staticpower.heat_unit": "°H",
+	"gui.staticpower.heat_unit": "°C",
 	"gui.staticpower.heat_unit_per_tick": "°C/t",
 	"gui.staticpower.heat_transfer": "Heat Transfer",
 	"gui.staticpower.heat": "Heat",

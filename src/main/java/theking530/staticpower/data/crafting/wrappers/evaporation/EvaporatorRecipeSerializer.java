@@ -28,13 +28,13 @@ public class EvaporatorRecipeSerializer extends StaticPowerRecipeSerializer<Evap
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Start with the default processing values.
-		float heatCost = TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
+		int heatCost = TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
 
 		// Capture the processing and power costs.
 		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(TileEntityEvaporator.DEFAULT_PROCESSING_TIME, 0, json);
 		// Capture the heat cost.
 		if (GsonHelper.isValidNode(json, "heat")) {
-			heatCost = json.get("heat").getAsFloat();
+			heatCost = json.get("heat").getAsInt();
 		}
 
 		// Create the recipe.
@@ -43,7 +43,7 @@ public class EvaporatorRecipeSerializer extends StaticPowerRecipeSerializer<Evap
 
 	@Override
 	public EvaporatorRecipe fromNetwork(ResourceLocation recipeId, FriendlyByteBuf buffer) {
-		float heat = buffer.readFloat();
+		int heat = buffer.readInt();
 		FluidStack input = buffer.readFluidStack();
 		FluidStack output = buffer.readFluidStack();
 		// Create the recipe.
@@ -52,8 +52,7 @@ public class EvaporatorRecipeSerializer extends StaticPowerRecipeSerializer<Evap
 
 	@Override
 	public void toNetwork(FriendlyByteBuf buffer, EvaporatorRecipe recipe) {
-		;
-		buffer.writeFloat(recipe.getRequiredHeat());
+		buffer.writeInt(recipe.getRequiredHeat());
 		buffer.writeFluidStack(recipe.getInputFluid());
 		buffer.writeFluidStack(recipe.getOutputFluid());
 		recipe.getProcessingSection().writeToBuffer(buffer);

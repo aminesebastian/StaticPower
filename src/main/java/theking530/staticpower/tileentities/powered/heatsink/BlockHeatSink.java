@@ -42,7 +42,8 @@ public class BlockHeatSink extends StaticPowerTileEntityBlock {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		tooltip.add(HeatTooltipUtilities.getHeatConductivityTooltip(tierObject.heatSinkConductivity.get()));
-		tooltip.add(HeatTooltipUtilities.getHeatCapacityTooltip(tierObject.heatSinkCapacity.get()));
+		tooltip.add(HeatTooltipUtilities.getOverheatingTooltip(tierObject.heatSinkOverheatTemperature.get()));
+		tooltip.add(HeatTooltipUtilities.getMaximumHeatTooltip(tierObject.heatSinkMaximumTemperature.get()));
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -2,6 +2,7 @@ package theking530.staticpower.data.tiers;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import theking530.api.heat.CapabilityHeatable;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.StaticPowerTier;
 
@@ -224,6 +225,14 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	@Override
 	protected long getDefaultMachinePowerOutput() {
 		return 16000;
+	}
+
+	protected int getDefaultMachineOverheatTemperature() {
+		return CapabilityHeatable.convertHeatToMilliHeat(350);
+	}
+
+	protected int getDefaultMachineMaximumTemperature() {
+		return CapabilityHeatable.convertHeatToMilliHeat(500);
 	}
 
 	@Override

@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -71,8 +72,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Register the heate component.
-		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", 5000, 1.0f));
-		heatStorage.getStorage().setConductivity(10);
+		registerComponent(
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f));
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", CrucibleRecipe.RECIPE_TYPE,
@@ -106,7 +107,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		if (!level.isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
 			if (energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get())
 					&& heatStorage.getStorage().canFullyAbsorbHeat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
-				heatStorage.getStorage().heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(), false);
+				heatStorage.getStorage().heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(), HeatTransferAction.EXECUTE);
 				energyStorage.useBulkPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get());
 			}
 		}
