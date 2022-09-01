@@ -605,6 +605,7 @@
 	"block.staticpower.machine_refinery_fluid_output": "Refinery Fluid Output",
 	"block.staticpower.machine_refinery_item_input": "Refinery Item Input",
 	"block.staticpower.machine_refinery_heat_vent": "Refinery Heat Vent",
+	"block.staticpower.refinery_tower": "Refinery Tower",
 	"block.staticpower.laboratory": "Research Laboratory",
 	"block.staticpower.power_monitor": "Power Monitor",
 	"block.staticpower.direct_dropper": "Bull's Eye Dropper",
