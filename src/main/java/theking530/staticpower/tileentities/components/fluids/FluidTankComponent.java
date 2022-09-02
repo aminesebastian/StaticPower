@@ -78,6 +78,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		exposeAsCapability = true;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void preProcessUpdate() {
 		if (!getLevel().isClientSide) {
@@ -86,6 +87,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void postProcessUpdate() {
 		if (!getLevel().isClientSide) {
@@ -181,6 +183,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	 * This method syncs the current state of this fluid tank component to all
 	 * clients within a 64 block radius.
 	 */
+	@SuppressWarnings("resource")
 	public void syncToClient() {
 		if (!getLevel().isClientSide) {
 			PacketFluidTankComponent syncPacket = new PacketFluidTankComponent(this, getPos(), this.getComponentName());

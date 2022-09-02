@@ -90,6 +90,7 @@ import theking530.staticpower.tileentities.powered.powermonitor.BlockPowerMonito
 import theking530.staticpower.tileentities.powered.pump.BlockPump;
 import theking530.staticpower.tileentities.powered.pump.PumpTube;
 import theking530.staticpower.tileentities.powered.pumpjack.BlockPumpJack;
+import theking530.staticpower.tileentities.powered.refinery.boiler.BlockRefineryBoiler;
 import theking530.staticpower.tileentities.powered.refinery.controller.BlockRefineryController;
 import theking530.staticpower.tileentities.powered.refinery.fluidio.input.BlockRefineryFluidInput;
 import theking530.staticpower.tileentities.powered.refinery.fluidio.output.BlockRefineryFluidOutput;
@@ -309,7 +310,8 @@ public class ModBlocks {
 	public static final RegistryObject<BlockRefineryFluidOutput> RefineryFluidOutput = registerBlock("machine_refinery_fluid_output", () -> new BlockRefineryFluidOutput());
 	public static final RegistryObject<BlockRefineryItemInput> RefineryItemInput = registerBlock("machine_refinery_item_input", () -> new BlockRefineryItemInput());
 	public static final RegistryObject<BlockRefineryHeatVent> RefineryHeatVent = registerBlock("machine_refinery_heat_vent", () -> new BlockRefineryHeatVent());
-	public static final RegistryObject<BlockRefineryTower> RefineryTower = registerBlock("refinery_tower", () -> new BlockRefineryTower());
+	public static final RegistryObject<BlockRefineryTower> RefineryTower = registerBlock("machine_refinery_tower", () -> new BlockRefineryTower());
+	public static final RegistryObject<BlockRefineryBoiler> RefineryBoiler = registerBlock("machine_refinery_boiler", () -> new BlockRefineryBoiler());
 
 	public static final RegistryObject<BlockLaboratory> Laboratory = registerBlock("laboratory", () -> new BlockLaboratory());
 	public static final RegistryObject<BlockResearchCheater> ResearchCheater = registerBlock("research_cheater", () -> new BlockResearchCheater());

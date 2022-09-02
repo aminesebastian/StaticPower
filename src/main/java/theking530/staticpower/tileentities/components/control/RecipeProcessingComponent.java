@@ -48,6 +48,7 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 		this.canStartProcessingRecipe = canProcessRecipe;
 		this.canContinueProcessingRecipe = canProcessRecipe;
 		this.recipeProcessingCompleted = recipeProcessingCompleted;
+		// TODO: Do we have to return a processingCheckState here??
 		this.performInputMove = performInputMove;
 
 		// Use the default callbacks internally.
@@ -206,8 +207,8 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 			ProcessingCheckState completedState = recipeProcessingCompleted.apply(recipe.get());
 
 			// If the processing completed, check to see if we have another recipe ready. If
-			// so, set the move timer to the max value to make it immediatley start. This is
-			// so that the move timer isn't vactored in with large operations.
+			// so, set the move timer to the max value to make it immediately start. This is
+			// so that the move timer isn't factored in with large operations.
 			if (completedState.isOk()) {
 				if (canMoveInputsToInternal().isOk()) {
 					moveTimer = MOVE_TIME;

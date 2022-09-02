@@ -1,12 +1,6 @@
 {
     "variants": {
-		"facing=north,is_on=false": { "model": "staticpower:block/machines/machine_refinery_fluid_output" },
-        "facing=south,is_on=false": { "model": "staticpower:block/machines/machine_refinery_fluid_output", "y": 180 },
-        "facing=west,is_on=false":  { "model": "staticpower:block/machines/machine_refinery_fluid_output", "y": 270 },
-        "facing=east,is_on=false":  { "model": "staticpower:block/machines/machine_refinery_fluid_output", "y": 90 },
-		"facing=north,is_on=true": { "model": "staticpower:block/machines/machine_refinery_fluid_output_on" },
-        "facing=south,is_on=true": { "model": "staticpower:block/machines/machine_refinery_fluid_output_on", "y": 180 },
-        "facing=west,is_on=true":  { "model": "staticpower:block/machines/machine_refinery_fluid_output_on", "y": 270 },
-        "facing=east,is_on=true":  { "model": "staticpower:block/machines/machine_refinery_fluid_output_on", "y": 90 }
+		"is_on=false": { "model": "staticpower:block/machines/machine_refinery_fluid_output" },
+        "is_on=true":  { "model": "staticpower:block/machines/machine_refinery_fluid_output_on" }
     }
 }

@@ -41,6 +41,9 @@
 		"staticpower:machine_refinery_controller",
 		"staticpower:machine_refinery_power_tap",
 		"staticpower:machine_refinery_fluid_input",
-		"staticpower:machine_refinery_fluid_output"
+		"staticpower:machine_refinery_fluid_output",
+		"staticpower:machine_refinery_item_input",
+		"staticpower:machine_refinery_boiler",
+		"staticpower:machine_refinery_tower"
 	]
 }

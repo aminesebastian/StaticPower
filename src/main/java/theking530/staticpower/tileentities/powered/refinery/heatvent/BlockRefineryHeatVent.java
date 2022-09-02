@@ -13,7 +13,8 @@ public class BlockRefineryHeatVent extends StaticPowerMachineBlock {
 
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		return HasGuiType.ALWAYS;
+		TileEntityRefineryHeatVent te = (TileEntityRefineryHeatVent) tileEntity;
+		return te.hasController() ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 	}
 
 	@Override

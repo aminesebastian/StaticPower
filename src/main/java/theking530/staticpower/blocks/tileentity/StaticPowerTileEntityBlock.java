@@ -102,30 +102,19 @@ public abstract class StaticPowerTileEntityBlock extends StaticPowerBlock implem
 
 	@Override
 	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		BlockEntity tileEntity = world.getBlockEntity(pos);
+		TileEntityBase te = (TileEntityBase) world.getBlockEntity(pos);
 
-		// Check to ensure this is a tile entity base and the gui type indicates the
-		// need for a gui.
-		if (tileEntity instanceof TileEntityBase) {
-			HasGuiType guiType = hasGuiScreen(tileEntity, state, world, pos, player, hand, hit);
-			if (guiType != HasGuiType.NEVER) {
-				// Ensure we meet the criteria for entering the GUI.
-				if (guiType == HasGuiType.ALWAYS || (guiType == HasGuiType.SNEAKING_ONLY && player.isShiftKeyDown())) {
-
-					// Only call this on the server.
-					if (!world.isClientSide) {
-						enterGuiScreen((TileEntityBase) tileEntity, state, world, pos, player, hand, hit);
-					}
-
-					// Raise the on Gui entered method.
-					if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-						((TileEntityBase) world.getBlockEntity(pos)).onGuiEntered(state, player, hand, hit);
-					}
-					return InteractionResult.CONSUME;
+		if (te != null) {
+			HasGuiType guiType = hasGuiScreen(te, state, world, pos, player, hand, hit);
+			// Ensure we meet the criteria for entering the GUI.
+			if (guiType == HasGuiType.ALWAYS || (guiType == HasGuiType.SNEAKING_ONLY && player.isShiftKeyDown())) {
+				if (!world.isClientSide) {
+					enterGuiScreen(te, state, world, te.getContainerReferencedBlockPos(), player, hand, hit);
 				}
+				te.onGuiEntered(state, player, hand, hit);
+				return InteractionResult.CONSUME;
 			}
 		}
-		// IF we didn't return earlier, continue the execution.
 		return InteractionResult.PASS;
 	}
 

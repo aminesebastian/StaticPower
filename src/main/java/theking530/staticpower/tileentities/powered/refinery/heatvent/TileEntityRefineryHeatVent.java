@@ -33,8 +33,10 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 
 	@Override
 	public void process() {
-		if (hasController() && !getLevel().isClientSide()) {
-			HeatStorageUtilities.transferHeatWithSurroundings(getController().heatStorage.getStorage(), getLevel(), getBlockPos(), HeatTransferAction.EXECUTE);
+		if (hasController()) {
+			if (!getLevel().isClientSide()) {
+				HeatStorageUtilities.transferHeatWithSurroundings(getController().heatStorage.getStorage(), getLevel(), getBlockPos(), HeatTransferAction.EXECUTE);
+			}
 		}
 	}
 
@@ -60,7 +62,17 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerRefineryHeatVent(windowId, inventory, this);
+		if (hasController()) {
+			return getController().createMenu(windowId, inventory, player);
+		}
+		return null;
+	}
+
+	public BlockPos getContainerReferencedBlockPos() {
+		if (hasController()) {
+			return getController().getContainerReferencedBlockPos();
+		}
+		return super.getContainerReferencedBlockPos();
 	}
 
 	@Override

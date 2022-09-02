@@ -34,6 +34,14 @@ public class SDMath {
 		return ThreadLocalRandom.current().nextInt(min, max + 1);
 	}
 
+	public static Vector4D getRandomVectorOffset() {
+		float randomX = (RANDOM.nextFloat() - 0.5f) * 2;
+		float randomY = (RANDOM.nextFloat() - 0.5f) * 2;
+		float randomZ = (RANDOM.nextFloat() - 0.5f) * 2;
+		float randomW = (RANDOM.nextFloat() - 0.5f) * 2;
+		return new Vector4D(randomX, randomY, randomZ, randomW);
+	}
+
 	public static int getSmallestFactor(int value) {
 		return getSmallestFactor(value, 2);
 	}

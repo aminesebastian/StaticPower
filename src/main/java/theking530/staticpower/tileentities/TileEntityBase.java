@@ -747,6 +747,17 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	}
 
 	/**
+	 * In most cases, we should only return the position of this BE, but in the case
+	 * where you want to remotely access another BE from this one, return the
+	 * position of the other BE.
+	 * 
+	 * @return
+	 */
+	public BlockPos getContainerReferencedBlockPos() {
+		return getBlockPos();
+	}
+
+	/**
 	 * Return the name of this tile entity.
 	 */
 	@Override

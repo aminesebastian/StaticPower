@@ -1,12 +1,6 @@
 {
     "variants": {
-		"facing=north,is_on=false": { "model": "staticpower:block/machines/machine_refinery_item_input" },
-        "facing=south,is_on=false": { "model": "staticpower:block/machines/machine_refinery_item_input", "y": 180 },
-        "facing=west,is_on=false":  { "model": "staticpower:block/machines/machine_refinery_item_input", "y": 270 },
-        "facing=east,is_on=false":  { "model": "staticpower:block/machines/machine_refinery_item_input", "y": 90 },
-		"facing=north,is_on=true": { "model": "staticpower:block/machines/machine_refinery_item_input_on" },
-        "facing=south,is_on=true": { "model": "staticpower:block/machines/machine_refinery_item_input_on", "y": 180 },
-        "facing=west,is_on=true":  { "model": "staticpower:block/machines/machine_refinery_item_input_on", "y": 270 },
-        "facing=east,is_on=true":  { "model": "staticpower:block/machines/machine_refinery_item_input_on", "y": 90 }
+		"is_on=false": { "model": "staticpower:block/machines/machine_refinery_item_input" },
+        "is_on=true":  { "model": "staticpower:block/machines/machine_refinery_item_input_on" }
     }
 }

@@ -6,6 +6,7 @@
 		"staticpower:machine_block_advanced",
 		"staticpower:machine_block_static",
 		"staticpower:machine_block_energized",
-		"staticpower:machine_block_lumum"
+		"staticpower:machine_block_lumum",
+		"staticpower:machine_block_industrial"
 	]
 }
