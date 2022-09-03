@@ -153,6 +153,7 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerOre> OreRuby = registerBlock("ore_ruby", () -> new StaticPowerOre(Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
 	public static final RegistryObject<StaticPowerOre> OreSapphire = registerBlock("ore_sapphire", () -> new StaticPowerOre(Properties.copy(Blocks.DIAMOND_ORE), 2, 5));
 	public static final RegistryObject<StaticPowerOre> OreRustyIron = registerBlock("ore_rusty_iron", () -> new StaticPowerOre(Properties.copy(Blocks.COAL_ORE), 1, 2));
+	public static final RegistryObject<StaticPowerOre> OreUranium = registerBlock("ore_uranium", () -> new StaticPowerOre(Properties.copy(Blocks.COAL_ORE), 1, 2));
 
 	// Deepslate Ore
 	public static final RegistryObject<StaticPowerOre> OreDeepslateTin = registerBlock("ore_deepslate_tin",
@@ -175,6 +176,8 @@ public class ModBlocks {
 			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
 	public static final RegistryObject<StaticPowerOre> OreDeepslateSapphire = registerBlock("ore_deepslate_sapphire",
 			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_DIAMOND_ORE), 2, 5));
+	public static final RegistryObject<StaticPowerOre> OreDeepslateUranium = registerBlock("ore_deepslate_uranium",
+			() -> new StaticPowerOre(Properties.copy(Blocks.DEEPSLATE_GOLD_ORE), 2, 4));
 
 	// Nether Ore
 	public static final RegistryObject<StaticPowerOre> OreNetherSilver = registerBlock("ore_nether_silver",
@@ -203,6 +206,7 @@ public class ModBlocks {
 	public static final RegistryObject<StaticPowerBlock> BlockEnergizedMetal = registerBlock("block_energized_metal",
 			() -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockLumumMetal = registerBlock("block_lumum_metal", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
+	public static final RegistryObject<StaticPowerBlock> BlockUranium = registerBlock("block_uranium", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
 	public static final RegistryObject<StaticPowerSlimeBlock> BlockLatex = registerBlock("block_latex", () -> new StaticPowerSlimeBlock(Properties.copy(Blocks.SLIME_BLOCK)));
 	public static final RegistryObject<StaticPowerSlimeBlock> BlockRubber = registerBlock("block_rubber", () -> new StaticPowerSlimeBlock(Properties.copy(Blocks.SLIME_BLOCK)));
 
@@ -223,6 +227,7 @@ public class ModBlocks {
 			() -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockRawLumumMetal = registerBlock("block_raw_lumum_metal",
 			() -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
+	public static final RegistryObject<StaticPowerBlock> BlockRawUranium = registerBlock("block_raw_uranium", () -> new StaticPowerBlock(Properties.copy(Blocks.RAW_GOLD_BLOCK)));
 
 	// Machine blocks.
 	public static final RegistryObject<StaticPowerCutoutBlock> MachineBlockAluminum = registerBlock("machine_block_aluminum",

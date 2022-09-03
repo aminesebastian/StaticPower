@@ -2,6 +2,7 @@ package theking530.staticpower.tileentities.powered.refinery.controller;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -14,7 +15,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -33,7 +33,7 @@ import theking530.staticpower.init.ModTags;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -66,6 +66,7 @@ public class TileEntityRefineryController extends TileEntityMachine {
 	public final RecipeProcessingComponent<RefineryRecipe> processingComponent;
 	public final HeatStorageComponent heatStorage;
 	public final FluidTankComponent[] fluidTanks;
+	private float currentProcessingProductivity;
 
 	private final MultiBlockCache<IRefineryBlockEntity> multiBlockCache;
 	private boolean refreshMultiBlock;
@@ -88,14 +89,13 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", RefineryRecipe.RECIPE_TYPE, 1, this::getMatchParameters,
-				this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, RefineryRecipe.RECIPE_TYPE, this::getMatchParameters,
+				this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the input fluid tanks.
@@ -104,13 +104,13 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		registerComponent(fluidTanks[0] = new FluidTankComponent("FluidTank0", tier.defaultTankCapacity.get(), (fluid) -> {
 			FluidStack otherFluid = getInputTank(1).isEmpty() ? ModFluids.WILDCARD : getInputTank(1).getFluid();
 			RecipeMatchParameters params = new RecipeMatchParameters().setFluids(fluid, otherFluid).ignoreItems().ignoreFluidAmounts();
-			return processingComponent.getRecipe(params).isPresent();
+			return processingComponent.getRecipeMatchingParameters(params).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input2).setUpgradeInventory(upgradesInventory));
 
 		registerComponent(fluidTanks[1] = new FluidTankComponent("FluidTank1", tier.defaultTankCapacity.get(), (fluid) -> {
 			FluidStack otherFluid = getInputTank(0).isEmpty() ? ModFluids.WILDCARD : getInputTank(0).getFluid();
 			RecipeMatchParameters params = new RecipeMatchParameters().setFluids(otherFluid, fluid).ignoreItems().ignoreFluidAmounts();
-			return processingComponent.getRecipe(params).isPresent();
+			return processingComponent.getRecipeMatchingParameters(params).isPresent();
 		}).setCapabilityExposedModes(MachineSideMode.Input3).setUpgradeInventory(upgradesInventory));
 
 		// Setup the output fluid tanks.
@@ -131,9 +131,9 @@ public class TileEntityRefineryController extends TileEntityMachine {
 
 		// Add the heat storage and the upgrade inventory to the heat component.
 		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", CapabilityHeatable.convertHeatToMilliHeat(200), tier.defaultMachineOverheatTemperature.get(),
-						tier.defaultMachineMaximumTemperature.get(), 1).setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL)
-						.setExposedAsCapability(false).setEnableAutomaticHeatTransfer(false).setMeltdownRecoveryTicks(100));
+				heatStorage = new HeatStorageComponent("HeatStorageComponent", 0, tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1)
+						.setCapabiltiyFilter((amount, direction, action) -> action == HeatManipulationAction.COOL).setExposedAsCapability(false)
+						.setEnableAutomaticHeatTransfer(false).setMeltdownRecoveryTicks(100));
 		heatStorage.setUpgradeInventory(upgradesInventory);
 	}
 
@@ -151,15 +151,12 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		refreshMultiBlock = true;
 
 		if (!getLevel().isClientSide()) {
-			if (redstoneControlComponent.passesRedstoneCheck() && getEfficiency() > 0) {
-				if (processingComponent.isPerformingWork()) {
+			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0) {
+				long powerCost = StaticPowerConfig.SERVER.refineryPowerUsage.get();
+				boolean shouldHeat = processingComponent.isPerformingWork() || !heatStorage.isRecoveringFromMeltdown();
+				if (energyStorage.hasEnoughPower(powerCost) && shouldHeat) {
+					energyStorage.useBulkPower(powerCost);
 					heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
-				} else if (!heatStorage.isRecoveringFromMeltdown()) {
-					RefineryRecipe recipe = processingComponent.getCurrentProcessingRecipe().orElse(null);
-					if (recipe != null && energyStorage.hasEnoughPower(recipe.getPowerCost())) {
-						energyStorage.useBulkPower(recipe.getPowerCost());
-						heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
-					}
 				}
 			}
 
@@ -226,10 +223,25 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		this.refreshMultiBlock = true;
 	}
 
+	public int getHeatUsage() {
+		int heatUse = StaticPowerConfig.SERVER.refineryHeatUse.get();
+		Optional<RefineryRecipe> recipe = processingComponent.getCurrentOrPendingRecipe();
+		if (recipe.isPresent()) {
+			heatUse = recipe.get().getProcessingSection().getHeatUse();
+		}
+		return (int) (heatUse * processingComponent.getCalculatedHeatGenerationMultiplier());
+	}
+
+	public int getMinimumHeat() {
+		Optional<RefineryRecipe> recipe = processingComponent.getCurrentOrPendingRecipe();
+		if (recipe.isPresent()) {
+			return recipe.get().getProcessingSection().getHeatUse();
+		}
+		return StaticPowerConfig.SERVER.refineryMinimumHeat.get();
+	}
+
 	public int getHeatGeneration() {
-		return (int) (CapabilityHeatable.convertHeatToMilliHeat(10) * processingComponent.getCalculatedHeatGenerationMultiplier());
-		// return (int) (StaticPowerConfig.SERVER.refineryHeatGeneration.get() *
-		// processingComponent.getCalculatedHeatGenerationMultiplier());
+		return StaticPowerConfig.SERVER.refineryPerBoilerHeatGeneration.get() * getBoilers().size();
 	}
 
 	public FluidTankComponent getInputTank(int index) {
@@ -275,7 +287,7 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		return output;
 	}
 
-	public float getEfficiency() {
+	public float getProductivity() {
 		float efficiencyPer = 1.0f / MAX_EFFICIENCY_TOWER_HEIGHT;
 		Map<BlockPos, Integer> boilers = getBoilers();
 
@@ -284,43 +296,31 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		for (BlockPos pos : boilers.keySet()) {
 			total += Math.min(boilers.get(pos), MAX_EFFICIENCY_TOWER_HEIGHT) * efficiencyPer;
 		}
-		return total / boilers.size();
+		return total;
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters().setItems(internalInventory.getStackInSlot(0)).setFluids(getInputTank(0).getFluid(), getInputTank(1).getFluid());
 		} else {
 			return new RecipeMatchParameters().setItems(catalystInventory.getStackInSlot(0)).setFluids(getInputTank(0).getFluid(), getInputTank(1).getFluid());
 		}
 	}
 
-	protected ProcessingCheckState moveInputs(RefineryRecipe recipe) {
-		ProcessingCheckState tankCheck = fillOutputTanksWithOutput(recipe, FluidAction.SIMULATE);
-		if (!tankCheck.isOk()) {
-			return tankCheck;
-		}
-
-		ProcessingCheckState heatCheck = checkHeatStorageReady();
-		if (!heatCheck.isOk()) {
-			return heatCheck;
-		}
-
-		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
-		if (!multiBlockCheck.isOk()) {
-			return multiBlockCheck;
-		}
-
+	protected void moveInputs(RefineryRecipe recipe) {
 		transferItemInternally(recipe.getCatalyst().getCount(), catalystInventory, 0, internalInventory, 0);
-
-		// Set the power usage.
-		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-
-		return ProcessingCheckState.ok();
+		currentProcessingProductivity = getProductivity();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(RefineryRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(RefineryRecipe recipe, RecipeProcessingPhase location) {
+		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+		heatStorage.getStorage().setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
+		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
+		if (!multiBlockCheck.isOk()) {
+			return multiBlockCheck;
+		}
+
 		ProcessingCheckState tankCheck = fillOutputTanksWithOutput(recipe, FluidAction.SIMULATE);
 		if (!tankCheck.isOk()) {
 			return tankCheck;
@@ -329,11 +329,6 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		ProcessingCheckState heatCheck = checkHeatStorageReady();
 		if (!heatCheck.isOk()) {
 			return heatCheck;
-		}
-
-		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
-		if (!multiBlockCheck.isOk()) {
-			return multiBlockCheck;
 		}
 
 		return ProcessingCheckState.ok();
@@ -344,11 +339,12 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		fillOutputTanksWithOutput(recipe, FluidAction.EXECUTE);
 
 		// Drain the fluid.
-		getInputTank(0).drain(recipe.getPrimaryFluidInput().getAmount(), FluidAction.EXECUTE);
-		getInputTank(1).drain(recipe.getSecondaryFluidInput().getAmount(), FluidAction.EXECUTE);
+		getInputTank(0).drain((int) (recipe.getPrimaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
+		getInputTank(1).drain((int) (recipe.getSecondaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
 
 		// Clear the internal inventory.
 		InventoryUtilities.clearInventory(internalInventory);
+		heatStorage.getStorage().cool(getHeatUsage(), HeatTransferAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
 
@@ -356,7 +352,7 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		if (getBoilers().size() == 0) {
 			return ProcessingCheckState.error("Missing Boilers!");
 		}
-		if (getEfficiency() <= 0.0f) {
+		if (getProductivity() <= 0.0f) {
 			return ProcessingCheckState.error("Missing Refinery Towers!");
 		}
 		return ProcessingCheckState.ok();
@@ -377,16 +373,20 @@ public class TileEntityRefineryController extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState fillOutputTanksWithOutput(RefineryRecipe recipe, FluidAction action) {
-		float efficiency = getEfficiency();
-
 		FluidStack output1 = recipe.getFluidOutput1().copy();
-		output1.setAmount((int) (output1.getAmount() * efficiency));
+		if (!output1.isEmpty()) {
+			output1.setAmount((int) (output1.getAmount() * currentProcessingProductivity));
+		}
 
 		FluidStack output2 = recipe.getFluidOutput2().copy();
-		output2.setAmount((int) (output2.getAmount() * efficiency));
+		if (!output2.isEmpty()) {
+			output2.setAmount((int) (output2.getAmount() * currentProcessingProductivity));
+		}
 
 		FluidStack output3 = recipe.getFluidOutput3().copy();
-		output3.setAmount((int) (output3.getAmount() * efficiency));
+		if (!output3.isEmpty()) {
+			output3.setAmount((int) (output3.getAmount() * currentProcessingProductivity));
+		}
 
 		if (getOutputTank(0).fill(output1, action) != output1.getAmount()) {
 			return ProcessingCheckState.outputTankCannotTakeFluid();

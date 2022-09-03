@@ -21,7 +21,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -68,8 +68,8 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", FluidInfusionRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get(),
+				FluidInfusionRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -97,8 +97,8 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
@@ -121,7 +121,7 @@ public class TileEntityFluidInfuser extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(FluidInfusionRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(FluidInfusionRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}

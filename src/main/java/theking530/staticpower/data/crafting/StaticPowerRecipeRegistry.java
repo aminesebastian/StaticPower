@@ -250,7 +250,8 @@ public class StaticPowerRecipeRegistry {
 		cachePackagerRecipes(manager, null);
 
 		// Log the completion.
-		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"), RECIPES.size() + FURNACE_RECIPES.size() + CRAFTING_RECIPES.size()));
+		LOGGER.info(String.format("Succesfully %1$s %2$d Static Power recipes.", (firstTime ? "cached" : "re-cached"),
+				RECIPES.size() + FURNACE_RECIPES.size() + CRAFTING_RECIPES.size()));
 	}
 
 	public static List<ResourceLocation> getMissingResearchForRecipe(ResourceLocation recipeId, Team team) {
@@ -361,13 +362,15 @@ public class StaticPowerRecipeRegistry {
 					CraftingRecipe recipe = twoRecipe.get();
 					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_2_dynamic");
 					PackagerRecipe packRecipe = new PackagerRecipe(id, 2, new StaticPowerIngredient(instance.copy(), 4), new ProbabilityItemStackOutput(recipe.getResultItem()),
-							MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get()));
+							MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 0,
+									0));
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
 				StaticPower.LOGGER.error(
 						"An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported. Check the debug log for more details.");
-				StaticPower.LOGGER.debug("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
+				StaticPower.LOGGER
+						.debug("An error occured when attempting to cache a 2x2 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
 			}
 
 			try {
@@ -378,13 +381,15 @@ public class StaticPowerRecipeRegistry {
 					CraftingRecipe recipe = threeRecipe.get();
 					ResourceLocation id = new ResourceLocation(recipe.getId().getNamespace(), recipe.getId().getPath() + "_packager_3_dynamic");
 					PackagerRecipe packRecipe = new PackagerRecipe(id, 3, new StaticPowerIngredient(instance.copy(), 9), new ProbabilityItemStackOutput(recipe.getResultItem()),
-							MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get()));
+							MachineRecipeProcessingSection.hardcoded(StaticPowerConfig.SERVER.packagerProcessingTime.get(), StaticPowerConfig.SERVER.packagerPowerUsage.get(), 0,
+									0));
 					addRecipe(packRecipe);
 				}
 			} catch (Exception e) {
 				StaticPower.LOGGER.error(
 						"An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported. Check the debug log for more details.");
-				StaticPower.LOGGER.debug("An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
+				StaticPower.LOGGER
+						.debug("An error occured when attempting to cache a 3x3 packager recipe! Recipes that require a reference to the world are not currently supported.", e);
 			}
 		}
 		// Log the completion.

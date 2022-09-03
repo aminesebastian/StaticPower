@@ -62,7 +62,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			BlockEntity tile = accessor.getBlockEntity();
 			if (tile != null) {
-				IStaticVoltHandler storage = tile.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, accessor.getSide()).orElse(null);
+				IStaticVoltHandler storage = tile.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
 				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
 					long stored, capacity;
 
@@ -88,7 +88,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			BlockEntity tile = accessor.getBlockEntity();
 			if (tile != null) {
-				IHeatStorage storage = tile.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, accessor.getSide()).orElse(null);
+				IHeatStorage storage = tile.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY).orElse(null);
 				if (storage != null && (!accessor.isServerConnected() || accessor.getServerData().contains(JadeDataProviders.HEAT_TAG))) {
 					int stored, capacity;
 					if (accessor.isServerConnected()) {

@@ -302,7 +302,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (isEnabled() && exposeAsCapability) {
+		// Still expose even if exposeAsCapability is false if the side is null. This is
+		// used for JADE and other overlays.
+		if (isEnabled() && (side == null || exposeAsCapability)) {
 			return manuallyGetCapability(cap, side);
 		}
 

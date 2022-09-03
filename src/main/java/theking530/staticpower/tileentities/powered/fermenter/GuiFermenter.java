@@ -17,7 +17,7 @@ import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, TileEntityFermenter> {
@@ -51,7 +51,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 	public void updateData() {
 		// If the recipe is non-null, render the fluid progress bar.
 		if (getTileEntity().processingComponent.isProcessing()) {
-			FluidStack fluid = getTileEntity().processingComponent.getRecipe(getTileEntity().getMatchParameters(RecipeProcessingLocation.INTERNAL)).get().getOutputFluidStack();
+			FluidStack fluid = getTileEntity().processingComponent.getRecipeMatchingParameters(getTileEntity().getMatchParameters(RecipeProcessingPhase.PROCESSING)).get().getOutputFluidStack();
 			progressBar.setFluidStack(fluid);
 		} else {
 			progressBar.setFluidStack(FluidStack.EMPTY);

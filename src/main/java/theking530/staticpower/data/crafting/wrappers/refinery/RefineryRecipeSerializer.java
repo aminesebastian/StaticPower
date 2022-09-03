@@ -38,7 +38,7 @@ public class RefineryRecipeSerializer extends StaticPowerRecipeSerializer<Refine
 
 		// Capture the processing and power costs.
 		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(StaticPowerConfig.SERVER.refineryProcessingTime.get(),
-				StaticPowerConfig.SERVER.refineryPowerUsage.get(), json);
+				StaticPowerConfig.SERVER.refineryPowerUsage.get(), StaticPowerConfig.SERVER.refineryMinimumHeat.get(), StaticPowerConfig.SERVER.refineryHeatUse.get(), json);
 
 		// Get the fluid result.
 		FluidStack output1 = FluidStack.EMPTY;

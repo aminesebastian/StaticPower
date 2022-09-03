@@ -17,7 +17,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -41,7 +41,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class TileEntityEnchanter extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityEnchanter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityEnchanter(pos, state), ModBlocks.Enchanter);
+	public static final BlockEntityTypeAllocator<TileEntityEnchanter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityEnchanter(pos, state),
+			ModBlocks.Enchanter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent enchantableInventory;
@@ -63,7 +64,7 @@ public class TileEntityEnchanter extends TileEntityMachine {
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 3, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
+				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
 			}
 		}));
 
@@ -76,8 +77,8 @@ public class TileEntityEnchanter extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<EnchanterRecipe>("ProcessingComponent", EnchanterRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canStartProcessRecipe, this::processingCompleted).setCanContinueProcessingLambda(this::canContinueProcessingRecipe));
+		registerComponent(processingComponent = new RecipeProcessingComponent<EnchanterRecipe>("ProcessingComponent", 1, EnchanterRecipe.RECIPE_TYPE, this::getMatchParameters,
+				this::canStartProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -93,8 +94,8 @@ public class TileEntityEnchanter extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Setup the fluid tanks and servo.
-		registerComponent(
-				fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input).setUpgradeInventory(upgradesInventory));
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
+				.setUpgradeInventory(upgradesInventory));
 		fluidTankComponent.setCanDrain(false);
 		fluidTankComponent.setAutoSyncPacketsEnabled(true);
 
@@ -107,13 +108,13 @@ public class TileEntityEnchanter extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2), internalInventory.getStackInSlot(3))
-					.setFluids(fluidTankComponent.getFluid());
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
+			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
+					internalInventory.getStackInSlot(3)).setFluids(fluidTankComponent.getFluid());
 		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), enchantableInventory.getStackInSlot(0))
-					.setFluids(fluidTankComponent.getFluid());
+			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2),
+					enchantableInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
 		}
 	}
 
@@ -130,15 +131,9 @@ public class TileEntityEnchanter extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canStartProcessRecipe(EnchanterRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getEnchantedVersion(enchantableInventory.getStackInSlot(0)))) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState canContinueProcessingRecipe(EnchanterRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getEnchantedVersion(internalInventory.getStackInSlot(3)))) {
+	protected ProcessingCheckState canStartProcessRecipe(EnchanterRecipe recipe, RecipeProcessingPhase location) {
+		ItemStack input = location == RecipeProcessingPhase.PRE_PROCESSING ? enchantableInventory.getStackInSlot(0) : internalInventory.getStackInSlot(3);
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, input)) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();

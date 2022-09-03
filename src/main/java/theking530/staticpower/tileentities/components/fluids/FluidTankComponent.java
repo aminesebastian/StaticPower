@@ -254,7 +254,7 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		if (isEnabled() && exposeAsCapability && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+		if (isEnabled() && (exposeAsCapability || side == null) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			// Check if the owner is side configurable. If it is, check to make sure it's
 			// not disabled, if not, return the inventory.
 			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());

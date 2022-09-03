@@ -16,7 +16,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -61,8 +61,8 @@ public class TileEntityFormer extends TileEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FormerRecipe>("ProcessingComponent", FormerRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FormerRecipe>("ProcessingComponent", 1, FormerRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe,
+				this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -79,8 +79,8 @@ public class TileEntityFormer extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1));
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), moldInventory.getStackInSlot(0));
@@ -104,7 +104,7 @@ public class TileEntityFormer extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(FormerRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(FormerRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRawRecipeOutput())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}

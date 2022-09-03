@@ -51,7 +51,7 @@ public class GuiRefineryController extends StaticPowerTileEntityGui<ContainerRef
 		registerWidget(fluidBar2 = new FluidProgressBar(79, 67, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
 		registerWidget(fluidBar3 = new FluidProgressBar(79, 73, 24, 4).bindToMachineProcessingComponent(getTileEntity().processingComponent).setDisplayErrorIcon(false));
 
-		getTabManager().registerTab(infoTab = new GuiInfoTab("Statistics", 95), true);
+		getTabManager().registerTab(infoTab = new GuiInfoTab("Statistics", 110), true);
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 
@@ -84,8 +84,12 @@ public class GuiRefineryController extends StaticPowerTileEntityGui<ContainerRef
 		}
 
 		// Update the production data.
-		infoTab.addKeyValueTwoLiner("boiler_count", new TextComponent("Boilers"), GuiTextUtilities.formatNumberAsString(getTileEntity().getBoilers().size()), ChatFormatting.BLUE);
-		infoTab.addKeyValueTwoLiner("efficiency", new TextComponent("Efficiency"), GuiTextUtilities.formatNumberAsString(getTileEntity().getEfficiency() * 100).append("%"),
+		infoTab.addKeyValueTwoLiner("productivity", new TextComponent("Productivity"),
+				GuiTextUtilities.formatNumberAsString(getTileEntity().getProductivity() * 100).append("% (")
+						.append(ChatFormatting.DARK_AQUA + GuiTextUtilities.formatNumberAsString(getTileEntity().getBoilers().size()).getString())
+						.append(" Boilers" + ChatFormatting.RESET + ")"),
 				ChatFormatting.GREEN);
+		infoTab.addKeyValueTwoLiner("heat_gen", new TextComponent("Heat Generation"), GuiTextUtilities.formatHeatRateToString(getTileEntity().getHeatGeneration()),
+				ChatFormatting.RED);
 	}
 }

@@ -15,9 +15,8 @@ import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnace
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -28,14 +27,15 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityFusionFurnace extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFusionFurnace(pos, state), ModBlocks.FusionFurnace);
+	public static final BlockEntityTypeAllocator<TileEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityFusionFurnace(pos, state),
+			ModBlocks.FusionFurnace);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
-	public final MachineProcessingComponent processingComponent;
+	public final RecipeProcessingComponent processingComponent;
 
 	public TileEntityFusionFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.ENERGIZED);
@@ -52,8 +52,9 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", FusionFurnaceRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(
+				processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(),
+						FusionFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -70,8 +71,8 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
 					internalInventory.getStackInSlot(3), internalInventory.getStackInSlot(4));
 		} else {
@@ -102,7 +103,7 @@ public class TileEntityFusionFurnace extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(FusionFurnaceRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(FusionFurnaceRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}

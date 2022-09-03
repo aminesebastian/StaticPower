@@ -25,7 +25,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
@@ -92,8 +92,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<AutoSmithRecipe>("ProcessingComponent", AutoSmithRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.autoSmithProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<AutoSmithRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoSmithProcessingTime.get(),
+				AutoSmithRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -120,8 +120,8 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1)).setFluids(fluidTankComponent.getFluid());
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1)).setFluids(fluidTankComponent.getFluid());
@@ -147,7 +147,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(AutoSmithRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(AutoSmithRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
@@ -166,7 +166,7 @@ public class TileEntityAutoSmith extends TileEntityMachine {
 		RecipeMatchParameters nextRecipeParameters = new RecipeMatchParameters(output, inputInventory.getStackInSlot(1)).setFluids(fluidTankComponent.getFluid());
 
 		// Check to get the recipe that will be processed next based on the modifier.
-		Optional<AutoSmithRecipe> nextRecipe = processingComponent.getRecipe(nextRecipeParameters);
+		Optional<AutoSmithRecipe> nextRecipe = processingComponent.getRecipeMatchingParameters(nextRecipeParameters);
 
 		// Put the item into the appropriate output slot.
 		if (nextRecipe.isPresent() && nextRecipe.get().canApplyToItemStack(output)) {

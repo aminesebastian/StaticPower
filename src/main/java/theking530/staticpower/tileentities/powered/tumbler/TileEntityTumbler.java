@@ -18,7 +18,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -53,7 +53,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
+				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
 			}
 		}));
 
@@ -66,8 +66,8 @@ public class TileEntityTumbler extends TileEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<TumblerRecipe>("ProcessingComponent", TumblerRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.tumblerProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<TumblerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.tumblerProcessingTime.get(),
+				TumblerRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -90,8 +90,8 @@ public class TileEntityTumbler extends TileEntityMachine {
 		currentSpeed = 0;
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
@@ -119,7 +119,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(TumblerRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(TumblerRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRawOutputItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}

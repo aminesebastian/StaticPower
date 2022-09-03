@@ -18,7 +18,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
@@ -64,8 +64,8 @@ public class TileEntityLathe extends TileEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<LatheRecipe>("ProcessingComponent", LatheRecipe.RECIPE_TYPE, 1, this::getMatchParameters, this::moveInputs,
-				this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<LatheRecipe>("ProcessingComponent", 1, LatheRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe,
+				this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -92,8 +92,8 @@ public class TileEntityLathe extends TileEntityMachine {
 		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
 					internalInventory.getStackInSlot(3), internalInventory.getStackInSlot(4), internalInventory.getStackInSlot(5), internalInventory.getStackInSlot(6),
 					internalInventory.getStackInSlot(7), internalInventory.getStackInSlot(8));
@@ -121,7 +121,7 @@ public class TileEntityLathe extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(LatheRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(LatheRecipe recipe, RecipeProcessingPhase location) {
 		// If the recipe cannot be insert into the output, return false.
 		if (!canOutputsTakeRecipeResult(recipe)) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();

@@ -1,6 +1,8 @@
 package theking530.staticpower.tileentities.components.control;
 
 import java.util.Optional;
+import java.util.function.BiFunction;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 import net.minecraft.world.Container;
@@ -11,50 +13,38 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
-public class RecipeProcessingComponent<T extends Recipe<Container>> extends MachineProcessingComponent {
-	public enum RecipeProcessingLocation {
-		INPUT, INTERNAL
+public class RecipeProcessingComponent<T extends Recipe<Container>> extends AbstractProcesingComponent {
+	public enum RecipeProcessingPhase {
+		PRE_PROCESSING, PROCESSING
 	}
 
 	public static final int MOVE_TIME = 8;
 
-	/**
-	 * This function is called both when checking to see if we can move the inputs
-	 * and also when starting the processing.
-	 */
-	private final Function<T, ProcessingCheckState> canStartProcessingRecipe;
-	private final Function<T, ProcessingCheckState> recipeProcessingCompleted;
-	private final Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters;
-	private final Function<T, ProcessingCheckState> performInputMove;
+	private final BiFunction<T, RecipeProcessingPhase, ProcessingCheckState> canProcessRecipe;
+	private final Function<RecipeProcessingPhase, RecipeMatchParameters> getMatchParameters;
+	private final Consumer<T> performInputMove;
+	private final Consumer<T> recipeProcessingCompleted;
 	private final RecipeType<T> recipeType;
-
-	private Function<T, ProcessingCheckState> canContinueProcessingRecipe;
 
 	@UpdateSerialize
 	private int moveTimer;
 
-	public RecipeProcessingComponent(String name, RecipeType<T> recipeType, int processingTime, Function<RecipeProcessingLocation, RecipeMatchParameters> getMatchParameters,
-			Function<T, ProcessingCheckState> performInputMove, Function<T, ProcessingCheckState> canProcessRecipe, Function<T, ProcessingCheckState> recipeProcessingCompleted) {
-		super(name, processingTime, null, null, null, true);
+	public RecipeProcessingComponent(String name, int processingTime, RecipeType<T> recipeType, Function<RecipeProcessingPhase, RecipeMatchParameters> getMatchParameters,
+			BiFunction<T, RecipeProcessingPhase, ProcessingCheckState> canProcessRecipe, Consumer<T> performInputMove, Consumer<T> recipeProcessingCompleted) {
+		super(name, processingTime, true);
 
 		// Capture the recipe type.
 		this.recipeType = recipeType;
 
 		// Set the recipe callbacks.
-		this.canStartProcessingRecipe = canProcessRecipe;
-		this.canContinueProcessingRecipe = canProcessRecipe;
+		this.canProcessRecipe = canProcessRecipe;
 		this.recipeProcessingCompleted = recipeProcessingCompleted;
-		// TODO: Do we have to return a processingCheckState here??
 		this.performInputMove = performInputMove;
-
-		// Use the default callbacks internally.
-		this.canStartProcessingCallback = () -> ProcessingCheckState.ok();// We can just return true here because we are overriding the parent's check.
-		this.canContinueProcessingCallback = () -> ProcessingCheckState.ok();// We can just return true here because we are overriding the parent's check.
-		this.processingEndedCallback = this::processingCompleted;
 		this.getMatchParameters = getMatchParameters;
 
 		// Set the initial move timer.
@@ -97,9 +87,9 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 			if (internalMoveState.isOk()) {
 				// We can just GET the recipe here because the call to #canMoveInputsToInternal
 				// already checks for a valid recipe.
-				ProcessingCheckState checkstate = performInputMove.apply(getRecipe(getMatchParameters.apply(RecipeProcessingLocation.INPUT)).get());
+				performInputMove.accept(getRecipeMatchingParameters(getMatchParameters.apply(RecipeProcessingPhase.PRE_PROCESSING)).get());
 				moveTimer = 0;
-				return checkstate;
+				return ProcessingCheckState.ok();
 			} else {
 				return internalMoveState;
 			}
@@ -118,7 +108,7 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 	 */
 	protected ProcessingCheckState canMoveInputsToInternal() {
 		// Attempt to get the recipe. If it does not exist, skip.
-		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INPUT);
+		Optional<T> recipe = getRecipe(RecipeProcessingPhase.PRE_PROCESSING);
 		if (!recipe.isPresent()) {
 			return ProcessingCheckState.skip();
 		}
@@ -143,13 +133,13 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 		}
 
 		// If we made it this far, check the start processing callback.
-		return canStartProcessingRecipe.apply(recipe.get());
+		return canProcessRecipe.apply(recipe.get(), RecipeProcessingPhase.PRE_PROCESSING);
 	}
 
 	@Override
 	protected ProcessingCheckState canStartProcessing() {
 		// Attempt to get the recipe. If it does not exist, skip.
-		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
+		Optional<T> recipe = getRecipe(RecipeProcessingPhase.PROCESSING);
 		if (!recipe.isPresent()) {
 			return ProcessingCheckState.skip();
 		}
@@ -169,7 +159,7 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 		}
 
 		// If we made it this far, check the start processing callback.
-		return canStartProcessingRecipe.apply(recipe.get());
+		return canProcessRecipe.apply(recipe.get(), RecipeProcessingPhase.PROCESSING);
 	}
 
 	@Override
@@ -181,13 +171,31 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 		}
 
 		// Get the recipe. Skip if it does not exist.
-		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
+		Optional<T> recipe = getRecipe(RecipeProcessingPhase.PROCESSING);
 		if (!recipe.isPresent()) {
 			return ProcessingCheckState.ok();
 		}
 
 		// Now check the callback.
-		return canContinueProcessingRecipe.apply(recipe.get());
+		return canProcessRecipe.apply(recipe.get(), RecipeProcessingPhase.PROCESSING);
+	}
+
+	protected ProcessingCheckState canCompleteProcessing() {
+		// Check the parent state.
+		ProcessingCheckState superCall = super.canCompleteProcessing();
+		if (!superCall.isOk()) {
+			return superCall;
+		}
+
+		// Get the recipe. Skip if it does not exist.
+		Optional<T> recipe = getRecipe(RecipeProcessingPhase.PROCESSING);
+		if (!recipe.isPresent()) {
+			return ProcessingCheckState.ok();
+		}
+
+		// Now check the callback.
+		recipeProcessingCompleted.accept(recipe.get());
+		return ProcessingCheckState.ok();
 	}
 
 	protected ProcessingCheckState processingCompleted() {
@@ -198,39 +206,32 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 		}
 
 		// Get the recipe.
-		Optional<T> recipe = getRecipe(RecipeProcessingLocation.INTERNAL);
+		Optional<T> recipe = getRecipe(RecipeProcessingPhase.PROCESSING);
 
 		// If there is a recipe, see if we can complete it. If there is no recipe, just
 		// return true so we don't get stuck in a loop. This is an edge case where a
 		// user may save mid processing, remove the recipe, and then reload.
 		if (recipe.isPresent()) {
-			ProcessingCheckState completedState = recipeProcessingCompleted.apply(recipe.get());
+			recipeProcessingCompleted.accept(recipe.get());
 
 			// If the processing completed, check to see if we have another recipe ready. If
 			// so, set the move timer to the max value to make it immediately start. This is
 			// so that the move timer isn't factored in with large operations.
-			if (completedState.isOk()) {
-				if (canMoveInputsToInternal().isOk()) {
-					moveTimer = MOVE_TIME;
-				}
+			if (canMoveInputsToInternal().isOk()) {
+				moveTimer = MOVE_TIME;
 			}
 		}
 		return ProcessingCheckState.ok();
 	}
 
-	public RecipeProcessingComponent<T> setCanContinueProcessingLambda(Function<T, ProcessingCheckState> canContinueProcessingRecipe) {
-		this.canContinueProcessingRecipe = canContinueProcessingRecipe;
-		return this;
-	}
-
-	private Optional<T> getRecipe(RecipeProcessingLocation location) {
+	private Optional<T> getRecipe(RecipeProcessingPhase location) {
 		// Get the recipe.
 		RecipeMatchParameters matchParameters = getMatchParameters.apply(location);
-		return getRecipe(matchParameters);
+		return getRecipeMatchingParameters(matchParameters);
 	}
 
 	@SuppressWarnings("unchecked")
-	public Optional<T> getRecipe(RecipeMatchParameters matchParameters) {
+	public Optional<T> getRecipeMatchingParameters(RecipeMatchParameters matchParameters) {
 		// Check for the recipe.
 		if (recipeType == RecipeType.SMELTING) {
 			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), getLevel());
@@ -245,8 +246,22 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Mach
 		return Optional.empty();
 	}
 
+	/**
+	 * First attempts to get the recipe using the processing phase. If one is not
+	 * found, then we fall back to the pre_processing phase.
+	 * 
+	 * @return
+	 */
+	public Optional<T> getCurrentOrPendingRecipe() {
+		Optional<T> recipe = getRecipeMatchingParameters(getMatchParameters.apply(RecipeProcessingPhase.PROCESSING));
+		if (!recipe.isPresent()) {
+			recipe = getRecipeMatchingParameters(getMatchParameters.apply(RecipeProcessingPhase.PRE_PROCESSING));
+		}
+		return recipe;
+	}
+
 	public Optional<T> getCurrentProcessingRecipe() {
-		return getRecipe(RecipeProcessingLocation.INTERNAL);
+		return getRecipe(RecipeProcessingPhase.PROCESSING);
 	}
 
 	@SuppressWarnings("unchecked")

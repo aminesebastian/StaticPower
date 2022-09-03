@@ -18,7 +18,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
@@ -62,7 +62,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
+				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
 			}
 		}));
 
@@ -76,8 +76,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", CentrifugeRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.centrifugeProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.centrifugeProcessingTime.get(),
+				CentrifugeRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -100,8 +100,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get();
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
@@ -134,7 +134,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		}
 	}
 
-	protected ProcessingCheckState canProcessRecipe(CentrifugeRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(CentrifugeRecipe recipe, RecipeProcessingPhase location) {
 		if (!canInsertRecipeIntoOutputs(recipe)) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}

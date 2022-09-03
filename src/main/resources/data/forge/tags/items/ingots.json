@@ -15,6 +15,7 @@
 	"staticpower:ingot_inert_infusion",
 	"staticpower:ingot_redstone_alloy",     
 	"staticpower:ingot_brass",
-	"staticpower:ingot_bronze"
+	"staticpower:ingot_bronze",
+	"staticpower:ingot_uranium"
   ]
 }

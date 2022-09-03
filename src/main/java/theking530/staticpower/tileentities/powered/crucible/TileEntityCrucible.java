@@ -20,7 +20,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -60,7 +60,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
+				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
 			}
 
 		}));
@@ -76,8 +76,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.defaultMachineOverheatTemperature.get(), tier.defaultMachineMaximumTemperature.get(), 1.0f));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", CrucibleRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.crucibleProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.crucibleProcessingTime.get(),
+				CrucibleRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -113,8 +113,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 		}
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
@@ -149,7 +149,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(CrucibleRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(CrucibleRecipe recipe, RecipeProcessingPhase location) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
 		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {

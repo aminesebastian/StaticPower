@@ -121,6 +121,7 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> RawTin = ITEMS.register("raw_tin", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RawTungsten = ITEMS.register("raw_tungsten", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RawZinc = ITEMS.register("raw_zinc", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> RawUranium = ITEMS.register("raw_uranium", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> IngotAluminum = ITEMS.register("ingot_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> IngotBrass = ITEMS.register("ingot_brass", () -> new StaticPowerItem());
@@ -137,6 +138,7 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> IngotTin = ITEMS.register("ingot_tin", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> IngotTungsten = ITEMS.register("ingot_tungsten", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> IngotZinc = ITEMS.register("ingot_zinc", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> IngotUranium = ITEMS.register("ingot_uranium", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> IngotTinHeated = ITEMS.register("ingot_tin_heated", () -> new HeatedIngot(() -> ModItems.IngotTin.get()));
 	public static final RegistryObject<StaticPowerItem> IngotZincHeated = ITEMS.register("ingot_zinc_heated", () -> new HeatedIngot(() -> ModItems.IngotZinc.get()));
@@ -261,6 +263,10 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> DustTin = ITEMS.register("dust_tin", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustTungsten = ITEMS.register("dust_tungsten", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> DustZinc = ITEMS.register("dust_zinc", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> DustUrnaium = ITEMS.register("dust_uranium", () -> new StaticPowerItem());
+
+	public static final RegistryObject<StaticPowerItem> DustCoalSmall = ITEMS.register("dust_coal_small", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> DustCharcoalSmall = ITEMS.register("dust_charcoal_small", () -> new StaticPowerItem());
 
 	public static final RegistryObject<StaticPowerItem> ChunksAluminum = ITEMS.register("chunks_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> ChunksCoal = ITEMS.register("chunks_coal", () -> new StaticPowerItem());

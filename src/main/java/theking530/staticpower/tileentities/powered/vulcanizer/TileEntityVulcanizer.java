@@ -19,7 +19,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
@@ -61,8 +61,8 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<VulcanizerRecipe>("ProcessingComponent",
-				VulcanizerRecipe.RECIPE_TYPE, StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(),
-				this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+				StaticPowerConfig.SERVER.vulcanizerProcessingTime.get(), VulcanizerRecipe.RECIPE_TYPE,
+				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -77,7 +77,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		// Setup the fluid tanks and servo.
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tierObject.defaultTankCapacity.get(),
 				(fluidStack) -> {
-					return processingComponent.getRecipe(new RecipeMatchParameters(fluidStack)).isPresent();
+					return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(fluidStack)).isPresent();
 				}));
 
 		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
@@ -98,8 +98,8 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		currentProcessingFluidStack = FluidStack.EMPTY;
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(currentProcessingFluidStack);
 		} else {
 			return new RecipeMatchParameters(fluidTankComponent.getFluid());
@@ -123,7 +123,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(VulcanizerRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(VulcanizerRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getRawOutputItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}

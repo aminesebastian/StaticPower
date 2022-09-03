@@ -13,7 +13,6 @@ import mezz.jei.api.ingredients.IIngredientRenderer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
@@ -26,8 +25,6 @@ import theking530.staticpower.integration.JEI.JEIErrorUtilSnippet;
 
 public class ProbabilityItemStackRenderer implements IIngredientRenderer<ProbabilityItemStackOutput> {
 
-	private final ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
-
 	@Override
 	public void render(PoseStack matrixStack, int xPosition, int yPosition, @Nullable ProbabilityItemStackOutput ingredient) {
 		if (ingredient != null) {
@@ -37,7 +34,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			Font font = getFontRenderer(minecraft, ingredient);
 
 			GuiDrawUtilities.drawItem(matrixStack, ingredient.getItem(), xPosition, yPosition, 10.0f);
-			
+
 			// Draw the percentage string manually.
 			if (ingredient.getOutputChance() != 1.0f) {
 				String percentageString = GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
@@ -56,6 +53,7 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 		try {
 			// Get the original item tooltip but remove the last line (that should be the
 			// mod name).
+			@SuppressWarnings("resource")
 			List<Component> tooltip = ingredient.getItem().getTooltipLines(Minecraft.getInstance().player, tooltipFlag);
 
 			// Formulate the output percentage tooltip and then add it.
@@ -68,8 +66,8 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			// Add the tooltip for the bonus output.
 			if (ingredient.getAdditionalBonus() > 0) {
 				Component bonus = new TranslatableComponent("gui.staticpower.bonus_output").withStyle(ChatFormatting.GREEN).append(": ")
-						.append(ChatFormatting.GOLD.toString() + String.valueOf(ingredient.getAdditionalBonus()) + ChatFormatting.GRAY.toString() + ChatFormatting.ITALIC.toString() + " ("
-								+ GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100).getString() + "%)");
+						.append(ChatFormatting.GOLD.toString() + String.valueOf(ingredient.getAdditionalBonus()) + ChatFormatting.GRAY.toString() + ChatFormatting.ITALIC.toString()
+								+ " (" + GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getBonusChance() * 100).getString() + "%)");
 				tooltip.add(bonus);
 			}
 

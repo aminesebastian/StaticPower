@@ -19,7 +19,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.StaticPowerSprites;
-import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent;
 
 /**
  * Abstract progress bar that can be used to render the current progress of a
@@ -35,7 +35,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * exists).
 	 */
 	@Nullable
-	protected MachineProcessingComponent machineProcessingComponent;
+	protected AbstractProcesingComponent machineProcessingComponent;
 
 	/**
 	 * The visual current progress. This is interpolated to match the current
@@ -226,7 +226,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * @param component The component to bind to.
 	 * @return This progress bar for chaining of commands.
 	 */
-	public T bindToMachineProcessingComponent(MachineProcessingComponent component) {
+	public T bindToMachineProcessingComponent(AbstractProcesingComponent component) {
 		machineProcessingComponent = component;
 
 		// Set the initial values.

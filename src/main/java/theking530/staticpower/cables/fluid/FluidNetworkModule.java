@@ -105,7 +105,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				// Get the cable and skip if its industrial.
 				ServerCable cable = CableNetworkManager.get(world).getCable(cablePos);
 				if (cable.getBooleanProperty(FluidCableComponent.FLUID_INDUSTRIAL_DATA_TAG_KEY)) {
-					continue;
+					//continue;
 				}
 
 				// Don't insert on block sides that have an extractor.

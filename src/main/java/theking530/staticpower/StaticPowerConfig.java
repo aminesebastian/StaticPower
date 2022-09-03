@@ -234,7 +234,9 @@ public class StaticPowerConfig {
 
 		public final LongValue refineryPowerUsage;
 		public final ConfigValue<Integer> refineryProcessingTime;
-		public final ConfigValue<Integer> refineryHeatGeneration;
+		public final ConfigValue<Integer> refineryPerBoilerHeatGeneration;
+		public final ConfigValue<Integer> refineryMinimumHeat;
+		public final ConfigValue<Integer> refineryHeatUse;
 		public final ConfigValue<Integer> refineryOverheatCooldownTime;
 
 		public final LongValue laboratoryPowerUsage;
@@ -776,9 +778,13 @@ public class StaticPowerConfig {
 					refineryProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime").define("RefineryProcessingTime", 200);
-					refineryHeatGeneration = builder.comment("Defines how much heat is produced by the refinery per tick ([1 Second = 20 Ticks]).")
+					refineryPerBoilerHeatGeneration = builder.comment("Defines how much heat (in mC [1C = 1000mC]) is produced by the refinery per tick ([1 Second = 20 Ticks]).")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryHeatGeneration")
-							.define("RefineryHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(50));
+							.define("RefineryHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(10));
+					refineryMinimumHeat = builder.comment("Defines how much heat (in mC [1C = 1000mC]) is required by the refinery before it begins processing.")
+							.translation(StaticPower.MOD_ID + ".config." + "refineryMinimumHeat").define("RefineryMinimumHeat", CapabilityHeatable.convertHeatToMilliHeat(300));
+					refineryHeatUse = builder.comment("Defines how much heat (in mC [1C = 1000mC]) is used by the refinery per tick ([1 Second = 20 Ticks]).")
+							.translation(StaticPower.MOD_ID + ".config." + "refineryHeatUse").define("RefineryHeatUse", CapabilityHeatable.convertHeatToMilliHeat(10));
 					refineryOverheatCooldownTime = builder
 							.comment("Defines how long it takes (in ticks [1 Second = 20 Ticks]) after a refinery has overheated to start processing again.")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryOverheatCooldownTime").define("RefineryOverheatCooldownTime", 100);

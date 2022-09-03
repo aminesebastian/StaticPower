@@ -18,6 +18,7 @@
 	"staticpower:dust_iron",    
 	"staticpower:dust_gold",    
 	"staticpower:dust_brass",
-	"staticpower:dust_bronze"
+	"staticpower:dust_bronze", 
+	"staticpower:dust_uranium"
   ]
 }

@@ -18,7 +18,7 @@ import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingLocation;
+import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -51,7 +51,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			public boolean canInsertItem(int slot, ItemStack stack) {
-				return processingComponent.getRecipe(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
+				return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(stack).ignoreItemCounts()).isPresent();
 			}
 		}));
 
@@ -64,8 +64,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent", GrinderRecipe.RECIPE_TYPE,
-				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), this::getMatchParameters, this::moveInputs, this::canProcessRecipe, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<GrinderRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(),
+				GrinderRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -85,8 +85,8 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		bonusOutputChance = StaticPowerConfig.SERVER.poweredGrinderOutputBonusChance.get();
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingLocation location) {
-		if (location == RecipeProcessingLocation.INTERNAL) {
+	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+		if (location == RecipeProcessingPhase.PROCESSING) {
 			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
 		} else {
 			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
@@ -109,7 +109,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(GrinderRecipe recipe) {
+	protected ProcessingCheckState canProcessRecipe(GrinderRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getRawOutputItems())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
