@@ -29,7 +29,7 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 77, 22, 20, 54, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new ArrowProgressBar(51, 30).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(102, 41, 17, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));

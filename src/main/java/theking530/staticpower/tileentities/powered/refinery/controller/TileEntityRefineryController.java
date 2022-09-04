@@ -156,18 +156,18 @@ public class TileEntityRefineryController extends TileEntityMachine {
 				boolean shouldHeat = processingComponent.isPerformingWork() || !heatStorage.isRecoveringFromMeltdown();
 				if (energyStorage.hasEnoughPower(powerCost) && shouldHeat) {
 					energyStorage.useBulkPower(powerCost);
-					heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
+					heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
 				}
 			}
 
 			// Handle sounds.
 			if (processingComponent.getIsOnBlockState()) {
-				generatingSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.35f, 0.5f, getBlockPos(), 64);
+				generatingSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.25f, 0.5f, getBlockPos(), 64);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
 			}
 
-			updateMultiblockBlockStates();
+			updateMultiblockBlockStates(processingComponent.getIsOnBlockState());
 		} else {
 			if (processingComponent.getIsOnBlockState() && SDMath.diceRoll(0.5f)) {
 				renderParticleEffects();
@@ -175,9 +175,7 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		}
 	}
 
-	private void updateMultiblockBlockStates() {
-		// Update the IN_ON state of all multi block blocks and produce particles.
-		boolean isOn = getBlockState().getValue(StaticPowerMachineBlock.IS_ON);
+	private void updateMultiblockBlockStates(boolean isOn) {
 		for (MultiBlockWrapper<IRefineryBlockEntity> wrapper : multiBlockCache) {
 			BlockState multiBlockState = wrapper.getBlockState(getLevel());
 			if (multiBlockState.hasProperty(StaticPowerMachineBlock.IS_ON)) {
@@ -315,7 +313,7 @@ public class TileEntityRefineryController extends TileEntityMachine {
 	protected ProcessingCheckState canProcessRecipe(RefineryRecipe recipe, RecipeProcessingPhase location) {
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-		heatStorage.getStorage().setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
+		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
 		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
 		if (!multiBlockCheck.isOk()) {
 			return multiBlockCheck;
@@ -344,7 +342,7 @@ public class TileEntityRefineryController extends TileEntityMachine {
 
 		// Clear the internal inventory.
 		InventoryUtilities.clearInventory(internalInventory);
-		heatStorage.getStorage().cool(getHeatUsage(), HeatTransferAction.EXECUTE);
+		heatStorage.cool(getHeatUsage(), HeatTransferAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
 
@@ -416,5 +414,11 @@ public class TileEntityRefineryController extends TileEntityMachine {
 	@Override
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
 		return SideConfigurationComponent.ALL_SIDES_NEVER;
+	}
+
+	@Override
+	public void setRemoved() {
+		updateMultiblockBlockStates(false);
+		super.setRemoved();
 	}
 }

@@ -24,7 +24,7 @@ public class GuiEvaporator extends StaticPowerTileEntityGui<ContainerEvaporator,
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 8, 18, 16, 62));
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 8, 18, 16, 62));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().inputTankComponent, 50, 20, 20, 58, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().outputTankComponent, 106, 20, 20, 58, MachineSideMode.Output, getTileEntity()));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(75, 46, 26, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));

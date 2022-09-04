@@ -56,7 +56,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		// Setup the inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.

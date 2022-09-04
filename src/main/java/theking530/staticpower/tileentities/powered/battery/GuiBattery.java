@@ -36,7 +36,7 @@ public class GuiBattery extends StaticPowerTileEntityGui<ContainerBattery, TileE
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 75, 20, 26, 51));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 75, 20, 26, 51));
 
 		GuiInfoTab infoTab;
 		getTabManager().registerTab(infoTab = new GuiInfoTab("Battery", 120));

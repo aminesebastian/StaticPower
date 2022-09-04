@@ -104,7 +104,7 @@ public class TileEntityCauldron extends TileEntityBase {
 	}
 
 	public boolean isBoiling() {
-		return heatStorage.getStorage().getCurrentHeat() >= BOILING_TEMP;
+		return heatStorage.getCurrentHeat() >= BOILING_TEMP;
 	}
 
 	/**

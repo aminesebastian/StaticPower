@@ -68,7 +68,7 @@ public class TileEntityBottler extends TileEntityMachine {
 		// Setup all the other inventories.;
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Use the old processing system because we need to support NON recipe based

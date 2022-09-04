@@ -141,15 +141,41 @@ public class HeatStorageUtilities {
 		return appliedDelta;
 	}
 
-	public static int getBiomeAmbientTemperature(IHeatStorage storage, Level world, BlockPos currentPos) {
+	public static int getBiomeAmbientTemperature(Level world, BlockPos currentPos) {
 		// Get the current biome we're in.
 		Holder<Biome> biome = world.getBiome(currentPos);
 
 		int ambientHeat = IHeatStorage.ROOM_TEMPERATURE;
 		if (biome.containsTag(Tags.Biomes.IS_HOT)) {
-			ambientHeat = CapabilityHeatable.convertHeatToMilliHeat(50);
-		} else if (biome.containsTag(Tags.Biomes.IS_COLD)) {
-			ambientHeat = CapabilityHeatable.convertHeatToMilliHeat(-10);
+			ambientHeat += CapabilityHeatable.convertHeatToMilliHeat(15);
+		}
+
+		if (biome.containsTag(Tags.Biomes.IS_COLD)) {
+			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(-15);
+		}
+
+		if (biome.containsTag(Tags.Biomes.IS_DRY)) {
+			ambientHeat += CapabilityHeatable.convertHeatToMilliHeat(5);
+		}
+
+		if (biome.containsTag(Tags.Biomes.IS_WET)) {
+			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(5);
+		}
+
+		if (biome.containsTag(Tags.Biomes.IS_BEACH)) {
+			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(5);
+		}
+		
+		if (biome.containsTag(Tags.Biomes.IS_WATER)) {
+			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(1);
+		}
+
+		if (!world.canSeeSky(currentPos.above())) {
+			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(10);
+		}
+
+		if (world.isRaining()) {
+			ambientHeat -= CapabilityHeatable.convertHeatToMilliHeat(5);
 		}
 
 		return ambientHeat;
@@ -178,7 +204,7 @@ public class HeatStorageUtilities {
 		if (recipe != null && recipe.hasActiveTemperature()) {
 			return (int) (recipe.getTemperature());
 		} else {
-			return getBiomeAmbientTemperature(storage, world, offsetPos);
+			return getBiomeAmbientTemperature(world, offsetPos);
 		}
 	}
 
@@ -247,4 +273,9 @@ public class HeatStorageUtilities {
 			}
 		}
 	}
+
+	public static boolean canFullyAbsorbHeat(IHeatStorage storage, int heatAmount) {
+		return storage.getCurrentHeat() + heatAmount <= storage.getMaximumHeat();
+	}
+
 }

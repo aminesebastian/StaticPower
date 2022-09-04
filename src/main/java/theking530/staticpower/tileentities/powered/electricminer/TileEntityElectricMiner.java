@@ -37,7 +37,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 				tierObject.defaultMachinePowerCapacity.get(), tierObject.defaultMachinePowerInput.get(),
 				tierObject.defaultMachinePowerOutput.get()));
 		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 
 		// Set the processing parameters.
 		processingComponent.setEnergyComponent(energyStorage);

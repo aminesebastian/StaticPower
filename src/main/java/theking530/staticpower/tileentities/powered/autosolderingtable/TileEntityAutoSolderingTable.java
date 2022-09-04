@@ -58,7 +58,7 @@ public class TileEntityAutoSolderingTable extends AbstractSolderingTable {
 
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(moveComponent = MachineProcessingComponent

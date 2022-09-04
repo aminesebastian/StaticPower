@@ -75,7 +75,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the power distribution component.
-		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));

@@ -15,7 +15,7 @@ public class GuiMachineHeatTab extends AbstractInfoTab {
 	protected HeatStorageComponent heatStorage;
 
 	public GuiMachineHeatTab(HeatStorageComponent storage) {
-		super("Heat I/O", new Color(100, 255, 255), 105,  new Color(1, 0.5f, 0.1f, 1.0f), new ItemDrawable(Items.CAMPFIRE));
+		super("Heat I/O", new Color(100, 255, 255), 105, new Color(1, 0.5f, 0.1f, 1.0f), new ItemDrawable(Items.CAMPFIRE));
 		heatStorage = storage;
 	}
 
@@ -23,9 +23,11 @@ public class GuiMachineHeatTab extends AbstractInfoTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Generating", new TextComponent("Generating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), ChatFormatting.RED);
-		addKeyValueTwoLiner("Dissipating", new TextComponent("Dissipating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), ChatFormatting.AQUA);
-		addKeyValueTwoLiner("Conductivity", new TextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getStorage().getConductivity()),
-				ChatFormatting.GREEN);
+		addKeyValueTwoLiner("Heating", new TextComponent("Heating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick()), ChatFormatting.RED);
+		addKeyValueTwoLiner("Cooling", new TextComponent("Cooling"), GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick()), ChatFormatting.AQUA);
+		if (heatStorage.getConductivity() != 1) {
+			addKeyValueTwoLiner("Conductivity", new TextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getConductivity()),
+					ChatFormatting.GREEN);
+		}
 	}
 }

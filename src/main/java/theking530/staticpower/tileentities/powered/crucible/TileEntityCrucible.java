@@ -7,6 +7,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
+import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -68,7 +69,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		// Setup all the other inventories.
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Register the heate component.
@@ -106,8 +107,8 @@ public class TileEntityCrucible extends TileEntityMachine {
 		super.process();
 		if (!level.isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
 			if (energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get())
-					&& heatStorage.getStorage().canFullyAbsorbHeat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
-				heatStorage.getStorage().heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(), HeatTransferAction.EXECUTE);
+					&& HeatStorageUtilities.canFullyAbsorbHeat(heatStorage, StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get())) {
+				heatStorage.heat(StaticPowerConfig.SERVER.crucibleHeatGenerationPerTick.get(), HeatTransferAction.EXECUTE);
 				energyStorage.useBulkPower(StaticPowerConfig.SERVER.crucibleHeatPowerUsage.get());
 			}
 		}
@@ -129,7 +130,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		}
 
 		// Check the heat.
-		if (heatStorage.getStorage().getCurrentHeat() < recipe.getMinimumTemperature()) {
+		if (heatStorage.getCurrentHeat() < recipe.getMinimumTemperature()) {
 			return ProcessingCheckState
 					.error("Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()).getString() + " has not been reached!");
 		}
@@ -157,7 +158,7 @@ public class TileEntityCrucible extends TileEntityMachine {
 		}
 
 		// Check the heat.
-		if (heatStorage.getStorage().getCurrentHeat() < recipe.getMinimumTemperature()) {
+		if (heatStorage.getCurrentHeat() < recipe.getMinimumTemperature()) {
 			return ProcessingCheckState
 					.error("Minimum heat temperature of " + GuiTextUtilities.formatHeatToString(recipe.getMinimumTemperature()).getString() + " has not been reached!");
 		}

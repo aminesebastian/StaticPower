@@ -117,7 +117,7 @@ public class CableNetworkManager extends SavedData {
 		if (!adjacents.isEmpty()) {
 			for (ServerCable adjacent : adjacents) {
 				if (adjacent.Network == cable.Network) {
-					adjacent.Network.updateGraph(World, adjacent.getPos());
+					adjacent.Network.updateGraph(World, adjacent.getPos(), true);
 					break;
 				}
 			}
@@ -318,7 +318,7 @@ public class CableNetworkManager extends SavedData {
 	private CableNetwork formNetworkAt(Level world, BlockPos pos) {
 		CableNetwork network = new CableNetwork(pos, CurrentNetworkId++);
 		addNetwork(network);
-		network.updateGraph(world, pos);
+		network.updateGraph(world, pos, true);
 		return network;
 	}
 
@@ -353,7 +353,7 @@ public class CableNetworkManager extends SavedData {
 			}
 		}
 
-		mainNetwork.updateGraph(world, pos);
+		mainNetwork.updateGraph(world, pos, true);
 
 		mergedNetworks.forEach(n -> n.onJoinedWithOtherNetwork(mainNetwork));
 
@@ -374,7 +374,7 @@ public class CableNetworkManager extends SavedData {
 			network.setOrigin(firstAdjacentCable.getPos());
 
 			// Then, remap the network.
-			NetworkMapper result = network.updateGraph(firstAdjacentCable.getWorld(), firstAdjacentCable.getPos());
+			NetworkMapper result = network.updateGraph(firstAdjacentCable.getWorld(), firstAdjacentCable.getPos(), true);
 
 			// Keep track of any new networks.
 			List<CableNetwork> newNetworks = new ArrayList<CableNetwork>();

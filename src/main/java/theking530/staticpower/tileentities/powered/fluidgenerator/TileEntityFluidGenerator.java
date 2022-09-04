@@ -60,7 +60,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 0, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
 
-		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage));
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluidStack) -> {
@@ -125,7 +125,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		energyStorage.setMaxInput(recipe.getPowerGeneration());
 		energyStorage.setMaxOutput(recipe.getPowerGeneration());
 		// Add the power.
-		energyStorage.getStorage().receivePower(recipe.getPowerGeneration(), false);
+		energyStorage.receivePower(recipe.getPowerGeneration(), false);
 		// Drain the used fluid.
 		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
 		return ProcessingCheckState.ok();

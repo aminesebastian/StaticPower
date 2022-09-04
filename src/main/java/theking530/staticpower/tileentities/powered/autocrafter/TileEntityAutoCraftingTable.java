@@ -65,7 +65,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", energyStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(moveComponent = MachineProcessingComponent

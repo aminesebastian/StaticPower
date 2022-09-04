@@ -94,7 +94,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		// Setup the power distribution component.
-		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the fluid tanks
 		registerComponent(inputFluidTankComponent = new FluidTankComponent("InputFluid", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)

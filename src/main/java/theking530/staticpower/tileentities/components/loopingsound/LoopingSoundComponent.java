@@ -14,6 +14,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 
 	private int soundStopCooldown;
 	private boolean shouldBeStopping;
+	private boolean isPlaying;
 	private int soundStartCooldown;
 
 	/**
@@ -54,12 +55,14 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 					StaticPowerMessageHandler.sendToAllPlayersInDimension(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), syncPacket);
 					shouldBeStopping = false;
 					soundStopCooldown = 0;
+					isPlaying = false;
 				}
 			}
 		}
 	}
 
 	public void startPlayingSound(ResourceLocation soundIdIn, SoundSource categoryIn, float volumeIn, float pitchIn, BlockPos pos, int blockRadius) {
+		isPlaying = true;
 		if (getLevel().isClientSide) {
 			proxy.startPlayingSound(getLevel(), soundIdIn, categoryIn, volumeIn, pitchIn, pos, blockRadius);
 		} else {
@@ -73,6 +76,10 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 	}
 
 	public void stopPlayingSound() {
+		if (!isPlaying) {
+			return;
+		}
+
 		if (getLevel().isClientSide) {
 			proxy.stopPlayingSound(getLevel());
 		} else {

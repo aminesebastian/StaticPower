@@ -83,7 +83,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.

@@ -25,7 +25,7 @@ public class GuiBottler extends StaticPowerTileEntityGui<ContainerBottler, TileE
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 52, 18, 16, 58, MachineSideMode.Input, getTileEntity()));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(74, 39, 28, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 

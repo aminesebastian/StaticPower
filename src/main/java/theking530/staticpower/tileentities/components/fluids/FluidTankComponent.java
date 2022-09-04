@@ -24,7 +24,8 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
-	public static final int FLUID_SYNC_MAX_DELTA = 5;
+	public static final int FLUID_SYNC_MAX_DELTA = 50;
+	public static final int FLUID_SYNC_MAX_TICKS = 10;
 
 	@UpdateSerialize
 	protected StaticPowerFluidTank fluidStorage;
@@ -42,15 +43,15 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 	private float upgradeMultiplier;
 	@UpdateSerialize
 	private int defaultCapacity;
-	@UpdateSerialize
-	private boolean issueSyncPackets;
 
+	private boolean issueSyncPackets;
+	private int timeSinceLastSync;
 	private float lastUpdatePartialTick;
+	private FluidStack lastSyncFluidStack;
+	private float visualFillLevel;
 
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
 	private final FluidComponentCapabilityInterface capabilityInterface;
-	private FluidStack lastSyncFluidStack;
-	private float visualFillLevel;
 	private UpgradeInventoryComponent upgradeInventory;
 
 	public FluidTankComponent(String name, int capacity) {
@@ -98,15 +99,27 @@ public class FluidTankComponent extends AbstractTileEntityComponent implements I
 				int delta = Math.abs(getFluidAmount() - lastSyncFluidStack.getAmount());
 
 				// Determine if we should sync.
-				boolean shouldSync = delta > FLUID_SYNC_MAX_DELTA;
-				shouldSync |= !lastSyncFluidStack.isFluidEqual(this.getFluid());
-				shouldSync |= getFluidAmount() == 0 && lastSyncFluidStack.getAmount() != 0;
-				shouldSync |= getFluidAmount() == getCapacity() && lastSyncFluidStack.getAmount() != getCapacity();
+				boolean shouldSync = delta >= FLUID_SYNC_MAX_DELTA;
+				if (!shouldSync) {
+					shouldSync = !lastSyncFluidStack.isFluidEqual(this.getFluid());
+				}
+				if (!shouldSync) {
+					shouldSync = getFluidAmount() == 0 && lastSyncFluidStack.getAmount() != 0;
+				}
+				if (!shouldSync) {
+					shouldSync = getFluidAmount() == getCapacity() && lastSyncFluidStack.getAmount() != getCapacity();
+				}
+				if (!shouldSync) {
+					shouldSync = timeSinceLastSync >= FLUID_SYNC_MAX_TICKS;
+				}
 
 				// If we should sync, perform the sync.
 				if (shouldSync) {
 					lastSyncFluidStack = getFluid().copy();
+					timeSinceLastSync = 0;
 					syncToClient();
+				} else {
+					timeSinceLastSync++;
 				}
 			}
 

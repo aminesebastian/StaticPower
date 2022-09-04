@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.api.power.StaticVoltUtilities;
 import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -69,7 +70,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 		super(allocator, pos, state);
 
 		// Add the power distributor.
-		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the energy storage component.
 		energyStorage.setAutoSyncPacketsEnabled(true);
@@ -98,15 +99,15 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 		outputRFTick = maxPowerIO / 2;
 
 		// Set the capacities and IO.
-		energyStorage.getStorage().setCapacity(maxPowerIO);
-		energyStorage.getStorage().setMaxReceive(inputRFTick);
-		energyStorage.getStorage().setMaxExtract(outputRFTick);
+		energyStorage.setCapacity(maxPowerIO);
+		energyStorage.setMaxReceive(inputRFTick);
+		energyStorage.setMaxExtract(outputRFTick);
 
 		// Add a battery input.
 		registerComponent(chargingInventory = new InventoryComponent("ChargingInventorySlot", 1));
 
 		// Add the charging input.
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 
 		// Create the metric capturing values.
 		metrics = new PowerTransferMetrics();
@@ -121,24 +122,24 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 		if (!getLevel().isClientSide) {
 			// If this is a creative battery, always keep the power at max.
 			if (getTier() == StaticPowerTiers.CREATIVE) {
-				this.energyStorage.getStorage().addPowerIgnoreTransferRate(Long.MAX_VALUE);
+				this.energyStorage.addPowerIgnoreTransferRate(Long.MAX_VALUE);
 			}
 
 			// Charge up the item in the input slot.
-			if (energyStorage.getStorage().getStoredPower() > 0) {
+			if (energyStorage.getStoredPower() > 0) {
 				// Get the item to charge.
 				ItemStack stack = chargingInventory.getStackInSlot(0);
 				// If it's not empty and is an energy storing item.
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
-						long charged = EnergyHandlerItemStackUtilities.receivePower(stack, energyStorage.getStorage().getCurrentMaximumPowerOutput(), false);
+						long charged = EnergyHandlerItemStackUtilities.receivePower(stack, StaticVoltUtilities.getCurrentMaximumPowerOutput(energyStorage), false);
 						energyStorage.useBulkPower(charged);
 					}
 				}
 			}
 
 			// Capture metrics.
-			metrics.addMetric(energyStorage.getStorage().getReceivedPerTick(), energyStorage.getStorage().getExtractedPerTick());
+			metrics.addMetric(energyStorage.getReceivedPerTick(), energyStorage.getExtractedPerTick());
 
 			if (!getLevel().isClientSide() && getLevel().getGameTime() % 20 == 0) {
 				TileEntityPowerMetricsSyncPacket msg = new TileEntityPowerMetricsSyncPacket(getBlockPos(), metrics);
@@ -177,12 +178,12 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 
 	public void setInputLimit(long newLimit) {
 		inputRFTick = newLimit;
-		energyStorage.getStorage().setMaxReceive(newLimit);
+		energyStorage.setMaxReceive(newLimit);
 	}
 
 	public void setOutputLimit(long newLimit) {
 		outputRFTick = newLimit;
-		energyStorage.getStorage().setMaxExtract(newLimit);
+		energyStorage.setMaxExtract(newLimit);
 	}
 
 	public void setMaximumPowerIO(long newMaxIO) {
@@ -229,8 +230,8 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	}
 
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.TOP, false, MachineSideMode.Never).setSide(BlockSide.BOTTOM, false, MachineSideMode.Never).setSide(BlockSide.BACK, false,
-				MachineSideMode.Never);
+		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.TOP, false, MachineSideMode.Never).setSide(BlockSide.BOTTOM, false, MachineSideMode.Never)
+				.setSide(BlockSide.BACK, false, MachineSideMode.Never);
 	}
 
 	// Tab Integration
@@ -238,7 +239,7 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 		if (minPowerThreshold == 0 && maxPowerThreshold == 0) {
 			return false;
 		}
-		float storedPercentage = energyStorage.getStorage().getStoredEnergyPercentScaled(100.0f);
+		float storedPercentage = StaticVoltUtilities.getStoredEnergyPercentScaled(energyStorage, 100.0f);
 		if (storedPercentage >= this.minPowerThreshold && storedPercentage <= this.maxPowerThreshold) {
 			return true;
 		}

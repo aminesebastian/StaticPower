@@ -186,7 +186,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 			// Use power if requested to.
 			if (hasProcessingPowerCost && powerComponent != null && powerComponent != null && currentProcessingTime < processingTime) {
-				powerComponent.getStorage().drainPower(getPowerUsage(), false);
+				powerComponent.drainPower(getPowerUsage(), false);
 			}
 
 			// If we can can continue processing, do so, otherwise, stop. If we have
@@ -535,7 +535,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
 		}
 		// Check the processing power rate.
-		if (hasProcessingPowerCost && powerComponent != null && powerComponent.getStorage().getMaxDrain() < getPowerUsage()) {
+		if (hasProcessingPowerCost && powerComponent != null && powerComponent.getMaxDrain() < getPowerUsage()) {
 			return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (").append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
 					.append(") is larger than the max for this machine!").getString());
 		}

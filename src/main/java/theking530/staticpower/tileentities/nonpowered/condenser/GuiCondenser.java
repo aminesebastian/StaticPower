@@ -24,7 +24,7 @@ public class GuiCondenser extends StaticPowerTileEntityGui<ContainerCondenser, T
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 8, 18, 16, 54));
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 8, 18, 16, 54));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().inputTankComponent, 50, 20, 20, 54, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().outputTankComponent, 106, 20, 20, 54, MachineSideMode.Output, getTileEntity()));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(75, 46, 26, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));

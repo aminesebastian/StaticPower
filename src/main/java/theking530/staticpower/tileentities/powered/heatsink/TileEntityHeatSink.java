@@ -52,8 +52,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 		super(allocator, pos, state, StaticPowerTiers.BASIC);
 		this.heatSinkTier = heatSinkTier;
 		StaticPowerTier tier = StaticPowerConfig.getTier(heatSinkTier);
-		registerComponent(
-				heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), 1.0f));
+		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), 1.0f));
 		energyStorage.setMaxInput(tier.heatSinkElectricHeatPowerUsage.get() * 2);
 	}
 
@@ -64,7 +63,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 			generateHeat();
 
 			// Damage entities if too hot.
-			if (heatStorage.getStorage().getCurrentHeat() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold.get()) {
+			if (heatStorage.getCurrentHeat() >= StaticPowerConfig.SERVER.heatSinkTemperatureDamageThreshold.get()) {
 				AABB aabb = new AABB(this.worldPosition.offset(0.0, 0, 0.0), this.worldPosition.offset(1.0, 2.0, 1.0));
 				List<Entity> list = this.level.getEntitiesOfClass(Entity.class, aabb);
 				for (Entity entity : list) {
@@ -77,7 +76,7 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 
 		// If under water, generate bubbles.
 		// TODO: Tweak this number to == the temp we say water boils.
-		if (heatStorage.getStorage().getCurrentHeat() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
+		if (heatStorage.getCurrentHeat() >= IHeatStorage.WATER_BOILING_TEMPERATURE) {
 			float randomOffset = (3 * getLevel().random.nextFloat()) - 1.5f;
 			if (SDMath.diceRoll(0.25f) && level.getBlockState(getBlockPos().relative(Direction.UP)).getBlock() == Blocks.WATER) {
 				randomOffset /= 3.5f;
@@ -90,20 +89,20 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 	}
 
 	protected void generateHeat() {
-		if (!energyStorage.getStorage().isEmpty()) {
+		if (energyStorage.getStoredPower() > 0) {
 			StaticPowerTier tier = StaticPowerConfig.getTier(heatSinkTier);
 			int generation = tier.heatSinkElectricHeatGeneration.get();
 			int generationCost = tier.heatSinkElectricHeatPowerUsage.get();
 
 			if (generation > 0) {
-				int transferableHeat = heatStorage.getStorage().getOverheatThreshold() - heatStorage.getStorage().getCurrentHeat();
+				int transferableHeat = heatStorage.getOverheatThreshold() - heatStorage.getCurrentHeat();
 				transferableHeat = Math.min(transferableHeat, generation);
 
-				long maxPowerUsage = Math.min(generationCost, energyStorage.getStorage().getStoredPower());
+				long maxPowerUsage = Math.min(generationCost, energyStorage.getStoredPower());
 				long powerUsage = (int) Math.max(1, maxPowerUsage * ((float) transferableHeat / generation));
 				if (energyStorage.hasEnoughPower(powerUsage)) {
 					energyStorage.useBulkPower(powerUsage);
-					heatStorage.getStorage().heat(transferableHeat, HeatTransferAction.EXECUTE);
+					heatStorage.heat(transferableHeat, HeatTransferAction.EXECUTE);
 				}
 			}
 		}

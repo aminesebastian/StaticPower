@@ -74,7 +74,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public long getStoredPower() {
 		if (hasController()) {
-			return getController().energyStorage.getStorage().getStoredPower();
+			return getController().energyStorage.getStoredPower();
 		}
 		return 0;
 	}
@@ -82,7 +82,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public long getCapacity() {
 		if (hasController()) {
-			return getController().energyStorage.getStorage().getCapacity();
+			return getController().energyStorage.getCapacity();
 		}
 		return 0;
 	}
@@ -90,7 +90,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public long getMaxReceive() {
 		if (hasController()) {
-			return getController().energyStorage.getStorage().getMaxReceive();
+			return getController().energyStorage.getMaxReceive();
 		}
 		return 0;
 	}
@@ -98,7 +98,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public long getMaxDrain() {
 		if (hasController()) {
-			return getController().energyStorage.getStorage().getMaxDrain();
+			return getController().energyStorage.getMaxDrain();
 		}
 		return 0;
 	}
@@ -106,7 +106,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public long receivePower(long power, boolean simulate) {
 		if (hasController()) {
-			return getController().energyStorage.getStorage().receivePower(power, simulate);
+			return getController().energyStorage.receivePower(power, simulate);
 		}
 		return 0;
 	}
@@ -114,7 +114,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public long drainPower(long power, boolean simulate) {
 		if (hasController()) {
-			return getController().energyStorage.getStorage().drainPower(power, simulate);
+			return getController().energyStorage.drainPower(power, simulate);
 		}
 		return 0;
 	}

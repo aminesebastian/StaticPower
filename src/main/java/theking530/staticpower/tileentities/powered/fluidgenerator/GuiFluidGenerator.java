@@ -28,7 +28,7 @@ public class GuiFluidGenerator extends StaticPowerTileEntityGui<ContainerFluidGe
 	@Override
 	public void initializeGui() {
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 60));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 60));
 		registerWidget(fireBar = new FireProgressBar(81, 52));
 		fireBar.setMaxProgress(1);
 

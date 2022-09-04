@@ -31,7 +31,7 @@ public class GuiSqueezer extends StaticPowerTileEntityGui<ContainerSqueezer, Til
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 108, 18, 16, 58, MachineSideMode.Output, getTileEntity()));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(74, 32, 28, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 

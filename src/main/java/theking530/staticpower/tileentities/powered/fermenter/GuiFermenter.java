@@ -31,7 +31,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, T
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Output, getTileEntity()));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(97, 45, 48, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 

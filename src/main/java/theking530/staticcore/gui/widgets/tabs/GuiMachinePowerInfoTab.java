@@ -24,8 +24,8 @@ public class GuiMachinePowerInfoTab extends AbstractInfoTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Input", new TextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getReceivedPerTick()), ChatFormatting.GREEN);
-		addKeyValueTwoLiner("Usage", new TextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getExtractedPerTick()), ChatFormatting.RED);
-		addKeyValueTwoLiner("I/O", new TextComponent("Max I/O"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getStorage().getMaxDrain()), ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Input", new TextComponent("Current Input"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getReceivedPerTick()), ChatFormatting.GREEN);
+		addKeyValueTwoLiner("Usage", new TextComponent("Current Usage"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getExtractedPerTick()), ChatFormatting.RED);
+		addKeyValueTwoLiner("I/O", new TextComponent("Max I/O"), GuiTextUtilities.formatEnergyRateToString(energyStorage.getMaxDrain()), ChatFormatting.AQUA);
 	}
 }

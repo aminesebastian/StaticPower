@@ -32,9 +32,9 @@ public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, Til
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 108, 18, 16, 58, MachineSideMode.Output, getTileEntity()));
-		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 28, 8, 6, 52));
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 28, 8, 6, 52));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(74, 48, 28, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));

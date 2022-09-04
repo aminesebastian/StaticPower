@@ -20,14 +20,16 @@ import theking530.staticpower.tileentities.components.items.UpgradeInventoryComp
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
-public class EnergyStorageComponent extends AbstractTileEntityComponent {
+public class EnergyStorageComponent extends AbstractTileEntityComponent implements IStaticVoltHandler {
 	public enum EnergyManipulationAction {
 		PROVIDE, RECIEVE
 	}
 
-	public static final int ENERGY_SYNC_MAX_DELTA = 10;
+	public static final long ENERGY_SYNC_MAX_DELTA = CapabilityStaticVolt.convertSVtomSV(1);
+	public static final int ENERGY_SYNC_MAX_TICKS = 10;
+
 	@UpdateSerialize
-	protected final StaticVoltHandler EnergyStorage;
+	private final StaticVoltHandler EnergyStorage;
 	@UpdateSerialize
 	private float powerCapacityUpgradeMultiplier;
 	@UpdateSerialize
@@ -39,16 +41,17 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	@UpdateSerialize
 	private long defaultMaxOutput;
 	@UpdateSerialize
-	private boolean issueSyncPackets;
-	@UpdateSerialize
 	private boolean exposeAsCapability;
+
+	private boolean issueSyncPackets;
+	private int timeSinceLastSync;
+	private long lastSyncEnergy;
 
 	private final Map<Direction, FECapabilityAccess> feAccessors;
 	private final Map<Direction, SVCapabilityAccess> staticVoltAccessors;
 	private final StaticVoltAutoConverter energyInterface;
 
 	protected TriFunction<Long, Direction, EnergyManipulationAction, Boolean> filter;
-	private long lastSyncEnergy;
 	private UpgradeInventoryComponent upgradeInventory;
 
 	public EnergyStorageComponent(String name, long capacity) {
@@ -82,6 +85,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		energyInterface = new StaticVoltAutoConverter(EnergyStorage);
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void preProcessUpdate() {
 		if (!getLevel().isClientSide) {
@@ -90,6 +94,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void postProcessUpdate() {
 		if (!getLevel().isClientSide) {
@@ -101,13 +106,23 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 
 				// Determine if we should sync.
 				boolean shouldSync = delta > ENERGY_SYNC_MAX_DELTA;
-				shouldSync |= EnergyStorage.getStoredPower() == 0 && lastSyncEnergy != 0;
-				shouldSync |= EnergyStorage.getStoredPower() == EnergyStorage.getCapacity() && lastSyncEnergy != EnergyStorage.getCapacity();
+				if (!shouldSync) {
+					shouldSync = EnergyStorage.getStoredPower() == 0 && lastSyncEnergy != 0;
+				}
+				if (!shouldSync) {
+					shouldSync = EnergyStorage.getStoredPower() == EnergyStorage.getCapacity() && lastSyncEnergy != EnergyStorage.getCapacity();
+				}
+				if (!shouldSync) {
+					shouldSync = timeSinceLastSync >= ENERGY_SYNC_MAX_TICKS;
+				}
 
 				// If we should sync, perform the sync.
 				if (shouldSync) {
 					lastSyncEnergy = EnergyStorage.getStoredPower();
+					timeSinceLastSync = 0;
 					syncToClient();
+				} else {
+					timeSinceLastSync++;
 				}
 			}
 
@@ -186,18 +201,9 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 		}
 
 		// Set the new values.
-		getStorage().setCapacity((int) (defaultCapacity * powerCapacityUpgradeMultiplier));
-		getStorage().setMaxExtract(Math.min(getStorage().getCapacity(), (long) (defaultMaxOutput * powerIOUpgradeMultiplier)));
-		getStorage().setMaxReceive(Math.min(getStorage().getCapacity(), (long) (defaultMaxInput * powerIOUpgradeMultiplier)));
-	}
-
-	/**
-	 * Gets the raw energy storage object.
-	 * 
-	 * @return
-	 */
-	public StaticVoltHandler getStorage() {
-		return EnergyStorage;
+		EnergyStorage.setCapacity((int) (defaultCapacity * powerCapacityUpgradeMultiplier));
+		EnergyStorage.setMaxExtract(Math.min(getCapacity(), (long) (defaultMaxOutput * powerIOUpgradeMultiplier)));
+		EnergyStorage.setMaxReceive(Math.min(getCapacity(), (long) (defaultMaxInput * powerIOUpgradeMultiplier)));
 	}
 
 	/**
@@ -221,10 +227,10 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 */
 	public boolean useBulkPower(long power) {
 		if (hasEnoughPower(power)) {
-			long maxExtract = getStorage().getMaxDrain();
-			getStorage().setMaxExtract(Integer.MAX_VALUE);
-			getStorage().drainPower(power, false);
-			getStorage().setMaxExtract(maxExtract);
+			long maxExtract = getMaxDrain();
+			EnergyStorage.setMaxExtract(Integer.MAX_VALUE);
+			drainPower(power, false);
+			EnergyStorage.setMaxExtract(maxExtract);
 			return true;
 		}
 		return false;
@@ -249,7 +255,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 	 */
 	public boolean addPower(long power) {
 		if (canAcceptPower(power)) {
-			getStorage().receivePower(power, false);
+			receivePower(power, false);
 			return true;
 		}
 		return false;
@@ -480,5 +486,67 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent {
 			}
 			return energyInterface.getMaxDrain();
 		}
+	}
+
+	@Override
+	public long getStoredPower() {
+		return EnergyStorage.getStoredPower();
+	}
+
+	@Override
+	public long getCapacity() {
+		return EnergyStorage.getCapacity();
+	}
+
+	@Override
+	public long getMaxReceive() {
+		return EnergyStorage.getMaxReceive();
+	}
+
+	@Override
+	public long getMaxDrain() {
+		return EnergyStorage.getMaxDrain();
+	}
+
+	@Override
+	public long receivePower(long power, boolean simulate) {
+		return EnergyStorage.receivePower(power, simulate);
+	}
+
+	@Override
+	public long drainPower(long power, boolean simulate) {
+		return EnergyStorage.drainPower(power, simulate);
+	}
+
+	public void setCanRecieve(boolean canRecieve) {
+		EnergyStorage.setCanRecieve(canRecieve);
+	}
+
+	public void setCanDrain(boolean canDrain) {
+		EnergyStorage.setCanDrain(canDrain);
+	}
+
+	public void setMaxReceive(long maxRecieve) {
+		EnergyStorage.setMaxReceive(maxRecieve);
+	}
+
+	public void setMaxExtract(long maxDrain) {
+		EnergyStorage.setMaxExtract(maxDrain);
+	}
+
+	public void setCapacity(long capacity) {
+		EnergyStorage.setCapacity(capacity);
+	}
+
+	public void addPowerIgnoreTransferRate(long power) {
+		EnergyStorage.addPowerIgnoreTransferRate(power);
+	}
+
+	public float getExtractedPerTick() {
+		return EnergyStorage.getExtractedPerTick();
+	}
+
+	public float getReceivedPerTick() {
+		return EnergyStorage.getReceivedPerTick();
 	}
 }

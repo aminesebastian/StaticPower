@@ -1,5 +1,6 @@
 {
 	"itemGroup.StaticPower": "Static Power",
+	"item.staticpower.thermometer": "Thermometer",
 	"item.staticpower.wrench": "Wrench",
 	"item.staticpower.wrench_static": "Static Wrench",
 	"item.staticpower.wrench_energized": "Energized Wrench",
@@ -228,9 +229,9 @@
 	"item.staticpower.dust_emerald": "Emerald Dust",
 	"item.staticpower.dust_diamond": "Diamond Dust",
 	"item.staticpower.dust_coal": "Coal Dust",
-	"item.staticpower.dust_coal_small": "Coal Powder",
+	"item.staticpower.dust_coal_small": "Small Pile of Coal Dust",
 	"item.staticpower.dust_charcoal": "Charcoal Dust",
-	"item.staticpower.dust_charcoal_small": "Charcoal Powder",
+	"item.staticpower.dust_charcoal_small": "Small Pile of Charcoal Dust",
 	"item.staticpower.dust_wood": "Saw Dust",
 	"item.staticpower.dust_saltpeter": "Saltpeter",
 	"item.staticpower.dust_sulfur": "Sulfur",

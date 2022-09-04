@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.api.power.StaticVoltUtilities;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -31,33 +32,27 @@ import theking530.staticpower.tileentities.components.power.PowerDistributionCom
 public class TileEntityBattery extends TileEntityMachine {
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_BASIC = new BlockEntityTypeAllocator<TileEntityBattery>(
-			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.BASIC),
-			ModBlocks.BatteryBasic);
+			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.BASIC), ModBlocks.BatteryBasic);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_ADVANCED = new BlockEntityTypeAllocator<TileEntityBattery>(
-			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.ADVANCED),
-			ModBlocks.BatteryAdvanced);
+			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.ADVANCED), ModBlocks.BatteryAdvanced);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_STATIC = new BlockEntityTypeAllocator<TileEntityBattery>(
-			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.STATIC),
-			ModBlocks.BatteryStatic);
+			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.STATIC), ModBlocks.BatteryStatic);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_ENERGIZED = new BlockEntityTypeAllocator<TileEntityBattery>(
-			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.ENERGIZED),
-			ModBlocks.BatteryEnergized);
+			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.ENERGIZED), ModBlocks.BatteryEnergized);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_LUMUM = new BlockEntityTypeAllocator<TileEntityBattery>(
-			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.LUMUM),
-			ModBlocks.BatteryLumum);
+			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.LUMUM), ModBlocks.BatteryLumum);
 
 	@TileEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBattery> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntityBattery>(
-			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.CREATIVE),
-			ModBlocks.BatteryCreative);
+			(allocator, pos, state) -> new TileEntityBattery(allocator, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.BatteryCreative);
 
 	public static final DefaultSideConfiguration DEFAULT_SIDE_CONFIGURATION = new DefaultSideConfiguration();
 
@@ -85,16 +80,14 @@ public class TileEntityBattery extends TileEntityMachine {
 
 	protected PowerDistributionComponent powerDistributor;
 
-	public TileEntityBattery(BlockEntityTypeAllocator<TileEntityBattery> allocator, BlockPos pos, BlockState state,
-			ResourceLocation tier) {
+	public TileEntityBattery(BlockEntityTypeAllocator<TileEntityBattery> allocator, BlockPos pos, BlockState state, ResourceLocation tier) {
 		super(allocator, pos, state, tier);
 		// Enable face interaction.
 		enableFaceInteraction();
 		this.ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION);
 
 		// Add the power distributor.
-		registerComponent(
-				powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage.getStorage()));
+		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the energy storage component.
 		energyStorage.setAutoSyncPacketsEnabled(true);
@@ -102,12 +95,10 @@ public class TileEntityBattery extends TileEntityMachine {
 			if (direction == null) {
 				return false;
 			}
-			if (action == EnergyManipulationAction.PROVIDE && this.ioSideConfiguration
-					.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Output) {
+			if (action == EnergyManipulationAction.PROVIDE && this.ioSideConfiguration.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Output) {
 				return false;
 			}
-			if (action == EnergyManipulationAction.RECIEVE && this.ioSideConfiguration
-					.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Input) {
+			if (action == EnergyManipulationAction.RECIEVE && this.ioSideConfiguration.getWorldSpaceDirectionConfiguration(direction) != MachineSideMode.Input) {
 				return false;
 			}
 			if (this.ioSideConfiguration.getWorldSpaceDirectionConfiguration(direction) == MachineSideMode.Disabled) {
@@ -125,16 +116,15 @@ public class TileEntityBattery extends TileEntityMachine {
 		outputRFTick = maxPowerIO / 2;
 
 		// Set the capacities and IO.
-		energyStorage.getStorage().setCapacity(tierObject.batteryCapacity.get());
-		energyStorage.getStorage().setMaxReceive(inputRFTick);
-		energyStorage.getStorage().setMaxExtract(outputRFTick);
+		energyStorage.setCapacity(tierObject.batteryCapacity.get());
+		energyStorage.setMaxReceive(inputRFTick);
+		energyStorage.setMaxExtract(outputRFTick);
 
 		// Add a battery input.
 		registerComponent(chargingInventory = new InventoryComponent("ChargingInventorySlot", 1));
 
 		// Add the charging input.
-		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 	}
 
 	@Override
@@ -142,19 +132,17 @@ public class TileEntityBattery extends TileEntityMachine {
 		if (!getLevel().isClientSide) {
 			// If this is a creative battery, always keep the power at max.
 			if (getTier() == StaticPowerTiers.CREATIVE) {
-				this.energyStorage.getStorage().addPowerIgnoreTransferRate(Long.MAX_VALUE);
+				this.energyStorage.addPowerIgnoreTransferRate(Long.MAX_VALUE);
 			}
 
 			// Charge up the item in the input slot.
-			if (energyStorage.getStorage().getStoredPower() > 0) {
+			if (energyStorage.getStoredPower() > 0) {
 				// Get the item to charge.
 				ItemStack stack = chargingInventory.getStackInSlot(0);
 				// If it's not empty and is an energy storing item.
 				if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
-					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities
-							.getCapacity(stack)) {
-						long charged = EnergyHandlerItemStackUtilities.receivePower(stack,
-								energyStorage.getStorage().getCurrentMaximumPowerOutput(), false);
+					if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
+						long charged = EnergyHandlerItemStackUtilities.receivePower(stack, StaticVoltUtilities.getCurrentMaximumPowerOutput(energyStorage), false);
 						energyStorage.useBulkPower(charged);
 					}
 				}
@@ -188,12 +176,12 @@ public class TileEntityBattery extends TileEntityMachine {
 
 	public void setInputLimit(long newLimit) {
 		inputRFTick = newLimit;
-		energyStorage.getStorage().setMaxReceive(newLimit);
+		energyStorage.setMaxReceive(newLimit);
 	}
 
 	public void setOutputLimit(long newLimit) {
 		outputRFTick = newLimit;
-		energyStorage.getStorage().setMaxExtract(newLimit);
+		energyStorage.setMaxExtract(newLimit);
 	}
 
 	public void setMaximumPowerIO(long newMaxIO) {
@@ -244,7 +232,7 @@ public class TileEntityBattery extends TileEntityMachine {
 		if (minPowerThreshold == 0 && maxPowerThreshold == 0) {
 			return false;
 		}
-		float storedPercentage = energyStorage.getStorage().getStoredEnergyPercentScaled(100.0f);
+		float storedPercentage = StaticVoltUtilities.getStoredEnergyPercentScaled(energyStorage, 100.0f);
 		if (storedPercentage >= this.minPowerThreshold && storedPercentage <= this.maxPowerThreshold) {
 			return true;
 		}

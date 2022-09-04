@@ -23,7 +23,7 @@ public class GuiPump extends StaticPowerTileEntityGui<ContainerPump, TileEntityP
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 10, 16, 44));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 10, 16, 44));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 71, 20, 28, 52));
 		registerWidget(new ArrowProgressBar(106, 20).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 

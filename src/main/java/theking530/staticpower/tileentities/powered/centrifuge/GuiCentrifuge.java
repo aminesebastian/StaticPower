@@ -29,7 +29,7 @@ public class GuiCentrifuge extends StaticPowerTileEntityGui<ContainerCentrifuge,
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new CentrifugeProgressBar(79, 38).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(infoTab = new GuiInfoTab(100));

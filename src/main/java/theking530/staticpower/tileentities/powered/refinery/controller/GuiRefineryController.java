@@ -36,8 +36,8 @@ public class GuiRefineryController extends StaticPowerTileEntityGui<ContainerRef
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 22, 16, 54));
-		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage.getStorage(), 27, 22, 4, 54));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 22, 16, 54));
+		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 27, 22, 4, 54));
 
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().getInputTank(0), 38, 22, 16, 54, MachineSideMode.Input2, getTileEntity()));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().getInputTank(1), 58, 22, 16, 54, MachineSideMode.Input3, getTileEntity()));

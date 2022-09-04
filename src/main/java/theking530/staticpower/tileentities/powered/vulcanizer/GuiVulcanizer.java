@@ -25,7 +25,7 @@ public class GuiVulcanizer extends StaticPowerTileEntityGui<ContainerVulcanizer,
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 50, 22, 20, 54, MachineSideMode.Input, getTileEntity()));
 		registerWidget(progressBar = (FluidProgressBar) new FluidProgressBar(76, 41, 55, 5).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 

@@ -95,7 +95,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 				return ProcessingCheckState.outputTankCannotTakeFluid();
 			}
 			// Check the heat level.
-			if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
+			if (heatStorage.getCurrentHeat() < recipe.getRequiredHeat()) {
 				return ProcessingCheckState.error("Heat level is not high enough!");
 			}
 
@@ -133,7 +133,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		EvaporatorRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 		// If we don;t have enough heat, return early.
-		if (heatStorage.getStorage().getCurrentHeat() < recipe.getRequiredHeat()) {
+		if (heatStorage.getCurrentHeat() < recipe.getRequiredHeat()) {
 			return ProcessingCheckState.error("Not enough Heat!");
 		}
 
@@ -150,7 +150,7 @@ public class TileEntityEvaporator extends TileEntityConfigurable {
 		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		// Use the heat.
-		heatStorage.getStorage().cool(DEFAULT_EVAPORATION_HEAT, HeatTransferAction.EXECUTE);
+		heatStorage.cool(DEFAULT_EVAPORATION_HEAT, HeatTransferAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
 

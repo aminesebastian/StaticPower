@@ -28,7 +28,7 @@ public class GuiAutoSmith extends StaticPowerTileEntityGui<ContainerAutoSmith, T
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 48));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 48));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 150, 8, 16, 60, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new AutoSmithProgressBar(79, 37).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 		

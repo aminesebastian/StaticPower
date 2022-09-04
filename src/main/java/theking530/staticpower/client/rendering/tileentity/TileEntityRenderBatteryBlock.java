@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.power.StaticVoltUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
@@ -26,7 +27,7 @@ public class TileEntityRenderBatteryBlock extends StaticPowerTileEntitySpecialRe
 	public void renderTileEntityBase(TileEntityBattery tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 		// Get the energy percentage.
-		float height = tileEntity.energyStorage.getStorage().getStoredEnergyPercentScaled(1.0f);
+		float height = StaticVoltUtilities.getStoredEnergyPercentScaled(tileEntity.energyStorage, 1.0f);
 
 		// Calculate the UV to use when rendering.
 		Vector4D uv = new Vector4D(0.0f, 1.0f - height, 1.0f, 1.0f);
@@ -46,7 +47,8 @@ public class TileEntityRenderBatteryBlock extends StaticPowerTileEntitySpecialRe
 			WorldRenderingUtilities.rotateMatrixToFaceSide(dir, matrixStack);
 
 			// Render the bar.
-			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.BATTERY_BLOCK_BAR, matrixStack, buffer, new Vector3D(0.225f, 0.225f, -0.03f), new Vector3D(0.55f, height, 1.0f), uv, Color.WHITE);
+			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.BATTERY_BLOCK_BAR, matrixStack, buffer, new Vector3D(0.225f, 0.225f, -0.03f),
+					new Vector3D(0.55f, height, 1.0f), uv, Color.WHITE);
 
 			matrixStack.popPose();
 		}

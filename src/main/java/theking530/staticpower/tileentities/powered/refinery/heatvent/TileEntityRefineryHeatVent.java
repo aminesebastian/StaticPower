@@ -35,7 +35,7 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	public void process() {
 		if (hasController()) {
 			if (!getLevel().isClientSide()) {
-				HeatStorageUtilities.transferHeatWithSurroundings(getController().heatStorage.getStorage(), getLevel(), getBlockPos(), HeatTransferAction.EXECUTE);
+				HeatStorageUtilities.transferHeatWithSurroundings(getController().heatStorage, getLevel(), getBlockPos(), HeatTransferAction.EXECUTE);
 			}
 		}
 	}
@@ -78,7 +78,7 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	@Override
 	public int getCurrentHeat() {
 		if (hasController()) {
-			return getController().heatStorage.getStorage().getCurrentHeat();
+			return getController().heatStorage.getCurrentHeat();
 		}
 		return 0;
 	}
@@ -86,7 +86,7 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	@Override
 	public int getOverheatThreshold() {
 		if (hasController()) {
-			return getController().heatStorage.getStorage().getOverheatThreshold();
+			return getController().heatStorage.getOverheatThreshold();
 		}
 		return 0;
 	}
@@ -94,7 +94,7 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	@Override
 	public int getMaximumHeat() {
 		if (hasController()) {
-			return getController().heatStorage.getStorage().getMaximumHeat();
+			return getController().heatStorage.getMaximumHeat();
 		}
 		return 0;
 	}
@@ -102,7 +102,7 @@ public class TileEntityRefineryHeatVent extends BaseRefineryTileEntity implement
 	@Override
 	public float getConductivity() {
 		if (hasController()) {
-			return getController().heatStorage.getStorage().getConductivity();
+			return getController().heatStorage.getConductivity();
 		}
 		return 0;
 	}

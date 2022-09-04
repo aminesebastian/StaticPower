@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
+import theking530.api.power.StaticVoltUtilities;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
@@ -28,8 +29,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityChargingStation extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityChargingStation> TYPE = new BlockEntityTypeAllocator<TileEntityChargingStation>((type, pos, state) -> new TileEntityChargingStation(pos, state),
-			ModBlocks.ChargingStation);
+	public static final BlockEntityTypeAllocator<TileEntityChargingStation> TYPE = new BlockEntityTypeAllocator<TileEntityChargingStation>(
+			(type, pos, state) -> new TileEntityChargingStation(pos, state), ModBlocks.ChargingStation);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -46,16 +47,17 @@ public class TileEntityChargingStation extends TileEntityMachine {
 		super(TYPE, pos, state, StaticPowerTiers.ENERGIZED);
 
 		// Add the input inventory that only takes energy storing items.
-		registerComponent(unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return EnergyHandlerItemStackUtilities.isEnergyContainer(stack);
-			}
-		}));
+		registerComponent(
+				unchargedInventory = new InventoryComponent("unchargedInventory", 4, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+					public boolean canInsertItem(int slot, ItemStack stack) {
+						return EnergyHandlerItemStackUtilities.isEnergyContainer(stack);
+					}
+				}));
 
 		// Add the rest of the inventories.
 		registerComponent(chargedInventory = new InventoryComponent("chargedInventory", 4, MachineSideMode.Output));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 
 		// Create the item i/o servos.
 		registerComponent(new OutputServoComponent("OutputServo", chargedInventory));
@@ -69,7 +71,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 	public void process() {
 		if (!getLevel().isClientSide) {
 			// Charge up to four items simultaneously.
-			if (energyStorage.getStorage().getStoredPower() > 0) {
+			if (energyStorage.getStoredPower() > 0) {
 				// Capture the count of chargeable items.
 				int count = getCountOfChargeableItems();
 
@@ -79,7 +81,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 				}
 
 				// Get the amount of power to apply to each item.
-				long maxOutput = energyStorage.getStorage().getCurrentMaximumPowerOutput() / count;
+				long maxOutput = StaticVoltUtilities.getCurrentMaximumPowerOutput(energyStorage) / count;
 
 				// Attempt to charge each item.
 				for (int i = 0; i < unchargedInventory.getSlots(); i++) {

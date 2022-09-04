@@ -31,7 +31,7 @@ public class GuiCaster extends StaticPowerTileEntityGui<ContainerCaster, TileEnt
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 54));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 54));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 34, 22, 20, 54, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new ArrowProgressBar(59, 34).bindToMachineProcessingComponent(getTileEntity().processingComponent).setAnimationLastUntil(0.5f));
 		registerWidget(

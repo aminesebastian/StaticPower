@@ -1,14 +1,14 @@
 package theking530.staticpower.tileentities.components.items;
 
 import net.minecraft.world.item.ItemStack;
-import theking530.api.power.StaticVoltHandler;
+import theking530.api.power.IStaticVoltHandler;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryInventoryComponent extends InventoryComponent {
 
-	private StaticVoltHandler EnergyStorage;
+	private IStaticVoltHandler EnergyStorage;
 
-	public BatteryInventoryComponent(String name, StaticVoltHandler energyStorage) {
+	public BatteryInventoryComponent(String name, IStaticVoltHandler energyStorage) {
 		super(name, 1);
 		EnergyStorage = energyStorage;
 		setShiftClickEnabled(true);
@@ -22,6 +22,7 @@ public class BatteryInventoryComponent extends InventoryComponent {
 		});
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void preProcessUpdate() {
 		if (!isEnabled()) {
@@ -33,7 +34,7 @@ public class BatteryInventoryComponent extends InventoryComponent {
 				ItemStack candidate = getStackInSlot(0);
 				if (candidate != null) {
 					if (EnergyHandlerItemStackUtilities.isEnergyContainer(candidate)) {
-						long maxInput = EnergyStorage.getCurrentMaximumPowerInput();
+						long maxInput = Math.min(EnergyStorage.getCapacity() - EnergyStorage.getStoredPower(), EnergyStorage.getMaxReceive());
 						long recieved = EnergyHandlerItemStackUtilities.drainPower(candidate, maxInput, false);
 						EnergyStorage.receivePower(recieved, false);
 					}

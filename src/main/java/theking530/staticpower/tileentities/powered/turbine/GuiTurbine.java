@@ -26,7 +26,7 @@ public class GuiTurbine extends StaticPowerTileEntityGui<ContainerTurbine, TileE
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 12, 16, 64));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 12, 16, 64));
 		registerWidget(progressBar = new FireProgressBar(80, 58));
 
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().inputFluidTankComponent, 50, 18, 16, 58, MachineSideMode.Output, getTileEntity()));

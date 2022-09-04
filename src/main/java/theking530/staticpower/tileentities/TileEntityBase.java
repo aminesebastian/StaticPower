@@ -24,6 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -46,6 +47,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
@@ -171,8 +173,7 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 
 			// Perform a data sync if requested.
 			if (shouldSync && !getLevel().isClientSide()) {
-				NetworkMessage msg = new TileEntityBasicSyncPacket(this, renderOnDataSync);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 64, msg);
+				synchronizeDataToPlayersInRadius(64, renderOnDataSync);
 			}
 
 			// If we also want to mark dirty, do so.
@@ -218,6 +219,24 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 
 	}
 
+	public void synchronizeDataToPlayersInRadius(int radius, boolean triggerRenderUpdate) {
+		if (!getLevel().isClientSide()) {
+			NetworkMessage msg = new TileEntityBasicSyncPacket(this, triggerRenderUpdate);
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), radius, msg);
+		} else {
+			StaticPower.LOGGER.warn(String.format("Calling #synchronizeDataToPlayersInRadius() on the client is a no-op. Called at position: %1$s.", getBlockPos().toString()));
+		}
+	}
+
+	public void synchronizeDataToContainerListener(ServerPlayer player) {
+		if (!getLevel().isClientSide()) {
+			NetworkMessage msg = new TileEntityBasicSyncPacket(this, false);
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), msg);
+		} else {
+			StaticPower.LOGGER.warn(String.format("Calling #synchronizeDataToContainerListener() on the client is a no-op. Called at position: %1$s.", getBlockPos().toString()));
+		}
+	}
+
 	public void addUpdateRequest(TileEntityUpdateRequest request, boolean markDirty) {
 		this.updateRequestQueue.add(request);
 		if (markDirty) {
@@ -228,7 +247,6 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 	public void addRenderingUpdateRequest() {
 		if (getLevel().isClientSide()) {
 			requestModelDataUpdate();
-			StaticPower.LOGGER.debug(String.format("Executing rendering state update at position: %1$s.", getBlockPos().toString()));
 		} else {
 			StaticPower.LOGGER.warn(String.format("Calling #addRenderingUpdateRequest() on the server is a no-op. Called at position: %1$s.", getBlockPos().toString()));
 		}

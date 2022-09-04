@@ -19,7 +19,7 @@ public class GuiSolidGenerator extends StaticPowerTileEntityGui<ContainerSolidGe
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 12, 16, 64));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 12, 16, 64));
 		registerWidget(new FireProgressBar(81, 58).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));

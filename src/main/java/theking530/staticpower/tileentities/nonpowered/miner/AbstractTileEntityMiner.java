@@ -15,6 +15,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.utilities.Color;
@@ -89,7 +90,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		heatStorage.setUpgradeInventory(upgradesInventory);
 
 		registerComponent(new OutputServoComponent("OutputServo", 1, outputInventory));
-		heatStorage.getStorage().setCanHeat(false);
+		heatStorage.setCanHeat(false);
 	}
 
 	@Override
@@ -113,9 +114,9 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			if (processingComponent.isPerformingWork()) {
-				heatStorage.getStorage().setCanHeat(true);
-				heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
-				heatStorage.getStorage().setCanHeat(false);
+				heatStorage.setCanHeat(true);
+				heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
+				heatStorage.setCanHeat(false);
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
@@ -183,7 +184,7 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 		if (getDrillBit().getDamageValue() >= getDrillBit().getMaxDamage()) {
 			return ProcessingCheckState.error("Drill bit needs repair!");
 		}
-		if (!heatStorage.getStorage().canFullyAbsorbHeat(getHeatGeneration())) {
+		if (!HeatStorageUtilities.canFullyAbsorbHeat(heatStorage, getHeatGeneration())) {
 			return ProcessingCheckState.error("Not enough heat capacity (Requires " + GuiTextUtilities.formatHeatToString(getHeatGeneration()).getString() + ")");
 		}
 		return ProcessingCheckState.ok();
@@ -214,9 +215,9 @@ public abstract class AbstractTileEntityMiner extends TileEntityConfigurable {
 			}
 
 			// We need to perform this here too, otherwise we'll skip a tick per generation.
-			heatStorage.getStorage().setCanHeat(true);
-			heatStorage.getStorage().heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
-			heatStorage.getStorage().setCanHeat(false);
+			heatStorage.setCanHeat(true);
+			heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
+			heatStorage.setCanHeat(false);
 
 			// Get the block to mine.
 			BlockPos minedPos = blocks.get(currentBlockIndex);

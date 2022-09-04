@@ -21,7 +21,7 @@ public class GuiLaboratory extends StaticPowerTileEntityGui<ContainerLaboratory,
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new ArrowProgressBar(78, 55).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 
 		getTabManager().registerTab(new GuiResearchTab(getTileEntity().getTeamComponent()));

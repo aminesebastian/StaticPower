@@ -47,7 +47,7 @@ public class TileEntityPumpJack extends TileEntityMachine {
 				.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage));
 
 		// Battery
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 
 		// Set the default side configuration.
 		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input));

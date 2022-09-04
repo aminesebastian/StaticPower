@@ -101,7 +101,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		if (!getLevel().isClientSide()) {
 			ServerCable cable = CableNetworkManager.get((ServerLevel) getLevel()).getCable(getPos());
 			if (cable != null && cable.getNetwork() != null) {
-				cable.getNetwork().updateGraph((ServerLevel) getLevel(), getPos());
+				cable.getNetwork().updateGraph((ServerLevel) getLevel(), getPos(), true);
 			}
 		}
 	}
@@ -112,7 +112,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	@Override
 	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
 		super.onNeighborReplaced(state, direction, facingState, FacingPos);
-		this.updateRenderingStateForCable();
+		if (state != facingState) {
+			updateRenderingStateForCable();
+		}
 	}
 
 	@Override

@@ -143,6 +143,9 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+	maven { 
+		url 'https://oss.sonatype.org/content/repositories/snapshots' 
+	}
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

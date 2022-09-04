@@ -84,6 +84,10 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		this.conductivity = conductivity;
 	}
 
+	public void setCurrentHeat(int heat) {
+		currentHeat = heat;
+	}
+
 	@Override
 	public int heat(int amountToHeat, HeatTransferAction action) {
 		if (!canHeat) {
@@ -120,9 +124,6 @@ public class HeatStorage implements IHeatStorage, INBTSerializable<CompoundTag> 
 		return currentHeat == 0.0f;
 	}
 
-	public boolean canFullyAbsorbHeat(double heatAmount) {
-		return currentHeat + heatAmount <= maximumHeat;
-	}
 
 	public boolean isCanHeat() {
 		return canHeat;

@@ -24,7 +24,7 @@ public class DestinationWrapper {
 	private final Level world;
 	private final BlockEntity tileEntity;
 	private final BlockPos pos;
-	private final Map<Direction, HashSet<DestinationType>> supportedTypes;
+	private final Map<Direction, HashSet<DestinationType>> supportedDestinationTypes;
 	private final Map<BlockPos, Direction> connectedCables;
 	private final BlockPos initialConnectedCable;
 
@@ -35,7 +35,7 @@ public class DestinationWrapper {
 		this.connectedCables = new HashMap<BlockPos, Direction>();
 		this.initialConnectedCable = connectedCable;
 		this.connectedCables.put(connectedCable, destinationSide);
-		supportedTypes = new HashMap<Direction, HashSet<DestinationType>>();
+		supportedDestinationTypes = new HashMap<Direction, HashSet<DestinationType>>();
 		populateDestinationTypes();
 	}
 
@@ -57,8 +57,8 @@ public class DestinationWrapper {
 	 * 
 	 * @return
 	 */
-	public boolean shouldBeDropped() {
-		return supportedTypes.isEmpty();
+	public boolean hasSupportedDestinationTypes() {
+		return supportedDestinationTypes.isEmpty();
 	}
 
 	/**
@@ -84,16 +84,16 @@ public class DestinationWrapper {
 	}
 
 	public HashSet<DestinationType> getTypesForSide(Direction side) {
-		return supportedTypes.get(side);
+		return supportedDestinationTypes.get(side);
 	}
 
 	public boolean supportsTypeOnSide(Direction side, DestinationType type) {
-		return supportedTypes.get(side).contains(type);
+		return supportedDestinationTypes.get(side).contains(type);
 	}
 
 	public boolean supportsType(DestinationType type) {
 		for (Direction dir : Direction.values()) {
-			if (supportedTypes.get(dir).contains(type)) {
+			if (supportedDestinationTypes.get(dir).contains(type)) {
 				return true;
 			}
 		}
@@ -101,7 +101,7 @@ public class DestinationWrapper {
 	}
 
 	private void populateDestinationTypes() {
-		supportedTypes.clear();
+		supportedDestinationTypes.clear();
 		for (Direction dir : Direction.values()) {
 			HashSet<DestinationType> types = new HashSet<DestinationType>();
 
@@ -136,7 +136,7 @@ public class DestinationWrapper {
 			}
 
 			// Put the types into the supported types array.
-			supportedTypes.put(dir, types);
+			supportedDestinationTypes.put(dir, types);
 		}
 	}
 }

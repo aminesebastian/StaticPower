@@ -24,7 +24,7 @@ public class GuiEnchanter extends StaticPowerTileEntityGui<ContainerEnchanter, T
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidTankComponent, 65, 22, 20, 54, MachineSideMode.Input, getTileEntity()));
 		registerWidget(new ArrowProgressBar(120, 40).bindToMachineProcessingComponent(getTileEntity().processingComponent));
 		

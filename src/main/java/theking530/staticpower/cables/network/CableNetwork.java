@@ -31,44 +31,44 @@ import theking530.staticpower.cables.network.pathfinding.PathCache;
  */
 public class CableNetwork {
 	private static final Logger LOGGER = LogManager.getLogger(CableNetwork.class);
-	private final CableNetworkGraph Graph;
-	private final PathCache PathCache;
-	private final long NetworkId;
-	private BlockPos Origin;
-	private boolean InitialScanComplete;
-	private Level World;
-	private HashMap<ResourceLocation, AbstractCableNetworkModule> Modules;
+	private final CableNetworkGraph graph;
+	private final PathCache pathCache;
+	private final long networkId;
+	private BlockPos origin;
+	private boolean initialScanCompleted;
+	private Level level;
+	private HashMap<ResourceLocation, AbstractCableNetworkModule> modules;
 	private boolean networkUpdatesDisabled;
 
 	public CableNetwork(BlockPos origin, long id) {
-		NetworkId = id;
-		Origin = origin;
-		PathCache = new PathCache(this);
-		Graph = new CableNetworkGraph(this);
-		Modules = new HashMap<ResourceLocation, AbstractCableNetworkModule>();
+		networkId = id;
+		this.origin = origin;
+		pathCache = new PathCache(this);
+		graph = new CableNetworkGraph(this);
+		modules = new HashMap<ResourceLocation, AbstractCableNetworkModule>();
 		networkUpdatesDisabled = false;
 	}
 
 	public void tick() {
 		// Perform a single scan when the world/network first loads.
-		if (!InitialScanComplete) {
-			InitialScanComplete = true;
-			updateGraph(World, Origin);
+		if (!initialScanCompleted) {
+			initialScanCompleted = true;
+			updateGraph(level, origin, true);
 		}
 
 		// Tick all the modules.
 
-		for (AbstractCableNetworkModule module : Modules.values()) {
+		for (AbstractCableNetworkModule module : modules.values()) {
 			try {
-				module.tick(World);
+				module.tick(level);
 			} catch (Exception e) {
 				throw new RuntimeException(String.format("An error occured when attempting to tick a graph module of type: %1$s.", module.getType().toString()), e);
 			}
 		}
 
 		// Tick all the cables.
-		if (Graph.getCables().size() > 0) {
-			for (ServerCable cable : Graph.getCables().values()) {
+		if (graph.getCables().size() > 0) {
+			for (ServerCable cable : graph.getCables().values()) {
 				try {
 					cable.tick();
 				} catch (Exception e) {
@@ -79,7 +79,7 @@ public class CableNetwork {
 	}
 
 	public boolean hasModule(ResourceLocation type) {
-		return Modules.containsKey(type);
+		return modules.containsKey(type);
 	}
 
 	public void addModule(AbstractCableNetworkModule module) {
@@ -89,7 +89,7 @@ public class CableNetwork {
 		}
 
 		// Add the module and let it know that it was added to a network.
-		Modules.put(module.getType(), module);
+		modules.put(module.getType(), module);
 		module.onAddedToNetwork(this);
 	}
 
@@ -99,26 +99,26 @@ public class CableNetwork {
 		if (!hasModule(type)) {
 			throw new RuntimeException(String.format("Attempted to get a module of a type: %1$s that does not exist on this network.", type));
 		}
-		return (T) Modules.get(type);
+		return (T) modules.get(type);
 	}
 
 	public List<AbstractCableNetworkModule> getModules() {
-		return Modules.values().stream().collect(Collectors.toList());
+		return modules.values().stream().collect(Collectors.toList());
 	}
 
-	public @Nullable NetworkMapper updateGraph(Level world, BlockPos startingPosition) {
+	public @Nullable NetworkMapper updateGraph(Level world, BlockPos startingPosition, boolean force) {
 		if (networkUpdatesDisabled) {
 			return null;
 		}
 
 		// Invalidate the path cache.
-		PathCache.invalidateCache();
+		pathCache.invalidateCache();
 
 		// Map the graph.
-		NetworkMapper output = Graph.scan(world, startingPosition);
+		NetworkMapper output = graph.scan(world, startingPosition);
 
 		// Let all the modules know the graph was updated.
-		for (AbstractCableNetworkModule module : Modules.values()) {
+		for (AbstractCableNetworkModule module : modules.values()) {
 			try {
 				module.onNetworkGraphUpdated(output, startingPosition);
 			} catch (Exception e) {
@@ -138,7 +138,7 @@ public class CableNetwork {
 	public void disableNetworkUpdates() {
 		if (!networkUpdatesDisabled) {
 			networkUpdatesDisabled = true;
-			for (AbstractCableNetworkModule module : Modules.values()) {
+			for (AbstractCableNetworkModule module : modules.values()) {
 				module.onNetworkUpdatesDisabled();
 			}
 		}
@@ -147,7 +147,7 @@ public class CableNetwork {
 	public void enableNetworkUpdates() {
 		if (networkUpdatesDisabled) {
 			networkUpdatesDisabled = false;
-			for (AbstractCableNetworkModule module : Modules.values()) {
+			for (AbstractCableNetworkModule module : modules.values()) {
 				module.onNetworkUpdatesEnabled();
 			}
 		}
@@ -155,7 +155,7 @@ public class CableNetwork {
 
 	public void onNetworksSplitOff(List<CableNetwork> newNetworks) {
 		// Let all the modules know the graph was updated.
-		for (AbstractCableNetworkModule module : Modules.values()) {
+		for (AbstractCableNetworkModule module : modules.values()) {
 			try {
 				module.onNetworksSplitOff(newNetworks);
 			} catch (Exception e) {
@@ -169,10 +169,10 @@ public class CableNetwork {
 		// Allocate the output list.
 		List<Component> output = new LinkedList<Component>();
 		output.add(new TextComponent(""));
-		output.add(new TextComponent("NetworkID: ").append(String.format("%1$s%2$d with %3$d cables", ChatFormatting.GRAY.toString(), NetworkId, Graph.getCables().size())));
+		output.add(new TextComponent("NetworkID: ").append(String.format("%1$s%2$d with %3$d cables", ChatFormatting.GRAY.toString(), networkId, graph.getCables().size())));
 
 		// Capture the output contents of the modules.
-		for (AbstractCableNetworkModule module : Modules.values()) {
+		for (AbstractCableNetworkModule module : modules.values()) {
 			module.getReaderOutput(output);
 		}
 
@@ -180,41 +180,41 @@ public class CableNetwork {
 	}
 
 	public BlockPos getOrigin() {
-		return Origin;
+		return origin;
 	}
 
 	public void setOrigin(BlockPos pos) {
-		Origin = pos;
+		origin = pos;
 	}
 
 	public CableNetworkGraph getGraph() {
-		return Graph;
+		return graph;
 	}
 
 	public PathCache getPathCache() {
-		return PathCache;
+		return pathCache;
 	}
 
 	public Level getWorld() {
-		return World;
+		return level;
 	}
 
 	public void onJoinedWithOtherNetwork(CableNetwork mainNetwork) {
-		for (AbstractCableNetworkModule module : Modules.values()) {
+		for (AbstractCableNetworkModule module : modules.values()) {
 			module.onAddedToNetwork(mainNetwork);
 		}
 	}
 
 	public long getId() {
-		return NetworkId;
+		return networkId;
 	}
 
 	public boolean isEmpty() {
-		return Graph.getCables().isEmpty();
+		return graph.getCables().isEmpty();
 	}
 
 	public boolean canAcceptCable(ServerCable currentNetworkCable, ServerCable newCable) {
-		for (AbstractCableNetworkModule module : Modules.values()) {
+		for (AbstractCableNetworkModule module : modules.values()) {
 			if (!module.canAcceptCable(currentNetworkCable, newCable)) {
 				return false;
 			}
@@ -223,7 +223,7 @@ public class CableNetwork {
 	}
 
 	public void setWorld(Level world) {
-		World = world;
+		level = world;
 	}
 
 	public static CableNetwork create(CompoundTag tag) {
@@ -231,8 +231,8 @@ public class CableNetwork {
 		CableNetwork network = new CableNetwork(BlockPos.of(tag.getLong("origin")), tag.getLong("network_id"));
 
 		// Deserialize the modules.
-		ListTag modules = tag.getList("modules", Tag.TAG_COMPOUND);
-		for (Tag moduleTag : modules) {
+		ListTag moduleTagList = tag.getList("modules", Tag.TAG_COMPOUND);
+		for (Tag moduleTag : moduleTagList) {
 			// Get the module compound.
 			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
 
@@ -252,26 +252,26 @@ public class CableNetwork {
 
 	public CompoundTag writeToNbt(CompoundTag tag) {
 		// Put the network ID and the origin.
-		tag.putLong("network_id", NetworkId);
-		tag.putLong("origin", Origin.asLong());
+		tag.putLong("network_id", networkId);
+		tag.putLong("origin", origin.asLong());
 
 		// Serialize the attachments.
-		ListTag modules = new ListTag();
-		Modules.values().forEach(module -> {
+		ListTag moduleTagList = new ListTag();
+		modules.values().forEach(module -> {
 			CompoundTag moduleTag = new CompoundTag();
 			moduleTag.putString("type", module.getType().toString());
 			module.writeToNbt(moduleTag);
-			modules.add(moduleTag);
+			moduleTagList.add(moduleTag);
 		});
 
 		// Add the attachments.
-		tag.put("modules", modules);
+		tag.put("modules", moduleTagList);
 
 		return tag;
 	}
 
 	public void recieveCrossNetworkUpdate(CableNetwork sendingNetwork, Set<CableNetwork> previousNetworks) {
-		for (AbstractCableNetworkModule module : Modules.values()) {
+		for (AbstractCableNetworkModule module : modules.values()) {
 			module.recieveCrossNetworkUpdate(sendingNetwork, previousNetworks);
 		}
 	}

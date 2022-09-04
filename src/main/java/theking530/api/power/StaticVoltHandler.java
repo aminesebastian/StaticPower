@@ -255,20 +255,6 @@ public class StaticVoltHandler implements IStaticVoltHandler, INBTSerializable<C
 		return Math.min(getStoredPower(), getMaxDrain());
 	}
 
-	/**
-	 * This is a helper method that returns the min between the amount of energy
-	 * space remaining in this storage and the maximum amount that can be received
-	 * per tick. For example, if our max receive is 256SV/t and we have 100FE left
-	 * to store in this storage, this will return 100. Otherwise, if we have >250SV
-	 * left to store in this storage, this will return 250SV.
-	 * 
-	 * @return The amount of energy that can be input into this storage on this
-	 *         tick.
-	 */
-	public long getCurrentMaximumPowerInput() {
-		return Math.min(getCapacity() - getStoredPower(), getMaxReceive());
-	}
-
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag output = new CompoundTag();

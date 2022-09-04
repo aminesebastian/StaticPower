@@ -66,6 +66,7 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 		}
 	}
 
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {

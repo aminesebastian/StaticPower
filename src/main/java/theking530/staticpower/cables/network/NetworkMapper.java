@@ -139,7 +139,7 @@ public class NetworkMapper {
 			if (!Destinations.containsKey(location)) {
 				// Cache a destination wrapper for it.
 				DestinationWrapper wrapper = new DestinationWrapper(world, location, world.getBlockEntity(location), scanningCable.getPos(), facing.getOpposite());
-				if (!wrapper.shouldBeDropped()) {
+				if (!wrapper.hasSupportedDestinationTypes()) {
 					Destinations.put(location, wrapper);
 				}
 			} else {

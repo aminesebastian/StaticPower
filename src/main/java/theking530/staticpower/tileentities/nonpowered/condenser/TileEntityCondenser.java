@@ -86,7 +86,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 			}
 
 			// Check the heat level.
-			if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getOverheatThreshold()) {
+			if (heatStorage.getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getOverheatThreshold()) {
 				return ProcessingCheckState.error("Machine is too hot!");
 			}
 
@@ -124,7 +124,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		CondensationRecipe recipe = getRecipe(inputTankComponent.getFluid(), false).orElse(null);
 
 		// Check the heat level.
-		if (heatStorage.getStorage().getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getStorage().getOverheatThreshold()) {
+		if (heatStorage.getCurrentHeat() + recipe.getHeatGeneration() > heatStorage.getOverheatThreshold()) {
 			return ProcessingCheckState.error("Machine is too hot!");
 		}
 
@@ -141,7 +141,7 @@ public class TileEntityCondenser extends TileEntityConfigurable {
 		outputTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
 
 		// Use the heat.
-		heatStorage.getStorage().heat(recipe.getHeatGeneration(), HeatTransferAction.EXECUTE);
+		heatStorage.heat(recipe.getHeatGeneration(), HeatTransferAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}
 

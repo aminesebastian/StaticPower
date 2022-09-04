@@ -12,10 +12,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraftforge.network.PacketDistributor;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
-import theking530.staticcore.network.NetworkMessage;
-import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
@@ -23,7 +20,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntityContainer.class);
-	public static final int DEFAULT_SYNC_TIME = 2;
+	public static final int DEFAULT_SYNC_TIME = 1;
 
 	private final T owningTileEntity;
 	private int syncTime;
@@ -57,10 +54,9 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 		syncTimer++;
 
 		// If the sync timer has passed a sync time interval, perform a sync.
-		if (syncTimer % syncTime == 0 && containerListeners.size() > 0) {
-			if (this.getPlayerInventory().player instanceof ServerPlayer) {
-				NetworkMessage msg = new TileEntityBasicSyncPacket(getTileEntity(), false);
-				StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) this.getPlayerInventory().player), msg);
+		if (syncTimer % DEFAULT_SYNC_TIME == 0 && containerListeners.size() > 0) {
+			if (getPlayerInventory().player instanceof ServerPlayer) {
+				getTileEntity().synchronizeDataToContainerListener((ServerPlayer) getPlayerInventory().player);
 			}
 		}
 	}

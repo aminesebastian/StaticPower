@@ -71,7 +71,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		registerComponent(secondOutputInventory = new InventoryComponent("SecondOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(thirdOutputInventory = new InventoryComponent("ThirdOutputInventory", 1, MachineSideMode.Output4));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage.getStorage()));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 

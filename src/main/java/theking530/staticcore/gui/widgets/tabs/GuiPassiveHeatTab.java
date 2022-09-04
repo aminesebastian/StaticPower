@@ -18,9 +18,11 @@ public class GuiPassiveHeatTab extends GuiMachineHeatTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Heating", new TextComponent("Heating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getHeatPerTick()), ChatFormatting.RED);
-		addKeyValueTwoLiner("Dissipating", new TextComponent("Dissipating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getStorage().getCooledPerTick()), ChatFormatting.AQUA);
-		addKeyValueTwoLiner("Conductivity", new TextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getStorage().getConductivity()),
-				ChatFormatting.GREEN);
+		addKeyValueTwoLiner("Heating", new TextComponent("Heating"), GuiTextUtilities.formatHeatRateToString(heatStorage.getHeatPerTick()), ChatFormatting.RED);
+		addKeyValueTwoLiner("Cooling", new TextComponent("Cooling"), GuiTextUtilities.formatHeatRateToString(heatStorage.getCooledPerTick()), ChatFormatting.AQUA);
+		if (heatStorage.getConductivity() != 1) {
+			addKeyValueTwoLiner("Conductivity", new TextComponent("Conductivity"), GuiTextUtilities.formatConductivityToString(heatStorage.getConductivity()),
+					ChatFormatting.GREEN);
+		}
 	}
 }

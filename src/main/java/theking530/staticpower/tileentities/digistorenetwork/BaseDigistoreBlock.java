@@ -15,6 +15,7 @@ public abstract class BaseDigistoreBlock extends StaticPowerMachineBlock {
 		super();
 	}
 
+	// TODO: Is this still needed??
 	@Override
 	public void onStaticPowerNeighborChanged(BlockState state, LevelReader world, BlockPos pos, BlockPos neighbor,
 			boolean isMoving) {
@@ -22,7 +23,7 @@ public abstract class BaseDigistoreBlock extends StaticPowerMachineBlock {
 		if (!world.isClientSide()) {
 			ServerCable cable = CableNetworkManager.get((ServerLevel) world).getCable(pos);
 			if (cable != null && cable.getNetwork() != null) {
-				cable.getNetwork().updateGraph((ServerLevel) world, pos);
+				cable.getNetwork().updateGraph((ServerLevel) world, pos, true);
 			}
 		}
 	}

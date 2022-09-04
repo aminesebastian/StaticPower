@@ -30,7 +30,7 @@ public class GuiMixer extends StaticPowerTileEntityGui<ContainerMixer, TileEntit
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage.getStorage(), 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidInput1, 32, 22, 20, 54, MachineSideMode.Input2, getTileEntity()));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidInput2, 84, 22, 20, 54, MachineSideMode.Input3, getTileEntity()));
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().fluidOutput, 148, 22, 20, 54, MachineSideMode.Output, getTileEntity()));
