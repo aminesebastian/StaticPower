@@ -29,7 +29,7 @@ import theking530.staticpower.tileentities.components.fluids.FluidInputServoComp
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
+import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
@@ -45,7 +45,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		}
 	}
 
-	public final InventoryComponent upgradesInventory;
+	public final UpgradeInventoryComponent upgradesInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final FluidTankComponent fluidTankComponent;
@@ -55,7 +55,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		super(TYPE, pos, state, StaticPowerTiers.BASIC);
 		disableFaceInteraction();
 
-		registerComponent(upgradesInventory = new InventoryComponent("UpgradeInventory", 3, MachineSideMode.Never));
+		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 0, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
@@ -80,6 +80,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 			return true;
 		});
 		energyStorage.setAutoSyncPacketsEnabled(true);
+		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override

@@ -777,7 +777,7 @@ public class StaticPowerConfig {
 							.defineInRange("RefineryPowerUsage", 20 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
 					refineryProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime").define("RefineryProcessingTime", 200);
+							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime").define("RefineryProcessingTime", 20);
 					refineryPerBoilerHeatGeneration = builder.comment("Defines how much heat (in mC [1C = 1000mC]) is produced by the refinery per tick ([1 Second = 20 Ticks]).")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryHeatGeneration")
 							.define("RefineryHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(10));

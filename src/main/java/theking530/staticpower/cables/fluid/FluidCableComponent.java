@@ -103,7 +103,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 			lastUpdateFluidStack = stack;
 			lastUpdateFilledPercentage = Math.min(1.0f, fluidAmount);
 			getTileEntity().requestModelDataUpdate();
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), true);
 		}
 	}
 

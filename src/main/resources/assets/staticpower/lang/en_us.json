@@ -1003,7 +1003,7 @@
 	"gui.staticpower.max_fluid_rate": "Maximum Fluid Rate",
 	"gui.staticpower.item_cable_acceleration": "Acceleration: %1$d%%",
 	"gui.staticpower.item_cable_friction": "Friction: -%1$d%%",
-	"gui.staticpower.industrial_cable_warning": "Cannot supply directly to machines!",
+	"gui.staticpower.industrial_cable_warning": "Can only supply to industrial machines!",
 	"gui.staticpower.next_recipe": "Next Recipe",
 	"gui.staticpower.previous_recipe": "Previous Recipe",
 	"gui.staticpower.day": "Day",
