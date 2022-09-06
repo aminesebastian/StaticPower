@@ -46,7 +46,7 @@ import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilt
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class TileEntityTurbine extends TileEntityMachine {
@@ -94,7 +94,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		// Setup the power distribution component.
-		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage));
+		registerComponent(new OldPowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the fluid tanks
 		registerComponent(inputFluidTankComponent = new FluidTankComponent("InputFluid", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)

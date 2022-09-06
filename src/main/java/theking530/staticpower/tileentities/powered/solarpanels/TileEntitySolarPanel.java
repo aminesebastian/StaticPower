@@ -17,7 +17,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 
 public class TileEntitySolarPanel extends TileEntityBase {
 	@TileEntityTypePopulator()
@@ -65,7 +65,7 @@ public class TileEntitySolarPanel extends TileEntityBase {
 				SideConfigurationComponent.ALL_SIDES_NEVER.copy().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output)));
 
 		// Set the distribution component.
-		registerComponent(new PowerDistributionComponent("PowerDistribution", energyStorage));
+		registerComponent(new OldPowerDistributionComponent("PowerDistribution", energyStorage));
 	}
 
 	@Override

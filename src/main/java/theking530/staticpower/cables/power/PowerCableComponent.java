@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.power;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -11,171 +13,41 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.CapabilityEnergy;
-import net.minecraftforge.energy.IEnergyStorage;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.consumer.CapabilityStaticPower;
+import theking530.api.energy.consumer.IStaticPowerStorage;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.tileentities.components.energy.SidedEnergyProxy;
 
-public class PowerCableComponent extends AbstractCableProviderComponent implements IEnergyStorage, IStaticVoltHandler {
-	public static final String POWER_CAPACITY_DATA_TAG_KEY = "power_capacity";
-	public static final String POWER_RATE_DATA_TAG_KEY = "power_transfer_rate";
+public class PowerCableComponent extends AbstractCableProviderComponent implements IStaticPowerStorage {
+	public static final String POWER_MAX_CURRENT = "power_max_current";
+	public static final String POWER_RESISTANCE = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
-	private final long capacity;
-	private final long transferRate;
+	private final Map<Direction, SidedEnergyProxy> powerInterfaces;
+	private final double resistance;
+	private final double maxCurrent;
 	private final boolean isIndustrial;
 
-	private long clientCurrentPower;
-	private long clientCapacity;
-	private long clientMaxReceive;
-	private long clientMaxDrain;
-	private float clientLastTickReceive;
-	private float clientLastTickDraint;
-
-	public PowerCableComponent(String name, boolean isIndustrial, long capacity, long transferRate) {
+	public PowerCableComponent(String name, boolean isIndustrial, double maxCurrent, double resistance) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
-		this.capacity = capacity;
-		this.transferRate = transferRate;
-		this.isIndustrial = isIndustrial;
-		this.clientCurrentPower = 0;
-		this.clientCapacity = 0;
-		this.clientMaxReceive = 0;
-		this.clientMaxDrain = 0;
-		this.clientLastTickReceive = 0;
-		this.clientLastTickDraint = 0;
-	}
-
-	@Override
-	public int receiveEnergy(int maxReceive, boolean simulate) {
-		return (int) recievePower(maxReceive, simulate, true);
-	}
-
-	@Override
-	public int extractEnergy(int maxExtract, boolean simulate) {
-		return 0;
-	}
-
-	@Override
-	public int getEnergyStored() {
-		if (!getTileEntity().getLevel().isClientSide) {
-			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
-			if (module != null) {
-				return module.getEnergyAutoConverter().getEnergyStored();
-			}
-		}
-		return CapabilityStaticVolt.convertmSVtoFE(clientCurrentPower);
-	}
-
-	@Override
-	public int getMaxEnergyStored() {
-		if (!getTileEntity().getLevel().isClientSide) {
-			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
-			if (module != null) {
-				return module.getEnergyAutoConverter().getMaxEnergyStored();
-			}
-		}
-		return CapabilityStaticVolt.convertmSVtoFE(clientCapacity);
-	}
-
-	public float getClientLastEnergyDrain() {
-		return this.clientLastTickDraint;
-	}
-
-	public float getClientLastEnergyReceieve() {
-		return this.clientLastTickReceive;
-	}
-
-	@Override
-	public boolean canExtract() {
-		return canBeDrained();
-	}
-
-	@Override
-	public boolean canReceive() {
-		return canRecievePower();
-	}
-
-	@Override
-	public long getMaxReceive() {
-		if (!getTileEntity().getLevel().isClientSide) {
-			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
-			if (module != null) {
-				return module.getEnergyAutoConverter().getMaxReceive();
-			}
-		}
-		return clientMaxReceive;
-	}
-
-	@Override
-	public long getMaxDrain() {
-		if (!getTileEntity().getLevel().isClientSide) {
-			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
-			if (module != null) {
-				return module.getEnergyAutoConverter().getMaxDrain();
-			}
-		}
-		return clientMaxDrain;
-	}
-
-	@Override
-	public long getStoredPower() {
-		if (!getTileEntity().getLevel().isClientSide) {
-			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
-			if (module != null) {
-				return module.getEnergyAutoConverter().getStoredPower();
-			}
-		}
-		return clientCurrentPower;
-	}
-
-	@Override
-	public long getCapacity() {
-		if (!getTileEntity().getLevel().isClientSide) {
-			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
-			if (module != null) {
-				return module.getEnergyAutoConverter().getCapacity();
-			}
-		}
-		return clientCapacity;
-	}
-
-	@Override
-	public long receivePower(long power, boolean simulate) {
-		return recievePower(power, simulate, false);
-	}
-
-	private long recievePower(long power, boolean simulate, boolean forge) {
-		if (!getTileEntity().getLevel().isClientSide) {
-			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
-			if (module != null) {
-				if (forge) {
-					return module.getEnergyAutoConverter().receiveEnergy((int) Math.min(CapabilityStaticVolt.convertmSVtoFE(transferRate), power), simulate);
-				} else {
-					return module.getEnergyAutoConverter().receivePower(Math.min(transferRate, power), simulate);
+		powerInterfaces = new HashMap<>();
+		for (Direction dir : Direction.values()) {
+			powerInterfaces.put(dir, new SidedEnergyProxy(dir, this) {
+				@Override
+				public double addPower(Direction side, double voltage, double power, boolean simulate) {
+					return PowerCableComponent.this.addPower(side, voltage, power, simulate);
 				}
-			}
+			});
 		}
-		return 0;
-	}
 
-	@Override
-	public long drainPower(long power, boolean simulate) {
-		return 0;
-	}
-
-	@Override
-	public boolean canRecievePower() {
-		return getPowerNetworkModule() != null;
-	}
-
-	@Override
-	public boolean canBeDrained() {
-		return false;
+		this.resistance = resistance;
+		this.maxCurrent = maxCurrent;
+		this.isIndustrial = isIndustrial;
 	}
 
 	/**
@@ -194,19 +66,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the energy capability if we are not disabled on that side.
-		if (cap == CapabilityEnergy.ENERGY || cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
-			boolean disabled = false;
-			if (side != null) {
-				if (getLevel().isClientSide) {
-					disabled = isSideDisabled(side);
-				} else {
-					Optional<ServerCable> cable = getCable();
-					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
-				}
-			}
-
-			if (!disabled) {
+		if (cap == CapabilityStaticPower.STATIC_VOLT_CAPABILITY) {
+			if (side == null) {
 				return LazyOptional.of(() -> this).cast();
+			} else if (!isSideDisabled(side)) {
+				return LazyOptional.of(() -> powerInterfaces.get(side)).cast();
 			}
 		}
 		return LazyOptional.empty();
@@ -214,41 +78,20 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
-		cable.setProperty(POWER_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.setProperty(POWER_RATE_DATA_TAG_KEY, transferRate);
+		cable.setProperty(POWER_RESISTANCE, resistance);
+		cable.setProperty(POWER_MAX_CURRENT, maxCurrent);
 		cable.setProperty(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}
 
 	@Override
 	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.serializeUpdateNbt(nbt, fromUpdate);
-		if (!this.getLevel().isClientSide) {
-			getPowerNetworkModule().ifPresent(module -> {
-				CompoundTag powerCableNBT = new CompoundTag();
-				powerCableNBT.putLong("power", module.getEnergyStorage().getStoredPower());
-				powerCableNBT.putLong("capacity", module.getEnergyStorage().getCapacity());
-				powerCableNBT.putFloat("max_drain", module.getEnergyStorage().getMaxDrain());
-				powerCableNBT.putFloat("max_receive", module.getEnergyStorage().getMaxReceive());
-				powerCableNBT.putFloat("drained", module.getEnergyStorage().getExtractedPerTick());
-				powerCableNBT.putFloat("received", module.getEnergyStorage().getReceivedPerTick());
-				nbt.put("power_cable", powerCableNBT);
-			});
-		}
 		return nbt;
 	}
 
 	@Override
 	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
-		if (nbt.contains("power_cable")) {
-			CompoundTag powerCableNBT = nbt.getCompound("power_cable");
-			clientCurrentPower = powerCableNBT.getLong("power");
-			clientCapacity = powerCableNBT.getLong("capacity");
-			clientLastTickDraint = powerCableNBT.getFloat("drained");
-			clientLastTickReceive = powerCableNBT.getFloat("received");
-			clientMaxDrain = powerCableNBT.getInt("max_drain");
-			clientMaxReceive = powerCableNBT.getInt("max_recieve");
-		}
 	}
 
 	@Override
@@ -260,7 +103,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 			}
 		}
 		if (te != null) {
-			if (te.getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).isPresent()) {
+			if (te.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, side.getOpposite()).isPresent()) {
 				return CableConnectionState.TILE_ENTITY;
 			}
 		}
@@ -272,4 +115,59 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		return false;
 	}
 
+	@Override
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticVoltageRange.ANY_VOLTAGE;
+	}
+
+	@Override
+	public double getStoredPower() {
+		return 0;
+	}
+
+	@Override
+	public double getCapacity() {
+		return 0;
+	}
+
+	@Override
+	public double getVoltageOutput() {
+		if (!isOnClientSide()) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getVoltageOutput();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public double addPower(double voltage, double current, boolean simulate) {
+		return 0;
+	}
+
+	public double addPower(Direction side, double voltage, double power, boolean simulate) {
+		if (!isOnClientSide()) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.addPower(getPos(), voltage, power, simulate);
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public double usePower(double power, boolean simulate) {
+		return 0;
+	}
+
+	@Override
+	public boolean canAcceptPower() {
+		return true;
+	}
+
+	@Override
+	public boolean doesProvidePower() {
+		return true;
+	}
 }

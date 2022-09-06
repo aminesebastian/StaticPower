@@ -55,7 +55,7 @@ import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
-import theking530.api.power.ItemStackStaticVoltCapability;
+import theking530.api.volts.ItemStackStaticVoltCapability;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;

@@ -9,8 +9,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.volts.IStaticVoltHandler;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -56,7 +56,7 @@ public class TileEntityRefineryPowerTap extends BaseRefineryTileEntity implement
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		// Only provide the energy capability if we are not disabled on that side.
-		if (cap == CapabilityEnergy.ENERGY || cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
+		if (cap == CapabilityEnergy.ENERGY || cap == CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY) {
 			if (hasController()) {
 				if(side != null) {
 					MachineSideMode mode = getComponent(SideConfigurationComponent.class).getWorldSpaceDirectionConfiguration(side);

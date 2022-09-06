@@ -8,7 +8,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;

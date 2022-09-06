@@ -19,8 +19,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.volts.IStaticVoltHandler;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -62,7 +62,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
 			BlockEntity tile = accessor.getBlockEntity();
 			if (tile != null) {
-				IStaticVoltHandler storage = tile.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
+				IStaticVoltHandler storage = tile.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).orElse(null);
 				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
 					long stored, capacity;
 

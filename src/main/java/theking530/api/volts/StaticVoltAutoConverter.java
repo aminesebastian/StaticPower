@@ -1,4 +1,4 @@
-package theking530.api.power;
+package theking530.api.volts;
 
 import net.minecraftforge.energy.IEnergyStorage;
 

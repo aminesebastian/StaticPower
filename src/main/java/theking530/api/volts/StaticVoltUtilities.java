@@ -1,4 +1,4 @@
-package theking530.api.power;
+package theking530.api.volts;
 
 public class StaticVoltUtilities {
 	public static long getCurrentMaximumPowerOutput(IStaticVoltHandler storage) {

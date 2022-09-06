@@ -1,4 +1,4 @@
-package theking530.api.power;
+package theking530.api.volts;
 
 import java.util.LinkedList;
 import java.util.Queue;

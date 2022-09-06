@@ -105,6 +105,8 @@ import theking530.staticpower.tileentities.powered.treefarmer.BlockTreeFarmer;
 import theking530.staticpower.tileentities.powered.tumbler.BlockTumbler;
 import theking530.staticpower.tileentities.powered.turbine.BlockTurbine;
 import theking530.staticpower.tileentities.powered.vulcanizer.BlockVulcanizer;
+import theking530.staticpower.tileentities.testing.battery.BlockTestBattery;
+import theking530.staticpower.tileentities.testing.furnace.BlockTestFurnace;
 import theking530.staticpower.world.trees.rubbertree.RubberTreePlacer;
 
 public class ModBlocks {
@@ -309,6 +311,8 @@ public class ModBlocks {
 	public static final RegistryObject<BlockRandomItemGenerator> RandomItemGenerator = registerBlock("random_item_generator", () -> new BlockRandomItemGenerator());
 	public static final RegistryObject<BlockEnchanter> Enchanter = registerBlock("machine_enchanter", () -> new BlockEnchanter());
 
+	public static final RegistryObject<BlockTestFurnace> TestFurnace = registerBlock("test_furnace", () -> new BlockTestFurnace());
+
 	public static final RegistryObject<BlockRefineryController> RefineryController = registerBlock("machine_refinery_controller", () -> new BlockRefineryController());
 	public static final RegistryObject<BlockRefineryPowerTap> RefineryPowerTap = registerBlock("machine_refinery_power_tap", () -> new BlockRefineryPowerTap());
 	public static final RegistryObject<BlockRefineryFluidInput> RefineryFluidInput = registerBlock("machine_refinery_fluid_input", () -> new BlockRefineryFluidInput());
@@ -500,6 +504,8 @@ public class ModBlocks {
 	public static final RegistryObject<BlockBattery> BatteryEnergized = registerBlock("battery_block_energized", () -> new BlockBattery(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BlockBattery> BatteryLumum = registerBlock("battery_block_lumum", () -> new BlockBattery(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockBattery> BatteryCreative = registerBlock("battery_block_creative", () -> new BlockBattery(StaticPowerTiers.CREATIVE));
+
+	public static final RegistryObject<BlockTestBattery> BatteryTest = registerBlock("battery_test_creative", () -> new BlockTestBattery(StaticPowerTiers.CREATIVE));
 
 	// Monitors
 	public static final RegistryObject<BlockPowerMonitor> PowerMonitor = registerBlock("power_monitor", () -> new BlockPowerMonitor());

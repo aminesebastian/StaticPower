@@ -1,4 +1,4 @@
-package theking530.api.power;
+package theking530.api.volts;
 
 import javax.annotation.Nullable;
 
@@ -154,7 +154,7 @@ public class PowerEnergyInterface implements IEnergyStorage, IStaticVoltHandler 
 		}
 
 		// Check for SV.
-		IStaticVoltHandler svHandler = stack.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
+		IStaticVoltHandler svHandler = stack.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).orElse(null);
 		if (svHandler != null) {
 			return new PowerEnergyInterface(svHandler);
 		}

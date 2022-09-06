@@ -32,7 +32,7 @@ import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilt
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
@@ -75,7 +75,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the power distribution component.
-		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage));
+		registerComponent(new OldPowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));

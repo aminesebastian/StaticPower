@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
@@ -49,7 +49,7 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		});
 
 		// Add static volt data.
-		te.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
+		te.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 			CompoundTag powerData = new CompoundTag();
 			powerData.putLong("value", powerStorage.getStoredPower());
 			powerData.putLong("max", powerStorage.getCapacity());

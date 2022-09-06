@@ -1,4 +1,4 @@
-package theking530.api.power;
+package theking530.api.volts;
 
 /**
  * Interface for defining a static volt handler.

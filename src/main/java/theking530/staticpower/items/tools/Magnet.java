@@ -25,7 +25,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
@@ -108,7 +108,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 
 		// Use power as needed.
 		if (droppedItems.size() > 0) {
-			stack.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
+			stack.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 				powerStorage.drainPower(1, false);
 			});
 		}
@@ -148,7 +148,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 
 		// Check the power.
 		if (isActivated(stack)) {
-			stack.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
+			stack.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 				if (powerStorage.getStoredPower() <= 0) {
 					toggleActivated(stack);
 				}

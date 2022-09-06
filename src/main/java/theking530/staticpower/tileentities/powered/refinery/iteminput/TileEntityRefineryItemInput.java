@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.volts.IStaticVoltHandler;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.data.StaticPowerTiers;

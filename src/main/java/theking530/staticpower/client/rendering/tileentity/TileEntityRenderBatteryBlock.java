@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.power.StaticVoltUtilities;
+import theking530.api.volts.StaticVoltUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;

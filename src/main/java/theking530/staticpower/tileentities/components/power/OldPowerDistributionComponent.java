@@ -8,23 +8,23 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.IStaticVoltHandler;
-import theking530.api.power.PowerEnergyInterface;
+import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.volts.IStaticVoltHandler;
+import theking530.api.volts.PowerEnergyInterface;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 
-public class PowerDistributionComponent extends AbstractTileEntityComponent {
+public class OldPowerDistributionComponent extends AbstractTileEntityComponent {
 
 	private IStaticVoltHandler energyStorage;
 	private MachineSideMode outputMode;
 
-	public PowerDistributionComponent(String name, IStaticVoltHandler energyStorage) {
+	public OldPowerDistributionComponent(String name, IStaticVoltHandler energyStorage) {
 		this(name, energyStorage, MachineSideMode.Output);
 	}
 
-	public PowerDistributionComponent(String name, IStaticVoltHandler energyStorage, MachineSideMode mode) {
+	public OldPowerDistributionComponent(String name, IStaticVoltHandler energyStorage, MachineSideMode mode) {
 		super(name);
 		this.energyStorage = energyStorage;
 		this.outputMode = mode;
@@ -81,7 +81,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 		}
 
 		// Check if the tile entity is a static volt handler.
-		LazyOptional<IStaticVoltHandler> powerStorageOptional = te.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, facing);
+		LazyOptional<IStaticVoltHandler> powerStorageOptional = te.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY, facing);
 		// If it is, return an interface based on that. Otherwise, check the same thing
 		// with energy storage instead.
 		if (powerStorageOptional.isPresent()) {

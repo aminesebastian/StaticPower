@@ -1,7 +1,7 @@
 package theking530.staticpower.tileentities.components.items;
 
 import net.minecraft.world.item.ItemStack;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.volts.IStaticVoltHandler;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryInventoryComponent extends InventoryComponent {

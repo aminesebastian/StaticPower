@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.api.power.StaticVoltUtilities;
+import theking530.api.volts.StaticVoltUtilities;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
@@ -27,7 +27,7 @@ import theking530.staticpower.tileentities.components.control.sideconfiguration.
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 
 public class TileEntityBattery extends TileEntityMachine {
 	@TileEntityTypePopulator()
@@ -78,7 +78,7 @@ public class TileEntityBattery extends TileEntityMachine {
 	private long inputRFTick;
 	private long outputRFTick;
 
-	protected PowerDistributionComponent powerDistributor;
+	protected OldPowerDistributionComponent powerDistributor;
 
 	public TileEntityBattery(BlockEntityTypeAllocator<TileEntityBattery> allocator, BlockPos pos, BlockState state, ResourceLocation tier) {
 		super(allocator, pos, state, tier);
@@ -87,7 +87,7 @@ public class TileEntityBattery extends TileEntityMachine {
 		this.ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION);
 
 		// Add the power distributor.
-		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage));
+		registerComponent(powerDistributor = new OldPowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the energy storage component.
 		energyStorage.setAutoSyncPacketsEnabled(true);

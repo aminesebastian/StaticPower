@@ -98,23 +98,23 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getCablePowerCapacity() {
-		return 1024000;
+	protected double getCablePowerMaxCurrent() {
+		return 100;
 	}
 
 	@Override
-	protected long getCablePowerDelivery() {
-		return 1024000;
+	protected double getCablePowerResistancePerBlock() {
+		return 0.0001;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerCapacity() {
-		return 8192000;
+	protected double getCableIndustrialPowerMaxCurrent() {
+		return 500;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerDelivery() {
-		return 8192000;
+	protected double getCableIndustrialPowerResistancePerBlock() {
+		return 0.001;
 	}
 
 	@Override

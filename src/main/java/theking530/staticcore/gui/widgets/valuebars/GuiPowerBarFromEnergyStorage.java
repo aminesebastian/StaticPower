@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.volts.IStaticVoltHandler;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 

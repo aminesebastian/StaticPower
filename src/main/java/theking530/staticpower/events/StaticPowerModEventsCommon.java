@@ -31,8 +31,9 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.digistore.CapabilityDigistoreInventory;
+import theking530.api.energy.consumer.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.StaticPower;
@@ -126,6 +127,8 @@ public class StaticPowerModEventsCommon {
 		CapabilityHeatable.register(event);
 		CapabilityAttributable.register(event);
 		CapabilityStaticPowerPlayerData.register(event);
+
+		CapabilityStaticPower.register(event);
 	}
 
 	@SubscribeEvent

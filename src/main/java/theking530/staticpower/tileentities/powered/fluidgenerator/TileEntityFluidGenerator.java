@@ -32,7 +32,7 @@ import theking530.staticpower.tileentities.components.items.FluidContainerInvent
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 
 public class TileEntityFluidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
@@ -60,7 +60,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 0, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
 
-		registerComponent(new PowerDistributionComponent("PowerDistributor", energyStorage));
+		registerComponent(new OldPowerDistributionComponent("PowerDistributor", energyStorage));
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluidStack) -> {

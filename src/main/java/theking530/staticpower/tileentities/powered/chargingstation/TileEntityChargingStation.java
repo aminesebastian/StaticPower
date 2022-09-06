@@ -10,7 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.api.power.StaticVoltUtilities;
+import theking530.api.volts.StaticVoltUtilities;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;

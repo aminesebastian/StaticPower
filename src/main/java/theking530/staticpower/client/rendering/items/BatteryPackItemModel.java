@@ -36,7 +36,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.volts.IStaticVoltHandler;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;

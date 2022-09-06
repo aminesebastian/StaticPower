@@ -8,8 +8,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.StaticVoltHandler;
+import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.volts.StaticVoltHandler;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
 import theking530.staticpower.client.gui.StaticPowerItemStackGui;
@@ -23,7 +23,7 @@ public class GuiMiningDrill extends StaticPowerItemStackGui<ContainerMiningDrill
 
 	public GuiMiningDrill(ContainerMiningDrill container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 176, 152);
-		StaticVoltHandler svHandler = (StaticVoltHandler) getItemStack().getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).orElse(null);
+		StaticVoltHandler svHandler = (StaticVoltHandler) getItemStack().getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).orElse(null);
 		if (svHandler != null) {
 			registerWidget(new GuiPowerBarFromEnergyStorage(svHandler, 8, 8, 16, 46));
 		}

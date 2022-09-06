@@ -1,4 +1,4 @@
-package theking530.api.power;
+package theking530.api.volts;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
@@ -8,7 +8,7 @@ import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 public class CapabilityStaticVolt {
 	public static final long mSV_TO_SV = 1000;
 	private static final long FE_TO_SV_CONVERSION = 10;
-	public static Capability<IStaticVoltHandler> STATIC_VOLT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+	public static Capability<IStaticVoltHandler> DEP_STATIC_VOLT_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
 	});
 
 	public static void register(RegisterCapabilitiesEvent event) {

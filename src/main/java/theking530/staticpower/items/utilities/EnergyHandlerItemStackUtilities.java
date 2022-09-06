@@ -5,8 +5,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.IStaticVoltHandler;
+import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.volts.IStaticVoltHandler;
 
 /**
  * Library class containing useful functions to interact with an static volt
@@ -31,7 +31,7 @@ public class EnergyHandlerItemStackUtilities {
 	 *         otherwise.
 	 */
 	public static boolean isEnergyContainer(ItemStack container) {
-		return container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).isPresent();
+		return container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).isPresent();
 	}
 
 	/**
@@ -41,7 +41,7 @@ public class EnergyHandlerItemStackUtilities {
 	 * @return The IStaticVoltHandler associated with the provided container.
 	 */
 	public static LazyOptional<IStaticVoltHandler> getEnergyContainer(ItemStack container) {
-		return container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY);
+		return container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY);
 	}
 
 	/**
@@ -53,7 +53,7 @@ public class EnergyHandlerItemStackUtilities {
 	 *                  to.
 	 */
 	public static void setEnergy(ItemStack container, long energy) {
-		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			instance.receivePower(energy, false);
 		});
 	}
@@ -65,7 +65,7 @@ public class EnergyHandlerItemStackUtilities {
 	 */
 	public static long getStoredPower(ItemStack container) {
 		AtomicLong energy = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			energy.set(instance.getStoredPower());
 		});
 		return energy.get();
@@ -79,7 +79,7 @@ public class EnergyHandlerItemStackUtilities {
 	 */
 	public static long getCapacity(ItemStack container) {
 		AtomicLong energy = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			energy.set(instance.getCapacity());
 		});
 		return energy.get();
@@ -95,7 +95,7 @@ public class EnergyHandlerItemStackUtilities {
 	 */
 	public static long receivePower(ItemStack container, long maxReceive, boolean simulate) {
 		AtomicLong received = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			received.set(instance.receivePower(maxReceive, simulate));
 		});
 		return received.get();
@@ -111,7 +111,7 @@ public class EnergyHandlerItemStackUtilities {
 	 */
 	public static long drainPower(ItemStack container, long maxExtract, boolean simulate) {
 		AtomicLong extracted = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
+		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
 			extracted.set(instance.drainPower(maxExtract, simulate));
 		});
 		return extracted.get();

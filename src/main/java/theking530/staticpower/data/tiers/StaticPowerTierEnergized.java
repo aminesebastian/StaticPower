@@ -98,23 +98,23 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getCablePowerCapacity() {
-		return 512000;
+	protected double getCablePowerMaxCurrent() {
+		return 75;
 	}
 
 	@Override
-	protected long getCablePowerDelivery() {
-		return 512000;
+	protected double getCablePowerResistancePerBlock() {
+		return 0.0005;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerCapacity() {
-		return 4096000;
+	protected double getCableIndustrialPowerMaxCurrent() {
+		return 400;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerDelivery() {
-		return 4096000;
+	protected double getCableIndustrialPowerResistancePerBlock() {
+		return 0.005;
 	}
 
 	@Override
@@ -236,6 +236,7 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	protected long getDefaultMachinePowerOutput() {
 		return 64000;
 	}
+
 	protected int getDefaultMachineOverheatTemperature() {
 		return CapabilityHeatable.convertHeatToMilliHeat(1400);
 	}
@@ -243,6 +244,7 @@ public class StaticPowerTierEnergized extends StaticPowerTier {
 	protected int getDefaultMachineMaximumTemperature() {
 		return CapabilityHeatable.convertHeatToMilliHeat(2000);
 	}
+
 	@Override
 	protected int getDefaultTankCapacity() {
 		return 15000;

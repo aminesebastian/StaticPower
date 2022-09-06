@@ -55,10 +55,11 @@ public abstract class StaticPowerTier {
 	/***************************
 	 * Power Cable Configuration
 	 ***************************/
-	public final LongValue cablePowerCapacity;
-	public final LongValue cablePowerDelivery;
-	public final LongValue cableIndustrialPowerCapacity;
-	public final LongValue cableIndustrialPowerDelivery;
+	public final ConfigValue<Double> cablePowerMaxCurrent;
+	public final ConfigValue<Double> cablePowerResistancePerBlock;
+
+	public final ConfigValue<Double> cableIndustrialPowerMaxCurrent;
+	public final ConfigValue<Double> cableIndustrialPowerResistancePerBlock;
 
 	/**************************
 	 * Item Cable Configuration
@@ -339,19 +340,21 @@ public abstract class StaticPowerTier {
 		 * Power
 		 ********/
 		builder.push("Power");
-		cablePowerCapacity = builder.comment("The amount of power that a power cable of this tier can store (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "cablePowerCapacity").defineInRange("CablePowerCapacity", this.getCablePowerCapacity(), 0, Long.MAX_VALUE);
-		cablePowerDelivery = builder.comment("The amount of power that a power cable of this tier can supply to a single destination (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "cablePowerDelivery").defineInRange("CablePowerDelivery", this.getCablePowerDelivery(), 0, Long.MAX_VALUE);
 
-		cableIndustrialPowerCapacity = builder.comment("The amount of power that an industrial power cable of this tier can store (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerCapacity")
-				.defineInRange("CableIndustrialPowerCapacity", this.getCableIndustrialPowerCapacity(), 0, Long.MAX_VALUE);
-		cableIndustrialPowerDelivery = builder
-				.comment("The amount of power that an industrial power cable of this tier can supply to a single destination (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerDelivery")
-				.defineInRange("CableIndustrialPowerDelivery", this.getCableIndustrialPowerDelivery(), 0, Long.MAX_VALUE);
+		cablePowerMaxCurrent = builder.comment("The amount of current this cable can transfer before breaking.").translation(StaticPower.MOD_ID + ".config." + "cablePowerCapacity")
+				.defineInRange("CablePowerMaxCurrent", this.getCablePowerMaxCurrent(), 0, Double.MAX_VALUE);
+		cablePowerResistancePerBlock = builder.comment(
+				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
+				.translation(StaticPower.MOD_ID + ".config." + "cablePowerResistancePerBlock")
+				.defineInRange("CablePowerResistancePerBlock", this.getCablePowerResistancePerBlock(), 0, Double.MAX_VALUE);
 
+		cableIndustrialPowerMaxCurrent = builder.comment("The amount of current that an industrial cable can transfer before breaking.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerMaxCurrent")
+				.defineInRange("CableIndustrialPowerMaxCurrent", this.getCableIndustrialPowerMaxCurrent(), 0, Double.MAX_VALUE);
+		cableIndustrialPowerResistancePerBlock = builder.comment(
+				"The resistance of this industrial cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerResistancePerBlock")
+				.defineInRange("CableIndustrialPowerResistancePerBlock", this.getCableIndustrialPowerResistancePerBlock(), 0, Double.MAX_VALUE);
 		builder.pop();
 
 		/********
@@ -736,19 +739,19 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
-	protected long getCablePowerCapacity() {
+	protected double getCablePowerMaxCurrent() {
 		return 0;
 	}
 
-	protected long getCablePowerDelivery() {
+	protected double getCablePowerResistancePerBlock() {
 		return 0;
 	}
 
-	protected long getCableIndustrialPowerCapacity() {
+	protected double getCableIndustrialPowerMaxCurrent() {
 		return 0;
 	}
 
-	protected long getCableIndustrialPowerDelivery() {
+	protected double getCableIndustrialPowerResistancePerBlock() {
 		return 0;
 	}
 

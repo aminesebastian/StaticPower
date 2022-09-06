@@ -20,8 +20,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.PowerEnergyInterface;
+import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.volts.PowerEnergyInterface;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
@@ -84,7 +84,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 		// If we're in a player's inventory.
 		if (isActivated(stack) && entityIn instanceof Player) {
 			// Get the power capability.
-			stack.getCapability(CapabilityStaticVolt.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
+			stack.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 				// If power is stored, attempt to charge items.
 				if (powerStorage.getStoredPower() > 0) {
 					// Get the player.

@@ -21,13 +21,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockIndustrialPowerCable extends AbstractCableBlock {
@@ -46,10 +46,13 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.power_cable_max_rate"));
-		tooltip.add(new TextComponent("� ").append(new TextComponent(
-				ChatFormatting.LIGHT_PURPLE + GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerDelivery.get()).getString())));
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(ChatFormatting.RED)));
+		tooltip.add(new TranslatableComponent("gui.staticpower.power_cable_max_current"));
+		tooltip.add(new TextComponent(" •").append(new TextComponent(
+				ChatFormatting.RED + StaticPowerEnergyTextUtilities.formatCurrentToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerMaxCurrent.get()).getString())));
+
+		tooltip.add(new TranslatableComponent("gui.staticpower.power_cable_resistance"));
+		tooltip.add(new TextComponent(" •").append(new TextComponent(ChatFormatting.GOLD
+				+ StaticPowerEnergyTextUtilities.formatResistanceToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerResistancePerBlock.get()).getString())));
 	}
 
 	@Override

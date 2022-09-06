@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.api.power.StaticVoltUtilities;
+import theking530.api.volts.StaticVoltUtilities;
 import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
@@ -31,7 +31,7 @@ import theking530.staticpower.tileentities.components.items.BatteryInventoryComp
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
 import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
-import theking530.staticpower.tileentities.components.power.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 import theking530.staticpower.tileentities.components.power.PowerTransferMetrics;
 import theking530.staticpower.tileentities.components.power.PowerTransferMetrics.MetricCategory;
 import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
@@ -64,13 +64,13 @@ public class TileEntityPowerMonitor extends TileEntityMachine implements IPowerM
 	private long inputRFTick;
 	private long outputRFTick;
 
-	protected PowerDistributionComponent powerDistributor;
+	protected OldPowerDistributionComponent powerDistributor;
 
 	public TileEntityPowerMonitor(BlockEntityTypeAllocator<TileEntityPowerMonitor> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 
 		// Add the power distributor.
-		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", energyStorage));
+		registerComponent(powerDistributor = new OldPowerDistributionComponent("PowerDistributor", energyStorage));
 
 		// Setup the energy storage component.
 		energyStorage.setAutoSyncPacketsEnabled(true);

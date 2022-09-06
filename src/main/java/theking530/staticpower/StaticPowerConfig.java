@@ -18,7 +18,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.power.CapabilityStaticVolt;
+import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticpower.data.StaticPowerTier;
 
 @EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)

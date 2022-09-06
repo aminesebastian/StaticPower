@@ -47,23 +47,23 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getCablePowerCapacity() {
-		return Long.MAX_VALUE;
+	protected double getCablePowerMaxCurrent() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override
-	protected long getCablePowerDelivery() {
-		return Long.MAX_VALUE;
+	protected double getCablePowerResistancePerBlock() {
+		return 0;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerCapacity() {
-		return Long.MAX_VALUE;
+	protected double getCableIndustrialPowerMaxCurrent() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerDelivery() {
-		return Long.MAX_VALUE;
+	protected double getCableIndustrialPowerResistancePerBlock() {
+		return 0;
 	}
 
 	@Override

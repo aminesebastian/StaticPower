@@ -68,6 +68,7 @@ public class GuiTextUtilities {
 	 * @param energy The amount of energy to format.
 	 * @return The formatted string.
 	 */
+	@Deprecated
 	public static MutableComponent formatEnergyToString(long energy, boolean includeUnits, boolean includeMetricUnit) {
 		// Allocate the text component.
 		MutableComponent output;
@@ -92,10 +93,12 @@ public class GuiTextUtilities {
 		return output;
 	}
 
+	@Deprecated
 	public static MutableComponent formatEnergyToString(long energy, boolean includeUnits) {
 		return formatEnergyToString(energy, includeUnits, true);
 	}
 
+	@Deprecated
 	public static MutableComponent formatEnergyToString(long energy) {
 		return formatEnergyToString(energy, true, true);
 	}
@@ -109,6 +112,7 @@ public class GuiTextUtilities {
 	 * @param capacity The maximum amount of energy to use as the denominator.
 	 * @return The formatted string.
 	 */
+	@Deprecated
 	public static MutableComponent formatEnergyToString(long energy, long capacity) {
 		return formatEnergyToString(energy, false, true).append("/").append(formatEnergyToString(capacity));
 

@@ -85,6 +85,7 @@ public abstract class AbstractTileEntityComponent {
 	/**
 	 * This method is called when the owning tile entity is first placed in the
 	 * world.
+	 * 
 	 * @param context TODO
 	 * @param state
 	 * @param placer
@@ -201,5 +202,9 @@ public abstract class AbstractTileEntityComponent {
 
 	public Level getLevel() {
 		return getTileEntity().getLevel();
+	}
+
+	public boolean isOnClientSide() {
+		return getTileEntity().isOnClientSide();
 	}
 }

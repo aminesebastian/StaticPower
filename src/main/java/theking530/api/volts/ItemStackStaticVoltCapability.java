@@ -1,4 +1,4 @@
-package theking530.api.power;
+package theking530.api.volts;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.capabilities.Capability;
@@ -34,7 +34,7 @@ public class ItemStackStaticVoltCapability extends StaticVoltHandler implements 
 
 	@Override
 	public Capability<?>[] getCapabilityTypes() {
-		return new Capability<?>[] { CapabilityStaticVolt.STATIC_VOLT_CAPABILITY, CapabilityEnergy.ENERGY };
+		return new Capability<?>[] { CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY, CapabilityEnergy.ENERGY };
 	}
 
 	@Override

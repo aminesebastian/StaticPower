@@ -98,23 +98,23 @@ public class StaticPowerTierBasic extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getCablePowerCapacity() {
-		return 32000;
+	protected double getCablePowerMaxCurrent() {
+		return 15;
 	}
 
 	@Override
-	protected long getCablePowerDelivery() {
-		return 32000;
+	protected double getCablePowerResistancePerBlock() {
+		return 0.01;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerCapacity() {
-		return 256000;
+	protected double getCableIndustrialPowerMaxCurrent() {
+		return 100;
 	}
 
 	@Override
-	protected long getCableIndustrialPowerDelivery() {
-		return 256000;
+	protected double getCableIndustrialPowerResistancePerBlock() {
+		return 0.1;
 	}
 
 	@Override

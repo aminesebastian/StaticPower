@@ -9,10 +9,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.IEnergyStorage;
 import theking530.api.IUpgradeItem.UpgradeType;
-import theking530.api.power.CapabilityStaticVolt;
-import theking530.api.power.IStaticVoltHandler;
-import theking530.api.power.StaticVoltAutoConverter;
-import theking530.api.power.StaticVoltHandler;
+import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.volts.IStaticVoltHandler;
+import theking530.api.volts.StaticVoltAutoConverter;
+import theking530.api.volts.StaticVoltHandler;
 import theking530.staticcore.utilities.TriFunction;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
@@ -327,7 +327,7 @@ public class EnergyStorageComponent extends AbstractTileEntityComponent implemen
 	 * @return
 	 */
 	public <T> LazyOptional<T> manuallyGetCapability(Capability<T> cap, Direction side) {
-		if (cap == CapabilityStaticVolt.STATIC_VOLT_CAPABILITY) {
+		if (cap == CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY) {
 			if (side != null) {
 				return LazyOptional.of(() -> staticVoltAccessors.get(side)).cast();
 			} else {

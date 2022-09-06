@@ -137,22 +137,35 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	/**
-	 * Checks to see if the provided side is disabled. This should only be called on
-	 * the client. The server should query the {@link ServerCable} directly.
+	 * Checks to see if the provided side is disabled. On the client, this checks
+	 * the locally cached disabled state. On the server, it checks the actual
+	 * {@link ServerCable}'s diabled state.
 	 * 
 	 * @param side
 	 * @return
 	 */
 	public boolean isSideDisabled(Direction side) {
-		return disabledSides[side.ordinal()];
+		if (isOnClientSide()) {
+			return disabledSides[side.ordinal()];
+		}
+
+		Optional<ServerCable> cable = getCable();
+		return cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
 	}
 
+	/**
+	 * On the client, this sets the local disabled state. On the server, this sets
+	 * the {@link ServerCable}'s disabled state.
+	 * 
+	 * @param side
+	 * @param disabledState
+	 */
 	public void setSideDisabledState(Direction side, boolean disabledState) {
 		if (disabledState != disabledSides[side.ordinal()]) {
 			disabledSides[side.ordinal()] = disabledState;
 			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			getTileEntity().requestModelDataUpdate();
-			if (!getLevel().isClientSide) {
+			if (!isOnClientSide()) {
 				CableNetworkManager.get(getLevel()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
 			}
 		}
