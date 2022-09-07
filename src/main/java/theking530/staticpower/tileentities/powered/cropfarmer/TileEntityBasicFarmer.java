@@ -102,14 +102,15 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 128));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
 				.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.basicFarmerProcessingTime.get(), this::canFarm,
-				this::canFarm, this::processingCompleted, true).setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent)
-				.setEnergyComponent(energyStorage).setProcessingPowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get())
-				.setCompletedPowerUsage(StaticPowerConfig.SERVER.basicFarmerHarvestPowerUsage.get()));
+				this::canFarm, this::processingCompleted, true));
+		processingComponent.setUpgradeInventory(upgradesInventory).setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage)
+				.setProcessingPowerUsage(StaticPowerConfig.SERVER.basicFarmerPowerUsage.get());
+
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
 			return StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluid)).isPresent();
 		}));
@@ -123,7 +124,7 @@ public class TileEntityBasicFarmer extends TileEntityMachine {
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 		range = StaticPowerConfig.SERVER.basicFarmerDefaultRange.get();
 		blocks = new LinkedList<BlockPos>();
 		shouldDrawRadiusPreview = false;

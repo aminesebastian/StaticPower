@@ -5,6 +5,7 @@ import java.text.NumberFormat;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class StaticPowerEnergyTextUtilities {
@@ -24,7 +25,7 @@ public class StaticPowerEnergyTextUtilities {
 	/** Translation text component for Static Power (P). */
 	public static final TranslatableComponent POWER_UNIT = new TranslatableComponent("gui.staticpower.power_unit");
 	/** Translation text component for Static Power Per Tick (P/t). */
-	public static final TranslatableComponent POWER_RATE_UNIT = new TranslatableComponent("gui.power_unit_per_tick.power_unit_per_tick");
+	public static final TranslatableComponent POWER_RATE_UNIT = new TranslatableComponent("gui.staticpower.power_unit_per_tick");
 
 	/** Translation text component for Static Resistance (Ω). */
 	public static final TranslatableComponent RESISTANCE_UNIT = new TranslatableComponent("gui.staticpower.power_resistance_unit");
@@ -126,6 +127,18 @@ public class StaticPowerEnergyTextUtilities {
 
 	public static MutableComponent formatVoltageToString(double voltage) {
 		return formatVoltageToString(voltage, true, true);
+	}
+
+	public static MutableComponent formatVoltageRangeToString(StaticVoltageRange range) {
+		if (range.minimumVoltage() == range.maximumVoltage()) {
+			return formatVoltageToString(range.maximumVoltage());
+		} else if (range.minimumVoltage() == 0) {
+			return new TextComponent("<").append(StaticPowerEnergyTextUtilities.formatVoltageToString(range.maximumVoltage()));
+		} else if (range.maximumVoltage() == Double.MAX_VALUE) {
+			return new TextComponent(">").append(StaticPowerEnergyTextUtilities.formatVoltageToString(range.minimumVoltage()));
+		} else {
+			return formatVoltageToString(range.minimumVoltage()).append("⇔").append(formatVoltageToString(range.maximumVoltage()));
+		}
 	}
 
 	public static MutableComponent formatCurrentToString(double current, boolean includeUnits, boolean includeMetricUnit) {

@@ -5,15 +5,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.PacketDistributor;
+import theking530.api.energy.metrics.IPowerMetricsSyncConsumer;
+import theking530.api.energy.metrics.PowerTransferMetrics;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
-import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
-import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
-import theking530.staticpower.tileentities.components.power.IPowerMetricsSyncConsumer;
-import theking530.staticpower.tileentities.components.power.PowerTransferMetrics;
 
 public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEntityPowerCable> implements IPowerMetricsSyncConsumer {
 	@ContainerTypePopulator

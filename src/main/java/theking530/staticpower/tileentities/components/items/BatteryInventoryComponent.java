@@ -1,16 +1,16 @@
 package theking530.staticpower.tileentities.components.items;
 
 import net.minecraft.world.item.ItemStack;
-import theking530.api.volts.IStaticVoltHandler;
+import theking530.api.energy.IStaticPowerStorage;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryInventoryComponent extends InventoryComponent {
 
-	private IStaticVoltHandler EnergyStorage;
+	private IStaticPowerStorage powerStorage;
 
-	public BatteryInventoryComponent(String name, IStaticVoltHandler energyStorage) {
+	public BatteryInventoryComponent(String name, IStaticPowerStorage powerStorage) {
 		super(name, 1);
-		EnergyStorage = energyStorage;
+		this.powerStorage = powerStorage;
 		setShiftClickEnabled(true);
 		setShiftClickPriority(-1);
 		setCapabilityExtractEnabled(false);
@@ -22,24 +22,26 @@ public class BatteryInventoryComponent extends InventoryComponent {
 		});
 	}
 
-	@SuppressWarnings("resource")
 	@Override
 	public void preProcessUpdate() {
 		if (!isEnabled()) {
 			return;
 		}
 
-		if (!getLevel().isClientSide) {
-			if (EnergyStorage.getStoredPower() < EnergyStorage.getCapacity()) {
-				ItemStack candidate = getStackInSlot(0);
-				if (candidate != null) {
-					if (EnergyHandlerItemStackUtilities.isEnergyContainer(candidate)) {
-						long maxInput = Math.min(EnergyStorage.getCapacity() - EnergyStorage.getStoredPower(), EnergyStorage.getMaxReceive());
-						long recieved = EnergyHandlerItemStackUtilities.drainPower(candidate, maxInput, false);
-						EnergyStorage.receivePower(recieved, false);
-					}
-				}
-			}
+		if (getLevel().isClientSide()) {
+			return;
+		}
+
+		ItemStack candidate = getStackInSlot(0);
+		if (candidate == null || candidate.isEmpty() || !EnergyHandlerItemStackUtilities.isEnergyContainer(candidate)) {
+			return;
+		}
+
+		double candidateVoltage = EnergyHandlerItemStackUtilities.getVoltageOutput(candidate);
+		if (powerStorage.getInputVoltageRange().isVoltageInRange(candidateVoltage)) {
+			double requiredPower = powerStorage.addPower(candidateVoltage, Double.MAX_VALUE, true);
+			double maxPowerToSupply = EnergyHandlerItemStackUtilities.usePower(candidate, requiredPower, false);
+			powerStorage.addPower(candidateVoltage, maxPowerToSupply, false);
 		}
 	}
 }

@@ -1,4 +1,4 @@
-package theking530.api.energy.consumer;
+package theking530.api.energy;
 
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;

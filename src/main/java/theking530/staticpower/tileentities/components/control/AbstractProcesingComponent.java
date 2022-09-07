@@ -3,19 +3,19 @@ package theking530.staticpower.tileentities.components.control;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.IUpgradeItem.UpgradeType;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.tileentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.SaveSerialize;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public abstract class AbstractProcesingComponent extends AbstractTileEntityComponent {
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
-	protected EnergyStorageComponent powerComponent;
+	protected PowerStorageComponent powerComponent;
 	protected RedstoneControlComponent redstoneControlComponent;
 
 	@UpdateSerialize
@@ -43,18 +43,11 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 	private float processingSpeedUpgradeMultiplier;
 
 	@UpdateSerialize
-	protected long powerUsage;
+	protected double powerUsage;
 	@SaveSerialize
-	protected long defaultPowerUsage;
+	protected double defaultPowerUsage;
 	@SaveSerialize
 	protected boolean hasProcessingPowerCost;
-
-	@UpdateSerialize
-	protected long completedPowerUsage;
-	@SaveSerialize
-	protected long completedDefaultPowerUsage;
-	@SaveSerialize
-	protected boolean hasCompletedPowerCost;
 
 	/**
 	 * The power multiplier as calculated from the speed upgrade.
@@ -88,7 +81,6 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		this.processingSpeedUpgradeMultiplier = 1.0f;
 		this.hasProcessingPowerCost = false;
 		this.powerUsageIncreaseMultiplier = 1.0f;
-		this.hasCompletedPowerCost = false;
 		this.processingErrorMessage = "";
 		this.processingStoppedDueToError = false;
 		this.powerMultiplier = 1.0f;
@@ -200,13 +192,6 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 					processingStoppedDueToError = true;
 					processingErrorMessage = completedState.getErrorMessage();
 				} else {
-					// If it is okay, then complete processing.
-					if (completedState.isOk()) {
-						// Use the complete power if requested to.
-						if (hasCompletedPowerCost && powerComponent != null && powerComponent != null) {
-							powerComponent.useBulkPower(getCompletedPowerUsage());
-						}
-					}
 					// If it is cancel or an ok, finish processing. If it is skip, do nothing.
 					if (completedState.isOk() || completedState.isCancel()) {
 						// Stop processing since we completed.
@@ -394,30 +379,19 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return this;
 	}
 
-	public AbstractProcesingComponent setEnergyComponent(EnergyStorageComponent energyComponent) {
+	public AbstractProcesingComponent setPowerComponent(PowerStorageComponent energyComponent) {
 		this.powerComponent = energyComponent;
 		return this;
 	}
 
-	public AbstractProcesingComponent setProcessingPowerUsage(long power) {
+	public AbstractProcesingComponent setProcessingPowerUsage(double power) {
 		if (power <= 0) {
 			return this;
 		}
 
 		hasProcessingPowerCost = true;
 		defaultPowerUsage = power;
-		powerUsage = (long) (defaultPowerUsage * powerUsageIncreaseMultiplier);
-		return this;
-	}
-
-	public AbstractProcesingComponent setCompletedPowerUsage(long power) {
-		if (power <= 0) {
-			return this;
-		}
-
-		hasCompletedPowerCost = true;
-		completedDefaultPowerUsage = power;
-		completedPowerUsage = (long) (completedDefaultPowerUsage * powerUsageIncreaseMultiplier);
+		powerUsage = defaultPowerUsage * powerUsageIncreaseMultiplier;
 		return this;
 	}
 
@@ -428,11 +402,6 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	public AbstractProcesingComponent disableProcessingPowerUsage() {
 		hasProcessingPowerCost = false;
-		return this;
-	}
-
-	public AbstractProcesingComponent disableCompletedPowerUsage() {
-		hasCompletedPowerCost = false;
 		return this;
 	}
 
@@ -457,12 +426,8 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 		return powerMultiplier;
 	}
 
-	public int getPowerUsage() {
-		return (int) (powerUsage * powerMultiplier);
-	}
-
-	public int getCompletedPowerUsage() {
-		return (int) (completedPowerUsage * powerMultiplier);
+	public double getPowerUsage() {
+		return powerUsage * powerMultiplier;
 	}
 
 	protected void checkUpgrades() {
@@ -491,7 +456,6 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 		// Set the power usages.
 		powerUsage = (int) (defaultPowerUsage * powerUsageIncreaseMultiplier);
-		completedPowerUsage = (int) (completedDefaultPowerUsage * powerUsageIncreaseMultiplier);
 	}
 
 	/**
@@ -531,18 +495,14 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	protected ProcessingCheckState checkPowerRequirements() {
 		// Check the processing power cost.
-		if (hasProcessingPowerCost && powerComponent != null && !powerComponent.hasEnoughPower(getPowerUsage())) {
+		if (hasProcessingPowerCost && powerComponent != null && powerComponent.getStoredPower() < getPowerUsage()) {
 			return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
 		}
 		// Check the processing power rate.
-		if (hasProcessingPowerCost && powerComponent != null && powerComponent.getMaxDrain() < getPowerUsage()) {
-			return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (").append(GuiTextUtilities.formatEnergyRateToString(getPowerUsage()))
-					.append(") is larger than the max for this machine!").getString());
-		}
-
-		// Check the completion power cost.
-		if (hasCompletedPowerCost && powerComponent != null && !powerComponent.hasEnoughPower(getCompletedPowerUsage())) {
-			return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
+		double drainedPower = powerComponent.drainPower(getPowerUsage(), true);
+		if (hasProcessingPowerCost && powerComponent != null && drainedPower < getPowerUsage()) {
+			return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (")
+					.append(StaticPowerEnergyTextUtilities.formatPowerRateToString(getPowerUsage())).append(") is larger than the amount this machine can handle!").getString());
 		}
 
 		// If we made it this far, return true.
@@ -646,8 +606,9 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			return new ProcessingCheckState(ProcessingState.ERROR, "Output tank does not have enough space!");
 		}
 
-		public static ProcessingCheckState notEnoughPower(long requiredPower) {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Not enough power! " + GuiTextUtilities.formatEnergyToString(requiredPower).getString() + " required!");
+		public static ProcessingCheckState notEnoughPower(double requiredPower) {
+			return new ProcessingCheckState(ProcessingState.ERROR,
+					"Not enough power! " + StaticPowerEnergyTextUtilities.formatPowerRateToString(requiredPower).getString() + " required!");
 		}
 
 		public static ProcessingCheckState powerOutputFull() {

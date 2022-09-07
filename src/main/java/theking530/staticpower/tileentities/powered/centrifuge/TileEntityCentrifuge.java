@@ -34,7 +34,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityCentrifuge extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCentrifuge(pos, state), ModBlocks.Centrifuge);
+	public static final BlockEntityTypeAllocator<TileEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityCentrifuge(pos, state),
+			ModBlocks.Centrifuge);
 
 	public final InventoryComponent inputInventory;
 
@@ -52,7 +53,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 	@UpdateSerialize
 	private int maxSpeed;
 	@UpdateSerialize
-	private long centrifugeMotorPowerCost;
+	private double centrifugeMotorPowerCost;
 
 	public TileEntityCentrifuge(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.ADVANCED);
@@ -71,7 +72,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		registerComponent(secondOutputInventory = new InventoryComponent("SecondOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(thirdOutputInventory = new InventoryComponent("ThirdOutputInventory", 1, MachineSideMode.Output4));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
@@ -83,7 +84,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the I/O servos.
@@ -93,7 +94,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo3", 4, thirdOutputInventory));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Set the max speed and power cost.
 		maxSpeed = StaticPowerConfig.SERVER.centrifugeInitialMaxSpeed.get();
@@ -175,8 +176,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 			if (currentSpeed > maxSpeed) {
 				currentSpeed -= 2;
 			} else {
-				if (energyStorage.hasEnoughPower(centrifugeMotorPowerCost) && redstoneControlComponent.passesRedstoneCheck()) {
-					energyStorage.useBulkPower(centrifugeMotorPowerCost);
+				if (powerStorage.hasEnoughPower(centrifugeMotorPowerCost) && redstoneControlComponent.passesRedstoneCheck()) {
+					powerStorage.usePowerIgnoringVoltageLimitations(centrifugeMotorPowerCost);
 					currentSpeed = SDMath.clamp(currentSpeed + 1, 0, maxSpeed);
 				} else {
 					currentSpeed = SDMath.clamp(currentSpeed - 1, 0, maxSpeed);
@@ -201,7 +202,7 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 		// new max speed.
 		if (!upgradeWrapper.isEmpty()) {
 			maxSpeed = upgradeWrapper.getTier().maxCentrifugeSpeedUpgrade.get();
-			centrifugeMotorPowerCost = (long) (StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get() * (1.0f + upgradeWrapper.getTier().centrifugeUpgradedPowerIncrease.get()));
+			centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get() * (1.0f + upgradeWrapper.getTier().centrifugeUpgradedPowerIncrease.get());
 		} else {
 			maxSpeed = StaticPowerConfig.SERVER.centrifugeInitialMaxSpeed.get();
 			centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get();
@@ -223,8 +224,8 @@ public class TileEntityCentrifuge extends TileEntityMachine {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2 || mode == MachineSideMode.Output3
-				|| mode == MachineSideMode.Output4;
+		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
+				|| mode == MachineSideMode.Output3 || mode == MachineSideMode.Output4;
 	}
 
 	@Override

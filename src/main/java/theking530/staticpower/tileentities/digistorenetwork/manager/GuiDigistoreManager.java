@@ -5,7 +5,7 @@ import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab.TabSide;
 import theking530.staticcore.gui.widgets.tabs.GuiPowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigistoreManager, TileEntityDigistoreManager> {
@@ -16,7 +16,7 @@ public class GuiDigistoreManager extends StaticPowerTileEntityGui<ContainerDigis
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
+		registerWidget(new GuiPowerBarFromStorage(getTileEntity().energyStorage, 8, 8, 16, 52));
 
 		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));

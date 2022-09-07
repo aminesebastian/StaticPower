@@ -83,7 +83,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
@@ -93,7 +93,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.laboratoryPowerUsage.get());
 
@@ -101,7 +101,7 @@ public class TileEntityLaboratory extends TileEntityMachine {
 		registerComponent(new InputServoComponent("InputServo", 4, inputInventory));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override

@@ -12,8 +12,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public abstract class AbstractDigistoreCableAttachment extends AbstractCableAttachment {
 
@@ -21,7 +21,7 @@ public abstract class AbstractDigistoreCableAttachment extends AbstractCableAtta
 		super();
 	}
 
-	public abstract long getPowerUsage(ItemStack attachment);
+	public abstract double getPowerUsage(ItemStack attachment);
 
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
@@ -29,10 +29,10 @@ public abstract class AbstractDigistoreCableAttachment extends AbstractCableAtta
 
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
-		long powerUsage = getPowerUsage(stack);
+		double powerUsage = getPowerUsage(stack);
 		if (powerUsage > 0) {
 			tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.digistore_attachment_power_usage").withStyle(ChatFormatting.GREEN)
-					.append(ChatFormatting.WHITE.toString() + GuiTextUtilities.formatEnergyRateToString(powerUsage).getString())));
+					.append(ChatFormatting.WHITE.toString() + StaticPowerEnergyTextUtilities.formatPowerRateToString(powerUsage).getString())));
 		}
 	}
 }

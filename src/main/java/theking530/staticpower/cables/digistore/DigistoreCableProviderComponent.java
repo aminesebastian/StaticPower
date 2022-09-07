@@ -37,7 +37,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	private boolean managerPresent;
 	private int managerPresenceUpdateTimer;
 	private boolean shouldControlOnBlockState;
-	private long powerUsage;
+	private double powerUsage;
 
 	/**
 	 * This is for any tile entities or blocks that must attach to the digistore
@@ -56,7 +56,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	 * @param name
 	 * @param powerUsage
 	 */
-	public DigistoreCableProviderComponent(String name, long powerUsage) {
+	public DigistoreCableProviderComponent(String name, double powerUsage) {
 		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
 		shouldControlOnBlockState = false;
 		this.powerUsage = powerUsage;
@@ -144,7 +144,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		// Throw this in a try catch because I'm skeptical about doing this.
 		try {
 			// Update the cable value on the server.
-			long attachmentPowerUsage = 0;
+			double attachmentPowerUsage = 0;
 			for (ItemStack attachment : attachments) {
 				if (attachment.getItem() instanceof AbstractDigistoreCableAttachment) {
 					AbstractDigistoreCableAttachment attachmentItem = (AbstractDigistoreCableAttachment) attachment.getItem();
@@ -161,11 +161,11 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		}
 	}
 
-	public long getBasePowerUsage() {
+	public double getBasePowerUsage() {
 		return powerUsage;
 	}
 
-	public DigistoreCableProviderComponent setBasePowerUsage(long usage) {
+	public DigistoreCableProviderComponent setBasePowerUsage(double usage) {
 		this.powerUsage = usage;
 		return this;
 	}

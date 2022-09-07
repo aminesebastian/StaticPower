@@ -80,8 +80,8 @@ public class DigistoreExporterAttachment extends AbstractDigistoreCableAttachmen
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
-		return 1000;
+	public double getPowerUsage(ItemStack attachment) {
+		return 1;
 	}
 
 	public boolean increaseSupplierTimer(ItemStack attachment) {

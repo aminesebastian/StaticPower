@@ -25,17 +25,18 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.volts.CapabilityStaticVolt;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class Magnet extends StaticPowerEnergyStoringItem {
 	private static final String ACTIVATED_TAG = "activated";
 	private final ResourceLocation tier;
 
 	public Magnet(ResourceLocation tier) {
-		super(0);
 		this.tier = tier;
 	}
 
@@ -108,9 +109,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 
 		// Use power as needed.
 		if (droppedItems.size() > 0) {
-			stack.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
-				powerStorage.drainPower(1, false);
-			});
+			EnergyHandlerItemStackUtilities.usePower(stack, 1, false);
 		}
 	}
 
@@ -146,13 +145,11 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 			toggleActivated(stack);
 		}
 
-		// Check the power.
+		// Check the power and toggle back off if we don't have any.
 		if (isActivated(stack)) {
-			stack.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
-				if (powerStorage.getStoredPower() <= 0) {
-					toggleActivated(stack);
-				}
-			});
+			if (EnergyHandlerItemStackUtilities.getStoredPower(stack) <= 0) {
+				toggleActivated(stack);
+			}
 		}
 
 		// Pull Items.
@@ -166,11 +163,6 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 		return isActivated(stack);
 	}
 
-	@Override
-	public long getCapacity() {
-		return StaticPowerConfig.getTier(tier).magnetPowerCapacity.get();
-	}
-
 	/**
 	 * When shift right clicked, toggle activation.
 	 */
@@ -181,5 +173,20 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 			return InteractionResultHolder.success(item);
 		}
 		return InteractionResultHolder.pass(item);
+	}
+
+	@Override
+	public double getCapacity() {
+		return StaticPowerConfig.getTier(tier).magnetPowerCapacity.get();
+	}
+
+	@Override
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).getPortableBatteryChargingVoltage();
+	}
+
+	@Override
+	public double getMaximumInputCurrent() {
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxCurrent.get();
 	}
 }

@@ -145,20 +145,21 @@ public class ChainsawItemModel implements BakedModel {
 				BlockFaceUV durabilityBgUv = new BlockFaceUV(new float[] { 0.0f, 0.0f, 16.0f, 16.0f }, 0);
 				BlockElementFace durabilityPartFace = new BlockElementFace(null, -1, blackSprite.getName().toString(), durabilityBgUv);
 				BlockElementRotation rotation = new BlockElementRotation(new Vector3f(0.0f, 0.0f, 0.0f), Direction.Axis.Z, 135, false);
-				BakedQuad durabilityBackground = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -15.15f + topOffset, 8.5f), new Vector3f(2.5f - sideOffset, -14.7f + topOffset, 8.51f), durabilityPartFace,
-						blackSprite, Direction.SOUTH, ModelUtilities.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
+				BakedQuad durabilityBackground = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -15.15f + topOffset, 8.5f),
+						new Vector3f(2.5f - sideOffset, -14.7f + topOffset, 8.51f), durabilityPartFace, blackSprite, Direction.SOUTH, ModelUtilities.IDENTITY, rotation, false,
+						new ResourceLocation("dummy_name"));
 				output.add(durabilityBackground);
 
 				// Draw the durability bar.
-				float bitDurability = (float) EnergyHandlerItemStackUtilities.getStoredPower(stack) / EnergyHandlerItemStackUtilities.getCapacity(stack);
+				float bitDurability = (float) (EnergyHandlerItemStackUtilities.getStoredPower(stack) / EnergyHandlerItemStackUtilities.getCapacity(stack));
 				float xUVCoord = bitDurability * 15.999f;
 				TextureAtlasSprite durabilityTexture = blocksTexture.getSprite(StaticPowerSprites.TOOL_POWER_BAR);
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { xUVCoord, 0.0f, xUVCoord, 16.0f }, 0);
 				BlockElementFace durabilityBarFace = new BlockElementFace(null, -1, durabilityTexture.getName().toString(), blockFaceUV);
 
 				BakedQuad durabilityBar = FaceBaker.bakeQuad(new Vector3f(-3.0f + sideOffset, -15.15f + topOffset, 8.5f),
-						new Vector3f(-3.0f + (bitDurability * 5.5f) - sideOffset, -14.7f + topOffset, 8.511f), durabilityBarFace, durabilityTexture, Direction.SOUTH, ModelUtilities.IDENTITY,
-						rotation, false, new ResourceLocation("dummy_name"));
+						new Vector3f(-3.0f + (bitDurability * 5.5f) - sideOffset, -14.7f + topOffset, 8.511f), durabilityBarFace, durabilityTexture, Direction.SOUTH,
+						ModelUtilities.IDENTITY, rotation, false, new ResourceLocation("dummy_name"));
 				output.add(durabilityBar);
 			} catch (Exception e) {
 				// No nothing -- this is just for those edge cases where resources are reloaded.

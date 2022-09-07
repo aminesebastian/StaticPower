@@ -12,13 +12,11 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.LongValue;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.loading.FMLPaths;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticpower.data.StaticPowerTier;
 
 @EventBusSubscriber(modid = StaticPower.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
@@ -128,7 +126,7 @@ public class StaticPowerConfig {
 		public final ConfigValue<Double> acceleratorCardImprovment;
 
 		public final ConfigValue<Integer> digistoreWirelessTerminalPowerCapacity;
-		public final ConfigValue<Integer> digistoreWirelessTerminalPowerUsage;
+		public final ConfigValue<Double> digistoreWirelessTerminalPowerUsage;
 
 		public final ConfigValue<Integer> minerHeatGeneration;
 		public final ConfigValue<Integer> minerFuelUsage;
@@ -138,39 +136,39 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> electricMinerHeatGeneration;
 		public final ConfigValue<Integer> electricMinerRadius;
 		public final ConfigValue<Integer> electricMinerProcessingTime;
-		public final LongValue electricMinerPowerUsage;
+		public final ConfigValue<Double> electricMinerPowerUsage;
 
-		public final LongValue solidFuelGenerationPerTick;
+		public final ConfigValue<Double> solidFuelGenerationPerTick;
 
 		public final ConfigValue<Integer> centrifugeInitialMaxSpeed;
-		public final LongValue centrifugePowerUsage;
-		public final LongValue centrifugeMotorPowerUsage;
+		public final ConfigValue<Double> centrifugePowerUsage;
+		public final ConfigValue<Double> centrifugeMotorPowerUsage;
 		public final ConfigValue<Integer> centrifugeProcessingTime;
 
-		public final LongValue cruciblePowerUsage;
-		public final LongValue crucibleHeatPowerUsage;
+		public final ConfigValue<Double> cruciblePowerUsage;
+		public final ConfigValue<Double> crucibleHeatPowerUsage;
 		public final ConfigValue<Integer> crucibleHeatGenerationPerTick;
 		public final ConfigValue<Integer> crucibleProcessingTime;
 
 		public final ConfigValue<Integer> basicFarmerFluidUsage;
 		public final ConfigValue<Integer> basicFarmerDefaultRange;
 		public final ConfigValue<Integer> basicFarmerToolUsage;
-		public final LongValue basicFarmerPowerUsage;
-		public final LongValue basicFarmerHarvestPowerUsage;
+		public final ConfigValue<Double> basicFarmerPowerUsage;
+		public final ConfigValue<Double> basicFarmerHarvestPowerUsage;
 		public final ConfigValue<Integer> basicFarmerProcessingTime;
 
 		public final ConfigValue<Integer> heatSinkTemperatureDamageThreshold;
 
 		public final ConfigValue<Double> poweredGrinderOutputBonusChance;
-		public final LongValue poweredGrinderPowerUsage;
+		public final ConfigValue<Double> poweredGrinderPowerUsage;
 		public final ConfigValue<Integer> poweredGrinderProcessingTime;
 
-		public final LongValue poweredFurnacePowerUsage;
+		public final ConfigValue<Double> poweredFurnacePowerUsage;
 
 		public final ConfigValue<Double> tumblerOutputBonusChance;
 		public final ConfigValue<Integer> tumblerRequiredSpeed;
-		public final LongValue tumblerPowerUsage;
-		public final LongValue tumblerMotorPowerUsage;
+		public final ConfigValue<Double> tumblerPowerUsage;
+		public final ConfigValue<Double> tumblerMotorPowerUsage;
 		public final ConfigValue<Integer> tumblerProcessingTime;
 
 		public final ConfigValue<Integer> treeFarmerFluidUsage;
@@ -179,67 +177,67 @@ public class StaticPowerConfig {
 		public final ConfigValue<Integer> treeFarmerMaxTreeRecursion;
 		public final ConfigValue<Integer> treeFarmerSaplingSpacing;
 		public final ConfigValue<Integer> treeFarmerProcessingTime;
-		public final LongValue treeFarmerPowerUsage;
-		public final LongValue treeFarmerHarvestPowerUsage;
+		public final ConfigValue<Double> treeFarmerPowerUsage;
+		public final ConfigValue<Double> treeFarmerHarvestPowerUsage;
 
-		public final LongValue autoCrafterPowerUsage;
+		public final ConfigValue<Double> autoCrafterPowerUsage;
 		public final ConfigValue<Integer> autoCrafterProcessingTime;
 
-		public final LongValue autoSmithPowerUsage;
+		public final ConfigValue<Double> autoSmithPowerUsage;
 		public final ConfigValue<Integer> autoSmithProcessingTime;
 
-		public final LongValue autoSolderingTablePowerUsage;
+		public final ConfigValue<Double> autoSolderingTablePowerUsage;
 		public final ConfigValue<Integer> autoSolderingTableProcessingTime;
 
-		public final LongValue bottlerPowerUsage;
+		public final ConfigValue<Double> bottlerPowerUsage;
 		public final ConfigValue<Integer> bottlerProcessingTime;
 
-		public final LongValue casterPowerUsage;
+		public final ConfigValue<Double> casterPowerUsage;
 		public final ConfigValue<Integer> casterProcessingTime;
 
-		public final LongValue fermenterPowerUsage;
+		public final ConfigValue<Double> fermenterPowerUsage;
 		public final ConfigValue<Integer> fermenterProcessingTime;
 
-		public final LongValue fluidInfuserPowerUsage;
+		public final ConfigValue<Double> fluidInfuserPowerUsage;
 		public final ConfigValue<Integer> fluidInfuserProcessingTime;
 
-		public final LongValue formerPowerUsage;
+		public final ConfigValue<Double> formerPowerUsage;
 		public final ConfigValue<Integer> formerProcessingTime;
 
-		public final LongValue fusionFurnacePowerUsage;
+		public final ConfigValue<Double> fusionFurnacePowerUsage;
 		public final ConfigValue<Integer> fusionFurnaceProcessingTime;
 
-		public final LongValue lathePowerUsage;
+		public final ConfigValue<Double> lathePowerUsage;
 		public final ConfigValue<Integer> latheProcessingTime;
 
-		public final LongValue lumberMillPowerUsage;
+		public final ConfigValue<Double> lumberMillPowerUsage;
 		public final ConfigValue<Integer> lumberMillProcessingTime;
 
-		public final LongValue mixerPowerUsage;
+		public final ConfigValue<Double> mixerPowerUsage;
 		public final ConfigValue<Integer> mixerProcessingTime;
 
-		public final LongValue packagerPowerUsage;
+		public final ConfigValue<Double> packagerPowerUsage;
 		public final ConfigValue<Integer> packagerProcessingTime;
 
-		public final LongValue pumpPowerUsage;
+		public final ConfigValue<Double> pumpPowerUsage;
 
-		public final LongValue squeezerPowerUsage;
+		public final ConfigValue<Double> squeezerPowerUsage;
 		public final ConfigValue<Integer> squeezerProcessingTime;
 
-		public final LongValue vulcanizerPowerUsage;
+		public final ConfigValue<Double> vulcanizerPowerUsage;
 		public final ConfigValue<Integer> vulcanizerProcessingTime;
 
-		public final LongValue enchanterPowerUsage;
+		public final ConfigValue<Double> enchanterPowerUsage;
 		public final ConfigValue<Integer> enchanterProcessingTime;
 
-		public final LongValue refineryPowerUsage;
+		public final ConfigValue<Double> refineryPowerUsage;
 		public final ConfigValue<Integer> refineryProcessingTime;
 		public final ConfigValue<Integer> refineryPerBoilerHeatGeneration;
 		public final ConfigValue<Integer> refineryMinimumHeat;
 		public final ConfigValue<Integer> refineryHeatUse;
 		public final ConfigValue<Integer> refineryOverheatCooldownTime;
 
-		public final LongValue laboratoryPowerUsage;
+		public final ConfigValue<Double> laboratoryPowerUsage;
 
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Generation");
@@ -248,25 +246,25 @@ public class StaticPowerConfig {
 				{
 					builder.push("Overworld");
 					{
-						generateZincOre = builder.comment("Disable or Enable Zinc Ore Generation").translation(StaticPower.MOD_ID + ".config." + "zincore")
+						generateZincOre = builder.comment("Disable or Enable Zinc Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateZincOre")
 								.define("GenerateZincOre", true);
-						generateMagnesiumOre = builder.comment("Disable or Enable Magnesium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "magnesiumore")
+						generateMagnesiumOre = builder.comment("Disable or Enable Magnesium Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateMagnesiumOre")
 								.define("GenerateMagnesiumOre", true);
-						generateAluminumOre = builder.comment("Disable or Enable Aluminum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "aluminumore")
+						generateAluminumOre = builder.comment("Disable or Enable Aluminum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateAluminumOre")
 								.define("GenerateAluminumOre", true);
-						generateTinOre = builder.comment("Disable or Enable Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tinore").define("GenerateTinOre",
+						generateTinOre = builder.comment("Disable or Enable Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tinore").define("generateTinOre",
 								true);
-						generateLeadOre = builder.comment("Disable or Enable Lead Ore Generation").translation(StaticPower.MOD_ID + ".config." + "leadore")
+						generateLeadOre = builder.comment("Disable or Enable Lead Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateLeadOre")
 								.define("GenerateLeadOre", true);
-						generateSilverOre = builder.comment("Disable or Enable Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "silverore")
+						generateSilverOre = builder.comment("Disable or Enable Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateSilverOre")
 								.define("GenerateSilverOre", true);
-						generatePlatinumOre = builder.comment("Disable or Enable Platinum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "platinumore")
+						generatePlatinumOre = builder.comment("Disable or Enable Platinum Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generatePlatinumOre")
 								.define("GeneratePlatinumOre", true);
-						generateTungstenOre = builder.comment("Disable or Enable Tunsgten Ore Generation").translation(StaticPower.MOD_ID + ".config." + "tungstenore")
+						generateTungstenOre = builder.comment("Disable or Enable Tunsgten Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateTungstenOre")
 								.define("GenerateTungstenOre", true);
-						generateSapphireOre = builder.comment("Disable or Enable Sapphire Ore Generation").translation(StaticPower.MOD_ID + ".config." + "sapphireore")
+						generateSapphireOre = builder.comment("Disable or Enable Sapphire Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateSapphireOre")
 								.define("GenerateSapphireOre", true);
-						generateRubyOre = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "rubyore")
+						generateRubyOre = builder.comment("Disable or Enable Ruby Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateRubyOre")
 								.define("GenerateRubyOre", true);
 						generateRustyIronOre = builder.comment("Disable or Enable Rusty Iron Ore Generation").translation(StaticPower.MOD_ID + ".config." + "generateRustyIronOre")
 								.define("GenerateRustyIronOre", true);
@@ -275,35 +273,35 @@ public class StaticPowerConfig {
 					builder.push("Deep");
 					{
 						generateDeepslateZincOre = builder.comment("Disable or Enable Deepslate Zinc Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslatezincore").define("GenerateDeepslateZincOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateZincOre").define("GenerateDeepslateZincOre", true);
 						generateDeepslateMagnesiumOre = builder.comment("Disable or Enable Deepslate Magnesium Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslatemagnesiumore").define("GenerateDeepslateMagnesiumOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateMagnesiumOre").define("GenerateDeepslateMagnesiumOre", true);
 						generateDeepslateAluminumOre = builder.comment("Disable or Enable Deepslate Aluminum Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslatealuminumore").define("GenerateDeepslateAluminumOre", true);
-						generateDeepslateTinOre = builder.comment("Disable or Enable Deepslate Tin Ore Generation").translation(StaticPower.MOD_ID + ".config." + "deepslatetinore")
-								.define("GenerateDeepslateTinOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateAluminumOre").define("GenerateDeepslateAluminumOre", true);
+						generateDeepslateTinOre = builder.comment("Disable or Enable Deepslate Tin Ore Generation")
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateTinOre").define("GenerateDeepslateTinOre", true);
 						generateDeepslateLeadOre = builder.comment("Disable or Enable Deepslate Lead Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslateleadore").define("GenerateDeepslateLeadOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateLeadOre").define("GenerateDeepslateLeadOre", true);
 						generateDeepslateSilverOre = builder.comment("Disable or Enable Deepslate Silver Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslatesilverore").define("GenerateDeepslateSilverOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateSilverOre").define("GenerateDeepslateSilverOre", true);
 						generateDeepslatePlatinumOre = builder.comment("Disable or Enable Deepslate Platinum Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslateplatinumore").define("GenerateDeepslatePlatinumOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslatePlatinumOre").define("GenerateDeepslatePlatinumOre", true);
 						generateDeepslateTungstenOre = builder.comment("Disable or Enable Deepslate Tunsgten Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslatetungstenore").define("GenerateDeepslateTungstenOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateTungstenOre").define("GenerateDeepslateTungstenOre", true);
 						generateDeepslateSapphireOre = builder.comment("Disable or Enable Deepslate Sapphire Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslatesapphireore").define("GenerateDeepslateSapphireOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateSapphireOre").define("GenerateDeepslateSapphireOre", true);
 						generateDeepslateRubyOre = builder.comment("Disable or Enable Deepslate Ruby Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "deepslaterubyore").define("GenerateDeepslateRubyOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateDeepslateRubyOre").define("GenerateDeepslateRubyOre", true);
 					}
 					builder.pop();
 					builder.push("Nether");
 					{
-						generateNetherSilverOre = builder.comment("Disable or Enable Nether Silver Ore Generation").translation(StaticPower.MOD_ID + ".config." + "nethersilverore")
-								.define("GenerateNetherSilverOre", true);
+						generateNetherSilverOre = builder.comment("Disable or Enable Nether Silver Ore Generation")
+								.translation(StaticPower.MOD_ID + ".config." + "generateNetherSilverOre").define("GenerateNetherSilverOre", true);
 						generateNetherPlatinumOre = builder.comment("Disable or Enable Nether Platinum Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "netherplatinumore").define("GenerateNetherPlatinumOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateNetherPlatinumOre").define("GenerateNetherPlatinumOre", true);
 						generateNetherTungstenOre = builder.comment("Disable or Enable Nether Tungsten Ore Generation")
-								.translation(StaticPower.MOD_ID + ".config." + "nethertungstenore").define("GenerateNetherTungstenOre", true);
+								.translation(StaticPower.MOD_ID + ".config." + "generateNetherTungstenOre").define("GenerateNetherTungstenOre", true);
 					}
 					builder.pop();
 				}
@@ -353,11 +351,10 @@ public class StaticPowerConfig {
 				builder.pop();
 
 				builder.push("WirelessTerminal");
-				digistoreWirelessTerminalPowerCapacity = builder.comment("Sets the power capacity of the Digistore Wireless Terminal (in mSV [1SV = 1000mSV]).")
+				digistoreWirelessTerminalPowerCapacity = builder.comment("Sets the power capacity of the Digistore Wireless Terminal (in SP).")
 						.translation(StaticPower.MOD_ID + ".config." + "digistoreWirelessTerminalPowerCapacity").define("DigistoreWirelessTerminalPowerCapacity", 10000000);
-				digistoreWirelessTerminalPowerUsage = builder
-						.comment("Sets the power used every time the digistore network is accessed by the wireless terminal (in mSV [1SV = 1000mSV]).")
-						.translation(StaticPower.MOD_ID + ".config." + "digistoreWirelessTerminalPowerUsage").define("DigistoreWirelessTerminalPowerUsage", 50000);
+				digistoreWirelessTerminalPowerUsage = builder.comment("Sets the power used every time the digistore network is accessed by the wireless terminal (in SP).")
+						.translation(StaticPower.MOD_ID + ".config." + "digistoreWirelessTerminalPowerUsage").define("DigistoreWirelessTerminalPowerUsage", 50.0);
 				builder.pop();
 			}
 			builder.pop();
@@ -451,36 +448,31 @@ public class StaticPowerConfig {
 							.define("ElectricMinerHeatGeneration", CapabilityHeatable.convertHeatToMilliHeat(100));
 					electricMinerRadius = builder.comment("Defines the base radius of the electric miner.").translation(StaticPower.MOD_ID + ".config." + "electricMinerRadius")
 							.define("ElectricMinerRadius", 3);
-					electricMinerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "electricMinerPowerUsage")
-							.defineInRange("ElectricMinerPowerUsage", 50 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					electricMinerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "electricMinerPowerUsage").define("ElectricMinerPowerUsage", 50.0);
 					electricMinerProcessingTime = builder.comment("Defines the amount of ticks an electric miner takes to break a block [1 Second = 20 Ticks].")
 							.translation(StaticPower.MOD_ID + ".config." + "electricMinerProcessingTime").define("ElectricMinerProcessingTime", 40);
 					builder.pop();
 				}
 				{
 					builder.push("Solid Generator");
-					solidFuelGenerationPerTick = builder.comment("Defines the amount of power that is generated per tick in a solid fueled generator (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "solidFuelGenerationPerTick")
-							.defineInRange("SolidFuelGenerationPerTick", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					solidFuelGenerationPerTick = builder.comment("Defines the amount of power that is generated per tick in a solid fueled generator (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "solidFuelGenerationPerTick").define("SolidFuelGenerationPerTick", 5.0);
 					builder.pop();
 				}
 
 				{
 					builder.push("Auto Crafter");
-					autoCrafterPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "autoCrafterPowerUsage")
-							.defineInRange("AutoCrafterPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					autoCrafterPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "autoCrafterPowerUsage").define("AutoCrafterPowerUsage", 5.0);
 					autoCrafterProcessingTime = builder.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]).")
 							.translation(StaticPower.MOD_ID + ".config." + "autoCrafterProcessingTime").define("AutoCrafterProcessingTime", 100);
 					builder.pop();
 				}
 				{
 					builder.push("Auto Smith");
-					autoSmithPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "autoSmithPowerUsage")
-							.defineInRange("AutoSmithPowerUsage", 14 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					autoSmithPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "autoSmithPowerUsage").define("AutoSmithPowerUsage", 14.0);
 					autoSmithProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "autoSmithProcessingTime").define("AutoSmithProcessingTime", 75);
@@ -488,21 +480,18 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Auto Solderer");
-					autoSolderingTablePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "autoSolderingTablePowerUsage")
-							.defineInRange("AutoSolderingTablePowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					autoSolderingTablePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "autoSolderingTablePowerUsage").define("AutoSolderingTablePowerUsage", 5.0);
 					autoSolderingTableProcessingTime = builder.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]).")
 							.translation(StaticPower.MOD_ID + ".config." + "autoSolderingTableProcessingTime").define("AutoSolderingTableProcessingTime", 100);
 					builder.pop();
 				}
 				{
 					builder.push("Basic Farmer");
-					basicFarmerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "basicFarmerPowerUsage")
-							.defineInRange("BasicFarmerPowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
-					basicFarmerHarvestPowerUsage = builder.comment("Controls how much power is used per harvest in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "basicFarmerHarvestPowerUsage")
-							.defineInRange("BasicFarmerHarvestPowerUsage", 100 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					basicFarmerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "basicFarmerPowerUsage").define("BasicFarmerPowerUsage", 10.0);
+					basicFarmerHarvestPowerUsage = builder.comment("Controls how much power is used per harvest in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "basicFarmerHarvestPowerUsage").define("BasicFarmerHarvestPowerUsage", 100.0);
 					basicFarmerProcessingTime = builder.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]).")
 							.translation(StaticPower.MOD_ID + ".config." + "basicFarmerProcessingTime").define("BasicFarmerProcessingTime", 20);
 					basicFarmerFluidUsage = builder.comment("Controls how many mB of fluid is consumed per tick in the Basic Farmer.")
@@ -518,10 +507,8 @@ public class StaticPowerConfig {
 				{
 					builder.push("Bottler");
 
-					bottlerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "bottlerPowerUsage")
-							.defineInRange("BottlerPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					bottlerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "bottlerPowerUsage").define("BottlerPowerUsage", 5.0);
 					bottlerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "bottlerProcessingTime").define("BottlerProcessingTime", 100);
@@ -530,10 +517,8 @@ public class StaticPowerConfig {
 				{
 					builder.push("Caster");
 
-					casterPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "casterPowerUsage")
-							.defineInRange("CasterPowerUsage", 15 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					casterPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "casterPowerUsage").define("CasterPowerUsage", 15.0);
 					casterProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "casterProcessingTime").define("CasterProcessingTime", 150);
@@ -541,13 +526,10 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Centrifuge");
-					centrifugePowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "centrifugePowerUsage")
-							.defineInRange("CentrifugePowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
-					centrifugeMotorPowerUsage = builder.comment("Controls how much power is used per tick to maintain the motor speed (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "centrifugeMotorPowerUsage")
-							.defineInRange("CentrifugeMotorPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					centrifugePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "centrifugePowerUsage").define("CentrifugePowerUsage", 10.0);
+					centrifugeMotorPowerUsage = builder.comment("Controls how much power is used per tick to maintain the motor speed (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "centrifugeMotorPowerUsage").define("CentrifugeMotorPowerUsage", 5.0);
 					centrifugeProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "centrifugeProcessingTime").define("CentrifugeProcessingTime", 100);
@@ -557,16 +539,13 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Crucible");
-					cruciblePowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "cruciblePowerUsage")
-							.defineInRange("CruciblePowerUsage", 20 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					cruciblePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "cruciblePowerUsage").define("CruciblePowerUsage", 20.0);
 					crucibleProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "crucibleProcessingTime").define("CrucibleProcessingTime", 100);
-					crucibleHeatPowerUsage = builder.comment("Controls how much power is used per tick in this machine to maintain the heat level (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "crucibleHeatPowerUsage")
-							.defineInRange("CrucibleHeatPowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					crucibleHeatPowerUsage = builder.comment("Controls how much power is used per tick in this machine to maintain the heat level (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "crucibleHeatPowerUsage").define("CrucibleHeatPowerUsage", 10.0);
 					crucibleHeatGenerationPerTick = builder.comment("Controls the amount of heat that is generated per tick for in the Crucible.")
 							.translation(StaticPower.MOD_ID + ".config." + "crucibleHeatGenerationPerTick")
 							.define("CrucibleHeatGenerationPerTick", CapabilityHeatable.convertHeatToMilliHeat(5));
@@ -574,10 +553,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Fermenter");
-					fermenterPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "fermenterPowerUsage")
-							.defineInRange("FermenterPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					fermenterPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "fermenterPowerUsage").define("FermenterPowerUsage", 5.0);
 					fermenterProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "fermenterProcessingTime").define("FermenterProcessingTime", 100);
@@ -585,10 +562,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Fluid Infuser");
-					fluidInfuserPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "fluidInfuserPowerUsage")
-							.defineInRange("FluidInfuserPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					fluidInfuserPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "fluidInfuserPowerUsage").define("FluidInfuserPowerUsage", 5.0);
 					fluidInfuserProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "fluidInfuserProcessingTime").define("FluidInfuserProcessingTime", 200);
@@ -597,10 +572,8 @@ public class StaticPowerConfig {
 				{
 					builder.push("Former");
 
-					formerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "formerPowerUsage")
-							.defineInRange("FormerPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					formerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "formerPowerUsage").define("FormerPowerUsage", 5.0);
 					formerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "formerProcessingTime").define("FormerProcessingTime", 150);
@@ -609,10 +582,8 @@ public class StaticPowerConfig {
 				{
 					builder.push("Fusion Furnace");
 
-					fusionFurnacePowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "fusionFurnacePowerUsage")
-							.defineInRange("FusionFurnacePowerUsage", 25 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					fusionFurnacePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "fusionFurnacePowerUsage").define("FusionFurnacePowerUsage", 25.0);
 					fusionFurnaceProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "fusionFurnaceProcessingTime").define("FusionFurnaceProcessingTime", 250);
@@ -626,10 +597,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Lathe");
-					lathePowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "lathePowerUsage")
-							.defineInRange("LathePowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					lathePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "lathePowerUsage").define("LathePowerUsage", 10.0);
 					latheProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "latheProcessingTime").define("LatheProcessingTime", 150);
@@ -637,10 +606,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Lumber Mill");
-					lumberMillPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "lumberMillPowerUsage")
-							.defineInRange("LumberMillPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					lumberMillPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "lumberMillPowerUsage").define("LumberMillPowerUsage", 5.0);
 					lumberMillProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "lumberMillProcessingTime").define("LumberMillProcessingTime", 150);
@@ -648,10 +615,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Mixer");
-					mixerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "mixerPowerUsage")
-							.defineInRange("MixerPowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					mixerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "mixerPowerUsage").define("MixerPowerUsage", 10.0);
 					mixerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "mixerProcessingTime").define("MixerProcessingTime", 200);
@@ -659,10 +624,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Packager");
-					packagerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "packagerPowerUsage")
-							.defineInRange("PackagerPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					packagerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "packagerPowerUsage").define("PackagerPowerUsage", 5.0);
 					packagerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "packagerProcessingTime").define("PackagerProcessingTime", 100);
@@ -670,35 +633,30 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Powered Furnace");
-					poweredFurnacePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "poweredFurnacePowerUsage")
-							.defineInRange("PoweredFurnacePowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					poweredFurnacePowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "poweredFurnacePowerUsage").define("PoweredFurnacePowerUsage", 5.0);
 					builder.pop();
 				}
 				{
 					builder.push("Powered Grinder");
 					poweredGrinderOutputBonusChance = builder.comment("Controls the default Powered Grinder output bonus chance.")
 							.translation(StaticPower.MOD_ID + ".config." + "poweredGrinderOutputBonusChance").define("PoweredGrinderOutputBonusChance", 1.0);
-					poweredGrinderPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "poweredFurnacePowerUsage")
-							.defineInRange("PoweredFurnacePowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					poweredGrinderPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "poweredFurnacePowerUsage").define("PoweredFurnacePowerUsage", 5.0);
 					poweredGrinderProcessingTime = builder.comment("Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]).")
 							.translation(StaticPower.MOD_ID + ".config." + "poweredGrinderProcessingTime").define("PoweredGrinderProcessingTime", 200);
 					builder.pop();
 				}
 				{
 					builder.push("Pump");
-					pumpPowerUsage = builder.comment("Controls how much power is used per pump action in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "pumpPowerUsage")
-							.defineInRange("PumpPowerUsage", 200 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					pumpPowerUsage = builder.comment("Controls how much power is used per pump action in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "pumpPowerUsage").define("PumpPowerUsage", 200.0);
 					builder.pop();
 				}
 				{
 					builder.push("Squeezer");
-					squeezerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "squeezerPowerUsage")
-							.defineInRange("SqueezerPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					squeezerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "squeezerPowerUsage").define("SqueezerPowerUsage", 5.0);
 					squeezerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "squeezerProcessingTime").define("SqueezerProcessingTime", 100);
@@ -706,13 +664,10 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Tree Farmer");
-					treeFarmerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerPowerUsage")
-							.defineInRange("TreeFarmerPowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
-					treeFarmerHarvestPowerUsage = builder.comment("Controls how much power is used per harvest in this machine (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerHarvestPowerUsage")
-							.defineInRange("TreeFarmerHarvestPowerUsage", 100 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					treeFarmerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerPowerUsage").define("TreeFarmerPowerUsage", 10.0);
+					treeFarmerHarvestPowerUsage = builder.comment("Controls how much power is used per harvest in this machine (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerHarvestPowerUsage").define("TreeFarmerHarvestPowerUsage", 100.0);
 					treeFarmerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "treeFarmerProcessingTime").define("TreeFarmerProcessingTime", 20);
@@ -731,13 +686,10 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Tumbler");
-					tumblerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "tumblerPowerUsage")
-							.defineInRange("TumblerPowerUsage", 20 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
-					tumblerMotorPowerUsage = builder.comment("Controls how much power is used per tick to maintain the motor speed (in mSV [1SV = 1000mSV]).")
-							.translation(StaticPower.MOD_ID + ".config." + "tumblerMotorPowerUsage")
-							.defineInRange("TumblerMotorPowerUsage", 10 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					tumblerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "tumblerPowerUsage").define("TumblerPowerUsage", 20.0);
+					tumblerMotorPowerUsage = builder.comment("Controls how much power is used per tick to maintain the motor speed (in SP).")
+							.translation(StaticPower.MOD_ID + ".config." + "tumblerMotorPowerUsage").define("TumblerMotorPowerUsage", 10.0);
 					tumblerOutputBonusChance = builder.comment("Controls the default Tumbler output bonus chance.")
 							.translation(StaticPower.MOD_ID + ".config." + "tumblerOutputBonusChance").define("TumblerOutputBonusChance", 1.0);
 					tumblerRequiredSpeed = builder.comment("Controls the speed required in the Tumbler before it starts processing.")
@@ -749,10 +701,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Vulcanizer");
-					vulcanizerPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "vulcanizerPowerUsage")
-							.defineInRange("VulcanizerPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					vulcanizerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "vulcanizerPowerUsage").define("VulcanizerPowerUsage", 5.0);
 					vulcanizerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "vulcanizerProcessingTime").define("VulcanizerProcessingTime", 200);
@@ -760,10 +710,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Enchanter");
-					enchanterPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "enchanterPowerUsage")
-							.defineInRange("EnchanterPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					enchanterPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "enchanterPowerUsage").define("EnchanterPowerUsage", 5.0);
 					enchanterProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "enchanterProcessingTime").define("EnchanterProcessingTime", 200);
@@ -771,10 +719,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Refinery");
-					refineryPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "refineryPowerUsage")
-							.defineInRange("RefineryPowerUsage", 20 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					refineryPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "refineryPowerUsage").define("RefineryPowerUsage", 20.0);
 					refineryProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "refineryProcessingTime").define("RefineryProcessingTime", 20);
@@ -792,10 +738,8 @@ public class StaticPowerConfig {
 				}
 				{
 					builder.push("Laboratory");
-					laboratoryPowerUsage = builder
-							.comment("Controls how much power is used per tick in this machine (in mSV [1SV = 1000mSV]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "laboratoryPowerUsage")
-							.defineInRange("LaboratoryPowerUsage", 5 * CapabilityStaticVolt.mSV_TO_SV, 0, Long.MAX_VALUE);
+					laboratoryPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SP). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "laboratoryPowerUsage").define("LaboratoryPowerUsage", 5.0);
 					builder.pop();
 				}
 

@@ -13,13 +13,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.items.CapabilityItemHandler;
-import theking530.api.energy.consumer.CapabilityStaticPower;
+import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.volts.CapabilityStaticVolt;
 
 public class DestinationWrapper {
 	public enum DestinationType {
-		ITEM, DEP_POWER, POWER, FORGE_POWER, FLUID, HEAT, REDSTONE_SOURCE
+		ITEM, POWER, FORGE_POWER, FLUID, HEAT, REDSTONE_SOURCE
 	}
 
 	private final Level world;
@@ -111,10 +110,6 @@ public class DestinationWrapper {
 				// Check for fluid capabilities.
 				if (tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir).isPresent()) {
 					types.add(DestinationType.FLUID);
-				}
-				// Check for power capabilities.
-				if (tileEntity.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY, dir).isPresent()) {
-					types.add(DestinationType.DEP_POWER);
 				}
 				// Check for power capabilities.
 				if (tileEntity.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, dir).isPresent()) {

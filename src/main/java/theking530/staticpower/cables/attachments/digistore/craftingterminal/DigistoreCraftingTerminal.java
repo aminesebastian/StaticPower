@@ -39,8 +39,8 @@ public class DigistoreCraftingTerminal extends AbstractDigistoreTerminalAttachme
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
-		return 1000;
+	public double getPowerUsage(ItemStack attachment) {
+		return 1;
 	}
 
 	@Override

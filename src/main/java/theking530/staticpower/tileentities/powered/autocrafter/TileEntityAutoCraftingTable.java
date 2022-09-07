@@ -65,7 +65,7 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryInventory", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(moveComponent = MachineProcessingComponent
@@ -76,14 +76,14 @@ public class TileEntityAutoCraftingTable extends TileEntityMachine {
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get());
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		patternInventory.setShouldDropContentsOnBreak(false);
 		filterInventory = new ItemStack[9];

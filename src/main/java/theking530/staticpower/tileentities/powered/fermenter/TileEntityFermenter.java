@@ -60,7 +60,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
@@ -71,7 +71,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.fermenterPowerUsage.get());
 
@@ -85,7 +85,7 @@ public class TileEntityFermenter extends TileEntityMachine {
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {

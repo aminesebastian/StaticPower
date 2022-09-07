@@ -7,12 +7,13 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.metrics.MetricsTimeUnit;
 import theking530.staticcore.rendering.WorldLineGraphRenderer;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.power.PowerTransferMetrics.MetricCategory;
 import theking530.staticpower.tileentities.powered.powermonitor.TileEntityPowerMonitor;
 
 @OnlyIn(Dist.CLIENT)
@@ -21,13 +22,13 @@ public class TileEntityRenderPowerMonitor extends StaticPowerTileEntitySpecialRe
 
 	public TileEntityRenderPowerMonitor(BlockEntityRendererProvider.Context context) {
 		super(context);
-		graphRenderer= new WorldLineGraphRenderer(0.02f, 13, 7);
+		graphRenderer = new WorldLineGraphRenderer(0.02f, 13, 7);
 	}
 
 	@Override
 	public void renderTileEntityBase(TileEntityPowerMonitor tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
-		if (tileEntity.getMetrics().getData(MetricCategory.TICKS).getInputValues().size() <= 1) {
+		if (tileEntity.getMetrics().getData(MetricsTimeUnit.TICKS).getInputValues().size() <= 1) {
 			return;
 		}
 
@@ -48,16 +49,16 @@ public class TileEntityRenderPowerMonitor extends StaticPowerTileEntitySpecialRe
 		double minValue = tileEntity.getProvidedData().getMinMaxValues().getX();
 
 		// Draw the max value.
-		WorldRenderingUtilities.drawTextInWorld(this.renderer, GuiTextUtilities.formatEnergyRateToString(maxValue).getString(), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),
-				new Vector3D(0.07f, 0.43f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+		WorldRenderingUtilities.drawTextInWorld(this.renderer, StaticPowerEnergyTextUtilities.formatPowerRateToString(maxValue).getString(), tileEntity,
+				new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.07f, 0.43f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		// Draw the min value.
-		WorldRenderingUtilities.drawTextInWorld(this.renderer, GuiTextUtilities.formatEnergyRateToString(minValue).getString(), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),
-				new Vector3D(0.07f, 0.04f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+		WorldRenderingUtilities.drawTextInWorld(this.renderer, StaticPowerEnergyTextUtilities.formatPowerRateToString(minValue).getString(), tileEntity,
+				new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.07f, 0.04f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		// Draw the current value.
 		WorldRenderingUtilities.drawTextInWorld(this.renderer,
-				GuiTextUtilities.formatEnergyRateToString(tileEntity.getMetrics().getData(MetricCategory.TICKS).getInputValues().peekLast()).getString(), tileEntity,
+				StaticPowerEnergyTextUtilities.formatPowerRateToString(tileEntity.getMetrics().getData(MetricsTimeUnit.TICKS).getInputValues().peekLast()).getString(), tileEntity,
 				new Color(255.0f, 255.0f, 255.0f, 255.0f), new Vector3D(0.74f, 0.2145f, 0.025f), 0.0035f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 
 		matrixStack.popPose();

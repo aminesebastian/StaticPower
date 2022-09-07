@@ -116,8 +116,8 @@ public class DigistoreRegulatorAttachment extends AbstractDigistoreCableAttachme
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
-		return 1000;
+	public double getPowerUsage(ItemStack attachment) {
+		return 1;
 	}
 
 	protected boolean regulate(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {

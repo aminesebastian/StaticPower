@@ -33,15 +33,13 @@ import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
+import theking530.staticpower.tileentities.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidContainerComponent;
 import theking530.staticpower.tileentities.components.fluids.PacketFluidTankComponent;
 import theking530.staticpower.tileentities.components.heat.PacketHeatStorageComponent;
 import theking530.staticpower.tileentities.components.items.PacketLockInventorySlot;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStart;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundPacketStop;
-import theking530.staticpower.tileentities.components.power.ContainerPowerMetricsSyncPacket;
-import theking530.staticpower.tileentities.components.power.PacketEnergyStorageComponent;
-import theking530.staticpower.tileentities.components.power.TileEntityPowerMetricsSyncPacket;
 import theking530.staticpower.tileentities.components.team.PacketSetTeamComponentTeam;
 import theking530.staticpower.tileentities.digistorenetwork.digistore.PacketLockDigistore;
 import theking530.staticpower.tileentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
@@ -64,7 +62,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(BatteryControlSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
-		StaticPowerMessageHandler.registerMessage(PacketEnergyStorageComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketHeatStorageComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketFluidTankComponent.class);
 		StaticPowerMessageHandler.registerMessage(PacketLockInventorySlot.class);
@@ -85,7 +82,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerMessage(PacketRestorePreviousCraftingRecipe.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
-		StaticPowerMessageHandler.registerMessage(ContainerPowerMetricsSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
 		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
 		StaticPowerMessageHandler.registerMessage(PacketUpdateRedstoneCableConfiguration.class);
@@ -93,10 +89,10 @@ public class ModNetworkMessages {
 
 		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreInventory.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreFakeSlotClicked.class);
-		
+
 		StaticPowerMessageHandler.registerMessage(PacketPowerMonitorSync.class);
-		StaticPowerMessageHandler.registerMessage(TileEntityPowerMetricsSyncPacket.class);
-		
+		StaticPowerMessageHandler.registerMessage(PowerStorageComponentSyncPacket.class);
+
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataLoadPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetTeamComponentTeam.class);

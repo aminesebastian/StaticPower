@@ -6,6 +6,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.PortableBatteryItemModel;
@@ -14,7 +15,6 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 	public final ResourceLocation tier;
 
 	public PortableBattery(ResourceLocation tier) {
-		super(0);
 		this.tier = tier;
 	}
 
@@ -30,7 +30,17 @@ public class PortableBattery extends StaticPowerEnergyStoringItem implements ICu
 	}
 
 	@Override
-	public long getCapacity() {
+	public double getCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get();
+	}
+
+	@Override
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(tier).getPortableBatteryChargingVoltage();
+	}
+
+	@Override
+	public double getMaximumInputCurrent() {
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxCurrent.get();
 	}
 }

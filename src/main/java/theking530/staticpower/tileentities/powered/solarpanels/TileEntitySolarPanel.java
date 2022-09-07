@@ -16,8 +16,8 @@ import theking530.staticpower.tileentities.TileEntityBase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
-import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
+import theking530.staticpower.tileentities.components.energy.PowerDistributionComponent;
+import theking530.staticpower.tileentities.components.energy.PowerStorageComponent;
 
 public class TileEntitySolarPanel extends TileEntityBase {
 	@TileEntityTypePopulator()
@@ -44,28 +44,29 @@ public class TileEntitySolarPanel extends TileEntityBase {
 	public static final BlockEntityTypeAllocator<TileEntitySolarPanel> TYPE_CREATIVE = new BlockEntityTypeAllocator<TileEntitySolarPanel>(
 			(allocator, pos, state) -> new TileEntitySolarPanel(allocator, pos, state, StaticPowerTiers.CREATIVE), ModBlocks.SolarPanelCreative);
 
-	public EnergyStorageComponent energyStorage;
+	public PowerStorageComponent powerStorage;
 	public SideConfigurationComponent sideConfiguration;
 	private final boolean isCreative;
+	private double generationPerTick;
 
 	public TileEntitySolarPanel(BlockEntityTypeAllocator<TileEntitySolarPanel> allocator, BlockPos pos, BlockState state, ResourceLocation tierType) {
 		super(allocator, pos, state);
 		// Set the values based on the tier.
 		StaticPowerTier tier = StaticPowerConfig.getTier(tierType);
 		isCreative = tierType == StaticPowerTiers.CREATIVE;
+		generationPerTick = tier.solarPanelPowerGeneration.get();
 
 		// Set the energy storage.
-		registerComponent(energyStorage = new EnergyStorageComponent("PowerBuffer", tier.solarPanelPowerStorage.get(), tier.solarPanelPowerGeneration.get(), tier.solarPanelPowerGeneration.get()));
-
-		// Don't let the storage recieve from outside sources.
-		energyStorage.setCanRecieve(false);
+		registerComponent(powerStorage = new PowerStorageComponent("PowerBuffer", tier.solarPanelPowerStorage.get(), Double.MAX_VALUE, Double.MAX_VALUE, Double.MAX_VALUE));
+		powerStorage.setSideConfiguration(sideConfiguration);
+		powerStorage.setCanAcceptPower(false);
 
 		// Set the side config to only output on the bottom and disable on the rest.
 		registerComponent(sideConfiguration = new SideConfigurationComponent("SideConfig", this::sideConfigCallback, this::sideModeFilter,
 				SideConfigurationComponent.ALL_SIDES_NEVER.copy().setSide(BlockSide.BOTTOM, true, MachineSideMode.Output)));
 
 		// Set the distribution component.
-		registerComponent(new OldPowerDistributionComponent("PowerDistribution", energyStorage));
+		registerComponent(new PowerDistributionComponent("PowerDistribution", powerStorage));
 	}
 
 	@Override
@@ -77,12 +78,13 @@ public class TileEntitySolarPanel extends TileEntityBase {
 
 	// Functionality
 	public void generateRF() {
-		if (isGenerating() && energyStorage.canAcceptPower(1)) {
-			if (energyStorage.getStoredPower() < energyStorage.getCapacity()) {
-				long generateAmount = getLevel().isRaining() ? energyStorage.getMaxReceive() / 2 : energyStorage.getMaxReceive();
-				energyStorage.setCanRecieve(true);
-				energyStorage.receivePower(generateAmount, false);
-				energyStorage.setCanRecieve(false);
+		if (isGenerating() && powerStorage.canAcceptPower(1)) {
+			if (powerStorage.getStoredPower() < powerStorage.getCapacity()) {
+				double generateAmount = generationPerTick;
+				if (getLevel().isRaining()) {
+					generateAmount /= 2;
+				}
+				powerStorage.addPowerIgnoringVoltageLimitations(generateAmount);
 			}
 		}
 	}

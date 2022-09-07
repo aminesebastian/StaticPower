@@ -10,7 +10,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.data.crafting.wrappers.turbine.TurbineRecipe;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
@@ -26,7 +26,7 @@ public class GuiTurbine extends StaticPowerTileEntityGui<ContainerTurbine, TileE
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 12, 16, 64));
+		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 12, 16, 64));
 		registerWidget(progressBar = new FireProgressBar(80, 58));
 
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().inputFluidTankComponent, 50, 18, 16, 58, MachineSideMode.Output, getTileEntity()));
@@ -35,7 +35,7 @@ public class GuiTurbine extends StaticPowerTileEntityGui<ContainerTurbine, TileE
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().inputFluidTankComponent).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 

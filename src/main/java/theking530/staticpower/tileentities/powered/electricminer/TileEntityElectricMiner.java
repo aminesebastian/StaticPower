@@ -17,36 +17,37 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.tileentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.tileentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.nonpowered.miner.AbstractTileEntityMiner;
 
 public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityElectricMiner> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new TileEntityElectricMiner(pos, state), ModBlocks.ElectricMiner);
+	public static final BlockEntityTypeAllocator<TileEntityElectricMiner> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityElectricMiner(pos, state),
+			ModBlocks.ElectricMiner);
 
-	public final EnergyStorageComponent energyStorage;
+	public final PowerStorageComponent powerStorage;
 	public final BatteryInventoryComponent batteryInventory;
 
 	public TileEntityElectricMiner(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(StaticPowerTiers.ENERGIZED);
-		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage",
-				tierObject.defaultMachinePowerCapacity.get(), tierObject.defaultMachinePowerInput.get(),
-				tierObject.defaultMachinePowerOutput.get()));
-		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+//		registerComponent(energyStorage = new EnergyStorageComponent("MainEnergyStorage",
+//				tierObject.defaultMachinePowerCapacity.get(), tierObject.defaultMachinePowerInput.get(),
+//				tierObject.defaultMachinePowerOutput.get()));
+
+		registerComponent(powerStorage = new PowerStorageComponent("MainEnergyStorage", StaticPowerTiers.ENERGIZED));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Set the processing parameters.
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 
 		// Expand upgrades.
 		this.upgradesInventory.setSize(4);
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override
@@ -58,14 +59,12 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 			float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 			randomOffset /= 3.5f;
 			float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
-			Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(),
-					new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-			getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(),
-					getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f,
-					0.0f);
+			Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
+			getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
+					getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
 			if (SDMath.diceRoll(0.25f)) {
-				getLevel().addParticle(ParticleTypes.LARGE_SMOKE, getBlockPos().getX() + 0.5f + randomOffset,
-						getBlockPos().getY() + 1.0f, getBlockPos().getZ() + 0.5f + randomOffset, 0.0f, 0.01f, 0.0f);
+				getLevel().addParticle(ParticleTypes.LARGE_SMOKE, getBlockPos().getX() + 0.5f + randomOffset, getBlockPos().getY() + 1.0f,
+						getBlockPos().getZ() + 0.5f + randomOffset, 0.0f, 0.01f, 0.0f);
 			}
 		}
 	}
@@ -82,8 +81,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 
 	@Override
 	public int getHeatGeneration() {
-		return (int) (StaticPowerConfig.SERVER.electricMinerHeatGeneration.get()
-				* processingComponent.getCalculatedPowerUsageMultipler());
+		return (int) (StaticPowerConfig.SERVER.electricMinerHeatGeneration.get() * processingComponent.getCalculatedPowerUsageMultipler());
 	}
 
 	@Override
@@ -103,7 +101,7 @@ public class TileEntityElectricMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public long getFuelUsage() {
+	public double getFuelUsage() {
 		return StaticPowerConfig.SERVER.electricMinerPowerUsage.get();
 	}
 }

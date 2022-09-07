@@ -27,12 +27,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminal;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
@@ -43,7 +45,7 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	private static final String TERMINAL_SIDE_KEY = "terminal_side";
 
 	public DigistoreWirelessTerminal() {
-		super(0);
+
 	}
 
 	public boolean isBound(Level world, ItemStack wirelessDevice) {
@@ -84,14 +86,10 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		return ItemStack.EMPTY;
 	}
 
-	public long getCapacity() {
-		return StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerCapacity.get();
-	}
-
 	public boolean usePower(ItemStack itemstack) {
 		// Should move to config, but 10SV per opening.
 		if (EnergyHandlerItemStackUtilities.getStoredPower(itemstack) >= StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerUsage.get()) {
-			EnergyHandlerItemStackUtilities.drainPower(itemstack, StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerUsage.get(), false);
+			EnergyHandlerItemStackUtilities.usePower(itemstack, StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerUsage.get(), false);
 			return true;
 		}
 		return false;
@@ -109,7 +107,7 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 				if (player.containerMenu instanceof InventoryMenu) {
 					worldIn.playSound(null, entityIn.blockPosition(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 0.75f, 1.5f);
 					openTerminalUI(worldIn, player, stack);
-				}else {
+				} else {
 					player.closeContainer();
 				}
 			}
@@ -167,7 +165,8 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	@OnlyIn(Dist.CLIENT)
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (worldIn != null && isBound(worldIn, stack)) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip", BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
+			tooltip.add(new TranslatableComponent("gui.staticpower.digistore_wireless_terminal_advanced_tooltip",
+					BlockPos.of(stack.getTag().getLong(TERMINAL_POSITION_KEY)).toString()));
 		}
 	}
 
@@ -190,5 +189,20 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 		public Component getDisplayName() {
 			return targetItemStack.getHoverName();
 		}
+	}
+
+	@Override
+	public double getCapacity() {
+		return StaticPowerConfig.SERVER.digistoreWirelessTerminalPowerCapacity.get();
+	}
+
+	@Override
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).getPortableBatteryChargingVoltage();
+	}
+
+	@Override
+	public double getMaximumInputCurrent() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxCurrent.get();
 	}
 }

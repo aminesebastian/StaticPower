@@ -13,9 +13,8 @@ import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
-import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.tileentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class RecipeProcessingComponent<T extends Recipe<Container>> extends AbstractProcesingComponent {
@@ -272,20 +271,14 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Abst
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public RecipeProcessingComponent<T> setEnergyComponent(EnergyStorageComponent energyComponent) {
-		return (RecipeProcessingComponent<T>) super.setEnergyComponent(energyComponent);
+	public RecipeProcessingComponent<T> setPowerComponent(PowerStorageComponent energyComponent) {
+		return (RecipeProcessingComponent<T>) super.setPowerComponent(energyComponent);
 	}
 
 	@SuppressWarnings("unchecked")
 	@Override
-	public RecipeProcessingComponent<T> setProcessingPowerUsage(long power) {
+	public RecipeProcessingComponent<T> setProcessingPowerUsage(double power) {
 		return (RecipeProcessingComponent<T>) super.setProcessingPowerUsage(power);
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public RecipeProcessingComponent<T> setCompletedPowerUsage(long power) {
-		return (RecipeProcessingComponent<T>) super.setCompletedPowerUsage(power);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -298,12 +291,6 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Abst
 	@Override
 	public RecipeProcessingComponent<T> disableProcessingPowerUsage() {
 		return (RecipeProcessingComponent<T>) super.disableProcessingPowerUsage();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public RecipeProcessingComponent<T> disableCompletedPowerUsage() {
-		return (RecipeProcessingComponent<T>) super.disableCompletedPowerUsage();
 	}
 
 	@SuppressWarnings("unchecked")

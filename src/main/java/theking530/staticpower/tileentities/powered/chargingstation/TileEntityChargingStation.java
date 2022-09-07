@@ -10,7 +10,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.api.volts.StaticVoltUtilities;
 import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
 import theking530.staticpower.client.rendering.tileentity.TileEntityRenderChargingStation;
@@ -57,21 +56,21 @@ public class TileEntityChargingStation extends TileEntityMachine {
 		// Add the rest of the inventories.
 		registerComponent(chargedInventory = new InventoryComponent("chargedInventory", 4, MachineSideMode.Output));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Create the item i/o servos.
 		registerComponent(new OutputServoComponent("OutputServo", chargedInventory));
 		registerComponent(new InputServoComponent("InputServo", unchargedInventory));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override
 	public void process() {
-		if (!getLevel().isClientSide) {
+		if (!getLevel().isClientSide()) {
 			// Charge up to four items simultaneously.
-			if (energyStorage.getStoredPower() > 0) {
+			if (powerStorage.getStoredPower() > 0) {
 				// Capture the count of chargeable items.
 				int count = getCountOfChargeableItems();
 
@@ -81,7 +80,7 @@ public class TileEntityChargingStation extends TileEntityMachine {
 				}
 
 				// Get the amount of power to apply to each item.
-				long maxOutput = StaticVoltUtilities.getCurrentMaximumPowerOutput(energyStorage) / count;
+				double maxOutput = (powerStorage.getVoltageOutput() * powerStorage.getMaximumCurrentOutput()) / count;
 
 				// Attempt to charge each item.
 				for (int i = 0; i < unchargedInventory.getSlots(); i++) {
@@ -90,8 +89,8 @@ public class TileEntityChargingStation extends TileEntityMachine {
 					// If it's not empty and is an energy storing item.
 					if (stack != ItemStack.EMPTY && EnergyHandlerItemStackUtilities.isEnergyContainer(stack)) {
 						if (EnergyHandlerItemStackUtilities.getStoredPower(stack) < EnergyHandlerItemStackUtilities.getCapacity(stack)) {
-							long charged = EnergyHandlerItemStackUtilities.receivePower(stack, maxOutput, false);
-							energyStorage.useBulkPower(charged);
+							double charged = EnergyHandlerItemStackUtilities.addPower(stack, powerStorage.getVoltageOutput(), maxOutput, false);
+							powerStorage.usePowerIgnoringVoltageLimitations(charged);
 						} else {
 							moveChargedItemToOutputs(i);
 						}

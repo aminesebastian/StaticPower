@@ -68,7 +68,7 @@ public class TileEntityBottler extends TileEntityMachine {
 		// Setup all the other inventories.;
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Use the old processing system because we need to support NON recipe based
@@ -78,7 +78,7 @@ public class TileEntityBottler extends TileEntityMachine {
 				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.bottlerProcessingTime.get(), this::canProcess,
 				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory)
-						.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage).setProcessingPowerUsage(StaticPowerConfig.SERVER.bottlerPowerUsage.get()));
+						.setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage).setProcessingPowerUsage(StaticPowerConfig.SERVER.bottlerPowerUsage.get()));
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
@@ -93,7 +93,7 @@ public class TileEntityBottler extends TileEntityMachine {
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	/**
@@ -106,7 +106,7 @@ public class TileEntityBottler extends TileEntityMachine {
 	 */
 	protected ProcessingCheckState canMoveFromInputToProcessing() {
 		if (hasValidInput() && hasFluidForInput(inputInventory.getStackInSlot(0)) && internalInventory.getStackInSlot(0).isEmpty() && fluidTankComponent.getFluidAmount() > 0
-				&& energyStorage.hasEnoughPower(processingComponent.getPowerUsage())) {
+				&& powerStorage.hasEnoughPower(processingComponent.getPowerUsage())) {
 			if (InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, getSimulatedFilledContainer(inputInventory.getStackInSlot(0)))) {
 				return ProcessingCheckState.ok();
 			}

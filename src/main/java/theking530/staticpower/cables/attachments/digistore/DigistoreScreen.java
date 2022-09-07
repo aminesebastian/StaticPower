@@ -31,7 +31,7 @@ public class DigistoreScreen extends AbstractDigistoreCableAttachment {
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
+	public double getPowerUsage(ItemStack attachment) {
 		return 0;
 	}
 }

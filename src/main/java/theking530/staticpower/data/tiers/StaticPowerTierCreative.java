@@ -1,5 +1,8 @@
 package theking530.staticpower.data.tiers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.staticpower.StaticPower;
@@ -27,18 +30,18 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getPortableBatteryCapacity() {
-		return Long.MAX_VALUE;
+	protected double getPortableBatteryCapacity() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override
-	protected long getSolarPanelPowerGeneration() {
-		return Long.MAX_VALUE;
+	protected double getSolarPanelPowerGeneration() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override
-	protected long getSolarPanelPowerStorage() {
-		return Long.MAX_VALUE;
+	protected double getSolarPanelPowerStorage() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override
@@ -72,13 +75,13 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getBatteryCapacity() {
-		return Long.MAX_VALUE;
+	protected double getBatteryCapacity() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override
-	protected long getBatteryMaxIO() {
-		return Long.MAX_VALUE;
+	protected List<Double> internalGetPortableBatteryChargingVoltage() {
+		return Arrays.asList(Double.MAX_VALUE, Double.MAX_VALUE);
 	}
 
 	@Override
@@ -106,19 +109,16 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 		return Integer.MAX_VALUE;
 	}
 
-	@Override
-	protected long getDefaultMachinePowerCapacity() {
-		return Long.MAX_VALUE;
+	protected double getDefaultMachinePowerCapacity() {
+		return Double.MAX_VALUE;
 	}
 
-	@Override
-	protected long getDefaultMachinePowerInput() {
-		return Long.MAX_VALUE;
+	protected List<Double> internalGetDefaultMachineInputVoltageRange() {
+		return Arrays.asList(0.0, Double.MAX_VALUE);
 	}
 
-	@Override
-	protected long getDefaultMachinePowerOutput() {
-		return Long.MAX_VALUE;
+	protected double getDefaultMachineMaximumCurrent() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override

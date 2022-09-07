@@ -162,8 +162,7 @@ public class MiningDrillItemModel implements BakedModel {
 				output.add(durabilityBackground);
 
 				// Draw the durability bar.
-				float bitDurability = (float) EnergyHandlerItemStackUtilities.getStoredPower(stack)
-						/ EnergyHandlerItemStackUtilities.getCapacity(stack);
+				float bitDurability = (float) (EnergyHandlerItemStackUtilities.getStoredPower(stack) / EnergyHandlerItemStackUtilities.getCapacity(stack));
 				float xUVCoord = bitDurability * 15.999f;
 				TextureAtlasSprite durabilityTexture = blocksTexture.getSprite(StaticPowerSprites.TOOL_POWER_BAR);
 				BlockFaceUV blockFaceUV = new BlockFaceUV(new float[] { xUVCoord, 0.0f, xUVCoord, 16.0f }, 0);

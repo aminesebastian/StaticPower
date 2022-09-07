@@ -5,14 +5,17 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
+import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.consumer.CapabilityStaticPower;
-import theking530.api.energy.consumer.IStaticPowerStorage;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -25,8 +28,12 @@ import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule implements IStaticPowerStorage {
+	protected record CachedPowerDestination(IStaticPowerStorage power, BlockPos cable) {
+	}
+
 	private final List<CachedPowerDestination> destinations;
 	private double lastTransferedVoltage;
+	private double maximumCurrentOutput;
 	private int lastSuppliedDestinationIndex;
 
 	public PowerNetworkModule() {
@@ -36,7 +43,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 
 	@Override
 	public void tick(Level world) {
-		lastTransferedVoltage = 0;
+
 	}
 
 	@Override
@@ -106,22 +113,53 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 
 	@Override
 	public void getReaderOutput(List<Component> output) {
-
+		output.add(new TextComponent(String.format("Supplying: %1$d destinations.", destinations.size())));
+		output.add(new TextComponent("Last Supplied Voltage: ")
+				.append(ChatFormatting.GREEN.toString() + StaticPowerEnergyTextUtilities.formatVoltageToString(lastTransferedVoltage).getString()));
 	}
 
-	protected class CachedPowerDestination {
-		public final IStaticPowerStorage power;
-		public final BlockPos cable;
+	public void getMultimeterOutput(List<Component> output, BlockPos startingLocation, BlockPos endingLocation) {
+		output.add(new TextComponent(""));
+		getReaderOutput(output);
+		// Get all the paths to the destination from this provider.
+		double cableResistance = getResistanceBetweenPoints(startingLocation, endingLocation);
+		output.add(new TextComponent("Resistance over Points: ")
+				.append(ChatFormatting.GOLD.toString() + StaticPowerEnergyTextUtilities.formatResistanceToString(cableResistance).getString()));
+		output.add(new TextComponent("Last Power Loss: ")
+				.append(ChatFormatting.RED.toString() + StaticPowerEnergyTextUtilities.formatPowerToString(cableResistance / lastTransferedVoltage).getString()));
+	}
 
-		public CachedPowerDestination(IStaticPowerStorage power, BlockPos cable) {
-			this.power = power;
-			this.cable = cable;
+	public double getResistanceBetweenPoints(BlockPos start, BlockPos end) {
+		if (!CableNetworkManager.get(Network.getWorld()).isTrackingCable(start)) {
+			return -1;
 		}
+
+		if (!CableNetworkManager.get(Network.getWorld()).isTrackingCable(end)) {
+			return -1;
+		}
+
+		List<Path> paths = Network.getPathCache().getPaths(start, end, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+		if (paths.isEmpty()) {
+			return -1;
+		}
+
+		Path path = paths.get(0);
+		double cableResistance = 0;
+		for (PathEntry entry : path.getEntries()) {
+			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
+			cableResistance += (cable.getDoubleProperty(PowerCableComponent.POWER_RESISTANCE));
+		}
+		return cableResistance;
 	}
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
 		return StaticVoltageRange.ANY_VOLTAGE;
+	}
+
+	@Override
+	public double getMaximumCurrentInput() {
+		return Double.MAX_VALUE;
 	}
 
 	@Override
@@ -140,7 +178,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	}
 
 	@Override
-	public double usePower(double power, boolean simulate) {
+	public double getMaximumCurrentOutput() {
+		return maximumCurrentOutput;
+	}
+
+	@Override
+	public double drainPower(double power, boolean simulate) {
 		return 0;
 	}
 
@@ -174,19 +217,11 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		CachedPowerDestination destination = destinations.get(lastSuppliedDestinationIndex);
 		lastSuppliedDestinationIndex++;
 
-		// Get all the paths to the destination from this provider.
-		List<Path> paths = Network.getPathCache().getPaths(pos, destination.cable, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
-		if (paths.isEmpty()) {
+		// Get the resistance between the points. If it is -1, there was no path, return
+		// 0.
+		double cableResistance = getResistanceBetweenPoints(pos, destination.cable);
+		if (cableResistance == -1) {
 			return 0;
-		}
-
-		// The shortest path will be the first one always. We then sum up the total
-		// resistance along the path.
-		Path path = paths.get(0);
-		double cableResistance = 0;
-		for (PathEntry entry : path.getEntries()) {
-			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
-			cableResistance += (cable.getDoubleProperty(PowerCableComponent.POWER_RESISTANCE) * 1000);
 		}
 
 		// This isn't the scientifically accurate way to do this, but this results in
@@ -196,9 +231,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		// resistance goes up, power loss goes up.
 		double cablePowerLoss = cableResistance / voltage;
 
-		// If we would use more power transferring than we have, do nothing. This
-		// shouldn't be possible in the real world, but this is possible in this mod due
-		// to the simplified math from above.
+		// If we would use more power transferring than we have, do nothing.
 		if (cablePowerLoss >= power) {
 			return 0;
 		}

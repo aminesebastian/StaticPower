@@ -7,16 +7,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.consumer.IStaticPowerStorage;
+import theking530.api.energy.IStaticPowerStorage;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiPowerBarFromPowerStorage extends AbstractGuiWidget<GuiPowerBarFromPowerStorage> {
+public class GuiPowerBarFromStorage extends AbstractGuiWidget<GuiPowerBarFromStorage> {
 
 	private IStaticPowerStorage energyStorage;
 
-	public GuiPowerBarFromPowerStorage(IStaticPowerStorage energyStorage, int xPosition, int yPosition, int xSize, int ySize) {
+	public GuiPowerBarFromStorage(IStaticPowerStorage energyStorage, int xPosition, int yPosition, int xSize, int ySize) {
 		super(xPosition, yPosition, xSize, ySize);
 		this.energyStorage = energyStorage;
 	}
@@ -28,7 +28,7 @@ public class GuiPowerBarFromPowerStorage extends AbstractGuiWidget<GuiPowerBarFr
 
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		tooltips.addAll(GuiPowerBarUtilities.getTooltip(energyStorage.getStoredPower(), energyStorage.getCapacity(), energyStorage.getInputVoltageRange().minimumVoltage(),
-				energyStorage.getInputVoltageRange().maximumVoltage()));
+		tooltips.addAll(GuiPowerBarUtilities.getTooltip(energyStorage.getStoredPower(), energyStorage.getCapacity(), energyStorage.getMaximumCurrentInput(),
+				energyStorage.getInputVoltageRange().minimumVoltage(), energyStorage.getInputVoltageRange().maximumVoltage()));
 	}
 }

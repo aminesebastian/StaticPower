@@ -13,9 +13,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
+import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.consumer.CapabilityStaticPower;
-import theking530.api.energy.consumer.IStaticPowerStorage;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
@@ -121,6 +121,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
+	public double getMaximumCurrentInput() {
+		return Double.MAX_VALUE;
+	}
+
+	@Override
 	public double getStoredPower() {
 		return 0;
 	}
@@ -132,10 +137,21 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public double getVoltageOutput() {
-		if (!isOnClientSide()) {
+		if (!isClientSide()) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.getVoltageOutput();
+			}
+		}
+		return 0;
+	}
+
+	@Override
+	public double getMaximumCurrentOutput() {
+		if (!isClientSide()) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.getMaximumCurrentOutput();
 			}
 		}
 		return 0;
@@ -147,7 +163,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	public double addPower(Direction side, double voltage, double power, boolean simulate) {
-		if (!isOnClientSide()) {
+		if (!isClientSide()) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
 				return module.addPower(getPos(), voltage, power, simulate);
@@ -157,7 +173,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public double usePower(double power, boolean simulate) {
+	public double drainPower(double power, boolean simulate) {
 		return 0;
 	}
 

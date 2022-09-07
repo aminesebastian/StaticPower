@@ -24,7 +24,7 @@ public class GuiSolarPanel extends StaticPowerTileEntityGui<ContainerSolarPanel,
 
 	@Override
 	public void initializeGui() {
-		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiPowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 
 		registerWidget(new TimeOfDayDrawable(19, 9, 50, getTileEntity().getLevel(), getTileEntity().getBlockPos()));
 		registerWidget(generatingWidget = new DrawableWidget<SpriteDrawable>(53, 65, 20, 20, new SpriteDrawable(StaticPowerSprites.GREEN_CHECK, 16, 16)));

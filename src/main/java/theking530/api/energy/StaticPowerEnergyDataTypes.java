@@ -5,8 +5,9 @@ import net.minecraft.nbt.CompoundTag;
 public class StaticPowerEnergyDataTypes {
 	public static record StaticVoltageRange(double minimumVoltage, double maximumVoltage) {
 		public static final StaticVoltageRange ANY_VOLTAGE = new StaticVoltageRange(Double.MIN_VALUE, Double.MAX_VALUE);
+		public static final StaticVoltageRange ZERO_VOLTAGE = new StaticVoltageRange(0, 0);
 
-		public boolean isVoltageInRange(long voltage) {
+		public boolean isVoltageInRange(double voltage) {
 			return voltage >= minimumVoltage && voltage <= maximumVoltage;
 		}
 
@@ -23,7 +24,7 @@ public class StaticPowerEnergyDataTypes {
 	}
 
 	public static record StaticCurrentRange(double minimumCurrent, double maximumCurrent) {
-		public boolean isCurrentInRange(long current) {
+		public boolean isCurrentInRange(double current) {
 			return current >= minimumCurrent && current <= maximumCurrent;
 		}
 

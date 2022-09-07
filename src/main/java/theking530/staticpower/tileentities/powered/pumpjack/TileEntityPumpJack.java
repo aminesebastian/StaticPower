@@ -44,10 +44,10 @@ public class TileEntityPumpJack extends TileEntityMachine {
 
 		// Register the processing component to handle the pumping.
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", pumpRate, this::canProcess, this::canProcess, this::pump, true)
-				.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage));
+				.setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage));
 
 		// Battery
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Set the default side configuration.
 		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input));
@@ -57,7 +57,7 @@ public class TileEntityPumpJack extends TileEntityMachine {
 	}
 
 	public ProcessingCheckState canProcess() {
-		if (!this.energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get())) {
+		if (!this.powerStorage.hasEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get())) {
 			return ProcessingCheckState.notEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
 		}
 

@@ -54,9 +54,11 @@ import theking530.api.attributes.defenitions.GrindingAttributeDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.ItemStackStaticPowerEnergyCapability;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
-import theking530.api.volts.ItemStackStaticVoltCapability;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -83,13 +85,21 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		PARTS.add(MultiPartSlots.DRILL_BIT);
 	}
 
-	public long getPowerCapacity() {
+	public double getPowerCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
+	}
+
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(tier).getPortableBatteryChargingVoltage();
+	}
+
+	public double getMaximumInputCurrent() {
+		return 0;
 	}
 
 	public ItemStack getFilledVariant() {
 		ItemStack output = new ItemStack(this, 1);
-		EnergyHandlerItemStackUtilities.setEnergy(output, Integer.MAX_VALUE);
+		EnergyHandlerItemStackUtilities.setStoredPower(output, Integer.MAX_VALUE);
 		return output;
 	}
 
@@ -308,7 +318,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		// Update the energy usage on client and server. 1 SV per block.
 		if (!player.isCreative()) {
-			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * 1000, false);
+			EnergyHandlerItemStackUtilities.usePower(stack, blocksMined.size() * 1000, false);
 		}
 
 		// Remove the enchantments.
@@ -324,9 +334,9 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		tooltip.add(new TextComponent(" "));
 
-		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
-		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
+		double remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
+		tooltip.add(StaticPowerEnergyTextUtilities.formatPowerToString(remainingCharge, capacity));
 
 		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack drillBit = this.getPartInSlot(stack, MultiPartSlots.DRILL_BIT);
@@ -354,7 +364,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-				.addCapability(new ItemStackStaticVoltCapability("default", stack, getPowerCapacity(), getPowerCapacity(), getPowerCapacity()));
+				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getPowerCapacity(), getInputVoltageRange(), getMaximumInputCurrent()));
 	}
 
 	@Override

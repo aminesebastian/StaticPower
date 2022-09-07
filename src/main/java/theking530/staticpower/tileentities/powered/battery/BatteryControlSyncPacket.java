@@ -9,33 +9,34 @@ import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
 
 public class BatteryControlSyncPacket extends NetworkMessage {
-	private long inputPerTick;
-	private long outputPerTick;
 	private BlockPos position;
+	private boolean isVoltage;
+	private double delta;
 
 	public BatteryControlSyncPacket() {
 	}
 
-	public BatteryControlSyncPacket(long inputPerTick, long outputPerTick, BlockPos pos) {
-		this.inputPerTick = inputPerTick;
-		this.outputPerTick = outputPerTick;
+	public BatteryControlSyncPacket(BlockPos pos, boolean voltage, double delta) {
 		this.position = pos;
+		this.isVoltage = voltage;
+		this.delta = delta;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeLong(inputPerTick);
-		buffer.writeLong(outputPerTick);
 		buffer.writeBlockPos(position);
+		buffer.writeBoolean(isVoltage);
+		buffer.writeDouble(delta);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		inputPerTick = buffer.readLong();
-		outputPerTick = buffer.readLong();
 		position = buffer.readBlockPos();
+		isVoltage = buffer.readBoolean();
+		delta = buffer.readDouble();
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
@@ -43,8 +44,11 @@ public class BatteryControlSyncPacket extends NetworkMessage {
 				BlockEntity rawTileEntity = ctx.get().getSender().getLevel().getBlockEntity(position);
 				if (rawTileEntity != null && rawTileEntity instanceof TileEntityBattery) {
 					TileEntityBattery battery = (TileEntityBattery) rawTileEntity;
-					battery.setInputLimit(inputPerTick);
-					battery.setOutputLimit(outputPerTick);
+					if (isVoltage) {
+						battery.addOutputVoltage(delta);
+					} else {
+						battery.addMaximumOutputCurrent(delta);
+					}
 				}
 			}
 		});

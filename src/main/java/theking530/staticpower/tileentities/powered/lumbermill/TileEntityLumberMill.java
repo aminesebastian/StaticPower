@@ -66,7 +66,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(mainOutputInventory = new InventoryComponent("MainOutputInventory", 1, MachineSideMode.Output2));
 		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1, MachineSideMode.Output3));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component to work with the redstone control component,
@@ -78,7 +78,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", inputInventory));
@@ -95,7 +95,7 @@ public class TileEntityLumberMill extends TileEntityMachine {
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidFillContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {

@@ -1,4 +1,4 @@
-package theking530.api.energy.consumer;
+package theking530.api.energy;
 
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 
@@ -11,6 +11,10 @@ public interface IStaticPowerStorage {
 	public double getCapacity();
 
 	public double getVoltageOutput();
+
+	public double getMaximumCurrentOutput();
+
+	public double getMaximumCurrentInput();
 
 	/**
 	 * Attempts to add power to this storage using the provided voltage. The
@@ -32,7 +36,7 @@ public interface IStaticPowerStorage {
 	 * @param simulate
 	 * @return
 	 */
-	public double usePower(double power, boolean simulate);
+	public double drainPower(double power, boolean simulate);
 
 	public boolean canAcceptPower();
 

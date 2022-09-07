@@ -10,15 +10,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
-import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
+import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent;
 
 public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 	public static final String POWER_TAG = "power";
+	public static final String DEP_POWER_TAG = "dep_power";
 	public static final String FLUID_TAG = "fluid";
 	public static final String HEAT_TAG = "heat";
 	public static final String PROCESSING_TAG = "processing";
@@ -48,11 +50,21 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 			data.put(HEAT_TAG, heatData);
 		});
 
-		// Add static volt data.
-		te.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
+		// Add static power data.
+		te.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 			CompoundTag powerData = new CompoundTag();
-			powerData.putLong("value", powerStorage.getStoredPower());
-			powerData.putLong("max", powerStorage.getCapacity());
+
+			if (powerStorage.doesProvidePower()) {
+				powerData.putDouble("output_voltage", powerStorage.getVoltageOutput());
+			}
+
+			// We don't want to show any of this for power cables, only the output voltage.
+			if (powerStorage.canAcceptPower() && !(te instanceof TileEntityPowerCable)) {
+				powerData.putDouble("min_voltage", powerStorage.getInputVoltageRange().minimumVoltage());
+				powerData.putDouble("max_voltage", powerStorage.getInputVoltageRange().maximumVoltage());
+				powerData.putDouble("stored_power", powerStorage.getStoredPower());
+				powerData.putDouble("capacity", powerStorage.getCapacity());
+			}
 			data.put(POWER_TAG, powerData);
 		});
 

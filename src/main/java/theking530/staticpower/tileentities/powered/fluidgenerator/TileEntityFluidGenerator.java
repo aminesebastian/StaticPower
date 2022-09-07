@@ -25,14 +25,13 @@ import theking530.staticpower.tileentities.TileEntityMachine;
 import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.tileentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.tileentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 
 public class TileEntityFluidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
@@ -60,7 +59,10 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", 0, this::canProcess, this::canProcess, this::processingCompleted, true)
 				.setShouldControlBlockState(true).setRedstoneControlComponent(redstoneControlComponent));
 
-		registerComponent(new OldPowerDistributionComponent("PowerDistributor", energyStorage));
+		powerStorage.setCanAcceptPower(false);
+		powerStorage.setSideConfiguration(ioSideConfiguration);
+		powerStorage.setUpgradeInventory(upgradesInventory);
+		registerComponent(new PowerDistributionComponent("PowerDistributor", powerStorage));
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluidStack) -> {
@@ -71,16 +73,6 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 
 		registerComponent(new FluidInputServoComponent("InputServo", 20, fluidTankComponent, MachineSideMode.Input));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
-
-		// Don't allow this to receive power from external sources.
-		this.energyStorage.setCapabiltiyFilter((amount, side, action) -> {
-			if (action == EnergyManipulationAction.RECIEVE) {
-				return false;
-			}
-			return true;
-		});
-		energyStorage.setAutoSyncPacketsEnabled(true);
-		energyStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	@Override
@@ -106,7 +98,7 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		}
 
 		// Check to make sure we can store power.
-		if (energyStorage.canAcceptPower(1)) {
+		if (powerStorage.canAcceptPower(1)) {
 			return ProcessingCheckState.ok();
 		} else {
 			return ProcessingCheckState.error("Energy Storage Full!");
@@ -123,10 +115,8 @@ public class TileEntityFluidGenerator extends TileEntityMachine {
 		// Get the recipe.
 		FluidGeneratorRecipe recipe = getRecipe(fluidTankComponent.getFluid()).get();
 
-		energyStorage.setMaxInput(recipe.getPowerGeneration());
-		energyStorage.setMaxOutput(recipe.getPowerGeneration());
 		// Add the power.
-		energyStorage.receivePower(recipe.getPowerGeneration(), false);
+		powerStorage.addPowerIgnoringVoltageLimitations(recipe.getPowerGeneration());
 		// Drain the used fluid.
 		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
 		return ProcessingCheckState.ok();

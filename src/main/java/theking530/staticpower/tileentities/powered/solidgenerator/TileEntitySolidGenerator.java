@@ -26,17 +26,17 @@ import theking530.staticpower.tileentities.components.control.AbstractProcesingC
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.tileentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.tileentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
 import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 
 public class TileEntitySolidGenerator extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntitySolidGenerator(pos, state), ModBlocks.SolidGenerator);
+	public static final BlockEntityTypeAllocator<TileEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntitySolidGenerator(pos, state),
+			ModBlocks.SolidGenerator);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
@@ -45,7 +45,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 
 	public final RecipeProcessingComponent<SolidFuelRecipe> processingComponent;
 
-	public long powerGenerationPerTick;
+	public double powerGenerationPerTick;
 
 	public TileEntitySolidGenerator(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state, StaticPowerTiers.IRON);
@@ -75,25 +75,15 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the power distribution component.
-		registerComponent(new OldPowerDistributionComponent("PowerDistributor", energyStorage));
+		powerStorage.setSideConfiguration(ioSideConfiguration);
+		powerStorage.setCanAcceptPower(false);
+		registerComponent(new PowerDistributionComponent("PowerDistributor", powerStorage));
 
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
 
 		// Set the default power generation.
 		powerGenerationPerTick = StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get();
-
-		// Don't allow this to receive power from external sources.
-		energyStorage.setCapabiltiyFilter((amount, side, action) -> {
-			if (action == EnergyManipulationAction.RECIEVE) {
-				return false;
-			}
-			return true;
-		});
-
-		// Set the max power I/O to infinite.
-		energyStorage.setMaxInput(Integer.MAX_VALUE);
-		energyStorage.setMaxOutput(Integer.MAX_VALUE);
 	}
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
@@ -107,7 +97,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	protected ProcessingCheckState moveInputs(SolidFuelRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!energyStorage.canAcceptPower(powerGenerationPerTick)) {
+		if (!powerStorage.canAcceptPower(powerGenerationPerTick)) {
 			return ProcessingCheckState.powerOutputFull();
 		}
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
@@ -116,7 +106,7 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 	}
 
 	protected ProcessingCheckState canProcessRecipe(SolidFuelRecipe recipe, RecipeProcessingPhase location) {
-		if (!energyStorage.canAcceptPower(powerGenerationPerTick)) {
+		if (!powerStorage.canAcceptPower(powerGenerationPerTick)) {
 			return ProcessingCheckState.powerOutputFull();
 		}
 		return ProcessingCheckState.ok();
@@ -144,16 +134,16 @@ public class TileEntitySolidGenerator extends TileEntityMachine {
 				randomOffset /= 3.5f;
 				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
 				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
-				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f,
-						0.01f, 0.0f);
-				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(), getBlockPos().getZ() + forwardVector.z(), 0.0f,
-						0.01f, 0.0f);
+				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
+						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
+				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
+						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
 			}
 		}
 
 		// If we're processing, generate power. Otherwise, pause.
 		if (!getLevel().isClientSide && processingComponent.isPerformingWork()) {
-			energyStorage.addPower((int) (powerGenerationPerTick));
+			powerStorage.addPowerIgnoringVoltageLimitations(powerGenerationPerTick);
 		}
 	}
 

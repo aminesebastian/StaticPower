@@ -1,5 +1,8 @@
 package theking530.staticpower.data.tiers;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.api.heat.CapabilityHeatable;
@@ -28,18 +31,28 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getPortableBatteryCapacity() {
-		return 2500000;
+	protected double getPortableBatteryCapacity() {
+		return 10000;
 	}
 
 	@Override
-	protected long getSolarPanelPowerGeneration() {
-		return 4000;
+	protected List<Double> internalGetPortableBatteryChargingVoltage() {
+		return Arrays.asList(12.0, 24.0);
 	}
 
 	@Override
-	protected long getSolarPanelPowerStorage() {
-		return 8000;
+	protected double getPortableBatteryMaxCurrent() {
+		return 5;
+	}
+
+	@Override
+	protected double getSolarPanelPowerGeneration() {
+		return 4;
+	}
+
+	@Override
+	protected double getSolarPanelPowerStorage() {
+		return 20;
 	}
 
 	@Override
@@ -99,12 +112,12 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 
 	@Override
 	protected double getCablePowerMaxCurrent() {
-		return 50;
+		return 20;
 	}
 
 	@Override
 	protected double getCablePowerResistancePerBlock() {
-		return 0.001;
+		return 1;
 	}
 
 	@Override
@@ -114,7 +127,7 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 
 	@Override
 	protected double getCableIndustrialPowerResistancePerBlock() {
-		return 0.01;
+		return 10;
 	}
 
 	@Override
@@ -123,13 +136,8 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getBatteryCapacity() {
-		return 25000000;
-	}
-
-	@Override
-	protected long getBatteryMaxIO() {
-		return 512000;
+	protected double getBatteryCapacity() {
+		return 25000;
 	}
 
 	@Override
@@ -223,24 +231,36 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getDefaultMachinePowerCapacity() {
-		return 2500000;
+	protected double getDefaultMachinePowerCapacity() {
+		return 500;
 	}
 
 	@Override
-	protected long getDefaultMachinePowerInput() {
-		return 32000;
+	protected List<Double> internalGetDefaultMachineInputVoltageRange() {
+		return Arrays.asList(24.0, 48.0);
 	}
 
 	@Override
-	protected long getDefaultMachinePowerOutput() {
-		return 32000;
+	protected double getDefaultMachineMaximumInputCurrent() {
+		return 3;
 	}
 
+	@Override
+	protected double getDefaultMachineMaximumVoltageOutput() {
+		return 48;
+	}
+
+	@Override
+	protected double getDefaultMachineMaximumCurrentOutput() {
+		return 3;
+	}
+
+	@Override
 	protected int getDefaultMachineOverheatTemperature() {
 		return CapabilityHeatable.convertHeatToMilliHeat(700);
 	}
 
+	@Override
 	protected int getDefaultMachineMaximumTemperature() {
 		return CapabilityHeatable.convertHeatToMilliHeat(1000);
 	}
@@ -276,7 +296,7 @@ public class StaticPowerTierStatic extends StaticPowerTier {
 	}
 
 	@Override
-	protected long getMagnetPowerCapacity() {
+	protected double getMagnetPowerCapacity() {
 		return getPortableBatteryCapacity() * 2;
 	}
 

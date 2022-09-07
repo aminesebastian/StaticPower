@@ -7,14 +7,12 @@ import javax.annotation.Nullable;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,10 +20,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.client.rendering.blocks.BatteryBlockedBakedModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 
@@ -52,35 +52,15 @@ public class BlockBattery extends StaticPowerMachineBlock {
 			if (nbt.contains("MainEnergyStorage")) {
 				CompoundTag energyNbt = nbt.getCompound("MainEnergyStorage").getCompound("EnergyStorage");
 				tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.stored_power", ChatFormatting.AQUA)
-						.append(GuiTextUtilities.formatEnergyToString(energyNbt.getLong("current_power"))));
+						.append(StaticPowerEnergyTextUtilities.formatPowerToString(energyNbt.getLong("current_power"))));
 			}
 		}
-
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.capacity", ChatFormatting.GREEN)
-				.append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.getTier(tier).batteryCapacity.get())));
-		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_input", ChatFormatting.BLUE)
-				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
-		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_output", ChatFormatting.GOLD)
-				.append(GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
+				.append(StaticPowerEnergyTextUtilities.formatPowerToString(tierObject.batteryCapacity.get())));// StaticPowerConfig.getTier(tier).batteryCapacity.get())));
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_input", ChatFormatting.BLUE).append(StaticPowerEnergyTextUtilities.formatPowerToString(0))); // StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
+		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.max_output", ChatFormatting.GOLD).append(StaticPowerEnergyTextUtilities.formatPowerToString(0))); // StaticPowerConfig.getTier(tier).batteryMaxIO.get())));
 		tooltip.add(GuiTextUtilities.createTooltipBulletpoint("gui.staticpower.battery_block_charging_tooltip", ChatFormatting.GRAY));
-	}
-
-	@Override
-	public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		if (blockAccess.getBlockEntity(pos) instanceof TileEntityBattery) {
-			TileEntityBattery battery = (TileEntityBattery) blockAccess.getBlockEntity(pos);
-			return battery.shouldOutputRedstoneSignal() ? 15 : 0;
-		}
-		return 0;
-	}
-
-	@Override
-	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		if (blockAccess.getBlockEntity(pos) instanceof TileEntityBattery) {
-			TileEntityBattery battery = (TileEntityBattery) blockAccess.getBlockEntity(pos);
-			return battery.shouldOutputRedstoneSignal() ? 15 : 0;
-		}
-		return 0;
 	}
 
 	@Override

@@ -53,7 +53,6 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 		this.heatSinkTier = heatSinkTier;
 		StaticPowerTier tier = StaticPowerConfig.getTier(heatSinkTier);
 		registerComponent(heatStorage = new HeatStorageComponent("HeatStorageComponent", tier.heatSinkOverheatTemperature.get(), tier.heatSinkMaximumTemperature.get(), 1.0f));
-		energyStorage.setMaxInput(tier.heatSinkElectricHeatPowerUsage.get() * 2);
 	}
 
 	@Override
@@ -89,19 +88,19 @@ public class TileEntityHeatSink extends TileEntityMachine implements MenuProvide
 	}
 
 	protected void generateHeat() {
-		if (energyStorage.getStoredPower() > 0) {
+		if (powerStorage.getStoredPower() > 0) {
 			StaticPowerTier tier = StaticPowerConfig.getTier(heatSinkTier);
 			int generation = tier.heatSinkElectricHeatGeneration.get();
-			int generationCost = tier.heatSinkElectricHeatPowerUsage.get();
+			double generationCost = tier.heatSinkElectricHeatPowerUsage.get();
 
 			if (generation > 0) {
 				int transferableHeat = heatStorage.getOverheatThreshold() - heatStorage.getCurrentHeat();
 				transferableHeat = Math.min(transferableHeat, generation);
 
-				long maxPowerUsage = Math.min(generationCost, energyStorage.getStoredPower());
-				long powerUsage = (int) Math.max(1, maxPowerUsage * ((float) transferableHeat / generation));
-				if (energyStorage.hasEnoughPower(powerUsage)) {
-					energyStorage.useBulkPower(powerUsage);
+				double maxPowerUsage = Math.min(generationCost, powerStorage.getStoredPower());
+				double powerUsage = (int) Math.max(1, maxPowerUsage * ((float) transferableHeat / generation));
+				if (powerStorage.hasEnoughPower(powerUsage)) {
+					powerStorage.usePowerIgnoringVoltageLimitations(powerUsage);
 					heatStorage.heat(transferableHeat, HeatTransferAction.EXECUTE);
 				}
 			}

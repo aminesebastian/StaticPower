@@ -345,6 +345,7 @@
 	"item.staticpower.mold_drill_bit": "Drill Bit Mold",
 	"item.staticpower.mold_rod": "Rod Mold",
 	"item.staticpower.cable_network_analyzer": "Cable Network Analyzer",
+	"item.staticpower.multimeter": "Multimeter",
 	"item.staticpower.portable_battery_basic": "Basic Portable Battery",
 	"item.staticpower.portable_battery_advanced": "Advanced Portable Battery",
 	"item.staticpower.portable_battery_static": "Static Portable Battery",
@@ -924,17 +925,19 @@
 	"gui.staticpower.min_input": "Max Input",
 	"gui.staticpower.max_input": "Max Input",
 	"gui.staticpower.max_output": "Max Output",
-	"gui.staticpower.input_range": "Input Range",
 	"gui.staticpower.capacity": "Capacity",
 	"gui.staticpower.stored_power": "Stored Power",
 	"gui.staticpower.usage": "Usage",
 	
+	"gui.staticpower.input_voltage": "Input Voltage",
 	"gui.staticpower.volt_unit": "V",
 	
-	"gui.staticpower.current_unit": "C",
+	"gui.staticpower.max_input_current": "Max Current",
+	"gui.staticpower.current_unit": "A",
+	
 	"gui.staticpower.stored_power": "Stored Power",
-	"gui.staticpower.power_unit": "P",
-	"gui.staticpower.power_unit_per_tick": "P/t",
+	"gui.staticpower.power_unit": "W",
+	"gui.staticpower.power_unit_per_tick": "W/t",
 	
 	"gui.staticpower.power_resistance_unit": "Ω",
 	
@@ -942,8 +945,8 @@
 	"gui.staticpower.fluid_unit": "B",
 	"gui.staticpower.fluid_unit_per_tick": "B/t",
 	
-	"gui.staticpower.heat_unit": "°H",
-	"gui.staticpower.heat_unit_per_tick": "°H/t",
+	"gui.staticpower.heat_unit": "°C",
+	"gui.staticpower.heat_unit_per_tick": "°C/t",
 	
 	"gui.staticpower.heat_conductivity_unit": "λ",
 	
@@ -1012,7 +1015,9 @@
 	"gui.staticpower.pump_rate_format": "Pumps every %1$s seconds",
 	"gui.staticpower.item_cable_transfer_rate": "%1$d %2$s/s",
 	"gui.staticpower.max_transfer_rate": "Maximum Transfer Rate",
-	"gui.staticpower.power_cable_max_current": "Maximum Current",
+	"gui.staticpower.power_cable_input_voltage": "Input Voltage",
+	"gui.staticpower.power_cable_max_current": "Max. Current",
+	"gui.staticpower.output_voltage": "Output Voltage",
 	"gui.staticpower.power_cable_resistance": "Resistance",
 	"gui.staticpower.max_fluid_rate": "Maximum Fluid Rate",
 	"gui.staticpower.item_cable_acceleration": "Acceleration: %1$d%%",

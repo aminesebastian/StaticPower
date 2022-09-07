@@ -113,12 +113,12 @@ public class TileEntityPump extends TileEntityMachine {
 
 		// Register the processing component to handle the pumping.
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", pumpRate, this::canProcess, this::canProcess, this::pump, true)
-				.setRedstoneControlComponent(redstoneControlComponent).setEnergyComponent(energyStorage));
+				.setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage));
 
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, fluidTankComponent, MachineSideMode.Output));
 
 		// Battery
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Set the default side configuration.
 		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input));
@@ -144,7 +144,7 @@ public class TileEntityPump extends TileEntityMachine {
 	 * @return
 	 */
 	public ProcessingCheckState canProcess() {
-		if (!this.energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get())) {
+		if (!this.powerStorage.hasEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get())) {
 			return ProcessingCheckState.notEnoughPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
 
 		}
@@ -199,7 +199,7 @@ public class TileEntityPump extends TileEntityMachine {
 					getLevel().playSound(null, getBlockPos(), fluidState.getType() == Fluids.LAVA ? SoundEvents.BUCKET_FILL_LAVA : SoundEvents.BUCKET_FILL, SoundSource.BLOCKS, 0.5f, 1.0f);
 
 					// Use the power.
-					energyStorage.useBulkPower(StaticPowerConfig.SERVER.pumpPowerUsage.get());
+					powerStorage.usePowerIgnoringVoltageLimitations(StaticPowerConfig.SERVER.pumpPowerUsage.get());
 
 					// Pump the fluid.
 					FluidStack pumpedStack = new FluidStack(fluidState.getType(), FluidAttributes.BUCKET_VOLUME);

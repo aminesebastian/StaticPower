@@ -15,6 +15,18 @@ public class MetricConverter {
 			return;
 		}
 
+		if (Double.isInfinite(Value)) {
+			Value = 0;
+			Suffix = "∞";
+			return;
+		}
+
+		if (value == Double.MAX_VALUE) {
+			Value = 0;
+			Suffix = "∞";
+			return;
+		}
+
 		// Keep dividing the Value by 1000 until we hit a current value of < 1000.
 		// For each iteration of the loop, increment the suffix index.
 		int suffixIndex = 8 + initialOffset;
@@ -24,6 +36,9 @@ public class MetricConverter {
 			while (Value / 1000 >= 1) {
 				Value /= 1000;
 				suffixIndex++;
+				if (suffixIndex > 16) {
+					break;
+				}
 			}
 		} else {
 			suffixIndex--;
@@ -31,6 +46,9 @@ public class MetricConverter {
 			while (Value < 1) {
 				Value *= 1000;
 				suffixIndex--;
+				if (suffixIndex < 0) {
+					break;
+				}
 			}
 		}
 

@@ -1,4 +1,4 @@
-package theking530.staticpower.tileentities.components.power;
+package theking530.api.energy.metrics;
 
 import java.util.Deque;
 import java.util.HashMap;
@@ -11,52 +11,48 @@ import net.minecraft.nbt.Tag;
 import net.minecraftforge.common.util.INBTSerializable;
 
 public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
-	public enum MetricCategory {
-		TICKS, SECONDS, MINUTES, HOURS
-	}
-
 	public static final int MAX_METRIC_SAMPLES = 60;
 
-	private final HashMap<MetricCategory, PowerTransferMetricWrapper> data;
+	private final HashMap<MetricsTimeUnit, PowerTransferMetricWrapper> data;
 	private byte currentTick;
 	private byte currentSecond;
 	private byte currentMinute;
 
 	public PowerTransferMetrics() {
-		this.data = new HashMap<MetricCategory, PowerTransferMetricWrapper>();
+		this.data = new HashMap<MetricsTimeUnit, PowerTransferMetricWrapper>();
 
 		// Pre-fill all the values.
-		for (MetricCategory cat : MetricCategory.values()) {
+		for (MetricsTimeUnit cat : MetricsTimeUnit.values()) {
 			data.put(cat, new PowerTransferMetricWrapper(cat));
 		}
 	}
 
-	public PowerTransferMetricWrapper getData(MetricCategory category) {
+	public PowerTransferMetricWrapper getData(MetricsTimeUnit category) {
 		return data.get(category);
 	}
 
 	public void addMetric(float input, float output) {
-		data.get(MetricCategory.TICKS).addInputValue(input);
-		data.get(MetricCategory.TICKS).addOutputValue(output);
+		data.get(MetricsTimeUnit.TICKS).addInputValue(input);
+		data.get(MetricsTimeUnit.TICKS).addOutputValue(output);
 		currentTick++;
 
 		// Propagate the values forward to all additional time categories.
 		if (currentTick >= 20) {
 			currentTick = 0;
 			currentSecond++;
-			data.get(MetricCategory.SECONDS).addInputValue(input);
-			data.get(MetricCategory.SECONDS).addOutputValue(output);
+			data.get(MetricsTimeUnit.SECONDS).addInputValue(input);
+			data.get(MetricsTimeUnit.SECONDS).addOutputValue(output);
 		}
 		if (currentSecond >= 60) {
 			currentSecond = 0;
 			currentMinute++;
-			data.get(MetricCategory.MINUTES).addInputValue(input);
-			data.get(MetricCategory.MINUTES).addOutputValue(output);
+			data.get(MetricsTimeUnit.MINUTES).addInputValue(input);
+			data.get(MetricsTimeUnit.MINUTES).addOutputValue(output);
 		}
 		if (currentMinute >= 60) {
 			currentMinute = 0;
-			data.get(MetricCategory.HOURS).addInputValue(input);
-			data.get(MetricCategory.HOURS).addOutputValue(output);
+			data.get(MetricsTimeUnit.HOURS).addInputValue(input);
+			data.get(MetricsTimeUnit.HOURS).addOutputValue(output);
 		}
 	}
 
@@ -68,7 +64,7 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
 		output.putByte("cMin", currentMinute);
 
 		// Serialize the data.
-		for (MetricCategory cat : MetricCategory.values()) {
+		for (MetricsTimeUnit cat : MetricsTimeUnit.values()) {
 			output.put(cat.toString(), data.get(cat).serializeNBT());
 		}
 
@@ -82,13 +78,13 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
 		currentMinute = nbt.getByte("cMin");
 
 		// Deserialize the data.
-		for (MetricCategory cat : MetricCategory.values()) {
+		for (MetricsTimeUnit cat : MetricsTimeUnit.values()) {
 			data.get(cat).deserializeNBT(nbt.getCompound(cat.toString()));
 		}
 	}
 
 	public class PowerTransferMetricWrapper implements INBTSerializable<CompoundTag> {
-		private MetricCategory category;
+		private MetricsTimeUnit category;
 		private Deque<Float> inputValues;
 		private Deque<Float> outputValues;
 
@@ -103,7 +99,7 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
 			}
 		}
 
-		public PowerTransferMetricWrapper(MetricCategory category) {
+		public PowerTransferMetricWrapper(MetricsTimeUnit category) {
 			this();
 			this.category = category;
 		}
@@ -154,7 +150,7 @@ public class PowerTransferMetrics implements INBTSerializable<CompoundTag> {
 
 		@Override
 		public void deserializeNBT(CompoundTag nbt) {
-			category = MetricCategory.values()[nbt.getByte("cat")];
+			category = MetricsTimeUnit.values()[nbt.getByte("cat")];
 
 			inputValues.clear();
 			outputValues.clear();

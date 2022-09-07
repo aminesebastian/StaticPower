@@ -204,7 +204,7 @@ public abstract class AbstractTileEntityComponent {
 		return getTileEntity().getLevel();
 	}
 
-	public boolean isOnClientSide() {
-		return getTileEntity().isOnClientSide();
+	public boolean isClientSide() {
+		return getTileEntity().getLevel().isClientSide();
 	}
 }

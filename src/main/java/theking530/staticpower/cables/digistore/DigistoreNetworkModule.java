@@ -54,7 +54,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void tick(Level world) {
 		if (isManagerPresent()) {
-			manager.energyStorage.useBulkPower(getPowerUsage());
+			manager.energyStorage.usePowerIgnoringVoltageLimitations(getPowerUsage());
 
 			craftingTimer++;
 			if (craftingTimer >= CRAFTING_TIME) {
@@ -110,13 +110,13 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 				// If we already had a manager set, ignore this.
 				// TODO: Error message to show that there are multiple managers attached.
 				if (te instanceof TileEntityDigistoreManager) {
-					if(manager == null) {
+					if (manager == null) {
 						manager = (TileEntityDigistoreManager) te;
 					}
 				}
 			}
 		}
-		
+
 		// Update the transaction manager.
 		transactionManager.updateDigistoreList(digistores);
 	}

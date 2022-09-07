@@ -53,9 +53,11 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
+import theking530.api.energy.ItemStackStaticPowerEnergyCapability;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
-import theking530.api.volts.ItemStackStaticVoltCapability;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -81,8 +83,16 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 		PARTS.add(MultiPartSlots.CHAINSAW_BLADE);
 	}
 
-	public long getCapacity() {
+	public double getPowerCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
+	}
+
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(tier).getPortableBatteryChargingVoltage();
+	}
+
+	public double getMaximumInputCurrent() {
+		return 0;
 	}
 
 	@Override
@@ -97,7 +107,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 	public ItemStack getFilledVariant() {
 		ItemStack output = new ItemStack(this, 1);
-		EnergyHandlerItemStackUtilities.setEnergy(output, Integer.MAX_VALUE);
+		EnergyHandlerItemStackUtilities.getEnergyContainer(output).ifPresent((cap) -> {
+			cap.setStoredPower(Double.MAX_VALUE);
+		});
 		return output;
 	}
 
@@ -233,7 +245,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 		// Update the energy usage on client and server. 1SV per block.
 		if (!player.isCreative()) {
-			EnergyHandlerItemStackUtilities.drainPower(stack, blocksMined.size() * 1000, false);
+			EnergyHandlerItemStackUtilities.usePower(stack, blocksMined.size() * 1000, false);
 		}
 	}
 
@@ -245,9 +257,9 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 
 		tooltip.add(new TextComponent(" "));
 
-		long remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
-		long capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-		tooltip.add(GuiTextUtilities.formatEnergyToString(remainingCharge, capacity));
+		double remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
+		double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
+		tooltip.add(StaticPowerEnergyTextUtilities.formatPowerToString(remainingCharge, capacity));
 
 		if (isSlotPopulated(stack, MultiPartSlots.CHAINSAW_BLADE)) {
 			ItemStack blade = getPartInSlot(stack, MultiPartSlots.CHAINSAW_BLADE);
@@ -275,7 +287,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-				.addCapability(new ItemStackStaticVoltCapability("default", stack, getCapacity(), getCapacity(), getCapacity()));
+				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getPowerCapacity(), getInputVoltageRange(), getMaximumInputCurrent()));
 	}
 
 	@Override

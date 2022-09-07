@@ -110,7 +110,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 			}
 		}).setSlotsLockable(true));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
 				.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64));
@@ -119,7 +119,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 				this::canProcess, this::processingCompleted, true));
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.treeFarmerPowerUsage.get());
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", 5000, (fluid) -> {
@@ -137,7 +137,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 
 		fluidContainerComponent.setMode(FluidContainerInteractionMode.DRAIN);
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
 	public int getRadius() {
@@ -185,7 +185,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 	@Override
 	public void process() {
 		if (processingComponent.isPerformingWork()) {
-			if (!isOnClientSide()) {
+			if (!getLevel().isClientSide()) {
 				fluidTankComponent.drain(StaticPowerConfig.SERVER.treeFarmerFluidUsage.get(), FluidAction.EXECUTE);
 			}
 		}
@@ -312,7 +312,6 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		bonemealSapling(pos);
 	}
 
-	@SuppressWarnings("deprecation")
 	protected boolean isFarmableBlock(BlockPos pos) {
 		// Get the block at the position.
 		Block block = getLevel().getBlockState(pos).getBlock();
@@ -338,7 +337,7 @@ public class TileEntityTreeFarm extends TileEntityMachine {
 		System.out.println(hitPositions.size() + "   " + getLevel().getBlockState(pos));
 		System.out.println(items.size());
 		getLevel().destroyBlock(pos, false);
-		energyStorage.useBulkPower(StaticPowerConfig.SERVER.treeFarmerHarvestPowerUsage.get());
+		powerStorage.usePowerIgnoringVoltageLimitations(StaticPowerConfig.SERVER.treeFarmerHarvestPowerUsage.get());
 		useAxe();
 
 		// Recurse to any adjacent blocks if they are farm-able.

@@ -7,11 +7,11 @@ import net.minecraft.util.GsonHelper;
 
 public class MachineRecipeProcessingSection {
 	protected final int processingTime;
-	protected final long powerCost;
+	protected final double powerCost;
 	protected final int minimumHeat;
 	protected final int heatUse;
 
-	protected MachineRecipeProcessingSection(int processingTime, long powerCost, int minimumHeat, int heatUse) {
+	protected MachineRecipeProcessingSection(int processingTime, double powerCost, int minimumHeat, int heatUse) {
 		this.processingTime = processingTime;
 		this.powerCost = powerCost;
 		this.minimumHeat = minimumHeat;
@@ -32,7 +32,7 @@ public class MachineRecipeProcessingSection {
 	 * 
 	 * @return
 	 */
-	public long getPowerCost() {
+	public double getPowerCost() {
 		return powerCost;
 	}
 
@@ -44,15 +44,15 @@ public class MachineRecipeProcessingSection {
 		return heatUse;
 	}
 
-	public static MachineRecipeProcessingSection hardcoded(int defaultTime, long defaultPowerCost, int minimumHeat, int heatUse) {
+	public static MachineRecipeProcessingSection hardcoded(int defaultTime, double defaultPowerCost, int minimumHeat, int heatUse) {
 		return new MachineRecipeProcessingSection(defaultTime, defaultPowerCost, minimumHeat, heatUse);
 	}
 
-	public static MachineRecipeProcessingSection fromJson(int defaultTime, long defaultPowerCost, JsonObject json) {
+	public static MachineRecipeProcessingSection fromJson(int defaultTime, double defaultPowerCost, JsonObject json) {
 		return fromJson(defaultTime, defaultPowerCost, 0, 0, json);
 	}
 
-	public static MachineRecipeProcessingSection fromJson(int defaultTime, long defaultPowerCost, int defaultMinimumHeat, int defaultHeatUse, JsonObject json) {
+	public static MachineRecipeProcessingSection fromJson(int defaultTime, double defaultPowerCost, int defaultMinimumHeat, int defaultHeatUse, JsonObject json) {
 		if (GsonHelper.isValidNode(json, "processing")) {
 			JsonObject processingElement = GsonHelper.getAsJsonObject(json, "processing");
 			int time = defaultTime;
@@ -60,9 +60,9 @@ public class MachineRecipeProcessingSection {
 				time = processingElement.get("time").getAsInt();
 			}
 
-			long power = defaultPowerCost;
+			double power = defaultPowerCost;
 			if (processingElement.has("power")) {
-				power = processingElement.get("power").getAsLong();
+				power = processingElement.get("power").getAsDouble();
 			}
 
 			int minimumHeat = defaultMinimumHeat;
@@ -81,12 +81,12 @@ public class MachineRecipeProcessingSection {
 	}
 
 	public static MachineRecipeProcessingSection fromBuffer(FriendlyByteBuf buf) {
-		return new MachineRecipeProcessingSection(buf.readInt(), buf.readLong(), buf.readInt(), buf.readInt());
+		return new MachineRecipeProcessingSection(buf.readInt(), buf.readDouble(), buf.readInt(), buf.readInt());
 	}
 
 	public void writeToBuffer(FriendlyByteBuf buf) {
 		buf.writeInt(processingTime);
-		buf.writeLong(powerCost);
+		buf.writeDouble(powerCost);
 		buf.writeInt(minimumHeat);
 		buf.writeInt(heatUse);
 	}

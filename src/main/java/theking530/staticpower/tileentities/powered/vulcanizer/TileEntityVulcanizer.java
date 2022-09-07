@@ -56,7 +56,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		// Setup the inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(
-				batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+				batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
@@ -68,7 +68,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the I/O servos.
@@ -92,7 +92,7 @@ public class TileEntityVulcanizer extends TileEntityMachine {
 				fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Initialize the current processing stack.
 		currentProcessingFluidStack = FluidStack.EMPTY;

@@ -9,33 +9,31 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
-import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.api.energy.metrics.MetricsTimeUnit;
+import theking530.api.energy.metrics.PowerTransferMetrics.PowerTransferMetricWrapper;
 import theking530.staticcore.gui.widgets.DataGraphWidget;
 import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromPowerStorage;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.power.PowerTransferMetrics.MetricCategory;
-import theking530.staticpower.tileentities.components.power.PowerTransferMetrics.PowerTransferMetricWrapper;
 
 public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable, TileEntityPowerCable> {
 
 	private DataGraphWidget graphWidget;
-	private MetricCategory displayType;
+	private MetricsTimeUnit displayType;
 	private TextButton metricTypeButton;
 
 	public GuiPowerCable(ContainerPowerCable container, Inventory invPlayer, Component name) {
 		super(container, invPlayer, name, 190, 125);
-		displayType = MetricCategory.SECONDS;
+		displayType = MetricsTimeUnit.SECONDS;
 	}
 
 	@Override
 	public void initializeGui() {
-		this.registerWidget(new GuiPowerBarFromPowerStorage(this.getTileEntity().powerCableComponent, 164, 20, 16, 78));
+		this.registerWidget(new GuiPowerBarFromStorage(this.getTileEntity().powerCableComponent, 164, 20, 16, 78));
 		this.registerWidget(graphWidget = new DataGraphWidget(10, 20, 146, 78));
 
 		registerWidget(metricTypeButton = new TextButton(164, 102, 16, 16, "S", this::buttonPressed));
@@ -74,20 +72,20 @@ public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable,
 	}
 
 	public void buttonPressed(StandardButton button, MouseButton mouseButton) {
-		if (displayType == MetricCategory.TICKS) {
-			displayType = MetricCategory.SECONDS;
+		if (displayType == MetricsTimeUnit.TICKS) {
+			displayType = MetricsTimeUnit.SECONDS;
 			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_minutes"));
 			metricTypeButton.setText("S");
-		} else if (displayType == MetricCategory.SECONDS) {
-			displayType = MetricCategory.MINUTES;
+		} else if (displayType == MetricsTimeUnit.SECONDS) {
+			displayType = MetricsTimeUnit.MINUTES;
 			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_minutes"));
 			metricTypeButton.setText("M");
-		} else if (displayType == MetricCategory.MINUTES) {
-			displayType = MetricCategory.HOURS;
+		} else if (displayType == MetricsTimeUnit.MINUTES) {
+			displayType = MetricsTimeUnit.HOURS;
 			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_hours"));
 			metricTypeButton.setText("H");
-		} else if (displayType == MetricCategory.HOURS) {
-			displayType = MetricCategory.TICKS;
+		} else if (displayType == MetricsTimeUnit.HOURS) {
+			displayType = MetricsTimeUnit.TICKS;
 			metricTypeButton.setTooltip(new TranslatableComponent("gui.staticpower.metric_ticks"));
 			metricTypeButton.setText("T");
 		}

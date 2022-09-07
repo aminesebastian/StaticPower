@@ -85,8 +85,8 @@ public class TileEntityRefineryController extends TileEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Create the energy storage and and set the energy storage upgrade inventory.
-		energyStorage.setExposedAsCapability(false);
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setExposeAsCapability(false);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, RefineryRecipe.RECIPE_TYPE, this::getMatchParameters,
@@ -152,10 +152,10 @@ public class TileEntityRefineryController extends TileEntityMachine {
 
 		if (!getLevel().isClientSide()) {
 			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0) {
-				long powerCost = StaticPowerConfig.SERVER.refineryPowerUsage.get();
+				double powerCost = StaticPowerConfig.SERVER.refineryPowerUsage.get();
 				boolean shouldHeat = processingComponent.isPerformingWork() || !heatStorage.isRecoveringFromMeltdown();
-				if (energyStorage.hasEnoughPower(powerCost) && shouldHeat) {
-					energyStorage.useBulkPower(powerCost);
+				if (powerStorage.hasEnoughPower(powerCost) && shouldHeat) {
+					powerStorage.usePowerIgnoringVoltageLimitations(powerCost);
 					heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
 				}
 			}

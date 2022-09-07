@@ -43,7 +43,7 @@ public abstract class AbstractSolderingTable extends TileEntityMachine implement
 
 		// Disable the power storage on this tile entity as this is the unpowered
 		// version.
-		energyStorage.setEnabled(false);
+		powerStorage.setEnabled(false);
 	}
 
 	public boolean hasRequiredItems() {

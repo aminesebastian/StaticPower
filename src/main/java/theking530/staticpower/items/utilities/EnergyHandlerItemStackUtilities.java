@@ -1,15 +1,15 @@
 package theking530.staticpower.items.utilities;
 
-import java.util.concurrent.atomic.AtomicLong;
-
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
-import theking530.api.volts.CapabilityStaticVolt;
-import theking530.api.volts.IStaticVoltHandler;
+import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.IStaticPowerStorage;
+import theking530.api.energy.ItemStackStaticPowerEnergyCapability;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 
 /**
- * Library class containing useful functions to interact with an static volt
+ * Library class containing useful functions to interact with an static power
  * storing {@link ItemStack} from StaticPower.
  * 
  * @author Amine Sebastian
@@ -31,89 +31,107 @@ public class EnergyHandlerItemStackUtilities {
 	 *         otherwise.
 	 */
 	public static boolean isEnergyContainer(ItemStack container) {
-		return container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).isPresent();
+		return container.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).isPresent();
 	}
 
 	/**
-	 * Gets the IStaticVoltHandler associated with the provided container.
+	 * Gets the {@link IStaticPowerStorage} associated with the provided container.
+	 * Note that this returns an instance of
+	 * {@link ItemStackStaticPowerEnergyCapability}. If the itemstack was not
+	 * initialized with an instance of {@link ItemStackStaticPowerEnergyCapability},
+	 * this will fail.
 	 * 
 	 * @param container The itemstack to check.
-	 * @return The IStaticVoltHandler associated with the provided container.
+	 * @return The {@link ItemStackStaticPowerEnergyCapability} associated with the
+	 *         provided container.
 	 */
-	public static LazyOptional<IStaticVoltHandler> getEnergyContainer(ItemStack container) {
-		return container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY);
+	public static LazyOptional<ItemStackStaticPowerEnergyCapability> getEnergyContainer(ItemStack container) {
+		return container.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).cast();
 	}
 
-	/**
-	 * Helper method to set the amount of energy in an energy containing itemstack.
-	 * This respects the itemstack's max stored energy property.
-	 * 
-	 * @param container The itemstack to add the energy to.
-	 * @param energy    The amount of energy to set this itemstack's stored energy
-	 *                  to.
-	 */
-	public static void setEnergy(ItemStack container, long energy) {
-		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
-			instance.receivePower(energy, false);
+	public static void setStoredPower(ItemStack container, double power) {
+		EnergyHandlerItemStackUtilities.getEnergyContainer(container).ifPresent((cap) -> {
+			cap.setStoredPower(Double.MAX_VALUE);
 		});
 	}
 
-	/**
-	 * Helper method to get the amount of energy in an energy containing itemstack.
-	 * 
-	 * @param container The itemstack to check.
-	 */
-	public static long getStoredPower(ItemStack container) {
-		AtomicLong energy = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
-			energy.set(instance.getStoredPower());
-		});
-		return energy.get();
+	public static StaticVoltageRange getInputVoltageRange(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return StaticVoltageRange.ZERO_VOLTAGE;
+		}
+		return cap.getInputVoltageRange();
 	}
 
-	/**
-	 * Helper method to get the maximum amount of energy in an energy containing
-	 * itemstack.
-	 * 
-	 * @param container The itemstack to check.
-	 */
-	public static long getCapacity(ItemStack container) {
-		AtomicLong energy = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
-			energy.set(instance.getCapacity());
-		});
-		return energy.get();
+	public static double getMaximumCurrentInput(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return 0;
+		}
+		return cap.getMaximumCurrentInput();
 	}
 
-	/**
-	 * Helper method to add energy to an energy containing itemstack.
-	 * 
-	 * @param container  The itemstack to add the energy to.
-	 * @param maxReceive The amount of energy to add.
-	 * @param simulate   If true, the process will only be simulated.
-	 * @return The actual amount of energy added.
-	 */
-	public static long receivePower(ItemStack container, long maxReceive, boolean simulate) {
-		AtomicLong received = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
-			received.set(instance.receivePower(maxReceive, simulate));
-		});
-		return received.get();
+	public static double getStoredPower(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return 0;
+		}
+		return cap.getStoredPower();
 	}
 
-	/**
-	 * Helper method to use energy from an energy containing itemstack.
-	 * 
-	 * @param container  The itemstack to add the energy to.
-	 * @param maxExtract The amount of energy to drain.
-	 * @param simulate   If true, the process will only be simulated.
-	 * @return The actual amount of energy drained.
-	 */
-	public static long drainPower(ItemStack container, long maxExtract, boolean simulate) {
-		AtomicLong extracted = new AtomicLong(0);
-		container.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent((IStaticVoltHandler instance) -> {
-			extracted.set(instance.drainPower(maxExtract, simulate));
-		});
-		return extracted.get();
+	public static double getCapacity(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return 0;
+		}
+		return cap.getCapacity();
+	}
+
+	public static double getVoltageOutput(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return 0;
+		}
+		return cap.getVoltageOutput();
+	}
+
+	public static double getMaximumCurrentOutput(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return 0;
+		}
+		return cap.getMaximumCurrentOutput();
+	}
+
+	public static double addPower(ItemStack container, double voltage, double power, boolean simulate) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return 0;
+		}
+		return cap.addPower(voltage, power, simulate);
+	}
+
+	public static double usePower(ItemStack container, double power, boolean simulate) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return 0;
+		}
+		return cap.drainPower(power, simulate);
+	}
+
+	public static boolean canAcceptPower(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return false;
+		}
+		return cap.canAcceptPower();
+	}
+
+	public static boolean doesProvidePower(ItemStack container) {
+		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
+		if (cap == null) {
+			return false;
+		}
+		return cap.doesProvidePower();
 	}
 }

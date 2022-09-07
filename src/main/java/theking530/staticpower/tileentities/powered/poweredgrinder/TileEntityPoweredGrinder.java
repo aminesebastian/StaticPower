@@ -58,7 +58,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		// Setup all the other inventories.
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 3, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
@@ -71,7 +71,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the I/O servos.
@@ -79,7 +79,7 @@ public class TileEntityPoweredGrinder extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Initialize the bonus output chance.
 		bonusOutputChance = StaticPowerConfig.SERVER.poweredGrinderOutputBonusChance.get();

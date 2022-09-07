@@ -24,7 +24,7 @@ public abstract class AbstractMachineRecipe extends AbstractStaticPowerRecipe {
 	 * 
 	 * @return
 	 */
-	public long getPowerCost() {
+	public double getPowerCost() {
 		return processingSection.getPowerCost();
 	}
 

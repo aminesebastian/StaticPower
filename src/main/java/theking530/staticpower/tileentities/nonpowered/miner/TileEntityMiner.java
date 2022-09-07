@@ -156,8 +156,8 @@ public class TileEntityMiner extends AbstractTileEntityMiner {
 	}
 
 	@Override
-	public long getFuelUsage() {
-		return (long) (StaticPowerConfig.SERVER.minerFuelUsage.get() * processingComponent.getCalculatedPowerUsageMultipler());
+	public double getFuelUsage() {
+		return StaticPowerConfig.SERVER.minerFuelUsage.get() * processingComponent.getCalculatedPowerUsageMultipler();
 	}
 
 	public int getFuelBurnTime(ItemStack input) {

@@ -4,8 +4,8 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nonnull;
 
+import theking530.staticpower.tileentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent;
 
 public class MachineProcessingComponent extends AbstractProcesingComponent {
 	public static final int DEFAULT_MOVING_TIME = 4;
@@ -23,6 +23,7 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 		this.canContinueProcessingCallback = canContinueProcessingCallback;
 		this.processingEndedCallback = processingEndedCallback;
 	}
+
 	public MachineProcessingComponent(String name, int processingTime, @Nonnull Supplier<ProcessingCheckState> processingEndedCallback, boolean serverOnly) {
 		this(name, processingTime, () -> ProcessingCheckState.error(""), () -> ProcessingCheckState.ok(), processingEndedCallback, serverOnly);
 	}
@@ -84,18 +85,13 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 	}
 
 	@Override
-	public MachineProcessingComponent setEnergyComponent(EnergyStorageComponent energyComponent) {
-		return (MachineProcessingComponent) super.setEnergyComponent(energyComponent);
+	public MachineProcessingComponent setPowerComponent(PowerStorageComponent energyComponent) {
+		return (MachineProcessingComponent) super.setPowerComponent(energyComponent);
 	}
 
 	@Override
-	public MachineProcessingComponent setProcessingPowerUsage(long power) {
+	public MachineProcessingComponent setProcessingPowerUsage(double power) {
 		return (MachineProcessingComponent) super.setProcessingPowerUsage(power);
-	}
-
-	@Override
-	public MachineProcessingComponent setCompletedPowerUsage(long power) {
-		return (MachineProcessingComponent) super.setCompletedPowerUsage(power);
 	}
 
 	@Override
@@ -106,11 +102,6 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 	@Override
 	public MachineProcessingComponent disableProcessingPowerUsage() {
 		return (MachineProcessingComponent) super.disableProcessingPowerUsage();
-	}
-
-	@Override
-	public MachineProcessingComponent disableCompletedPowerUsage() {
-		return (MachineProcessingComponent) super.disableCompletedPowerUsage();
 	}
 
 	@Override

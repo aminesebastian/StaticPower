@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import theking530.api.energy.consumer.CapabilityStaticPower;
-import theking530.api.energy.consumer.IStaticPowerStorage;
+import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.IStaticPowerStorage;
 import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -28,7 +28,7 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 
 	@Override
 	public void preProcessUpdate() {
-		if (isOnClientSide()) {
+		if (isClientSide()) {
 			return;
 		}
 		if (energyStorage != null && energyStorage.getStoredPower() > 0) {
@@ -48,10 +48,10 @@ public class PowerDistributionComponent extends AbstractTileEntityComponent {
 		IStaticPowerStorage targetStorage = getPowerStorageAtLocation(pos, facing.getOpposite());
 
 		if (targetStorage != null && energyStorage.getVoltageOutput() != 0) {
-			double maxCurrentOutput = Math.min(energyStorage.getStoredPower() / energyStorage.getVoltageOutput(), 10);
+			double maxCurrentOutput = Math.min(energyStorage.getStoredPower() / energyStorage.getVoltageOutput(), energyStorage.getMaximumCurrentOutput());
 			double maxPowerOutput = energyStorage.getVoltageOutput() * maxCurrentOutput;
 			double usedPower = targetStorage.addPower(energyStorage.getVoltageOutput(), maxPowerOutput, false);
-			energyStorage.usePower(usedPower, false);
+			energyStorage.drainPower(usedPower, false);
 			return usedPower;
 		}
 		return 0;

@@ -38,6 +38,7 @@ import theking530.staticpower.tileentities.components.control.AbstractProcesingC
 import theking530.staticpower.tileentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.tileentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.tileentities.components.items.InputServoComponent;
@@ -45,13 +46,12 @@ import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.tileentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.tileentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.tileentities.components.loopingsound.LoopingSoundComponent;
-import theking530.staticpower.tileentities.components.power.EnergyStorageComponent.EnergyManipulationAction;
-import theking530.staticpower.tileentities.components.power.OldPowerDistributionComponent;
 import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class TileEntityTurbine extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityTurbine> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTurbine(pos, state), ModBlocks.Turbine);
+	public static final BlockEntityTypeAllocator<TileEntityTurbine> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTurbine(pos, state),
+			ModBlocks.Turbine);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -94,7 +94,9 @@ public class TileEntityTurbine extends TileEntityMachine {
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		// Setup the power distribution component.
-		registerComponent(new OldPowerDistributionComponent("PowerDistributor", energyStorage));
+		powerStorage.setSideConfiguration(ioSideConfiguration);
+		powerStorage.setCanAcceptPower(false);
+		registerComponent(new PowerDistributionComponent("PowerDistributor", powerStorage));
 
 		// Setup the fluid tanks
 		registerComponent(inputFluidTankComponent = new FluidTankComponent("InputFluid", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
@@ -105,16 +107,6 @@ public class TileEntityTurbine extends TileEntityMachine {
 		// Setup the I/O servos.
 		registerComponent(new InputServoComponent("InputServo", 2, turbineBladeInventory));
 		registerComponent(new FluidOutputServoComponent("FluidOutputServoComponent", 100, outputFluidTankComponent, MachineSideMode.Output));
-
-		// Don't allow this to receive power from external sources and let it output all
-		// of the power at once.
-		energyStorage.setMaxOutput(Integer.MAX_VALUE);
-		energyStorage.setCapabiltiyFilter((amount, side, action) -> {
-			if (action == EnergyManipulationAction.RECIEVE) {
-				return false;
-			}
-			return true;
-		});
 	}
 
 	@Override
@@ -132,11 +124,8 @@ public class TileEntityTurbine extends TileEntityMachine {
 						// Get the recieve amount.
 						int recieveAmount = getGenerationPerTick();
 
-						// Update the energy storage rates.
-						energyStorage.setMaxInput(recieveAmount);
-
 						// Generate the power.
-						energyStorage.addPower(recieveAmount);
+						powerStorage.addPowerIgnoringVoltageLimitations(recieveAmount);
 
 						// Start the sound.
 						if (!isGenerating) {
@@ -174,7 +163,8 @@ public class TileEntityTurbine extends TileEntityMachine {
 				if (SDMath.diceRoll(0.4f)) {
 					float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
 					randomOffset /= 2f;
-					getLevel().addParticle(ParticleTypes.FALLING_WATER, getBlockPos().getX() + 0.5 + randomOffset, getBlockPos().getY() - 0.5, getBlockPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
+					getLevel().addParticle(ParticleTypes.FALLING_WATER, getBlockPos().getX() + 0.5 + randomOffset, getBlockPos().getY() - 0.5,
+							getBlockPos().getZ() + 0.5 + randomOffset, 0.0f, 0.01f, 0.0f);
 				}
 			}
 		}
@@ -227,7 +217,7 @@ public class TileEntityTurbine extends TileEntityMachine {
 	public ProcessingCheckState getProcessingState(TurbineRecipe recipe) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!energyStorage.canAcceptPower(getGenerationPerTick())) {
+		if (!powerStorage.canAcceptPower(getGenerationPerTick())) {
 			return ProcessingCheckState.powerOutputFull();
 		}
 

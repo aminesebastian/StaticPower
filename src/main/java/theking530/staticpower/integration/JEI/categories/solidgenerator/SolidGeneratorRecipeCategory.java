@@ -22,6 +22,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.ForgeHooks;
+import theking530.api.energy.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
@@ -31,7 +32,6 @@ import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
@@ -90,7 +90,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 	public void draw(SolidFuelRecipe recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 66, 19, 0);
 
-		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, 1.0f, powerTimer.getValue(), powerTimer.getMaxValue());
+		GuiPowerBarUtilities.drawPowerBar(matrixStack, 5, 6, 16, 48, powerTimer.getValue(), powerTimer.getMaxValue());
 
 		fireBar.setCurrentProgress(processingTimer.getValue());
 		fireBar.setMaxProgress(processingTimer.getMaxValue());
@@ -101,7 +101,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		Font fontRenderer = Minecraft.getInstance().font;
-		String powerGeneration = GuiTextUtilities.formatEnergyRateToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get()).getString();
+		String powerGeneration = StaticPowerEnergyTextUtilities.formatPowerRateToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get()).getString();
 		fontRenderer.draw(matrixStack, powerGeneration, 51 - (fontRenderer.width(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
 
 	}
@@ -111,7 +111,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			int burnTime = ForgeHooks.getBurnTime(recipe.getFuel(), null);
-			output.add(new TextComponent("Generates: ").append(GuiTextUtilities.formatEnergyToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get() * burnTime)));
+			output.add(new TextComponent("Generates: ").append(StaticPowerEnergyTextUtilities.formatPowerToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get() * burnTime)));
 		}
 
 		// Render the progress bar tooltip.

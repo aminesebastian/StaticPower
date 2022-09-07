@@ -8,7 +8,6 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
-import theking530.api.volts.CapabilityStaticVolt;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;
@@ -53,6 +52,7 @@ import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.items.tools.ElectricSolderingIron;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.items.tools.Magnet;
+import theking530.staticpower.items.tools.Multimeter;
 import theking530.staticpower.items.tools.SolderingIron;
 import theking530.staticpower.items.tools.StaticWrench;
 import theking530.staticpower.items.tools.Themometer;
@@ -476,8 +476,7 @@ public class ModItems {
 			() -> new WireCutters(StaticPowerTiers.CREATIVE, () -> Items.AIR));
 
 	public static final RegistryObject<SolderingIron> SolderingIron = ITEMS.register("soldering_iron", () -> new SolderingIron(100));
-	public static final RegistryObject<ElectricSolderingIron> ElectringSolderingIron = ITEMS.register("soldering_iron_electric",
-			() -> new ElectricSolderingIron(1000 * CapabilityStaticVolt.mSV_TO_SV));
+	public static final RegistryObject<ElectricSolderingIron> ElectringSolderingIron = ITEMS.register("soldering_iron_electric", () -> new ElectricSolderingIron());
 
 	public static final RegistryObject<MiningDrill> BasicMiningDrill = ITEMS.register("mining_drill_basic", () -> new MiningDrill(5.0f, 5.0f, StaticPowerTiers.BASIC));
 	public static final RegistryObject<MiningDrill> AdvancedMiningDrill = ITEMS.register("mining_drill_advanced", () -> new MiningDrill(5.0f, 5.0f, StaticPowerTiers.ADVANCED));
@@ -495,7 +494,7 @@ public class ModItems {
 	public static final RegistryObject<StaticWrench> StaticWrench = ITEMS.register("wrench_static", () -> new StaticWrench());
 	public static final RegistryObject<StaticWrench> EnergizedWrench = ITEMS.register("wrench_energized", () -> new StaticWrench());
 	public static final RegistryObject<StaticWrench> LumumWrench = ITEMS.register("wrench_lumum", () -> new StaticWrench());
-	
+
 	public static final RegistryObject<Themometer> Thermometer = ITEMS.register("thermometer", () -> new Themometer());
 
 	public static final RegistryObject<StaticPowerItem> WeakMagnet = ITEMS.register("magnet_weak", () -> new StaticPowerItem());
@@ -506,6 +505,7 @@ public class ModItems {
 	public static final RegistryObject<Magnet> LumumMagnet = ITEMS.register("magnet_lumum", () -> new Magnet(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<CableNetworkAnalyzer> CableNetworkAnalyzer = ITEMS.register("cable_network_analyzer", () -> new CableNetworkAnalyzer());
+	public static final RegistryObject<Multimeter> Multimeter = ITEMS.register("multimeter", () -> new Multimeter());
 
 	public static final RegistryObject<CoverSaw> IronCoverSaw = ITEMS.register("saw_iron", () -> new CoverSaw(100));
 	public static final RegistryObject<CoverSaw> TungstenCoverSaw = ITEMS.register("saw_tungsten", () -> new CoverSaw(2500));

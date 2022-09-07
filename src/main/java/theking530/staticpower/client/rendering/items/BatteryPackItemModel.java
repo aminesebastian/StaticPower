@@ -36,7 +36,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
-import theking530.api.volts.IStaticVoltHandler;
+import theking530.api.energy.ItemStackStaticPowerEnergyCapability;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.blocks.AbstractBakedModel;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -66,7 +66,7 @@ public class BatteryPackItemModel implements BakedModel {
 				}
 
 				// Get the energy handler.
-				IStaticVoltHandler handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
+				ItemStackStaticPowerEnergyCapability handler = EnergyHandlerItemStackUtilities.getEnergyContainer(stack).orElse(null);
 				if (handler == null) {
 					return originalModel;
 				}

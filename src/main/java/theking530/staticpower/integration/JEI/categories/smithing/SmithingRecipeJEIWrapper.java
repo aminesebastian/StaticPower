@@ -10,7 +10,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
-import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityJEIRecipeWrapper;
 
 public class SmithingRecipeJEIWrapper implements Recipe<Container> {
 	public static final RecipeType<SmithingRecipeJEIWrapper> RECIPE_TYPE = new StaticPowerRecipeType<SmithingRecipeJEIWrapper>();

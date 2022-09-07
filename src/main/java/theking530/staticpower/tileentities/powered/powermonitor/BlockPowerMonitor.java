@@ -34,7 +34,7 @@ public class BlockPowerMonitor extends StaticPowerMachineBlock {
 	protected static final VoxelShape X_AXIS_SHAPE = Block.box(3.5D, 3D, 0.0D, 12.5D, 13.0D, 16.0D);
 
 	public BlockPowerMonitor() {
-	
+
 	}
 
 	@Override
@@ -46,29 +46,6 @@ public class BlockPowerMonitor extends StaticPowerMachineBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 
-	}
-
-	@Override
-	public int getDirectSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		if (blockAccess.getBlockEntity(pos) instanceof TileEntityPowerMonitor) {
-			TileEntityPowerMonitor battery = (TileEntityPowerMonitor) blockAccess.getBlockEntity(pos);
-			return battery.shouldOutputRedstoneSignal() ? 15 : 0;
-		}
-		return 0;
-	}
-
-	@Override
-	public int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
-		if (blockAccess.getBlockEntity(pos) instanceof TileEntityPowerMonitor) {
-			TileEntityPowerMonitor battery = (TileEntityPowerMonitor) blockAccess.getBlockEntity(pos);
-			return battery.shouldOutputRedstoneSignal() ? 15 : 0;
-		}
-		return 0;
-	}
-
-	@Override
-	public boolean isSignalSource(BlockState state) {
-		return true;
 	}
 
 	@Override

@@ -119,8 +119,8 @@ public class DigistoreIOBusAttachment extends AbstractDigistoreCableAttachment {
 	}
 
 	@Override
-	public long getPowerUsage(ItemStack attachment) {
-		return 1000;
+	public double getPowerUsage(ItemStack attachment) {
+		return 1;
 	}
 
 	public boolean doesItemPassImportFilter(ItemStack attachment, ItemStack itemToTest) {

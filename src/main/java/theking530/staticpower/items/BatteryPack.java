@@ -20,19 +20,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.volts.CapabilityStaticVolt;
-import theking530.api.volts.PowerEnergyInterface;
+import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.IStaticPowerStorage;
+import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.BatteryPackItemModel;
+import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {
 	private static final String ACTIVATED_TAG = "activated";
 	public final ResourceLocation tier;
 
 	public BatteryPack(ResourceLocation tier) {
-		super(0);
 		this.tier = tier;
 	}
 
@@ -84,14 +85,14 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 		// If we're in a player's inventory.
 		if (isActivated(stack) && entityIn instanceof Player) {
 			// Get the power capability.
-			stack.getCapability(CapabilityStaticVolt.DEP_STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
+			stack.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 				// If power is stored, attempt to charge items.
 				if (powerStorage.getStoredPower() > 0) {
 					// Get the player.
 					Player player = (Player) entityIn;
 
 					// Get all the chargeable items.
-					List<PowerEnergyInterface> items = new ArrayList<PowerEnergyInterface>();
+					List<IStaticPowerStorage> items = new ArrayList<IStaticPowerStorage>();
 
 					// Iterate through the inventory.
 					for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
@@ -101,24 +102,19 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 							continue;
 						}
 
-						// Capture the energy interface as needed.
-						PowerEnergyInterface energyInterface = PowerEnergyInterface.getFromItemStack(inventoryStack);
-						if (energyInterface != null) {
-							if (energyInterface.getEnergyStored() < energyInterface.getMaxEnergyStored()) {
-								items.add(energyInterface);
-							}
+						if (EnergyHandlerItemStackUtilities.isEnergyContainer(inventoryStack)) {
+							items.add(EnergyHandlerItemStackUtilities.getEnergyContainer(inventoryStack).orElse(null));
 						}
 					}
 
 					// How much power should we distribute?
 					if (items.size() > 0) {
-						long perItemDistribute = powerStorage.getStoredPower() / items.size();
+						double perItemDistribute = powerStorage.getStoredPower() / items.size();
 						perItemDistribute = SDMath.clamp(perItemDistribute, 1, powerStorage.getCapacity() / 100);
 
-						for (PowerEnergyInterface powerInterface : items) {
-							long charged = powerInterface.receivePower(perItemDistribute, true);
-							long drained = powerStorage.drainPower(charged, false);
-							powerInterface.receivePower(drained, false);
+						for (IStaticPowerStorage otherItem : items) {
+							double charged = otherItem.addPower(powerStorage.getVoltageOutput(), perItemDistribute, true);
+							powerStorage.drainPower(charged, false);
 
 							// Break out if we used all the power.
 							if (powerStorage.getStoredPower() <= 0) {
@@ -150,7 +146,17 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	}
 
 	@Override
-	public long getCapacity() {
+	public double getCapacity() {
 		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 3;
+	}
+
+	@Override
+	public StaticVoltageRange getInputVoltageRange() {
+		return StaticPowerConfig.getTier(tier).getPortableBatteryChargingVoltage();
+	}
+
+	@Override
+	public double getMaximumInputCurrent() {
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxCurrent.get();
 	}
 }

@@ -17,7 +17,7 @@ import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedst
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
-import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromEnergyStorage;
+import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
@@ -36,7 +36,7 @@ public class GuiRefineryController extends StaticPowerTileEntityGui<ContainerRef
 
 	@Override
 	public void initializeGui() {
-		registerWidget(new GuiPowerBarFromEnergyStorage(getTileEntity().energyStorage, 8, 22, 16, 54));
+		registerWidget(new GuiPowerBarFromStorage(getTileEntity().powerStorage, 8, 22, 16, 54));
 		registerWidget(new GuiHeatBarFromHeatStorage(getTileEntity().heatStorage, 27, 22, 4, 54));
 
 		registerWidget(new GuiFluidBarFromTank(getTileEntity().getInputTank(0), 38, 22, 16, 54, MachineSideMode.Input2, getTileEntity()));
@@ -55,7 +55,7 @@ public class GuiRefineryController extends StaticPowerTileEntityGui<ContainerRef
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage));
 		getTabManager().registerTab(new GuiTileEntityRedstoneTab(getTileEntity().getComponent(RedstoneControlComponent.class)));
 
-		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().energyStorage).setTabSide(TabSide.LEFT), true);
+		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 	}
 

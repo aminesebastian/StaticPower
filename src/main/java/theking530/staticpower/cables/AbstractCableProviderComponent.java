@@ -145,7 +145,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public boolean isSideDisabled(Direction side) {
-		if (isOnClientSide()) {
+		if (isClientSide()) {
 			return disabledSides[side.ordinal()];
 		}
 
@@ -165,7 +165,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			disabledSides[side.ordinal()] = disabledState;
 			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			getTileEntity().requestModelDataUpdate();
-			if (!isOnClientSide()) {
+			if (!isClientSide()) {
 				CableNetworkManager.get(getLevel()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
 			}
 		}

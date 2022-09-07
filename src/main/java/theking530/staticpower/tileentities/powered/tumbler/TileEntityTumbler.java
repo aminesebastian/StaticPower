@@ -33,7 +33,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
 
 public class TileEntityTumbler extends TileEntityMachine {
 	@TileEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityTumbler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTumbler(pos, state), ModBlocks.Tumbler);
+	public static final BlockEntityTypeAllocator<TileEntityTumbler> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new TileEntityTumbler(pos, state),
+			ModBlocks.Tumbler);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
@@ -60,7 +61,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		// Setup all the other inventories.
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));
+		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
@@ -73,7 +74,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		// component, upgrade component and energy component.
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
-		processingComponent.setEnergyComponent(energyStorage);
+		processingComponent.setPowerComponent(powerStorage);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
 		// Setup the I/O servos.
@@ -81,7 +82,7 @@ public class TileEntityTumbler extends TileEntityMachine {
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
 
 		// Set the energy storage upgrade inventory.
-		energyStorage.setUpgradeInventory(upgradesInventory);
+		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Initialize the bonus output chance.
 		bonusOutputChance = StaticPowerConfig.SERVER.tumblerOutputBonusChance.get();
@@ -172,8 +173,8 @@ public class TileEntityTumbler extends TileEntityMachine {
 			if (currentSpeed > StaticPowerConfig.SERVER.tumblerRequiredSpeed.get()) {
 				currentSpeed -= 2;
 			} else {
-				if (energyStorage.hasEnoughPower(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get()) && redstoneControlComponent.passesRedstoneCheck()) {
-					energyStorage.useBulkPower(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get());
+				if (powerStorage.hasEnoughPower(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get()) && redstoneControlComponent.passesRedstoneCheck()) {
+					powerStorage.usePowerIgnoringVoltageLimitations(StaticPowerConfig.SERVER.tumblerMotorPowerUsage.get());
 					currentSpeed = SDMath.clamp(currentSpeed + 1, 0, StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());
 				} else {
 					currentSpeed = SDMath.clamp(currentSpeed - 1, 0, StaticPowerConfig.SERVER.tumblerRequiredSpeed.get());

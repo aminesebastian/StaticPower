@@ -328,10 +328,6 @@ public abstract class TileEntityBase extends BlockEntity implements MenuProvider
 		return isValid;
 	}
 
-	public boolean isOnClientSide() {
-		return getLevel().isClientSide();
-	}
-
 	@SuppressWarnings("resource")
 	@OnlyIn(Dist.CLIENT)
 	private static double getBlockReachDistanceClient() {
