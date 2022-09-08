@@ -37,11 +37,11 @@ import theking530.api.wrench.IWrenchable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.utilities.ITooltipProvider;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.blocks.interfaces.IItemBlockProvider;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.items.tools.StaticWrench;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.interfaces.IBreakSerializeable;
 
 /**
  * Basic implementation of a static power block.
@@ -226,16 +226,16 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 		if (state.getBlock() != newState.getBlock()) {
 			// Raise the tile entity's broken method.
-			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-				((TileEntityBase) world.getBlockEntity(pos)).onBlockBroken(state, newState, isMoving);
+			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+				((BlockEntityBase) world.getBlockEntity(pos)).onBlockBroken(state, newState, isMoving);
 			}
 
 			// Only call the super if the blocks are not equal.
 			super.onRemove(state, world, pos, newState, isMoving);
 		} else {
 			// Raise the tile entity's changed method.
-			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-				((TileEntityBase) world.getBlockEntity(pos)).onBlockReplaced(state, newState, isMoving);
+			if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+				((BlockEntityBase) world.getBlockEntity(pos)).onBlockReplaced(state, newState, isMoving);
 			}
 		}
 	}
@@ -251,8 +251,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 
 		// Raise the tile entity's activated method and return here if it does not
 		// pass.
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			InteractionResult teResult = ((TileEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player, hand, hit);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			InteractionResult teResult = ((BlockEntityBase) world.getBlockEntity(pos)).onBlockActivated(state, player, hand, hit);
 			if (teResult != InteractionResult.PASS) {
 				return teResult;
 			}
@@ -274,8 +274,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	}
 
 	public void onPlacedInWorld(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onPlaced(context, state, placer, stack);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onPlaced(context, state, placer, stack);
 		}
 		onStaticPowerBlockPlaced(context,world, pos, state, placer, stack);
 	}
@@ -284,8 +284,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@Override
 	public void attack(BlockState state, Level world, BlockPos pos, Player player) {
 		super.attack(state, world, pos, player);
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onBlockLeftClicked(state, player);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onBlockLeftClicked(state, player);
 		}
 		onStaticPowerBlockClicked(state, world, pos, player);
 	}
@@ -294,8 +294,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@Override
 	public BlockState updateShape(BlockState state, Direction dir, BlockState facingState, LevelAccessor world, BlockPos pos, BlockPos facingPos) {
 		super.updateShape(state, dir, facingState, world, pos, facingPos);
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborReplaced(state, dir, facingState, facingPos);
 		}
 		onNeighborReplaced(state, dir, facingState, world, pos, facingPos);
 		return state;
@@ -305,8 +305,8 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 	@SuppressWarnings("deprecation")
 	public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
 		super.neighborChanged(state, world, pos, block, fromPos, isMoving);
-		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof TileEntityBase) {
-			((TileEntityBase) world.getBlockEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
+		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			((BlockEntityBase) world.getBlockEntity(pos)).onNeighborChanged(state, fromPos, isMoving);
 		}
 		onStaticPowerNeighborChanged(state, world, pos, fromPos, isMoving);
 	}

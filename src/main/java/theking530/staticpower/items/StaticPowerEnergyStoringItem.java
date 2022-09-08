@@ -14,11 +14,11 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import theking530.api.energy.ItemStackStaticPowerEnergyCapability;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 /**
  * Light class for any static power items that require the ability to store
@@ -60,6 +60,8 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public abstract StaticVoltageRange getInputVoltageRange();
 
 	public abstract double getMaximumInputCurrent();
+
+	public abstract double getOutputVoltage();
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {

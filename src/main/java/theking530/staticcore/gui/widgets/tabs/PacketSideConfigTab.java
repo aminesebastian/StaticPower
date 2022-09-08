@@ -8,9 +8,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 
 public class PacketSideConfigTab extends NetworkMessage {
 	private MachineSideMode[] configuration;
@@ -60,8 +60,8 @@ public class PacketSideConfigTab extends NetworkMessage {
 			if (context.get().getSender().getLevel().isAreaLoaded(position, 1)) {
 				BlockEntity te = context.get().getSender().level.getBlockEntity(position);
 
-				if (te instanceof TileEntityBase) {
-					TileEntityBase tileEntity = (TileEntityBase) te;
+				if (te instanceof BlockEntityBase) {
+					BlockEntityBase tileEntity = (BlockEntityBase) te;
 					if (!tileEntity.hasComponentOfType(SideConfigurationComponent.class)) {
 						return;
 					}

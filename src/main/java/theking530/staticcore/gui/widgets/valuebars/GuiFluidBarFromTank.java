@@ -10,19 +10,19 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.IFluidTank;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.fluids.FluidTankComponent;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiFluidBarFromTank extends AbstractGuiWidget<GuiFluidBarFromTank> {
 
 	private IFluidTank tank;
 	private MachineSideMode mode;
-	private TileEntityBase owningTileEntity;
+	private BlockEntityBase owningTileEntity;
 
-	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize, MachineSideMode mode, TileEntityBase owningTileEntity) {
+	public GuiFluidBarFromTank(IFluidTank tank, int xPosition, int yPosition, int xSize, int ySize, MachineSideMode mode, BlockEntityBase owningTileEntity) {
 		super(xPosition, yPosition, xSize, ySize);
 		this.tank = tank;
 		this.mode = mode;

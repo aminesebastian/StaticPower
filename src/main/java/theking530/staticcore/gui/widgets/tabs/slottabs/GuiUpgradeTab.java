@@ -10,12 +10,12 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.utilities.Color;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.container.slots.UpgradeItemSlot;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 @OnlyIn(Dist.CLIENT)

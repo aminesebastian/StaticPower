@@ -12,11 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.upgrades.UpgradeTypes;
 
 public class BaseTankUpgrade extends BaseUpgrade {
 
 	public BaseTankUpgrade(ResourceLocation tier) {
-		super(tier, UpgradeType.TANK);
+		super(tier, UpgradeTypes.TANK);
 	}
 
 	@Override

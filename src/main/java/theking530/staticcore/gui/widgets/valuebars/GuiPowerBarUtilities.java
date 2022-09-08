@@ -10,7 +10,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -38,7 +38,7 @@ public class GuiPowerBarUtilities {
 	}
 
 	public static void drawPowerBar(PoseStack matrixStack, float xpos, float ypos, float width, float height, double currentEnergy, double maxEnergy) {
-		float percentFilled = (float) currentEnergy / (float) maxEnergy;
+		float percentFilled = (float) (currentEnergy / maxEnergy);
 		float filledHeight = percentFilled * height;
 
 		matrixStack.pushPose();

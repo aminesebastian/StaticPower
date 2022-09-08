@@ -21,7 +21,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
@@ -30,9 +30,9 @@ import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.powered.poweredfurnace.BlockEntityPoweredFurnace;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
-import theking530.staticpower.tileentities.powered.poweredfurnace.TileEntityPoweredFurnace;
 
 public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<SmeltingRecipe> {
 	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "powered_furnace");
@@ -107,7 +107,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			output.add(
-					new TextComponent("Usage: ").append(StaticPowerEnergyTextUtilities.formatPowerToString(TileEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
+					new TextComponent("Usage: ").append(StaticPowerEnergyTextUtilities.formatPowerToString(BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
 		}
 
 		// Render the progress bar tooltip.
@@ -148,8 +148,8 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		guiItemStacks.init(OUTPUT_SLOT, false, 90, 18);
 		guiItemStacks.set(ingredients);
 
-		powerTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.getCookTime(recipe),
-				(int) (TileEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get()), true);
-		processingTimer = guiHelper.createTickTimer(TileEntityPoweredFurnace.getCookTime(recipe), TileEntityPoweredFurnace.getCookTime(recipe), false);
+		powerTimer = guiHelper.createTickTimer(BlockEntityPoweredFurnace.getCookTime(recipe),
+				(int) (BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get()), true);
+		processingTimer = guiHelper.createTickTimer(BlockEntityPoweredFurnace.getCookTime(recipe), BlockEntityPoweredFurnace.getCookTime(recipe), false);
 	}
 }

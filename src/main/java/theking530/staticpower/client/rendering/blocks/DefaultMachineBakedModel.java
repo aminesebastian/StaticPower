@@ -34,13 +34,13 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
+import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.client.StaticPowerSprites;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.utilities.ModelUtilities;
 
 @OnlyIn(Dist.CLIENT)
@@ -176,9 +176,9 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.005f));
 
 			// Check if we have a facing property.
-			if (state != null && state.hasProperty(StaticPowerTileEntityBlock.FACING)) {
+			if (state != null && state.hasProperty(StaticPowerBlockEntityBlock.FACING)) {
 				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side,
-						state.getValue(StaticPowerTileEntityBlock.FACING));
+						state.getValue(StaticPowerBlockEntityBlock.FACING));
 
 				// If we do, see if we have a requested offset. If we do, apply it.
 				if (sideOffsets.containsKey(blockSide)) {
@@ -240,8 +240,8 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 
 		BlockEntity rawTileEntity = world.getBlockEntity(blockPos);
 
-		if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
-			TileEntityBase configurable = (TileEntityBase) rawTileEntity;
+		if (rawTileEntity != null && rawTileEntity instanceof BlockEntityBase) {
+			BlockEntityBase configurable = (BlockEntityBase) rawTileEntity;
 			if (configurable.hasComponentOfType(SideConfigurationComponent.class)) {
 				return Optional
 						.of(configurable.getComponent(SideConfigurationComponent.class).getWorldSpaceConfiguration());

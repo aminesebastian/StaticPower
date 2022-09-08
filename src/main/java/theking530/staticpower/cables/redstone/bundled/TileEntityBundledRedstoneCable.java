@@ -2,13 +2,13 @@ package theking530.staticpower.cables.redstone.bundled;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
-import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
+import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
+import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.tileentities.TileEntityBase;
 
-public class TileEntityBundledRedstoneCable extends TileEntityBase {
-	@TileEntityTypePopulator()
+public class TileEntityBundledRedstoneCable extends BlockEntityBase {
+	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityBundledRedstoneCable> TYPE = new BlockEntityTypeAllocator<TileEntityBundledRedstoneCable>(
 			(allocator, pos, state) -> new TileEntityBundledRedstoneCable(allocator, pos, state), ModBlocks.BundledRedstoneCable);
 

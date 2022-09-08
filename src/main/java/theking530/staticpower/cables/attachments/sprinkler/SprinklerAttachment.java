@@ -25,6 +25,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
@@ -34,7 +35,6 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
 import theking530.staticpower.init.ModFluids;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
 public class SprinklerAttachment extends AbstractCableAttachment {
 	private static final Vector3D SPRINKLER_BOUNDS = new Vector3D(2.5f, 2.5f, 2.5f);

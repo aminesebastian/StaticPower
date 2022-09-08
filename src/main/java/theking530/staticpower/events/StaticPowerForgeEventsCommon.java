@@ -80,7 +80,9 @@ public class StaticPowerForgeEventsCommon {
 	@SubscribeEvent
 	public static void worldTickEvent(TickEvent.WorldTickEvent event) {
 		if (!event.world.isClientSide) {
-			if (event.phase == TickEvent.Phase.END) {
+			if (event.phase == TickEvent.Phase.START) {
+				CableNetworkManager.get(event.world).preWorldTick();
+			} else if (event.phase == TickEvent.Phase.END) {
 				CableNetworkManager.get(event.world).tick();
 				StaticPowerGameDataManager.tickGameData();
 			}
@@ -245,7 +247,7 @@ public class StaticPowerForgeEventsCommon {
 					if (recipe.hasOverheatingBehaviour()) {
 						event.getToolTip().add(HeatTooltipUtilities.getOverheatingTooltip(recipe.getOverheatedTemperature()));
 					}
-					
+
 					// Add freezing tooltip.
 					if (recipe.hasFreezeBehaviour()) {
 						event.getToolTip().add(HeatTooltipUtilities.getFreezingTooltip(recipe.getFreezingTemperature()));
@@ -265,7 +267,6 @@ public class StaticPowerForgeEventsCommon {
 
 				// Add the "Hold Shift" indentifier.
 				if (advancedToolTips.size() > 0) {
-					event.getToolTip().add(new TextComponent(" "));
 					event.getToolTip().add(new TranslatableComponent("gui.staticpower.hold_shift").withStyle(ChatFormatting.ITALIC).withStyle(ChatFormatting.GRAY));
 				}
 			}

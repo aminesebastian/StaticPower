@@ -28,11 +28,11 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.digistorenetwork.digistore.TileEntityDigistore;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.TileEntityDigistore;
 
 public class WorldRenderingUtilities {
-	public static void drawItemInWorld(TileEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, PoseStack matrixStack,
+	public static void drawItemInWorld(BlockEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, float partialTicks, PoseStack matrixStack,
 			MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		drawItemInWorld(tileEntity, item, transformType, offset, scale, Vector3D.ZERO, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 	}
@@ -49,7 +49,7 @@ public class WorldRenderingUtilities {
 	 *                        {@link TileEntity} is rendering at.
 	 * @param combinedOverlay The combined overlay.
 	 */
-	public static void drawItemInWorld(TileEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, Vector3D rotation, float partialTicks,
+	public static void drawItemInWorld(BlockEntityBase tileEntity, ItemStack item, TransformType transformType, Vector3D offset, Vector3D scale, Vector3D rotation, float partialTicks,
 			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		matrixStack.pushPose();
 		matrixStack.translate(offset.getX(), offset.getY(), offset.getZ());
@@ -120,7 +120,7 @@ public class WorldRenderingUtilities {
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, TileEntityBase tileEntity, Color color, Vector3D offset, float scale, float partialTicks,
+	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, BlockEntityBase tileEntity, Color color, Vector3D offset, float scale, float partialTicks,
 			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (text == null || text.isEmpty())
 			return;
@@ -192,7 +192,7 @@ public class WorldRenderingUtilities {
 		drawRectangleLit(matrixStack, buffer, offset, scale, color, 15728880);
 	}
 
-	public static int getForwardFacingLightLevel(TileEntityBase tileEntity) {
+	public static int getForwardFacingLightLevel(BlockEntityBase tileEntity) {
 		return LevelRenderer.getLightColor(tileEntity.getLevel(), tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));
 	}
 

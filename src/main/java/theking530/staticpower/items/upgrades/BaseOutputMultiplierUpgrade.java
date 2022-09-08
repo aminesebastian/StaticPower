@@ -12,11 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.upgrades.UpgradeTypes;
 
 public class BaseOutputMultiplierUpgrade extends BaseUpgrade {
 
 	public BaseOutputMultiplierUpgrade(ResourceLocation tier) {
-		super(tier, new Properties().stacksTo(8), UpgradeType.OUTPUT_MULTIPLIER);
+		super(tier, new Properties().stacksTo(8), UpgradeTypes.OUTPUT_MULTIPLIER);
 	}
 
 	@Override

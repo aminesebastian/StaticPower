@@ -19,9 +19,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkHooks;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.blockentities.nonpowered.cauldron.BlockCauldron;
+import theking530.staticpower.blockentities.nonpowered.cauldron.BlockEntityCauldron;
 import theking530.staticpower.init.ModEntities;
-import theking530.staticpower.tileentities.nonpowered.cauldron.BlockCauldron;
-import theking530.staticpower.tileentities.nonpowered.cauldron.TileEntityCauldron;
 
 public class CauldronContainedEntity extends ItemEntity {
 	private static final EntityDataAccessor<Integer> TOTAL_COOKING_TIME = SynchedEntityData.defineId(CauldronContainedEntity.class, EntityDataSerializers.INT);
@@ -89,9 +89,9 @@ public class CauldronContainedEntity extends ItemEntity {
 		if (currentBlockState.getBlock() instanceof BlockCauldron) {
 			// Get the tile entity and confirm it is a cauldron.
 			BlockEntity te = getCommandSenderWorld().getBlockEntity(blockPosition());
-			if (te instanceof TileEntityCauldron) {
+			if (te instanceof BlockEntityCauldron) {
 				// Get the tile entity for the cauldron.
-				TileEntityCauldron cauldron = (TileEntityCauldron) te;
+				BlockEntityCauldron cauldron = (BlockEntityCauldron) te;
 				if (cauldron.getRecipe(getItem()).isPresent()) {
 					System.out.println(getEntityData().get(CURRENT_COOKING_TIME));
 					// See if we aged enough.

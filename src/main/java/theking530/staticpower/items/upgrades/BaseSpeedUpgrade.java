@@ -12,11 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.upgrades.UpgradeTypes;
 
 public class BaseSpeedUpgrade extends BaseUpgrade {
 
 	public BaseSpeedUpgrade(ResourceLocation tier) {
-		super(tier, UpgradeType.SPEED);
+		super(tier, UpgradeTypes.SPEED);
 	}
 
 	@Override

@@ -29,29 +29,29 @@ import net.minecraftforge.client.model.data.IModelData;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent.SideIncrementDirection;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationComponent.SideIncrementDirection;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities;
-import theking530.staticpower.tileentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiSideConfigTab extends BaseGuiTab {
 	private static final BlockModel HIGHLIGHT_RENDERER = new BlockModel();
 	private static final AABB BOUNDS = new AABB(new Vec3(-0.05, -0.05, -0.05), new Vec3(1.05, 1.05, 1.05));
 
-	public TileEntityBase tileEntity;
+	public BlockEntityBase tileEntity;
 	private Vector2D rotation;
 	private Vector2D rotationVelocity;
 	private Vector2D mouseDownLocation;
 	private boolean mouseDownInside;
 	private Direction highlightedSide;
 
-	public GuiSideConfigTab(TileEntityBase te) {
+	public GuiSideConfigTab(BlockEntityBase te) {
 		super("Side Config", Color.EIGHT_BIT_WHITE, 110, 105, new Color(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
 		tileEntity = te;
 
@@ -203,8 +203,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	}
 
 	public TranslatableComponent conditionallyGetCardinal(BlockSide side) {
-		if (tileEntity instanceof TileEntityBase) {
-			TileEntityBase te = (TileEntityBase) tileEntity;
+		if (tileEntity instanceof BlockEntityBase) {
+			BlockEntityBase te = (BlockEntityBase) tileEntity;
 			return new TranslatableComponent("gui." + SideConfigurationUtilities.getDirectionFromSide(side, te.getFacingDirection()).toString().toLowerCase());
 		}
 		return new TranslatableComponent("ERROR");

@@ -57,6 +57,13 @@ public class CableNetworkManager extends SavedData {
 		Networks = new HashMap<Long, CableNetwork>();
 	}
 
+	public void preWorldTick() {
+		// Tick all the networks.
+		for (CableNetwork network : Networks.values()) {
+			network.preWorldTick();
+		}
+	}
+
 	public void tick() {
 		if (!firstTick) {
 			firstTick = true;

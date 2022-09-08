@@ -23,11 +23,11 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.items.BatteryPackItemModel;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustomModelSupplier {
 	private static final String ACTIVATED_TAG = "activated";
@@ -157,6 +157,11 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	public double getMaximumInputCurrent() {
-		return StaticPowerConfig.getTier(tier).portableBatteryMaxCurrent.get();
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+	}
+
+	@Override
+	public double getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
 	}
 }

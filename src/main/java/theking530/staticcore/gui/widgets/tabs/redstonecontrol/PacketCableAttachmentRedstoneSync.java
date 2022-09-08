@@ -7,10 +7,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 
 public class PacketCableAttachmentRedstoneSync extends NetworkMessage {
 	private RedstoneMode redstoneMode;

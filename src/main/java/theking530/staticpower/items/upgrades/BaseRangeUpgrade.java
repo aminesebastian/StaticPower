@@ -12,11 +12,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.upgrades.UpgradeTypes;
 
 public class BaseRangeUpgrade extends BaseUpgrade {
 
 	public BaseRangeUpgrade(ResourceLocation tier) {
-		super(tier, new Properties().stacksTo(1), UpgradeType.RANGE);
+		super(tier, new Properties().stacksTo(1), UpgradeTypes.RANGE);
 	}
 
 	@Override

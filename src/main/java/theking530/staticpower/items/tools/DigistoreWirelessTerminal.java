@@ -28,8 +28,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.DigistoreCraftingTerminal;
@@ -37,8 +39,6 @@ import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
 
 public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	private static final String TERMINAL_POSITION_KEY = "terminal_position";
@@ -203,6 +203,11 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 
 	@Override
 	public double getMaximumInputCurrent() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxCurrent.get();
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxOutputCurrent.get();
+	}
+
+	@Override
+	public double getOutputVoltage() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryOutputVoltage.get();
 	}
 }

@@ -11,7 +11,7 @@ import theking530.staticcore.gui.widgets.button.ItemButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.utilities.Color;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {

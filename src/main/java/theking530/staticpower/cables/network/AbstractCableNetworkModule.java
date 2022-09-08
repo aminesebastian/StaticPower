@@ -55,6 +55,9 @@ public abstract class AbstractCableNetworkModule {
 
 	public abstract void getReaderOutput(List<Component> components);
 
+	public void preWorldTick(Level world) {
+	}
+
 	public abstract void tick(Level world);
 
 	public void readFromNbt(CompoundTag tag) {

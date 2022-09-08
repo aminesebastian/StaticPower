@@ -25,6 +25,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.nonpowered.solderingtable.ContainerSolderingTable;
+import theking530.staticpower.blockentities.powered.autocrafter.ContainerAutoCraftingTable;
+import theking530.staticpower.blockentities.powered.autosolderingtable.ContainerAutoSolderingTable;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.ContainerDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
@@ -92,9 +95,6 @@ import theking530.staticpower.integration.JEI.ingredients.ProbabilityItemStackHe
 import theking530.staticpower.integration.JEI.ingredients.ProbabilityItemStackRenderer;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
-import theking530.staticpower.tileentities.nonpowered.solderingtable.ContainerSolderingTable;
-import theking530.staticpower.tileentities.powered.autocrafter.ContainerAutoCraftingTable;
-import theking530.staticpower.tileentities.powered.autosolderingtable.ContainerAutoSolderingTable;
 
 @JeiPlugin
 public class PluginJEI implements IModPlugin {

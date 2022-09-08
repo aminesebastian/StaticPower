@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -34,23 +34,18 @@ import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockIndustrialFluidCable extends AbstractCableBlock {
-	private ResourceLocation tier;
 
 	public BlockIndustrialFluidCable(ResourceLocation tier) {
-		super(new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)), 4.5f);
-		this.tier = tier;
+		super(tier, new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)), 4.5f);
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
-	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip,
-			boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.max_fluid_rate"));
-		tooltip.add(new TextComponent("� ").append(new TextComponent(ChatFormatting.AQUA + GuiTextUtilities
-				.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get())
-				.getString())));
-		tooltip.add(new TextComponent("� ").append(
-				new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(ChatFormatting.RED)));
+	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
+		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_fluid_rate", ChatFormatting.AQUA,
+				GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableIndustrialFluidCapacity.get()).getString());
+		
+		tooltip.add(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}
 
 	@Override
@@ -58,39 +53,26 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	public BakedModel getModelOverride(BlockState state, @Nullable BakedModel existingModel, ModelBakeEvent event) {
 		BakedModel extensionModel = null;
 		BakedModel straightModel = null;
-		BakedModel attachmentModel = event.getModelRegistry()
-				.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT);
+		BakedModel attachmentModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_DEFAULT_ATTACHMENT);
 
 		if (tier == StaticPowerTiers.BASIC) {
-			extensionModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_BASIC_EXTENSION);
-			straightModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_BASIC_STRAIGHT);
+			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_BASIC_EXTENSION);
+			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_BASIC_STRAIGHT);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			extensionModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ADVANCED_EXTENSION);
-			straightModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ADVANCED_STRAIGHT);
+			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ADVANCED_EXTENSION);
+			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ADVANCED_STRAIGHT);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			extensionModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STATIC_EXTENSION);
-			straightModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STATIC_STRAIGHT);
+			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STATIC_EXTENSION);
+			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_STATIC_STRAIGHT);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			extensionModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ENERGIZED_EXTENSION);
-			straightModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ENERGIZED_STRAIGHT);
+			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ENERGIZED_EXTENSION);
+			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_ENERGIZED_STRAIGHT);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			extensionModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_LUMUM_EXTENSION);
-			straightModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_LUMUM_STRAIGHT);
+			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_LUMUM_EXTENSION);
+			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_LUMUM_STRAIGHT);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			extensionModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_CREATIVE_EXTENSION);
-			straightModel = event.getModelRegistry()
-					.get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_CREATIVE_STRAIGHT);
+			extensionModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_CREATIVE_EXTENSION);
+			straightModel = event.getModelRegistry().get(StaticPowerAdditionalModels.CABLE_FLUID_INDUSTRIAL_CREATIVE_STRAIGHT);
 		}
 
 		return new CableBakedModel(existingModel, extensionModel, straightModel, attachmentModel);

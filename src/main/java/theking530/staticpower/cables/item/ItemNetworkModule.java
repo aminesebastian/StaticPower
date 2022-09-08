@@ -27,6 +27,8 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.utilities.SDMath;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.digistorenetwork.ioport.DigitstoreIOPortInventoryComponent;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -35,8 +37,6 @@ import theking530.staticpower.cables.network.DestinationWrapper;
 import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.pathfinding.Path;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.digistorenetwork.ioport.DigitstoreIOPortInventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -634,8 +634,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @return
 	 */
 	protected ItemCableComponent getItemCableComponentAtPosition(BlockPos position) {
-		if (Network.getWorld().getBlockEntity(position) instanceof TileEntityBase) {
-			return ((TileEntityBase) Network.getWorld().getBlockEntity(position)).getComponent(ItemCableComponent.class);
+		if (Network.getWorld().getBlockEntity(position) instanceof BlockEntityBase) {
+			return ((BlockEntityBase) Network.getWorld().getBlockEntity(position)).getComponent(ItemCableComponent.class);
 		}
 		return null;
 	}

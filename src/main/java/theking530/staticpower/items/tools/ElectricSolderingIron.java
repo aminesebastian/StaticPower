@@ -12,11 +12,11 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.ISolderingIron;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implements ISolderingIron {
 
@@ -60,6 +60,11 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 
 	@Override
 	public double getMaximumInputCurrent() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxCurrent.get();
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxOutputCurrent.get();
+	}
+
+	@Override
+	public double getOutputVoltage() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryOutputVoltage.get();
 	}
 }

@@ -4,8 +4,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.heat.HeatStorageComponent;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiPassiveHeatTab extends GuiMachineHeatTab {

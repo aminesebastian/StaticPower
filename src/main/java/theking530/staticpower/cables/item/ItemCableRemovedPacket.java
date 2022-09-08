@@ -8,7 +8,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
-import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.blockentities.BlockEntityBase;
 
 public class ItemCableRemovedPacket extends NetworkMessage {
 	protected long removedParcel;
@@ -39,8 +39,8 @@ public class ItemCableRemovedPacket extends NetworkMessage {
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
 			BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(tileEntityPosition);
-			if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
-				TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
+			if (rawTileEntity != null && rawTileEntity instanceof BlockEntityBase) {
+				BlockEntityBase tileEntity = (BlockEntityBase) rawTileEntity;
 				ItemCableComponent cableComponent = tileEntity.getComponent(ItemCableComponent.class);
 				cableComponent.removeTransferingItem(removedParcel);
 			}

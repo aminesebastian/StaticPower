@@ -5,8 +5,8 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.tileentities.TileEntityBase;
 
 public class CableUtilities {
 
@@ -35,8 +35,8 @@ public class CableUtilities {
 	 * @return The cable wrapper component if one is found, null otherwise.
 	 */
 	public static @Nullable AbstractCableProviderComponent getCableWrapperComponent(BlockGetter world, BlockPos pos) {
-		if (world.getBlockEntity(pos) instanceof TileEntityBase) {
-			TileEntityBase tileEntityBase = (TileEntityBase) world.getBlockEntity(pos);
+		if (world.getBlockEntity(pos) instanceof BlockEntityBase) {
+			BlockEntityBase tileEntityBase = (BlockEntityBase) world.getBlockEntity(pos);
 			if (tileEntityBase.hasComponentOfType(AbstractCableProviderComponent.class)) {
 				return tileEntityBase.getComponent(AbstractCableProviderComponent.class);
 			}

@@ -11,11 +11,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.upgrades.UpgradeTypes;
 
 public class CraftingUpgrade extends BaseUpgrade {
 
 	public CraftingUpgrade() {
-		super(new Properties().stacksTo(1), UpgradeType.DIGISTORE_ATTACHMENT);
+		super(new Properties().stacksTo(1), UpgradeTypes.DIGISTORE_ATTACHMENT);
 	}
 
 	@Override

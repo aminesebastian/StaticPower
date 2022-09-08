@@ -6,7 +6,6 @@ import java.util.List;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.staticpower.StaticPower;
 
@@ -91,18 +90,20 @@ public abstract class StaticPowerTier {
 	public final ConfigValue<Integer> heatSinkElectricHeatPowerUsage;
 
 	/*********************
-	 * Power Configuration
+	 * Battery Configuration
 	 *********************/
 	public final ConfigValue<Double> batteryCapacity;
-//	public final ConfigValue<Double> batteryMinimumChargingVoltage;
-//	public final ConfigValue<Double> batteryMaximumChargingVoltage;
+	public final ConfigValue<List<Double>> batteryInputVoltageRange;
+	public final ConfigValue<List<Double>> batteryOutputVoltageRange;
+	public final ConfigValue<Double> batteryMaximumOutputCurrent;
 
 	/*********************
 	 * Item Configuration
 	 *********************/
 	public final ConfigValue<Double> portableBatteryCapacity;
 	public final ConfigValue<List<Double>> portableBatteryInputVoltageRange;
-	public final ConfigValue<Double> portableBatteryMaxCurrent;
+	public final ConfigValue<Double> portableBatteryMaxOutputCurrent;
+	public final ConfigValue<Double> portableBatteryOutputVoltage;
 
 	/***********************
 	 * Machine Configuration
@@ -114,15 +115,15 @@ public abstract class StaticPowerTier {
 	public final ConfigValue<Double> defaultMachineMaximumOutputVoltage;
 	public final ConfigValue<Double> defaultMachineMaximumOutputCurrent;
 
-	public final IntValue defaultMachineOverheatTemperature;
-	public final IntValue defaultMachineMaximumTemperature;
+	public final ConfigValue<Integer> defaultMachineOverheatTemperature;
+	public final ConfigValue<Integer> defaultMachineMaximumTemperature;
 
 	/**********
 	 * Conveyer
 	 **********/
 	public final ConfigValue<Double> conveyorSpeedMultiplier;
-	public final IntValue conveyorSupplierStackSize;
-	public final IntValue conveyorExtractorStackSize;
+	public final ConfigValue<Integer> conveyorSupplierStackSize;
+	public final ConfigValue<Integer> conveyorExtractorStackSize;
 
 	/********************
 	 * Processing Upgrade
@@ -217,66 +218,64 @@ public abstract class StaticPowerTier {
 		builder.pop();
 
 		builder.push("Machines");
-		defaultMachinePowerCapacity = builder.comment("The minimum voltage a machine of this tier requires (in SV).")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerCapacity")
-				.defineInRange("DefaultMachinePowerCapacity", this.getDefaultMachinePowerCapacity(), 0, Double.MAX_VALUE);
-
-		defaultMachineInputVoltageRange = builder.comment("The input voltage range for a machine of this tier (in SV.")
+		defaultMachinePowerCapacity = builder.comment("The amount of power a machine of this tier can store (in SW).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachinePowerCapacity").define("DefaultMachinePowerCapacity", getDefaultMachinePowerCapacity());
+		defaultMachineInputVoltageRange = builder.comment("The input voltage range for a machine of this tier (in SV).")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineInputVoltageRange")
-				.define("DefaultMachineInputVoltageRange", this.internalGetDefaultMachineInputVoltageRange());
-		defaultMachineMaximumInputCurrent = builder.comment("The minimum current a machine of this tier can take (in SC.")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineMaximumCurrent")
-				.defineInRange("DefaultMachineMaximumCurrent", this.getDefaultMachineMaximumInputCurrent(), 0, Double.MAX_VALUE);
+				.define("DefaultMachineInputVoltageRange", internalGetDefaultMachineInputVoltageRange());
+		defaultMachineMaximumInputCurrent = builder.comment("The minimum current a machine of this tier can take (in SA.")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineMaximumInputCurrent")
+				.define("DefaultMachineMaximumInputCurrent", getDefaultMachineMaximumInputCurrent());
 
 		defaultMachineMaximumOutputVoltage = builder.comment(
 				"The voltage a machine uses internally when performing work (in SV). This is used alongside defaultMachineMaximumCurrentOutput to determine the maximum amount of power a machien can use per tick.")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineMaximumVoltageOutput")
-				.defineInRange("DefaultMachineMaximumVoltageOutput", this.getDefaultMachineMaximumVoltageOutput(), 0, Double.MAX_VALUE);
-
+				.define("DefaultMachineMaximumVoltageOutput", getDefaultMachineMaximumVoltageOutput());
 		defaultMachineMaximumOutputCurrent = builder.comment(
 				"The maximum current a machine of this tier can use while performing work (in SA).  This is used alongside defaultMachineMaximumVoltageOutput to determine the maximum amount of power a machien can use per tick.")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineMaximumCurrentOutput")
-				.defineInRange("DefaultMachineMaximumCurrentOutput", this.getDefaultMachineMaximumCurrentOutput(), 0, Double.MAX_VALUE);
+				.define("DefaultMachineMaximumCurrentOutput", getDefaultMachineMaximumCurrentOutput());
 
 		defaultMachineOverheatTemperature = builder.comment("The temperature at which a machine of this tier overheats and stops processing (in mC [1C = 1000mC]).")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineOverheatTemperature")
-				.defineInRange("DefaultMachineOverheatTemperature", this.getDefaultMachineOverheatTemperature(), 0, Integer.MAX_VALUE);
+				.define("DefaultMachineOverheatTemperature", getDefaultMachineOverheatTemperature());
 		defaultMachineMaximumTemperature = builder.comment("The maximum amount of heat a machine of this tier can contain (in mC [1C = 1000mC]).")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultMachineMaximumTemperature")
-				.defineInRange("DefaultMachineMaximumTemperature", this.getDefaultMachineMaximumTemperature(), 0, Integer.MAX_VALUE);
+				.define("DefaultMachineMaximumTemperature", getDefaultMachineMaximumTemperature());
 
-		defaultTankCapacity = builder.comment("The base amount of fluid a machine of this tier can store..").translation(StaticPower.MOD_ID + ".config." + "defaultTankCapacity")
-				.define("DefaultTankCapacity", this.getDefaultTankCapacity());
+		defaultTankCapacity = builder.comment("The base amount of fluid a machine of this tier can store (in mB [1B = 1000mB]).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultTankCapacity").define("DefaultTankCapacity", this.getDefaultTankCapacity());
 
 		builder.push("Conveyor");
 		conveyorSpeedMultiplier = builder.comment("The speed multitplier applied to conveyors of this tier.")
-				.translation(StaticPower.MOD_ID + ".config." + "conveyorSpeedMultiplier")
-				.defineInRange("ConveyorSpeedMultiplier", getConveyorSpeedMultiplier(), 0, Double.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "conveyorSpeedMultiplier").define("ConveyorSpeedMultiplier", getConveyorSpeedMultiplier());
 
 		conveyorSupplierStackSize = builder.comment("The maximum stack size suppliers of this tier can consume at a time.")
-				.translation(StaticPower.MOD_ID + ".config." + "conveyorSupplierStackSize")
-				.defineInRange("ConveyorSupplierStackSize", getConveyorSupplierStackSize(), 0, Integer.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "conveyorSupplierStackSize").define("ConveyorSupplierStackSize", getConveyorSupplierStackSize());
 
 		conveyorExtractorStackSize = builder.comment("The maximum stack size that an extractor of this tier can extract from an adjacent inventory.")
-				.translation(StaticPower.MOD_ID + ".config." + "conveyorExtractorStackSize")
-				.defineInRange("ConveyorExtractorStackSize", getConveyorExtractorStackSize(), 0, Integer.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "conveyorExtractorStackSize").define("ConveyorExtractorStackSize", getConveyorExtractorStackSize());
 
 		builder.pop();
 
 		builder.push("Battery");
-		batteryCapacity = builder.comment("The amount of power that a non-portable battery of this tier can store (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "batteryCapacity").defineInRange("BatteryCapacity", this.getBatteryCapacity(), 0, Double.MAX_VALUE);
+		batteryCapacity = builder.comment("The amount of power that a non-portable battery of this tier can store (in SW).")
+				.translation(StaticPower.MOD_ID + ".config." + "batteryCapacity").define("BatteryCapacity", getBatteryCapacity());
+		batteryInputVoltageRange = builder.comment("The voltage range that can be used to charge a battery of this tier (in SV).")
+				.translation(StaticPower.MOD_ID + ".config." + "batteryInputVoltageRange").define("BatteryInputVoltageRange", internalGetBatteryInputVoltageRange());
+		batteryOutputVoltageRange = builder.comment("The voltage range that a battery of this tier can output (in SV).")
+				.translation(StaticPower.MOD_ID + ".config." + "batteryOutputVoltageRange").define("BatteryOutputVoltageRange", internalGetBatteryOutputVoltageRange());
+		batteryMaximumOutputCurrent = builder.comment("The maximum current that a battery of this tier can output (in SA).")
+				.translation(StaticPower.MOD_ID + ".config." + "batteryMaximumOutputCurrent").define("BatteryMaximumOutputCurrent", getBatteryMaximumOutputCurrent());
 
 		builder.pop();
 
 		builder.push("Solar_Panel");
-		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration")
-				.defineInRange("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
+		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick (in SW).")
+				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration").define("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration());
 
-		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage")
-				.defineInRange("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration(), 0, Long.MAX_VALUE);
+		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store (in SW).")
+				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage").define("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration());
 		builder.pop();
 
 		builder.push("Pump");
@@ -359,19 +358,17 @@ public abstract class StaticPowerTier {
 		builder.push("Power");
 
 		cablePowerMaxCurrent = builder.comment("The amount of current this cable can transfer before breaking.").translation(StaticPower.MOD_ID + ".config." + "cablePowerCapacity")
-				.defineInRange("CablePowerMaxCurrent", this.getCablePowerMaxCurrent(), 0, Double.MAX_VALUE);
+				.define("CablePowerMaxCurrent", this.getCablePowerMaxCurrent());
 		cablePowerResistancePerBlock = builder.comment(
 				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
-				.translation(StaticPower.MOD_ID + ".config." + "cablePowerResistancePerBlock")
-				.defineInRange("CablePowerResistancePerBlock", this.getCablePowerResistancePerBlock(), 0, Double.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "cablePowerResistancePerBlock").define("CablePowerResistancePerBlock", this.getCablePowerResistancePerBlock());
 
 		cableIndustrialPowerMaxCurrent = builder.comment("The amount of current that an industrial cable can transfer before breaking.")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerMaxCurrent")
-				.defineInRange("CableIndustrialPowerMaxCurrent", this.getCableIndustrialPowerMaxCurrent(), 0, Double.MAX_VALUE);
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerMaxCurrent").define("CableIndustrialPowerMaxCurrent", this.getCableIndustrialPowerMaxCurrent());
 		cableIndustrialPowerResistancePerBlock = builder.comment(
 				"The resistance of this industrial cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerResistancePerBlock")
-				.defineInRange("CableIndustrialPowerResistancePerBlock", this.getCableIndustrialPowerResistancePerBlock(), 0, Double.MAX_VALUE);
+				.define("CableIndustrialPowerResistancePerBlock", this.getCableIndustrialPowerResistancePerBlock());
 		builder.pop();
 
 		/********
@@ -423,15 +420,16 @@ public abstract class StaticPowerTier {
 				.translation(StaticPower.MOD_ID + ".config." + "itemFilterSlots").define("ItemFilterSlots", this.getItemFilterSlots());
 
 		builder.push("Battery");
-		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier (in SP).")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity")
-				.defineInRange("PortableBatteryCapacity", this.getPortableBatteryCapacity(), 0, Double.MAX_VALUE);
+		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier (in SW).")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").define("PortableBatteryCapacity", this.getPortableBatteryCapacity());
 		portableBatteryInputVoltageRange = builder.comment("The voltage range that can be used to charge a battery of this tier (in SV).")
 				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryInputVoltageRange")
 				.define("PortableBatteryInputVoltageRange", internalGetPortableBatteryChargingVoltage());
-		portableBatteryMaxCurrent = builder.comment("The maximum input current for a battery of this tier (in SV).")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryMaxCurrent")
-				.defineInRange("PortableBatteryMaxCurrent", this.getPortableBatteryMaxCurrent(), 0, Double.MAX_VALUE);
+		portableBatteryMaxOutputCurrent = builder.comment("The maximum input current for a battery of this tier (in SA).")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryMaxOutputCurrent")
+				.define("PortableBatteryMaxOutputCurrent", this.getPortableBatteryMaxOutputCurrent());
+		portableBatteryOutputVoltage = builder.comment("The ouput voltage for a battery of this tier (in SV).")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryOutputVoltage").define("PortableBatteryOutputVoltage", this.getPortableBatteryOutputVoltage());
 		builder.pop();
 
 		/********
@@ -465,8 +463,8 @@ public abstract class StaticPowerTier {
 
 		wireCutterUses = builder.comment("The number of items that can be processed by a wire cutter of this tier.").translation(StaticPower.MOD_ID + ".config." + "wireCutterUses")
 				.define("WireCutterUses", this.getWireCutterUses());
-		magnetPowerCapacity = builder.comment("The amount of power that can be stored in a magnet of this tier (in mSV [1SV = 1000mSV]).")
-				.translation(StaticPower.MOD_ID + ".config." + "magnetPowerCapacity").defineInRange("MagnetPowerCapacity", this.getMagnetPowerCapacity(), 0, Long.MAX_VALUE);
+		magnetPowerCapacity = builder.comment("The amount of power that can be stored in a magnet of this tier (in SW).")
+				.translation(StaticPower.MOD_ID + ".config." + "magnetPowerCapacity").define("MagnetPowerCapacity", this.getMagnetPowerCapacity());
 		magnetRadius = builder.comment("The number of blocks away from which items will be pulled towards the wielder.")
 				.translation(StaticPower.MOD_ID + ".config." + "magnetRadius").define("MagnetRadius", this.getMagnetRadius());
 		builder.pop();
@@ -773,6 +771,26 @@ public abstract class StaticPowerTier {
 		return 0;
 	}
 
+	protected List<Double> internalGetBatteryInputVoltageRange() {
+		return Arrays.asList(0.0, 0.0);
+	}
+
+	public StaticVoltageRange getBatteryInputVoltageRange() {
+		return new StaticVoltageRange(batteryInputVoltageRange.get().get(0), batteryInputVoltageRange.get().get(1));
+	}
+
+	protected List<Double> internalGetBatteryOutputVoltageRange() {
+		return Arrays.asList(0.0, 0.0);
+	}
+
+	public StaticVoltageRange getBatteryOutputVoltageRange() {
+		return new StaticVoltageRange(batteryOutputVoltageRange.get().get(0), batteryOutputVoltageRange.get().get(1));
+	}
+
+	protected double getBatteryMaximumOutputCurrent() {
+		return 0;
+	}
+
 	protected double getCablePowerMaxCurrent() {
 		return 0;
 	}
@@ -805,7 +823,11 @@ public abstract class StaticPowerTier {
 		return new StaticVoltageRange(portableBatteryInputVoltageRange.get().get(0), portableBatteryInputVoltageRange.get().get(1));
 	}
 
-	protected double getPortableBatteryMaxCurrent() {
+	protected double getPortableBatteryMaxOutputCurrent() {
+		return 0;
+	}
+
+	protected double getPortableBatteryOutputVoltage() {
 		return 0;
 	}
 

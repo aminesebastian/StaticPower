@@ -8,7 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -21,21 +21,21 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockIndustrialPowerCable extends AbstractCableBlock {
-	private ResourceLocation tier;
 
 	public BlockIndustrialPowerCable(ResourceLocation tier) {
-		super(new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)), 4.5f);
-		this.tier = tier;
+		super(tier, new CableBoundsCache(3.5D, new Vector3D(4.25f, 4.25f, 2.0f)), 4.5f);
 	}
 
 	@Override
@@ -46,13 +46,13 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TranslatableComponent("gui.staticpower.power_cable_max_current"));
-		tooltip.add(new TextComponent(" •").append(new TextComponent(
-				ChatFormatting.RED + StaticPowerEnergyTextUtilities.formatCurrentToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerMaxCurrent.get()).getString())));
+		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_current", ChatFormatting.RED,
+				StaticPowerEnergyTextUtilities.formatCurrentToString(tierObject.cableIndustrialPowerMaxCurrent.get()).getString());
+		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.power_resistance", ChatFormatting.GOLD,
+				StaticPowerEnergyTextUtilities.formatResistanceToString(tierObject.cableIndustrialPowerResistancePerBlock.get()).getString());
 
-		tooltip.add(new TranslatableComponent("gui.staticpower.power_cable_resistance"));
-		tooltip.add(new TextComponent(" •").append(new TextComponent(ChatFormatting.GOLD
-				+ StaticPowerEnergyTextUtilities.formatResistanceToString(StaticPowerConfig.getTier(tier).cableIndustrialPowerResistancePerBlock.get()).getString())));
+		tooltip.add(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}
 
 	@Override

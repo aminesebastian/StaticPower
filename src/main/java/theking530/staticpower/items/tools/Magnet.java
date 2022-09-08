@@ -26,11 +26,10 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class Magnet extends StaticPowerEnergyStoringItem {
 	private static final String ACTIVATED_TAG = "activated";
@@ -182,11 +181,16 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).getPortableBatteryChargingVoltage();
+		return StaticPowerConfig.getTier(tier).getPortableBatteryChargingVoltage();
 	}
 
 	@Override
 	public double getMaximumInputCurrent() {
-		return StaticPowerConfig.getTier(tier).portableBatteryMaxCurrent.get();
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+	}
+
+	@Override
+	public double getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
 	}
 }

@@ -15,6 +15,8 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.IUpgradeItem;
+import theking530.api.upgrades.UpgradeType;
+import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.items.StaticPowerItem;
@@ -40,7 +42,7 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 		// If no upgrade type was supplied, then mark this as a special singular
 		// upgrade.
 		if (upgradeTypes.length == 0) {
-			this.upgradeTypes.add(UpgradeType.SPECIAL);
+			this.upgradeTypes.add(UpgradeTypes.SPECIAL);
 		} else {
 			for (UpgradeType type : upgradeTypes) {
 				this.upgradeTypes.add(type);

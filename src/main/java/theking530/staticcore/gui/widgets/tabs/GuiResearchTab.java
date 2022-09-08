@@ -10,10 +10,10 @@ import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.utilities.Color;
+import theking530.staticpower.blockentities.components.team.TeamComponent;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
-import theking530.staticpower.tileentities.components.team.TeamComponent;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiResearchTab extends AbstractInfoTab {

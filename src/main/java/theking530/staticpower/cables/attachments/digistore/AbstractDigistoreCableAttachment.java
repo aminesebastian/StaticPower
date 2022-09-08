@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 
 public abstract class AbstractDigistoreCableAttachment extends AbstractCableAttachment {

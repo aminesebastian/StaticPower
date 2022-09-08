@@ -21,14 +21,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.digistorenetwork.digistore.BlockDigistore;
 
 @WailaPlugin(StaticPower.MOD_ID)
 public class JadePluginImplementation implements IWailaPlugin {
@@ -114,16 +114,16 @@ public class JadePluginImplementation implements IWailaPlugin {
 					// Draw stored power bar.
 					if (displayInputParameters) {
 						if (minVoltage == maxVoltage) {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.power_cable_input_voltage").append(": ")
+							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
 									.append(StaticPowerEnergyTextUtilities.formatVoltageToString(minVoltage)), INPUT_VOLTAGE_RENDERER);
 						} else if (minVoltage == 0) {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.power_cable_input_voltage").append(": <")
+							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": <")
 									.append(StaticPowerEnergyTextUtilities.formatVoltageToString(maxVoltage)), INPUT_VOLTAGE_RENDERER);
 						} else if (maxVoltage == Double.MAX_VALUE) {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.power_cable_input_voltage").append(": >")
+							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": >")
 									.append(StaticPowerEnergyTextUtilities.formatVoltageToString(minVoltage)), INPUT_VOLTAGE_RENDERER);
 						} else {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.power_cable_input_voltage").append(": ")
+							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
 									.append(StaticPowerEnergyTextUtilities.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
 						}
 						JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_SV_COLOR, ALT_SV_COLOR,

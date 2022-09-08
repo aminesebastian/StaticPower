@@ -55,8 +55,9 @@ import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.ItemStackStaticPowerEnergyCapability;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
+import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
 import theking530.staticcore.item.ICustomModelSupplier;
@@ -72,7 +73,6 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class MiningDrill extends AbstractMultiHarvestTool implements ICustomModelSupplier {

@@ -16,8 +16,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.tileentities.TileEntityBase;
 
 public class ServerCable {
 	public enum CableConnectionState {
@@ -283,7 +283,7 @@ public class ServerCable {
 	 * @return
 	 */
 	public List<AbstractCableProviderComponent> getCableProviderComponents() {
-		TileEntityBase baseTe = (TileEntityBase) World.getChunkAt(getPos()).getBlockEntity(getPos(), LevelChunk.EntityCreationType.QUEUED);
+		BlockEntityBase baseTe = (BlockEntityBase) World.getChunkAt(getPos()).getBlockEntity(getPos(), LevelChunk.EntityCreationType.QUEUED);
 		if (baseTe == null) {
 			throw new RuntimeException(String.format("A cable wrapper exists without a cooresponding AbstractCableProviderComponent at BlockPos: %1$s.", Position));
 		}

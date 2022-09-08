@@ -8,10 +8,10 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.nonpowered.evaporator.BlockEntityEvaporator;
 import theking530.staticpower.data.crafting.MachineRecipeProcessingSection;
 import theking530.staticpower.data.crafting.StaticPowerJsonParsingUtilities;
 import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeSerializer;
-import theking530.staticpower.tileentities.nonpowered.evaporator.TileEntityEvaporator;
 
 public class EvaporatorRecipeSerializer extends StaticPowerRecipeSerializer<EvaporatorRecipe> {
 	public static final EvaporatorRecipeSerializer INSTANCE = new EvaporatorRecipeSerializer();
@@ -28,10 +28,10 @@ public class EvaporatorRecipeSerializer extends StaticPowerRecipeSerializer<Evap
 		FluidStack outputFluid = StaticPowerJsonParsingUtilities.parseFluidStack(outputFluidObject);
 
 		// Start with the default processing values.
-		int heatCost = TileEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
+		int heatCost = BlockEntityEvaporator.DEFAULT_EVAPORATION_HEAT;
 
 		// Capture the processing and power costs.
-		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(TileEntityEvaporator.DEFAULT_PROCESSING_TIME, 0, json);
+		MachineRecipeProcessingSection processing = MachineRecipeProcessingSection.fromJson(BlockEntityEvaporator.DEFAULT_PROCESSING_TIME, 0, json);
 		// Capture the heat cost.
 		if (GsonHelper.isValidNode(json, "heat")) {
 			heatCost = json.get("heat").getAsInt();

@@ -20,6 +20,7 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.api.IUpgradeItem;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsHoverResult;
@@ -27,7 +28,6 @@ import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.ServerAttachmentDataContainer;
 import theking530.staticpower.items.StaticPowerItem;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {

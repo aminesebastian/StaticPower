@@ -8,6 +8,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
+import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
@@ -26,9 +29,6 @@ import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.TileEntityUpdateRequest;
-import theking530.staticpower.tileentities.components.serialization.UpdateSerialize;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	public static final String POWER_USAGE_TAG = "power_usage";
@@ -79,7 +79,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
-					getTileEntity().addUpdateRequest(TileEntityUpdateRequest.syncDataOnly(true), false);
+					getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(true), false);
 				}
 
 				// Update the on/off state of the block.
@@ -193,8 +193,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
 			}
-		} else if (te instanceof TileEntityBase) {
-			TileEntityBase baseTe = (TileEntityBase) te;
+		} else if (te instanceof BlockEntityBase) {
+			BlockEntityBase baseTe = (BlockEntityBase) te;
 			if (baseTe.hasComponentOfType(DigistoreCableProviderComponent.class)) {
 				return CableConnectionState.TILE_ENTITY;
 			}

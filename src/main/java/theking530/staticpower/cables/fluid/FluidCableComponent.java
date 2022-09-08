@@ -22,6 +22,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.drain.DrainAttachment;
@@ -31,7 +32,6 @@ import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.TileEntityUpdateRequest;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
 	public static final String FLUID_CAPACITY_DATA_TAG_KEY = "fluid_capacity";

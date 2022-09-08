@@ -3,41 +3,37 @@ package theking530.staticpower.cables.heat;
 import java.util.List;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import theking530.staticcore.initialization.tileentity.BlockEntityTypeAllocator;
-import theking530.staticcore.initialization.tileentity.TileEntityTypePopulator;
-import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
+import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.tileentities.TileEntityBase;
 
-public class TileEntityHeatCable extends TileEntityBase {
-	@TileEntityTypePopulator()
+public class TileEntityHeatCable extends BlockEntityBase {
+	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_ALUMINUM = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.ALUMINUM), ModBlocks.AluminumHeatCable);
-	@TileEntityTypePopulator()
+			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.AluminumHeatCable);
+	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_COPPER = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.COPPER), ModBlocks.CopperHeatCable);
-	@TileEntityTypePopulator()
+			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.CopperHeatCable);
+	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_TIN = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.TIN), ModBlocks.TinHeatCable);
-	@TileEntityTypePopulator()
+			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.TinHeatCable);
+	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_SILVER = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.SILVER), ModBlocks.SilverHeatCable);
-	@TileEntityTypePopulator()
+			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.SilverHeatCable);
+	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_GOLD = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state, StaticPowerTiers.GOLD), ModBlocks.GoldHeatCable);
+			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.GoldHeatCable);
 
 	private final HeatCableComponent cableComponent;
 
-	public TileEntityHeatCable(BlockEntityTypeAllocator<TileEntityHeatCable> allocator, BlockPos pos, BlockState state, ResourceLocation tier) {
+	public TileEntityHeatCable(BlockEntityTypeAllocator<TileEntityHeatCable> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
-		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", StaticPowerConfig.getTier(tier).heatCableCapacity.get(),
-				StaticPowerConfig.getTier(tier).heatCableConductivity.get()));
+		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", getTierObject().heatCableCapacity.get(), getTierObject().heatCableConductivity.get()));
 	}
 
 	@Override

@@ -11,12 +11,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPowerConfig;
 
 public class AcceleratorUpgrade extends BaseUpgrade {
 
 	public AcceleratorUpgrade() {
-		super(new Properties().stacksTo(8), UpgradeType.DIGISTORE_ATTACHMENT);
+		super(new Properties().stacksTo(8), UpgradeTypes.DIGISTORE_ATTACHMENT);
 	}
 
 	@Override

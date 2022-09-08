@@ -19,12 +19,12 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class DrainAttachment extends AbstractCableAttachment {

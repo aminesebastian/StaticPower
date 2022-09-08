@@ -14,6 +14,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
+import theking530.staticpower.blockentities.digistorenetwork.manager.TileEntityDigistoreManager;
+import theking530.staticpower.blockentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.cables.attachments.digistore.craftinginterface.DigistoreCraftingInterfaceAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
@@ -23,9 +26,6 @@ import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.digistorenetwork.manager.TileEntityDigistoreManager;
-import theking530.staticpower.tileentities.digistorenetwork.patternstorage.TileEntityPatternStorage;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends AbstractCableNetworkModule {
@@ -54,7 +54,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	@Override
 	public void tick(Level world) {
 		if (isManagerPresent()) {
-			manager.energyStorage.usePowerIgnoringVoltageLimitations(getPowerUsage());
+			manager.energyStorage.drainPower(getPowerUsage(), false);
 
 			craftingTimer++;
 			if (craftingTimer >= CRAFTING_TIME) {

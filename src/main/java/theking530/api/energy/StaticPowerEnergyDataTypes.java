@@ -1,6 +1,7 @@
 package theking530.api.energy;
 
 import net.minecraft.nbt.CompoundTag;
+import theking530.staticcore.utilities.SDMath;
 
 public class StaticPowerEnergyDataTypes {
 	public static record StaticVoltageRange(double minimumVoltage, double maximumVoltage) {
@@ -9,6 +10,10 @@ public class StaticPowerEnergyDataTypes {
 
 		public boolean isVoltageInRange(double voltage) {
 			return voltage >= minimumVoltage && voltage <= maximumVoltage;
+		}
+
+		public double clampVoltageToRange(double voltage) {
+			return SDMath.clamp(voltage, minimumVoltage, maximumVoltage);
 		}
 
 		public CompoundTag serializeNBT() {
@@ -26,6 +31,10 @@ public class StaticPowerEnergyDataTypes {
 	public static record StaticCurrentRange(double minimumCurrent, double maximumCurrent) {
 		public boolean isCurrentInRange(double current) {
 			return current >= minimumCurrent && current <= maximumCurrent;
+		}
+
+		public double clampCurrentToRange(double current) {
+			return SDMath.clamp(current, minimumCurrent, maximumCurrent);
 		}
 
 		public CompoundTag serializeNBT() {

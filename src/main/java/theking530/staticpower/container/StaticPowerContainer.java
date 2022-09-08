@@ -23,13 +23,13 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.TriFunction;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.components.items.PacketLockInventorySlot;
 import theking530.staticpower.container.slots.DummySlot;
 import theking530.staticpower.container.slots.PhantomSlot;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
-import theking530.staticpower.tileentities.components.items.PacketLockInventorySlot;
 
 public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerContainer.class);

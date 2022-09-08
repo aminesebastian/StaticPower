@@ -16,12 +16,12 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.staticpower.blockentities.components.energy.SidedEnergyProxy;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.tileentities.components.energy.SidedEnergyProxy;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements IStaticPowerStorage {
 	public static final String POWER_MAX_CURRENT = "power_max_current";
@@ -166,7 +166,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 		if (!isClientSide()) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.addPower(getPos(), voltage, power, simulate);
+				return module.addPower(getPos().relative(side), getPos(), voltage, power, simulate);
 			}
 		}
 		return 0;

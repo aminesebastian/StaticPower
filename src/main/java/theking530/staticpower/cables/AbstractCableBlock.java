@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -30,17 +31,21 @@ import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.network.NetworkGUI;
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
+import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock implements ICustomModelSupplier {
+public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
 	public static final Logger LOGGER = LogManager.getLogger(AbstractCableBlock.class);
 	public final CableBoundsCache cableBoundsCache;
 	public final float coverHoleSize;
+
+	public AbstractCableBlock(CableBoundsCache cableBoundsCache, float coverHoleSize) {
+		this(null, cableBoundsCache, coverHoleSize);
+	}
 
 	/**
 	 * 
@@ -49,9 +54,9 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 	 * @param coverHoleSize        The size of the hole to render in a cover when
 	 *                             this cable passes through a cover.
 	 */
-	public AbstractCableBlock(CableBoundsCache cableBoundsGenerator, float coverHoleSize) {
-		super(Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
-		cableBoundsCache = cableBoundsGenerator;
+	public AbstractCableBlock(ResourceLocation tier, CableBoundsCache cableBoundsCache, float coverHoleSize) {
+		super(tier, Block.Properties.of(Material.METAL).strength(1.5f).noOcclusion().requiresCorrectToolForDrops());
+		this.cableBoundsCache = cableBoundsCache;
 		this.coverHoleSize = coverHoleSize;
 	}
 
@@ -117,7 +122,7 @@ public abstract class AbstractCableBlock extends StaticPowerTileEntityBlock impl
 		}
 
 		// IF we didn't return earlier, go to the super call.
-		//hit.hitInfo = hoverResult;
+		// hit.hitInfo = hoverResult;
 		return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
 	}
 

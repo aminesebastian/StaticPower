@@ -49,6 +49,17 @@ public class CableNetwork {
 		networkUpdatesDisabled = false;
 	}
 
+	public void preWorldTick() {
+		// Tick all the modules.
+		for (AbstractCableNetworkModule module : modules.values()) {
+			try {
+				module.preWorldTick(level);
+			} catch (Exception e) {
+				throw new RuntimeException(String.format("An error occured when attempting to pre-tick a graph module of type: %1$s.", module.getType().toString()), e);
+			}
+		}
+	}
+
 	public void tick() {
 		// Perform a single scan when the world/network first loads.
 		if (!initialScanCompleted) {

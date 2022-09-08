@@ -9,8 +9,8 @@ import java.util.List;
 import net.minecraft.world.item.ItemStack;
 import theking530.api.digistore.DigistoreInventory;
 import theking530.api.digistore.IDigistoreInventory;
+import theking530.staticpower.blockentities.digistorenetwork.digistore.DigistoreStack;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
-import theking530.staticpower.tileentities.digistorenetwork.digistore.DigistoreStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class DigistoreNetworkTransactionManager {

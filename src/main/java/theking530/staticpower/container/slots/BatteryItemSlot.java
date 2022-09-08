@@ -4,8 +4,8 @@ import javax.annotation.Nonnull;
 
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.items.utilities.EnergyHandlerItemStackUtilities;
 
 public class BatteryItemSlot extends StaticPowerContainerSlot {
 	public BatteryItemSlot(IItemHandler itemHandler, int index, int xPosition, int yPosition) {

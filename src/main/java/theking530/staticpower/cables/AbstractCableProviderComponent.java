@@ -19,15 +19,15 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
+import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.tileentities.TileEntityUpdateRequest;
-import theking530.staticpower.tileentities.components.AbstractTileEntityComponent;
-import theking530.staticpower.tileentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
@@ -163,7 +163,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	public void setSideDisabledState(Direction side, boolean disabledState) {
 		if (disabledState != disabledSides[side.ordinal()]) {
 			disabledSides[side.ordinal()] = disabledState;
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
+			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			getTileEntity().requestModelDataUpdate();
 			if (!isClientSide()) {
 				CableNetworkManager.get(getLevel()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
@@ -363,7 +363,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			}
 
 			// Re-sync the tile entity.
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
+			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			return true;
 		}
 
@@ -394,7 +394,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				CableNetworkManager.get(getLevel()).getCable(getPos()).clearAttachmentDataForSide(side);
 			}
 
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
+			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			getLevel().getChunkSource().getLightEngine().checkBlock(getPos());
 			return output;
 		}
@@ -426,7 +426,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			covers[side.ordinal()].setCount(1);
 
 			// Re-sync the tile entity.
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
+			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			return true;
 		}
 		return false;
@@ -449,7 +449,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			covers[side.ordinal()] = ItemStack.EMPTY;
 
 			// Re-sync the tile entity.
-			getTileEntity().addUpdateRequest(TileEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
+			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
 			return output;
 		}
 		return ItemStack.EMPTY;

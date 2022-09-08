@@ -80,6 +80,21 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
+	protected List<Double> internalGetBatteryInputVoltageRange() {
+		return Arrays.asList(0.0, Double.MAX_VALUE);
+	}
+
+	@Override
+	protected List<Double> internalGetBatteryOutputVoltageRange() {
+		return Arrays.asList(0.0, Double.MAX_VALUE);
+	}
+
+	@Override
+	protected double getBatteryMaximumOutputCurrent() {
+		return Double.MAX_VALUE;
+	}
+
+	@Override
 	protected List<Double> internalGetPortableBatteryChargingVoltage() {
 		return Arrays.asList(Double.MAX_VALUE, Double.MAX_VALUE);
 	}
@@ -109,15 +124,28 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 		return Integer.MAX_VALUE;
 	}
 
+	@Override
 	protected double getDefaultMachinePowerCapacity() {
 		return Double.MAX_VALUE;
 	}
 
+	@Override
 	protected List<Double> internalGetDefaultMachineInputVoltageRange() {
 		return Arrays.asList(0.0, Double.MAX_VALUE);
 	}
 
-	protected double getDefaultMachineMaximumCurrent() {
+	@Override
+	protected double getDefaultMachineMaximumInputCurrent() {
+		return Double.MAX_VALUE;
+	}
+
+	@Override
+	protected double getDefaultMachineMaximumVoltageOutput() {
+		return Double.MAX_VALUE;
+	}
+
+	@Override
+	protected double getDefaultMachineMaximumCurrentOutput() {
 		return Double.MAX_VALUE;
 	}
 

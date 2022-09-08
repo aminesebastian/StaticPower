@@ -41,8 +41,13 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	}
 
 	@Override
-	protected double getPortableBatteryMaxCurrent() {
+	protected double getPortableBatteryMaxOutputCurrent() {
 		return 2;
+	}
+
+	@Override
+	protected double getPortableBatteryOutputVoltage() {
+		return 12;
 	}
 
 	@Override
@@ -138,6 +143,21 @@ public class StaticPowerTierAdvanced extends StaticPowerTier {
 	@Override
 	protected double getBatteryCapacity() {
 		return 6400;
+	}
+
+	@Override
+	protected List<Double> internalGetBatteryInputVoltageRange() {
+		return Arrays.asList(0.0, 48.0);
+	}
+
+	@Override
+	protected List<Double> internalGetBatteryOutputVoltageRange() {
+		return Arrays.asList(24.0, 48.0);
+	}
+
+	@Override
+	protected double getBatteryMaximumOutputCurrent() {
+		return 10.0;
 	}
 
 	@Override

@@ -12,11 +12,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.staticpower.blockentities.components.ComponentUtilities;
+import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.tileentities.components.ComponentUtilities;
-import theking530.staticpower.tileentities.components.control.AbstractProcesingComponent;
 
 public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 	public static final String POWER_TAG = "power";

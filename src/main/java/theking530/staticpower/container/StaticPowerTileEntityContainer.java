@@ -13,12 +13,12 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
+import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
-import theking530.staticpower.tileentities.TileEntityBase;
-import theking530.staticpower.tileentities.components.items.InventoryComponent;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> extends StaticPowerContainer {
+public abstract class StaticPowerTileEntityContainer<T extends BlockEntityBase> extends StaticPowerContainer {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerTileEntityContainer.class);
 	public static final int DEFAULT_SYNC_TIME = 1;
 
@@ -84,13 +84,13 @@ public abstract class StaticPowerTileEntityContainer<T extends TileEntityBase> e
 	 * @param playerInventory The player's inventory (used to get the world
 	 *                        instance).
 	 * @param data            The data packet.
-	 * @return The {@link TileEntityBase} for this container or null if none was
+	 * @return The {@link BlockEntityBase} for this container or null if none was
 	 *         encountered.
 	 */
-	protected static TileEntityBase resolveTileEntityFromDataPacket(final Inventory playerInventory, final FriendlyByteBuf data) {
+	protected static BlockEntityBase resolveTileEntityFromDataPacket(final Inventory playerInventory, final FriendlyByteBuf data) {
 		final BlockEntity tileAtPos = playerInventory.player.level.getBlockEntity(data.readBlockPos());
-		if (tileAtPos instanceof TileEntityBase) {
-			return (TileEntityBase) tileAtPos;
+		if (tileAtPos instanceof BlockEntityBase) {
+			return (BlockEntityBase) tileAtPos;
 		} else {
 			LOGGER.error(String.format("Encountered invalid tile entity: %1$s at position: %2$s.", tileAtPos, data.readBlockPos()));
 			return null;

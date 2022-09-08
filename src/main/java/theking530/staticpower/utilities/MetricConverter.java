@@ -9,21 +9,9 @@ public class MetricConverter {
 	private String Suffix;
 
 	public MetricConverter(double value, int initialOffset) {
-		if (value == 0) {
-			Value = 0;
+		if (value == 0 || Double.isInfinite(Value) || value == Double.MAX_VALUE) {
+			Value = value;
 			Suffix = "";
-			return;
-		}
-
-		if (Double.isInfinite(Value)) {
-			Value = 0;
-			Suffix = "∞";
-			return;
-		}
-
-		if (value == Double.MAX_VALUE) {
-			Value = 0;
-			Suffix = "∞";
 			return;
 		}
 
@@ -40,7 +28,7 @@ public class MetricConverter {
 					break;
 				}
 			}
-		} else {
+		} else if(Value < 1){
 			suffixIndex--;
 			Value *= 1000;
 			while (Value < 1) {

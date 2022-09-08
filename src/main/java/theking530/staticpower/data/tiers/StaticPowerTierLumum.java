@@ -41,8 +41,13 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
-	protected double getPortableBatteryMaxCurrent() {
-		return 20;
+	protected double getPortableBatteryMaxOutputCurrent() {
+		return 5;
+	}
+
+	@Override
+	protected double getPortableBatteryOutputVoltage() {
+		return 120;
 	}
 
 	@Override
@@ -138,6 +143,21 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	@Override
 	protected double getBatteryCapacity() {
 		return 100000;
+	}
+
+	@Override
+	protected List<Double> internalGetBatteryInputVoltageRange() {
+		return Arrays.asList(0.0, 480.0);
+	}
+
+	@Override
+	protected List<Double> internalGetBatteryOutputVoltageRange() {
+		return Arrays.asList(240.0, 480.0);
+	}
+
+	@Override
+	protected double getBatteryMaximumOutputCurrent() {
+		return 30.0;
 	}
 
 	@Override

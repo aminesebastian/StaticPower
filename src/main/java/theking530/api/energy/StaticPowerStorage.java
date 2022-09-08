@@ -6,7 +6,7 @@ import java.util.Queue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraftforge.common.util.INBTSerializable;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.staticcore.utilities.SDMath;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 
 public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable<CompoundTag> {
 	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
@@ -122,6 +122,38 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		return this;
 	}
 
+	/**
+	 * Calculates the maximum amount of power that can be supplied by this storage.
+	 * This is constrained by the voltage output and maximum current output.
+	 * 
+	 * @return
+	 */
+	public double getMaxOutputPower() {
+		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(getVoltageOutput(), getMaximumCurrentOutput());
+	}
+
+	/**
+	 * Determines whether or not the requested amount of power can be drawn from
+	 * this storage. This factors the output voltage and maximum output current.
+	 * 
+	 * @param power
+	 * @return
+	 */
+	public boolean canSupplyPower(double power) {
+		return drainPower(power, true) == power;
+	}
+
+	/**
+	 * Determines whether or not this storage can accept the provided amount of
+	 * power. This factors the the maximum input voltage and maximum input current.
+	 * 
+	 * @param power
+	 * @return
+	 */
+	public boolean canAcceptPower(double power) {
+		return addPower(this.getInputVoltageRange().maximumVoltage(), power, true) == power;
+	}
+
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
 		return voltageRange;
@@ -175,7 +207,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 			return 0;
 		}
 
-		double maxPowerDrain = getInputVoltageRange().maximumVoltage() * getMaximumCurrentInput();
+		double maxPowerDrain = getVoltageOutput() * getMaximumCurrentOutput();
 		double maxUsedPower = Math.min(power, maxPowerDrain);
 		maxUsedPower = Math.min(maxUsedPower, storedPower);
 
@@ -196,17 +228,17 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		return doesProvidePower;
 	}
 
-	public double addPowerIgnoringVoltageLimitations(double power) {
-		double maxAdd = Math.min(power, capacity - storedPower);
-		this.storedPower = SDMath.clamp(storedPower + power, 0, capacity);
-		return maxAdd;
-	}
-
-	public double usePowerIgnoringVoltageLimitations(double power) {
-		double maxUse = Math.min(power, storedPower);
-		this.storedPower = SDMath.clamp(storedPower - maxUse, 0, capacity);
-		return maxUse;
-	}
+//	public double addPowerIgnoringVoltageLimitations(double power) {
+//		double maxAdd = Math.min(power, capacity - storedPower);
+//		this.storedPower = SDMath.clamp(storedPower + power, 0, capacity);
+//		return maxAdd;
+//	}
+//
+//	public double usePowerIgnoringVoltageLimitations(double power) {
+//		double maxUse = Math.min(power, storedPower);
+//		this.storedPower = SDMath.clamp(storedPower - maxUse, 0, capacity);
+//		return maxUse;
+//	}
 
 	public double getAveragePowerUsedPerTick() {
 		return averageExtracted;
@@ -242,5 +274,11 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 
 		averageRecieved = nbt.getDouble("averageRecieved");
 		averageExtracted = nbt.getDouble("averageExtracted");
+	}
+
+	public static StaticPowerStorage fromTag(CompoundTag nbt) {
+		StaticPowerStorage output = new StaticPowerStorage(0, StaticVoltageRange.ZERO_VOLTAGE, 0, 0, 0);
+		output.deserializeNBT(nbt);
+		return output;
 	}
 }

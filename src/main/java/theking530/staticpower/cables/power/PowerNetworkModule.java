@@ -15,7 +15,7 @@ import net.minecraft.world.level.Level;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.api.energy.StaticPowerEnergyTextUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -28,11 +28,11 @@ import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
 
 public class PowerNetworkModule extends AbstractCableNetworkModule implements IStaticPowerStorage {
-	protected record CachedPowerDestination(IStaticPowerStorage power, BlockPos cable) {
+	protected record CachedPowerDestination(IStaticPowerStorage power, BlockPos cable, BlockPos desintationPos) {
 	}
 
 	private final List<CachedPowerDestination> destinations;
-	private double lastTransferedVoltage;
+	private double lastProvidedVoltage;
 	private double maximumCurrentOutput;
 	private int lastSuppliedDestinationIndex;
 
@@ -42,8 +42,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	}
 
 	@Override
-	public void tick(Level world) {
+	public void preWorldTick(Level world) {
+		lastProvidedVoltage = 0;
+	}
 
+	@Override
+	public void tick(Level world) {
 	}
 
 	@Override
@@ -103,7 +107,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 			if (wrapper.supportsType(DestinationType.POWER)) {
 				IStaticPowerStorage powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, connectedSide).orElse(null);
 				if (powerStorage != null && powerStorage.canAcceptPower()) {
-					output.add(new CachedPowerDestination(powerStorage, cablePos));
+					output.add(new CachedPowerDestination(powerStorage, cablePos, wrapper.getPos()));
 				}
 			}
 		}
@@ -115,7 +119,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	public void getReaderOutput(List<Component> output) {
 		output.add(new TextComponent(String.format("Supplying: %1$d destinations.", destinations.size())));
 		output.add(new TextComponent("Last Supplied Voltage: ")
-				.append(ChatFormatting.GREEN.toString() + StaticPowerEnergyTextUtilities.formatVoltageToString(lastTransferedVoltage).getString()));
+				.append(ChatFormatting.GREEN.toString() + StaticPowerEnergyTextUtilities.formatVoltageToString(lastProvidedVoltage).getString()));
 	}
 
 	public void getMultimeterOutput(List<Component> output, BlockPos startingLocation, BlockPos endingLocation) {
@@ -126,7 +130,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		output.add(new TextComponent("Resistance over Points: ")
 				.append(ChatFormatting.GOLD.toString() + StaticPowerEnergyTextUtilities.formatResistanceToString(cableResistance).getString()));
 		output.add(new TextComponent("Last Power Loss: ")
-				.append(ChatFormatting.RED.toString() + StaticPowerEnergyTextUtilities.formatPowerToString(cableResistance / lastTransferedVoltage).getString()));
+				.append(ChatFormatting.RED.toString() + StaticPowerEnergyTextUtilities.formatPowerToString(cableResistance / lastProvidedVoltage).getString()));
 	}
 
 	public double getResistanceBetweenPoints(BlockPos start, BlockPos end) {
@@ -174,7 +178,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 
 	@Override
 	public double getVoltageOutput() {
-		return lastTransferedVoltage;
+		return lastProvidedVoltage;
 	}
 
 	@Override
@@ -202,7 +206,9 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		return true;
 	}
 
-	public double addPower(BlockPos pos, double voltage, double power, boolean simulate) {
+	public double addPower(BlockPos powerSourcePos, BlockPos fromCablePos, double voltage, double power, boolean simulate) {
+		lastProvidedVoltage = voltage;
+
 		if (destinations.isEmpty()) {
 			return 0;
 		}
@@ -217,9 +223,17 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		CachedPowerDestination destination = destinations.get(lastSuppliedDestinationIndex);
 		lastSuppliedDestinationIndex++;
 
+		// Avoid loops
+//		if (destination.cable() == fromCablePos) {
+//			return 0;
+//		}
+//		if (destination.desintationPos.equals(powerSourcePos)) {
+//			return 0;
+//		}
+
 		// Get the resistance between the points. If it is -1, there was no path, return
 		// 0.
-		double cableResistance = getResistanceBetweenPoints(pos, destination.cable);
+		double cableResistance = getResistanceBetweenPoints(fromCablePos, destination.cable);
 		if (cableResistance == -1) {
 			return 0;
 		}
@@ -230,7 +244,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		// resistance and voltage. As voltage goes up, power loss goes down. As
 		// resistance goes up, power loss goes up.
 		double cablePowerLoss = cableResistance / voltage;
-
+		
 		// If we would use more power transferring than we have, do nothing.
 		if (cablePowerLoss >= power) {
 			return 0;
@@ -244,7 +258,6 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		// then return how much power it used PLUS the power loss. Otherwise, use 0
 		// power.
 		double machineUsedPower = destination.power.addPower(voltage, power, false);
-		lastTransferedVoltage = voltage;
 
 		// TODO: If there is leftover power, supply to the next destination.
 		return machineUsedPower + cablePowerLoss;

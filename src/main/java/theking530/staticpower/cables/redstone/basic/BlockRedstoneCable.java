@@ -27,6 +27,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.network.NetworkHooks;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsHoverResult;
@@ -36,7 +37,6 @@ import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.cables.redstone.basic.gui.ContainerBasicRedstoneIO;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.tileentities.TileEntityBase;
 
 public class BlockRedstoneCable extends AbstractCableBlock {
 	private static boolean canProvidePower;
@@ -110,7 +110,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	 * @return
 	 */
 	@Override
-	public void enterGuiScreen(TileEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+	public void enterGuiScreen(BlockEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (!world.isClientSide) {
 			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());

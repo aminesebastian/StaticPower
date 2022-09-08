@@ -29,12 +29,12 @@ import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.utilities.SDMath;
-import theking530.staticpower.blocks.tileentity.StaticPowerTileEntityBlock;
+import theking530.staticpower.blockentities.digistorenetwork.severrack.TileEntityDigistoreServerRack;
+import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;
 import theking530.staticpower.items.DigistoreStackedCard;
-import theking530.staticpower.tileentities.digistorenetwork.severrack.TileEntityDigistoreServerRack;
 import theking530.thirdparty.codechicken.lib.model.CachedFormat;
 import theking530.thirdparty.codechicken.lib.model.Quad;
 import theking530.thirdparty.codechicken.lib.model.pipeline.BakedPipeline;
@@ -70,7 +70,7 @@ public class ServerRackModel extends AbstractBakedModel {
 		}
 
 		// Get the data used in rendering.
-		Direction facing = state.getValue(StaticPowerTileEntityBlock.FACING);
+		Direction facing = state.getValue(StaticPowerBlockEntityBlock.FACING);
 		ItemStack[] cards = data.getData(TileEntityDigistoreServerRack.CARD_RENDERING_STATE).cards;
 
 		// Create the output array.

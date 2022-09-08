@@ -13,10 +13,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.tileentities.TileEntityBase;
+import theking530.staticpower.blockentities.BlockEntityBase;
 
 /**
- * Packet used to synchronize a {@link TileEntityBase} ad hoc. This should
+ * Packet used to synchronize a {@link BlockEntityBase} ad hoc. This should
  * usually only be sent to a specific player looking inside a GUI. But if it
  * needs to be sent to multiple players, be sure to get players only in the same
  * dimension of the TileEntity and within a certain radius.
@@ -33,7 +33,7 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 
 	}
 
-	public TileEntityBasicSyncPacket(TileEntityBase tileEntity, boolean shouldReRender) {
+	public TileEntityBasicSyncPacket(BlockEntityBase tileEntity, boolean shouldReRender) {
 		tileEntityPosition = tileEntity.getBlockPos();
 		this.shouldReRender = shouldReRender;
 		machineUpdateTag = new CompoundTag();
@@ -72,8 +72,8 @@ public class TileEntityBasicSyncPacket extends NetworkMessage {
 		ctx.get().enqueueWork(() -> {
 			if (Minecraft.getInstance().player.level.isAreaLoaded(tileEntityPosition, 1)) {
 				BlockEntity rawTileEntity = Minecraft.getInstance().player.level.getBlockEntity(tileEntityPosition);
-				if (rawTileEntity != null && rawTileEntity instanceof TileEntityBase) {
-					TileEntityBase tileEntity = (TileEntityBase) rawTileEntity;
+				if (rawTileEntity != null && rawTileEntity instanceof BlockEntityBase) {
+					BlockEntityBase tileEntity = (BlockEntityBase) rawTileEntity;
 					tileEntity.deserializeUpdateNbt(machineUpdateTag, true);
 
 					// If a render update was requested, perform that too.
