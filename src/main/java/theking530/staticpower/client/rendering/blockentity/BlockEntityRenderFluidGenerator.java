@@ -13,7 +13,7 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.blockentities.powered.fluidgenerator.BlockEntityFluidGenerator;
+import theking530.staticpower.blockentities.power.fluidgenerator.BlockEntityFluidGenerator;
 import theking530.staticpower.client.StaticPowerSprites;
 
 @OnlyIn(Dist.CLIENT)

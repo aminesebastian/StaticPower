@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.ISolderingIron;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.StaticPowerConfig;
@@ -66,5 +66,10 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 	@Override
 	public double getOutputVoltage() {
 		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryOutputVoltage.get();
+	}
+
+	@Override
+	public double getMaximumOutputCurrent() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxOutputCurrent.get();
 	}
 }

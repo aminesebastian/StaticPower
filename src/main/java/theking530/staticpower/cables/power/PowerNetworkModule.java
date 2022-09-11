@@ -13,8 +13,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.Level;
 import theking530.api.energy.CapabilityStaticPower;
+import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
@@ -33,17 +35,20 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 
 	private final List<CachedPowerDestination> destinations;
 	private double lastProvidedVoltage;
+	private CurrentType lastProvidedCurrentType;
 	private double maximumCurrentOutput;
 	private int lastSuppliedDestinationIndex;
 
 	public PowerNetworkModule() {
 		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		destinations = new ArrayList<>();
+		lastSuppliedDestinationIndex = 0;
 	}
 
 	@Override
 	public void preWorldTick(Level world) {
 		lastProvidedVoltage = 0;
+		lastProvidedCurrentType = CurrentType.DIRECT;
 	}
 
 	@Override
@@ -106,7 +111,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 
 			if (wrapper.supportsType(DestinationType.POWER)) {
 				IStaticPowerStorage powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, connectedSide).orElse(null);
-				if (powerStorage != null && powerStorage.canAcceptPower()) {
+				if (powerStorage != null) {
 					output.add(new CachedPowerDestination(powerStorage, cablePos, wrapper.getPos()));
 				}
 			}
@@ -142,6 +147,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 			return -1;
 		}
 
+		if (start.equals(end)) {
+			return 0; // A single cable connection does not have any power loss (for gameplay reasons,
+						// no need to be too mean).
+
+		}
+
 		List<Path> paths = Network.getPathCache().getPaths(start, end, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		if (paths.isEmpty()) {
 			return -1;
@@ -167,6 +178,11 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	}
 
 	@Override
+	public boolean canAcceptCurrentType(CurrentType type) {
+		return true;
+	}
+
+	@Override
 	public double getStoredPower() {
 		return 0;
 	}
@@ -177,7 +193,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	}
 
 	@Override
-	public double getVoltageOutput() {
+	public double getOutputVoltage() {
 		return lastProvidedVoltage;
 	}
 
@@ -187,49 +203,25 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	}
 
 	@Override
-	public double drainPower(double power, boolean simulate) {
+	public CurrentType getOutputCurrentType() {
+		return lastProvidedCurrentType;
+	}
+
+	@Override
+	public PowerStack drainPower(double power, boolean simulate) {
+		return PowerStack.EMPTY;
+	}
+
+	@Override
+	public double addPower(PowerStack power, boolean simulate) {
 		return 0;
 	}
 
-	@Override
-	public double addPower(double voltage, double current, boolean simulate) {
-		return 0;
-	}
-
-	@Override
-	public boolean canAcceptPower() {
-		return true;
-	}
-
-	@Override
-	public boolean doesProvidePower() {
-		return true;
-	}
-
-	public double addPower(BlockPos powerSourcePos, BlockPos fromCablePos, double voltage, double power, boolean simulate) {
-		lastProvidedVoltage = voltage;
-
-		if (destinations.isEmpty()) {
+	protected double supplyPower(BlockPos powerSourcePos, BlockPos fromCablePos, PowerStack power, CachedPowerDestination destination, boolean simulate) {
+		// Avoid loops
+		if (destination.desintationPos.equals(powerSourcePos)) {
 			return 0;
 		}
-
-		// We round robin the output destination. Perform this check first as the last
-		// time around we could end up with an invalid index. We do NOT clear the index
-		// on graph update so even if we get spammed with updates, we end up preserving
-		// the round robin.
-		if (lastSuppliedDestinationIndex >= destinations.size()) {
-			lastSuppliedDestinationIndex = 0;
-		}
-		CachedPowerDestination destination = destinations.get(lastSuppliedDestinationIndex);
-		lastSuppliedDestinationIndex++;
-
-		// Avoid loops
-//		if (destination.cable() == fromCablePos) {
-//			return 0;
-//		}
-//		if (destination.desintationPos.equals(powerSourcePos)) {
-//			return 0;
-//		}
 
 		// Get the resistance between the points. If it is -1, there was no path, return
 		// 0.
@@ -243,23 +235,41 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		// part of this calculation. Just a straight inverse relationship between cable
 		// resistance and voltage. As voltage goes up, power loss goes down. As
 		// resistance goes up, power loss goes up.
-		double cablePowerLoss = cableResistance / voltage;
-		
-		// If we would use more power transferring than we have, do nothing.
-		if (cablePowerLoss >= power) {
-			return 0;
-		}
+		double cablePowerLoss = Math.abs(cableResistance / power.getVoltage());
 
 		// Subtract that power loss from the total amount of power that we were
 		// provided.
-		power -= cablePowerLoss;
+		double leftoverPower = power.getPower() - cablePowerLoss;
 
 		// Supply the power to the destination. If and only if it actually uses power,
 		// then return how much power it used PLUS the power loss. Otherwise, use 0
 		// power.
-		double machineUsedPower = destination.power.addPower(voltage, power, false);
+		double machineUsedPower = destination.power.addPower(new PowerStack(leftoverPower, power.getVoltage(), power.getCurrentType()), false);
+		if (machineUsedPower == 0) {
+			return 0;
+		}
 
-		// TODO: If there is leftover power, supply to the next destination.
 		return machineUsedPower + cablePowerLoss;
+	}
+
+	public double addPower(BlockPos powerSourcePos, BlockPos fromCablePos, PowerStack power, boolean simulate) {
+		lastProvidedVoltage = power.getVoltage();
+		lastProvidedCurrentType = power.getCurrentType();
+
+		if (destinations.isEmpty()) {
+			return 0;
+		}
+
+		double suppliedPower = 0;
+		for (int i = 0; i < destinations.size(); i++) {
+			lastSuppliedDestinationIndex = (lastSuppliedDestinationIndex + 1) % destinations.size();
+			double supplied = supplyPower(powerSourcePos, fromCablePos, power, destinations.get(lastSuppliedDestinationIndex), simulate);
+			power.setPower(power.getPower() - supplied);
+			suppliedPower += supplied;
+			if (power.getPower() <= 0) {
+				break;
+			}
+		}
+		return suppliedPower;
 	}
 }

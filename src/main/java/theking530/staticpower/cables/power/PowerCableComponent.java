@@ -1,7 +1,5 @@
 package theking530.staticpower.cables.power;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -14,36 +12,30 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
-import theking530.api.energy.IStaticPowerStorage;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-import theking530.staticpower.blockentities.components.energy.SidedEnergyProxy;
+import theking530.api.energy.CurrentType;
+import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.sided.ISidedStaticPowerStorage;
+import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
-public class PowerCableComponent extends AbstractCableProviderComponent implements IStaticPowerStorage {
+public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
 	public static final String POWER_MAX_CURRENT = "power_max_current";
 	public static final String POWER_RESISTANCE = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
-	private final Map<Direction, SidedEnergyProxy> powerInterfaces;
+	private final SidedStaticPowerCapabilityWrapper capabilityWrapper;
 	private final double resistance;
 	private final double maxCurrent;
 	private final boolean isIndustrial;
 
 	public PowerCableComponent(String name, boolean isIndustrial, double maxCurrent, double resistance) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
-		powerInterfaces = new HashMap<>();
-		for (Direction dir : Direction.values()) {
-			powerInterfaces.put(dir, new SidedEnergyProxy(dir, this) {
-				@Override
-				public double addPower(Direction side, double voltage, double power, boolean simulate) {
-					return PowerCableComponent.this.addPower(side, voltage, power, simulate);
-				}
-			});
-		}
+		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 
 		this.resistance = resistance;
 		this.maxCurrent = maxCurrent;
@@ -67,11 +59,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
 		// Only provide the energy capability if we are not disabled on that side.
 		if (cap == CapabilityStaticPower.STATIC_VOLT_CAPABILITY) {
-			if (side == null) {
-				return LazyOptional.of(() -> this).cast();
-			} else if (!isSideDisabled(side)) {
-				return LazyOptional.of(() -> powerInterfaces.get(side)).cast();
-			}
+			return LazyOptional.of(() -> capabilityWrapper.get(side)).cast();
 		}
 		return LazyOptional.empty();
 	}
@@ -126,6 +114,12 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
+	public boolean canAcceptCurrentType(CurrentType type) {
+		// Cables don't care about the input type.
+		return true;
+	}
+
+	@Override
 	public double getStoredPower() {
 		return 0;
 	}
@@ -136,11 +130,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public double getVoltageOutput() {
+	public double getOutputVoltage() {
 		if (!isClientSide()) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.getVoltageOutput();
+				return module.getOutputVoltage();
 			}
 		}
 		return 0;
@@ -158,32 +152,34 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public double addPower(double voltage, double current, boolean simulate) {
-		return 0;
-	}
-
-	public double addPower(Direction side, double voltage, double power, boolean simulate) {
+	public CurrentType getOutputCurrentType() {
 		if (!isClientSide()) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.addPower(getPos().relative(side), getPos(), voltage, power, simulate);
+				return module.getOutputCurrentType();
+			}
+		}
+		return CurrentType.DIRECT;
+	}
+
+	@Override
+	public double addPower(PowerStack power, boolean simulate) {
+		return 0;
+	}
+
+	@Override
+	public double addPower(Direction side, PowerStack power, boolean simulate) {
+		if (!isClientSide()) {
+			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
+			if (module != null) {
+				return module.addPower(getPos().relative(side), getPos(), power, simulate);
 			}
 		}
 		return 0;
 	}
 
 	@Override
-	public double drainPower(double power, boolean simulate) {
-		return 0;
-	}
-
-	@Override
-	public boolean canAcceptPower() {
-		return true;
-	}
-
-	@Override
-	public boolean doesProvidePower() {
-		return true;
+	public PowerStack drainPower(double power, boolean simulate) {
+		return PowerStack.EMPTY;
 	}
 }

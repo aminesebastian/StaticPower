@@ -76,7 +76,7 @@ public class Hammer extends StaticPowerItem {
 
 	@Override
 	public int getMaxDamage(ItemStack stack) {
-		return StaticPowerConfig.getTier(tier).hammerUses.get();
+		return StaticPowerConfig.getTier(tier).toolConfiguration.hammerUses.get();
 	}
 
 	@Override
@@ -92,8 +92,8 @@ public class Hammer extends StaticPowerItem {
 
 		// Add the swinging speed modifier.
 		Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", tier.hammerDamage.get(), AttributeModifier.Operation.ADDITION));
-		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", tier.hammerSwingSpeed.get(), AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_UUID, "Tool modifier", tier.toolConfiguration.hammerDamage.get(), AttributeModifier.Operation.ADDITION));
+		builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", tier.toolConfiguration.hammerSwingSpeed.get(), AttributeModifier.Operation.ADDITION));
 
 		return equipmentSlot == EquipmentSlot.MAINHAND ? builder.build() : super.getDefaultAttributeModifiers(equipmentSlot);
 	}
@@ -145,7 +145,7 @@ public class Hammer extends StaticPowerItem {
 					StaticPowerTier tier = StaticPowerConfig.getTier(this.tier);
 
 					// Set the cooldown before the player can hammer again.
-					player.getCooldowns().addCooldown(stack.getItem(), tier.hammerCooldown.get());
+					player.getCooldowns().addCooldown(stack.getItem(), tier.toolConfiguration.hammerCooldown.get());
 				} else {
 					player.getCommandSenderWorld().playSound(null, pos, SoundEvents.ANVIL_PLACE, SoundSource.BLOCKS, 0.5F, (float) (1.2F + Math.random() * 0.3));
 					player.getCooldowns().addCooldown(stack.getItem(), 5);

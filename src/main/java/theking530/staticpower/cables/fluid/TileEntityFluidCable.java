@@ -73,7 +73,7 @@ public class TileEntityFluidCable extends BlockEntityBase {
 	public TileEntityFluidCable(BlockEntityTypeAllocator<TileEntityFluidCable> allocator, BlockPos pos, BlockState state, float radius, boolean isIndustrial) {
 		super(allocator, pos, state);
 		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial,
-				isIndustrial ? getTierObject().cableIndustrialFluidCapacity.get() : getTierObject().cableFluidCapacity.get()));
+				isIndustrial ? getTierObject().cableFluidConfiguration.cableIndustrialFluidCapacity.get() : getTierObject().cableFluidConfiguration.cableFluidCapacity.get()));
 		fluidRenderRadius = radius;
 	}
 }

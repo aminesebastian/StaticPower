@@ -151,7 +151,7 @@ public class BlockEntityMiner extends AbstractTileEntityMiner {
 
 		// Otherwise, caluclate the new range.
 		StaticPowerTier tier = upgradeWrapper.getTier();
-		double newRange = tier.rangeUpgrade.get() * StaticPowerConfig.SERVER.minerRadius.get();
+		double newRange = tier.upgradeConfiguration.rangeUpgrade.get() * StaticPowerConfig.SERVER.minerRadius.get();
 		return (int) newRange;
 	}
 

@@ -53,7 +53,7 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
@@ -92,7 +92,17 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	}
 
 	public double getMaximumInputCurrent() {
-		return 0;
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+	}
+
+	public double getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
+
+	}
+
+	public double getMaximumOutputCurrent() {
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+
 	}
 
 	@Override
@@ -149,7 +159,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 				}
 			});
 		}
-		return efficiency.get() * StaticPowerConfig.getTier(tier).chainsawSpeedMultiplier.get();
+		return efficiency.get() * StaticPowerConfig.getTier(tier).toolConfiguration.chainsawSpeedMultiplier.get();
 	}
 
 	/**
@@ -252,7 +262,7 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(" ").append(GuiTextUtilities.formatNumberAsString(StaticPowerConfig.getTier(tier).chainsawSpeedMultiplier.get())).append("x ")
+		tooltip.add(new TextComponent(" ").append(GuiTextUtilities.formatNumberAsString(StaticPowerConfig.getTier(tier).toolConfiguration.chainsawSpeedMultiplier.get())).append("x ")
 				.append(new TranslatableComponent("gui.staticpower.tool_speed_multiplier")).withStyle(ChatFormatting.DARK_GREEN));
 
 		tooltip.add(new TextComponent(" "));
@@ -287,7 +297,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getPowerCapacity(), getInputVoltageRange(), getMaximumInputCurrent()));
+				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getPowerCapacity(), getInputVoltageRange(), getMaximumInputCurrent(), getOutputVoltage(),
+						getMaximumOutputCurrent()));
 	}
 
 	@Override

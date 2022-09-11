@@ -85,7 +85,7 @@ public class BlockItemCable extends AbstractCableBlock {
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		double blocksPerTick = StaticPowerConfig.getTier(tier).itemCableMaxSpeed.get();
+		double blocksPerTick = StaticPowerConfig.getTier(tier).cableItemConfiguration.itemCableMaxSpeed.get();
 
 		tooltip.add(new TranslatableComponent("gui.staticpower.max_transfer_rate"));
 		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.item_cable_transfer_rate",
@@ -96,9 +96,9 @@ public class BlockItemCable extends AbstractCableBlock {
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		tooltip.add(new TextComponent(""));
 		tooltip.add(new TranslatableComponent("gui.staticpower.item_cable_acceleration",
-				ChatFormatting.BLUE + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).itemCableAcceleration.get() * 100).getString()));
+				ChatFormatting.BLUE + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).cableItemConfiguration.itemCableAcceleration.get() * 100).getString()));
 		tooltip.add(new TranslatableComponent("gui.staticpower.item_cable_friction",
-				ChatFormatting.RED + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).itemCableFriction.get() * 100).getString()));
+				ChatFormatting.RED + GuiTextUtilities.formatUnitRateToString(StaticPowerConfig.getTier(tier).cableItemConfiguration.itemCableFriction.get() * 100).getString()));
 	}
 
 	@Override

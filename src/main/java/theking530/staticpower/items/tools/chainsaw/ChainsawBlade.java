@@ -67,7 +67,7 @@ public class ChainsawBlade extends AbstractToolPart {
 
 	@Override
 	protected int getBaseDurability() {
-		return StaticPowerConfig.getTier(tier).chainsawBladeUses.get();
+		return StaticPowerConfig.getTier(tier).toolConfiguration.chainsawBladeUses.get();
 	}
 
 	public Tier getMiningTier(ItemStack stack) {

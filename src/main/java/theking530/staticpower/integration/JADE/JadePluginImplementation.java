@@ -20,14 +20,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
-import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 @WailaPlugin(StaticPower.MOD_ID)
@@ -73,6 +72,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 					double stored = 0, capacity = 0, outputVoltage = 0, minVoltage = 0, maxVoltage = 0;
 					boolean displayOutputVoltage = false;
 					boolean displayInputParameters = false;
+					boolean isAlternating = false;
 
 					if (accessor.isServerConnected()) {
 						CompoundTag svData = accessor.getServerData().getCompound(JadeDataProviders.POWER_TAG);
@@ -82,21 +82,25 @@ public class JadePluginImplementation implements IWailaPlugin {
 							outputVoltage = svData.getDouble("output_voltage");
 						}
 
+						isAlternating = svData.getBoolean("is_alternating");
+
 						if (svData.contains("capacity")) {
-							displayInputParameters = true;
 							stored = svData.getDouble("stored_power");
 							capacity = svData.getDouble("capacity");
 							minVoltage = svData.getDouble("min_voltage");
 							maxVoltage = svData.getDouble("max_voltage");
+							if (minVoltage != Double.MIN_VALUE && maxVoltage != Double.MAX_VALUE) {
+								displayInputParameters = true;
+							}
 						}
 
 					} else {
-						if (storage.doesProvidePower()) {
+						if (!storage.drainPower(1, true).isEmpty()) {
 							displayOutputVoltage = true;
-							outputVoltage = storage.getVoltageOutput();
+							outputVoltage = storage.getOutputVoltage();
 						}
 
-						if (storage.canAcceptPower() && !(tile instanceof TileEntityPowerCable)) {
+						if (storage.getInputVoltageRange().minimumVoltage() != Double.MIN_VALUE && storage.getInputVoltageRange().maximumVoltage() != Double.MAX_VALUE) {
 							displayInputParameters = true;
 							stored = storage.getStoredPower();
 							capacity = storage.getCapacity();
@@ -109,6 +113,10 @@ public class JadePluginImplementation implements IWailaPlugin {
 					if (displayOutputVoltage) {
 						JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.output_voltage").append(": ")
 								.append(StaticPowerEnergyTextUtilities.formatVoltageToString(outputVoltage)), OUTPUT_VOLTAGE_RENDERER);
+					}
+
+					if (isAlternating) {
+						JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("~"), new ResourceLocation(StaticPower.MOD_ID, "TEMP_AC"));
 					}
 
 					// Draw stored power bar.
@@ -126,6 +134,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
 									.append(StaticPowerEnergyTextUtilities.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
 						}
+					}
+
+					if (capacity > 0) {
 						JadePluginImplementation.drawBar(tooltip, stored, capacity, MAIN_SV_COLOR, ALT_SV_COLOR,
 								StaticPowerEnergyTextUtilities.formatPowerToString(stored, capacity).withStyle(ChatFormatting.WHITE), POWER_BAR_RENDERER);
 					}

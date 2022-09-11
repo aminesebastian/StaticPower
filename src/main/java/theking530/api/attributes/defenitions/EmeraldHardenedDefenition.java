@@ -21,11 +21,11 @@ public class EmeraldHardenedDefenition extends AbstractHardenedDefenition {
 		}
 
 		// Get the modifier amount.
-		double modifier = StaticPowerConfig.getTier(StaticPowerTiers.EMERALD).hardenedDurabilityBoost.get();
+		double modifier = StaticPowerConfig.getTier(StaticPowerTiers.EMERALD).toolConfiguration.hardenedDurabilityBoost.get();
 
 		// Apply the modification depending on whether or not this is an additive
 		// durability boost.
-		if (StaticPowerConfig.getTier(StaticPowerTiers.EMERALD).hardenedDurabilityBoostAdditive.get()) {
+		if (StaticPowerConfig.getTier(StaticPowerTiers.EMERALD).toolConfiguration.hardenedDurabilityBoostAdditive.get()) {
 			value += modifier;
 		} else {
 			value *= modifier;

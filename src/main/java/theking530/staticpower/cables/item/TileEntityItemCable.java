@@ -50,7 +50,7 @@ public class TileEntityItemCable extends BlockEntityBase {
 	public TileEntityItemCable(BlockEntityTypeAllocator<TileEntityItemCable> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		StaticPowerTier tierObject = getTierObject();
-		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", getTier(), tierObject.itemCableMaxSpeed.get(), tierObject.itemCableFriction.get(),
-				1.0f / Math.max(tierObject.itemCableAcceleration.get(), 0.00000001f)));
+		registerComponent(cableComponent = new ItemCableComponent("ItemCableComponent", getTier(), tierObject.cableItemConfiguration.itemCableMaxSpeed.get(),
+				tierObject.cableItemConfiguration.itemCableFriction.get(), 1.0f / Math.max(tierObject.cableItemConfiguration.itemCableAcceleration.get(), 0.00000001f)));
 	}
 }

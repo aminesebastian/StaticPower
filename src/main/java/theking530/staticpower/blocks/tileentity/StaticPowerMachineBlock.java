@@ -22,15 +22,14 @@ import net.minecraft.world.level.material.MaterialColor;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.IBreakSerializeable;
 import theking530.api.energy.StaticPowerStorage;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.data.StaticPowerTier;
 
 public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
 	/**
@@ -63,14 +62,14 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 		if (tier == null) {
 			return StaticVoltageRange.ZERO_VOLTAGE;
 		}
-		return StaticPowerConfig.getTier(tier).getDefaultMachineInputVoltageRange();
+		return StaticPowerConfig.getTier(tier).powerConfiguration.getDefaultInputVoltageRange();
 	}
 
 	public double getMaximumInputCurrent() {
 		if (tier == null) {
 			return 0;
 		}
-		return StaticPowerConfig.getTier(tier).defaultMachineMaximumInputCurrent.get();
+		return StaticPowerConfig.getTier(tier).powerConfiguration.defaultMaximumInputCurrent.get();
 	}
 
 	@OnlyIn(Dist.CLIENT)

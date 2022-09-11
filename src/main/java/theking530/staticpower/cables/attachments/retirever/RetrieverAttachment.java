@@ -50,8 +50,8 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	@Nullable
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableRetrievalFilterSlots.get()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(
+				new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalFilterSlots.get()));
 	}
 
 	@Override
@@ -97,8 +97,8 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 				}
 
 				// If we're able to retrieve an item, break.
-				if (network.retrieveItemStack(filterItem, StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get(), cable.getPos().relative(side), side,
-						StaticPowerConfig.getTier(tierType).cableRetrievedItemInitialSpeed.get())) {
+				if (network.retrieveItemStack(filterItem, StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalStackSize.get(),
+						cable.getPos().relative(side), side, StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievedItemInitialSpeed.get())) {
 					break;
 				}
 			}
@@ -118,7 +118,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableRetrievalRate.get()) {
+		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalRate.get()) {
 			attachment.getTag().putInt(RETRIEVEAL_TIMER_TAG, 0);
 			return true;
 		} else {
@@ -151,17 +151,19 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_tooltip"));
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableRetrievalFilterSlots.get(), tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalFilterSlots.get(),
+				tooltip);
 	}
 
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		tooltip.add(new TextComponent(""));
-		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_rate_format", ChatFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalRate.get()));
-		tooltip.add(new TextComponent("� ").append(
-				new TranslatableComponent("gui.staticpower.retriever_stack_size", ChatFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableRetrievalStackSize.get())));
+		tooltip.add(new TranslatableComponent("gui.staticpower.retriever_rate_format",
+				ChatFormatting.AQUA.toString() + StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalRate.get()));
+		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.retriever_stack_size",
+				ChatFormatting.GOLD.toString() + StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalStackSize.get())));
 
-		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableRetrievedItemInitialSpeed.get();
+		double blocksPerTick = StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievedItemInitialSpeed.get();
 		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.cable_transfer_rate",
 				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslatableComponent("gui.staticpower.blocks").getString())));
 	}

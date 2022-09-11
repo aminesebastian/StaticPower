@@ -260,7 +260,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 					// Attempt to insert the stack into the cable. We will use the default
 					// extraction speed.
 					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false,
-							StaticPowerConfig.getTier(tier).cableExtractedItemInitialSpeed.get());
+							StaticPowerConfig.getTier(tier).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
 					if (remainingAmount.getCount() < insertStack.getCount()) {
 						getTileEntity().setChanged();
 						stack.setCount(stack.getCount() - insertStack.getCount() + remainingAmount.getCount());

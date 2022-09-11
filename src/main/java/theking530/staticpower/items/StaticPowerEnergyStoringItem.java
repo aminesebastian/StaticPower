@@ -14,7 +14,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
@@ -45,8 +45,8 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		double capacity = getCapacity();
-		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, capacity, getInputVoltageRange(), getMaximumInputCurrent()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, capacity, getInputVoltageRange(),
+				getMaximumInputCurrent(), getOutputVoltage(), getMaximumOutputCurrent()));
 	}
 
 	public ItemStack getFilledVariant() {
@@ -62,6 +62,8 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public abstract double getMaximumInputCurrent();
 
 	public abstract double getOutputVoltage();
+
+	public abstract double getMaximumOutputCurrent();
 
 	@Override
 	public boolean isBarVisible(ItemStack stack) {

@@ -50,7 +50,7 @@ public class Blade extends AbstractToolPart {
 
 	@Override
 	protected int getBaseDurability() {
-		return StaticPowerConfig.getTier(tier).chainsawBladeUses.get();
+		return StaticPowerConfig.getTier(tier).toolConfiguration.chainsawBladeUses.get();
 	}
 
 	public Tiers getMiningTier() {

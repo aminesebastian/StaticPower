@@ -5,7 +5,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticVoltageRange;
 
 /**
  * Library class containing useful functions to interact with an static power
@@ -91,7 +92,7 @@ public class EnergyHandlerItemStackUtilities {
 		if (cap == null) {
 			return 0;
 		}
-		return cap.getVoltageOutput();
+		return cap.getOutputVoltage();
 	}
 
 	public static double getMaximumCurrentOutput(ItemStack container) {
@@ -102,35 +103,19 @@ public class EnergyHandlerItemStackUtilities {
 		return cap.getMaximumCurrentOutput();
 	}
 
-	public static double addPower(ItemStack container, double voltage, double power, boolean simulate) {
+	public static double addPower(ItemStack container, PowerStack power, boolean simulate) {
 		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
 		if (cap == null) {
 			return 0;
 		}
-		return cap.addPower(voltage, power, simulate);
+		return cap.addPower(power, simulate);
 	}
 
-	public static double usePower(ItemStack container, double power, boolean simulate) {
+	public static PowerStack usePower(ItemStack container, double power, boolean simulate) {
 		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
 		if (cap == null) {
-			return 0;
+			return PowerStack.EMPTY;
 		}
 		return cap.drainPower(power, simulate);
-	}
-
-	public static boolean canAcceptPower(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
-		if (cap == null) {
-			return false;
-		}
-		return cap.canAcceptPower();
-	}
-
-	public static boolean doesProvidePower(ItemStack container) {
-		ItemStackStaticPowerEnergyCapability cap = EnergyHandlerItemStackUtilities.getEnergyContainer(container).orElse(null);
-		if (cap == null) {
-			return false;
-		}
-		return cap.doesProvidePower();
 	}
 }

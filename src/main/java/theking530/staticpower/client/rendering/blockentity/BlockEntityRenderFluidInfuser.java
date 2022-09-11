@@ -15,7 +15,7 @@ import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.blockentities.powered.fluidinfuser.BlockEntityFluidInfuser;
+import theking530.staticpower.blockentities.machines.fluidinfuser.BlockEntityFluidInfuser;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecialRenderer<BlockEntityFluidInfuser> {

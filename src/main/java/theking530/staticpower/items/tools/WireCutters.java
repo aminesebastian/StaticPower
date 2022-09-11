@@ -51,7 +51,7 @@ public class WireCutters extends StaticPowerItem {
 
 	@Override
 	public int getMaxDamage(ItemStack stack) {
-		return StaticPowerConfig.getTier(tier).wireCutterUses.get();
+		return StaticPowerConfig.getTier(tier).toolConfiguration.wireCutterUses.get();
 	}
 
 	@Override

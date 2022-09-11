@@ -22,7 +22,8 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.utilities.SDMath;
@@ -113,7 +114,7 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 						perItemDistribute = SDMath.clamp(perItemDistribute, 1, powerStorage.getCapacity() / 100);
 
 						for (IStaticPowerStorage otherItem : items) {
-							double charged = otherItem.addPower(powerStorage.getVoltageOutput(), perItemDistribute, true);
+							double charged = otherItem.addPower(new PowerStack(perItemDistribute, powerStorage.getOutputVoltage()), true);
 							powerStorage.drainPower(charged, false);
 
 							// Break out if we used all the power.
@@ -163,5 +164,10 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 	@Override
 	public double getOutputVoltage() {
 		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
+	}
+
+	@Override
+	public double getMaximumOutputCurrent() {
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
 	}
 }

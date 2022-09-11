@@ -98,8 +98,7 @@ public class SerializationUtilities {
 		// Iterate through all the fields.
 		for (Field field : fields) {
 			// Check if the field is accessible.
-			@SuppressWarnings("deprecation")
-			boolean isAccessible = field.isAccessible();
+			boolean isAccessible = field.canAccess(object);
 			try {
 				// Mark it accessible if not.
 				field.setAccessible(true);
@@ -168,8 +167,7 @@ public class SerializationUtilities {
 			}
 
 			// Check if the field is accessible.
-			@SuppressWarnings("deprecation")
-			boolean isAccessible = field.isAccessible();
+			boolean isAccessible = field.canAccess(object);
 			try {
 				// Mark it accessible if not.
 				field.setAccessible(true);

@@ -27,7 +27,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.network.NetworkGUI;
 import theking530.staticpower.StaticPowerConfig;
@@ -209,5 +209,10 @@ public class DigistoreWirelessTerminal extends StaticPowerEnergyStoringItem {
 	@Override
 	public double getOutputVoltage() {
 		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryOutputVoltage.get();
+	}
+
+	@Override
+	public double getMaximumOutputCurrent() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxOutputCurrent.get();
 	}
 }

@@ -1,7 +1,9 @@
 package theking530.staticpower.blockentities.components.items;
 
 import net.minecraft.world.item.ItemStack;
+import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
+import theking530.api.energy.PowerStack;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 
 public class BatteryInventoryComponent extends InventoryComponent {
@@ -39,9 +41,9 @@ public class BatteryInventoryComponent extends InventoryComponent {
 
 		double candidateVoltage = EnergyHandlerItemStackUtilities.getVoltageOutput(candidate);
 		if (powerStorage.getInputVoltageRange().isVoltageInRange(candidateVoltage)) {
-			double requiredPower = powerStorage.addPower(candidateVoltage, Double.MAX_VALUE, true);
-			double maxPowerToSupply = EnergyHandlerItemStackUtilities.usePower(candidate, requiredPower, false);
-			powerStorage.addPower(candidateVoltage, maxPowerToSupply, false);
+			double requiredPower = powerStorage.addPower(new PowerStack(candidateVoltage, Double.MAX_VALUE, CurrentType.DIRECT), true);
+			PowerStack maxPowerToSupply = EnergyHandlerItemStackUtilities.usePower(candidate, requiredPower, false);
+			powerStorage.addPower(maxPowerToSupply, false);
 		}
 	}
 }

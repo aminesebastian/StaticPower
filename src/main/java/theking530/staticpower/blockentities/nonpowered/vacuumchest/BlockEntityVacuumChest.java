@@ -228,7 +228,7 @@ public class BlockEntityVacuumChest extends BlockEntityConfigurable implements M
 		// Get the range upgrade.
 		UpgradeItemWrapper rangeUpgrade = upgradesInventory.getMaxTierItemForUpgradeType(UpgradeTypes.RANGE);
 		if (!rangeUpgrade.isEmpty()) {
-			vacuumDiamater = (float) (DEFAULT_RANGE * rangeUpgrade.getTier().rangeUpgrade.get());
+			vacuumDiamater = (float) (DEFAULT_RANGE * rangeUpgrade.getTier().upgradeConfiguration.rangeUpgrade.get());
 		} else {
 			vacuumDiamater = DEFAULT_RANGE;
 		}

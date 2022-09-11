@@ -11,7 +11,7 @@ import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.blockentities.powered.cropfarmer.BlockEntityBasicFarmer;
+import theking530.staticpower.blockentities.machines.cropfarmer.BlockEntityBasicFarmer;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderFarmer extends StaticPowerBlockEntitySpecialRenderer<BlockEntityBasicFarmer> {

@@ -23,10 +23,10 @@ public class BaseHeatUpgrade extends BaseUpgrade {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		double conductivityUpgrade = getTier().heatConductivityUpgrade.get();
+		double conductivityUpgrade = getTier().upgradeConfiguration.heatConductivityUpgrade.get();
 		conductivityUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
-		double capacityUpgrade = getTier().heatCapacityUpgrade.get();
+		double capacityUpgrade = getTier().upgradeConfiguration.heatCapacityUpgrade.get();
 		capacityUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
 		tooltip.add(new TextComponent(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(capacityUpgrade * 100) + "%" + ChatFormatting.GREEN + " Heat Capacity"));

@@ -30,7 +30,7 @@ import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.powered.poweredfurnace.BlockEntityPoweredFurnace;
+import theking530.staticpower.blockentities.machines.poweredfurnace.BlockEntityPoweredFurnace;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 

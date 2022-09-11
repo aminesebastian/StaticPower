@@ -54,7 +54,7 @@ import theking530.api.attributes.defenitions.GrindingAttributeDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
@@ -94,7 +94,17 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	}
 
 	public double getMaximumInputCurrent() {
-		return 0;
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+	}
+
+	public double getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
+
+	}
+
+	public double getMaximumOutputCurrent() {
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+
 	}
 
 	public ItemStack getFilledVariant() {
@@ -149,7 +159,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 				}
 			});
 		}
-		return efficiency.get() * StaticPowerConfig.getTier(tier).drillSpeedMultiplier.get();
+		return efficiency.get() * StaticPowerConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get();
 	}
 
 	/**
@@ -329,7 +339,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
-		tooltip.add(new TextComponent(" ").append(GuiTextUtilities.formatNumberAsString(StaticPowerConfig.getTier(tier).drillSpeedMultiplier.get())).append("x ")
+		tooltip.add(new TextComponent(" ").append(GuiTextUtilities.formatNumberAsString(StaticPowerConfig.getTier(tier).toolConfiguration.drillSpeedMultiplier.get())).append("x ")
 				.append(new TranslatableComponent("gui.staticpower.tool_speed_multiplier")).withStyle(ChatFormatting.DARK_GREEN));
 
 		tooltip.add(new TextComponent(" "));
@@ -364,7 +374,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getPowerCapacity(), getInputVoltageRange(), getMaximumInputCurrent()));
+				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getPowerCapacity(), getInputVoltageRange(), getMaximumInputCurrent(), getOutputVoltage(),
+						getMaximumOutputCurrent()));
 	}
 
 	@Override

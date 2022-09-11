@@ -12,8 +12,6 @@ import theking530.staticpower.blockentities.components.energy.PowerStorageCompon
 public abstract class BlockEntityMachine extends BlockEntityConfigurable {
 	public final PowerStorageComponent powerStorage;
 
-	public boolean isUpdateQueued = true;
-
 	public BlockEntityMachine(BlockEntityTypeAllocator<? extends BlockEntityMachine> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		disableFaceInteraction();

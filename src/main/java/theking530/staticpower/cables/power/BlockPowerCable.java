@@ -46,9 +46,9 @@ public class BlockPowerCable extends AbstractCableBlock {
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_current", ChatFormatting.RED,
-				StaticPowerEnergyTextUtilities.formatCurrentToString(tierObject.cablePowerMaxCurrent.get()).getString());
+				StaticPowerEnergyTextUtilities.formatCurrentToString(tierObject.cablePowerConfiguration.cablePowerMaxCurrent.get()).getString());
 		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.power_resistance", ChatFormatting.GOLD,
-				StaticPowerEnergyTextUtilities.formatResistanceToString(tierObject.cablePowerResistancePerBlock.get()).getString());
+				StaticPowerEnergyTextUtilities.formatResistanceToString(tierObject.cablePowerConfiguration.cablePowerResistancePerBlock.get()).getString());
 	}
 
 	@Override

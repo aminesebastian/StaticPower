@@ -1,8 +1,5 @@
 package theking530.staticpower.blockentities.components.energy;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -12,9 +9,13 @@ import net.minecraft.world.level.Explosion;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
-import theking530.api.energy.IStaticPowerStorage;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.CurrentType;
+import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerStorage;
+import theking530.api.energy.StaticVoltageRange;
+import theking530.api.energy.sided.ISidedStaticPowerStorage;
+import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -26,17 +27,17 @@ import theking530.staticpower.blockentities.components.serialization.UpdateSeria
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class PowerStorageComponent extends AbstractTileEntityComponent implements IStaticPowerStorage {
-	public static final int OVER_VOLTAGE_EXPLOSION_TICKS = 40;
+public class PowerStorageComponent extends AbstractTileEntityComponent implements ISidedStaticPowerStorage {
+	public static final int ELECTRICAL_EXPLOSION_TICKS = 40;
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 64;
 	private static final double ENERGY_SYNC_MAX_DELTA = 10;
 
 	@UpdateSerialize
-	private final StaticPowerStorage storage;
+	protected final StaticPowerStorage storage;
 	@UpdateSerialize
-	private float powerCapacityUpgradeMultiplier;
+	protected float powerCapacityUpgradeMultiplier;
 	@UpdateSerialize
-	private float powerOutputUpgradeMultiplier;
+	protected float powerOutputUpgradeMultiplier;
 
 	private double baseCapacity;
 	private StaticVoltageRange baseInputVoltageRange;
@@ -47,7 +48,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	private SideConfigurationComponent sideConfig;
 	private UpgradeInventoryComponent upgradeInventory;
 
-	private final Map<Direction, SidedEnergyProxy> powerInterfaces;
+	private final SidedStaticPowerCapabilityWrapper capabilityWrapper;
 	private boolean exposeAsCapability;
 
 	private boolean issueSyncPackets;
@@ -55,68 +56,45 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	private boolean pendingManualSync;
 
 	private boolean shouldExplodeWhenOverVolted;
-	private int overVoltageExplosionTimeRemaining;
-	private boolean pendingOverVoltageExplosion;
+	private int electricalExplosionTimeRemaining;
+	private boolean pendingElectricalExplosion;
+
+	private boolean canAcceptExternalPower;
+	private boolean canBeDrainedByExternalPower;
 
 	public PowerStorageComponent(String name, ResourceLocation staticPowerTier) {
-		this(name, 0, 0, 0, 0, 0, 0);
+		this(name, 0, 0, 0, 0, new CurrentType[] { CurrentType.DIRECT }, 0, 0, CurrentType.DIRECT);
 		issueSyncPackets = true;
 
 		// Get the tier.
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(staticPowerTier);
-		setCapacity(tierObject.defaultMachinePowerCapacity.get());
-		setInputVoltageRange(
-				new StaticVoltageRange(tierObject.getDefaultMachineInputVoltageRange().minimumVoltage(), tierObject.getDefaultMachineInputVoltageRange().maximumVoltage()));
-		setMaximumInputCurrent(tierObject.defaultMachineMaximumInputCurrent.get());
-		setMaximumOutputCurrent(tierObject.defaultMachineMaximumOutputCurrent.get());
-		setOutputVoltage(tierObject.defaultMachineMaximumOutputVoltage.get());
+		setCapacity(tierObject.powerConfiguration.defaultPowerCapacity.get());
+		setInputVoltageRange(tierObject.powerConfiguration.getDefaultInputVoltageRange().copy());
+		setMaximumInputCurrent(tierObject.powerConfiguration.defaultMaximumInputCurrent.get());
+		setMaximumOutputCurrent(tierObject.powerConfiguration.defaultMaximumPowerOutput.get() / tierObject.powerConfiguration.defaultOutputVoltage.get());
+		setOutputVoltage(tierObject.powerConfiguration.defaultOutputVoltage.get());
 	}
 
-	public PowerStorageComponent(String name, double capacity, double minInputVoltage, double maxInputVoltage, double maxInputcurrent, double voltageOutput,
-			double maxCurrentOutput) {
+	public PowerStorageComponent(String name, double capacity, double minInputVoltage, double maxInputVoltage, double maxInputcurrent, CurrentType[] acceptableInputCurrents,
+			double voltageOutput, double maxCurrentOutput, CurrentType outputCurrentType) {
 		super(name);
+		canAcceptExternalPower = true;
+		canBeDrainedByExternalPower = false;
+
 		exposeAsCapability = true;
 		shouldExplodeWhenOverVolted = true;
-		overVoltageExplosionTimeRemaining = 0;
-		pendingOverVoltageExplosion = false;
+		electricalExplosionTimeRemaining = 0;
+		pendingElectricalExplosion = false;
 
 		baseCapacity = capacity;
 		baseInputVoltageRange = new StaticVoltageRange(minInputVoltage, maxInputVoltage);
 		baseVoltageOutput = voltageOutput;
 		baseMaximumOutputCurrent = maxCurrentOutput;
 
-		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputcurrent, voltageOutput, maxCurrentOutput) {
-			@Override
-			public double addPower(double voltage, double power, boolean simulate) {
-				if (!simulate && voltage > getInputVoltageRange().maximumVoltage()) {
-					handleOvervoltage(voltage, power);
-					return 0;
-				} else {
-					return super.addPower(voltage, power, simulate);
-				}
-			}
-		};
+		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputcurrent, acceptableInputCurrents, voltageOutput,
+				maxCurrentOutput, outputCurrentType);
 
-		powerInterfaces = new HashMap<>();
-		for (Direction dir : Direction.values()) {
-			powerInterfaces.put(dir, new SidedEnergyProxy(dir, this) {
-				@Override
-				public boolean canAcceptPower(Direction side) {
-					if (sideConfig != null) {
-						return sideConfig.getWorldSpaceDirectionConfiguration(side).isInputMode();
-					}
-					return true;
-				}
-
-				@Override
-				public boolean doesProvidePower(Direction side) {
-					if (sideConfig != null) {
-						return sideConfig.getWorldSpaceDirectionConfiguration(side).isOutputMode();
-					}
-					return true;
-				}
-			});
-		}
+		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 	}
 
 	@Override
@@ -128,17 +106,15 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 			if (pendingManualSync) {
 				sendSynchronizationPacket();
 			}
-
-			storage.captureEnergyMetric();
 		}
 	}
 
 	@Override
 	public void postProcessUpdate() {
 		if (!isClientSide()) {
-			if (pendingOverVoltageExplosion) {
-				overVoltageExplosionTimeRemaining--;
-				if (overVoltageExplosionTimeRemaining <= 0) {
+			if (pendingElectricalExplosion) {
+				electricalExplosionTimeRemaining--;
+				if (electricalExplosionTimeRemaining <= 0) {
 					getLevel().explode(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, 1, Explosion.BlockInteraction.BREAK);
 				}
 			}
@@ -147,6 +123,8 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 			if (issueSyncPackets) {
 				handleNetworkSynchronization();
 			}
+
+			storage.tick(getLevel());
 		}
 	}
 
@@ -164,8 +142,8 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 			powerCapacityUpgradeMultiplier = 1.0f;
 			powerOutputUpgradeMultiplier = 1.0f;
 		} else {
-			powerCapacityUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().powerUpgrade.get() * upgrade.getUpgradeWeight()));
-			powerOutputUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().powerIOUpgrade.get() * upgrade.getUpgradeWeight()));
+			powerCapacityUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().upgradeConfiguration.powerUpgrade.get() * upgrade.getUpgradeWeight()));
+			powerOutputUpgradeMultiplier = (float) (1.0f + (upgrade.getTier().upgradeConfiguration.powerIOUpgrade.get() * upgrade.getUpgradeWeight()));
 		}
 
 		// Set the new values.
@@ -219,16 +197,12 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		lastSyncEnergy = getStoredPower();
 	}
 
-	protected void handleOvervoltage(double voltage, double power) {
-		if (power == 0) {
-			return;
-		}
-		if (pendingOverVoltageExplosion) {
-			return;
-		}
+	protected void initiateVoltageBasedExplosion() {
+		// If we made it this far, one of the above failed and, if we're allowed to
+		// explode, we must.
 		if (shouldExplodeWhenOverVolted) {
-			pendingOverVoltageExplosion = true;
-			overVoltageExplosionTimeRemaining = OVER_VOLTAGE_EXPLOSION_TICKS;
+			pendingElectricalExplosion = true;
+			electricalExplosionTimeRemaining = ELECTRICAL_EXPLOSION_TICKS;
 			getLevel().playSound(null, getPos(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0f, 1.5f);
 			// TODO: Add particle effects here.
 		}
@@ -239,21 +213,19 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return this;
 	}
 
+	public PowerStorageComponent setCanAcceptExternalPower(boolean canAcceptExternalPower) {
+		this.canAcceptExternalPower = canAcceptExternalPower;
+		return this;
+	}
+
+	public PowerStorageComponent setCanBeDrainedByExternalPower(boolean canBeDrainedByExternalPower) {
+		this.canBeDrainedByExternalPower = canBeDrainedByExternalPower;
+		return this;
+	}
+
 	public PowerStorageComponent setCapacity(double capacity) {
 		storage.setCapacity(capacity);
 		baseCapacity = capacity;
-		markDirty();
-		return this;
-	}
-
-	public PowerStorageComponent setDoesProvidePower(boolean doesProvidePower) {
-		storage.setDoesProvidePower(doesProvidePower);
-		markDirty();
-		return this;
-	}
-
-	public PowerStorageComponent setCanAcceptPower(boolean canAcceptPower) {
-		storage.setCanAcceptPower(canAcceptPower);
 		markDirty();
 		return this;
 	}
@@ -292,6 +264,16 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return this;
 	}
 
+	public PowerStorageComponent setInputCurrentTypes(CurrentType... types) {
+		storage.setInputCurrentTypes(types);
+		return this;
+	}
+
+	public PowerStorageComponent setOutputCurrentType(CurrentType type) {
+		storage.setOutputCurrentType(type);
+		return this;
+	}
+
 	public PowerStorageComponent setShouldExplodeWhenOverVolted(boolean shouldExplodeWhenOverVolted) {
 		this.shouldExplodeWhenOverVolted = shouldExplodeWhenOverVolted;
 		markDirty();
@@ -307,14 +289,8 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return shouldExplodeWhenOverVolted;
 	}
 
-	@Override
-	public StaticVoltageRange getInputVoltageRange() {
-		return storage.getInputVoltageRange();
-	}
-
-	@Override
-	public double getMaximumCurrentInput() {
-		return storage.getMaximumCurrentInput();
+	public boolean canFullyAcceptPower(double power) {
+		return storage.canFullyAcceptPower(power);
 	}
 
 	@Override
@@ -328,8 +304,23 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	}
 
 	@Override
-	public double getVoltageOutput() {
-		return storage.getVoltageOutput();
+	public StaticVoltageRange getInputVoltageRange() {
+		return storage.getInputVoltageRange();
+	}
+
+	@Override
+	public double getMaximumCurrentInput() {
+		return storage.getMaximumCurrentInput();
+	}
+
+	@Override
+	public boolean canAcceptCurrentType(CurrentType type) {
+		return storage.canAcceptCurrentType(type);
+	}
+
+	@Override
+	public double getOutputVoltage() {
+		return storage.getOutputVoltage();
 	}
 
 	@Override
@@ -338,32 +329,54 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	}
 
 	@Override
-	public double addPower(double voltage, double power, boolean simulate) {
-		return storage.addPower(voltage, power, simulate);
+	public CurrentType getOutputCurrentType() {
+		return storage.getOutputCurrentType();
 	}
 
 	@Override
-	public double drainPower(double power, boolean simulate) {
+	public double addPower(PowerStack stack, boolean simulate) {
+		return storage.addPower(stack, simulate);
+	}
+
+	@Override
+	public PowerStack drainPower(double power, boolean simulate) {
 		return storage.drainPower(power, simulate);
 	}
 
 	@Override
-	public boolean canAcceptPower() {
-		return storage.canAcceptPower();
+	public double addPower(Direction side, PowerStack stack, boolean simulate) {
+		if (!canAcceptExternalPower) {
+			return 0;
+		}
+
+		if (sideConfig == null || sideConfig.getWorldSpaceDirectionConfiguration(side).isInputMode()) {
+			// Only when not simulating, check if we should initiate an explosion.
+			if (!simulate) {
+				if (!pendingElectricalExplosion && StaticPowerEnergyUtilities.shouldPowerStackTriggerExplosion(stack, this)) {
+					initiateVoltageBasedExplosion();
+					return 0;
+				}
+			}
+
+			// If we're pending an explosion, do nothing.
+			if (!pendingElectricalExplosion) {
+				return addPower(stack, simulate);
+			}
+		}
+
+		return 0;
 	}
 
 	@Override
-	public boolean doesProvidePower() {
-		return storage.doesProvidePower();
+	public PowerStack drainPower(Direction side, double power, boolean simulate) {
+		if (!canBeDrainedByExternalPower) {
+			return PowerStack.EMPTY;
+		}
+		if (sideConfig == null || sideConfig.getWorldSpaceDirectionConfiguration(side).isOutputMode()) {
+			return drainPower(power, simulate);
+		}
+		return PowerStack.EMPTY;
 	}
-
-//	public double addPowerIgnoringVoltageLimitations(double power) {
-//		return storage.addPowerIgnoringVoltageLimitations(power);
-//	}
-//
-//	public double usePowerIgnoringVoltageLimitations(double power) {
-//		return storage.usePowerIgnoringVoltageLimitations(power);
-//	}
 
 	public double getAveragePowerUsedPerTick() {
 		return storage.getAveragePowerUsedPerTick();
@@ -373,16 +386,24 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return storage.getAveragePowerAddedPerTick();
 	}
 
+	public double getLastRecievedVoltage() {
+		return storage.getLastRecievedVoltage();
+	}
+
+	public double getLastRecievedCurrent() {
+		return storage.getLastRecievedCurrent();
+	}
+
+	public CurrentType getLastRecievedCurrentType() {
+		return storage.getLastRecievedCurrentType();
+	}
+
 	public boolean canSupplyPower(double power) {
 		return storage.canSupplyPower(power);
 	}
 
 	public double getMaxOutputPower() {
 		return storage.getMaxOutputPower();
-	}
-
-	public boolean canAcceptPower(double power) {
-		return storage.canAcceptPower(power);
 	}
 
 	public PowerStorageComponent setAutoSyncPacketsEnabled(boolean enabled) {
@@ -408,9 +429,21 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 
 	@Override
 	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		if (!isEnabled()) {
+			return LazyOptional.empty();
+		}
+
 		// Still expose even if exposeAsCapability is false if the side is null. This is
 		// used for JADE and other overlays.
-		if (isEnabled() && (side == null || exposeAsCapability)) {
+		if (side == null) {
+			return manuallyGetCapability(cap, side);
+		}
+
+		if (!exposeAsCapability) {
+			return LazyOptional.empty();
+		}
+
+		if (sideConfig == null || !sideConfig.getWorldSpaceDirectionConfiguration(side).isDisabledMode()) {
 			return manuallyGetCapability(cap, side);
 		}
 
@@ -419,11 +452,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 
 	public <T> LazyOptional<T> manuallyGetCapability(Capability<T> cap, Direction side) {
 		if (cap == CapabilityStaticPower.STATIC_VOLT_CAPABILITY) {
-			if (side == null) {
-				return LazyOptional.of(() -> this).cast();
-			} else {
-				return LazyOptional.of(() -> powerInterfaces.get(side)).cast();
-			}
+			return LazyOptional.of(() -> capabilityWrapper.get(side)).cast();
 		}
 		return LazyOptional.empty();
 	}
@@ -438,5 +467,4 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		this.deserializeUpdateNbt(nbt, fromUpdate);
 
 	}
-
 }

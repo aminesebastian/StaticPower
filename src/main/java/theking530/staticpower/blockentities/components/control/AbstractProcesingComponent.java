@@ -2,6 +2,7 @@ package theking530.staticpower.blockentities.components.control;
 
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.api.energy.PowerStack;
 import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
@@ -444,8 +445,8 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			processingSpeedUpgradeMultiplier = 1.0f;
 			powerUsageIncreaseMultiplier = 1.0f;
 		} else {
-			processingSpeedUpgradeMultiplier = (float) (1.0f + (speedUpgrade.getTier().processingSpeedUpgrade.get()) * speedUpgrade.getUpgradeWeight());
-			powerUsageIncreaseMultiplier = (float) (1.0f + (speedUpgrade.getTier().processingSpeedPowerCost.get()) * speedUpgrade.getUpgradeWeight());
+			processingSpeedUpgradeMultiplier = (float) (1.0f + (speedUpgrade.getTier().upgradeConfiguration.processingSpeedUpgrade.get()) * speedUpgrade.getUpgradeWeight());
+			powerUsageIncreaseMultiplier = (float) (1.0f + (speedUpgrade.getTier().upgradeConfiguration.processingSpeedPowerCost.get()) * speedUpgrade.getUpgradeWeight());
 		}
 
 		// Set the processing time.
@@ -499,8 +500,8 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 			return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
 		}
 		// Check the processing power rate.
-		double drainedPower = powerComponent.drainPower(getPowerUsage(), true);
-		if (hasProcessingPowerCost && powerComponent != null && drainedPower < getPowerUsage()) {
+		PowerStack drainedPower = powerComponent.drainPower(getPowerUsage(), true);
+		if (hasProcessingPowerCost && powerComponent != null && drainedPower.getPower() < getPowerUsage()) {
 			return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (")
 					.append(StaticPowerEnergyTextUtilities.formatPowerRateToString(getPowerUsage())).append(") is larger than the amount this machine can handle!").getString());
 		}

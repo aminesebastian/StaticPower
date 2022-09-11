@@ -1,44 +1,40 @@
 package theking530.api.energy;
 
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
-
 public interface IStaticPowerStorage {
 
 	public StaticVoltageRange getInputVoltageRange();
 
-	public double getStoredPower();
+	public double getMaximumCurrentInput();
 
-	public double getCapacity();
+	public boolean canAcceptCurrentType(CurrentType type);
 
-	public double getVoltageOutput();
+	public double getOutputVoltage();
 
 	public double getMaximumCurrentOutput();
 
-	public double getMaximumCurrentInput();
+	public CurrentType getOutputCurrentType();
+
+	public double getStoredPower();
+
+	public double getCapacity();
 
 	/**
 	 * Attempts to add power to this storage using the provided voltage. The
 	 * provided current is calculated to be the provided power/voltage. We return
 	 * how much power is consumed by this storage.
 	 * 
-	 * @param voltage
 	 * @param power
-	 * @param simulate
 	 * @return
 	 */
-	public double addPower(double voltage, double power, boolean simulate);
+	public double addPower(PowerStack power, boolean simulate);
 
 	/**
 	 * Uses the power stored within this storage. The voltage it is used that is
-	 * equal to the result of {@link #getVoltageOutput()}.
+	 * equal to the result of {@link #getOutputVoltage()}.
 	 * 
 	 * @param power
 	 * @param simulate
 	 * @return
 	 */
-	public double drainPower(double power, boolean simulate);
-
-	public boolean canAcceptPower();
-
-	public boolean doesProvidePower();
+	public PowerStack drainPower(double power, boolean simulate);
 }

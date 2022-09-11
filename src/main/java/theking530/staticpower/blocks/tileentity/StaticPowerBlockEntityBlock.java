@@ -28,12 +28,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkHooks;
+import theking530.api.IBreakSerializeable;
 import theking530.api.wrench.RegularWrenchMode;
 import theking530.api.wrench.SneakWrenchMode;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent.SideIncrementDirection;
-import theking530.staticpower.blockentities.interfaces.IBreakSerializeable;
 import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.utilities.WorldUtilities;
 

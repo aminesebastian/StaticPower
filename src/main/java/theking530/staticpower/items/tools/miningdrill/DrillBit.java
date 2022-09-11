@@ -93,7 +93,7 @@ public class DrillBit extends AbstractToolPart {
 
 	@Override
 	protected int getBaseDurability() {
-		return StaticPowerConfig.getTier(tier).drillBitUses.get();
+		return StaticPowerConfig.getTier(tier).toolConfiguration.drillBitUses.get();
 	}
 
 	@Override

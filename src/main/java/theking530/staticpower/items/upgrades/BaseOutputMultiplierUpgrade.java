@@ -24,9 +24,9 @@ public class BaseOutputMultiplierUpgrade extends BaseUpgrade {
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		tooltip.add(new TextComponent(
-				ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(getTier().outputMultiplierUpgrade.get() * 100) + "%" + ChatFormatting.GREEN + " Output Chance"));
+				ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(getTier().upgradeConfiguration.outputMultiplierUpgrade.get() * 100) + "%" + ChatFormatting.GREEN + " Output Chance"));
 		tooltip.add(new TextComponent(
-				ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#.#").format(getTier().outputMultiplierPowerCostUpgrade.get() * 100) + "%" + ChatFormatting.RED + " Power Usage"));
+				ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#.#").format(getTier().upgradeConfiguration.outputMultiplierPowerCostUpgrade.get() * 100) + "%" + ChatFormatting.RED + " Power Usage"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

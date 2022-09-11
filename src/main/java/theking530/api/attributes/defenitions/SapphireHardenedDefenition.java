@@ -21,11 +21,11 @@ public class SapphireHardenedDefenition extends AbstractHardenedDefenition {
 		}
 
 		// Get the modifier amount.
-		double modifier = StaticPowerConfig.getTier(StaticPowerTiers.SAPPHIRE).hardenedDurabilityBoost.get();
+		double modifier = StaticPowerConfig.getTier(StaticPowerTiers.SAPPHIRE).toolConfiguration.hardenedDurabilityBoost.get();
 
 		// Apply the modification depending on whether or not this is an additive
 		// durability boost.
-		if (StaticPowerConfig.getTier(StaticPowerTiers.SAPPHIRE).hardenedDurabilityBoostAdditive.get()) {
+		if (StaticPowerConfig.getTier(StaticPowerTiers.SAPPHIRE).toolConfiguration.hardenedDurabilityBoostAdditive.get()) {
 			value += modifier;
 		} else {
 			value *= modifier;

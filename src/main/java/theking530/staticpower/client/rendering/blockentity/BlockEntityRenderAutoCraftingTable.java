@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.powered.autocrafter.BlockEntityAutoCraftingTable;
+import theking530.staticpower.blockentities.machines.autocrafter.BlockEntityAutoCraftingTable;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderAutoCraftingTable

@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.blockentities.powered.squeezer.BlockEntitySqueezer;
+import theking530.staticpower.blockentities.machines.squeezer.BlockEntitySqueezer;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderSqueezer extends StaticPowerBlockEntitySpecialRenderer<BlockEntitySqueezer> {

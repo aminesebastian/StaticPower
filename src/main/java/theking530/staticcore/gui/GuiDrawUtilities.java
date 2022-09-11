@@ -227,6 +227,14 @@ public class GuiDrawUtilities {
 		tessellator.end();
 	}
 
+	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y) {
+		drawTexture(pose, texture, width, height, x, y, 0, 0, 0, 1, 1, Color.WHITE);
+	}
+
+	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y, Color color) {
+		drawTexture(pose, texture, width, height, x, y, 0, 0, 0, 1, 1, color);
+	}
+
 	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float minU, float minV, float maxU, float maxV, Color color) {
 		drawTexture(pose, texture, width, height, 0, 0, 0, minU, minV, maxU, maxV, color);
 	}
@@ -540,7 +548,7 @@ public class GuiDrawUtilities {
 		GuiDrawUtilities.drawRectangle(pose, width, height, x, y, 0,
 				new Color(DEFAULT_SLOT_CORNER_COLOR.getRed(), DEFAULT_SLOT_CORNER_COLOR.getGreen(), DEFAULT_SLOT_CORNER_COLOR.getBlue(), 1.0f - alpha));
 		RenderSystem.disableBlend();
-		
+
 		if (item.getCount() > 1) {
 			GuiDrawUtilities.drawString(pose, String.valueOf(item.getCount()), x + 17, y + 16, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}

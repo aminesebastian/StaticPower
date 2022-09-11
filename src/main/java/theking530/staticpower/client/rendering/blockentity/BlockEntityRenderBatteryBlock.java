@@ -13,7 +13,7 @@ import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
-import theking530.staticpower.blockentities.powered.battery.BlockEntityBattery;
+import theking530.staticpower.blockentities.power.battery.BlockEntityBattery;
 import theking530.staticpower.client.StaticPowerSprites;
 
 @OnlyIn(Dist.CLIENT)

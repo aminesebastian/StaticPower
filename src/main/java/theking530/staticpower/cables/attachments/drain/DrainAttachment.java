@@ -82,7 +82,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 
 		// Increment the current timer.
 		currentTimer += 1;
-		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableExtractorRate.get()) {
+		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractorRate.get()) {
 			attachment.getTag().putInt(DRAINER_TIMER_TAG, 0);
 			return true;
 		} else {

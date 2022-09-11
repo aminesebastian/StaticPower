@@ -13,7 +13,7 @@ import theking530.staticcore.rendering.WorldLineGraphRenderer;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.powered.powermonitor.BlockEntityPowerMonitor;
+import theking530.staticpower.blockentities.power.powermonitor.BlockEntityPowerMonitor;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 @OnlyIn(Dist.CLIENT)

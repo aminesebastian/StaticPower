@@ -15,7 +15,6 @@ import theking530.api.heat.CapabilityHeatable;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
-import theking530.staticpower.cables.power.TileEntityPowerCable;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
@@ -53,18 +52,14 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		// Add static power data.
 		te.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 			CompoundTag powerData = new CompoundTag();
+			powerData.putDouble("output_voltage", powerStorage.getOutputVoltage());
+			powerData.putByte("output_current_type", (byte) powerStorage.getOutputCurrentType().ordinal());
 
-			if (powerStorage.doesProvidePower()) {
-				powerData.putDouble("output_voltage", powerStorage.getVoltageOutput());
-			}
+			powerData.putDouble("min_voltage", powerStorage.getInputVoltageRange().minimumVoltage());
+			powerData.putDouble("max_voltage", powerStorage.getInputVoltageRange().maximumVoltage());
+			powerData.putDouble("stored_power", powerStorage.getStoredPower());
+			powerData.putDouble("capacity", powerStorage.getCapacity());
 
-			// We don't want to show any of this for power cables, only the output voltage.
-			if (powerStorage.canAcceptPower() && !(te instanceof TileEntityPowerCable)) {
-				powerData.putDouble("min_voltage", powerStorage.getInputVoltageRange().minimumVoltage());
-				powerData.putDouble("max_voltage", powerStorage.getInputVoltageRange().maximumVoltage());
-				powerData.putDouble("stored_power", powerStorage.getStoredPower());
-				powerData.putDouble("capacity", powerStorage.getCapacity());
-			}
 			data.put(POWER_TAG, powerData);
 		});
 

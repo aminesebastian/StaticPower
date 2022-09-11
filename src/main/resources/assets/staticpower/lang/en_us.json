@@ -621,12 +621,20 @@
 	"block.staticpower.experience_hopper": "Experience Hopper",
 	"block.staticpower.rusty_cauldron": "Rusty Cauldron",
 	"block.staticpower.clean_cauldron": "Cauldron 2.0",
+	
 	"block.staticpower.battery_block_basic": "Basic Battery",
 	"block.staticpower.battery_block_advanced": "Advanced Battery",
 	"block.staticpower.battery_block_static": "Static Battery",
 	"block.staticpower.battery_block_energized": "Energized Battery",
 	"block.staticpower.battery_block_lumum": "Lumum Battery",
 	"block.staticpower.battery_block_creative": "Creative Battery",
+	
+	"block.staticpower.transformer_basic": "Basic Transformer",
+	
+	"block.staticpower.inverter_basic": "Basic Inverter",
+	
+	"block.staticpower.rectifier_basic": "Basic Rectifier",
+	
 	"block.staticpower.cable_power_basic": "Power Cable",
 	"block.staticpower.cable_power_advanced": "Advanced Power Cable",
 	"block.staticpower.cable_power_static": "Static Power Cable",

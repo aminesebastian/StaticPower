@@ -16,7 +16,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.powered.chargingstation.BlockEntityChargingStation;
+import theking530.staticpower.blockentities.machines.chargingstation.BlockEntityChargingStation;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderChargingStation extends StaticPowerBlockEntitySpecialRenderer<BlockEntityChargingStation> {

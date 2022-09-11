@@ -15,10 +15,10 @@ import theking530.staticpower.blockentities.components.loopingsound.LoopingSound
 import theking530.staticpower.blockentities.components.loopingsound.LoopingSoundPacketStop;
 import theking530.staticpower.blockentities.components.team.PacketSetTeamComponentTeam;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.PacketLockDigistore;
+import theking530.staticpower.blockentities.machines.packager.PacketPackagerSizeChange;
 import theking530.staticpower.blockentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
-import theking530.staticpower.blockentities.powered.battery.BatteryControlSyncPacket;
-import theking530.staticpower.blockentities.powered.packager.PacketPackagerSizeChange;
-import theking530.staticpower.blockentities.powered.powermonitor.PacketPowerMonitorSync;
+import theking530.staticpower.blockentities.power.powermonitor.PacketPowerMonitorSync;
+import theking530.staticpower.blockentities.power.transformer.TransformerControlSyncPacket;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketClearDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
@@ -59,7 +59,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(ItemCableRemovedPacket.class);
 		StaticPowerMessageHandler.registerMessage(FluidCableUpdatePacket.class);
 		StaticPowerMessageHandler.registerMessage(HeatCableUpdatePacket.class);
-		StaticPowerMessageHandler.registerMessage(BatteryControlSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(TransformerControlSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreTerminalFilters.class);
 		StaticPowerMessageHandler.registerMessage(JEIRecipeTransferPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketHeatStorageComponent.class);

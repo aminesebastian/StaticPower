@@ -45,7 +45,7 @@ public class FilterAttachment extends AbstractCableAttachment {
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt)
-				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableFilterSlots.get()));
+				.addCapability(new ItemStackCapabilityInventory("default", stack, StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableFilterSlots.get()));
 	}
 
 	public boolean doesItemPassFilter(ItemStack attachment, ItemStack itemToTest, AbstractCableProviderComponent cableComponent) {
@@ -95,7 +95,7 @@ public class FilterAttachment extends AbstractCableAttachment {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TranslatableComponent("gui.staticpower.filter_tooltip"));
-		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableFilterSlots.get(), tooltip);
+		AttachmentTooltipUtilities.addSlotsCountTooltip("gui.staticpower.slots", StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableFilterSlots.get(), tooltip);
 	}
 
 	protected class FilterContainerProvider extends AbstractCableAttachmentContainerProvider {

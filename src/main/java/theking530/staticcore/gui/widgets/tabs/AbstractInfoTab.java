@@ -100,13 +100,14 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 		// Iterate through all the info lines.
 		for (List<Component> formattedTextList : info.values()) {
 			for (Component formattedText : formattedTextList) {
-				if (formattedText.getString().equals("\n")) {
+				String formattedString = formattedText.getString();
+				if (formattedString.equals("\n") || formattedString.isEmpty()) {
 					lineHeight += LINE_BREAK_HEIGHT;
 					continue;
 				}
 
 				// Get the word wrapped result.
-				List<String> lines = GuiDrawUtilities.wrapString(formattedText.getString(), getExpandedSize().getX() - 30);
+				List<String> lines = GuiDrawUtilities.wrapString(formattedString, getExpandedSize().getX() - 30);
 				// Render the info text.
 				for (String line : lines) {
 					if (!simulate) {

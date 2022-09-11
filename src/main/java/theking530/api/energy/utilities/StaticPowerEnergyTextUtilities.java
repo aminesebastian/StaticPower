@@ -5,7 +5,7 @@ import java.text.NumberFormat;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class StaticPowerEnergyTextUtilities {
@@ -102,7 +102,7 @@ public class StaticPowerEnergyTextUtilities {
 		MutableComponent output;
 
 		// If the value is equal to the integer max, make it infinite.
-		if (Double.isInfinite(voltage) || voltage == Double.MAX_VALUE) {
+		if (Double.isInfinite(voltage) || voltage == Double.MAX_VALUE || voltage == Double.MIN_VALUE) {
 			output = new TextComponent("∞");
 		} else {
 			// Perform the metric conversion.

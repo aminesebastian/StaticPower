@@ -315,8 +315,8 @@ public class HeatStorageComponent extends AbstractTileEntityComponent implements
 		// If there is, apply the combo heat upgrade, otherwise check if there is just a
 		// heat capacity upgrade, and then apply that.
 		if (!heatUpgrade.isEmpty()) {
-			heatCapacityUpgradeMultiplier = (1.0f + (heatUpgrade.getTier().heatCapacityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
-			heatConductivityMultiplier = (1.0f + (heatUpgrade.getTier().heatConductivityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
+			heatCapacityUpgradeMultiplier = (1.0f + (heatUpgrade.getTier().upgradeConfiguration.heatCapacityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
+			heatConductivityMultiplier = (1.0f + (heatUpgrade.getTier().upgradeConfiguration.heatConductivityUpgrade.get() * heatUpgrade.getUpgradeWeight()));
 		} else {
 			// Set the heat conductivity back to 1.
 			heatConductivityMultiplier = 1.0f;
@@ -326,7 +326,7 @@ public class HeatStorageComponent extends AbstractTileEntityComponent implements
 			if (heatCapacityUpgrade.isEmpty()) {
 				heatCapacityUpgradeMultiplier = 1.0f;
 			} else {
-				heatCapacityUpgradeMultiplier = (1.0f + (heatCapacityUpgrade.getTier().heatCapacityUpgrade.get() * heatCapacityUpgrade.getUpgradeWeight()));
+				heatCapacityUpgradeMultiplier = (1.0f + (heatCapacityUpgrade.getTier().upgradeConfiguration.heatCapacityUpgrade.get() * heatCapacityUpgrade.getUpgradeWeight()));
 			}
 		}
 

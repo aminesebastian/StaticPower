@@ -31,6 +31,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	public static final DefaultSideConfiguration ALL_SIDES_OUTPUT = new DefaultSideConfiguration();
 	public static final DefaultSideConfiguration ALL_SIDES_INPUT = new DefaultSideConfiguration();
 	public static final DefaultSideConfiguration TOP_SIDE_ONLY_OUTPUT = new DefaultSideConfiguration();
+	public static final DefaultSideConfiguration FRONT_BACK_INPUT_OUTPUT = new DefaultSideConfiguration();
 	static {
 		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.TOP, true, MachineSideMode.Input);
 		DEFAULT_SIDE_CONFIGURATION.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
@@ -66,6 +67,13 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.BACK, false, MachineSideMode.Never);
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
+		
+		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.TOP, false, MachineSideMode.Never);
+		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
+		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Input);
+		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.BACK, true, MachineSideMode.Output);
+		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
+		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
 	}
 
 	private MachineSideMode[] configuration;

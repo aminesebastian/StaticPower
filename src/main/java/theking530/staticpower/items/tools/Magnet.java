@@ -25,7 +25,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.init.ModKeyBindings;
@@ -131,7 +131,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	}
 
 	public int getRadius(ItemStack stack) {
-		return StaticPowerConfig.getTier(tier).magnetRadius.get();
+		return StaticPowerConfig.getTier(tier).toolConfiguration.magnetRadius.get();
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 
 	@Override
 	public double getCapacity() {
-		return StaticPowerConfig.getTier(tier).magnetPowerCapacity.get();
+		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
 	}
 
 	@Override
@@ -192,5 +192,10 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	public double getOutputVoltage() {
 		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
+	}
+
+	@Override
+	public double getMaximumOutputCurrent() {
+		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
 	}
 }

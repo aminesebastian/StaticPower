@@ -48,7 +48,7 @@ public enum MachineSideMode {
 	}
 
 	public boolean isDisabledMode() {
-		return this == Disabled;
+		return this == Disabled || this == Never;
 	}
 
 	public boolean areOfSameType(MachineSideMode other) {

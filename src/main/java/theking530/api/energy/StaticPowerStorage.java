@@ -1,90 +1,51 @@
 package theking530.api.energy;
 
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.api.energy.StaticPowerEnergyDataTypes.StaticVoltageRange;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 
 public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable<CompoundTag> {
-	public static final int MAXIMUM_IO_CAPTURE_FRAMES = 5;
-
-	protected StaticVoltageRange voltageRange;
-	protected double maxInputCurrent;
-
-	protected double storedPower;
 	protected double capacity;
-	protected double voltageOutput;
-	protected double maximumCurrentOutput;
-	protected boolean doesProvidePower;
-	protected boolean canAcceptPower;
+	protected double storedPower;
 
-	protected Queue<Double> ioCaptureFrames;
-	protected Queue<Double> receiveCaptureFrames;
-	protected Queue<Double> extractCaptureFrames;
-	protected double currentFrameEnergyReceived;
-	protected double currentFrameEnergyExtracted;
-	protected double averageRecieved;
-	protected double averageExtracted;
+	protected StaticVoltageRange inputVoltageRange;
+	protected double maxInputCurrent;
+	protected Set<CurrentType> acceptableCurrentTypes;
 
-	public StaticPowerStorage(double capacity, StaticVoltageRange voltageRange, double maxInputCurrent, double voltageOutput, double currentOutput) {
+	protected double outputVoltage;
+	protected double maxOutputCurrent;
+	protected CurrentType outputCurrentType;
+
+	protected StaticPowerEnergyTracker ticker;
+
+	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputCurrent, CurrentType[] acceptableCurrentTypes, double outputVoltage,
+			double maxOutputCurrent, CurrentType outputCurrentType) {
+		this();
 		this.capacity = capacity;
-		this.voltageRange = voltageRange;
+		this.inputVoltageRange = inputVoltageRange;
 		this.maxInputCurrent = maxInputCurrent;
-		this.voltageOutput = voltageOutput;
-		this.maximumCurrentOutput = currentOutput;
-		this.doesProvidePower = true;
-		this.canAcceptPower = true;
+		this.outputVoltage = outputVoltage;
+		this.maxOutputCurrent = maxOutputCurrent;
+		this.outputCurrentType = outputCurrentType;
+		this.acceptableCurrentTypes.addAll(Arrays.asList(acceptableCurrentTypes));
+	}
 
-		ioCaptureFrames = new LinkedList<Double>();
-		receiveCaptureFrames = new LinkedList<Double>();
-		extractCaptureFrames = new LinkedList<Double>();
+	protected StaticPowerStorage() {
+		acceptableCurrentTypes = new HashSet<>();
+		ticker = new StaticPowerEnergyTracker();
 	}
 
 	/**
 	 * Caches the current energy IO metric and starts capturing a new one. This
 	 * should be called once per tick.
 	 */
-	public void captureEnergyMetric() {
-		// IO Capture
-		double tranfered = currentFrameEnergyReceived + currentFrameEnergyExtracted;
-
-		ioCaptureFrames.add(tranfered);
-		if (ioCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
-			ioCaptureFrames.poll();
-		}
-
-		// Capture Received Amounts
-		receiveCaptureFrames.add(currentFrameEnergyReceived);
-		if (receiveCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
-			receiveCaptureFrames.poll();
-		}
-
-		// Capture Extracted Amounts
-		extractCaptureFrames.add(currentFrameEnergyExtracted);
-		if (extractCaptureFrames.size() > MAXIMUM_IO_CAPTURE_FRAMES) {
-			extractCaptureFrames.poll();
-		}
-
-		// Cache the average extracted rate.
-		averageExtracted = 0;
-		for (double value : extractCaptureFrames) {
-			averageExtracted += value;
-		}
-		averageExtracted /= Math.max(1, extractCaptureFrames.size());
-
-		// Cache the average recieved rate.
-		averageRecieved = 0;
-		for (double value : receiveCaptureFrames) {
-			averageRecieved += value;
-		}
-		averageRecieved /= Math.max(1, receiveCaptureFrames.size());
-
-		// Reset the values.
-		currentFrameEnergyReceived = 0;
-		currentFrameEnergyExtracted = 0;
+	public void tick(Level level) {
+		ticker.tick(level);
 	}
 
 	public StaticPowerStorage setCapacity(double capacity) {
@@ -93,32 +54,35 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	}
 
 	public StaticPowerStorage setOutputVoltage(double voltageOutput) {
-		this.voltageOutput = voltageOutput;
+		this.outputVoltage = voltageOutput;
 		return this;
 	}
 
 	public StaticPowerStorage setMaximumOutputCurrent(double currentOutput) {
-		this.maximumCurrentOutput = currentOutput;
-		return this;
-	}
-
-	public StaticPowerStorage setDoesProvidePower(boolean doesProvidePower) {
-		this.doesProvidePower = doesProvidePower;
-		return this;
-	}
-
-	public StaticPowerStorage setCanAcceptPower(boolean canAcceptPower) {
-		this.canAcceptPower = canAcceptPower;
+		this.maxOutputCurrent = currentOutput;
 		return this;
 	}
 
 	public StaticPowerStorage setInputVoltageRange(StaticVoltageRange voltageRange) {
-		this.voltageRange = voltageRange;
+		this.inputVoltageRange = voltageRange;
 		return this;
 	}
 
 	public StaticPowerStorage setMaximumInputCurrent(double maxInputCurrent) {
 		this.maxInputCurrent = maxInputCurrent;
+		return this;
+	}
+
+	public StaticPowerStorage setInputCurrentTypes(CurrentType... currentTypes) {
+		this.acceptableCurrentTypes.clear();
+		for (CurrentType type : currentTypes) {
+			acceptableCurrentTypes.add(type);
+		}
+		return this;
+	}
+
+	public StaticPowerStorage setOutputCurrentType(CurrentType type) {
+		this.outputCurrentType = type;
 		return this;
 	}
 
@@ -129,7 +93,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	 * @return
 	 */
 	public double getMaxOutputPower() {
-		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(getVoltageOutput(), getMaximumCurrentOutput());
+		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(getOutputVoltage(), getMaximumCurrentOutput());
 	}
 
 	/**
@@ -140,23 +104,36 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	 * @return
 	 */
 	public boolean canSupplyPower(double power) {
-		return drainPower(power, true) == power;
+		return drainPower(power, true).getPower() == power;
 	}
 
 	/**
 	 * Determines whether or not this storage can accept the provided amount of
 	 * power. This factors the the maximum input voltage and maximum input current.
 	 * 
-	 * @param power
+	 * @param stack
 	 * @return
 	 */
-	public boolean canAcceptPower(double power) {
-		return addPower(this.getInputVoltageRange().maximumVoltage(), power, true) == power;
+	public boolean canFullyAcceptPower(double power) {
+		if (power > this.getOutputVoltage() * this.getMaximumCurrentOutput()) {
+			return false;
+		}
+		return storedPower + power <= capacity;
+	}
+
+	@Override
+	public boolean canAcceptCurrentType(CurrentType type) {
+		return acceptableCurrentTypes.contains(type);
+	}
+
+	@Override
+	public CurrentType getOutputCurrentType() {
+		return outputCurrentType;
 	}
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return voltageRange;
+		return inputVoltageRange;
 	}
 
 	@Override
@@ -175,109 +152,134 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	}
 
 	@Override
-	public double getVoltageOutput() {
-		return voltageOutput;
+	public double getOutputVoltage() {
+		return outputVoltage;
 	}
 
 	@Override
 	public double getMaximumCurrentOutput() {
-		return maximumCurrentOutput;
+		return maxOutputCurrent;
 	}
 
 	@Override
-	public double addPower(double voltage, double power, boolean simulate) {
-		if (power <= 0) {
+	public double addPower(PowerStack stack, boolean simulate) {
+		// If we can't accept the input type, do nothing,
+		if (!canAcceptCurrentType(stack.getCurrentType()) || stack.getVoltage() < 0 || stack.getPower() < 0) {
+			if (!simulate) {
+				ticker.powerAdded(new PowerStack(0, stack.getVoltage(), stack.getCurrentType()));
+			}
 			return 0;
 		}
 
-		double maxAcceptablePower = Math.min(voltage * getMaximumCurrentInput(), capacity - storedPower);
-		double acceptedPower = Math.min(power, maxAcceptablePower);
+		double actualPowerDelta = 0;
+		double absVoltage = Math.abs(stack.getVoltage());
+		double absPower = Math.abs(stack.getPower());
 
-		if (acceptedPower > 0 && !simulate) {
-			currentFrameEnergyReceived += acceptedPower;
-			storedPower += acceptedPower;
-		}
-
-		return acceptedPower;
-	}
-
-	@Override
-	public double drainPower(double power, boolean simulate) {
-		if (power <= 0) {
-			return 0;
-		}
-
-		double maxPowerDrain = getVoltageOutput() * getMaximumCurrentOutput();
-		double maxUsedPower = Math.min(power, maxPowerDrain);
-		maxUsedPower = Math.min(maxUsedPower, storedPower);
+		double maxPowerDelta = Math.min(absVoltage * getMaximumCurrentInput(), capacity - storedPower);
+		actualPowerDelta = Math.min(absPower, maxPowerDelta);
 
 		if (!simulate) {
-			storedPower -= maxUsedPower;
-			currentFrameEnergyExtracted -= maxUsedPower;
+			ticker.powerAdded(new PowerStack(actualPowerDelta, stack.getVoltage(), stack.getCurrentType()));
+			storedPower += actualPowerDelta;
 		}
-		return maxUsedPower;
+
+		return actualPowerDelta;
 	}
 
 	@Override
-	public boolean canAcceptPower() {
-		return canAcceptPower;
-	}
+	public PowerStack drainPower(double power, boolean simulate) {
+		if (power > 0) {
+			double maxPowerDrain = getOutputVoltage() * getMaximumCurrentOutput();
+			double maxUsedPower = Math.min(power, maxPowerDrain);
+			maxUsedPower = Math.min(maxUsedPower, getStoredPower());
 
-	@Override
-	public boolean doesProvidePower() {
-		return doesProvidePower;
-	}
+			if (!simulate) {
+				storedPower -= maxUsedPower;
+				ticker.powerDrained(maxUsedPower);
+			}
+			return new PowerStack(maxUsedPower, getOutputVoltage(), getOutputCurrentType());
+		} else {
+			power = -power;
+			double maxPowerAdd = getInputVoltageRange().maximumVoltage() * getMaximumCurrentInput();
+			double maxAddedPower = Math.min(power, maxPowerAdd);
+			maxAddedPower = Math.min(maxAddedPower, getCapacity() - getStoredPower());
 
-//	public double addPowerIgnoringVoltageLimitations(double power) {
-//		double maxAdd = Math.min(power, capacity - storedPower);
-//		this.storedPower = SDMath.clamp(storedPower + power, 0, capacity);
-//		return maxAdd;
-//	}
-//
-//	public double usePowerIgnoringVoltageLimitations(double power) {
-//		double maxUse = Math.min(power, storedPower);
-//		this.storedPower = SDMath.clamp(storedPower - maxUse, 0, capacity);
-//		return maxUse;
-//	}
+			if (!simulate) {
+				storedPower += maxAddedPower;
+				ticker.powerDrained(-maxAddedPower);
+			}
+			return new PowerStack(maxAddedPower, getOutputVoltage(), getOutputCurrentType());
+		}
+	}
 
 	public double getAveragePowerUsedPerTick() {
-		return averageExtracted;
+		return ticker.getAveragePowerUsedPerTick();
 	}
 
 	public double getAveragePowerAddedPerTick() {
-		return averageRecieved;
+		return ticker.getAveragePowerAddedPerTick();
+	}
+
+	public double getLastRecievedVoltage() {
+		return ticker.getLastRecievedVoltage();
+	}
+
+	public double getLastRecievedCurrent() {
+		return ticker.getLastRecievedCurrent();
+	}
+
+	public CurrentType getLastRecievedCurrentType() {
+		return ticker.getLastRecievedCurrentType();
 	}
 
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag output = new CompoundTag();
-		output.put("voltageRange", voltageRange.serializeNBT());
-		output.putDouble("maxInputCurrent", maxInputCurrent);
-		output.putDouble("storedPower", storedPower);
 		output.putDouble("capacity", capacity);
-		output.putDouble("voltageOutput", voltageOutput);
-		output.putDouble("currentOutput", maximumCurrentOutput);
+		output.putDouble("storedPower", storedPower);
 
-		output.putDouble("averageRecieved", averageRecieved);
-		output.putDouble("averageExtracted", averageExtracted);
+		output.put("inputVoltageRange", inputVoltageRange.serializeNBT());
+		output.putDouble("maxInputCurrent", maxInputCurrent);
+
+		output.putDouble("voltageOutput", outputVoltage);
+		output.putDouble("currentOutput", maxOutputCurrent);
+
+		output.putByte("outputType", (byte) outputCurrentType.ordinal());
+
+		output.putByte("acceptedInputCount", (byte) acceptableCurrentTypes.size());
+		byte index = 0;
+		for (CurrentType type : acceptableCurrentTypes) {
+			output.putByte("input" + index, (byte) type.ordinal());
+			index++;
+		}
+		output.put("ticker", ticker.serializeNBT());
 		return output;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		voltageRange = StaticVoltageRange.deserializeNBT(nbt.getCompound("voltageRange"));
-		maxInputCurrent = nbt.getDouble("maxInputCurrent");
-		storedPower = nbt.getDouble("storedPower");
 		capacity = nbt.getDouble("capacity");
-		voltageOutput = nbt.getDouble("voltageOutput");
-		maximumCurrentOutput = nbt.getDouble("currentOutput");
+		storedPower = nbt.getDouble("storedPower");
 
-		averageRecieved = nbt.getDouble("averageRecieved");
-		averageExtracted = nbt.getDouble("averageExtracted");
+		inputVoltageRange = StaticVoltageRange.deserializeNBT(nbt.getCompound("inputVoltageRange"));
+		maxInputCurrent = nbt.getDouble("maxInputCurrent");
+
+		outputVoltage = nbt.getDouble("voltageOutput");
+		maxOutputCurrent = nbt.getDouble("currentOutput");
+
+		outputCurrentType = CurrentType.values()[nbt.getByte("outputType")];
+
+		acceptableCurrentTypes.clear();
+		int acceptedInputCount = nbt.getByte("acceptedInputCount");
+		for (int i = 0; i < acceptedInputCount; i++) {
+			acceptableCurrentTypes.add(CurrentType.values()[nbt.getByte("acceptedInputCount" + i)]);
+		}
+
+		ticker.deserializeNBT(nbt.getCompound("ticker"));
 	}
 
 	public static StaticPowerStorage fromTag(CompoundTag nbt) {
-		StaticPowerStorage output = new StaticPowerStorage(0, StaticVoltageRange.ZERO_VOLTAGE, 0, 0, 0);
+		StaticPowerStorage output = new StaticPowerStorage();
 		output.deserializeNBT(nbt);
 		return output;
 	}

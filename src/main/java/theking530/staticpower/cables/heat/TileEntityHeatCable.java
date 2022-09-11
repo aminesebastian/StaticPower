@@ -33,7 +33,8 @@ public class TileEntityHeatCable extends BlockEntityBase {
 
 	public TileEntityHeatCable(BlockEntityTypeAllocator<TileEntityHeatCable> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
-		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", getTierObject().heatCableCapacity.get(), getTierObject().heatCableConductivity.get()));
+		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", getTierObject().cableHeatConfiguration.heatCableCapacity.get(),
+				getTierObject().cableHeatConfiguration.heatCableConductivity.get()));
 	}
 
 	@Override

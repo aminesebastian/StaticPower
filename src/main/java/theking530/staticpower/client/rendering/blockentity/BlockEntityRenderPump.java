@@ -14,7 +14,7 @@ import net.minecraftforge.client.model.ForgeModelBakery;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.powered.pump.BlockEntityPump;
+import theking530.staticpower.blockentities.machines.pump.BlockEntityPump;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.BlockModel;
 
