@@ -239,6 +239,12 @@ public class StaticPowerConfig {
 
 		public final ConfigValue<Double> laboratoryPowerUsage;
 
+		public final ConfigValue<Double> lowVoltage;
+		public final ConfigValue<Double> mediumVoltage;
+		public final ConfigValue<Double> highVoltage;
+		public final ConfigValue<Double> veryHighVoltage;
+		public final ConfigValue<Double> extremeVoltage;
+
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Generation");
 			{
@@ -338,6 +344,21 @@ public class StaticPowerConfig {
 					builder.pop();
 				}
 				builder.pop();
+			}
+			builder.pop();
+
+			builder.push("Power");
+			{
+				lowVoltage = builder.comment("The voltage level associated with low voltage power.").translation(StaticPower.MOD_ID + ".config." + "lowVoltage")
+						.define("LowVoltage", 10.0);
+				mediumVoltage = builder.comment("The voltage level associated with medium voltage power.").translation(StaticPower.MOD_ID + ".config." + "mediumVoltage")
+						.define("MediumVoltage", 50.0);
+				highVoltage = builder.comment("The voltage level associated with high voltage power.").translation(StaticPower.MOD_ID + ".config." + "highVoltage")
+						.define("HighVoltage", 100.0);
+				veryHighVoltage = builder.comment("The voltage level associated with very high voltage power.").translation(StaticPower.MOD_ID + ".config." + "veryHighVoltage")
+						.define("VeryHighVoltage", 1000.0);
+				extremeVoltage = builder.comment("The voltage level associated with extreme voltage power.").translation(StaticPower.MOD_ID + ".config." + "extremeVoltage")
+						.define("ExtremeVoltage", 10000.0);
 			}
 			builder.pop();
 

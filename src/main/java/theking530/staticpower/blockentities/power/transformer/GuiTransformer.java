@@ -9,7 +9,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
@@ -53,12 +53,12 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 
 		// Render the output current.
 		font.draw(stack, "Current", 8, 36, 4210752);
-		String inputRateString = StaticPowerEnergyTextUtilities.formatCurrentToString(getTileEntity().powerStorage.getMaximumCurrentOutput()).getString();
+		String inputRateString = PowerTextFormatting.formatPowerRateToString(getTileEntity().powerStorage.getMaximumPowerOutput()).getString();
 		font.draw(stack, inputRateString, 28 - (font.width(inputRateString) / 2), 46, 4210752);
 
 		// Render the output voltage.
 		font.draw(stack, "Voltage", 131, 36, 4210752);
-		String outputRateString = StaticPowerEnergyTextUtilities.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
+		String outputRateString = PowerTextFormatting.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
 		font.draw(stack, outputRateString, 149 - (font.width(outputRateString) / 2), 46, 4210752);
 
 		// Add tooltip for the actual value of the input.
@@ -70,12 +70,12 @@ public class GuiTransformer extends StaticPowerTileEntityGui<ContainerTransforme
 
 	@Override
 	protected void getExtraTooltips(List<Component> tooltips, PoseStack stack, int mouseX, int mouseY) {
-		String maxCurrent = StaticPowerEnergyTextUtilities.formatCurrentToString(getTileEntity().powerStorage.getMaximumCurrentOutput()).getString();
-		String maxVoltage = StaticPowerEnergyTextUtilities.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
+		String maxPower = PowerTextFormatting.formatPowerRateToString(getTileEntity().powerStorage.getMaximumPowerOutput()).getString();
+		String maxVoltage = PowerTextFormatting.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
 
-		if (mouseX > leftPos + 28 - (font.width(maxCurrent) / 2) && mouseX < leftPos + 28 + (font.width(maxCurrent) / 2) && mouseY > this.topPos + 41
+		if (mouseX > leftPos + 28 - (font.width(maxPower) / 2) && mouseX < leftPos + 28 + (font.width(maxPower) / 2) && mouseY > this.topPos + 41
 				&& mouseY < this.topPos + 50) {
-			tooltips.add(new TextComponent(maxCurrent));
+			tooltips.add(new TextComponent(maxPower));
 		}
 
 		// Add tooltip for the actual value of the output.

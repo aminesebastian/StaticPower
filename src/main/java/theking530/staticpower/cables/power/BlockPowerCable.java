@@ -8,6 +8,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
@@ -19,7 +20,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
@@ -45,10 +46,12 @@ public class BlockPowerCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_current", ChatFormatting.RED,
-				StaticPowerEnergyTextUtilities.formatCurrentToString(tierObject.cablePowerConfiguration.cablePowerMaxCurrent.get()).getString());
+		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.voltage", ChatFormatting.BLUE,
+				new TranslatableComponent(tierObject.cablePowerConfiguration.cableMaxVoltage.get().getShortName()).getString());
+		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_power", ChatFormatting.RED,
+				PowerTextFormatting.formatPowerRateToString(tierObject.cablePowerConfiguration.cablePowerMaxPower.get()).getString());
 		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.power_resistance", ChatFormatting.GOLD,
-				StaticPowerEnergyTextUtilities.formatResistanceToString(tierObject.cablePowerConfiguration.cablePowerResistancePerBlock.get()).getString());
+				PowerTextFormatting.formatResistanceToString(tierObject.cablePowerConfiguration.cablePowerResistancePerBlock.get()).getString());
 	}
 
 	@Override

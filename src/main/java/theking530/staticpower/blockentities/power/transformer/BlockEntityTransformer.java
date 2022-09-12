@@ -56,11 +56,11 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getTransformerVoltageRange());
 
 		if (getTier() == StaticPowerTiers.CREATIVE) {
-			powerStorage.setMaximumOutputCurrent(100);
+			powerStorage.setMaximumOutputPower(100);
 			powerStorage.setOutputVoltage(100);
 		} else {
 			powerStorage.setOutputVoltage(Math.floor((possibleOutputVoltageRange.minimumVoltage() + possibleOutputVoltageRange.maximumVoltage()) / 2));
-			powerStorage.setMaximumOutputCurrent(Math.floor(maximumPossibleOutputCurrent / 2));
+			powerStorage.setMaximumOutputPower(Math.floor(maximumPossibleOutputCurrent / 2));
 		}
 	}
 
@@ -74,7 +74,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 	public double transformAndSupplyPower(Direction side, PowerStack stack, boolean simulate) {
 		if (ioSideConfiguration.getWorldSpaceDirectionConfiguration(side).isInputMode() && stack.getCurrentType() == CurrentType.ALTERNATING) {
 			double voltageSign = stack.getVoltage() < 0 ? -1 : 1;
-			double power = Math.min(stack.getPower(), powerStorage.getOutputVoltage() * powerStorage.getMaximumCurrentOutput());
+			double power = Math.min(stack.getPower(), powerStorage.getOutputVoltage() * powerStorage.getMaximumPowerOutput());
 			PowerStack transformedStack = new PowerStack(power, powerStorage.getOutputVoltage() * voltageSign, CurrentType.ALTERNATING);
 			return powerDistributor.manuallyDistributePower(powerStorage, transformedStack, simulate);
 		}
@@ -83,7 +83,7 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 
 	public void setMaximumOutputCurrent(double current) {
 		if (current >= 0 && current <= maximumPossibleOutputCurrent) {
-			powerStorage.setMaximumOutputCurrent(current);
+			powerStorage.setMaximumOutputPower(current);
 		}
 	}
 
@@ -94,8 +94,8 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 	}
 
 	public void addMaximumOutputCurrentDelta(double deltaCurrent) {
-		double newCurrent = SDMath.clamp(powerStorage.getMaximumCurrentOutput() + deltaCurrent, 0, maximumPossibleOutputCurrent);
-		powerStorage.setMaximumOutputCurrent(newCurrent);
+		double newCurrent = SDMath.clamp(powerStorage.getMaximumPowerOutput() + deltaCurrent, 0, maximumPossibleOutputCurrent);
+		powerStorage.setMaximumOutputPower(newCurrent);
 	}
 
 	public void addOutputVoltageDelta(double deltaVoltage) {

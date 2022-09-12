@@ -1,6 +1,7 @@
 package theking530.staticpower.data.tiers.lumum;
 
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticpower.data.tiers.categories.cables.TierCableAttachmentConfiguration;
 import theking530.staticpower.data.tiers.categories.cables.TierFluidCableConfiguration;
 import theking530.staticpower.data.tiers.categories.cables.TierItemCableConfiguration;
@@ -50,23 +51,18 @@ public class LumumCableConfiguration {
 		}
 
 		@Override
-		protected double getCablePowerMaxCurrent() {
-			return 50;
+		protected StaticPowerVoltage getCableMaxVoltage() {
+			return StaticPowerVoltage.EXTREME;
+		}
+
+		@Override
+		protected double getCableMaxPower() {
+			return 320;
 		}
 
 		@Override
 		protected double getCablePowerResistancePerBlock() {
 			return 0.1;
-		}
-
-		@Override
-		protected double getCableIndustrialPowerMaxCurrent() {
-			return 500;
-		}
-
-		@Override
-		protected double getCableIndustrialPowerResistancePerBlock() {
-			return 2;
 		}
 	}
 

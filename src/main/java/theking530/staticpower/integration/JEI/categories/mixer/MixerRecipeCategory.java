@@ -22,8 +22,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.FluidProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.MixerProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
@@ -118,7 +118,7 @@ public class MixerRecipeCategory extends BaseJEIRecipeCategory<MixerRecipe> {
 	public List<Component> getTooltipStrings(MixerRecipe recipe, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(StaticPowerEnergyTextUtilities.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getPowerCost() * recipe.getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.

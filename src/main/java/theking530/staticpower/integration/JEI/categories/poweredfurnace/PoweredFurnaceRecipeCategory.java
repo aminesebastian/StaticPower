@@ -21,8 +21,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.Color;
@@ -107,7 +107,7 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			output.add(
-					new TextComponent("Usage: ").append(StaticPowerEnergyTextUtilities.formatPowerToString(BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
+					new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
 		}
 
 		// Render the progress bar tooltip.

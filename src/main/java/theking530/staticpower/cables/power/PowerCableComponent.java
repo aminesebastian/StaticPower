@@ -14,6 +14,7 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.sided.ISidedStaticPowerStorage;
 import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
@@ -24,21 +25,24 @@ import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
-	public static final String POWER_MAX_CURRENT = "power_max_current";
+	public static final String VOLTAGE_ORDINAL = "power_voltage_ordinal";
+	public static final String POWER_MAX = "power_max_power";
 	public static final String POWER_RESISTANCE = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
 	private final SidedStaticPowerCapabilityWrapper capabilityWrapper;
 	private final double resistance;
-	private final double maxCurrent;
+	private final double maxPower;
+	private final StaticPowerVoltage voltage;
 	private final boolean isIndustrial;
 
-	public PowerCableComponent(String name, boolean isIndustrial, double maxCurrent, double resistance) {
+	public PowerCableComponent(String name, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double resistance) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 
+		this.voltage = voltage;
 		this.resistance = resistance;
-		this.maxCurrent = maxCurrent;
+		this.maxPower = maxPower;
 		this.isIndustrial = isIndustrial;
 	}
 
@@ -66,8 +70,9 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
+		cable.setProperty(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
 		cable.setProperty(POWER_RESISTANCE, resistance);
-		cable.setProperty(POWER_MAX_CURRENT, maxCurrent);
+		cable.setProperty(POWER_MAX, maxPower);
 		cable.setProperty(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}
 
@@ -109,7 +114,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public double getMaximumCurrentInput() {
+	public double getMaximumPowerInput() {
 		return Double.MAX_VALUE;
 	}
 
@@ -141,11 +146,11 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public double getMaximumCurrentOutput() {
+	public double getMaximumPowerOutput() {
 		if (!isClientSide()) {
 			PowerNetworkModule module = getPowerNetworkModule().orElse(null);
 			if (module != null) {
-				return module.getMaximumCurrentOutput();
+				return module.getMaximumPowerOutput();
 			}
 		}
 		return 0;

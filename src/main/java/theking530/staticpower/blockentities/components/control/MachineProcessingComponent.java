@@ -33,6 +33,7 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 		return new MachineProcessingComponent(name, DEFAULT_MOVING_TIME, processingEndedCallback, processingEndedCallback, processingEndedCallback, serverOnly);
 	}
 
+	@Override
 	protected ProcessingCheckState canStartProcessing() {
 		// Check the redstone state.
 		ProcessingCheckState redstoneState;
@@ -50,6 +51,7 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 		return canStartProcessingCallback.get();
 	}
 
+	@Override
 	protected ProcessingCheckState canContinueProcessing() {
 		// Check the parent state.
 		ProcessingCheckState superCall = super.canContinueProcessing();
@@ -61,6 +63,7 @@ public class MachineProcessingComponent extends AbstractProcesingComponent {
 		return canContinueProcessingCallback.get();
 	}
 
+	@Override
 	protected ProcessingCheckState canCompleteProcessing() {
 		// Check the parent state.
 		ProcessingCheckState superCall = super.canCompleteProcessing();

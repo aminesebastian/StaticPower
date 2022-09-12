@@ -49,8 +49,6 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 
 	public BlockEntityFluidGenerator(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
-		disableFaceInteraction();
-
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", 0, FluidGeneratorRecipe.RECIPE_TYPE,
@@ -62,10 +60,9 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 
 		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", getTierObject().defaultTankCapacity.get(), (fluidStack) -> {
 			return processingComponent.getRecipeMatchingParameters(new RecipeMatchParameters(fluidStack)).isPresent();
-		}));
-		fluidTankComponent.setCapabilityExposedModes(MachineSideMode.Input);
-		registerComponent(new FluidInputServoComponent("InputServo", 20, fluidTankComponent, MachineSideMode.Input));
+		}).setCapabilityExposedModes(MachineSideMode.Input));
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.DRAIN));
+		registerComponent(new FluidInputServoComponent("InputServo", 20, fluidTankComponent, MachineSideMode.Input));
 	}
 
 	@Override

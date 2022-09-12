@@ -1,6 +1,8 @@
 package theking530.staticpower.cables.power;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -11,13 +13,16 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -124,47 +129,57 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	public void getReaderOutput(List<Component> output) {
 		output.add(new TextComponent(String.format("Supplying: %1$d destinations.", destinations.size())));
 		output.add(new TextComponent("Last Supplied Voltage: ")
-				.append(ChatFormatting.GREEN.toString() + StaticPowerEnergyTextUtilities.formatVoltageToString(lastProvidedVoltage).getString()));
+				.append(ChatFormatting.GREEN.toString() + PowerTextFormatting.formatVoltageToString(lastProvidedVoltage).getString()));
 	}
 
 	public void getMultimeterOutput(List<Component> output, BlockPos startingLocation, BlockPos endingLocation) {
 		output.add(new TextComponent(""));
 		getReaderOutput(output);
 		// Get all the paths to the destination from this provider.
-		double cableResistance = getResistanceBetweenPoints(startingLocation, endingLocation);
+		ElectricalPathProperties properties = getPropertiesBetweenPoints(startingLocation, endingLocation);
 		output.add(new TextComponent("Resistance over Points: ")
-				.append(ChatFormatting.GOLD.toString() + StaticPowerEnergyTextUtilities.formatResistanceToString(cableResistance).getString()));
+				.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatResistanceToString(properties.resistance).getString()));
 		output.add(new TextComponent("Last Power Loss: ")
-				.append(ChatFormatting.RED.toString() + StaticPowerEnergyTextUtilities.formatPowerToString(cableResistance / lastProvidedVoltage).getString()));
+				.append(ChatFormatting.RED.toString() + PowerTextFormatting.formatPowerToString(properties.resistance / lastProvidedVoltage).getString()));
 	}
 
-	public double getResistanceBetweenPoints(BlockPos start, BlockPos end) {
+	public ElectricalPathProperties getPropertiesBetweenPoints(BlockPos start, BlockPos end) {
 		if (!CableNetworkManager.get(Network.getWorld()).isTrackingCable(start)) {
-			return -1;
+			return ElectricalPathProperties.EMPTY;
 		}
 
 		if (!CableNetworkManager.get(Network.getWorld()).isTrackingCable(end)) {
-			return -1;
+			return ElectricalPathProperties.EMPTY;
 		}
 
 		if (start.equals(end)) {
-			return 0; // A single cable connection does not have any power loss (for gameplay reasons,
-						// no need to be too mean).
-
+			// A single cable connection does not have anypower loss (for gameplay reasons,
+			// no need to be too mean).
+			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(end);
+			double maxPower = cable.getDoubleProperty(PowerCableComponent.POWER_MAX);
+			return new ElectricalPathProperties(0, maxPower, List.of(cable));
 		}
 
 		List<Path> paths = Network.getPathCache().getPaths(start, end, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		if (paths.isEmpty()) {
-			return -1;
+			return ElectricalPathProperties.EMPTY;
 		}
 
 		Path path = paths.get(0);
+		List<ServerCable> cables = new LinkedList<ServerCable>();
 		double cableResistance = 0;
+		double maxPowerPerTick = Double.MAX_VALUE;
 		for (PathEntry entry : path.getEntries()) {
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
 			cableResistance += (cable.getDoubleProperty(PowerCableComponent.POWER_RESISTANCE));
+			cables.add(cable);
+
+			double cableMaxPower = cable.getDoubleProperty(PowerCableComponent.POWER_MAX);
+			if (cableMaxPower < maxPowerPerTick) {
+				maxPowerPerTick = cableMaxPower;
+			}
 		}
-		return cableResistance;
+		return new ElectricalPathProperties(cableResistance, maxPowerPerTick, cables);
 	}
 
 	@Override
@@ -173,7 +188,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	}
 
 	@Override
-	public double getMaximumCurrentInput() {
+	public double getMaximumPowerInput() {
 		return Double.MAX_VALUE;
 	}
 
@@ -198,7 +213,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	}
 
 	@Override
-	public double getMaximumCurrentOutput() {
+	public double getMaximumPowerOutput() {
 		return maximumCurrentOutput;
 	}
 
@@ -217,7 +232,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		return 0;
 	}
 
-	protected double supplyPower(BlockPos powerSourcePos, BlockPos fromCablePos, PowerStack power, CachedPowerDestination destination, boolean simulate) {
+	protected double supplyPower(BlockPos powerSourcePos, BlockPos fromCablePos, PowerStack stack, CachedPowerDestination destination, boolean simulate) {
 		// Avoid loops
 		if (destination.desintationPos.equals(powerSourcePos)) {
 			return 0;
@@ -225,26 +240,41 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 
 		// Get the resistance between the points. If it is -1, there was no path, return
 		// 0.
-		double cableResistance = getResistanceBetweenPoints(fromCablePos, destination.cable);
-		if (cableResistance == -1) {
+		ElectricalPathProperties properties = getPropertiesBetweenPoints(fromCablePos, destination.cable);
+		if (properties == ElectricalPathProperties.EMPTY) {
 			return 0;
 		}
+
+		// If the input voltage is higher than the voltage of a cable, break it. Use ALL the power.
+		for (ServerCable cable : properties.cables) {
+			StaticPowerVoltage voltage = StaticPowerVoltage.values()[cable.getIntProperty(PowerCableComponent.VOLTAGE_ORDINAL)];
+			if (stack.getVoltage() > voltage.getVoltage()) {
+				if(!simulate) {
+					Network.getWorld().destroyBlock(cable.getPos(), false);
+					Network.getWorld().playSound(null, cable.getPos(), SoundEvents.REDSTONE_TORCH_BURNOUT, SoundSource.BLOCKS, 0.5f, 1.25f);				
+				}
+				return stack.getPower();
+			}
+		}
+
+		// Limit the transfered power to the max of the path.
+		double power = Math.min(stack.getPower(), properties.maxPower);
 
 		// This isn't the scientifically accurate way to do this, but this results in
 		// more fun gameplay! We won't factor in the circuit current or load current as
 		// part of this calculation. Just a straight inverse relationship between cable
 		// resistance and voltage. As voltage goes up, power loss goes down. As
 		// resistance goes up, power loss goes up.
-		double cablePowerLoss = Math.abs(cableResistance / power.getVoltage());
+		double cablePowerLoss = Math.abs(properties.resistance / stack.getVoltage());
 
 		// Subtract that power loss from the total amount of power that we were
 		// provided.
-		double leftoverPower = power.getPower() - cablePowerLoss;
+		double leftoverPower = power - cablePowerLoss;
 
 		// Supply the power to the destination. If and only if it actually uses power,
 		// then return how much power it used PLUS the power loss. Otherwise, use 0
 		// power.
-		double machineUsedPower = destination.power.addPower(new PowerStack(leftoverPower, power.getVoltage(), power.getCurrentType()), false);
+		double machineUsedPower = destination.power.addPower(new PowerStack(leftoverPower, stack.getVoltage(), stack.getCurrentType()), simulate);
 		if (machineUsedPower == 0) {
 			return 0;
 		}
@@ -271,5 +301,9 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 			}
 		}
 		return suppliedPower;
+	}
+
+	private record ElectricalPathProperties(double resistance, double maxPower, List<ServerCable> cables) {
+		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, Collections.emptyList());
 	}
 }

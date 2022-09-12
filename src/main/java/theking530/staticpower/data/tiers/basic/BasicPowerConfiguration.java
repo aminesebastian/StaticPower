@@ -1,9 +1,7 @@
 package theking530.staticpower.data.tiers.basic;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticpower.data.tiers.categories.TierPowerConfiguration;
 
 public class BasicPowerConfiguration extends TierPowerConfiguration {
@@ -18,52 +16,22 @@ public class BasicPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
-	protected List<Double> internalGetDefaultInputVoltageRange() {
-		return Arrays.asList(0.0, 12.0);
+	protected StaticPowerVoltage getDefaultOutputVoltage() {
+		return StaticPowerVoltage.LOW;
 	}
 
 	@Override
-	protected double getDefaultMaximumInputCurrent() {
-		return 2;
-	}
-
-	@Override
-	protected double getDefaultOutputVoltage() {
-		return 12;
-	}
-
-	@Override
-	protected double getDefaultMaximumPowerOutput() {
+	protected double getDefaultMaximumPowerInput() {
 		return 10;
 	}
 
 	@Override
-	protected double getBatteryCapacity() {
-		return 3200;
-	}
-
-	@Override
 	protected double getBatteryMaximumPowerOutput() {
-		return 60;
-	}
-
-	@Override
-	protected double getBatteryOutputVoltage() {
-		return 12;
-	}
-
-	@Override
-	protected List<Double> internalGetTransformerVoltageRange() {
-		return Arrays.asList(0.0, 24.0);
+		return 25;
 	}
 
 	@Override
 	protected double getSolarPanelPowerGeneration() {
-		return 1;
-	}
-
-	@Override
-	protected double getSolarPanelPowerStorage() {
 		return 1;
 	}
 }

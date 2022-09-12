@@ -1,6 +1,7 @@
 package theking530.staticpower.data.tiers.advanced;
 
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticpower.data.tiers.categories.cables.TierCableAttachmentConfiguration;
 import theking530.staticpower.data.tiers.categories.cables.TierFluidCableConfiguration;
 import theking530.staticpower.data.tiers.categories.cables.TierItemCableConfiguration;
@@ -87,7 +88,7 @@ public class AdvancedCableConfiguration {
 
 		@Override
 		protected double getItemCableMaxSpeed() {
-			return 1.0;
+			return 2.0;
 		}
 
 		@Override
@@ -105,25 +106,19 @@ public class AdvancedCableConfiguration {
 		public PowerCableConfiguration(Builder builder) {
 			super(builder);
 		}
+		@Override
+		protected StaticPowerVoltage getCableMaxVoltage() {
+			return StaticPowerVoltage.MEDIUM;
+		}
 
 		@Override
-		protected double getCablePowerMaxCurrent() {
-			return 15;
+		protected double getCableMaxPower() {
+			return 40;
 		}
 
 		@Override
 		protected double getCablePowerResistancePerBlock() {
 			return 5;
-		}
-
-		@Override
-		protected double getCableIndustrialPowerMaxCurrent() {
-			return 200;
-		}
-
-		@Override
-		protected double getCableIndustrialPowerResistancePerBlock() {
-			return 50;
 		}
 	}
 }

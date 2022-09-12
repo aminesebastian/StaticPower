@@ -937,6 +937,7 @@
 	"gui.staticpower.stored_power": "Stored Power",
 	"gui.staticpower.usage": "Usage",
 	
+	"gui.staticpower.voltage": "Voltage",
 	"gui.staticpower.output_voltage": "Output Voltage",
 	"gui.staticpower.input_voltage": "Input Voltage",
 	"gui.staticpower.volt_unit": "V",
@@ -949,7 +950,9 @@
 	"gui.staticpower.stored_power": "Stored Power",
 	"gui.staticpower.power_unit": "W",
 	"gui.staticpower.power_unit_per_tick": "W/t",
-	
+	"gui.staticpower.max_power": "Max. Power",
+	"gui.staticpower.max_input_power": "Max. Input Power",
+	"gui.staticpower.max_output_power": "Max. Output Power",
 	
 	"gui.staticpower.power_resistance": "Resistance",
 	"gui.staticpower.power_resistance_unit": "Ω",
@@ -962,6 +965,18 @@
 	"gui.staticpower.heat_unit_per_tick": "°C/t",
 	
 	"gui.staticpower.heat_conductivity_unit": "λ",
+	
+	"gui.staticpower.voltage.full_name.low_voltage": "Low Voltage",
+	"gui.staticpower.voltage.full_name.medium_voltage": "Medium Voltage",
+	"gui.staticpower.voltage.full_name.high_voltage": "High Voltage",
+	"gui.staticpower.voltage.full_name.very_high_voltage": "Very High Voltage",
+	"gui.staticpower.voltage.full_name.extreme_voltage": "Extreme Voltage",
+	
+	"gui.staticpower.voltage.short_name.low_voltage": "LV",
+	"gui.staticpower.voltage.short_name.medium_voltage": "MV",
+	"gui.staticpower.voltage.short_name.high_voltage": "HV",
+	"gui.staticpower.voltage.short_name.very_high_voltage": "VHV",
+	"gui.staticpower.voltage.short_name.extreme_voltage": "EV",
 	
 	"gui.staticpower.heat_transfer": "Heat Transfer",
 	"gui.staticpower.heat": "Heat",

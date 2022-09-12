@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
@@ -57,12 +57,12 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 
 		// Render the input rate string.
 		font.draw(stack, "Input", 15, 32, 4210752);
-		String inputRateString = StaticPowerEnergyTextUtilities.formatPowerRateToString(getTileEntity().getInputLimit()).getString();
+		String inputRateString = PowerTextFormatting.formatPowerRateToString(getTileEntity().getInputLimit()).getString();
 		font.draw(stack, inputRateString, 28 - (font.width(inputRateString) / 2), 42, 4210752);
 
 		// Render the output rate string.
 		font.draw(stack, "Output", 132, 32, 4210752);
-		String outputRateString = StaticPowerEnergyTextUtilities.formatPowerRateToString(getTileEntity().getOutputLimit()).getString();
+		String outputRateString = PowerTextFormatting.formatPowerRateToString(getTileEntity().getOutputLimit()).getString();
 		font.draw(stack, outputRateString, 149 - (font.width(outputRateString) / 2), 42, 4210752);
 
 		// Add tooltip for the actual value of the input.
@@ -74,8 +74,8 @@ public class GuiPowerMonitor extends StaticPowerTileEntityGui<ContainerPowerMoni
 
 	@Override
 	protected void getExtraTooltips(List<Component> tooltips, PoseStack stack, int mouseX, int mouseY) {
-		String inputRateString = StaticPowerEnergyTextUtilities.formatPowerRateToString(getTileEntity().getInputLimit()).getString();
-		String outputRateString = StaticPowerEnergyTextUtilities.formatPowerRateToString(getTileEntity().getOutputLimit()).getString();
+		String inputRateString = PowerTextFormatting.formatPowerRateToString(getTileEntity().getInputLimit()).getString();
+		String outputRateString = PowerTextFormatting.formatPowerRateToString(getTileEntity().getOutputLimit()).getString();
 
 		if (mouseX > leftPos + 28 - (font.width(inputRateString) / 2) && mouseX < leftPos + 28 + (font.width(inputRateString) / 2) && mouseY > this.topPos + 41
 				&& mouseY < this.topPos + 50) {

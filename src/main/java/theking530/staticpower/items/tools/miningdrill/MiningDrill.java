@@ -57,9 +57,9 @@ import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.api.multipartitem.AbstractMultiPartSlot;
 import theking530.api.multipartitem.MultiPartSlots;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -346,7 +346,7 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 
 		double remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-		tooltip.add(StaticPowerEnergyTextUtilities.formatPowerToString(remainingCharge, capacity));
+		tooltip.add(PowerTextFormatting.formatPowerToString(remainingCharge, capacity));
 
 		if (isSlotPopulated(stack, MultiPartSlots.DRILL_BIT)) {
 			ItemStack drillBit = this.getPartInSlot(stack, MultiPartSlots.DRILL_BIT);

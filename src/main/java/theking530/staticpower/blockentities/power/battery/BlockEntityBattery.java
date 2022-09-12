@@ -78,9 +78,8 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", powerStorage));
 		powerStorage.setSideConfiguration(ioSideConfiguration);
 		powerStorage.setCapacity(getTierObject().powerConfiguration.batteryCapacity.get());
-		powerStorage.setInputVoltageRange(getTierObject().powerConfiguration.getDefaultInputVoltageRange());
 		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
-		powerStorage.setMaximumOutputCurrent(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
+		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 		powerStorage.setInputCurrentTypes(CurrentType.DIRECT, CurrentType.ALTERNATING);
 
 		// Add a battery input.

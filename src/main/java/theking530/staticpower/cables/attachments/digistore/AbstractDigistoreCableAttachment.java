@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 
 public abstract class AbstractDigistoreCableAttachment extends AbstractCableAttachment {
@@ -32,7 +32,7 @@ public abstract class AbstractDigistoreCableAttachment extends AbstractCableAtta
 		double powerUsage = getPowerUsage(stack);
 		if (powerUsage > 0) {
 			tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.digistore_attachment_power_usage").withStyle(ChatFormatting.GREEN)
-					.append(ChatFormatting.WHITE.toString() + StaticPowerEnergyTextUtilities.formatPowerRateToString(powerUsage).getString())));
+					.append(ChatFormatting.WHITE.toString() + PowerTextFormatting.formatPowerRateToString(powerUsage).getString())));
 		}
 	}
 }

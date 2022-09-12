@@ -14,23 +14,23 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	protected double storedPower;
 
 	protected StaticVoltageRange inputVoltageRange;
-	protected double maxInputCurrent;
+	protected double maxInputPower;
 	protected Set<CurrentType> acceptableCurrentTypes;
 
 	protected double outputVoltage;
-	protected double maxOutputCurrent;
+	protected double maxOutputPower;
 	protected CurrentType outputCurrentType;
 
 	protected StaticPowerEnergyTracker ticker;
 
-	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputCurrent, CurrentType[] acceptableCurrentTypes, double outputVoltage,
-			double maxOutputCurrent, CurrentType outputCurrentType) {
+	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputPower, CurrentType[] acceptableCurrentTypes, double outputVoltage,
+			double maxOutputPower, CurrentType outputCurrentType) {
 		this();
 		this.capacity = capacity;
 		this.inputVoltageRange = inputVoltageRange;
-		this.maxInputCurrent = maxInputCurrent;
+		this.maxInputPower = maxInputPower;
 		this.outputVoltage = outputVoltage;
-		this.maxOutputCurrent = maxOutputCurrent;
+		this.maxOutputPower = maxOutputPower;
 		this.outputCurrentType = outputCurrentType;
 		this.acceptableCurrentTypes.addAll(Arrays.asList(acceptableCurrentTypes));
 	}
@@ -58,8 +58,8 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		return this;
 	}
 
-	public StaticPowerStorage setMaximumOutputCurrent(double currentOutput) {
-		this.maxOutputCurrent = currentOutput;
+	public StaticPowerStorage setMaximumOutputPower(double maxOutputPower) {
+		this.maxOutputPower = maxOutputPower;
 		return this;
 	}
 
@@ -68,8 +68,8 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		return this;
 	}
 
-	public StaticPowerStorage setMaximumInputCurrent(double maxInputCurrent) {
-		this.maxInputCurrent = maxInputCurrent;
+	public StaticPowerStorage setMaximumInputPower(double maxInputPower) {
+		this.maxInputPower = maxInputPower;
 		return this;
 	}
 
@@ -84,16 +84,6 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	public StaticPowerStorage setOutputCurrentType(CurrentType type) {
 		this.outputCurrentType = type;
 		return this;
-	}
-
-	/**
-	 * Calculates the maximum amount of power that can be supplied by this storage.
-	 * This is constrained by the voltage output and maximum current output.
-	 * 
-	 * @return
-	 */
-	public double getMaxOutputPower() {
-		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(getOutputVoltage(), getMaximumCurrentOutput());
 	}
 
 	/**
@@ -115,7 +105,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	 * @return
 	 */
 	public boolean canFullyAcceptPower(double power) {
-		if (power > this.getOutputVoltage() * this.getMaximumCurrentOutput()) {
+		if (power > this.getMaximumPowerOutput()) {
 			return false;
 		}
 		return storedPower + power <= capacity;
@@ -137,8 +127,8 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	}
 
 	@Override
-	public double getMaximumCurrentInput() {
-		return maxInputCurrent;
+	public double getMaximumPowerInput() {
+		return maxInputPower;
 	}
 
 	@Override
@@ -157,8 +147,8 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	}
 
 	@Override
-	public double getMaximumCurrentOutput() {
-		return maxOutputCurrent;
+	public double getMaximumPowerOutput() {
+		return maxOutputPower;
 	}
 
 	@Override
@@ -172,10 +162,9 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		}
 
 		double actualPowerDelta = 0;
-		double absVoltage = Math.abs(stack.getVoltage());
 		double absPower = Math.abs(stack.getPower());
 
-		double maxPowerDelta = Math.min(absVoltage * getMaximumCurrentInput(), capacity - storedPower);
+		double maxPowerDelta = Math.min(getMaximumPowerInput(), capacity - storedPower);
 		actualPowerDelta = Math.min(absPower, maxPowerDelta);
 
 		if (!simulate) {
@@ -189,7 +178,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	@Override
 	public PowerStack drainPower(double power, boolean simulate) {
 		if (power > 0) {
-			double maxPowerDrain = getOutputVoltage() * getMaximumCurrentOutput();
+			double maxPowerDrain = getMaximumPowerOutput();
 			double maxUsedPower = Math.min(power, maxPowerDrain);
 			maxUsedPower = Math.min(maxUsedPower, getStoredPower());
 
@@ -198,18 +187,9 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 				ticker.powerDrained(maxUsedPower);
 			}
 			return new PowerStack(maxUsedPower, getOutputVoltage(), getOutputCurrentType());
-		} else {
-			power = -power;
-			double maxPowerAdd = getInputVoltageRange().maximumVoltage() * getMaximumCurrentInput();
-			double maxAddedPower = Math.min(power, maxPowerAdd);
-			maxAddedPower = Math.min(maxAddedPower, getCapacity() - getStoredPower());
 
-			if (!simulate) {
-				storedPower += maxAddedPower;
-				ticker.powerDrained(-maxAddedPower);
-			}
-			return new PowerStack(maxAddedPower, getOutputVoltage(), getOutputCurrentType());
 		}
+		return PowerStack.EMPTY;
 	}
 
 	public double getAveragePowerUsedPerTick() {
@@ -239,10 +219,10 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		output.putDouble("storedPower", storedPower);
 
 		output.put("inputVoltageRange", inputVoltageRange.serializeNBT());
-		output.putDouble("maxInputCurrent", maxInputCurrent);
+		output.putDouble("maxInputPower", maxInputPower);
 
 		output.putDouble("voltageOutput", outputVoltage);
-		output.putDouble("currentOutput", maxOutputCurrent);
+		output.putDouble("maxOutputPower", maxOutputPower);
 
 		output.putByte("outputType", (byte) outputCurrentType.ordinal());
 
@@ -262,10 +242,10 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		storedPower = nbt.getDouble("storedPower");
 
 		inputVoltageRange = StaticVoltageRange.deserializeNBT(nbt.getCompound("inputVoltageRange"));
-		maxInputCurrent = nbt.getDouble("maxInputCurrent");
+		maxInputPower = nbt.getDouble("maxInputPower");
 
 		outputVoltage = nbt.getDouble("voltageOutput");
-		maxOutputCurrent = nbt.getDouble("currentOutput");
+		maxOutputPower = nbt.getDouble("maxOutputPower");
 
 		outputCurrentType = CurrentType.values()[nbt.getByte("outputType")];
 

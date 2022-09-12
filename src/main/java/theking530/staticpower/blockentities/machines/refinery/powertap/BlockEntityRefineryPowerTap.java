@@ -80,9 +80,9 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public double getMaximumCurrentInput() {
+	public double getMaximumPowerInput() {
 		if (hasController()) {
-			return getController().powerStorage.getMaximumCurrentInput();
+			return getController().powerStorage.getMaximumPowerInput();
 		}
 		return 0;
 	}
@@ -120,9 +120,9 @@ public class BlockEntityRefineryPowerTap extends BaseRefineryBlockEntity impleme
 	}
 
 	@Override
-	public double getMaximumCurrentOutput() {
+	public double getMaximumPowerOutput() {
 		if (hasController()) {
-			return getController().powerStorage.getMaximumCurrentOutput();
+			return getController().powerStorage.getMaximumPowerOutput();
 		}
 		return 0;
 	}

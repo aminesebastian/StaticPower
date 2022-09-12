@@ -12,9 +12,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.energy.CurrentType;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticcore.utilities.Vector2D;
@@ -35,12 +35,14 @@ public class GuiMachinePowerInfoTab extends AbstractInfoTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Input", new TextComponent("Power Input"), StaticPowerEnergyTextUtilities.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()),
+		addKeyValueTwoLiner("Input", new TextComponent("Power Input"), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()),
 				ChatFormatting.GREEN);
-		addKeyValueTwoLiner("Usage", new TextComponent("Power Usage"), StaticPowerEnergyTextUtilities.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()),
-				ChatFormatting.RED);
-		addKeyValueTwoLiner("Connection", new TextComponent("Conn. Power"), StaticPowerEnergyTextUtilities.formatVoltageToString(energyStorage.getLastRecievedVoltage()),
-				ChatFormatting.AQUA);
+		addKeyValueTwoLiner("Usage", new TextComponent("Power Usage"), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()), ChatFormatting.RED);
+		addKeyValueTwoLiner("Connection", new TextComponent("Conn. Power"), PowerTextFormatting.formatVoltageToString(energyStorage.getLastRecievedVoltage()), ChatFormatting.AQUA);
+
+		addKeyValueTwoLiner("MaxInput", new TextComponent("Max Input"), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerInput()), ChatFormatting.YELLOW);
+		addKeyValueTwoLiner("MaxOutput", new TextComponent("Max Output"), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerOutput()),
+				ChatFormatting.LIGHT_PURPLE);
 	}
 
 	@SuppressWarnings("resource")
@@ -52,9 +54,9 @@ public class GuiMachinePowerInfoTab extends AbstractInfoTab {
 				currentTypeTexture = GuiTextures.AC_POWER_INDICATOR;
 			}
 
-			String connPowerLine = StaticPowerEnergyTextUtilities.formatVoltageToString(energyStorage.getLastRecievedVoltage()).getString();
+			String connPowerLine = PowerTextFormatting.formatVoltageToString(energyStorage.getLastRecievedVoltage()).getString();
 			int offset = Minecraft.getInstance().font.width(connPowerLine);
-			GuiDrawUtilities.drawTexture(matrix, currentTypeTexture, 12, 12, 18 + offset, 75.5f, MinecraftColor.WHITE.getColor());
+			GuiDrawUtilities.drawTexture(matrix, currentTypeTexture, 12, 12, 22 + offset, 75.5f, MinecraftColor.WHITE.getColor());
 		}
 	}
 

@@ -3,8 +3,8 @@ package theking530.staticpower.blockentities.components.control;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.PowerStack;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.api.upgrades.UpgradeTypes;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
@@ -496,14 +496,17 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 	protected ProcessingCheckState checkPowerRequirements() {
 		// Check the processing power cost.
-		if (hasProcessingPowerCost && powerComponent != null && powerComponent.getStoredPower() < getPowerUsage()) {
-			return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
-		}
-		// Check the processing power rate.
-		PowerStack drainedPower = powerComponent.drainPower(getPowerUsage(), true);
-		if (hasProcessingPowerCost && powerComponent != null && drainedPower.getPower() < getPowerUsage()) {
-			return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (")
-					.append(StaticPowerEnergyTextUtilities.formatPowerRateToString(getPowerUsage())).append(") is larger than the amount this machine can handle!").getString());
+		if (hasProcessingPowerCost) {
+			if (powerComponent != null && powerComponent.getStoredPower() < getPowerUsage()) {
+				return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
+			}
+			// Check the processing power rate.
+			PowerStack drainedPower = powerComponent.drainPower(getPowerUsage(), true);
+			if (hasProcessingPowerCost && powerComponent != null && drainedPower.getPower() < getPowerUsage()) {
+				return ProcessingCheckState
+						.error(new TextComponent("Recipe's power per tick requirement (").append(PowerTextFormatting.formatPowerRateToString(getPowerUsage()))
+								.append(") is larger than the amount this machine can handle!").getString());
+			}
 		}
 
 		// If we made it this far, return true.
@@ -609,7 +612,7 @@ public abstract class AbstractProcesingComponent extends AbstractTileEntityCompo
 
 		public static ProcessingCheckState notEnoughPower(double requiredPower) {
 			return new ProcessingCheckState(ProcessingState.ERROR,
-					"Not enough power! " + StaticPowerEnergyTextUtilities.formatPowerRateToString(requiredPower).getString() + " required!");
+					"Not enough power! " + PowerTextFormatting.formatPowerRateToString(requiredPower).getString() + " required!");
 		}
 
 		public static ProcessingCheckState powerOutputFull() {

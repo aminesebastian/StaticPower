@@ -13,7 +13,7 @@ public interface ISidedStaticPowerStorage extends IStaticPowerStorage {
 	}
 
 	public default double getMaximumCurrentInput(Direction side) {
-		return getMaximumCurrentInput();
+		return getMaximumPowerInput();
 	}
 
 	public default boolean canAcceptCurrentType(Direction side, CurrentType type) {
@@ -25,7 +25,7 @@ public interface ISidedStaticPowerStorage extends IStaticPowerStorage {
 	}
 
 	public default double getMaximumCurrentOutput(Direction side) {
-		return getMaximumCurrentOutput();
+		return getMaximumPowerOutput();
 	}
 
 	public default CurrentType getOutputCurrentType(Direction side) {

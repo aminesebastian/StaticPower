@@ -20,8 +20,8 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.api.heat.HeatTooltipUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTier;
@@ -54,7 +54,7 @@ public class BlockHeatSink extends StaticPowerBlockEntityBlock {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 		tooltip.add(HeatTooltipUtilities.getHeatGenerationTooltip(tierObject.heatSinkElectricHeatGeneration.get()));
 		tooltip.add(new TextComponent(ChatFormatting.GRAY + "Generation Usage: ")
-				.append(StaticPowerEnergyTextUtilities.formatPowerRateToString(tierObject.heatSinkElectricHeatPowerUsage.get())).withStyle(ChatFormatting.RED));
+				.append(PowerTextFormatting.formatPowerRateToString(tierObject.heatSinkElectricHeatPowerUsage.get())).withStyle(ChatFormatting.RED));
 	}
 
 	@Override

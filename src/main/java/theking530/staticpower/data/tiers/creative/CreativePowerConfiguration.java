@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticpower.data.tiers.categories.TierPowerConfiguration;
 
 public class CreativePowerConfiguration extends TierPowerConfiguration {
@@ -23,13 +24,13 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
-	protected double getDefaultMaximumInputCurrent() {
+	protected double getDefaultMaximumPowerInput() {
 		return Double.MAX_VALUE;
 	}
 
 	@Override
-	protected double getDefaultOutputVoltage() {
-		return 12;
+	protected StaticPowerVoltage getDefaultOutputVoltage() {
+		return StaticPowerVoltage.LOW;
 	}
 
 	@Override

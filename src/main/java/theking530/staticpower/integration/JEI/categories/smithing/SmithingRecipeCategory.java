@@ -27,8 +27,8 @@ import net.minecraft.world.item.crafting.Ingredient;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.AutoSmithProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
@@ -164,7 +164,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 	public List<Component> getTooltipStrings(SmithingRecipeJEIWrapper recipe, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(new TextComponent("Usage: ").append(StaticPowerEnergyTextUtilities.formatPowerToString(recipe.getRecipe().getPowerCost() * recipe.getRecipe().getProcessingTime())));
+			output.add(new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(recipe.getRecipe().getPowerCost() * recipe.getRecipe().getProcessingTime())));
 		}
 
 		// Render the progress bar tooltip.

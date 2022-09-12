@@ -98,7 +98,7 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Abst
 
 	/**
 	 * Checks to see if we can move the inputs to the internal inventory for
-	 * processing. This is a separate module in this component so it peforms many
+	 * processing. This is a separate module in this component so it performs many
 	 * duplicate checks. Users could let this do all the work OR manually move items
 	 * to the internal inventory. In that case, the processing needs to perform some
 	 * checks.
@@ -194,31 +194,14 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Abst
 
 		// Now check the callback.
 		recipeProcessingCompleted.accept(recipe.get());
+		processingCompleted();
 		return ProcessingCheckState.ok();
 	}
 
 	protected ProcessingCheckState processingCompleted() {
-		// Check the super call.
-		ProcessingCheckState superCall = super.canContinueProcessing();
-		if (!superCall.isOk()) {
-			return superCall;
-		}
-
-		// Get the recipe.
-		Optional<T> recipe = getRecipe(RecipeProcessingPhase.PROCESSING);
-
-		// If there is a recipe, see if we can complete it. If there is no recipe, just
-		// return true so we don't get stuck in a loop. This is an edge case where a
-		// user may save mid processing, remove the recipe, and then reload.
-		if (recipe.isPresent()) {
-			recipeProcessingCompleted.accept(recipe.get());
-
-			// If the processing completed, check to see if we have another recipe ready. If
-			// so, set the move timer to the max value to make it immediately start. This is
-			// so that the move timer isn't factored in with large operations.
-			if (canMoveInputsToInternal().isOk()) {
-				moveTimer = MOVE_TIME;
-			}
+		// If we can immediately start processing again, do so without a move delay.
+		if (canMoveInputsToInternal().isOk()) {
+			moveTimer = MOVE_TIME;
 		}
 		return ProcessingCheckState.ok();
 	}

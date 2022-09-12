@@ -41,9 +41,9 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 
 	private double baseCapacity;
 	private StaticVoltageRange baseInputVoltageRange;
-	private double baseMaximumInputCurrent;
+	private double baseMaximumInputPower;
 	private double baseVoltageOutput;
-	private double baseMaximumOutputCurrent;
+	private double baseMaximumOutputPower;
 
 	private SideConfigurationComponent sideConfig;
 	private UpgradeInventoryComponent upgradeInventory;
@@ -70,9 +70,9 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(staticPowerTier);
 		setCapacity(tierObject.powerConfiguration.defaultPowerCapacity.get());
 		setInputVoltageRange(tierObject.powerConfiguration.getDefaultInputVoltageRange().copy());
-		setMaximumInputCurrent(tierObject.powerConfiguration.defaultMaximumInputCurrent.get());
-		setMaximumOutputCurrent(tierObject.powerConfiguration.defaultMaximumPowerOutput.get() / tierObject.powerConfiguration.defaultOutputVoltage.get());
-		setOutputVoltage(tierObject.powerConfiguration.defaultOutputVoltage.get());
+		setMaximumInputPower(tierObject.powerConfiguration.defaultMaximumInputPower.get());
+		setMaximumOutputPower(tierObject.powerConfiguration.defaultMaximumPowerOutput.get());
+		setOutputVoltage(tierObject.powerConfiguration.defaultOutputVoltage.get().getVoltage());
 	}
 
 	public PowerStorageComponent(String name, double capacity, double minInputVoltage, double maxInputVoltage, double maxInputcurrent, CurrentType[] acceptableInputCurrents,
@@ -89,7 +89,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		baseCapacity = capacity;
 		baseInputVoltageRange = new StaticVoltageRange(minInputVoltage, maxInputVoltage);
 		baseVoltageOutput = voltageOutput;
-		baseMaximumOutputCurrent = maxCurrentOutput;
+		baseMaximumOutputPower = maxCurrentOutput;
 
 		storage = new StaticPowerStorage(capacity, new StaticVoltageRange(minInputVoltage, maxInputVoltage), maxInputcurrent, acceptableInputCurrents, voltageOutput,
 				maxCurrentOutput, outputCurrentType);
@@ -150,9 +150,9 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		storage.setCapacity(baseCapacity * powerCapacityUpgradeMultiplier);
 		storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage() * powerOutputUpgradeMultiplier,
 				baseInputVoltageRange.maximumVoltage() * powerOutputUpgradeMultiplier));
-		storage.setMaximumInputCurrent(baseMaximumInputCurrent * powerOutputUpgradeMultiplier);
+		storage.setMaximumInputPower(baseMaximumInputPower * powerOutputUpgradeMultiplier);
 		storage.setOutputVoltage(baseVoltageOutput * powerOutputUpgradeMultiplier);
-		storage.setMaximumOutputCurrent(baseMaximumOutputCurrent * powerOutputUpgradeMultiplier);
+		storage.setMaximumOutputPower(baseMaximumOutputPower * powerOutputUpgradeMultiplier);
 	}
 
 	protected void handleNetworkSynchronization() {
@@ -237,9 +237,9 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return this;
 	}
 
-	public PowerStorageComponent setMaximumOutputCurrent(double currentOutput) {
-		storage.setMaximumOutputCurrent(currentOutput);
-		baseMaximumOutputCurrent = currentOutput;
+	public PowerStorageComponent setMaximumOutputPower(double powerOutput) {
+		storage.setMaximumOutputPower(powerOutput);
+		baseMaximumOutputPower = powerOutput;
 		markDirty();
 		return this;
 	}
@@ -257,9 +257,9 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return this;
 	}
 
-	public PowerStorageComponent setMaximumInputCurrent(double current) {
-		storage.setMaximumInputCurrent(current);
-		baseMaximumInputCurrent = current;
+	public PowerStorageComponent setMaximumInputPower(double powerInput) {
+		storage.setMaximumInputPower(powerInput);
+		baseMaximumInputPower = powerInput;
 		markDirty();
 		return this;
 	}
@@ -309,8 +309,8 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	}
 
 	@Override
-	public double getMaximumCurrentInput() {
-		return storage.getMaximumCurrentInput();
+	public double getMaximumPowerInput() {
+		return storage.getMaximumPowerInput();
 	}
 
 	@Override
@@ -324,8 +324,8 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	}
 
 	@Override
-	public double getMaximumCurrentOutput() {
-		return storage.getMaximumCurrentOutput();
+	public double getMaximumPowerOutput() {
+		return storage.getMaximumPowerOutput();
 	}
 
 	@Override
@@ -402,10 +402,6 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return storage.canSupplyPower(power);
 	}
 
-	public double getMaxOutputPower() {
-		return storage.getMaxOutputPower();
-	}
-
 	public PowerStorageComponent setAutoSyncPacketsEnabled(boolean enabled) {
 		issueSyncPackets = enabled;
 		return this;
@@ -424,7 +420,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	}
 
 	public double getBaseCurrentOutput() {
-		return baseMaximumOutputCurrent;
+		return baseMaximumOutputPower;
 	}
 
 	@Override

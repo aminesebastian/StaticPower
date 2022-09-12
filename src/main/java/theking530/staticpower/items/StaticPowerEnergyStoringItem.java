@@ -17,7 +17,7 @@ import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 
 /**
@@ -92,8 +92,8 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
 		double remainingCharge = EnergyHandlerItemStackUtilities.getStoredPower(stack);
 		double capacity = EnergyHandlerItemStackUtilities.getCapacity(stack);
-		tooltip.add(StaticPowerEnergyTextUtilities.formatPowerToString(remainingCharge, capacity));
-		tooltip.add(StaticPowerEnergyTextUtilities.formatVoltageRangeToString(EnergyHandlerItemStackUtilities.getInputVoltageRange(stack)));
+		tooltip.add(PowerTextFormatting.formatPowerToString(remainingCharge, capacity));
+		tooltip.add(PowerTextFormatting.formatVoltageRangeToString(EnergyHandlerItemStackUtilities.getInputVoltageRange(stack)));
 	}
 
 	public static class EnergyItemJEIInterpreter implements IIngredientSubtypeInterpreter<ItemStack> {

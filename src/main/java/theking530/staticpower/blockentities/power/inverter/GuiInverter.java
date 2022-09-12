@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.entity.player.Inventory;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
@@ -38,13 +38,13 @@ public class GuiInverter extends StaticPowerTileEntityGui<ContainerInverter, Blo
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 
 		// Render the output current.
-		font.draw(stack, "Current", 8, 36, 4210752);
-		String inputRateString = StaticPowerEnergyTextUtilities.formatCurrentToString(getTileEntity().powerStorage.getMaximumCurrentOutput()).getString();
+		font.draw(stack, "Power", 8, 36, 4210752);
+		String inputRateString = PowerTextFormatting.formatPowerRateToString(getTileEntity().powerStorage.getMaximumPowerOutput()).getString();
 		font.draw(stack, inputRateString, 28 - (font.width(inputRateString) / 2), 46, 4210752);
 
 		// Render the output voltage.
 		font.draw(stack, "Voltage", 131, 36, 4210752);
-		String outputRateString = StaticPowerEnergyTextUtilities.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
+		String outputRateString = PowerTextFormatting.formatVoltageToString(getTileEntity().powerStorage.getOutputVoltage()).getString();
 		font.draw(stack, outputRateString, 149 - (font.width(outputRateString) / 2), 46, 4210752);
 
 		// Add tooltip for the actual value of the input.

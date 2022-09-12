@@ -3,6 +3,7 @@ package theking530.staticpower.blockentities.power.solidgenerator;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
@@ -124,10 +125,8 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine {
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
 			if (SDMath.diceRoll(0.25f)) {
-				float randomOffset = (2 * getLevel().random.nextFloat()) - 1.0f;
-				randomOffset /= 3.5f;
-				float forwardOffset = getFacingDirection().getAxisDirection() == AxisDirection.POSITIVE ? -1.05f : -0.05f;
-				Vector3f forwardVector = SDMath.transformVectorByDirection(getFacingDirection(), new Vector3f(randomOffset + 0.5f, 0.32f, forwardOffset));
+				float randomOffset = ((2 * getLevel().random.nextFloat()) - 1.0f) / 3.5f;
+				Vector3f forwardVector = SDMath.translateRelativeOffset(getFacingDirection(), new Vector3f(1.0f, 0.32f, -0.5f + randomOffset));
 				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
 						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
 				getLevel().addParticle(ParticleTypes.FLAME, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),

@@ -257,7 +257,7 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTank> CreativeTank = registerBlock("tank_creative", () -> new BlockTank(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<PumpTube> PumpTube = registerBlock("pump_tube", () -> new PumpTube());
-	public static final RegistryObject<BlockPump> IronPump = registerBlock("pump_iron", () -> new BlockPump(StaticPowerTiers.IRON));
+	//public static final RegistryObject<BlockPump> IronPump = registerBlock("pump_iron", () -> new BlockPump(StaticPowerTiers.IRON));
 	public static final RegistryObject<BlockPump> BasicPump = registerBlock("pump_basic", () -> new BlockPump(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BlockPump> AdvancedPump = registerBlock("pump_advanced", () -> new BlockPump(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<BlockPump> StaticPump = registerBlock("pump_static", () -> new BlockPump(StaticPowerTiers.STATIC));

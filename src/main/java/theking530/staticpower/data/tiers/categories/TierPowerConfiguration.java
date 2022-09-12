@@ -1,9 +1,11 @@
 package theking530.staticpower.data.tiers.categories;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticpower.StaticPower;
 
@@ -13,9 +15,9 @@ public abstract class TierPowerConfiguration {
 	 ***********************/
 	public final ConfigValue<Double> defaultPowerCapacity;
 	public final ConfigValue<List<Double>> defaultInputVoltageRange;
-	public final ConfigValue<Double> defaultMaximumInputCurrent;
+	public final ConfigValue<Double> defaultMaximumInputPower;
 
-	public final ConfigValue<Double> defaultOutputVoltage;
+	public final ConfigValue<StaticPowerVoltage> defaultOutputVoltage;
 	public final ConfigValue<Double> defaultMaximumPowerOutput;
 
 	/*********************
@@ -42,8 +44,8 @@ public abstract class TierPowerConfiguration {
 
 		defaultInputVoltageRange = builder.comment("The input voltage range for powered blocks of this tier (in SV).")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultInputVoltageRange").define("DefaultInputVoltageRange", internalGetDefaultInputVoltageRange());
-		defaultMaximumInputCurrent = builder.comment("The maximum current a machine of this tier can take (in SA.")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMaximumInputCurrent").define("DefaultMaximumInputCurrent", getDefaultMaximumInputCurrent());
+		defaultMaximumInputPower = builder.comment("The maximum power a block of this tier can take (in SW.")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMaximumInputPower").define("DefaultMaximumInputPower", getDefaultMaximumPowerInput());
 
 		defaultOutputVoltage = builder.comment("The voltage a block uses internally when performing work (in SV).")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultOutputVoltage").define("DefaultOutputVoltage", getDefaultOutputVoltage());
@@ -77,31 +79,43 @@ public abstract class TierPowerConfiguration {
 
 	protected abstract double getDefaultPowerCapacity();
 
-	protected abstract List<Double> internalGetDefaultInputVoltageRange();
+	protected List<Double> internalGetDefaultInputVoltageRange() {
+		return Arrays.asList(0.0, getDefaultOutputVoltage().getVoltage());
+	}
 
-	public StaticVoltageRange getDefaultInputVoltageRange() {
+	public final StaticVoltageRange getDefaultInputVoltageRange() {
 		return new StaticVoltageRange(defaultInputVoltageRange.get().get(0), defaultInputVoltageRange.get().get(1));
 	}
 
-	protected abstract double getDefaultMaximumInputCurrent();
+	protected abstract double getDefaultMaximumPowerInput();
 
-	protected abstract double getDefaultOutputVoltage();
+	protected abstract StaticPowerVoltage getDefaultOutputVoltage();
 
-	protected abstract double getDefaultMaximumPowerOutput();
+	protected double getDefaultMaximumPowerOutput() {
+		return getDefaultOutputVoltage().getVoltage();
+	}
 
-	protected abstract double getBatteryCapacity();
+	protected double getBatteryCapacity() {
+		return getDefaultPowerCapacity() * 100;
+	}
 
 	protected abstract double getBatteryMaximumPowerOutput();
 
-	protected abstract double getBatteryOutputVoltage();
+	protected double getBatteryOutputVoltage() {
+		return getDefaultOutputVoltage().getVoltage();
+	}
 
-	protected abstract List<Double> internalGetTransformerVoltageRange();
+	protected List<Double> internalGetTransformerVoltageRange() {
+		return Arrays.asList(0.0, getDefaultOutputVoltage().getVoltage() * 2);
+	}
 
-	public StaticVoltageRange getTransformerVoltageRange() {
+	public final StaticVoltageRange getTransformerVoltageRange() {
 		return new StaticVoltageRange(transformerVoltageRange.get().get(0), transformerVoltageRange.get().get(1));
 	}
 
 	protected abstract double getSolarPanelPowerGeneration();
 
-	protected abstract double getSolarPanelPowerStorage();
+	protected double getSolarPanelPowerStorage() {
+		return getSolarPanelPowerGeneration();
+	}
 }

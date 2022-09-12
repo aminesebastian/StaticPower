@@ -21,8 +21,8 @@ import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
@@ -100,7 +100,7 @@ public class BottleRecipeCategory extends BaseJEIRecipeCategory<BottleRecipe> {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			output.add(new TextComponent("Usage: ")
-					.append(StaticPowerEnergyTextUtilities
+					.append(PowerTextFormatting
 							.formatPowerToString(StaticPowerConfig.SERVER.bottlerPowerUsage.get() * StaticPowerConfig.SERVER.bottlerProcessingTime.get())));
 		}
 

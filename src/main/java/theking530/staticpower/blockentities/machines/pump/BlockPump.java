@@ -61,9 +61,10 @@ public class BlockPump extends StaticPowerBlockEntityBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		if (tier == StaticPowerTiers.IRON) {
-			return BlockEntityPump.TYPE_IRON.create(pos, state);
-		} else if (tier == StaticPowerTiers.BASIC) {
+//		if (tier == StaticPowerTiers.IRON) {
+//			return BlockEntityPump.TYPE_IRON.create(pos, state);
+//		} else 
+		if (tier == StaticPowerTiers.BASIC) {
 			return BlockEntityPump.TYPE_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
 			return BlockEntityPump.TYPE_ADVANCED.create(pos, state);

@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -25,11 +24,10 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.IBreakSerializeable;
 import theking530.api.energy.StaticPowerStorage;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.client.rendering.blocks.DefaultMachineBakedModel;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
 	/**
@@ -65,11 +63,11 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 		return StaticPowerConfig.getTier(tier).powerConfiguration.getDefaultInputVoltageRange();
 	}
 
-	public double getMaximumInputCurrent() {
+	public double getMaximumInputPower() {
 		if (tier == null) {
 			return 0;
 		}
-		return StaticPowerConfig.getTier(tier).powerConfiguration.defaultMaximumInputCurrent.get();
+		return StaticPowerConfig.getTier(tier).powerConfiguration.defaultMaximumInputPower.get();
 	}
 
 	@OnlyIn(Dist.CLIENT)
@@ -80,8 +78,7 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 			CompoundTag nbt = IBreakSerializeable.getSerializeDataFromItemStack(stack);
 			if (nbt.contains("MainEnergyStorage") && nbt.getCompound("MainEnergyStorage").contains("storage")) {
 				StaticPowerStorage storage = StaticPowerStorage.fromTag(nbt.getCompound("MainEnergyStorage").getCompound("storage"));
-				GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.stored_power", ChatFormatting.GREEN,
-						StaticPowerEnergyTextUtilities.formatPowerToString(storage.getStoredPower()).getString());
+				PowerTooltips.addStoredPowerTooltip(tooltip, storage.getStoredPower());
 			}
 		}
 	}
@@ -90,13 +87,11 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 	@Override
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		if (getInputVoltageRange() != StaticVoltageRange.ZERO_VOLTAGE) {
-			GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.input_voltage", ChatFormatting.BLUE,
-					StaticPowerEnergyTextUtilities.formatVoltageRangeToString(getInputVoltageRange()).getString());
+			PowerTooltips.addVoltageInputTooltip(tooltip, getInputVoltageRange());
 		}
 
-		if (getMaximumInputCurrent() > 0) {
-			GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_input_current", ChatFormatting.RED,
-					StaticPowerEnergyTextUtilities.formatCurrentToString(getMaximumInputCurrent()).getString());
+		if (getMaximumInputPower() > 0) {
+			PowerTooltips.addMaximumInputPowerTooltip(tooltip, getMaximumInputPower());
 		}
 
 	}

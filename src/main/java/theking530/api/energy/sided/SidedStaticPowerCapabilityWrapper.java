@@ -55,7 +55,7 @@ public class SidedStaticPowerCapabilityWrapper {
 		}
 
 		@Override
-		public double getMaximumCurrentInput() {
+		public double getMaximumPowerInput() {
 			return proxy.getMaximumCurrentInput(representedSide);
 		}
 
@@ -70,7 +70,7 @@ public class SidedStaticPowerCapabilityWrapper {
 		}
 
 		@Override
-		public final double getMaximumCurrentOutput() {
+		public final double getMaximumPowerOutput() {
 			return proxy.getMaximumCurrentOutput(representedSide);
 		}
 

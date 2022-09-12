@@ -88,7 +88,7 @@ public class BlockItemCable extends AbstractCableBlock {
 		double blocksPerTick = StaticPowerConfig.getTier(tier).cableItemConfiguration.itemCableMaxSpeed.get();
 
 		tooltip.add(new TranslatableComponent("gui.staticpower.max_transfer_rate"));
-		tooltip.add(new TextComponent("� ").append(new TranslatableComponent("gui.staticpower.item_cable_transfer_rate",
+		tooltip.add(new TextComponent("• ").append(new TranslatableComponent("gui.staticpower.item_cable_transfer_rate",
 				ChatFormatting.GREEN + GuiTextUtilities.formatUnitRateToString(blocksPerTick).getString(), new TranslatableComponent("gui.staticpower.blocks").getString())));
 	}
 

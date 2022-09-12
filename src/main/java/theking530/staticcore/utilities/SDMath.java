@@ -145,6 +145,19 @@ public class SDMath {
 		return offset;
 	}
 
+	public static Vector3f translateRelativeOffset(Direction dir, Vector3f vector) {
+		if (dir == Direction.NORTH) {
+			return new Vector3f(vector.z() + 1, vector.y(), -vector.x() + 1);
+		} else if (dir == Direction.SOUTH) {
+			return new Vector3f(-vector.z(), vector.y(), vector.x());
+		} else if (dir == Direction.EAST) {
+			return new Vector3f(vector.x(), vector.y(), -vector.z());
+		} else if (dir == Direction.WEST) {
+			return new Vector3f(-vector.x() + 1, vector.y(), vector.z() + 1);
+		}
+		return vector;
+	}
+
 	public static float getAngleBetweenVectors(AbstractVector start, AbstractVector finish) {
 		AbstractVector normStart = start.copy();
 		AbstractVector normEnd = finish.copy();

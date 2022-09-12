@@ -101,6 +101,10 @@ public class ServerCable {
 		return dataTag.getInt(key);
 	}
 
+	public int getByteProperty(String key) {
+		return dataTag.getByte(key);
+	}
+
 	public float getFloatProperty(String key) {
 		return dataTag.getFloat(key);
 	}
@@ -127,6 +131,10 @@ public class ServerCable {
 
 	public void setProperty(String key, int value) {
 		dataTag.putInt(key, value);
+	}
+
+	public void setProperty(String key, byte value) {
+		dataTag.putByte(key, value);
 	}
 
 	public void setProperty(String key, boolean value) {

@@ -13,7 +13,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockSolidGenerator extends StaticPowerMachineBlock {
 
 	public BlockSolidGenerator() {
-		super(StaticPowerTiers.IRON);
+		super(StaticPowerTiers.BASIC);
 	}
 
 	@Override

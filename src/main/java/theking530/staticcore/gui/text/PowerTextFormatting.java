@@ -1,14 +1,15 @@
-package theking530.api.energy.utilities;
+package theking530.staticcore.gui.text;
 
 import java.text.NumberFormat;
 
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class StaticPowerEnergyTextUtilities {
+public class PowerTextFormatting {
 	/** Single instance of number formatter with two decimal places.. */
 	private static final NumberFormat NUMBER_FORMATTER_TWO_DECIMAL;
 	/** Single instance of number formatter with a single decimal place. */
@@ -133,44 +134,14 @@ public class StaticPowerEnergyTextUtilities {
 		if (range.minimumVoltage() == range.maximumVoltage()) {
 			return formatVoltageToString(range.maximumVoltage());
 		} else if (range.minimumVoltage() == 0) {
-			return new TextComponent("<").append(StaticPowerEnergyTextUtilities.formatVoltageToString(range.maximumVoltage()));
+			return new TextComponent("<").append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.maximumVoltage()).getShortName()));
+//			return new TextComponent("<").append(PowerTextFormatting.formatVoltageToString(range.maximumVoltage()));
 		} else if (range.maximumVoltage() == Double.MAX_VALUE) {
-			return new TextComponent(">").append(StaticPowerEnergyTextUtilities.formatVoltageToString(range.minimumVoltage()));
+			return new TextComponent("<").append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.minimumVoltage()).getShortName()));
+//			return new TextComponent(">").append(PowerTextFormatting.formatVoltageToString(range.minimumVoltage()));
 		} else {
 			return formatVoltageToString(range.minimumVoltage()).append("⇔").append(formatVoltageToString(range.maximumVoltage()));
 		}
-	}
-
-	public static MutableComponent formatCurrentToString(double current, boolean includeUnits, boolean includeMetricUnit) {
-		// Allocate the text component.
-		MutableComponent output;
-
-		// If the value is equal to the integer max, make it infinite.
-		if (Double.isInfinite(current) || current == Double.MAX_VALUE) {
-			output = new TextComponent("∞");
-		} else {
-			// Perform the metric conversion.
-			MetricConverter metricEnergy = new MetricConverter(current);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
-
-			// Include the metric unit if requested.
-			if (includeMetricUnit) {
-				output.append(metricEnergy.getSuffix());
-			}
-		}
-
-		if (includeUnits) {
-			output.append(CURRENT_UNIT);
-		}
-		return output;
-	}
-
-	public static MutableComponent formatCurrentToString(double current, boolean includeUnits) {
-		return formatCurrentToString(current, includeUnits, true);
-	}
-
-	public static MutableComponent formatCurrentToString(double current) {
-		return formatCurrentToString(current, true, true);
 	}
 
 	public static MutableComponent formatResistanceToString(double resistance, boolean includeUnits, boolean includeMetricUnit) {

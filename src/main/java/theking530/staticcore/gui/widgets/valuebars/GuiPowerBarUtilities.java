@@ -10,30 +10,29 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.client.gui.GuiTextures;
 
 public class GuiPowerBarUtilities {
-	public static List<Component> getTooltip(double storedPower, double capacity, double maximumInputCurrent, double minimumInputVoltage, double maximumInputVoltage) {
+	public static List<Component> getTooltip(double storedPower, double capacity, double maximumInptuPower, double minimumInputVoltage, double maximumInputVoltage) {
 		List<Component> tooltip = new ArrayList<Component>();
 
 		// Show the total amount of energy remaining / total energy capacity.
 		tooltip.add(new TranslatableComponent("gui.staticpower.stored_power").withStyle(ChatFormatting.GREEN).append(": ")
-				.append(ChatFormatting.WHITE + StaticPowerEnergyTextUtilities.formatPowerToString(storedPower, capacity).getString()));
+				.append(ChatFormatting.WHITE + PowerTextFormatting.formatPowerToString(storedPower, capacity).getString()));
 
 		// Add the input rate to the tooltip.
 		if (minimumInputVoltage == maximumInputVoltage) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.input").append(": ").append(StaticPowerEnergyTextUtilities.formatVoltageToString(minimumInputVoltage)));
+			tooltip.add(new TranslatableComponent("gui.staticpower.input").append(": ").append(PowerTextFormatting.formatVoltageToString(minimumInputVoltage)));
 		} else {
-			tooltip.add(new TranslatableComponent("gui.staticpower.input_voltage").withStyle(ChatFormatting.GOLD).append(": ").append(ChatFormatting.WHITE
-					+ StaticPowerEnergyTextUtilities.formatVoltageRangeToString(new StaticVoltageRange(minimumInputVoltage, maximumInputVoltage)).getString()));
+			tooltip.add(new TranslatableComponent("gui.staticpower.input_voltage").withStyle(ChatFormatting.GOLD).append(": ")
+					.append(ChatFormatting.WHITE + PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minimumInputVoltage, maximumInputVoltage)).getString()));
 		}
 
-		tooltip.add(new TranslatableComponent("gui.staticpower.max_input_current").withStyle(ChatFormatting.AQUA).append(": ")
-				.append(ChatFormatting.WHITE + StaticPowerEnergyTextUtilities.formatCurrentToString(maximumInputCurrent).getString()));
-
+		tooltip.add(new TranslatableComponent("gui.staticpower.max_input_power").withStyle(ChatFormatting.AQUA).append(": ")
+				.append(ChatFormatting.WHITE + PowerTextFormatting.formatPowerRateToString(maximumInptuPower).getString()));
 		return tooltip;
 	}
 

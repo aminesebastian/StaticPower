@@ -22,8 +22,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraftforge.fluids.FluidStack;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticpower.StaticPower;
@@ -112,7 +112,7 @@ public class FermenterRecipeCategory extends BaseJEIRecipeCategory<FermenterReci
 		// Add a tooltip for the energy bar.
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
 			output.add(new TextComponent("Usage: ")
-					.append(StaticPowerEnergyTextUtilities.formatPowerToString(StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get())));
+					.append(PowerTextFormatting.formatPowerToString(StaticPowerConfig.SERVER.fermenterPowerUsage.get() * StaticPowerConfig.SERVER.fermenterProcessingTime.get())));
 
 		}
 

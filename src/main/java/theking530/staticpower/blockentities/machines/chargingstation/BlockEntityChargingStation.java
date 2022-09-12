@@ -80,7 +80,7 @@ public class BlockEntityChargingStation extends BlockEntityMachine {
 				}
 
 				// Get the amount of power to apply to each item.
-				double maxOutput = (powerStorage.getOutputVoltage() * powerStorage.getMaximumCurrentOutput()) / count;
+				double maxOutput = (powerStorage.getOutputVoltage() * powerStorage.getMaximumPowerOutput()) / count;
 
 				// Attempt to charge each item.
 				for (int i = 0; i < unchargedInventory.getSlots(); i++) {

@@ -4,8 +4,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -23,9 +23,9 @@ public class GuiPowerInfoTab extends AbstractInfoTab {
 	public void tick() {
 		super.tick();
 		clear();
-		addKeyValueTwoLiner("Input", new TextComponent("Power Input"), StaticPowerEnergyTextUtilities.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()),
+		addKeyValueTwoLiner("Input", new TextComponent("Power Input"), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()),
 				ChatFormatting.GREEN);
-		addKeyValueTwoLiner("Usage", new TextComponent("Power Usage"), StaticPowerEnergyTextUtilities.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()),
+		addKeyValueTwoLiner("Usage", new TextComponent("Power Usage"), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()),
 				ChatFormatting.RED);
 	}
 }

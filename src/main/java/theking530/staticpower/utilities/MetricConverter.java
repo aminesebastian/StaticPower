@@ -29,8 +29,6 @@ public class MetricConverter {
 				}
 			}
 		} else if(Value < 1){
-			suffixIndex--;
-			Value *= 1000;
 			while (Value < 1) {
 				Value *= 1000;
 				suffixIndex--;

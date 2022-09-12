@@ -1,16 +1,14 @@
 package theking530.staticpower.cables.power;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityBase;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class TileEntityPowerCable extends BlockEntityBase {
@@ -56,11 +54,13 @@ public class TileEntityPowerCable extends BlockEntityBase {
 
 	public TileEntityPowerCable(BlockEntityTypeAllocator<TileEntityPowerCable> allocator, BlockPos pos, BlockState state, boolean isIndustrial) {
 		super(allocator, pos, state);
-		double maxCurrent = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerMaxCurrent.get()
-				: getTierObject().cablePowerConfiguration.cablePowerMaxCurrent.get();
+		StaticPowerVoltage voltage = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialMaxVoltage.get()
+				: getTierObject().cablePowerConfiguration.cableMaxVoltage.get();
+		double maxPower = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerMaxPower.get()
+				: getTierObject().cablePowerConfiguration.cablePowerMaxPower.get();
 		double resistance = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerResistancePerBlock.get()
 				: getTierObject().cablePowerConfiguration.cablePowerResistancePerBlock.get();
-		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, maxCurrent, resistance));
+		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, voltage, maxPower, resistance));
 	}
 
 	@Override

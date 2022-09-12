@@ -33,7 +33,7 @@ public class StaticPowerEnergyUtilities {
 	}
 
 	public static double getMaxOutputPower(IStaticPowerStorage storage) {
-		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(storage.getOutputVoltage(), storage.getMaximumCurrentOutput());
+		return StaticPowerEnergyUtilities.getPowerFromVoltageAndCurrent(storage.getOutputVoltage(), storage.getMaximumPowerOutput());
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class StaticPowerEnergyUtilities {
 	 */
 	public static boolean canSupplyPower(IStaticPowerStorage storage, double power) {
 		double requestedCurrent = getCurrentFromPower(power, storage.getOutputVoltage());
-		if (requestedCurrent > storage.getMaximumCurrentOutput()) {
+		if (requestedCurrent > storage.getMaximumPowerOutput()) {
 			return false;
 		}
 		return power >= storage.getCapacity();

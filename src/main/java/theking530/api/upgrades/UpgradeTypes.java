@@ -14,4 +14,5 @@ public class UpgradeTypes {
 	public static final UpgradeType DIGISTORE_ATTACHMENT = new UpgradeType(new ResourceLocation(StaticPower.MOD_ID, "digistore_attachment"));
 	public static final UpgradeType HEAT_CAPACITY = new UpgradeType(new ResourceLocation(StaticPower.MOD_ID, "heat_capacity"));
 	public static final UpgradeType HEAT = new UpgradeType(new ResourceLocation(StaticPower.MOD_ID, "heat"));
+	public static final UpgradeType POWER_TRANSFORMER = new UpgradeType(new ResourceLocation(StaticPower.MOD_ID, "power_transformer"));
 }

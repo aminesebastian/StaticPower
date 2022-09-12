@@ -48,9 +48,9 @@ import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityPump extends BlockEntityMachine {
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_IRON = new BlockEntityTypeAllocator<BlockEntityPump>(
-			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.IronPump);
+//	@BlockEntityTypePopulator()
+//	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_IRON = new BlockEntityTypeAllocator<BlockEntityPump>(
+//			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.IronPump);
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPump> TYPE_BASIC = new BlockEntityTypeAllocator<BlockEntityPump>(
 			(type, pos, state) -> new BlockEntityPump(type, pos, state), ModBlocks.BasicPump);
@@ -72,7 +72,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			TYPE_IRON.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
+			//TYPE_IRON.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
 			TYPE_BASIC.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
 			TYPE_ADVANCED.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
 			TYPE_STATIC.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);

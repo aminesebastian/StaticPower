@@ -4,13 +4,13 @@ public interface IStaticPowerStorage {
 
 	public StaticVoltageRange getInputVoltageRange();
 
-	public double getMaximumCurrentInput();
+	public double getMaximumPowerInput();
 
 	public boolean canAcceptCurrentType(CurrentType type);
 
 	public double getOutputVoltage();
 
-	public double getMaximumCurrentOutput();
+	public double getMaximumPowerOutput();
 
 	public CurrentType getOutputCurrentType();
 

@@ -21,7 +21,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
@@ -47,10 +47,12 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_current", ChatFormatting.RED,
-				StaticPowerEnergyTextUtilities.formatCurrentToString(tierObject.cablePowerConfiguration.cableIndustrialPowerMaxCurrent.get()).getString());
+		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.voltage", ChatFormatting.BLUE,
+				new TranslatableComponent(tierObject.cablePowerConfiguration.cableMaxVoltage.get().getShortName()).getString());
+		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_power", ChatFormatting.RED,
+				PowerTextFormatting.formatPowerRateToString(tierObject.cablePowerConfiguration.cableIndustrialPowerMaxPower.get()).getString());
 		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.power_resistance", ChatFormatting.GOLD,
-				StaticPowerEnergyTextUtilities.formatResistanceToString(tierObject.cablePowerConfiguration.cableIndustrialPowerResistancePerBlock.get()).getString());
+				PowerTextFormatting.formatResistanceToString(tierObject.cablePowerConfiguration.cableIndustrialPowerResistancePerBlock.get()).getString());
 
 		tooltip.add(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}

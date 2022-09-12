@@ -209,18 +209,6 @@ public class GuiTextUtilities {
 		return new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(Double.isNaN(number) ? 0 : number * 100)).append("%");
 	}
 
-	public static MutableComponent createTooltipBulletpoint(String localizationKey, ChatFormatting color) {
-		return new TextComponent("• " + new TranslatableComponent(localizationKey).getString() + " ").withStyle(color);
-	}
-
-	public static MutableComponent createTooltipBulletpoint(String localizationKey, Component value, ChatFormatting color) {
-		return createTooltipBulletpoint(localizationKey, value, color, ChatFormatting.WHITE);
-	}
-
-	public static MutableComponent createTooltipBulletpoint(String localizationKey, Component value, ChatFormatting keyColor, ChatFormatting ValueColor) {
-		return new TextComponent(keyColor + "• " + new TranslatableComponent(localizationKey).getString()).append(": ").append(ValueColor + value.getString());
-	}
-
 	public static void addColoredBulletTooltip(List<Component> tooltip, String key, ChatFormatting keyColor, String value) {
 		addColoredBulletTooltip(tooltip, key, Style.EMPTY.withColor(keyColor), value, Style.EMPTY.withColor(ChatFormatting.WHITE));
 	}

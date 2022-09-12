@@ -1,14 +1,26 @@
 package theking530.api.energy;
 
+import java.util.function.Supplier;
+
+import theking530.staticpower.StaticPowerConfig;
+
 public enum StaticPowerVoltage {
-	VERY_LOW(5, "very_low"), LOW(12, "low"), NORMAL(120, "normal"), MEDIUM(240, "medium"), HIGH(480, "high"), VERY_HIGH(1000, "very_high"), EXTREME(10000, "extreme");
+	LOW("low_voltage", StaticPowerConfig.SERVER.lowVoltage), MEDIUM("medium_voltage", StaticPowerConfig.SERVER.mediumVoltage),
+	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage), VERY_HIGH("very_high_voltage", StaticPowerConfig.SERVER.veryHighVoltage),
+	EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage);
 
 	private String unlocalizedName;
-	private double voltage;
+	private String shortName;
+	private Supplier<Double> voltageSupplier;
 
-	private StaticPowerVoltage(double voltage, String unlocalizedName) {
-		this.unlocalizedName = "gui.staticpower.mode." + unlocalizedName;
-		this.voltage = voltage;
+	private StaticPowerVoltage(String unlocalizedName, Supplier<Double> voltageSupplier) {
+		this.unlocalizedName = "gui.staticpower.voltage.full_name." + unlocalizedName;
+		this.shortName = "gui.staticpower.voltage.short_name." + unlocalizedName;
+		this.voltageSupplier = voltageSupplier;
+	}
+
+	public String getShortName() {
+		return shortName;
 	}
 
 	public String getUnlocalizedName() {
@@ -16,6 +28,16 @@ public enum StaticPowerVoltage {
 	}
 
 	public double getVoltage() {
-		return voltage;
+		return voltageSupplier.get();
+	}
+
+	public static StaticPowerVoltage getVoltageClass(double voltage) {
+		voltage = Math.abs(voltage);
+		for (StaticPowerVoltage tier : StaticPowerVoltage.values()) {
+			if (voltage <= tier.getVoltage()) {
+				return tier;
+			}
+		}
+		return StaticPowerVoltage.EXTREME;
 	}
 }

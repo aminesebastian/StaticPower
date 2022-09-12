@@ -68,7 +68,7 @@ public class EnergyHandlerItemStackUtilities {
 		if (cap == null) {
 			return 0;
 		}
-		return cap.getMaximumCurrentInput();
+		return cap.getMaximumPowerInput();
 	}
 
 	public static double getStoredPower(ItemStack container) {
@@ -100,7 +100,7 @@ public class EnergyHandlerItemStackUtilities {
 		if (cap == null) {
 			return 0;
 		}
-		return cap.getMaximumCurrentOutput();
+		return cap.getMaximumPowerOutput();
 	}
 
 	public static double addPower(ItemStack container, PowerStack power, boolean simulate) {

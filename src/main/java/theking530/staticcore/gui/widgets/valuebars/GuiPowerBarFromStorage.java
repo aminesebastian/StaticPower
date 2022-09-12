@@ -28,7 +28,7 @@ public class GuiPowerBarFromStorage extends AbstractGuiWidget<GuiPowerBarFromSto
 
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		tooltips.addAll(GuiPowerBarUtilities.getTooltip(energyStorage.getStoredPower(), energyStorage.getCapacity(), energyStorage.getMaximumCurrentInput(),
+		tooltips.addAll(GuiPowerBarUtilities.getTooltip(energyStorage.getStoredPower(), energyStorage.getCapacity(), energyStorage.getMaximumPowerInput(),
 				energyStorage.getInputVoltageRange().minimumVoltage(), energyStorage.getInputVoltageRange().maximumVoltage()));
 	}
 }

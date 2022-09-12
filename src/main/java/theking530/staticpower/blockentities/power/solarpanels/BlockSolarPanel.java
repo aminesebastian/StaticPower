@@ -22,7 +22,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.utilities.StaticPowerEnergyTextUtilities;
+import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -48,7 +48,7 @@ public class BlockSolarPanel extends StaticPowerBlockEntityBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		tooltip.add(new TextComponent(ChatFormatting.GREEN.toString() + " • Generation ")
-				.append(StaticPowerEnergyTextUtilities.formatPowerRateToString(StaticPowerConfig.getTier(tier).powerConfiguration.solarPanelPowerGeneration.get())));
+				.append(PowerTextFormatting.formatPowerRateToString(StaticPowerConfig.getTier(tier).powerConfiguration.solarPanelPowerGeneration.get())));
 	}
 
 	@Override

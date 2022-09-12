@@ -1,6 +1,7 @@
 package theking530.api.energy;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Queue;
 
 import net.minecraft.nbt.CompoundTag;
@@ -17,13 +18,19 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 	protected Queue<Double> receiveCaptureFrames;
 	protected Queue<Double> extractCaptureFrames;
 
-	protected PowerStack currentRecievedPower;
-	protected PowerStack lastRecievedPower;
+	protected Queue<Double> voltageCaptureFrames;
+	protected Queue<Double> currentCaptureFrames;
+
+	protected List<PowerStack> currentTickRecievedPower;
 
 	protected double currentFrameEnergyReceived;
 	protected double currentFrameEnergyExtracted;
 	protected double averageRecieved;
 	protected double averageExtracted;
+
+	protected double averageVoltage;
+	protected double averageCurrent;
+	protected CurrentType lastCurrentType;
 
 	public StaticPowerEnergyTracker() {
 		this(MAXIMUM_IO_CAPTURE_FRAMES);
@@ -34,8 +41,10 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 		ioCaptureFrames = new LinkedList<>();
 		receiveCaptureFrames = new LinkedList<>();
 		extractCaptureFrames = new LinkedList<>();
-		currentRecievedPower = PowerStack.EMPTY;
-		lastRecievedPower = PowerStack.EMPTY;
+		voltageCaptureFrames = new LinkedList<>();
+		currentCaptureFrames = new LinkedList<>();
+		currentTickRecievedPower = new LinkedList<>();
+		lastCurrentType = CurrentType.DIRECT;
 	}
 
 	public void tick(Level level) {
@@ -73,6 +82,27 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 			extractCaptureFrames.poll();
 		}
 
+		double currentTickAverageVoltage = 0;
+		double currentTickAverageCurrent = 0;
+		for (PowerStack stack : currentTickRecievedPower) {
+			currentTickAverageVoltage += stack.getVoltage();
+			currentTickAverageCurrent += stack.getCurrent();
+		}
+		currentTickAverageVoltage /= Math.max(1, currentTickRecievedPower.size());
+		currentTickAverageCurrent /= Math.max(1, currentTickRecievedPower.size());
+
+		// Capture Voltage
+		voltageCaptureFrames.add(currentTickAverageVoltage);
+		if (voltageCaptureFrames.size() > maxIoCaptureFrames) {
+			voltageCaptureFrames.poll();
+		}
+
+		// Capture Current
+		currentCaptureFrames.add(currentTickAverageCurrent);
+		if (currentCaptureFrames.size() > maxIoCaptureFrames) {
+			currentCaptureFrames.poll();
+		}
+
 		// Cache the average extracted rate.
 		averageExtracted = 0;
 		for (double value : extractCaptureFrames) {
@@ -87,23 +117,33 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 		}
 		averageRecieved /= Math.max(1, receiveCaptureFrames.size());
 
-		// Induce one tick of lag on this metric to make sure we get a correct value in
-		// the gui.
-		lastRecievedPower = currentRecievedPower;
+		// Cache the average voltage.
+		averageVoltage = 0;
+		for (double value : voltageCaptureFrames) {
+			averageVoltage += value;
+		}
+		averageVoltage /= Math.max(1, voltageCaptureFrames.size());
+
+		// Cache the average current.
+		averageCurrent = 0;
+		for (double value : currentCaptureFrames) {
+			averageCurrent += value;
+		}
+		averageCurrent /= Math.max(1, currentCaptureFrames.size());
 
 		// Reset the values.
 		currentFrameEnergyReceived = 0;
 		currentFrameEnergyExtracted = 0;
-		currentRecievedPower = PowerStack.EMPTY;
+		lastCurrentType = CurrentType.DIRECT;
+		currentTickRecievedPower.clear();
 	}
 
 	public void powerAdded(PowerStack stack) {
-		if(stack.getVoltage() == 0) {
-			System.out.println(stack.getVoltage());
-		}
-
 		currentFrameEnergyReceived += stack.getPower();
-		currentRecievedPower = stack.copy();
+		currentTickRecievedPower.add(stack.copy());
+		if (stack.getCurrentType() == CurrentType.ALTERNATING) {
+			lastCurrentType = CurrentType.ALTERNATING;
+		}
 	}
 
 	public void powerDrained(double power) {
@@ -119,31 +159,37 @@ public class StaticPowerEnergyTracker implements INBTSerializable<CompoundTag> {
 	}
 
 	public double getLastRecievedVoltage() {
-		return lastRecievedPower.getVoltage();
+		return averageVoltage;
 	}
 
 	public double getLastRecievedCurrent() {
-		return lastRecievedPower.getCurrent();
+		return averageCurrent;
 	}
 
 	public CurrentType getLastRecievedCurrentType() {
-		return lastRecievedPower.getCurrentType();
+		return lastCurrentType;
 	}
 
 	@Override
 	public CompoundTag serializeNBT() {
 		CompoundTag output = new CompoundTag();
-		output.putDouble("avgRecieved", averageRecieved);
-		output.putDouble("avgExtracted", averageExtracted);
-		output.put("lastPower", lastRecievedPower.serialize());
+		output.putDouble("avgRe", averageRecieved);
+		output.putDouble("avgEx", averageExtracted);
+
+		output.putDouble("avgV", averageVoltage);
+		output.putDouble("avgC", averageCurrent);
+		output.putByte("lastCT", (byte) lastCurrentType.ordinal());
 
 		return output;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundTag nbt) {
-		averageRecieved = nbt.getDouble("avgRecieved");
-		averageExtracted = nbt.getDouble("avgExtracted");
-		lastRecievedPower = PowerStack.deserialize(nbt.getCompound("lastPower"));
+		averageRecieved = nbt.getDouble("avgRe");
+		averageExtracted = nbt.getDouble("avgEx");
+
+		averageVoltage = nbt.getDouble("avgV");
+		averageCurrent = nbt.getDouble("avgC");
+		lastCurrentType = CurrentType.values()[nbt.getByte("lastCT")];
 	}
 }

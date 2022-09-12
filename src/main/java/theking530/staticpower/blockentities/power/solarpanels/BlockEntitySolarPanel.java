@@ -5,8 +5,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
+import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -15,7 +16,6 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
@@ -52,13 +52,15 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 	public BlockEntitySolarPanel(BlockEntityTypeAllocator<BlockEntitySolarPanel> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		// Set the values based on the tier.
-		StaticPowerTier tier = getTierObject();
 		isCreative = getTier() == StaticPowerTiers.CREATIVE;
-		generationPerTick = tier.powerConfiguration.solarPanelPowerGeneration.get();
+		generationPerTick = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 
 		// Set the energy storage.
-		registerComponent(powerStorage = new PowerStorageComponent("PowerBuffer", tier.powerConfiguration.solarPanelPowerStorage.get(), Double.MAX_VALUE, Double.MAX_VALUE,
-				Double.MAX_VALUE, new CurrentType[] { CurrentType.DIRECT }, tier.powerConfiguration.solarPanelPowerGeneration.get(), 1, CurrentType.DIRECT));
+		registerComponent(powerStorage = new PowerStorageComponent("Powerbuffer", getTier()));
+		powerStorage.setCapacity(getTierObject().powerConfiguration.solarPanelPowerStorage.get());
+		powerStorage.setOutputVoltage(StaticPowerVoltage.LOW.getVoltage());
+		powerStorage.setMaximumOutputPower(generationPerTick);
+		powerStorage.setInputVoltageRange(new StaticVoltageRange(StaticPowerVoltage.LOW.getVoltage(), StaticPowerVoltage.LOW.getVoltage()));
 		powerStorage.setSideConfiguration(sideConfiguration);
 
 		// Set the side config to only output on the bottom and disable on the rest.
