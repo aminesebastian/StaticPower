@@ -352,13 +352,13 @@ public class StaticPowerConfig {
 				lowVoltage = builder.comment("The voltage level associated with low voltage power.").translation(StaticPower.MOD_ID + ".config." + "lowVoltage")
 						.define("LowVoltage", 10.0);
 				mediumVoltage = builder.comment("The voltage level associated with medium voltage power.").translation(StaticPower.MOD_ID + ".config." + "mediumVoltage")
-						.define("MediumVoltage", 50.0);
+						.define("MediumVoltage", 100.0);
 				highVoltage = builder.comment("The voltage level associated with high voltage power.").translation(StaticPower.MOD_ID + ".config." + "highVoltage")
-						.define("HighVoltage", 100.0);
+						.define("HighVoltage", 1000.0);
 				veryHighVoltage = builder.comment("The voltage level associated with very high voltage power.").translation(StaticPower.MOD_ID + ".config." + "veryHighVoltage")
-						.define("VeryHighVoltage", 1000.0);
+						.define("VeryHighVoltage", 10000.0);
 				extremeVoltage = builder.comment("The voltage level associated with extreme voltage power.").translation(StaticPower.MOD_ID + ".config." + "extremeVoltage")
-						.define("ExtremeVoltage", 10000.0);
+						.define("ExtremeVoltage", 100000.0);
 			}
 			builder.pop();
 

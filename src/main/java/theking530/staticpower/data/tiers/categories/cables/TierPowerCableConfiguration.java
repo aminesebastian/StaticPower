@@ -8,11 +8,11 @@ import theking530.staticpower.StaticPower;
 public abstract class TierPowerCableConfiguration {
 	public final ConfigValue<StaticPowerVoltage> cableMaxVoltage;
 	public final ConfigValue<Double> cablePowerMaxPower;
-	public final ConfigValue<Double> cablePowerResistancePerBlock;
+	public final ConfigValue<Double> cablePowerLossPerBlock;
 
 	public final ConfigValue<StaticPowerVoltage> cableIndustrialMaxVoltage;
 	public final ConfigValue<Double> cableIndustrialPowerMaxPower;
-	public final ConfigValue<Double> cableIndustrialPowerResistancePerBlock;
+	public final ConfigValue<Double> cableIndustrialPowerLossPerBlock;
 
 	public TierPowerCableConfiguration(ForgeConfigSpec.Builder builder) {
 		builder.push("Power");
@@ -20,18 +20,18 @@ public abstract class TierPowerCableConfiguration {
 				.define("CableMaxVoltage", getCableMaxVoltage());
 		cablePowerMaxPower = builder.comment("The amount of power a cable of this tier can transfer.").translation(StaticPower.MOD_ID + ".config." + "cablePowerMaxPower")
 				.define("CablePowerMaxPower", getCableMaxPower());
-		cablePowerResistancePerBlock = builder.comment(
+		cablePowerLossPerBlock = builder.comment(
 				"The resistance of this cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
-				.translation(StaticPower.MOD_ID + ".config." + "cablePowerResistancePerBlock").define("CablePowerResistancePerBlock", this.getCablePowerResistancePerBlock());
+				.translation(StaticPower.MOD_ID + ".config." + "cablePowerLossPerBlock").define("CablePowerLossPerBlock", this.getCablePowerLossPerBlock());
 
 		cableIndustrialMaxVoltage = builder.comment("The highest voltage an industrial cable of this tier can transfer before burning.")
 				.translation(StaticPower.MOD_ID + ".config." + "CableIndustrialMaxVoltage").define("cableIndustrialMaxVoltage", this.getCableIndustrialMaxVoltage());
 		cableIndustrialPowerMaxPower = builder.comment("The amount of power an industrial cable of this tier can transfer.")
 				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerMaxPower").define("CableIndustrialPowerMaxPower", getCableIndustrialPowerMaxPower());
-		cableIndustrialPowerResistancePerBlock = builder.comment(
+		cableIndustrialPowerLossPerBlock = builder.comment(
 				"The resistance of this industrial cable per block. This value is totaled along the path from the power provider to the power destination to determine how much power is lost during the transfer.")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerResistancePerBlock")
-				.define("CableIndustrialPowerResistancePerBlock", this.getCableIndustrialPowerResistancePerBlock());
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialPowerLossPerBlock")
+				.define("CableIndustrialPowerLossPerBlock", this.cableIndustrialPowerLossPerBlock());
 		builder.pop();
 	}
 
@@ -39,7 +39,7 @@ public abstract class TierPowerCableConfiguration {
 
 	protected abstract double getCableMaxPower();
 
-	protected abstract double getCablePowerResistancePerBlock();
+	protected abstract double getCablePowerLossPerBlock();
 
 	protected StaticPowerVoltage getCableIndustrialMaxVoltage() {
 		return getCableMaxVoltage();
@@ -49,7 +49,7 @@ public abstract class TierPowerCableConfiguration {
 		return getCableMaxPower() * 10;
 	}
 
-	protected double getCableIndustrialPowerResistancePerBlock() {
-		return getCablePowerResistancePerBlock() * 10;
+	protected double cableIndustrialPowerLossPerBlock() {
+		return getCablePowerLossPerBlock() * 10;
 	}
 }

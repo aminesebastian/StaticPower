@@ -54,6 +54,7 @@ import theking530.api.attributes.defenitions.GrindingAttributeDefenition;
 import theking530.api.attributes.defenitions.HasteAttributeDefenition;
 import theking530.api.attributes.defenitions.SilkTouchAttributeDefenition;
 import theking530.api.attributes.defenitions.SmeltingAttributeDefenition;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
@@ -85,26 +86,24 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 		PARTS.add(MultiPartSlots.DRILL_BIT);
 	}
 
-	public double getPowerCapacity() {
-		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 2;
+	public double getCapacity() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 2;
 	}
 
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(tier).getPortableBatteryChargingVoltage();
+		return StaticPowerConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
 	}
 
-	public double getMaximumInputCurrent() {
-		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+	public double getMaximumInputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
 	}
 
-	public double getOutputVoltage() {
-		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
-
+	public StaticPowerVoltage getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
 	}
 
-	public double getMaximumOutputCurrent() {
-		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
-
+	public double getMaximumOutputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 
 	public ItemStack getFilledVariant() {
@@ -374,8 +373,8 @@ public class MiningDrill extends AbstractMultiHarvestTool implements ICustomMode
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getPowerCapacity(), getInputVoltageRange(), getMaximumInputCurrent(), getOutputVoltage(),
-						getMaximumOutputCurrent()));
+				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(), getInputVoltageRange(), getMaximumInputPower(),
+						getOutputVoltage().getVoltage(), getMaximumOutputPower()));
 	}
 
 	@Override

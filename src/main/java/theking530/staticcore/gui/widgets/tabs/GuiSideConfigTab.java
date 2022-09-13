@@ -19,7 +19,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -32,8 +31,8 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
-import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent.SideIncrementDirection;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.init.ModKeyBindings;
@@ -54,19 +53,14 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	public GuiSideConfigTab(BlockEntityBase te) {
 		super("Side Config", Color.EIGHT_BIT_WHITE, 110, 105, new Color(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
 		tileEntity = te;
-
-		rotation = new Vector2D(55, -25);
 		rotationVelocity = new Vector2D(0, 0);
 		mouseDownLocation = new Vector2D(0, 0);
 
 		// Rotate initially to reflect the angle the player is looking from.
-		@SuppressWarnings("resource")
-		Player player = Minecraft.getInstance().player;
-		Vec3 eyeLocation = player.getPosition(0.5f);
-		Vec3 blockPosition = new Vec3(tileEntity.getBlockPos().getX(), tileEntity.getBlockPos().getY(), tileEntity.getBlockPos().getZ());
-		Vec3 direction = eyeLocation.subtract(blockPosition).normalize();
+		Vec3 direction = getLocalPlayer().getLookAngle();
 		double xAngle = Math.toDegrees(Math.atan2(direction.x(), direction.z()));
-		rotation = new Vector2D(xAngle, -25);
+		double yAngle = Math.toDegrees(Math.asin(direction.y()));
+		rotation = new Vector2D(xAngle + 180, yAngle);
 	}
 
 	@Override
@@ -103,8 +97,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
 		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
 		matrix.pushPose();
-		matrix.translate(73f, 41.2f, 50);
-		matrix.scale(-38, 38, 38);
+		matrix.translate(75f, 40.75f, 50);
+		matrix.scale(-39, 39, 39);
 		matrix.translate(0.5f, 0.5f, 0.5f);
 		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
 		matrix.translate(-0.5f, -0.5f, -0.5f);
@@ -117,7 +111,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		Vector4f mouseMin = createMouseVector(inverse, mouseX, mouseY, 1000);
 		Vector4f mouseMax = createMouseVector(inverse, mouseX, mouseY, -1000);
 
-		BlockHitResult result = AABB.clip(Collections.singleton(BOUNDS), new Vec3(mouseMin.x(), mouseMin.y(), mouseMin.z()), new Vec3(mouseMax.x(), mouseMax.y(), mouseMax.z()), new BlockPos(0, 0, 0));
+		BlockHitResult result = AABB.clip(Collections.singleton(BOUNDS), new Vec3(mouseMin.x(), mouseMin.y(), mouseMin.z()), new Vec3(mouseMax.x(), mouseMax.y(), mouseMax.z()),
+				new BlockPos(0, 0, 0));
 		if (result != null) {
 			highlightedSide = result.getDirection();
 			SideConfigurationComponent sideConfig = tileEntity.getComponent(SideConfigurationComponent.class);

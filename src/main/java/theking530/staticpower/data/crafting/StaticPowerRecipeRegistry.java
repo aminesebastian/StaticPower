@@ -57,10 +57,10 @@ public class StaticPowerRecipeRegistry {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerRecipeRegistry.class);
 
 	@SuppressWarnings("rawtypes")
-	public static final HashMap<RecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<>();
-	public static final Map<ResourceLocation, SmeltingRecipe> FURNACE_RECIPES = new HashMap<>();
-	public static final Map<ResourceLocation, CraftingRecipe> CRAFTING_RECIPES = new HashMap<>();
-	public static final Map<ResourceLocation, Set<ResourceLocation>> LOCKED_RECIPES = new LinkedHashMap<>();
+	private static final HashMap<RecipeType, LinkedList<AbstractStaticPowerRecipe>> RECIPES = new HashMap<>();
+	private static final Map<ResourceLocation, SmeltingRecipe> FURNACE_RECIPES = new HashMap<>();
+	private static final Map<ResourceLocation, CraftingRecipe> CRAFTING_RECIPES = new HashMap<>();
+	private static final Map<ResourceLocation, Set<ResourceLocation>> LOCKED_RECIPES = new LinkedHashMap<>();
 
 	/**
 	 * Attempts to find a recipe of the given type that matches the provided
@@ -140,6 +140,17 @@ public class StaticPowerRecipeRegistry {
 
 		// If we find no match, return empty.
 		return Optional.empty();
+	}
+
+	public static Optional<CraftingRecipe> getCraftingRecipe(ResourceLocation id) {
+		if (CRAFTING_RECIPES.containsKey(id)) {
+			return Optional.of(CRAFTING_RECIPES.get(id));
+		}
+		return Optional.empty();
+	}
+
+	public static Map<ResourceLocation, SmeltingRecipe> getAllFurnaceRecipes() {
+		return FURNACE_RECIPES;
 	}
 
 	/**

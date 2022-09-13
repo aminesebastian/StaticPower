@@ -16,6 +16,7 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -33,12 +34,14 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<ThermalConductivityJEIRecipeWrapper> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity");
+	public static final RecipeType<ThermalConductivityJEIRecipeWrapper> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "thermal_conductivity"),
+			ThermalConductivityJEIRecipeWrapper.class);
 
 	private final TranslatableComponent locTitle;
 	private final IDrawable background;
@@ -48,13 +51,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		super(guiHelper);
 		locTitle = new TranslatableComponent("gui.staticpower.heat");
 		background = guiHelper.createBlankDrawable(170, 45);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.CopperHeatSink.get()));
-	}
-
-	@Override
-	@Nonnull
-	public ResourceLocation getUid() {
-		return UID;
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.CopperHeatSink.get()));
 	}
 
 	@Override
@@ -79,27 +76,47 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		return icon;
 	}
 
+	@Override
+	@Nonnull
+	public RecipeType<ThermalConductivityJEIRecipeWrapper> getRecipeType() {
+		return TYPE;
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public void draw(ThermalConductivityJEIRecipeWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
+		// TODO: Clean this up to support the new thermal system.
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 5, 5, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, 135, 35, 30, 5, 0);
 
-		int yPos = 15;
+		int yPos = 14;
 		int xPos = 160;
 
 		if (recipe.getRecipe().hasActiveTemperature()) {
-			String temperature = new TextComponent("Temperature: ").append(ChatFormatting.BLUE.toString())
+			String temperature = new TextComponent("Temperature: ").append(ChatFormatting.GOLD.toString())
 					.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getTemperature())).getString();
 			GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
-			yPos += 10;
+			yPos += 11;
 		}
+
+		String temperature = new TextComponent("Conductivity: ").append(ChatFormatting.GREEN.toString())
+				.append(GuiTextUtilities.formatConductivityToString(recipe.getRecipe().getConductivity())).getString();
+		GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+		yPos += 11;
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
 			String overheatTemp = new TextComponent("<- Overheat: ").append(ChatFormatting.RED.toString())
 					.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
 			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
-			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, 30f, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			yPos += 11;
+		}
+
+		if (recipe.getRecipe().hasFreezeBehaviour()) {
+			String overheatTemp = new TextComponent("<- Freeze: ").append(ChatFormatting.RED.toString())
+					.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getFreezingTemperature())).getString();
+			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
 		}
 
 		if (!recipe.getFluidInput().isEmpty()) {

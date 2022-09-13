@@ -18,6 +18,7 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -40,12 +41,14 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
+import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
+import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "cauldron");
+	public static final RecipeType<CauldronRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "cauldron"), CauldronRecipe.class);
 	private static final int INPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 	private static final int INPUT_FLUID_SLOT = 2;
@@ -61,14 +64,8 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.RustyCauldron.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 55);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.RustyCauldron.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.RustyCauldron.get()));
 		arrow = new ArrowProgressBar(57, 16);
-	}
-
-	@Override
-	@Nonnull
-	public ResourceLocation getUid() {
-		return UID;
 	}
 
 	@Override
@@ -91,6 +88,12 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 	@Override
 	public IDrawable getIcon() {
 		return icon;
+	}
+
+	@Override
+	@Nonnull
+	public RecipeType<CauldronRecipe> getRecipeType() {
+		return TYPE;
 	}
 
 	@SuppressWarnings("deprecation")

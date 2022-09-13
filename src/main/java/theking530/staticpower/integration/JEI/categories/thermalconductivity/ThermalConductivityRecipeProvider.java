@@ -6,6 +6,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import mezz.jei.api.recipe.IFocus;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.resources.ResourceKey;
@@ -93,22 +95,22 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 	}
 
 	@Override
-	public <V> List<ResourceLocation> getRecipeCategoryUids(IFocus<V> focus) {
-		if (focus.getValue() instanceof ItemStack) {
+	public <V> List<RecipeType<?>> getRecipeTypes(IFocus<V> focus) {
+		if (focus.getTypedValue().getIngredient() instanceof ItemStack) {
 			ItemStack itemStack = (ItemStack) focus.getValue();
-			if (focus.getMode() == IFocus.Mode.OUTPUT) {
+			if (focus.getRole() == RecipeIngredientRole.OUTPUT) {
 				if (isValidOverheatingOutput(itemStack)) {
-					return Collections.singletonList(ThermalConductivityRecipeCategory.UID);
+					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
 				}
-			} else if (focus.getMode() == IFocus.Mode.INPUT) {
+			} else if (focus.getRole() == RecipeIngredientRole.INPUT) {
 				if (hasThermalConductivity(itemStack)) {
-					return Collections.singletonList(ThermalConductivityRecipeCategory.UID);
+					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
 				}
 			}
-		} else if (focus.getValue() instanceof FluidStack) {
-			if (focus.getMode() == IFocus.Mode.INPUT) {
+		} else if (focus.getTypedValue().getIngredient() instanceof FluidStack) {
+			if (focus.getRole() == RecipeIngredientRole.INPUT) {
 				if (hasThermalConductivity((FluidStack) focus.getValue())) {
-					return Collections.singletonList(ThermalConductivityRecipeCategory.UID);
+					return Collections.singletonList(ThermalConductivityRecipeCategory.TYPE);
 				}
 			}
 		}
@@ -119,7 +121,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 	@Override
 	public <T> List<T> getRecipes(IRecipeCategory<T> recipeCategory) {
 		// Check the category.
-		if (recipeCategory != null && !ThermalConductivityRecipeCategory.UID.equals(recipeCategory.getUid())) {
+		if (recipeCategory != null && !ThermalConductivityRecipeCategory.TYPE.equals(recipeCategory.getRecipeType())) {
 			return Collections.emptyList();
 		}
 
@@ -170,5 +172,10 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 			}
 		}
 		return false;
+	}
+
+	@Override
+	public <V> List<ResourceLocation> getRecipeCategoryUids(IFocus<V> focus) {
+		return getRecipeTypes(focus).stream().map((type) -> type.getUid()).toList();
 	}
 }

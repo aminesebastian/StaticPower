@@ -58,8 +58,8 @@ public class TileEntityPowerCable extends BlockEntityBase {
 				: getTierObject().cablePowerConfiguration.cableMaxVoltage.get();
 		double maxPower = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerMaxPower.get()
 				: getTierObject().cablePowerConfiguration.cablePowerMaxPower.get();
-		double resistance = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerResistancePerBlock.get()
-				: getTierObject().cablePowerConfiguration.cablePowerResistancePerBlock.get();
+		double resistance = isIndustrial ? getTierObject().cablePowerConfiguration.cableIndustrialPowerLossPerBlock.get()
+				: getTierObject().cablePowerConfiguration.cablePowerLossPerBlock.get();
 		registerComponent(powerCableComponent = new PowerCableComponent("PowerCableComponent", isIndustrial, voltage, maxPower, resistance));
 	}
 

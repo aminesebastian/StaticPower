@@ -14,6 +14,7 @@ import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -27,13 +28,14 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
+import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "hammer");
+	public static final RecipeType<HammerRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "hammer"), HammerRecipe.class);
 	private static final int INPUT_SLOT = 0;
 	private static final int OUTPUT_SLOT = 1;
 
@@ -46,20 +48,20 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		super(guiHelper);
 		locTitle = new TranslatableComponent("gui.staticpower.hammering");
 		background = guiHelper.createBlankDrawable(110, 50);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModItems.IronMetalHammer.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModItems.IronMetalHammer.get()));
 		arrow = new ArrowProgressBar(57, 16);
-	}
-
-	@Override
-	@Nonnull
-	public ResourceLocation getUid() {
-		return UID;
 	}
 
 	@Override
 	@Nonnull
 	public Component getTitle() {
 		return locTitle;
+	}
+
+	@Override
+	@Nonnull
+	public RecipeType<HammerRecipe> getRecipeType() {
+		return TYPE;
 	}
 
 	@Override
@@ -103,7 +105,7 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 			List<Block> blocks = ForgeRegistries.BLOCKS.tags().getTag(recipe.getInputTag()).stream().toList();
 			ItemStack[] inputBlocks = new ItemStack[blocks.size()];
 			int index = 0;
-			for (Block block :  blocks) {
+			for (Block block : blocks) {
 				inputBlocks[index] = new ItemStack(block);
 				index++;
 			}

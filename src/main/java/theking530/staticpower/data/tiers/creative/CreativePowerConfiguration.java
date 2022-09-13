@@ -14,13 +14,18 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected double getPortableBatteryCapacity() {
+		return Double.MAX_VALUE;
+	}
+
+	@Override
 	protected double getDefaultPowerCapacity() {
 		return Double.MAX_VALUE;
 	}
 
 	@Override
-	protected List<Double> internalGetDefaultInputVoltageRange() {
-		return Arrays.asList(0.0, Double.MAX_VALUE);
+	protected List<StaticPowerVoltage> internalGetDefaultInputVoltageRange() {
+		return Arrays.asList(StaticPowerVoltage.LOW, StaticPowerVoltage.EXTREME);
 	}
 
 	@Override
@@ -46,16 +51,6 @@ public class CreativePowerConfiguration extends TierPowerConfiguration {
 	@Override
 	protected double getBatteryMaximumPowerOutput() {
 		return Double.MAX_VALUE;
-	}
-
-	@Override
-	protected double getBatteryOutputVoltage() {
-		return 12;
-	}
-
-	@Override
-	protected List<Double> internalGetTransformerVoltageRange() {
-		return Arrays.asList(0.0, Double.MAX_VALUE);
 	}
 
 	@Override

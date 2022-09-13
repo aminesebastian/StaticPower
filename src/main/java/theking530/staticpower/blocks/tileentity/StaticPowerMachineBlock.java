@@ -67,7 +67,7 @@ public abstract class StaticPowerMachineBlock extends StaticPowerBlockEntityBloc
 		if (tier == null) {
 			return 0;
 		}
-		return StaticPowerConfig.getTier(tier).powerConfiguration.defaultMaximumInputPower.get();
+		return StaticPowerConfig.getTier(tier).powerConfiguration.defaultMaximumPowerInput.get();
 	}
 
 	@OnlyIn(Dist.CLIENT)

@@ -1,8 +1,5 @@
 package theking530.staticpower.data.tiers.creative;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
@@ -33,11 +30,6 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	}
 
 	@Override
-	protected double getPortableBatteryCapacity() {
-		return Double.MAX_VALUE;
-	}
-
-	@Override
 	protected int getPumpRate() {
 		return 10;
 	}
@@ -45,11 +37,6 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 	@Override
 	protected int getDigistoreCardCapacity() {
 		return Integer.MAX_VALUE;
-	}
-
-	@Override
-	protected List<Double> internalGetPortableBatteryChargingVoltage() {
-		return Arrays.asList(Double.MAX_VALUE, Double.MAX_VALUE);
 	}
 
 	@Override

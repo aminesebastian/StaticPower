@@ -290,7 +290,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
-			FluidCableComponent otherFluidCableComp = (FluidCableComponent) otherProvider;
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
 				return CableConnectionState.CABLE;
 			}

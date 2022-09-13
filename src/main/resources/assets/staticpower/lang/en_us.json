@@ -938,10 +938,13 @@
 	"gui.staticpower.usage": "Usage",
 	
 	"gui.staticpower.voltage": "Voltage",
-	"gui.staticpower.output_voltage": "Output Voltage",
+	"gui.staticpower.max_voltage": "Max. Voltage",
+	"gui.staticpower.min_voltage": "Min. Voltage",
 	"gui.staticpower.input_voltage": "Input Voltage",
+	"gui.staticpower.output_voltage": "Output Voltage",
 	"gui.staticpower.volt_unit": "V",
 	
+	"gui.staticpower.current": "Current",
 	"gui.staticpower.max_current": "Max. Current",
 	"gui.staticpower.max_input_current": "Max. Input Current",
 	"gui.staticpower.max_output_current": "Max. Output Current",
@@ -951,9 +954,11 @@
 	"gui.staticpower.power_unit": "W",
 	"gui.staticpower.power_unit_per_tick": "W/t",
 	"gui.staticpower.max_power": "Max. Power",
+	"gui.staticpower.max_power_transfer": "Transfer Rate",
 	"gui.staticpower.max_input_power": "Max. Input Power",
 	"gui.staticpower.max_output_power": "Max. Output Power",
-	
+	"gui.staticpower.power_loss": "Loss Per Block",
+
 	"gui.staticpower.power_resistance": "Resistance",
 	"gui.staticpower.power_resistance_unit": "Ω",
 	
@@ -994,7 +999,14 @@
 	"gui.staticpower.direction.south": "South",
 	"gui.staticpower.redstone_mode.low": "Low",
 	"gui.staticpower.redstone_mode.high": "High",
-	"gui.staticpower.redstone_mode.ignore": "Ignore",
+	"gui.staticpower.redstone_mode.ignore": "Ignore",	
+	"gui.staticpower.power_tab.power_input": "Power Input",
+	"gui.staticpower.power_tab.max_power_input": "Max. Input",
+	"gui.staticpower.power_tab.power_output": "Power Output",
+	"gui.staticpower.power_tab.max_power_output": "Max. Output",
+	"gui.staticpower.power_tab.power_usage": "Power Usage",
+	"gui.staticpower.power_tab.max_power_usage": "Max. Usage",
+	"gui.staticpower.power_tab.connected_power": "Conn. Power",
 	"gui.staticpower.mode.regular": "Regular",
 	"gui.staticpower.mode.input": "Input",
 	"gui.staticpower.mode.input2": "Primary Input",

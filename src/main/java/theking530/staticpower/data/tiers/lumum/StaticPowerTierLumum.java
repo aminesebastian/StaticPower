@@ -1,8 +1,5 @@
 package theking530.staticpower.data.tiers.lumum;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
@@ -31,26 +28,6 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	@Override
 	protected String getUnlocalizedName() {
 		return "tier.staticpower.lumum";
-	}
-
-	@Override
-	protected double getPortableBatteryCapacity() {
-		return 100000;
-	}
-
-	@Override
-	protected List<Double> internalGetPortableBatteryChargingVoltage() {
-		return Arrays.asList(48.0, 120.0);
-	}
-
-	@Override
-	protected double getPortableBatteryMaxOutputCurrent() {
-		return 5;
-	}
-
-	@Override
-	protected double getPortableBatteryOutputVoltage() {
-		return 120;
 	}
 
 	@Override

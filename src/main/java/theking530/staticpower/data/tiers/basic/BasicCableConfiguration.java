@@ -61,8 +61,8 @@ public class BasicCableConfiguration {
 		}
 
 		@Override
-		protected double getCablePowerResistancePerBlock() {
-			return 10;
+		protected double getCablePowerLossPerBlock() {
+			return 1;
 		}
 	}
 

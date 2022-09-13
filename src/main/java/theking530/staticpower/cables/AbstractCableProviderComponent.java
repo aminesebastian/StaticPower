@@ -137,20 +137,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	/**
-	 * Checks to see if the provided side is disabled. On the client, this checks
-	 * the locally cached disabled state. On the server, it checks the actual
-	 * {@link ServerCable}'s diabled state.
+	 * Checks to see if the provided side is disabled. This only checks the client
+	 * synced value, so we must ensure the server value is synced to the client
+	 * always.
 	 * 
 	 * @param side
 	 * @return
 	 */
 	public boolean isSideDisabled(Direction side) {
-		if (isClientSide()) {
-			return disabledSides[side.ordinal()];
-		}
-
-		Optional<ServerCable> cable = getCable();
-		return cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
+		return disabledSides[side.ordinal()];
 	}
 
 	/**

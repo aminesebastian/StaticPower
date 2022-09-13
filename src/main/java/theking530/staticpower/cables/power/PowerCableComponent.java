@@ -27,21 +27,21 @@ import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
 	public static final String VOLTAGE_ORDINAL = "power_voltage_ordinal";
 	public static final String POWER_MAX = "power_max_power";
-	public static final String POWER_RESISTANCE = "power_resistance";
+	public static final String POWER_LOSS = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
 	private final SidedStaticPowerCapabilityWrapper capabilityWrapper;
-	private final double resistance;
+	private final double powerLoss;
 	private final double maxPower;
 	private final StaticPowerVoltage voltage;
 	private final boolean isIndustrial;
 
-	public PowerCableComponent(String name, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double resistance) {
+	public PowerCableComponent(String name, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
 		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 
 		this.voltage = voltage;
-		this.resistance = resistance;
+		this.powerLoss = powerLoss;
 		this.maxPower = maxPower;
 		this.isIndustrial = isIndustrial;
 	}
@@ -71,7 +71,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
 		cable.setProperty(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
-		cable.setProperty(POWER_RESISTANCE, resistance);
+		cable.setProperty(POWER_LOSS, powerLoss);
 		cable.setProperty(POWER_MAX, maxPower);
 		cable.setProperty(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}

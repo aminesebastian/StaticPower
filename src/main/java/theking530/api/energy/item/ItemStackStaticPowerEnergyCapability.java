@@ -15,14 +15,14 @@ public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage imp
 	protected final ItemStack container;
 	protected ItemStackMultiCapabilityProvider owningProvider;
 
-	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputRange, double maximumInputCurrent, double voltageOutput,
-			double maxOutputCurrent) {
-		this(name, container, capacity, inputRange, maximumInputCurrent, new CurrentType[] { CurrentType.DIRECT }, voltageOutput, maxOutputCurrent, CurrentType.DIRECT);
+	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputRange, double maximumInputPower, double voltageOutput,
+			double maximumOutputPower) {
+		this(name, container, capacity, inputRange, maximumInputPower, new CurrentType[] { CurrentType.DIRECT }, voltageOutput, maximumOutputPower, CurrentType.DIRECT);
 	}
 
-	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputVoltageRange, double maxInputCurrent,
-			CurrentType[] acceptableCurrentTypes, double outputVoltage, double maxOutputCurrent, CurrentType outputCurrentType) {
-		super(capacity, inputVoltageRange, maxInputCurrent, acceptableCurrentTypes, outputVoltage, maxOutputCurrent, outputCurrentType);
+	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputVoltageRange, double maximumInputPower,
+			CurrentType[] acceptableCurrentTypes, double outputVoltage, double maximumOutputPower, CurrentType outputCurrentType) {
+		super(capacity, inputVoltageRange, maximumInputPower, acceptableCurrentTypes, outputVoltage, maximumOutputPower, outputCurrentType);
 		this.name = name;
 		this.container = container;
 

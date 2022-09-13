@@ -251,16 +251,16 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	@Override
 	protected void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		updateAnimation(partialTicks);
-		float width = getWidth() + 4;
+		float width = getWidth() + 16;
 		float xPos = 0;
 		if (tabSide == TabSide.RIGHT) {
-			xPos -= 4;
+			xPos -= 16;
 		}
 		GuiDrawUtilities.drawGenericBackground(matrix, width, getHeight(), xPos, 0, -10 * tabIndex, tabColor);
 
 		if (icon != null) {
 			if (this.tabSide == TabSide.LEFT) {
-				icon.draw(matrix, getWidth() - 20.25f, 5f, -tabIndex * 5);
+				icon.draw(getParent().getLastRenderMatrix(), -18.5f, this.getPosition().getY() + 4, -tabIndex * 5);
 			} else {
 				icon.draw(matrix, 4f, 5f, -tabIndex * 5);
 			}

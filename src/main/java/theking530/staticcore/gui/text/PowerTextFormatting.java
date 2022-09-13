@@ -132,15 +132,14 @@ public class PowerTextFormatting {
 
 	public static MutableComponent formatVoltageRangeToString(StaticVoltageRange range) {
 		if (range.minimumVoltage() == range.maximumVoltage()) {
-			return formatVoltageToString(range.maximumVoltage());
+			return new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.maximumVoltage()).getShortName());
 		} else if (range.minimumVoltage() == 0) {
 			return new TextComponent("<").append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.maximumVoltage()).getShortName()));
-//			return new TextComponent("<").append(PowerTextFormatting.formatVoltageToString(range.maximumVoltage()));
 		} else if (range.maximumVoltage() == Double.MAX_VALUE) {
 			return new TextComponent("<").append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.minimumVoltage()).getShortName()));
-//			return new TextComponent(">").append(PowerTextFormatting.formatVoltageToString(range.minimumVoltage()));
 		} else {
-			return formatVoltageToString(range.minimumVoltage()).append("⇔").append(formatVoltageToString(range.maximumVoltage()));
+			return new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.minimumVoltage()).getShortName()).append("⇔")
+					.append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.maximumVoltage()).getShortName()));
 		}
 	}
 

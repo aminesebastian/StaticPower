@@ -11,6 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.ISolderingIron;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
@@ -50,26 +51,26 @@ public class ElectricSolderingIron extends StaticPowerEnergyStoringItem implemen
 
 	@Override
 	public double getCapacity() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryCapacity.get();
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryCapacity.get();
 	}
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).getPortableBatteryChargingVoltage();
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.getPortableBatteryChargingVoltage();
 	}
 
 	@Override
-	public double getMaximumInputCurrent() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxOutputCurrent.get();
+	public double getMaximumInputPower() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerInput.get();
 	}
 
 	@Override
-	public double getOutputVoltage() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryOutputVoltage.get();
+	public StaticPowerVoltage getOutputVoltage() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryOutputVoltage.get();
 	}
 
 	@Override
-	public double getMaximumOutputCurrent() {
-		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).portableBatteryMaxOutputCurrent.get();
+	public double getMaximumOutputPower() {
+		return StaticPowerConfig.getTier(StaticPowerTiers.ADVANCED).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 }

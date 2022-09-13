@@ -61,8 +61,8 @@ public class EnergizedCableConfiguration {
 		}
 
 		@Override
-		protected double getCablePowerResistancePerBlock() {
-			return 0.5;
+		protected double getCablePowerLossPerBlock() {
+			return 0.05;
 		}
 	}
 

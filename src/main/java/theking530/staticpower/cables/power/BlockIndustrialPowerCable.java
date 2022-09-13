@@ -21,14 +21,13 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
-import theking530.staticcore.gui.text.PowerTextFormatting;
+import theking530.staticcore.gui.text.PowerTooltips;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.CableBoundsCache;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
-import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 
@@ -47,13 +46,9 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.voltage", ChatFormatting.BLUE,
-				new TranslatableComponent(tierObject.cablePowerConfiguration.cableMaxVoltage.get().getShortName()).getString());
-		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_power", ChatFormatting.RED,
-				PowerTextFormatting.formatPowerRateToString(tierObject.cablePowerConfiguration.cableIndustrialPowerMaxPower.get()).getString());
-		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.power_resistance", ChatFormatting.GOLD,
-				PowerTextFormatting.formatResistanceToString(tierObject.cablePowerConfiguration.cableIndustrialPowerResistancePerBlock.get()).getString());
-
+		PowerTooltips.addOutputVoltageTooltip(tooltip, tierObject.cablePowerConfiguration.cableMaxVoltage.get().getVoltage());
+		PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerMaxPower.get());
+		PowerTooltips.addPowerLossTooltip(tooltip, tierObject.cablePowerConfiguration.cableIndustrialPowerLossPerBlock.get());
 		tooltip.add(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}
 

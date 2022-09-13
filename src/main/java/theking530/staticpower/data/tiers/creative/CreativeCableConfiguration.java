@@ -61,7 +61,7 @@ public class CreativeCableConfiguration {
 		}
 
 		@Override
-		protected double getCablePowerResistancePerBlock() {
+		protected double getCablePowerLossPerBlock() {
 			return 0;
 		}
 	}

@@ -70,7 +70,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(staticPowerTier);
 		setCapacity(tierObject.powerConfiguration.defaultPowerCapacity.get());
 		setInputVoltageRange(tierObject.powerConfiguration.getDefaultInputVoltageRange().copy());
-		setMaximumInputPower(tierObject.powerConfiguration.defaultMaximumInputPower.get());
+		setMaximumInputPower(tierObject.powerConfiguration.defaultMaximumPowerInput.get());
 		setMaximumOutputPower(tierObject.powerConfiguration.defaultMaximumPowerOutput.get());
 		setOutputVoltage(tierObject.powerConfiguration.defaultOutputVoltage.get().getVoltage());
 	}

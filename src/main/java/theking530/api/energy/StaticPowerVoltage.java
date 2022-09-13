@@ -9,6 +9,7 @@ public enum StaticPowerVoltage {
 	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage), VERY_HIGH("very_high_voltage", StaticPowerConfig.SERVER.veryHighVoltage),
 	EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage);
 
+	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / StaticPowerVoltage.values().length;
 	private String unlocalizedName;
 	private String shortName;
 	private Supplier<Double> voltageSupplier;
@@ -29,6 +30,27 @@ public enum StaticPowerVoltage {
 
 	public double getVoltage() {
 		return voltageSupplier.get();
+	}
+
+	public StaticPowerVoltage upgrade() {
+		if (ordinal() == StaticPowerVoltage.values().length - 1) {
+			return this;
+		} else {
+			return StaticPowerVoltage.values()[ordinal() + 1];
+		}
+	}
+
+	public StaticPowerVoltage downgrade() {
+		if (this.ordinal() == 0) {
+			return this;
+		} else {
+			return StaticPowerVoltage.values()[ordinal() - 1];
+		}
+	}
+
+	public static double adjustPowerLossByVoltage(StaticPowerVoltage voltage, double powerLoss) {
+		double adjustment = POWER_LOSS_ADJUSTMENT_PER_VOLTAGE * (StaticPowerVoltage.values().length - voltage.ordinal());
+		return powerLoss * adjustment;
 	}
 
 	public static StaticPowerVoltage getVoltageClass(double voltage) {

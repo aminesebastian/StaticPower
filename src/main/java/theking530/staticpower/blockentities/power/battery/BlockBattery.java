@@ -55,7 +55,7 @@ public class BlockBattery extends StaticPowerMachineBlock {
 	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
 		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
 
-		PowerTooltips.addOutputVoltageTooltip(tooltip, tierObject.powerConfiguration.batteryOutputVoltage.get());
+		PowerTooltips.addOutputVoltageTooltip(tooltip, tierObject.powerConfiguration.batteryOutputVoltage.get().getVoltage());
 		PowerTooltips.addMaximumOutputPowerTooltip(tooltip, tierObject.powerConfiguration.batteryMaximumPowerOutput.get());
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.battery_block_charging_tooltip", ChatFormatting.GRAY);
 	}

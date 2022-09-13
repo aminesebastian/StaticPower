@@ -8,18 +8,18 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
@@ -31,13 +31,12 @@ import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.machines.poweredfurnace.BlockEntityPoweredFurnace;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 
 public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<SmeltingRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "powered_furnace");
-	private static final int INTPUT_SLOT = 0;
-	private static final int OUTPUT_SLOT = 1;
+	public static final RecipeType<SmeltingRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "powered_furnace"), SmeltingRecipe.class);
 
 	private final TranslatableComponent locTitle;
 	private final IDrawable background;
@@ -51,14 +50,8 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.PoweredFurnace.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(120, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.PoweredFurnace.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.PoweredFurnace.get()));
 		pBar = new ArrowProgressBar(62, 19);
-	}
-
-	@Override
-	@Nonnull
-	public ResourceLocation getUid() {
-		return UID;
 	}
 
 	@Override
@@ -71,6 +64,11 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 	@Nonnull
 	public IDrawable getBackground() {
 		return background;
+	}
+
+	@Override
+	public RecipeType<SmeltingRecipe> getRecipeType() {
+		return TYPE;
 	}
 
 	@Override
@@ -94,20 +92,23 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());
 		pBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
-		
+
 		float experience = recipe.getExperience();
 		if (experience > 0) {
 			TranslatableComponent experienceString = new TranslatableComponent("gui.staticpower.experience", experience);
-			GuiDrawUtilities.drawStringCentered(matrixStack, experienceString.getString(), 100, 12, 0.0f, 0.9f, Color.EIGHT_BIT_GREY, false);
+			GuiDrawUtilities.drawStringCentered(matrixStack, experienceString.getString(), 100, 10, 0.0f, 1f, Color.EIGHT_BIT_GREY, false);
 		}
+
+		int processingTicks = (int) (recipe.getCookingTime() * BlockEntityPoweredFurnace.DEFAULT_PROCESSING_TIME_MULT);
+		GuiDrawUtilities.drawStringCentered(matrixStack, GuiTextUtilities.formatTicksToTimeUnit(processingTicks).getString(), 110, 55, 0.0f, 1f, Color.EIGHT_BIT_GREY, false);
 	}
 
 	@Override
 	public List<Component> getTooltipStrings(SmeltingRecipe recipe, double mouseX, double mouseY) {
 		List<Component> output = new ArrayList<Component>();
 		if (mouseX > 8 && mouseX < 24 && mouseY < 54 && mouseY > 4) {
-			output.add(
-					new TextComponent("Usage: ").append(PowerTextFormatting.formatPowerToString(BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
+			output.add(new TextComponent("Usage: ")
+					.append(PowerTextFormatting.formatPowerToString(BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get())));
 		}
 
 		// Render the progress bar tooltip.
@@ -124,29 +125,9 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 	}
 
 	@Override
-	public void setIngredients(SmeltingRecipe recipe, IIngredients ingredients) {
-		// Sanity Check
-		if (recipe.getIngredients().size() != 1) {
-			return;
-		}
-
-		// Add the input ingredients.
-		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getIngredients().get(0));
-		ingredients.setInputIngredients(input);
-
-		// Add the output item.
-		List<ItemStack> outputs = new ArrayList<ItemStack>();
-		outputs.add(recipe.getResultItem());
-		ingredients.setOutputs(VanillaTypes.ITEM, outputs);
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, SmeltingRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(INTPUT_SLOT, true, 40, 18);
-		guiItemStacks.init(OUTPUT_SLOT, false, 90, 18);
-		guiItemStacks.set(ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, SmeltingRecipe recipe, IFocusGroup ingredients) {
+		builder.addSlot(RecipeIngredientRole.INPUT, 41, 19).addIngredients(recipe.getIngredients().get(0));
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 91, 19).addItemStack(recipe.getResultItem());
 
 		powerTimer = guiHelper.createTickTimer(BlockEntityPoweredFurnace.getCookTime(recipe),
 				(int) (BlockEntityPoweredFurnace.getCookTime(recipe) * StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get()), true);

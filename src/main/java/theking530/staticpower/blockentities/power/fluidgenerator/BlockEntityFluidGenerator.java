@@ -91,6 +91,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 		}
 
 		// Check to make sure we can store power.
+		powerStorage.setMaximumInputPower(recipe.getPowerGeneration());
 		if (powerStorage.canFullyAcceptPower(recipe.getPowerGeneration())) {
 			return ProcessingCheckState.ok();
 		} else {

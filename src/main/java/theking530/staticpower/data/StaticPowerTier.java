@@ -1,12 +1,8 @@
 package theking530.staticpower.data;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import theking530.api.energy.StaticVoltageRange;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.tiers.categories.TierPowerConfiguration;
 import theking530.staticpower.data.tiers.categories.TierToolConfiguration;
@@ -44,13 +40,6 @@ public abstract class StaticPowerTier {
 	public final ConfigValue<Integer> heatSinkElectricHeatGeneration;
 	public final ConfigValue<Integer> heatSinkElectricHeatPowerUsage;
 
-	/*********************
-	 * Item Configuration
-	 *********************/
-	public final ConfigValue<Double> portableBatteryCapacity;
-	public final ConfigValue<List<Double>> portableBatteryInputVoltageRange;
-	public final ConfigValue<Double> portableBatteryMaxOutputCurrent;
-	public final ConfigValue<Double> portableBatteryOutputVoltage;
 
 	/***********************
 	 * Machine Configuration
@@ -201,18 +190,6 @@ public abstract class StaticPowerTier {
 		itemFilterSlots = builder.comment("The number of slots that exist on an item filter of this tier (not the filter attachment, the actual item).")
 				.translation(StaticPower.MOD_ID + ".config." + "itemFilterSlots").define("ItemFilterSlots", this.getItemFilterSlots());
 
-		builder.push("Battery");
-		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier (in SW).")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").define("PortableBatteryCapacity", this.getPortableBatteryCapacity());
-		portableBatteryInputVoltageRange = builder.comment("The voltage range that can be used to charge a battery of this tier (in SV).")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryInputVoltageRange")
-				.define("PortableBatteryInputVoltageRange", internalGetPortableBatteryChargingVoltage());
-		portableBatteryMaxOutputCurrent = builder.comment("The maximum input current for a battery of this tier (in SA).")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryMaxOutputCurrent")
-				.define("PortableBatteryMaxOutputCurrent", this.getPortableBatteryMaxOutputCurrent());
-		portableBatteryOutputVoltage = builder.comment("The ouput voltage for a battery of this tier (in SV).")
-				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryOutputVoltage").define("PortableBatteryOutputVoltage", this.getPortableBatteryOutputVoltage());
-		builder.pop();
 
 		/********
 		 * Tools
@@ -312,26 +289,6 @@ public abstract class StaticPowerTier {
 	}
 
 	protected int getItemFilterSlots() {
-		return 0;
-	}
-
-	protected double getPortableBatteryCapacity() {
-		return 0;
-	}
-
-	protected List<Double> internalGetPortableBatteryChargingVoltage() {
-		return Arrays.asList(0.0, 0.0);
-	}
-
-	public StaticVoltageRange getPortableBatteryChargingVoltage() {
-		return new StaticVoltageRange(portableBatteryInputVoltageRange.get().get(0), portableBatteryInputVoltageRange.get().get(1));
-	}
-
-	protected double getPortableBatteryMaxOutputCurrent() {
-		return 0;
-	}
-
-	protected double getPortableBatteryOutputVoltage() {
 		return 0;
 	}
 

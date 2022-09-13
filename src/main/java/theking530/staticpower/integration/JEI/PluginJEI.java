@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -21,6 +22,7 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
+import mezz.jei.plugins.vanilla.crafting.VanillaRecipes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
@@ -342,15 +344,22 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
+		VanillaRecipes vanillaRecipes = new VanillaRecipes();
+
 		registration.addRecipes(LumberMillRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(LumberMillRecipe.RECIPE_TYPE));
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FormerRecipe.RECIPE_TYPE), FormerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.FURNACE_RECIPES.values(), PoweredFurnaceRecipeCategory.UID);
+		registration.addRecipes(PoweredFurnaceRecipeCategory.TYPE, vanillaRecipes.getFurnaceRecipes(poweredFurnaceCategory));
+		registration.addRecipes(FormerRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(FormerRecipe.RECIPE_TYPE));
+		registration.addRecipes(SolderingTableRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(SolderingRecipe.RECIPE_TYPE));
+		registration.addRecipes(ThermalConductivityRecipeCategory.TYPE, ThermalConductivityRecipeProvider.getRecipes());
+		registration.addRecipes(HammerRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(HammerRecipe.RECIPE_TYPE));
+		registration.addRecipes(CauldronRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(CauldronRecipe.RECIPE_TYPE));
+		registration.addRecipes(FertilizerRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(FertalizerRecipe.RECIPE_TYPE));
+
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FermenterRecipe.RECIPE_TYPE), FermenterRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE), BottleRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolidFuelRecipe.RECIPE_TYPE), SolidGeneratorRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolderingRecipe.RECIPE_TYPE), SolderingTableRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidInfusionRecipe.RECIPE_TYPE), FluidInfuserRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CentrifugeRecipe.RECIPE_TYPE), CentrifugeRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FusionFurnaceRecipe.RECIPE_TYPE), FusionFurnaceRecipeCategory.UID);
@@ -360,30 +369,27 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(VulcanizerRecipe.RECIPE_TYPE), VulcanizerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LatheRecipe.RECIPE_TYPE), LatheRecipeCategory.UID);
 		registration.addRecipes(SmithingRecipeProvider.getRecipes(), SmithingRecipeCategory.UID);
-		registration.addRecipes(ThermalConductivityRecipeProvider.getRecipes(), ThermalConductivityRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(MixerRecipe.RECIPE_TYPE), MixerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CrucibleRecipe.RECIPE_TYPE), CrucibleRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CastingRecipe.RECIPE_TYPE), CasterRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(TumblerRecipe.RECIPE_TYPE), TumblerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(PackagerRecipe.RECIPE_TYPE), PackagerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(HammerRecipe.RECIPE_TYPE), HammerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CauldronRecipe.RECIPE_TYPE), CauldronRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FertalizerRecipe.RECIPE_TYPE), FertilizerRecipeCategory.UID);
 		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(RefineryRecipe.RECIPE_TYPE), RefineryRecipeCategory.UID);
 	}
 
 	@Override
 	public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.LumberMill.get()), LumberMillRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Former.get()), FormerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredFurnace.get()), PoweredFurnaceRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.LumberMill.get()), LumberMillRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredFurnace.get()), PoweredFurnaceRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Former.get()), FormerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable.get()), SolderingTableRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable.get()), SolderingTableRecipeCategory.TYPE);
+
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder.get()), PoweredGrinderRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Fermenter.get()), FermenterRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Squeezer.get()), SqueezerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Bottler.get()), BottleRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator.get()), SolidGeneratorRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable.get()), SolderingTableRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable.get()), SolderingTableRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable.get()), VanillaRecipeCategoryUid.CRAFTING);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser.get()), FluidInfuserRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge.get()), CentrifugeRecipeCategory.UID);
@@ -400,30 +406,30 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler.get()), TumblerRecipeCategory.UID);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Packager.get()), PackagerRecipeCategory.UID);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatCable.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatCable.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatSink.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatCable.get()), ThermalConductivityRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatSink.get()), ThermalConductivityRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
 
-		registration.addRecipeCatalyst(new ItemStack(ModItems.BronzeMetalHammer.get()), HammerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.CreativeMetalHammer.get()), HammerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.IronMetalHammer.get()), HammerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.CopperMetalHammer.get()), HammerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.TinMetalHammer.get()), HammerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.TungstenMetalHammer.get()), HammerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.ZincMetalHammer.get()), HammerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.BronzeMetalHammer.get()), HammerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.CreativeMetalHammer.get()), HammerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.IronMetalHammer.get()), HammerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.CopperMetalHammer.get()), HammerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.TinMetalHammer.get()), HammerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.TungstenMetalHammer.get()), HammerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.ZincMetalHammer.get()), HammerRecipeCategory.TYPE);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RustyCauldron.get()), CauldronRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CleanCauldron.get()), CauldronRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RustyCauldron.get()), CauldronRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CleanCauldron.get()), CauldronRecipeCategory.TYPE);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer.get()), FertilizerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment.get()), FertilizerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer.get()), FertilizerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment.get()), FertilizerRecipeCategory.TYPE);
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RefineryController.get()), RefineryRecipeCategory.UID);
 	}
@@ -439,18 +445,17 @@ public class PluginJEI implements IModPlugin {
 	public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
 		registration.addRecipeTransferHandler(
 				new CraftingRecipeTransferHandler<ContainerDigistoreCraftingTerminal, CraftingRecipe>(ContainerDigistoreCraftingTerminal.class, CraftingRecipe.class, 9),
-				VanillaRecipeCategoryUid.CRAFTING);
+				RecipeTypes.CRAFTING);
 		registration.addRecipeTransferHandler(
-				new CraftingRecipeTransferHandler<ContainerAutoCraftingTable, CraftingRecipe>(ContainerAutoCraftingTable.class, CraftingRecipe.class, 9),
-				VanillaRecipeCategoryUid.CRAFTING);
+				new CraftingRecipeTransferHandler<ContainerAutoCraftingTable, CraftingRecipe>(ContainerAutoCraftingTable.class, CraftingRecipe.class, 9), RecipeTypes.CRAFTING);
 		registration.addRecipeTransferHandler(
 				new CraftingRecipeTransferHandler<ContainerDigistorePatternEncoder, CraftingRecipe>(ContainerDigistorePatternEncoder.class, CraftingRecipe.class, 9),
-				VanillaRecipeCategoryUid.CRAFTING);
+				RecipeTypes.CRAFTING);
 		registration.addRecipeTransferHandler(new CraftingRecipeTransferHandler<ContainerSolderingTable, SolderingRecipe>(ContainerSolderingTable.class, SolderingRecipe.class, 9),
-				SolderingTableRecipeCategory.UID);
+				SolderingTableRecipeCategory.TYPE);
 		registration.addRecipeTransferHandler(
 				new CraftingRecipeTransferHandler<ContainerAutoSolderingTable, SolderingRecipe>(ContainerAutoSolderingTable.class, SolderingRecipe.class, 9),
-				SolderingTableRecipeCategory.UID);
+				SolderingTableRecipeCategory.TYPE);
 	}
 
 	@Override

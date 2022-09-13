@@ -14,8 +14,8 @@ public abstract class TierPowerConfiguration {
 	 * Power Configuration
 	 ***********************/
 	public final ConfigValue<Double> defaultPowerCapacity;
-	public final ConfigValue<List<Double>> defaultInputVoltageRange;
-	public final ConfigValue<Double> defaultMaximumInputPower;
+	public final ConfigValue<List<StaticPowerVoltage>> defaultInputVoltageRange;
+	public final ConfigValue<Double> defaultMaximumPowerInput;
 
 	public final ConfigValue<StaticPowerVoltage> defaultOutputVoltage;
 	public final ConfigValue<Double> defaultMaximumPowerOutput;
@@ -24,13 +24,23 @@ public abstract class TierPowerConfiguration {
 	 * Battery Configuration
 	 *********************/
 	public final ConfigValue<Double> batteryCapacity;
+	public final ConfigValue<Double> batteryMaximumPowerInput;
 	public final ConfigValue<Double> batteryMaximumPowerOutput;
-	public final ConfigValue<Double> batteryOutputVoltage;
+	public final ConfigValue<StaticPowerVoltage> batteryOutputVoltage;
+
+	/*********************************
+	 * Portable Battery Configuration
+	 *********************************/
+	public final ConfigValue<Double> portableBatteryCapacity;
+	public final ConfigValue<List<StaticPowerVoltage>> portableBatteryInputVoltageRange;
+	public final ConfigValue<Double> portableBatteryMaximumPowerInput;
+	public final ConfigValue<Double> portableBatteryMaximumPowerOutput;
+	public final ConfigValue<StaticPowerVoltage> portableBatteryOutputVoltage;
 
 	/*********************
 	 * Transformer Configuration
 	 *********************/
-	public final ConfigValue<List<Double>> transformerVoltageRange;
+	public final ConfigValue<List<StaticPowerVoltage>> transformerVoltageRange;
 
 	/*************
 	 * Solar Panel
@@ -42,36 +52,53 @@ public abstract class TierPowerConfiguration {
 		defaultPowerCapacity = builder.comment("The amount of power a block of this tier can store (in SW).").translation(StaticPower.MOD_ID + ".config." + "defaultPowerCapacity")
 				.define("DefaultPowerCapacity", getDefaultPowerCapacity());
 
-		defaultInputVoltageRange = builder.comment("The input voltage range for powered blocks of this tier (in SV).")
+		defaultInputVoltageRange = builder.comment("The input voltage range for powered blocks of this tier.")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultInputVoltageRange").define("DefaultInputVoltageRange", internalGetDefaultInputVoltageRange());
-		defaultMaximumInputPower = builder.comment("The maximum power a block of this tier can take (in SW.")
-				.translation(StaticPower.MOD_ID + ".config." + "defaultMaximumInputPower").define("DefaultMaximumInputPower", getDefaultMaximumPowerInput());
+		defaultMaximumPowerInput = builder.comment("The maximum power a block of this tier can take (in SW/t).")
+				.translation(StaticPower.MOD_ID + ".config." + "defaultMaximumPowerInput").define("DefaultMaximumPowerInput", getDefaultMaximumPowerInput());
 
-		defaultOutputVoltage = builder.comment("The voltage a block uses internally when performing work (in SV).")
+		defaultOutputVoltage = builder.comment("The voltage a block outputs and uses internally when performing work.")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultOutputVoltage").define("DefaultOutputVoltage", getDefaultOutputVoltage());
-		defaultMaximumPowerOutput = builder.comment("The maximum power a machine of this tier can use while performing work (in SW).")
+		defaultMaximumPowerOutput = builder.comment("The maximum power a machine of this tier can use while performing work (in SW/t).")
 				.translation(StaticPower.MOD_ID + ".config." + "defaultMaximumPowerOutput").define("DefaultMaximumPowerOutput", getDefaultMaximumPowerOutput());
 
 		builder.push("Transformer");
 
-		transformerVoltageRange = builder.comment("The voltage range that can be handled by a transformer of this tier (in SV).")
+		transformerVoltageRange = builder.comment("The voltage range that can be handled by a transformer of this tier.")
 				.translation(StaticPower.MOD_ID + ".config." + "transformerVoltageRange").define("TransformerVoltageRange", internalGetTransformerVoltageRange());
 
 		builder.pop();
 
 		builder.push("Battery");
-		batteryCapacity = builder.comment("The amount of power that a non-portable battery of this tier can store (in SW).")
-				.translation(StaticPower.MOD_ID + ".config." + "batteryCapacity").define("BatteryCapacity", getBatteryCapacity());
-		batteryMaximumPowerOutput = builder.comment("The maximum power that a battery of this tier can output (in SW).")
+		batteryCapacity = builder.comment("The amount of power that a battery of this tier can store (in SW).").translation(StaticPower.MOD_ID + ".config." + "batteryCapacity")
+				.define("BatteryCapacity", getBatteryCapacity());
+		batteryMaximumPowerInput = builder.comment("The maximum power that a battery of this tier can accept (in SW/t).")
+				.translation(StaticPower.MOD_ID + ".config." + "batteryMaximumPowerInput").define("BatteryMaximumPowerInput", getBatteryMaximumPowerInput());
+		batteryMaximumPowerOutput = builder.comment("The maximum power that a battery of this tier can output (in SW/t).")
 				.translation(StaticPower.MOD_ID + ".config." + "batteryMaximumPowerOutput").define("BatteryMaximumPowerOutput", getBatteryMaximumPowerOutput());
-		batteryOutputVoltage = builder.comment("The maximum power that a battery of this tier can output (in SW).")
-				.translation(StaticPower.MOD_ID + ".config." + "batteryOutputVoltage").define("BatteryOutputVoltage", getBatteryOutputVoltage());
+		batteryOutputVoltage = builder.comment("The output voltage of a batter of this tier.").translation(StaticPower.MOD_ID + ".config." + "batteryOutputVoltage")
+				.define("BatteryOutputVoltage", getBatteryOutputVoltage());
+		builder.pop();
+
+		builder.push("Portable_Battery");
+		portableBatteryCapacity = builder.comment("The amount of power that can be stored in a portable battery of this tier (in SW).")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryCapacity").define("PortableBatteryCapacity", getPortableBatteryCapacity());
+		portableBatteryMaximumPowerOutput = builder.comment("The maximum amount of power a portable battery of this tier can output (in SW/t).")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryMaximumPowerOutput")
+				.define("PortableBatteryMaximumPowerOutput", this.getPortableBatteryMaxPowerOutput());
+		portableBatteryInputVoltageRange = builder.comment("The voltage range that can be used to charge a portable battery of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryInputVoltageRange")
+				.define("PortableBatteryInputVoltageRange", internalGetPortableBatteryChargingVoltage());
+
+		portableBatteryMaximumPowerInput = builder.comment("The maximum amount of power a portable battery of this tier can input (in SW/t).")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryMaximumPowerInput").define("PortableBatteryMaximumPowerInput", getPortableBatteryMaxPowerInput());
+		portableBatteryOutputVoltage = builder.comment("The output voltage of a portable battery of this tier.")
+				.translation(StaticPower.MOD_ID + ".config." + "portableBatteryOutputVoltage").define("BortableBatteryOutputVoltage", getPortableBatteryOutputVoltage());
 		builder.pop();
 
 		builder.push("Solar_Panel");
-		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick (in SW).")
+		solarPanelPowerGeneration = builder.comment("The amount of power generated by a solar panel of this tier per tick (in SW/t).")
 				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerGeneration").define("SolarPanelPowerGeneration", this.getSolarPanelPowerGeneration());
-
 		solarPanelPowerStorage = builder.comment("The amount of power a solar panel of this tier can store (in SW).")
 				.translation(StaticPower.MOD_ID + ".config." + "solarPanelPowerStorage").define("SolarPanelPowerStorage", this.getSolarPanelPowerGeneration());
 		builder.pop();
@@ -79,12 +106,12 @@ public abstract class TierPowerConfiguration {
 
 	protected abstract double getDefaultPowerCapacity();
 
-	protected List<Double> internalGetDefaultInputVoltageRange() {
-		return Arrays.asList(0.0, getDefaultOutputVoltage().getVoltage());
+	protected List<StaticPowerVoltage> internalGetDefaultInputVoltageRange() {
+		return Arrays.asList(StaticPowerVoltage.LOW, getDefaultOutputVoltage());
 	}
 
 	public final StaticVoltageRange getDefaultInputVoltageRange() {
-		return new StaticVoltageRange(defaultInputVoltageRange.get().get(0), defaultInputVoltageRange.get().get(1));
+		return new StaticVoltageRange(defaultInputVoltageRange.get().get(0).getVoltage(), defaultInputVoltageRange.get().get(1).getVoltage());
 	}
 
 	protected abstract double getDefaultMaximumPowerInput();
@@ -99,23 +126,52 @@ public abstract class TierPowerConfiguration {
 		return getDefaultPowerCapacity() * 100;
 	}
 
-	protected abstract double getBatteryMaximumPowerOutput();
+	protected double getBatteryMaximumPowerInput() {
+		return getDefaultMaximumPowerInput();
 
-	protected double getBatteryOutputVoltage() {
-		return getDefaultOutputVoltage().getVoltage();
 	}
 
-	protected List<Double> internalGetTransformerVoltageRange() {
-		return Arrays.asList(0.0, getDefaultOutputVoltage().getVoltage() * 2);
+	protected abstract double getBatteryMaximumPowerOutput();
+
+	protected StaticPowerVoltage getBatteryOutputVoltage() {
+		return getDefaultOutputVoltage();
+	}
+
+	protected List<StaticPowerVoltage> internalGetTransformerVoltageRange() {
+		return Arrays.asList(StaticPowerVoltage.LOW, getDefaultOutputVoltage().upgrade());
 	}
 
 	public final StaticVoltageRange getTransformerVoltageRange() {
-		return new StaticVoltageRange(transformerVoltageRange.get().get(0), transformerVoltageRange.get().get(1));
+		return new StaticVoltageRange(transformerVoltageRange.get().get(0).getVoltage(), transformerVoltageRange.get().get(1).getVoltage());
 	}
 
 	protected abstract double getSolarPanelPowerGeneration();
 
 	protected double getSolarPanelPowerStorage() {
 		return getSolarPanelPowerGeneration();
+	}
+
+	protected double getPortableBatteryCapacity() {
+		return getBatteryCapacity() / 6;
+	}
+
+	protected List<StaticPowerVoltage> internalGetPortableBatteryChargingVoltage() {
+		return Arrays.asList(StaticPowerVoltage.LOW, getDefaultOutputVoltage());
+	}
+
+	public StaticVoltageRange getPortableBatteryChargingVoltage() {
+		return new StaticVoltageRange(portableBatteryInputVoltageRange.get().get(0).getVoltage(), portableBatteryInputVoltageRange.get().get(1).getVoltage());
+	}
+
+	protected double getPortableBatteryMaxPowerInput() {
+		return getDefaultMaximumPowerInput();
+	}
+
+	protected double getPortableBatteryMaxPowerOutput() {
+		return getDefaultMaximumPowerOutput();
+	}
+
+	protected StaticPowerVoltage getPortableBatteryOutputVoltage() {
+		return getDefaultOutputVoltage();
 	}
 }

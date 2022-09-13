@@ -8,19 +8,18 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.ITickTimer;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiIngredientGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
@@ -28,17 +27,14 @@ import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.wrappers.former.FormerRecipe;
+import theking530.staticpower.data.crafting.wrappers.soldering.SolderingRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "former");
-	private static final int MOLD_SLOT = 0;
-	private static final int INTPUT_SLOT = 1;
-	private static final int OUTPUT_SLOT = 2;
+	public static final RecipeType<FormerRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "former"), FormerRecipe.class);
 
 	private final TranslatableComponent locTitle;
 	private final IDrawable background;
@@ -52,14 +48,8 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.Former.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(140, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.Former.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.Former.get()));
 		pBar = new ArrowProgressBar(84, 19);
-	}
-
-	@Override
-	@Nonnull
-	public ResourceLocation getUid() {
-		return UID;
 	}
 
 	@Override
@@ -82,6 +72,12 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	@Override
 	public IDrawable getIcon() {
 		return icon;
+	}
+
+	@Override
+	@Nonnull
+	public RecipeType<FormerRecipe> getRecipeType() {
+		return TYPE;
 	}
 
 	@Override
@@ -116,27 +112,10 @@ public class FormerRecipeCategory extends BaseJEIRecipeCategory<FormerRecipe> {
 	}
 
 	@Override
-	public void setIngredients(FormerRecipe recipe, IIngredients ingredients) {
-		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getRequiredMold());
-		input.add(recipe.getInputIngredient().getIngredient());
-		ingredients.setInputIngredients(input);
-
-		// Set the output.
-		ingredients.setOutput(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, FormerRecipe recipe, IIngredients ingredients) {
-		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(MOLD_SLOT, true, 39, 18);
-		guiItemStacks.init(INTPUT_SLOT, true, 62, 18);
-		guiItemStacks.set(ingredients);
-
-		// Set the outputs.
-		IGuiIngredientGroup<ProbabilityItemStackOutput> probabilityStacks = recipeLayout.getIngredientsGroup(PluginJEI.PROBABILITY_ITEM_STACK);
-		probabilityStacks.init(OUTPUT_SLOT, false, 112, 19);
-		probabilityStacks.set(ingredients);
+	public void setRecipe(IRecipeLayoutBuilder builder, FormerRecipe recipe, IFocusGroup ingredients) {
+		builder.addSlot(RecipeIngredientRole.INPUT, 40, 19).addIngredients(recipe.getRequiredMold());
+		builder.addSlot(RecipeIngredientRole.INPUT, 63, 19).addIngredients(recipe.getInputIngredient().getIngredient());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 113, 19).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getOutput());
 
 		powerTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), (int) (recipe.getProcessingTime() * recipe.getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getProcessingTime(), recipe.getProcessingTime(), false);

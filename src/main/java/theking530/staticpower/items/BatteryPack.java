@@ -23,6 +23,7 @@ import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.staticcore.item.ICustomModelSupplier;
@@ -148,26 +149,26 @@ public class BatteryPack extends StaticPowerEnergyStoringItem implements ICustom
 
 	@Override
 	public double getCapacity() {
-		return StaticPowerConfig.getTier(tier).portableBatteryCapacity.get() * 3;
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryCapacity.get() * 3;
 	}
 
 	@Override
 	public StaticVoltageRange getInputVoltageRange() {
-		return StaticPowerConfig.getTier(tier).getPortableBatteryChargingVoltage();
+		return StaticPowerConfig.getTier(tier).powerConfiguration.getPortableBatteryChargingVoltage();
 	}
 
 	@Override
-	public double getMaximumInputCurrent() {
-		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+	public double getMaximumInputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerInput.get();
 	}
 
 	@Override
-	public double getOutputVoltage() {
-		return StaticPowerConfig.getTier(tier).portableBatteryOutputVoltage.get();
+	public StaticPowerVoltage getOutputVoltage() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryOutputVoltage.get();
 	}
 
 	@Override
-	public double getMaximumOutputCurrent() {
-		return StaticPowerConfig.getTier(tier).portableBatteryMaxOutputCurrent.get();
+	public double getMaximumOutputPower() {
+		return StaticPowerConfig.getTier(tier).powerConfiguration.portableBatteryMaximumPowerOutput.get();
 	}
 }

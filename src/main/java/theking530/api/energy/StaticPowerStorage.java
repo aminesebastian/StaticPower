@@ -105,7 +105,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	 * @return
 	 */
 	public boolean canFullyAcceptPower(double power) {
-		if (power > this.getMaximumPowerOutput()) {
+		if (power > this.getMaximumPowerInput()) {
 			return false;
 		}
 		return storedPower + power <= capacity;

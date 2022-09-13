@@ -4,59 +4,33 @@ import java.util.List;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.CurrentType;
-import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.gui.drawables.SpriteDrawable;
-import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
-import theking530.staticpower.client.gui.GuiTextures;
 
 @OnlyIn(Dist.CLIENT)
-public class GuiMachinePowerInfoTab extends AbstractInfoTab {
-
-	private PowerStorageComponent energyStorage;
+public class GuiMachinePowerInfoTab extends GuiPowerInfoTab {
 
 	public GuiMachinePowerInfoTab(PowerStorageComponent storage) {
-		super("Power I/O", new Color(242, 0, 255), 110, new Color(0.6f, 0.1f, 1.0f), new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
-		this.energyStorage = storage;
+		super(storage);
+		this.setOutputLabel("gui.staticpower.power_tab.power_usage");
+		this.setMaxOutputLabel("gui.staticpower.power_tab.max_power_usage");
 	}
 
-	@Override
-	public void tick() {
-		super.tick();
-		clear();
-		addKeyValueTwoLiner("Input", new TextComponent("Power Input"), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()),
-				ChatFormatting.GREEN);
-		addKeyValueTwoLiner("Usage", new TextComponent("Power Usage"), PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()), ChatFormatting.RED);
-		addKeyValueTwoLiner("Connection", new TextComponent("Conn. Power"), PowerTextFormatting.formatVoltageToString(energyStorage.getLastRecievedVoltage()), ChatFormatting.AQUA);
-
-		addKeyValueTwoLiner("MaxInput", new TextComponent("Max Input"), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerInput()), ChatFormatting.YELLOW);
-		addKeyValueTwoLiner("MaxOutput", new TextComponent("Max Output"), PowerTextFormatting.formatPowerRateToString(energyStorage.getMaximumPowerOutput()),
-				ChatFormatting.LIGHT_PURPLE);
-	}
-
-	@SuppressWarnings("resource")
 	@Override
 	protected void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		if (isOpen()) {
-			ResourceLocation currentTypeTexture = GuiTextures.DC_POWER_INDICATOR;
-			if (energyStorage.getLastRecievedCurrentType() == CurrentType.ALTERNATING) {
-				currentTypeTexture = GuiTextures.AC_POWER_INDICATOR;
-			}
-
-			String connPowerLine = PowerTextFormatting.formatVoltageToString(energyStorage.getLastRecievedVoltage()).getString();
-			int offset = Minecraft.getInstance().font.width(connPowerLine);
-			GuiDrawUtilities.drawTexture(matrix, currentTypeTexture, 12, 12, 22 + offset, 75.5f, MinecraftColor.WHITE.getColor());
+//			float topOffset = 2;
+//
+//			String avgAdded = PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerAddedPerTick()).getString();
+//			GuiDrawUtilities.drawTexture(matrix, GuiTextures.DOWN_INDICATOR, 12, 12, 12, topOffset + 25f, Color.GREEN);
+//			GuiDrawUtilities.drawStringLeftAligned(matrix, avgAdded, 25, topOffset + 34f, 1, 1, Color.EIGHT_BIT_WHITE, true);
+//
+//			String avgUsed = PowerTextFormatting.formatPowerRateToString(energyStorage.getAveragePowerUsedPerTick()).getString();
+//			GuiDrawUtilities.drawTexture(matrix, GuiTextures.UP_INDICATOR, 12, 12, 57, topOffset + 25f, Color.RED);
+//			GuiDrawUtilities.drawStringLeftAligned(matrix, avgUsed, 70, topOffset + 34f, 1, 1, Color.EIGHT_BIT_WHITE, true);
 		}
 	}
 

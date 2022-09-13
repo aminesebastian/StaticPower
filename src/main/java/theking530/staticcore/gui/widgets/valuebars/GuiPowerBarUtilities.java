@@ -23,13 +23,9 @@ public class GuiPowerBarUtilities {
 		tooltip.add(new TranslatableComponent("gui.staticpower.stored_power").withStyle(ChatFormatting.GREEN).append(": ")
 				.append(ChatFormatting.WHITE + PowerTextFormatting.formatPowerToString(storedPower, capacity).getString()));
 
-		// Add the input rate to the tooltip.
-		if (minimumInputVoltage == maximumInputVoltage) {
-			tooltip.add(new TranslatableComponent("gui.staticpower.input").append(": ").append(PowerTextFormatting.formatVoltageToString(minimumInputVoltage)));
-		} else {
-			tooltip.add(new TranslatableComponent("gui.staticpower.input_voltage").withStyle(ChatFormatting.GOLD).append(": ")
-					.append(ChatFormatting.WHITE + PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minimumInputVoltage, maximumInputVoltage)).getString()));
-		}
+		// Add the input voltage to the tooltip.
+		tooltip.add(new TranslatableComponent("gui.staticpower.input_voltage").withStyle(ChatFormatting.GOLD).append(": ")
+				.append(ChatFormatting.WHITE + PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minimumInputVoltage, maximumInputVoltage)).getString()));
 
 		tooltip.add(new TranslatableComponent("gui.staticpower.max_input_power").withStyle(ChatFormatting.AQUA).append(": ")
 				.append(ChatFormatting.WHITE + PowerTextFormatting.formatPowerRateToString(maximumInptuPower).getString()));

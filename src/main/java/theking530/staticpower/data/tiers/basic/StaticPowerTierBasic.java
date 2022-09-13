@@ -1,8 +1,5 @@
 package theking530.staticpower.data.tiers.basic;
 
-import java.util.Arrays;
-import java.util.List;
-
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
@@ -31,26 +28,6 @@ public class StaticPowerTierBasic extends StaticPowerTier {
 	@Override
 	protected String getUnlocalizedName() {
 		return "tier.staticpower.basic";
-	}
-
-	@Override
-	protected double getPortableBatteryCapacity() {
-		return 1000;
-	}
-
-	@Override
-	protected List<Double> internalGetPortableBatteryChargingVoltage() {
-		return Arrays.asList(0.0, 5.0);
-	}
-
-	@Override
-	protected double getPortableBatteryMaxOutputCurrent() {
-		return 1;
-	}
-
-	@Override
-	protected double getPortableBatteryOutputVoltage() {
-		return 5;
 	}
 
 	@Override

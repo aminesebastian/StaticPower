@@ -1,8 +1,5 @@
 package theking530.staticpower.integration.JEI.categories.lumbermill;
 
-import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
-import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,6 +14,7 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
@@ -38,12 +36,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
 
 public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRecipe> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "lumber_mill");
-	public static final RecipeType<LumberMillRecipe> TYPE = new RecipeType<>(UID, LumberMillRecipe.class);
-
-	private static final int INTPUT_SLOT = 0;
-	private static final int PRIMARY_OUTPUT_SLOT = 1;
-	private static final int SECONDARY_OUTPUT_SLOT = 2;
+	public static final RecipeType<LumberMillRecipe> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "lumber_mill"), LumberMillRecipe.class);
 
 	private final TranslatableComponent locTitle;
 	private final IDrawable background;
@@ -57,14 +50,8 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.LumberMill.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(176, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.LumberMill.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.LumberMill.get()));
 		pBar = new ArrowProgressBar(63, 19);
-	}
-
-	@Override
-	@Nonnull
-	public ResourceLocation getUid() {
-		return UID;
 	}
 
 	@Override
@@ -131,16 +118,16 @@ public class LumberMillRecipeCategory extends BaseJEIRecipeCategory<LumberMillRe
 
 	@Override
 	public void setRecipe(IRecipeLayoutBuilder builder, LumberMillRecipe recipe, IFocusGroup ingredients) {
-		builder.addSlot(INPUT, 41, 19).addIngredients(recipe.getInput().getIngredient());
-		builder.addSlot(OUTPUT, 91, 19).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getPrimaryOutput());
+		builder.addSlot(RecipeIngredientRole.INPUT, 41, 19).addIngredients(recipe.getInput().getIngredient());
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 91, 19).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getPrimaryOutput());
 
 		if (!recipe.getSecondaryOutput().isEmpty()) {
-			builder.addSlot(OUTPUT, 121, 19).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getSecondaryOutput());
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 121, 19).addIngredient(PluginJEI.PROBABILITY_ITEM_STACK, recipe.getSecondaryOutput());
 		}
 
 		// Add the fluid.
 		if (recipe.hasOutputFluid()) {
-			builder.addSlot(OUTPUT, 153, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid()).setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false,
+			builder.addSlot(RecipeIngredientRole.OUTPUT, 153, 6).addIngredient(ForgeTypes.FLUID_STACK, recipe.getOutputFluid()).setFluidRenderer(getFluidTankDisplaySize(recipe.getOutputFluid()), false,
 					16, 48);
 		}
 
