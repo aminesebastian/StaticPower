@@ -371,7 +371,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
 				range = (int) Math.max(range,
-						StaticPowerConfig.SERVER.basicFarmerDefaultRange.get() * (((BaseRangeUpgrade) stack.getItem()).getTier().upgradeConfiguration.rangeUpgrade.get()));
+						StaticPowerConfig.SERVER.basicFarmerDefaultRange.get() * ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
 			}
 		}
 		refreshBlocksInRange(range);

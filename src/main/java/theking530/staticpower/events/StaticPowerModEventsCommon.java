@@ -49,6 +49,7 @@ import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
 import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
+import theking530.staticpower.cables.power.wire.PowerWireNetworkModuleFactory;
 import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModuleFactory;
 import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModuleFactory;
 import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
@@ -72,6 +73,7 @@ public class StaticPowerModEventsCommon {
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
 		// Register network modules.
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_NETWORK_MODULE, new PowerNetworkModuleFactory());
+		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE, new PowerWireNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.ITEM_NETWORK_MODULE, new ItemNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.FLUID_NETWORK_MODULE, new FluidNetworkModuleFactory());
 		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE, new DigistoreNetworkModuleFactory());

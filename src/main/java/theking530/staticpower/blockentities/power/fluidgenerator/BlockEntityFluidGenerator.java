@@ -53,6 +53,8 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 
 		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", 0, FluidGeneratorRecipe.RECIPE_TYPE,
 				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		powerStorage.setCanAcceptExternalPower(false).setSideConfiguration(ioSideConfiguration).setUpgradeInventory(upgradesInventory);
@@ -100,7 +102,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 	}
 
 	protected ProcessingCheckState processingCompleted(FluidGeneratorRecipe recipe) {
-		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage()), false);
+		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage().getVoltage()), false);
 		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
 		return ProcessingCheckState.ok();
 	}

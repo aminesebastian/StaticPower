@@ -46,7 +46,7 @@ public class BlockPowerCable extends AbstractCableBlock {
 		
 		PowerTooltips.addOutputVoltageTooltip(tooltip, tierObject.cablePowerConfiguration.cableMaxVoltage.get().getVoltage());
 		PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerMaxPower.get());
-		PowerTooltips.addPowerLossTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerLossPerBlock.get());
+		PowerTooltips.addPowerLossPerBlockTooltip(tooltip, tierObject.cablePowerConfiguration.cablePowerLossPerBlock.get());
 	}
 
 	@Override

@@ -511,6 +511,12 @@
 	"item.staticpower.upgrade_speed_static": "Static Speed Upgrade",
 	"item.staticpower.upgrade_speed_energized": "Energized Speed Upgrade",
 	"item.staticpower.upgrade_speed_lumum": "Lumum Speed Upgrade",
+	
+	"item.staticpower.upgrade_transformer_advanced": "MV Transformer Upgrade",
+	"item.staticpower.upgrade_transformer_static": "HV Transformer Upgrade",
+	"item.staticpower.upgrade_transformer_energized": "VHV Transformer Upgrade",
+	"item.staticpower.upgrade_transformer_lumum": "EV Transformer Upgrade",
+	
 	"item.staticpower.upgrade_output_multiplier_basic": "Basic Output Multiplier Upgrade",
 	"item.staticpower.upgrade_output_multiplier_advanced": "Advanced Output Multiplier Upgrade",
 	"item.staticpower.upgrade_output_multiplier_static": "Static Output Multiplier Upgrade",
@@ -957,10 +963,8 @@
 	"gui.staticpower.max_power_transfer": "Transfer Rate",
 	"gui.staticpower.max_input_power": "Max. Input Power",
 	"gui.staticpower.max_output_power": "Max. Output Power",
-	"gui.staticpower.power_loss": "Loss Per Block",
-
-	"gui.staticpower.power_resistance": "Resistance",
-	"gui.staticpower.power_resistance_unit": "Ω",
+	"gui.staticpower.power_loss": "Power Loss",
+	"gui.staticpower.power_loss_per_block": "Loss Per Block",
 	
 	"gui.staticpower.millbuckets": "mB",
 	"gui.staticpower.fluid_unit": "B",
@@ -971,18 +975,21 @@
 	
 	"gui.staticpower.heat_conductivity_unit": "λ",
 	
+	"gui.staticpower.voltage.full_name.no_voltage": "No Voltage",
 	"gui.staticpower.voltage.full_name.low_voltage": "Low Voltage",
 	"gui.staticpower.voltage.full_name.medium_voltage": "Medium Voltage",
 	"gui.staticpower.voltage.full_name.high_voltage": "High Voltage",
 	"gui.staticpower.voltage.full_name.very_high_voltage": "Very High Voltage",
 	"gui.staticpower.voltage.full_name.extreme_voltage": "Extreme Voltage",
 	
+	"gui.staticpower.voltage.short_name.no_voltage": "Zero",
 	"gui.staticpower.voltage.short_name.low_voltage": "LV",
 	"gui.staticpower.voltage.short_name.medium_voltage": "MV",
 	"gui.staticpower.voltage.short_name.high_voltage": "HV",
 	"gui.staticpower.voltage.short_name.very_high_voltage": "VHV",
 	"gui.staticpower.voltage.short_name.extreme_voltage": "EV",
 	
+	"gui.staticpower.length": "Length",
 	"gui.staticpower.heat_transfer": "Heat Transfer",
 	"gui.staticpower.heat": "Heat",
 	"gui.staticpower.side.top": "Top",
@@ -1130,6 +1137,7 @@
 	"gui.staticpower.tab_title.research": "Research",
 	"gui.staticpower.remaining_heat_time": "Remaining Heat Time:",
 	"gui.staticpower.tool_speed_multiplier": "Mining Speed",
+	"gui.staticpower.transformer_upgrade_tooltip": "Upgrades a Machine from %1$s to %2$s",
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox",
 	"key.categories.staticpower": "Static Power",

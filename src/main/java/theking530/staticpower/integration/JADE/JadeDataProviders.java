@@ -55,8 +55,7 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 			powerData.putDouble("output_voltage", powerStorage.getOutputVoltage());
 			powerData.putByte("output_current_type", (byte) powerStorage.getOutputCurrentType().ordinal());
 
-			powerData.putDouble("min_voltage", powerStorage.getInputVoltageRange().minimumVoltage());
-			powerData.putDouble("max_voltage", powerStorage.getInputVoltageRange().maximumVoltage());
+			powerData.put("voltage_range", powerStorage.getInputVoltageRange().serializeNBT());
 			powerData.putDouble("stored_power", powerStorage.getStoredPower());
 			powerData.putDouble("capacity", powerStorage.getCapacity());
 

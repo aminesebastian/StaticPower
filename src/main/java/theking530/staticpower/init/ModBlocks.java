@@ -82,6 +82,7 @@ import theking530.staticpower.blockentities.power.solarpanels.BlockSolarPanel;
 import theking530.staticpower.blockentities.power.solidgenerator.BlockSolidGenerator;
 import theking530.staticpower.blockentities.power.transformer.BlockTransformer;
 import theking530.staticpower.blockentities.power.turbine.BlockTurbine;
+import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.blocks.EnergizedGrass;
 import theking530.staticpower.blocks.StaticGrass;
 import theking530.staticpower.blocks.StaticPowerBlock;
@@ -257,7 +258,8 @@ public class ModBlocks {
 	public static final RegistryObject<BlockTank> CreativeTank = registerBlock("tank_creative", () -> new BlockTank(StaticPowerTiers.CREATIVE));
 
 	public static final RegistryObject<PumpTube> PumpTube = registerBlock("pump_tube", () -> new PumpTube());
-	//public static final RegistryObject<BlockPump> IronPump = registerBlock("pump_iron", () -> new BlockPump(StaticPowerTiers.IRON));
+	// public static final RegistryObject<BlockPump> IronPump =
+	// registerBlock("pump_iron", () -> new BlockPump(StaticPowerTiers.IRON));
 	public static final RegistryObject<BlockPump> BasicPump = registerBlock("pump_basic", () -> new BlockPump(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BlockPump> AdvancedPump = registerBlock("pump_advanced", () -> new BlockPump(StaticPowerTiers.ADVANCED));
 	public static final RegistryObject<BlockPump> StaticPump = registerBlock("pump_static", () -> new BlockPump(StaticPowerTiers.STATIC));
@@ -503,15 +505,18 @@ public class ModBlocks {
 	public static final RegistryObject<BlockBattery> BatteryEnergized = registerBlock("battery_block_energized", () -> new BlockBattery(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BlockBattery> BatteryLumum = registerBlock("battery_block_lumum", () -> new BlockBattery(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockBattery> BatteryCreative = registerBlock("battery_block_creative", () -> new BlockBattery(StaticPowerTiers.CREATIVE));
-	
+
 	// Transformers
 	public static final RegistryObject<BlockTransformer> TransformerBasic = registerBlock("transformer_basic", () -> new BlockTransformer(StaticPowerTiers.BASIC));
-	
+
 	// Inverters
 	public static final RegistryObject<BlockInverter> InverterBasic = registerBlock("inverter_basic", () -> new BlockInverter(StaticPowerTiers.BASIC));
-	
+
 	// Rectifiers
 	public static final RegistryObject<BlockRectifier> RectifierBasic = registerBlock("rectifier_basic", () -> new BlockRectifier(StaticPowerTiers.BASIC));
+
+	// Wire Connectors
+	public static final RegistryObject<BlockWireConnector> WireConnectorBasic = registerBlock("wire_terminus_basic", () -> new BlockWireConnector(StaticPowerTiers.BASIC));
 
 	// Monitors
 	public static final RegistryObject<BlockPowerMonitor> PowerMonitor = registerBlock("power_monitor", () -> new BlockPowerMonitor());

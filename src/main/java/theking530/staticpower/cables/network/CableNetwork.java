@@ -76,17 +76,6 @@ public class CableNetwork {
 				throw new RuntimeException(String.format("An error occured when attempting to tick a graph module of type: %1$s.", module.getType().toString()), e);
 			}
 		}
-
-		// Tick all the cables.
-		if (graph.getCables().size() > 0) {
-			for (ServerCable cable : graph.getCables().values()) {
-				try {
-					cable.tick();
-				} catch (Exception e) {
-					throw new RuntimeException(String.format("An error occured when attempting to tick a cable with data tag: %1$s.", cable.getCompleteDataTag().toString()), e);
-				}
-			}
-		}
 	}
 
 	public boolean hasModule(ResourceLocation type) {

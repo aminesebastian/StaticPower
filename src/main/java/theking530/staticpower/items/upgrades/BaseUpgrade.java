@@ -50,10 +50,14 @@ public class BaseUpgrade extends StaticPowerItem implements IUpgradeItem {
 		}
 	}
 
+	public StaticPowerTier getTierObject() {
+		return StaticPowerConfig.getTier(tier);
+	}
+
 	@Override
-	public StaticPowerTier getTier() {
+	public ResourceLocation getTier() {
 		if (isTiered()) {
-			return StaticPowerConfig.getTier(tier);
+			return tier;
 		} else {
 			throw new RuntimeException("Attempted to get the tier of a non-tiered ugprade!");
 		}

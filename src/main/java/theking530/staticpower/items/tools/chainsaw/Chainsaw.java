@@ -296,8 +296,8 @@ public class Chainsaw extends AbstractMultiHarvestTool implements ICustomModelSu
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackCapabilityInventory("default", stack, 5))
-				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(), getInputVoltageRange(), getMaximumInputPower(),
-						getOutputVoltage().getVoltage(), getMaximumOutputPower()));
+				.addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, getCapacity(), getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(),
+						getMaximumOutputPower()));
 	}
 
 	@Override

@@ -13,6 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -128,19 +129,27 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	@Override
 	public void getReaderOutput(List<Component> output) {
 		output.add(new TextComponent(String.format("Supplying: %1$d destinations.", destinations.size())));
-		output.add(
-				new TextComponent("Last Supplied Voltage: ").append(ChatFormatting.GREEN.toString() + PowerTextFormatting.formatVoltageToString(lastProvidedVoltage).getString()));
+		output.add(new TranslatableComponent("gui.staticpower.voltage").append(": ")
+				.append(ChatFormatting.BLUE.toString() + PowerTextFormatting.formatVoltageToString(lastProvidedVoltage).getString()));
 	}
 
 	public void getMultimeterOutput(List<Component> output, BlockPos startingLocation, BlockPos endingLocation) {
 		output.add(new TextComponent(""));
 		getReaderOutput(output);
-		// Get all the paths to the destination from this provider.
 		ElectricalPathProperties properties = getPropertiesBetweenPoints(startingLocation, endingLocation);
-		output.add(new TextComponent("Resistance over Points: ")
-				.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatResistanceToString(properties.powerLoss).getString()));
-		output.add(new TextComponent("Last Power Loss: ")
-				.append(ChatFormatting.RED.toString() + PowerTextFormatting.formatPowerToString(properties.powerLoss / lastProvidedVoltage).getString()));
+
+		if (lastProvidedVoltage != 0) {
+			output.add(new TranslatableComponent("gui.staticpower.power_loss").append(": ").append(ChatFormatting.GOLD.toString() + PowerTextFormatting
+					.formatPowerToString(StaticPowerVoltage.adjustPowerLossByVoltage(StaticPowerVoltage.getVoltageClass(lastProvidedVoltage), properties.powerLoss)).getString()));
+		} else {
+			output.add(new TranslatableComponent("gui.staticpower.power_loss").append(": ")
+					.append(ChatFormatting.GOLD.toString() + PowerTextFormatting.formatPowerToString(properties.powerLoss).getString()).append(" @ ")
+					.append(new TranslatableComponent(StaticPowerVoltage.LOW.getShortName())));
+		}
+
+		output.add(new TranslatableComponent("gui.staticpower.max_power").append(": ")
+				.append(ChatFormatting.GREEN.toString() + PowerTextFormatting.formatPowerRateToString(properties.maxPower).getString()));
+		output.add(new TranslatableComponent("gui.staticpower.length").append(": ").append(ChatFormatting.GRAY.toString() + properties.cables().size()));
 	}
 
 	public ElectricalPathProperties getPropertiesBetweenPoints(BlockPos start, BlockPos end) {
@@ -172,7 +181,10 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		for (PathEntry entry : path.getEntries()) {
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
 			cablePowerLoss += (cable.getDoubleProperty(PowerCableComponent.POWER_LOSS));
-			cables.add(cable);
+
+			if (!cables.contains(cable)) {
+				cables.add(cable);
+			}
 
 			double cableMaxPower = cable.getDoubleProperty(PowerCableComponent.POWER_MAX);
 			if (cableMaxPower < maxPowerPerTick) {

@@ -40,21 +40,21 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
+import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
-import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderTreeFarmer;
@@ -413,7 +413,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		for (ItemStack stack : upgradesInventory) {
 			if (stack.getItem() instanceof BaseRangeUpgrade) {
 				range = (int) Math.max(range,
-						StaticPowerConfig.SERVER.treeFarmerDefaultRange.get() * (((BaseRangeUpgrade) stack.getItem()).getTier().upgradeConfiguration.rangeUpgrade.get()));
+						StaticPowerConfig.SERVER.treeFarmerDefaultRange.get() * ((BaseRangeUpgrade) stack.getItem()).getTierObject().upgradeConfiguration.rangeUpgrade.get());
 			}
 		}
 		refreshBlocksInRange(range);

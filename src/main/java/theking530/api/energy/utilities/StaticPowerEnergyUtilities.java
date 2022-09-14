@@ -6,6 +6,10 @@ import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
 
 public class StaticPowerEnergyUtilities {
+	public enum ElectricalExplosionTrigger {
+		NONE, OVER_VOLTAGE, INCOMPATIBLE_CURRENT_TYPE
+	}
+
 	public static final double FE_TO_SP_CONVERSION = 10;
 
 	public static double convertFEtomSP(int FE) {
@@ -66,7 +70,8 @@ public class StaticPowerEnergyUtilities {
 	 * @return
 	 */
 	public static double getAlternatingCurrentMultiplierAtTick(int tick) {
-		// return Math.sin((tick / 10.0) * Math.PI); // <- this produces a sin wave, realistic but not fun for gameplay.
+		// return Math.sin((tick / 10.0) * Math.PI); // <- this produces a sin wave,
+		// realistic but not fun for gameplay.
 		return tick >= 10 ? -1 : 1;
 	}
 
@@ -105,23 +110,23 @@ public class StaticPowerEnergyUtilities {
 		return provided;
 	}
 
-	public static boolean shouldPowerStackTriggerExplosion(PowerStack stack, IStaticPowerStorage storage) {
+	public static ElectricalExplosionTrigger shouldPowerStackTriggerExplosion(PowerStack stack, IStaticPowerStorage storage) {
 		// If there is no power, no need to explode.
 		if (stack.getPower() == 0) {
-			return false;
+			return ElectricalExplosionTrigger.NONE;
 		}
 
-		// If the voltage is negative and we don't accept alternative current, that's
+		// If the voltage is alternating and we don't accept alternative current, that's
 		// bad!
-		if (stack.getVoltage() < 0 && !storage.canAcceptCurrentType(CurrentType.ALTERNATING)) {
-			return true;
+		if (stack.getCurrentType() == CurrentType.ALTERNATING && !storage.canAcceptCurrentType(stack.getCurrentType())) {
+			return ElectricalExplosionTrigger.INCOMPATIBLE_CURRENT_TYPE;
 		}
 
 		// If the input voltage is over our supported range, that's an overvoltage!
-		if (stack.getVoltage() > storage.getInputVoltageRange().maximumVoltage()) {
-			return true;
+		if (Math.abs(stack.getVoltage()) > storage.getInputVoltageRange().maximumVoltage().getVoltage()) {
+			return ElectricalExplosionTrigger.OVER_VOLTAGE;
 		}
 
-		return false;
+		return ElectricalExplosionTrigger.NONE;
 	}
 }

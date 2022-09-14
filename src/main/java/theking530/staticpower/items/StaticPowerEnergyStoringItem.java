@@ -46,8 +46,8 @@ public abstract class StaticPowerEnergyStoringItem extends StaticPowerItem {
 	@Override
 	public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
 		double capacity = getCapacity();
-		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(new ItemStackStaticPowerEnergyCapability("default", stack, capacity, getInputVoltageRange(),
-				getMaximumInputPower(), getOutputVoltage().getVoltage(), getMaximumOutputPower()));
+		return new ItemStackMultiCapabilityProvider(stack, nbt).addCapability(
+				new ItemStackStaticPowerEnergyCapability("default", stack, capacity, getInputVoltageRange(), getMaximumInputPower(), getOutputVoltage(), getMaximumOutputPower()));
 	}
 
 	public ItemStack getFilledVariant() {

@@ -111,7 +111,7 @@ public abstract class TierPowerConfiguration {
 	}
 
 	public final StaticVoltageRange getDefaultInputVoltageRange() {
-		return new StaticVoltageRange(defaultInputVoltageRange.get().get(0).getVoltage(), defaultInputVoltageRange.get().get(1).getVoltage());
+		return new StaticVoltageRange(defaultInputVoltageRange.get().get(0), defaultInputVoltageRange.get().get(1));
 	}
 
 	protected abstract double getDefaultMaximumPowerInput();
@@ -142,7 +142,7 @@ public abstract class TierPowerConfiguration {
 	}
 
 	public final StaticVoltageRange getTransformerVoltageRange() {
-		return new StaticVoltageRange(transformerVoltageRange.get().get(0).getVoltage(), transformerVoltageRange.get().get(1).getVoltage());
+		return new StaticVoltageRange(transformerVoltageRange.get().get(0), transformerVoltageRange.get().get(1));
 	}
 
 	protected abstract double getSolarPanelPowerGeneration();
@@ -160,7 +160,7 @@ public abstract class TierPowerConfiguration {
 	}
 
 	public StaticVoltageRange getPortableBatteryChargingVoltage() {
-		return new StaticVoltageRange(portableBatteryInputVoltageRange.get().get(0).getVoltage(), portableBatteryInputVoltageRange.get().get(1).getVoltage());
+		return new StaticVoltageRange(portableBatteryInputVoltageRange.get().get(0), portableBatteryInputVoltageRange.get().get(1));
 	}
 
 	protected double getPortableBatteryMaxPowerInput() {

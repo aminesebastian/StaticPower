@@ -5,11 +5,11 @@ import java.util.function.Supplier;
 import theking530.staticpower.StaticPowerConfig;
 
 public enum StaticPowerVoltage {
-	LOW("low_voltage", StaticPowerConfig.SERVER.lowVoltage), MEDIUM("medium_voltage", StaticPowerConfig.SERVER.mediumVoltage),
+	ZERO("no_voltage", () -> 0.0), LOW("low_voltage", StaticPowerConfig.SERVER.lowVoltage), MEDIUM("medium_voltage", StaticPowerConfig.SERVER.mediumVoltage),
 	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage), VERY_HIGH("very_high_voltage", StaticPowerConfig.SERVER.veryHighVoltage),
 	EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage);
 
-	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / StaticPowerVoltage.values().length;
+	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / StaticPowerVoltage.values().length - 1;
 	private String unlocalizedName;
 	private String shortName;
 	private Supplier<Double> voltageSupplier;
@@ -32,6 +32,22 @@ public enum StaticPowerVoltage {
 		return voltageSupplier.get();
 	}
 
+	public boolean isLessThan(StaticPowerVoltage otherVoltage) {
+		return ordinal() < otherVoltage.ordinal();
+	}
+
+	public boolean isLessThanOrEqualTo(StaticPowerVoltage otherVoltage) {
+		return ordinal() <= otherVoltage.ordinal();
+	}
+
+	public boolean isGreaterThan(StaticPowerVoltage otherVoltage) {
+		return ordinal() > otherVoltage.ordinal();
+	}
+
+	public boolean isGreaterThanOrEqualTo(StaticPowerVoltage otherVoltage) {
+		return ordinal() >= otherVoltage.ordinal();
+	}
+
 	public StaticPowerVoltage upgrade() {
 		if (ordinal() == StaticPowerVoltage.values().length - 1) {
 			return this;
@@ -49,7 +65,12 @@ public enum StaticPowerVoltage {
 	}
 
 	public static double adjustPowerLossByVoltage(StaticPowerVoltage voltage, double powerLoss) {
-		double adjustment = POWER_LOSS_ADJUSTMENT_PER_VOLTAGE * (StaticPowerVoltage.values().length - voltage.ordinal());
+		// We do voltage.ordinal() - 1 to adjust for the "ZERO" option.
+		if (voltage == StaticPowerVoltage.ZERO) {
+			return powerLoss;
+		}
+
+		double adjustment = POWER_LOSS_ADJUSTMENT_PER_VOLTAGE * (StaticPowerVoltage.values().length - voltage.ordinal() - 1);
 		return powerLoss * adjustment;
 	}
 

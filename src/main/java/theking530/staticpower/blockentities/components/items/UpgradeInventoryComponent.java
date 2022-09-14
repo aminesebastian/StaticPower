@@ -1,8 +1,13 @@
 package theking530.staticpower.blockentities.components.items;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.api.IUpgradeItem;
 import theking530.api.upgrades.UpgradeType;
+import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.items.upgrades.BaseUpgrade;
@@ -22,7 +27,7 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 
 	public UpgradeItemWrapper getMaxTierItemForUpgradeType(UpgradeType type) {
 		// Allocate the max tier upgrade stack and tier.
-		StaticPowerTier maxTier = null;
+		ResourceLocation maxTier = null;
 		ItemStack maxTierUpgradeStack = ItemStack.EMPTY;
 		int count = 0;
 
@@ -38,7 +43,8 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 			// If it is a valid upgrade item, and it is of the requested type, check to see
 			// if the tier is higher than the current tier.
 			if (upgradeItem != null && upgradeItem.isOfType(type)) {
-				if (maxTier == null || upgradeItem.getTier().upgradeConfiguration.upgradeOrdinal.get() > maxTier.upgradeConfiguration.upgradeOrdinal.get()) {
+				if (maxTier == null || StaticPowerConfig.getTier(upgradeItem.getTier()).upgradeConfiguration.upgradeOrdinal
+						.get() > StaticPowerConfig.getTier(maxTier).upgradeConfiguration.upgradeOrdinal.get()) {
 					maxTier = upgradeItem.getTier();
 					maxTierUpgradeStack = upgradeStack;
 					count = upgradeStack.getCount();
@@ -52,6 +58,36 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 		ItemStack maxStack = maxTierUpgradeStack.copy();
 		maxStack.setCount(Math.min(maxStack.getMaxStackSize(), count));
 		return new UpgradeItemWrapper(maxStack, maxTier);
+	}
+
+	public List<UpgradeItemWrapper> getAllUpgradesOfType(UpgradeType type) {
+		List<UpgradeItemWrapper> output = new LinkedList<UpgradeItemWrapper>();
+
+		// Check for all items in the stacks array.
+		for (ItemStack upgradeStack : stacks) {
+			// Skip empty stacks.
+			if (upgradeStack.isEmpty()) {
+				continue;
+			}
+			// Get the upgrade item.
+			BaseUpgrade upgradeItem = upgradeStack.getItem() instanceof BaseUpgrade ? (BaseUpgrade) upgradeStack.getItem() : null;
+
+			// If it is a valid upgrade item, and it is of the requested type, add it.
+			if (upgradeItem != null && upgradeItem.isOfType(type)) {
+				boolean foundExisting = false;
+				for (UpgradeItemWrapper wrapper : output) {
+					if (ItemUtilities.areItemStacksStackable(wrapper.getStack(), upgradeStack)) {
+						wrapper.stack.grow(upgradeStack.getCount());
+						foundExisting = true;
+					}
+				}
+
+				if (!foundExisting) {
+					output.add(new UpgradeItemWrapper(upgradeStack.copy(), upgradeItem.getTier()));
+				}
+			}
+		}
+		return output;
 	}
 
 	/**
@@ -71,10 +107,10 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 
 	public class UpgradeItemWrapper {
 		private final ItemStack stack;
-		private final StaticPowerTier tier;
+		private final ResourceLocation tier;
 		private final boolean isEmpty;
 
-		public UpgradeItemWrapper(ItemStack stack, StaticPowerTier tier) {
+		public UpgradeItemWrapper(ItemStack stack, ResourceLocation tier) {
 			super();
 			this.stack = stack;
 			this.tier = tier;
@@ -89,8 +125,12 @@ public class UpgradeInventoryComponent extends InventoryComponent {
 			return stack;
 		}
 
-		public StaticPowerTier getTier() {
+		public ResourceLocation getTierId() {
 			return tier;
+		}
+
+		public StaticPowerTier getTier() {
+			return StaticPowerConfig.getTier(tier);
 		}
 
 		public float getUpgradeWeight() {

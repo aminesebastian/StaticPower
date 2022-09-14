@@ -20,8 +20,8 @@ public class PowerTooltips {
 		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.max_power_transfer", ChatFormatting.GREEN, PowerTextFormatting.formatPowerRateToString(maximumPowerTransfer));
 	}
 
-	public static void addPowerLossTooltip(List<Component> tooltip, double powerLoss) {
-		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.power_loss", ChatFormatting.GOLD, PowerTextFormatting.formatPowerToString(powerLoss));
+	public static void addPowerLossPerBlockTooltip(List<Component> tooltip, double powerLoss) {
+		TooltipUtilities.addSingleLineBullet(tooltip, "gui.staticpower.power_loss_per_block", ChatFormatting.GOLD, PowerTextFormatting.formatPowerToString(powerLoss));
 	}
 
 	public static void addPowerCapacityTooltip(List<Component> tooltip, double capacity) {

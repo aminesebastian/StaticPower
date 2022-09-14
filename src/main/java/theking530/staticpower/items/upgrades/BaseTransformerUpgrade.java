@@ -4,15 +4,16 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.upgrades.UpgradeTypes;
+import theking530.staticpower.data.StaticPowerTiers;
 
 public class BaseTransformerUpgrade extends BaseUpgrade {
 
@@ -23,15 +24,22 @@ public class BaseTransformerUpgrade extends BaseUpgrade {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		double conductivityUpgrade = getTier().upgradeConfiguration.heatConductivityUpgrade.get();
-		conductivityUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
+		StaticPowerVoltage fromVoltage = StaticPowerVoltage.LOW;
+		StaticPowerVoltage toVoltage = StaticPowerVoltage.MEDIUM;
 
-		double capacityUpgrade = getTier().upgradeConfiguration.heatCapacityUpgrade.get();
-		capacityUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
+		if (getTier() == StaticPowerTiers.STATIC) {
+			fromVoltage = StaticPowerVoltage.MEDIUM;
+			toVoltage = StaticPowerVoltage.HIGH;
+		} else if (getTier() == StaticPowerTiers.ENERGIZED) {
+			fromVoltage = StaticPowerVoltage.HIGH;
+			toVoltage = StaticPowerVoltage.VERY_HIGH;
+		} else if (getTier() == StaticPowerTiers.LUMUM) {
+			fromVoltage = StaticPowerVoltage.VERY_HIGH;
+			toVoltage = StaticPowerVoltage.EXTREME;
+		}
 
-		tooltip.add(new TextComponent(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(capacityUpgrade * 100) + "%" + ChatFormatting.GREEN + " Heat Capacity"));
-		tooltip.add(new TextComponent(
-				ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(conductivityUpgrade * 100) + "%" + ChatFormatting.GREEN + " Heat Conductivity"));
+		tooltip.add(new TranslatableComponent("gui.staticpower.transformer_upgrade_tooltip", new TranslatableComponent(fromVoltage.getShortName()),
+				new TranslatableComponent(toVoltage.getShortName())));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);
 	}
 }

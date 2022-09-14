@@ -58,9 +58,9 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 		// Set the energy storage.
 		registerComponent(powerStorage = new PowerStorageComponent("Powerbuffer", getTier()));
 		powerStorage.setCapacity(getTierObject().powerConfiguration.solarPanelPowerStorage.get());
-		powerStorage.setOutputVoltage(StaticPowerVoltage.LOW.getVoltage());
+		powerStorage.setOutputVoltage(StaticPowerVoltage.LOW);
 		powerStorage.setMaximumOutputPower(generationPerTick);
-		powerStorage.setInputVoltageRange(new StaticVoltageRange(StaticPowerVoltage.LOW.getVoltage(), StaticPowerVoltage.LOW.getVoltage()));
+		powerStorage.setInputVoltageRange(new StaticVoltageRange(StaticPowerVoltage.LOW, StaticPowerVoltage.LOW));
 		powerStorage.setSideConfiguration(sideConfiguration);
 
 		// Set the side config to only output on the bottom and disable on the rest.

@@ -5,6 +5,7 @@ import net.minecraftforge.common.capabilities.Capability;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.StaticPowerStorage;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.item.IItemMultiCapability;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
@@ -15,13 +16,13 @@ public class ItemStackStaticPowerEnergyCapability extends StaticPowerStorage imp
 	protected final ItemStack container;
 	protected ItemStackMultiCapabilityProvider owningProvider;
 
-	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputRange, double maximumInputPower, double voltageOutput,
-			double maximumOutputPower) {
+	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputRange, double maximumInputPower,
+			StaticPowerVoltage voltageOutput, double maximumOutputPower) {
 		this(name, container, capacity, inputRange, maximumInputPower, new CurrentType[] { CurrentType.DIRECT }, voltageOutput, maximumOutputPower, CurrentType.DIRECT);
 	}
 
 	public ItemStackStaticPowerEnergyCapability(String name, ItemStack container, double capacity, StaticVoltageRange inputVoltageRange, double maximumInputPower,
-			CurrentType[] acceptableCurrentTypes, double outputVoltage, double maximumOutputPower, CurrentType outputCurrentType) {
+			CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage, double maximumOutputPower, CurrentType outputCurrentType) {
 		super(capacity, inputVoltageRange, maximumInputPower, acceptableCurrentTypes, outputVoltage, maximumOutputPower, outputCurrentType);
 		this.name = name;
 		this.container = container;

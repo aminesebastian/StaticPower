@@ -9,7 +9,7 @@ public class StaticPowerEnergyStorageBuilder {
 	protected StaticVoltageRange inputVoltageRange;
 	protected double maxInputCurrent;
 
-	protected double outputVoltage;
+	protected StaticPowerVoltage outputVoltage;
 	protected double maxOutputCurrent;
 
 	protected CurrentType outputCurrentType;
@@ -30,7 +30,7 @@ public class StaticPowerEnergyStorageBuilder {
 		return this;
 	}
 
-	public StaticPowerEnergyStorageBuilder withOutputParameters(CurrentType currentType, double outputVoltage, double maxOutputCurrent) {
+	public StaticPowerEnergyStorageBuilder withOutputParameters(CurrentType currentType, StaticPowerVoltage outputVoltage, double maxOutputCurrent) {
 		this.outputCurrentType = currentType;
 		this.outputVoltage = outputVoltage;
 		this.maxOutputCurrent = maxOutputCurrent;

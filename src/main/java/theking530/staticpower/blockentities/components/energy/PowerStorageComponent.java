@@ -1,5 +1,7 @@
 package theking530.staticpower.blockentities.components.energy;
 
+import java.util.List;
+
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -12,10 +14,12 @@ import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerStorage;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.sided.ISidedStaticPowerStorage;
 import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
+import theking530.api.energy.utilities.StaticPowerEnergyUtilities.ElectricalExplosionTrigger;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -25,6 +29,7 @@ import theking530.staticpower.blockentities.components.items.UpgradeInventoryCom
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.data.StaticPowerTier;
+import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class PowerStorageComponent extends AbstractTileEntityComponent implements ISidedStaticPowerStorage {
@@ -42,7 +47,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	private double baseCapacity;
 	private StaticVoltageRange baseInputVoltageRange;
 	private double baseMaximumInputPower;
-	private double baseVoltageOutput;
+	private StaticPowerVoltage baseVoltageOutput;
 	private double baseMaximumOutputPower;
 
 	private SideConfigurationComponent sideConfig;
@@ -55,15 +60,16 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	private double lastSyncEnergy;
 	private boolean pendingManualSync;
 
+	private boolean receivedExplosivePowerCurrentTick;
+	private boolean receivedExplosivePowerLastTick;
 	private boolean shouldExplodeWhenOverVolted;
 	private int electricalExplosionTimeRemaining;
-	private boolean pendingElectricalExplosion;
 
 	private boolean canAcceptExternalPower;
 	private boolean canBeDrainedByExternalPower;
 
 	public PowerStorageComponent(String name, ResourceLocation staticPowerTier) {
-		this(name, 0, 0, 0, 0, new CurrentType[] { CurrentType.DIRECT }, 0, 0, CurrentType.DIRECT);
+		this(name, 0, StaticPowerVoltage.ZERO, StaticPowerVoltage.ZERO, 0, new CurrentType[] { CurrentType.DIRECT }, StaticPowerVoltage.ZERO, 0, CurrentType.DIRECT);
 		issueSyncPackets = true;
 
 		// Get the tier.
@@ -72,19 +78,19 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		setInputVoltageRange(tierObject.powerConfiguration.getDefaultInputVoltageRange().copy());
 		setMaximumInputPower(tierObject.powerConfiguration.defaultMaximumPowerInput.get());
 		setMaximumOutputPower(tierObject.powerConfiguration.defaultMaximumPowerOutput.get());
-		setOutputVoltage(tierObject.powerConfiguration.defaultOutputVoltage.get().getVoltage());
+		setOutputVoltage(tierObject.powerConfiguration.defaultOutputVoltage.get());
 	}
 
-	public PowerStorageComponent(String name, double capacity, double minInputVoltage, double maxInputVoltage, double maxInputcurrent, CurrentType[] acceptableInputCurrents,
-			double voltageOutput, double maxCurrentOutput, CurrentType outputCurrentType) {
+	public PowerStorageComponent(String name, double capacity, StaticPowerVoltage minInputVoltage, StaticPowerVoltage maxInputVoltage, double maxInputcurrent,
+			CurrentType[] acceptableInputCurrents, StaticPowerVoltage voltageOutput, double maxCurrentOutput, CurrentType outputCurrentType) {
 		super(name);
 		canAcceptExternalPower = true;
 		canBeDrainedByExternalPower = false;
 
 		exposeAsCapability = true;
 		shouldExplodeWhenOverVolted = true;
-		electricalExplosionTimeRemaining = 0;
-		pendingElectricalExplosion = false;
+		electricalExplosionTimeRemaining = -1;
+		receivedExplosivePowerCurrentTick = false;
 
 		baseCapacity = capacity;
 		baseInputVoltageRange = new StaticVoltageRange(minInputVoltage, maxInputVoltage);
@@ -112,12 +118,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 	@Override
 	public void postProcessUpdate() {
 		if (!isClientSide()) {
-			if (pendingElectricalExplosion) {
-				electricalExplosionTimeRemaining--;
-				if (electricalExplosionTimeRemaining <= 0) {
-					getLevel().explode(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, 1, Explosion.BlockInteraction.BREAK);
-				}
-			}
+			tickVoltageBasedExplosion();
 
 			// Synchronize whenever we need to.
 			if (issueSyncPackets) {
@@ -125,6 +126,8 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 			}
 
 			storage.tick(getLevel());
+			receivedExplosivePowerLastTick = receivedExplosivePowerCurrentTick;
+			receivedExplosivePowerCurrentTick = false;
 		}
 	}
 
@@ -148,11 +151,33 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 
 		// Set the new values.
 		storage.setCapacity(baseCapacity * powerCapacityUpgradeMultiplier);
-		storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage() * powerOutputUpgradeMultiplier,
-				baseInputVoltageRange.maximumVoltage() * powerOutputUpgradeMultiplier));
 		storage.setMaximumInputPower(baseMaximumInputPower * powerOutputUpgradeMultiplier);
-		storage.setOutputVoltage(baseVoltageOutput * powerOutputUpgradeMultiplier);
+		storage.setOutputVoltage(baseVoltageOutput);
 		storage.setMaximumOutputPower(baseMaximumOutputPower * powerOutputUpgradeMultiplier);
+
+		// Handle the input transformer upgrade.
+		UpgradeItemWrapper powerUpgrade = upgradeInventory.getMaxTierItemForUpgradeType(UpgradeTypes.POWER_TRANSFORMER);
+		if (powerUpgrade.isEmpty()) {
+			storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), baseInputVoltageRange.maximumVoltage()));
+		} else {
+			if (powerUpgrade.getTierId() == StaticPowerTiers.ADVANCED) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.MEDIUM)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.MEDIUM));
+				}
+			} else if (powerUpgrade.getTierId() == StaticPowerTiers.STATIC) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.HIGH)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.HIGH));
+				}
+			} else if (powerUpgrade.getTierId() == StaticPowerTiers.ENERGIZED) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.VERY_HIGH)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.VERY_HIGH));
+				}
+			} else if (powerUpgrade.getTierId() == StaticPowerTiers.LUMUM) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.EXTREME)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.EXTREME));
+				}
+			}
+		}
 	}
 
 	protected void handleNetworkSynchronization() {
@@ -197,15 +222,38 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		lastSyncEnergy = getStoredPower();
 	}
 
-	protected void initiateVoltageBasedExplosion() {
-		// If we made it this far, one of the above failed and, if we're allowed to
-		// explode, we must.
-		if (shouldExplodeWhenOverVolted) {
-			pendingElectricalExplosion = true;
-			electricalExplosionTimeRemaining = ELECTRICAL_EXPLOSION_TICKS;
-			getLevel().playSound(null, getPos(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0f, 1.5f);
-			// TODO: Add particle effects here.
+	protected void tickVoltageBasedExplosion() {
+		if (!shouldExplodeWhenOverVolted) {
+			return;
 		}
+
+		if (!receivedExplosivePowerLastTick) {
+			resetExplosionTimer();
+			return;
+		}
+
+		if (!isPendingElectricalExplosion()) {
+			initiateExplosionTimer();
+		} else {
+			electricalExplosionTimeRemaining--;
+			if (electricalExplosionTimeRemaining <= 0) {
+				getLevel().explode(null, getPos().getX() + 0.5, getPos().getY() + 0.5, getPos().getZ() + 0.5, 1, Explosion.BlockInteraction.BREAK);
+			}
+		}
+	}
+
+	protected void initiateExplosionTimer() {
+		// TODO: Add particle effects here.
+		electricalExplosionTimeRemaining = ELECTRICAL_EXPLOSION_TICKS;
+		getLevel().playSound(null, getPos(), SoundEvents.TNT_PRIMED, SoundSource.BLOCKS, 1.0f, 1.5f);
+	}
+
+	protected void resetExplosionTimer() {
+		electricalExplosionTimeRemaining = -1;
+	}
+
+	protected boolean isPendingElectricalExplosion() {
+		return electricalExplosionTimeRemaining >= 0;
 	}
 
 	public PowerStorageComponent setSideConfiguration(SideConfigurationComponent sideConfig) {
@@ -230,7 +278,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return this;
 	}
 
-	public PowerStorageComponent setOutputVoltage(double voltageOutput) {
+	public PowerStorageComponent setOutputVoltage(StaticPowerVoltage voltageOutput) {
 		storage.setOutputVoltage(voltageOutput);
 		baseVoltageOutput = voltageOutput;
 		markDirty();
@@ -352,16 +400,15 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		if (sideConfig == null || sideConfig.getWorldSpaceDirectionConfiguration(side).isInputMode()) {
 			// Only when not simulating, check if we should initiate an explosion.
 			if (!simulate) {
-				if (!pendingElectricalExplosion && StaticPowerEnergyUtilities.shouldPowerStackTriggerExplosion(stack, this)) {
-					initiateVoltageBasedExplosion();
-					return 0;
+				if (receivedExplosivePowerCurrentTick || StaticPowerEnergyUtilities.shouldPowerStackTriggerExplosion(stack, this) != ElectricalExplosionTrigger.NONE) {
+					receivedExplosivePowerCurrentTick = true;
+					// Make a new power stack with 0 power but the accurate voltage and current type
+					// to the player will see it in the UI (if only for a moment ;))
+					return addPower(new PowerStack(0, stack.getVoltage(), stack.getCurrentType()), simulate);
 				}
 			}
 
-			// If we're pending an explosion, do nothing.
-			if (!pendingElectricalExplosion) {
-				return addPower(stack, simulate);
-			}
+			return addPower(stack, simulate);
 		}
 
 		return 0;
@@ -415,7 +462,7 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 		return baseInputVoltageRange;
 	}
 
-	public double getBaseVoltageOutput() {
+	public StaticPowerVoltage getBaseVoltageOutput() {
 		return baseVoltageOutput;
 	}
 

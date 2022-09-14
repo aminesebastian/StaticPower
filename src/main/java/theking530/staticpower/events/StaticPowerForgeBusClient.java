@@ -36,7 +36,8 @@ import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.client.event.RenderLevelLastEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent;
+import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import net.minecraftforge.client.event.ScreenEvent.BackgroundDrawnEvent;
 import net.minecraftforge.client.event.ScreenEvent.DrawScreenEvent;
 import net.minecraftforge.client.event.ScreenEvent.InitScreenEvent;
@@ -59,7 +60,7 @@ import theking530.staticpower.utilities.RaytracingUtilities;
 /**
  * Any client only event handling is performed here.
  * 
- * @author 
+ * @author
  *
  */
 @SuppressWarnings("resource")
@@ -77,7 +78,7 @@ public class StaticPowerForgeBusClient {
 	}
 
 	@SubscribeEvent
-	public static void render(RenderLevelLastEvent event) {
+	public static void render(RenderLevelStageEvent event) {
 		CUSTOM_RENDERER.render(event);
 		renderMultiHarvesteBlockBreakEffect(event);
 	}
@@ -147,8 +148,8 @@ public class StaticPowerForgeBusClient {
 		Fluid fluid = PlayerUtilities.getFluidAtEyeLevel();
 
 		if (fluid instanceof AbstractStaticPowerFluid) {
-			AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;	
-			Color color = abstractFluid.getFogColor();	
+			AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;
+			Color color = abstractFluid.getFogColor();
 			event.setRed(color.getRed());
 			event.setGreen(color.getGreen());
 			event.setBlue(color.getBlue());
@@ -206,37 +207,40 @@ public class StaticPowerForgeBusClient {
 		}
 	}
 
-	private static void renderMultiHarvesteBlockBreakEffect(RenderLevelLastEvent event) {
-		// Get the controller. If it is null, return early.
-		MultiPlayerGameMode controller = Minecraft.getInstance().gameMode;
-		if (controller == null) {
-			return;
-		}
-
-		// Get the local player. If null, return early.
-		Player player = Minecraft.getInstance().player;
-		if (player == null) {
-			return;
-		}
-
-		// Get the player's held item.
-		ItemStack heldItem = player.getMainHandItem();
-
-		// If we're holding a multi harvest tool, render the extra block damage.
-		if (!heldItem.isEmpty() && heldItem.getItem() instanceof AbstractMultiHarvestTool) {
-			// Raytrace from the player's perspective to see which block they are looking
-			// at.
-			BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
-			if (raytraceResult.getType() != HitResult.Type.BLOCK) {
+	private static void renderMultiHarvesteBlockBreakEffect(RenderLevelStageEvent event) {
+		if (event.getStage() == Stage.AFTER_PARTICLES) {
+			// Get the controller. If it is null, return early.
+			MultiPlayerGameMode controller = Minecraft.getInstance().gameMode;
+			if (controller == null) {
 				return;
 			}
 
-			// Get all the extra blocks that we can mine based on where we are looking.
-			List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
+			// Get the local player. If null, return early.
+			Player player = Minecraft.getInstance().player;
+			if (player == null) {
+				return;
+			}
 
-			// If we're currently mining, draw the block damage texture.
-			if (controller.isDestroying()) {
-				drawBlockDamageTexture(event.getLevelRenderer(), event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(), extraBlocks);
+			// Get the player's held item.
+			ItemStack heldItem = player.getMainHandItem();
+
+			// If we're holding a multi harvest tool, render the extra block damage.
+			if (!heldItem.isEmpty() && heldItem.getItem() instanceof AbstractMultiHarvestTool) {
+				// Raytrace from the player's perspective to see which block they are looking
+				// at.
+				BlockHitResult raytraceResult = RaytracingUtilities.findPlayerRayTrace(player.getCommandSenderWorld(), player, ClipContext.Fluid.ANY);
+				if (raytraceResult.getType() != HitResult.Type.BLOCK) {
+					return;
+				}
+
+				// Get all the extra blocks that we can mine based on where we are looking.
+				List<BlockPos> extraBlocks = ((AbstractMultiHarvestTool) heldItem.getItem()).getMineableExtraBlocks(heldItem, raytraceResult.getBlockPos(), player);
+
+				// If we're currently mining, draw the block damage texture.
+				if (controller.isDestroying()) {
+					drawBlockDamageTexture(event.getLevelRenderer(), event.getPoseStack(), Minecraft.getInstance().gameRenderer.getMainCamera(), player.getCommandSenderWorld(),
+							extraBlocks);
+				}
 			}
 		}
 	}
@@ -271,7 +275,8 @@ public class StaticPowerForgeBusClient {
 		for (BlockPos pos : extraBlocks) {
 			matrixStackIn.pushPose();
 			// Make sure we transform into projection space.
-			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x, (double) pos.getY() - renderInfo.getPosition().y, (double) pos.getZ() - renderInfo.getPosition().z);
+			matrixStackIn.translate((double) pos.getX() - renderInfo.getPosition().x, (double) pos.getY() - renderInfo.getPosition().y,
+					(double) pos.getZ() - renderInfo.getPosition().z);
 			VertexConsumer matrixBuilder = new SheetedDecalTextureGenerator(vertexBuilder, matrixStackIn.last().pose(), matrixStackIn.last().normal());
 
 			// Render the damage.

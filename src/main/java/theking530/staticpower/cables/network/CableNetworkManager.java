@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.network;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -62,6 +63,8 @@ public class CableNetworkManager extends SavedData {
 		for (CableNetwork network : Networks.values()) {
 			network.preWorldTick();
 		}
+//		WorldCables.clear();
+//		Networks.clear();
 	}
 
 	public void tick() {
@@ -102,12 +105,41 @@ public class CableNetworkManager extends SavedData {
 
 		setDirty();
 
+		// If sparse, just create the network. Adding a sparse cable is automatically a
+		// new network always.
+		if (cable.isSparse()) {
+			formNetworkAt(cable.getWorld(), cable.getPos());
+			return;
+		}
+
+		// If we have a non sparse cable, see if it can join an adjacent network.
 		List<ServerCable> adjacents = getAdjacents(cable);
 		if (adjacents.isEmpty()) {
 			formNetworkAt(cable.getWorld(), cable.getPos());
 		} else {
 			mergeNetworksIntoOne(adjacents, cable.getWorld(), cable.getPos());
 		}
+	}
+
+	public void joinSparseCables(ServerCable initiator, ServerCable target) {
+		if (initiator.Network == null) {
+			throw new RuntimeException(String.format("Attempted to join sparse cables with initiator: %1$s with a null network.", initiator.getPos()));
+		}
+		if (target.Network == null) {
+			throw new RuntimeException(String.format("Attempted to join sparse cables with target: %1$s with a null network.", target.getPos()));
+		}
+		mergeNetworksIntoOne(Arrays.asList(initiator, target), World, initiator.getPos());
+	}
+
+	public void separateSparseCables(ServerCable initiator, ServerCable target) {
+		if (initiator.Network == null) {
+			throw new RuntimeException(String.format("Attempted to join sparse cables with initiator: %1$s with a null network.", initiator.getPos()));
+		}
+		if (target.Network == null) {
+			throw new RuntimeException(String.format("Attempted to join sparse cables with target: %1$s with a null network.", target.getPos()));
+		}
+
+		splitNetworks(initiator);
 	}
 
 	public void refreshCable(ServerCable cable) {
@@ -141,6 +173,12 @@ public class CableNetworkManager extends SavedData {
 			if (originalCable.Network == null) {
 				// Get it's adjacent.
 				List<ServerCable> newAdjacents = getAdjacents(originalCable);
+				// In the context of adjacent networks, this cable should be considered as well
+				// for sparse cables.
+				if (cable.isSparse()) {
+					newAdjacents.add(cable);
+				}
+
 				// If there are no adjacents, create a new network. Otherwise, attempt to join
 				// it.
 				if (newAdjacents.isEmpty()) {
@@ -447,34 +485,40 @@ public class CableNetworkManager extends SavedData {
 
 	private List<ServerCable> getAdjacents(ServerCable cable) {
 		List<ServerCable> wrappers = new ArrayList<ServerCable>();
-		for (Direction dir : Direction.values()) {
-			// Skip checking that side if that side is disabled.
-			if (cable.isDisabledOnSide(dir)) {
-				continue;
+		if (cable.isSparse()) {
+			for (BlockPos connection : cable.getSparseConnections()) {
+				wrappers.add(getCable(connection));
 			}
+		} else {
+			for (Direction dir : Direction.values()) {
+				// Skip checking that side if that side is disabled.
+				if (cable.isDisabledOnSide(dir)) {
+					continue;
+				}
 
-			// Check if a cable exists on the provided side and it is enabled on that side
-			// and of the same type.
-			ServerCable adjacent = getCable(cable.getPos().relative(dir));
+				// Check if a cable exists on the provided side and it is enabled on that side
+				// and of the same type.
+				ServerCable adjacent = getCable(cable.getPos().relative(dir));
 
-			if (adjacent == null) {
-				continue;
-			}
+				if (adjacent == null) {
+					continue;
+				}
 
-			if (adjacent.isDisabledOnSide(dir.getOpposite())) {
-				continue;
-			}
+				if (adjacent.isDisabledOnSide(dir.getOpposite())) {
+					continue;
+				}
 
-			if (adjacent.getNetwork() == null) {
-				continue;
-			}
+				if (adjacent.getNetwork() == null) {
+					continue;
+				}
 
-			if (!adjacent.getNetwork().canAcceptCable(adjacent, cable)) {
-				continue;
-			}
+				if (!adjacent.getNetwork().canAcceptCable(adjacent, cable)) {
+					continue;
+				}
 
-			if (adjacent.shouldConnectTo(cable)) {
-				wrappers.add(adjacent);
+				if (adjacent.shouldConnectTo(cable)) {
+					wrappers.add(adjacent);
+				}
 			}
 		}
 

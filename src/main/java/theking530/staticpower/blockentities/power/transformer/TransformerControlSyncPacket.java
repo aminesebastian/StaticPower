@@ -6,34 +6,35 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.network.NetworkMessage;
 
 public class TransformerControlSyncPacket extends NetworkMessage {
 	private BlockPos position;
-	private boolean isVoltage;
-	private double delta;
+	private StaticPowerVoltage voltage;
+	private double powerDelta;
 
 	public TransformerControlSyncPacket() {
 	}
 
-	public TransformerControlSyncPacket(BlockPos pos, boolean voltage, double delta) {
+	public TransformerControlSyncPacket(BlockPos pos, StaticPowerVoltage voltage, double powerDelta) {
 		this.position = pos;
-		this.isVoltage = voltage;
-		this.delta = delta;
+		this.voltage = voltage;
+		this.powerDelta = powerDelta;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
 		buffer.writeBlockPos(position);
-		buffer.writeBoolean(isVoltage);
-		buffer.writeDouble(delta);
+		buffer.writeByte(voltage.ordinal());
+		buffer.writeDouble(powerDelta);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
 		position = buffer.readBlockPos();
-		isVoltage = buffer.readBoolean();
-		delta = buffer.readDouble();
+		voltage = StaticPowerVoltage.values()[buffer.readByte()];
+		powerDelta = buffer.readDouble();
 	}
 
 	@SuppressWarnings("deprecation")
@@ -44,11 +45,8 @@ public class TransformerControlSyncPacket extends NetworkMessage {
 				BlockEntity rawTileEntity = ctx.get().getSender().getLevel().getBlockEntity(position);
 				if (rawTileEntity != null && rawTileEntity instanceof BlockEntityTransformer) {
 					BlockEntityTransformer battery = (BlockEntityTransformer) rawTileEntity;
-					if (isVoltage) {
-						battery.addOutputVoltageDelta(delta);
-					} else {
-						battery.addMaximumOutputCurrentDelta(delta);
-					}
+					battery.setOutputVoltage(voltage);
+					battery.addMaximumOutputPowerDelta(powerDelta);
 				}
 			}
 		});

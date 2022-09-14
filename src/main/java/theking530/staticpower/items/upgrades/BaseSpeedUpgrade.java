@@ -23,10 +23,10 @@ public class BaseSpeedUpgrade extends BaseUpgrade {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		double speedUpgrade = getTier().upgradeConfiguration.processingSpeedUpgrade.get();
+		double speedUpgrade = getTierObject().upgradeConfiguration.processingSpeedUpgrade.get();
 		speedUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
-		double powerRateUpgrade = getTier().upgradeConfiguration.processingSpeedPowerCost.get();
+		double powerRateUpgrade = getTierObject().upgradeConfiguration.processingSpeedPowerCost.get();
 		powerRateUpgrade *= (float) stack.getCount() / stack.getMaxStackSize();
 
 		tooltip.add(new TextComponent(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(speedUpgrade * 100) + "%" + ChatFormatting.GREEN + " Processing Speed"));

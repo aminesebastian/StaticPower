@@ -8,6 +8,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.CurrentType;
 import theking530.api.energy.PowerStack;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -57,9 +58,9 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 
 		if (getTier() == StaticPowerTiers.CREATIVE) {
 			powerStorage.setMaximumOutputPower(100);
-			powerStorage.setOutputVoltage(100);
+			powerStorage.setOutputVoltage(StaticPowerVoltage.MEDIUM);
 		} else {
-			powerStorage.setOutputVoltage(Math.floor((possibleOutputVoltageRange.minimumVoltage() + possibleOutputVoltageRange.maximumVoltage()) / 2));
+			powerStorage.setOutputVoltage(possibleOutputVoltageRange.minimumVoltage());
 			powerStorage.setMaximumOutputPower(Math.floor(maximumPossibleOutputCurrent / 2));
 		}
 	}
@@ -81,26 +82,15 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 		return 0;
 	}
 
-	public void setMaximumOutputCurrent(double current) {
-		if (current >= 0 && current <= maximumPossibleOutputCurrent) {
-			powerStorage.setMaximumOutputPower(current);
-		}
-	}
-
-	public void setOutputVoltage(double voltage) {
+	public void setOutputVoltage(StaticPowerVoltage voltage) {
 		if (possibleOutputVoltageRange.isVoltageInRange(voltage)) {
 			powerStorage.setOutputVoltage(voltage);
 		}
 	}
 
-	public void addMaximumOutputCurrentDelta(double deltaCurrent) {
+	public void addMaximumOutputPowerDelta(double deltaCurrent) {
 		double newCurrent = SDMath.clamp(powerStorage.getMaximumPowerOutput() + deltaCurrent, 0, maximumPossibleOutputCurrent);
 		powerStorage.setMaximumOutputPower(newCurrent);
-	}
-
-	public void addOutputVoltageDelta(double deltaVoltage) {
-		double newVoltage = possibleOutputVoltageRange.clampVoltageToRange(powerStorage.getOutputVoltage() + deltaVoltage);
-		powerStorage.setOutputVoltage(newVoltage);
 	}
 
 	@Override

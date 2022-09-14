@@ -23,7 +23,7 @@ public class BaseTankUpgrade extends BaseUpgrade {
 	@Override
 	@OnlyIn(Dist.CLIENT)
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean showAdvanced) {
-		double upgradeAmount = getTier().upgradeConfiguration.tankCapacityUpgrade.get();
+		double upgradeAmount = getTierObject().upgradeConfiguration.tankCapacityUpgrade.get();
 		upgradeAmount *= (float) stack.getCount() / stack.getMaxStackSize();
 		tooltip.add(new TextComponent(ChatFormatting.WHITE + "+" + new java.text.DecimalFormat("#").format(upgradeAmount * 100) + "%" + ChatFormatting.GREEN + " Tank Capacity"));
 		super.getTooltip(stack, worldIn, tooltip, showAdvanced);

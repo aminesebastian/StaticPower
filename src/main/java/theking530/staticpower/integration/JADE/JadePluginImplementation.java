@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
+import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
@@ -69,7 +70,8 @@ public class JadePluginImplementation implements IWailaPlugin {
 			if (tile != null) {
 				IStaticPowerStorage storage = tile.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).orElse(null);
 				if (storage != null || (accessor.isServerConnected() && accessor.getServerData().contains(JadeDataProviders.POWER_TAG))) {
-					double stored = 0, capacity = 0, outputVoltage = 0, minVoltage = 0, maxVoltage = 0;
+					double stored = 0, capacity = 0, outputVoltage = 0;
+					StaticPowerVoltage minVoltage = StaticPowerVoltage.ZERO, maxVoltage = StaticPowerVoltage.ZERO;
 					boolean displayOutputVoltage = false;
 					boolean displayInputParameters = false;
 					boolean isAlternating = false;
@@ -87,9 +89,12 @@ public class JadePluginImplementation implements IWailaPlugin {
 						if (svData.contains("capacity")) {
 							stored = svData.getDouble("stored_power");
 							capacity = svData.getDouble("capacity");
-							minVoltage = svData.getDouble("min_voltage");
-							maxVoltage = svData.getDouble("max_voltage");
-							if (minVoltage != Double.MIN_VALUE && maxVoltage != Double.MAX_VALUE) {
+
+							StaticVoltageRange range = StaticVoltageRange.deserializeNBT(svData.getCompound("voltage_range"));
+
+							minVoltage = range.minimumVoltage();
+							maxVoltage = range.maximumVoltage();
+							if (minVoltage != StaticPowerVoltage.ZERO && maxVoltage != StaticPowerVoltage.ZERO) {
 								displayInputParameters = true;
 							}
 						}
@@ -100,7 +105,8 @@ public class JadePluginImplementation implements IWailaPlugin {
 							outputVoltage = storage.getOutputVoltage();
 						}
 
-						if (storage.getInputVoltageRange().minimumVoltage() != Double.MIN_VALUE && storage.getInputVoltageRange().maximumVoltage() != Double.MAX_VALUE) {
+						if (storage.getInputVoltageRange().minimumVoltage() != StaticPowerVoltage.ZERO
+								&& storage.getInputVoltageRange().maximumVoltage() != StaticPowerVoltage.ZERO) {
 							displayInputParameters = true;
 							stored = storage.getStoredPower();
 							capacity = storage.getCapacity();
@@ -111,8 +117,9 @@ public class JadePluginImplementation implements IWailaPlugin {
 
 					// Draw the output voltage.
 					if (displayOutputVoltage) {
-						JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.output_voltage").append(": ")
-								.append(PowerTextFormatting.formatVoltageToString(outputVoltage)), OUTPUT_VOLTAGE_RENDERER);
+						JadePluginImplementation.drawValue(tooltip,
+								new TranslatableComponent("gui.staticpower.output_voltage").append(": ").append(PowerTextFormatting.formatVoltageToString(outputVoltage)),
+								OUTPUT_VOLTAGE_RENDERER);
 					}
 
 					if (isAlternating) {
@@ -122,14 +129,17 @@ public class JadePluginImplementation implements IWailaPlugin {
 					// Draw stored power bar.
 					if (displayInputParameters) {
 						if (minVoltage == maxVoltage) {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
-									.append(PowerTextFormatting.formatVoltageToString(minVoltage)), INPUT_VOLTAGE_RENDERER);
-						} else if (minVoltage == 0) {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": <")
-									.append(PowerTextFormatting.formatVoltageToString(maxVoltage)), INPUT_VOLTAGE_RENDERER);
-						} else if (maxVoltage == Double.MAX_VALUE) {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": >")
-									.append(PowerTextFormatting.formatVoltageToString(minVoltage)), INPUT_VOLTAGE_RENDERER);
+							JadePluginImplementation.drawValue(tooltip,
+									new TranslatableComponent("gui.staticpower.input_voltage").append(": ").append(new TranslatableComponent(minVoltage.getShortName())),
+									INPUT_VOLTAGE_RENDERER);
+						} else if (minVoltage == StaticPowerVoltage.ZERO) {
+							JadePluginImplementation.drawValue(tooltip,
+									new TranslatableComponent("gui.staticpower.input_voltage").append(": <").append(new TranslatableComponent(maxVoltage.getShortName())),
+									INPUT_VOLTAGE_RENDERER);
+						} else if (maxVoltage == StaticPowerVoltage.EXTREME) {
+							JadePluginImplementation.drawValue(tooltip,
+									new TranslatableComponent("gui.staticpower.input_voltage").append(": >").append(new TranslatableComponent(minVoltage.getShortName())),
+									INPUT_VOLTAGE_RENDERER);
 						} else {
 							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
 									.append(PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);

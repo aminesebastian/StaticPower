@@ -41,6 +41,7 @@ import theking530.staticpower.items.PortableBattery;
 import theking530.staticpower.items.ResearchItem;
 import theking530.staticpower.items.StaticPowerFood;
 import theking530.staticpower.items.StaticPowerItem;
+import theking530.staticpower.items.WireCoil;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -72,6 +73,7 @@ import theking530.staticpower.items.upgrades.BasePowerUpgrade;
 import theking530.staticpower.items.upgrades.BaseRangeUpgrade;
 import theking530.staticpower.items.upgrades.BaseSpeedUpgrade;
 import theking530.staticpower.items.upgrades.BaseTankUpgrade;
+import theking530.staticpower.items.upgrades.BaseTransformerUpgrade;
 import theking530.staticpower.items.upgrades.CraftingUpgrade;
 import theking530.staticpower.items.upgrades.ExperienceVacuumUpgrade;
 import theking530.staticpower.items.upgrades.StackUpgrade;
@@ -373,18 +375,20 @@ public class ModItems {
 
 	public static final RegistryObject<StaticPowerItem> RubberBar = ITEMS.register("rubber_bar", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> RubberSheet = ITEMS.register("rubber_sheet", () -> new StaticPowerItem());
+
+	public static final RegistryObject<StaticPowerItem> WireAluminum = ITEMS.register("wire_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> WireCopper = ITEMS.register("wire_copper", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> WireTin = ITEMS.register("wire_tin", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> WireSilver = ITEMS.register("wire_silver", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> WireGold = ITEMS.register("wire_gold", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> WirePlatinum = ITEMS.register("wire_platinum", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> WireAluminum = ITEMS.register("wire_aluminum", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> CoilCopper = ITEMS.register("coil_copper", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> CoilSilver = ITEMS.register("coil_silver", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> CoilGold = ITEMS.register("coil_gold", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> CoilPlatinum = ITEMS.register("coil_platinum", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> CoilAluminum = ITEMS.register("coil_aluminum", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> CoilTin = ITEMS.register("coil_tin", () -> new StaticPowerItem());
+	
+	public static final RegistryObject<StaticPowerItem> CoilCopper = ITEMS.register("coil_copper", () -> new WireCoil());
+	public static final RegistryObject<StaticPowerItem> CoilSilver = ITEMS.register("coil_silver", () -> new WireCoil());
+	public static final RegistryObject<StaticPowerItem> CoilGold = ITEMS.register("coil_gold", () -> new WireCoil());
+	public static final RegistryObject<StaticPowerItem> CoilPlatinum = ITEMS.register("coil_platinum", () -> new WireCoil());
+	public static final RegistryObject<StaticPowerItem> CoilAluminum = ITEMS.register("coil_aluminum", () -> new WireCoil());
+	public static final RegistryObject<StaticPowerItem> CoilTin = ITEMS.register("coil_tin", () -> new WireCoil());
 
 	public static final RegistryObject<DrillBit> IronDrillBit = ITEMS.register("drill_bit_iron", () -> new DrillBit(Tiers.IRON, StaticPowerTiers.IRON));
 	public static final RegistryObject<DrillBit> BronzeDrillBit = ITEMS.register("drill_bit_bronze", () -> new DrillBit(Tiers.IRON, StaticPowerTiers.BRONZE));
@@ -642,6 +646,15 @@ public class ModItems {
 	public static final RegistryObject<StackUpgrade> StackUpgrade = ITEMS.register("upgrade_stack", () -> new StackUpgrade());
 	public static final RegistryObject<AcceleratorUpgrade> AcceleratorUpgrade = ITEMS.register("upgrade_accelerator", () -> new AcceleratorUpgrade());
 	public static final RegistryObject<CraftingUpgrade> CraftingUpgrade = ITEMS.register("upgrade_crafting", () -> new CraftingUpgrade());
+
+	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeMV = ITEMS.register("upgrade_transformer_advanced",
+			() -> new BaseTransformerUpgrade(StaticPowerTiers.ADVANCED));
+	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeHV = ITEMS.register("upgrade_transformer_static",
+			() -> new BaseTransformerUpgrade(StaticPowerTiers.STATIC));
+	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeVHV = ITEMS.register("upgrade_transformer_energized",
+			() -> new BaseTransformerUpgrade(StaticPowerTiers.ENERGIZED));
+	public static final RegistryObject<BaseTransformerUpgrade> TransformerUpgradeEV = ITEMS.register("upgrade_transformer_lumum",
+			() -> new BaseTransformerUpgrade(StaticPowerTiers.LUMUM));
 
 	public static final RegistryObject<BasePowerUpgrade> BasicPowerUpgrade = ITEMS.register("upgrade_power_basic", () -> new BasePowerUpgrade(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BasePowerUpgrade> StaticPowerUpgrade = ITEMS.register("upgrade_power_static", () -> new BasePowerUpgrade(StaticPowerTiers.STATIC));

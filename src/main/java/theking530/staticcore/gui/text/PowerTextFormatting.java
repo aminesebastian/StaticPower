@@ -99,27 +99,28 @@ public class PowerTextFormatting {
 	}
 
 	public static MutableComponent formatVoltageToString(double voltage, boolean includeUnits, boolean includeMetricUnit) {
-		// Allocate the text component.
-		MutableComponent output;
-
-		// If the value is equal to the integer max, make it infinite.
-		if (Double.isInfinite(voltage) || voltage == Double.MAX_VALUE || voltage == Double.MIN_VALUE) {
-			output = new TextComponent("∞");
-		} else {
-			// Perform the metric conversion.
-			MetricConverter metricEnergy = new MetricConverter(voltage);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
-
-			// Include the metric unit if requested.
-			if (includeMetricUnit) {
-				output.append(metricEnergy.getSuffix());
-			}
-		}
-
-		if (includeUnits) {
-			output.append(VOLTAGE_UNIT);
-		}
-		return output;
+		return new TranslatableComponent(StaticPowerVoltage.getVoltageClass(voltage).getShortName());
+//		// Allocate the text component.
+//		MutableComponent output;
+//
+//		// If the value is equal to the integer max, make it infinite.
+//		if (Double.isInfinite(voltage) || voltage == Double.MAX_VALUE || voltage == Double.MIN_VALUE) {
+//			output = new TextComponent("∞");
+//		} else {
+//			// Perform the metric conversion.
+//			MetricConverter metricEnergy = new MetricConverter(voltage);
+//			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricEnergy.getValue()));
+//
+//			// Include the metric unit if requested.
+//			if (includeMetricUnit) {
+//				output.append(metricEnergy.getSuffix());
+//			}
+//		}
+//
+//		if (includeUnits) {
+//			output.append(VOLTAGE_UNIT);
+//		}
+//		return output;
 	}
 
 	public static MutableComponent formatVoltageToString(double voltage, boolean includeUnits) {
@@ -132,14 +133,13 @@ public class PowerTextFormatting {
 
 	public static MutableComponent formatVoltageRangeToString(StaticVoltageRange range) {
 		if (range.minimumVoltage() == range.maximumVoltage()) {
-			return new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.maximumVoltage()).getShortName());
-		} else if (range.minimumVoltage() == 0) {
-			return new TextComponent("<").append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.maximumVoltage()).getShortName()));
-		} else if (range.maximumVoltage() == Double.MAX_VALUE) {
-			return new TextComponent("<").append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.minimumVoltage()).getShortName()));
+			return new TranslatableComponent(range.maximumVoltage().getShortName());
+		} else if (range.minimumVoltage() == StaticPowerVoltage.LOW) {
+			return new TextComponent("<").append(new TranslatableComponent(range.maximumVoltage().getShortName()));
+		} else if (range.maximumVoltage() == StaticPowerVoltage.EXTREME) {
+			return new TextComponent("<").append(new TranslatableComponent(range.maximumVoltage().getShortName()));
 		} else {
-			return new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.minimumVoltage()).getShortName()).append("⇔")
-					.append(new TranslatableComponent(StaticPowerVoltage.getVoltageClass(range.maximumVoltage()).getShortName()));
+			return new TranslatableComponent(range.minimumVoltage().getShortName()).append("⇔").append(new TranslatableComponent(range.maximumVoltage().getShortName()));
 		}
 	}
 

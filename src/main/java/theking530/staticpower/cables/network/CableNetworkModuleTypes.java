@@ -6,6 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
 
 public class CableNetworkModuleTypes {
+	public static final ResourceLocation POWER_WIRE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_power_wire_network");
 	public static final ResourceLocation POWER_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_power_network");
 	public static final ResourceLocation ITEM_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_item_network");
 	public static final ResourceLocation FLUID_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_fluid_network");
@@ -14,7 +15,7 @@ public class CableNetworkModuleTypes {
 	public static final ResourceLocation SCAFFOLD_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_scaffold_network");
 
 	public static final ResourceLocation REFINERY_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_refiney_network");
-	
+
 	public static final ResourceLocation BUNDLED_REDSTONE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_bundled_redstone_network");
 	public static final ResourceLocation REDSTONE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_redstone_network");
 

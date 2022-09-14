@@ -7,7 +7,6 @@ import java.util.Set;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.common.util.INBTSerializable;
-import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 
 public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable<CompoundTag> {
 	protected double capacity;
@@ -17,13 +16,13 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 	protected double maxInputPower;
 	protected Set<CurrentType> acceptableCurrentTypes;
 
-	protected double outputVoltage;
+	protected StaticPowerVoltage outputVoltage;
 	protected double maxOutputPower;
 	protected CurrentType outputCurrentType;
 
 	protected StaticPowerEnergyTracker ticker;
 
-	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputPower, CurrentType[] acceptableCurrentTypes, double outputVoltage,
+	public StaticPowerStorage(double capacity, StaticVoltageRange inputVoltageRange, double maxInputPower, CurrentType[] acceptableCurrentTypes, StaticPowerVoltage outputVoltage,
 			double maxOutputPower, CurrentType outputCurrentType) {
 		this();
 		this.capacity = capacity;
@@ -53,7 +52,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		return this;
 	}
 
-	public StaticPowerStorage setOutputVoltage(double voltageOutput) {
+	public StaticPowerStorage setOutputVoltage(StaticPowerVoltage voltageOutput) {
 		this.outputVoltage = voltageOutput;
 		return this;
 	}
@@ -143,7 +142,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 
 	@Override
 	public double getOutputVoltage() {
-		return outputVoltage;
+		return outputVoltage.getVoltage();
 	}
 
 	@Override
@@ -221,7 +220,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		output.put("inputVoltageRange", inputVoltageRange.serializeNBT());
 		output.putDouble("maxInputPower", maxInputPower);
 
-		output.putDouble("voltageOutput", outputVoltage);
+		output.putByte("voltageOutput", (byte) outputVoltage.ordinal());
 		output.putDouble("maxOutputPower", maxOutputPower);
 
 		output.putByte("outputType", (byte) outputCurrentType.ordinal());
@@ -244,7 +243,7 @@ public class StaticPowerStorage implements IStaticPowerStorage, INBTSerializable
 		inputVoltageRange = StaticVoltageRange.deserializeNBT(nbt.getCompound("inputVoltageRange"));
 		maxInputPower = nbt.getDouble("maxInputPower");
 
-		outputVoltage = nbt.getDouble("voltageOutput");
+		outputVoltage = StaticPowerVoltage.values()[nbt.getByte("voltageOutput")];
 		maxOutputPower = nbt.getDouble("maxOutputPower");
 
 		outputCurrentType = CurrentType.values()[nbt.getByte("outputType")];

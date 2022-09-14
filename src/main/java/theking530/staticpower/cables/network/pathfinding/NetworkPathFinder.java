@@ -92,28 +92,36 @@ public class NetworkPathFinder {
 				throw new RuntimeException(String.format("Attempted to use a null cable in a network path find. Error occured at location: %1$s.", curr));
 			}
 
+			List<BlockPos> positionsToScan = new ArrayList<BlockPos>();
+			if (cable.isSparse()) {
+				positionsToScan.addAll(cable.getSparseConnections());
+			} else {
+				// Scan all adjacent blocks.
+				for (Direction dir : Direction.values()) {
+					// Skip checking that block at this point in time because the cable is disabled
+					// on that side. We may hit the block on this side again, but it will be later
+					// when the path is longer.
+					if (cable.isDisabledOnSide(dir)) {
+						continue;
+					}
+					// Get the adjacent and check if we have visited it before. If we have, skip it.
+					// Also, skip it if it's not part of our graph nodes list.
+					// Finally, skip it if the filter fails.
+					BlockPos adjacent = curr.relative(dir);
+					if (!GraphNodes.contains(adjacent) || VisitedPositions.contains(adjacent) || (filter != null && !filter.apply(curr, adjacent))) {
+						continue;
+					}
+					positionsToScan.add(adjacent);
+				}
+			}
+
 			// Scan all adjacent blocks.
-			for (Direction dir : Direction.values()) {
-				// Skip checking that block at this point in time because the cable is disabled
-				// on that side. We may hit the block on this side again, but it will be later
-				// when the path is longer.
-				if (cable.isDisabledOnSide(dir)) {
-					continue;
-				}
-
-				// Get the adjacent and check if we have visited it before. If we have, skip it.
-				// Also, skip it if it's not part of our graph nodes list.
-				// Finally, skip it if the filter fails.
-				BlockPos adjacent = curr.relative(dir);
-				if (!GraphNodes.contains(adjacent) || VisitedPositions.contains(adjacent) || (filter != null && !filter.apply(curr, adjacent))) {
-					continue;
-				}
-
+			for (BlockPos adjacent : positionsToScan) {
 				// Mark the adjacent as visited
 				VisitedPositions.add(adjacent);
 
 				// Cache the predecessor to this location.
-				Predecessors.put(adjacent, new PathEntry(curr, dir));
+				Predecessors.put(adjacent, new PathEntry(curr, Direction.UP));
 
 				// If we got this far, we should recurse on this node.
 				BFSQueue.add(adjacent);

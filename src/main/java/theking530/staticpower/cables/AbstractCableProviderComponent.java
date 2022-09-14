@@ -660,7 +660,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	protected ServerCable createCable() {
-		return new ServerCable(getLevel(), getPos(), getSupportedNetworkModuleTypes());
+		return new ServerCable(getLevel(), getPos(), false, getSupportedNetworkModuleTypes());
 	}
 
 	protected void onCableFirstAddedToNetwork(ServerCable cable) {

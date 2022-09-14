@@ -21,6 +21,7 @@ public class GuiMachinePowerInfoTab extends GuiPowerInfoTab {
 
 	@Override
 	protected void renderWidgetBehindItems(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
+		super.renderWidgetBehindItems(matrix, mouseX, mouseY, partialTicks);
 		if (isOpen()) {
 //			float topOffset = 2;
 //

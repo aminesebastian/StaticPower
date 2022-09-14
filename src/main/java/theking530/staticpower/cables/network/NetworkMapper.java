@@ -72,25 +72,44 @@ public class NetworkMapper {
 		// though, as another cable may get to it that is enabled on that side.
 		ServerCable cable = CableNetworkManager.get(world).getCable(currentPosition);
 
-		for (Direction facing : Direction.values()) {
-			if (cable != null && cable.isDisabledOnSide(facing)) {
-				continue;
+		// If sparse, check the connections, otherwise, check all sides.
+		if (cable.isSparse()) {
+			for (BlockPos connection : cable.getSparseConnections()) {
+				if (visited.contains(connection)) {
+					continue;
+				}
+
+				// Attempt to cache this location if needed. If true, we found a cable and we
+				// continue mapping, otherwise, we stop here.
+				if (scanLocation(world, cable, null, connection)) {
+					// Add the block to the visited list.
+					visited.add(connection);
+
+					// Recurse.
+					_updateNetworkWorker(world, visited, connection);
+				}
 			}
+		} else {
+			for (Direction facing : Direction.values()) {
+				if (cable != null && cable.isDisabledOnSide(facing)) {
+					continue;
+				}
 
-			// Get the next position to test. If we've visited it before, skip it.
-			BlockPos testPos = currentPosition.relative(facing);
-			if (visited.contains(testPos)) {
-				continue;
-			}
+				// Get the next position to test. If we've visited it before, skip it.
+				BlockPos testPos = currentPosition.relative(facing);
+				if (visited.contains(testPos)) {
+					continue;
+				}
 
-			// Attempt to cache this location if needed. If true, we found a cable and we
-			// continue mapping, otherwise, we stop here.
-			if (scanLocation(world, cable, facing, testPos)) {
-				// Add the block to the visited list.
-				visited.add(testPos);
+				// Attempt to cache this location if needed. If true, we found a cable and we
+				// continue mapping, otherwise, we stop here.
+				if (scanLocation(world, cable, facing, testPos)) {
+					// Add the block to the visited list.
+					visited.add(testPos);
 
-				// Recurse.
-				_updateNetworkWorker(world, visited, testPos);
+					// Recurse.
+					_updateNetworkWorker(world, visited, testPos);
+				}
 			}
 		}
 	}
