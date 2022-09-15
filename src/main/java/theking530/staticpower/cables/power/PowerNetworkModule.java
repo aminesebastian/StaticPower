@@ -14,6 +14,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -46,7 +47,11 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 	private int lastSuppliedDestinationIndex;
 
 	public PowerNetworkModule() {
-		super(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+		this(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+	}
+
+	public PowerNetworkModule(ResourceLocation type) {
+		super(type);
 		destinations = new ArrayList<>();
 		lastSuppliedDestinationIndex = 0;
 	}
@@ -157,10 +162,6 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 			return ElectricalPathProperties.EMPTY;
 		}
 
-		if (!CableNetworkManager.get(Network.getWorld()).isTrackingCable(end)) {
-			return ElectricalPathProperties.EMPTY;
-		}
-
 		if (start.equals(end)) {
 			// A single cable connection does not have anypower loss (for gameplay reasons,
 			// no need to be too mean).
@@ -169,7 +170,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 			return new ElectricalPathProperties(0, maxPower, List.of(cable));
 		}
 
-		List<Path> paths = Network.getPathCache().getPaths(start, end, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+		List<Path> paths = Network.getPathCache().getPaths(start, end, this.getType());
 		if (paths.isEmpty()) {
 			return ElectricalPathProperties.EMPTY;
 		}
@@ -179,16 +180,23 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		double cablePowerLoss = 0;
 		double maxPowerPerTick = Double.MAX_VALUE;
 		for (PathEntry entry : path.getEntries()) {
+			// Make sure the cable is not null. The cable will be null when checking the
+			// last point in an actual run, as this will be the destination. The reason we
+			// don't just check if the entry position != the end is when using the
+			// multimeter, you can scan between two cables, not just a cable and a
+			// destination.
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
-			cablePowerLoss += (cable.getDoubleProperty(PowerCableComponent.POWER_LOSS));
+			if (cable != null) {
+				cablePowerLoss += (cable.getDoubleProperty(PowerCableComponent.POWER_LOSS));
 
-			if (!cables.contains(cable)) {
-				cables.add(cable);
-			}
+				if (!cables.contains(cable)) {
+					cables.add(cable);
+				}
 
-			double cableMaxPower = cable.getDoubleProperty(PowerCableComponent.POWER_MAX);
-			if (cableMaxPower < maxPowerPerTick) {
-				maxPowerPerTick = cableMaxPower;
+				double cableMaxPower = cable.getDoubleProperty(PowerCableComponent.POWER_MAX);
+				if (cableMaxPower < maxPowerPerTick) {
+					maxPowerPerTick = cableMaxPower;
+				}
 			}
 		}
 		return new ElectricalPathProperties(cablePowerLoss, maxPowerPerTick, cables);
@@ -252,7 +260,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 
 		// Get the resistance between the points. If it is -1, there was no path, return
 		// 0.
-		ElectricalPathProperties properties = getPropertiesBetweenPoints(fromCablePos, destination.cable);
+		ElectricalPathProperties properties = getPropertiesBetweenPoints(fromCablePos, destination.desintationPos);
 		if (properties == ElectricalPathProperties.EMPTY) {
 			return 0;
 		}

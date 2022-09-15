@@ -9,7 +9,7 @@ public enum StaticPowerVoltage {
 	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage), VERY_HIGH("very_high_voltage", StaticPowerConfig.SERVER.veryHighVoltage),
 	EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage);
 
-	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / StaticPowerVoltage.values().length - 1;
+	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / (StaticPowerVoltage.values().length - 1);
 	private String unlocalizedName;
 	private String shortName;
 	private Supplier<Double> voltageSupplier;

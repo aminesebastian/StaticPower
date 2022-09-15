@@ -11,19 +11,19 @@ import theking530.staticpower.StaticPower;
 
 public class CableNetworkGraph {
 	protected static final Logger LOGGER = LogManager.getLogger(CableNetworkGraph.class);
-	private final CableNetwork Network;
-	private HashMap<BlockPos, ServerCable> Cables;
-	private HashMap<BlockPos, DestinationWrapper> Destinations;
+	private final CableNetwork owningNetwork;
+	private HashMap<BlockPos, ServerCable> cables;
+	private HashMap<BlockPos, DestinationWrapper> destinations;
 
 	public CableNetworkGraph(CableNetwork network) {
-		Cables = new HashMap<BlockPos, ServerCable>();
-		Destinations = new HashMap<BlockPos, DestinationWrapper>();
-		Network = network;
+		cables = new HashMap<BlockPos, ServerCable>();
+		destinations = new HashMap<BlockPos, DestinationWrapper>();
+		owningNetwork = network;
 	}
 
 	public NetworkMapper scan(Level world, BlockPos scanStartPosition) {
 		// Map the network.
-		NetworkMapper mapper = new NetworkMapper(Cables.values());
+		NetworkMapper mapper = new NetworkMapper(cables.values());
 
 		try {
 			// If the cable is bad, return early.
@@ -35,24 +35,26 @@ public class CableNetworkGraph {
 			// Map the network.
 			mapper.scanFromLocation(world, scanStartPosition);
 
-			// Clear the old values.
-			Cables.clear();
-			Destinations.clear();
-
-			// Cache the new values.
-			mapper.getDiscoveredCables().forEach(cable -> Cables.put(cable.getPos(), cable));
-			Destinations = mapper.getDestinations();
-
-			// Raise the network joined and left events.
-			mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(Network, true));
+			// Raise the removed even BEFORE we clear our current cache.
 			mapper.getRemovedCables().forEach(cable -> {
 				// A cable may have been removed and added to a different network. We don't want
 				// to invalidate that cable's new network, so only remove IF the cable was
 				// removed FROM this network directly.
-				if (cable.Network == Network) {
-					cable.onNetworkLeft();
+				if (cable.Network == owningNetwork) {
+					cable.onNetworkLeft(owningNetwork);
 				}
 			});
+
+			// Clear the old values.
+			cables.clear();
+			destinations.clear();
+			
+			// Cache the new values.
+			mapper.getDiscoveredCables().forEach(cable -> cables.put(cable.getPos(), cable));
+			destinations = mapper.getDestinations();
+
+			// Raise the network joined event.
+			mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(owningNetwork, true));
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("An error occured when attempting to scan a network starting at cable position: %1$s.", scanStartPosition), e);
 		}
@@ -61,10 +63,10 @@ public class CableNetworkGraph {
 	}
 
 	public HashMap<BlockPos, ServerCable> getCables() {
-		return Cables;
+		return cables;
 	}
 
 	public HashMap<BlockPos, DestinationWrapper> getDestinations() {
-		return Destinations;
+		return destinations;
 	}
 }

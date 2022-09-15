@@ -1,21 +1,17 @@
 package theking530.staticpower.client.rendering;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
@@ -26,12 +22,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
 import theking530.staticcore.utilities.Color;
-import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.blockentities.power.wireconnector.WirePowerCableComponent;
 
 @OnlyIn(Dist.CLIENT)
 public class CustomRenderer {
 	private BlockModel model = new BlockModel();
 	private static HashMap<BlockEntity, HashMap<String, DrawCubeRequest>> CubeRenderRequests = new HashMap<BlockEntity, HashMap<String, DrawCubeRequest>>();
+	public static List<WirePowerCableComponent> TEMP_CABLES = new ArrayList<>();
 
 	public void render(RenderLevelStageEvent event) {
 		if (event.getStage() == Stage.AFTER_TRANSLUCENT_BLOCKS) {
@@ -63,34 +60,15 @@ public class CustomRenderer {
 				for (DrawCubeRequest request : CubeRenderRequests.get(te).values()) {
 					model.drawPreviewCube(request.Position, request.Scale, request.Color, matrixStack);
 				}
-
-				RenderSystem.setShader(GameRenderer::getRendertypeLinesShader);
-				RenderSystem.enableBlend();
-				RenderSystem.disableCull();
-				RenderSystem.lineWidth(10);
-				Vector3D start = new Vector3D(te.getBlockPos().getX() + 0.5f, te.getBlockPos().getY() + 1f, te.getBlockPos().getZ() + 0.5f);
-				Vector3D end = new Vector3D(0, te.getBlockPos().getY() + 1f, te.getBlockPos().getZ() + 0.5f);
-				Color startcolor = Color.BLUE;
-				Color endColor = Color.RED;
-				Vector3D normal = end.copy().subtract(start).normalize();
-				
-				for (int i = 0; i < 1000; i++) {
-					Tesselator tessellator = Tesselator.getInstance();
-					BufferBuilder bufferbuilder = tessellator.getBuilder();
-					bufferbuilder.begin(VertexFormat.Mode.LINES, DefaultVertexFormat.POSITION_COLOR_NORMAL);
-					bufferbuilder.vertex(matrixStack.last().pose(), start.getX(), start.getY(), start.getZ())
-							.color(startcolor.getRed(), startcolor.getGreen(), startcolor.getBlue(), startcolor.getAlpha()).normal(normal.getX(), normal.getY(), 0).endVertex();
-					bufferbuilder.vertex(matrixStack.last().pose(), end.getX(), end.getY(), end.getZ())
-							.color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).normal(normal.getX(), normal.getY(), 0).endVertex();
-					tessellator.end();
-				}
-				RenderSystem.enableCull();
-
 			}
 
 			// Purge the old requests.
 			for (BlockEntity te : teEntriesToRemove) {
 				CubeRenderRequests.remove(te);
+			}
+
+			for (WirePowerCableComponent temp : TEMP_CABLES) {
+				temp.renderConnections(matrixStack);
 			}
 
 			// Pop our stack entry.

@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.network;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.SparseCableLink;
+import theking530.staticpower.cables.SparseCableLink.SparseCableConnectionType;
 
 public class ServerCable {
 	public enum CableConnectionState {
@@ -35,7 +38,7 @@ public class ServerCable {
 	private final Map<Direction, ServerAttachmentDataContainer> attachmentData;
 
 	private final boolean isSparse;
-	private final List<BlockPos> sparseConnections;
+	private final Map<BlockPos, SparseCableLink> sparseLinks;
 
 	public ServerCable(Level world, BlockPos position, boolean sparse, HashSet<ResourceLocation> supportedModules) {
 		Position = position;
@@ -47,7 +50,7 @@ public class ServerCable {
 		}
 		supportedNetworkModules = supportedModules;
 		disabledSides = new boolean[] { false, false, false, false, false, false };
-		sparseConnections = new ArrayList<BlockPos>();
+		sparseLinks = new HashMap<BlockPos, SparseCableLink>();
 		isSparse = sparse;
 	}
 
@@ -61,14 +64,15 @@ public class ServerCable {
 		// Create the disabled sides.
 		disabledSides = new boolean[] { false, false, false, false, false, false };
 
-		// Create the connections.
-		int connectionCount = tag.getInt("connectionCount");
-		sparseConnections = new ArrayList<BlockPos>();
-		for (int i = 0; i < connectionCount; i++) {
-			sparseConnections.add(BlockPos.of(tag.getLong("connection" + i)));
-		}
-
 		isSparse = tag.getBoolean("sparse");
+
+		// Create the links.
+		sparseLinks = new HashMap<BlockPos, SparseCableLink>();
+		ListTag sparseLinkTags = tag.getList("sparse_links", Tag.TAG_COMPOUND);
+		for (Tag sparseLinkTag : sparseLinkTags) {
+			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
+			sparseLinks.put(link.linkToPosition(), link);
+		}
 
 		// Deserialize the attachments.
 		attachmentData = new HashMap<Direction, ServerAttachmentDataContainer>();
@@ -98,21 +102,25 @@ public class ServerCable {
 		dataTag = tag.getCompound(DATA_TAG_KEY);
 	}
 
-	public boolean addConnection(BlockPos connection) {
-		if (!isConnectedTo(connection)) {
-			sparseConnections.add(connection);
-			ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(connection);
+	public boolean addSparseLink(BlockPos linkToPosition) {
+		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition)) {
+			ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(linkToPosition);
+			otherCable.sparseLinks.put(getPos(), new SparseCableLink(getPos(), SparseCableConnectionType.STARTING));
+
+			sparseLinks.put(linkToPosition, new SparseCableLink(linkToPosition, SparseCableConnectionType.ENDING));
 			CableNetworkManager.get(getWorld()).joinSparseCables(this, otherCable);
 			return true;
 		}
 		return false;
 	}
 
-	public boolean removeConnection(BlockPos connection) {
-		for (int i = sparseConnections.size() - 1; i >= 0; i--) {
-			if (sparseConnections.get(i).equals(connection)) {
-				sparseConnections.remove(i);
-				ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(connection);
+	public boolean removeSparseLink(BlockPos linkedToPosition) {
+		if (!linkedToPosition.equals(getPos())) {
+			if (sparseLinks.remove(linkedToPosition) != null) {
+
+				ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(linkedToPosition);
+				otherCable.sparseLinks.remove(getPos());
+
 				CableNetworkManager.get(getWorld()).separateSparseCables(this, otherCable);
 				return true;
 			}
@@ -120,21 +128,59 @@ public class ServerCable {
 		return false;
 	}
 
-	public boolean isConnectedTo(BlockPos connection) {
-		for (BlockPos conn : sparseConnections) {
-			if (conn.equals(connection)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean isLinkedTo(BlockPos position) {
+		return sparseLinks.containsKey(position);
 	}
 
 	public boolean isSparse() {
 		return this.isSparse;
 	}
 
-	public List<BlockPos> getSparseConnections() {
-		return sparseConnections;
+	public Collection<SparseCableLink> getSparseLinks() {
+		return sparseLinks.values();
+	}
+
+	public List<ServerCable> getAdjacents() {
+		List<ServerCable> wrappers = new ArrayList<ServerCable>();
+		if (isSparse()) {
+			for (SparseCableLink link : getSparseLinks()) {
+				ServerCable cable = CableNetworkManager.get(getWorld()).getCable(link.linkToPosition());
+				wrappers.add(cable);
+			}
+		} else {
+			for (Direction dir : Direction.values()) {
+				// Skip checking that side if that side is disabled.
+				if (isDisabledOnSide(dir)) {
+					continue;
+				}
+
+				// Check if a cable exists on the provided side and it is enabled on that side
+				// and of the same type.
+				ServerCable adjacent = CableNetworkManager.get(getWorld()).getCable(getPos().relative(dir));
+
+				if (adjacent == null) {
+					continue;
+				}
+
+				if (adjacent.isDisabledOnSide(dir.getOpposite())) {
+					continue;
+				}
+
+				if (adjacent.getNetwork() == null) {
+					continue;
+				}
+
+				if (!adjacent.getNetwork().canAcceptCable(adjacent, this)) {
+					continue;
+				}
+
+				if (adjacent.shouldConnectTo(this)) {
+					wrappers.add(adjacent);
+				}
+			}
+		}
+
+		return wrappers;
 	}
 
 	public boolean containsProperty(String key) {
@@ -257,7 +303,12 @@ public class ServerCable {
 		}
 	}
 
-	public void onNetworkLeft() {
+	public void onNetworkLeft(CableNetwork oldNetwork) {
+		for (ServerCable otherCable : oldNetwork.getGraph().getCables().values()) {
+			if (otherCable.isLinkedTo(getPos())) {
+				otherCable.sparseLinks.remove(getPos());
+			}
+		}
 		Network = null;
 		updateCableBlock();
 	}
@@ -313,11 +364,12 @@ public class ServerCable {
 			tag.putBoolean("disabled" + i, disabledSides[i]);
 		}
 
-		// Serialize the connections.
-		tag.putInt("connectionCount", sparseConnections.size());
-		for (int i = 0; i < sparseConnections.size(); i++) {
-			tag.putLong("connection" + i, sparseConnections.get(i).asLong());
-		}
+		// Serialize the sparse links..
+		ListTag sparseLinkTag = new ListTag();
+		sparseLinks.values().forEach(link -> {
+			sparseLinkTag.add(link.serialize());
+		});
+		tag.put("sparse_links", sparseLinkTag);
 
 		// Serialize if sparse.
 		tag.putBoolean("sparse", isSparse);

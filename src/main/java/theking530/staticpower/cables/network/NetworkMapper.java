@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import theking530.staticpower.cables.SparseCableLink;
 
 public class NetworkMapper {
 	private final Collection<ServerCable> InitialCables;
@@ -40,8 +41,16 @@ public class NetworkMapper {
 		startingPosition = startingPos;
 
 		// Check the starting position.
-		scanLocation(world, CableNetworkManager.get(world).getCable(startingPos), null, startingPos);
-
+		ServerCable startingCable = CableNetworkManager.get(world).getCable(startingPos);
+		scanLocation(world, startingCable, null, startingPos);
+		if(startingCable.isSparse()) {
+			for (Direction dir : Direction.values()) {
+				if (!startingCable.isLinkedTo(startingPos.relative(dir))) {
+					scanLocationForDestinations(world, startingCable, dir, startingPos.relative(dir));
+				}
+			}
+		}
+		
 		// Kick off the recursion.
 		_updateNetworkWorker(world, visited, startingPos);
 	}
@@ -74,19 +83,28 @@ public class NetworkMapper {
 
 		// If sparse, check the connections, otherwise, check all sides.
 		if (cable.isSparse()) {
-			for (BlockPos connection : cable.getSparseConnections()) {
-				if (visited.contains(connection)) {
+			for (SparseCableLink link : cable.getSparseLinks()) {
+				BlockPos linkPosition = link.linkToPosition();
+				if (visited.contains(linkPosition)) {
 					continue;
 				}
 
 				// Attempt to cache this location if needed. If true, we found a cable and we
-				// continue mapping, otherwise, we stop here.
-				if (scanLocation(world, cable, null, connection)) {
+				// continue mapping.
+				if (scanLocation(world, cable, null, linkPosition)) {
 					// Add the block to the visited list.
-					visited.add(connection);
+					visited.add(linkPosition);
+
+					// Look around this sparse cable for any destinations. Add in an extra check to
+					// ensure we don't scan another connected cable as a destination.
+					for (Direction dir : Direction.values()) {
+						if (!cable.isLinkedTo(linkPosition.relative(dir))) {
+							scanLocationForDestinations(world, cable, dir, linkPosition.relative(dir));
+						}
+					}
 
 					// Recurse.
-					_updateNetworkWorker(world, visited, connection);
+					_updateNetworkWorker(world, visited, linkPosition);
 				}
 			}
 		} else {
@@ -102,13 +120,15 @@ public class NetworkMapper {
 				}
 
 				// Attempt to cache this location if needed. If true, we found a cable and we
-				// continue mapping, otherwise, we stop here.
+				// continue mapping, otherwise, we stop here and just check for destinations.
 				if (scanLocation(world, cable, facing, testPos)) {
 					// Add the block to the visited list.
 					visited.add(testPos);
 
 					// Recurse.
 					_updateNetworkWorker(world, visited, testPos);
+				} else {
+					scanLocationForDestinations(world, cable, facing, testPos);
 				}
 			}
 		}
@@ -153,18 +173,20 @@ public class NetworkMapper {
 			// Remove the cable if it was in the removed cable set.
 			RemovedCables.remove(cable);
 			return true;
-		} else {
-			// Make sure it is valid.
-			if (!Destinations.containsKey(location)) {
-				// Cache a destination wrapper for it.
-				DestinationWrapper wrapper = new DestinationWrapper(world, location, world.getBlockEntity(location), scanningCable.getPos(), facing.getOpposite());
-				if (!wrapper.hasSupportedDestinationTypes()) {
-					Destinations.put(location, wrapper);
-				}
-			} else {
-				Destinations.get(location).addConnectedCable(scanningCable.getPos(), facing.getOpposite());
+		}
+		return false;
+	}
+
+	protected void scanLocationForDestinations(Level world, ServerCable scanningCable, Direction facing, BlockPos location) {
+		// Make sure it is valid.
+		if (!Destinations.containsKey(location)) {
+			// Cache a destination wrapper for it.
+			DestinationWrapper wrapper = new DestinationWrapper(world, location, world.getBlockEntity(location), scanningCable.getPos(), facing.getOpposite());
+			if (!wrapper.hasSupportedDestinationTypes()) {
+				Destinations.put(location, wrapper);
 			}
-			return false;
+		} else {
+			Destinations.get(location).addConnectedCable(scanningCable.getPos(), facing.getOpposite());
 		}
 	}
 }

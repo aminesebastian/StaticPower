@@ -74,7 +74,7 @@ public class PathCache {
 	 */
 	private List<Path> cacheNewPath(BlockPos source, BlockPos destination, ResourceLocation moduleType) {
 		// Perform the path finding.
-		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), OwningNetwork.getWorld(), source, destination, moduleType);
+		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), OwningNetwork.getWorld(), source, destination, moduleType, (cable, dist) -> 1.0f);
 		List<Path> paths = pathFinder.executeAlgorithm();
 
 		// If we found no paths, return early.
@@ -93,7 +93,7 @@ public class PathCache {
 
 		// If we have a destination for this, sort it by length.
 		if (Cache.containsKey(destination)) {
-			Cache.get(destination).get(source).sort(Comparator.comparingInt(Path::getLength));
+			Cache.get(destination).get(source).sort(Comparator.comparingDouble(Path::getLength));
 		}
 
 		// Check if we now have the path.

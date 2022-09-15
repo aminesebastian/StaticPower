@@ -8,6 +8,7 @@ import theking530.staticpower.StaticPower;
 public class CableNetworkModuleTypes {
 	public static final ResourceLocation POWER_WIRE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_power_wire_network");
 	public static final ResourceLocation POWER_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_power_network");
+	
 	public static final ResourceLocation ITEM_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_item_network");
 	public static final ResourceLocation FLUID_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_fluid_network");
 	public static final ResourceLocation DIGISTORE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_digistore_network");

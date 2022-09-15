@@ -38,7 +38,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	 * This is the slowest an item may travel.
 	 */
 	public static final int MAXIMUM_MOVE_TIME = 1000;
-	public static final String ITEM_CABLE_MAX_BLOCKS_PER_TICK = "min_transfer_time";
+	public static final String ITEM_CABLE_MAX_TRANSFER_SPEED = "min_transfer_time";
 	public static final String ITEM_CABLE_FRICTION_FACTOR_TAG = "friction_factor";
 	public static final String ITEM_CABLE_ACCELERATION_FACTOR_TAG = "acceleration_factor";
 
@@ -108,7 +108,8 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	public void addTransferingItem(ItemRoutingParcelClient routingPacket) {
 		containedPackets.put(routingPacket.getId(), routingPacket);
 		if (!getLevel().isClientSide) {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())), new ItemCableAddedPacket(this, routingPacket));
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())),
+					new ItemCableAddedPacket(this, routingPacket));
 		}
 		getTileEntity().setChanged();
 	}
@@ -116,13 +117,30 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	public void removeTransferingItem(long parcelId) {
 		containedPackets.remove(parcelId);
 		if (!getLevel().isClientSide) {
-			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())), new ItemCableRemovedPacket(this, parcelId));
+			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())),
+					new ItemCableRemovedPacket(this, parcelId));
 		}
 		getTileEntity().setChanged();
 	}
 
 	public Collection<ItemRoutingParcelClient> getContainedItems() {
 		return containedPackets.values();
+	}
+
+	public boolean canExtractFromSide(ItemStack stack, Direction destinationSide) {
+		// If there is no attachment on that side, we can extract.
+		if (!hasAttachment(destinationSide)) {
+			return true;
+		}
+
+		// If there is a filter attachment, evaluate against it.
+		if (getAttachment(destinationSide).getItem() instanceof FilterAttachment) {
+			FilterAttachment filterAttachmentItem = (FilterAttachment) getAttachment(destinationSide).getItem();
+			return filterAttachmentItem.doesItemPassFilter(getAttachment(destinationSide), stack, this);
+		}
+
+		// If there is an attachment, but its not a filter attachment, return false.
+		return false;
 	}
 
 	public boolean canInsertThroughSide(ItemStack stack, Direction destinationSide) {
@@ -143,7 +161,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
-		cable.setProperty(ITEM_CABLE_MAX_BLOCKS_PER_TICK, maxTransferSpeed);
+		cable.setProperty(ITEM_CABLE_MAX_TRANSFER_SPEED, maxTransferSpeed);
 		cable.setProperty(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
 		cable.setProperty(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);
 	}

@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.Capability;
@@ -30,6 +31,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	public static final String POWER_LOSS = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
+	private final ResourceLocation moduleType;
 	private final SidedStaticPowerCapabilityWrapper capabilityWrapper;
 	private final double powerLoss;
 	private final double maxPower;
@@ -37,13 +39,18 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	private final boolean isIndustrial;
 
 	public PowerCableComponent(String name, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
-		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+		this(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE, isIndustrial, voltage, maxPower, powerLoss);
+	}
+
+	public PowerCableComponent(String name, ResourceLocation powerModuleType, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
+		super(name, powerModuleType);
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 
 		this.voltage = voltage;
 		this.powerLoss = powerLoss;
 		this.maxPower = maxPower;
 		this.isIndustrial = isIndustrial;
+		this.moduleType = powerModuleType;
 	}
 
 	/**
@@ -56,7 +63,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	 * @return
 	 */
 	protected Optional<PowerNetworkModule> getPowerNetworkModule() {
-		return getNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+		return getNetworkModule(moduleType);
 	}
 
 	@Override

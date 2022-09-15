@@ -30,6 +30,10 @@ public class WireCoil extends StaticPowerItem {
 					BlockEntityWireConnector connector = (BlockEntityWireConnector) world.getBlockEntity(pos);
 					connector.addConnectedConnector(initialLocation);
 
+					if (!player.isCreative()) {
+						item.shrink(1);
+					}
+
 					MutableComponent message = new TextComponent(
 							String.format("Linked wire connector at location %1$s to position %2$s.", pos.toShortString(), initialLocation.toShortString()));
 					player.sendMessage(message, player.getUUID());

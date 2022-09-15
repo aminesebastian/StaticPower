@@ -19,6 +19,7 @@ import theking530.staticpower.blockentities.machines.packager.PacketPackagerSize
 import theking530.staticpower.blockentities.nonpowered.solderingtable.PacketSyncSolderingFakeSlotRecipe;
 import theking530.staticpower.blockentities.power.powermonitor.PacketPowerMonitorSync;
 import theking530.staticpower.blockentities.power.transformer.TransformerControlSyncPacket;
+import theking530.staticpower.blockentities.power.wireconnector.WireConnectionSyncPacket;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketClearDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
@@ -97,5 +98,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataLoadPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetTeamComponentTeam.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetSelectedResearch.class);
+		
+		StaticPowerMessageHandler.registerMessage(WireConnectionSyncPacket.class);
 	}
 }

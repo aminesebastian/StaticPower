@@ -13,12 +13,14 @@ public class Path {
 	private final BlockPos sourceLocation;
 	private final BlockPos destinationLocation;
 	private final PathEntry[] path;
+	private final float length;
 	private final ResourceLocation supportedNetworkType;
 
-	public Path(BlockPos source, BlockPos destination, ResourceLocation supportedNetworkType, PathEntry... path) {
+	public Path(BlockPos source, BlockPos destination, ResourceLocation supportedNetworkType, float length, PathEntry... path) {
 		sourceLocation = source;
 		destinationLocation = destination;
 		this.path = path;
+		this.length = length;
 		this.supportedNetworkType = supportedNetworkType;
 	}
 
@@ -34,6 +36,7 @@ public class Path {
 			CompoundTag entryTag = (CompoundTag) entries.get(i);
 			path[i] = PathEntry.createFromNbt(entryTag);
 		}
+		length = nbt.getFloat("length");
 
 		// Get the source and destination locations.
 		sourceLocation = BlockPos.of(nbt.getLong("source"));
@@ -79,7 +82,11 @@ public class Path {
 		return path[path.length - 1].getDirectionOfEntry();
 	}
 
-	public int getLength() {
+	public float getLength() {
+		return length;
+	}
+
+	public int getPathEntryCount() {
 		return path.length;
 	}
 
@@ -102,6 +109,7 @@ public class Path {
 			pathNBTList.add(entryTag);
 		}
 		nbt.put("entries", pathNBTList);
+		nbt.putFloat("length", length);
 		nbt.putString("supported_network_module", supportedNetworkType.toString());
 		return nbt;
 	}

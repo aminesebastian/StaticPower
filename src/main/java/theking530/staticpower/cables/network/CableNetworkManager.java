@@ -89,6 +89,10 @@ public class CableNetworkManager extends SavedData {
 		for (long id : toRemove) {
 			Networks.remove(id);
 		}
+
+		if (Networks.size() > 0) {
+			System.out.println(Networks.size());
+		}
 	}
 
 	public void addCable(ServerCable cable) {
@@ -113,7 +117,7 @@ public class CableNetworkManager extends SavedData {
 		}
 
 		// If we have a non sparse cable, see if it can join an adjacent network.
-		List<ServerCable> adjacents = getAdjacents(cable);
+		List<ServerCable> adjacents = cable.getAdjacents();
 		if (adjacents.isEmpty()) {
 			formNetworkAt(cable.getWorld(), cable.getPos());
 		} else {
@@ -128,6 +132,7 @@ public class CableNetworkManager extends SavedData {
 		if (target.Network == null) {
 			throw new RuntimeException(String.format("Attempted to join sparse cables with target: %1$s with a null network.", target.getPos()));
 		}
+
 		mergeNetworksIntoOne(Arrays.asList(initiator, target), World, initiator.getPos());
 	}
 
@@ -152,7 +157,7 @@ public class CableNetworkManager extends SavedData {
 		originalNetworkCables.addAll(cable.Network.getGraph().getCables().values());
 
 		// Get all the adjacents.
-		List<ServerCable> adjacents = getAdjacents(cable);
+		List<ServerCable> adjacents = cable.getAdjacents();
 		if (!adjacents.isEmpty()) {
 			for (ServerCable adjacent : adjacents) {
 				if (adjacent.Network == cable.Network) {
@@ -161,7 +166,7 @@ public class CableNetworkManager extends SavedData {
 				}
 			}
 		} else {
-			cable.onNetworkLeft();
+			cable.onNetworkLeft(cable.Network);
 		}
 
 		setDirty();
@@ -172,7 +177,7 @@ public class CableNetworkManager extends SavedData {
 			// If the original cable does not have a network, attempt to give it one.
 			if (originalCable.Network == null) {
 				// Get it's adjacent.
-				List<ServerCable> newAdjacents = getAdjacents(originalCable);
+				List<ServerCable> newAdjacents = originalCable.getAdjacents();
 				// In the context of adjacent networks, this cable should be considered as well
 				// for sparse cables.
 				if (cable.isSparse()) {
@@ -367,7 +372,7 @@ public class CableNetworkManager extends SavedData {
 		return network;
 	}
 
-	private void mergeNetworksIntoOne(List<ServerCable> candidates, Level world, BlockPos pos) {
+	private CableNetwork mergeNetworksIntoOne(List<ServerCable> candidates, Level world, BlockPos pos) {
 		if (candidates.isEmpty()) {
 			throw new RuntimeException("Cannot merge networks: no candidates");
 		}
@@ -403,11 +408,13 @@ public class CableNetworkManager extends SavedData {
 		mergedNetworks.forEach(n -> n.onJoinedWithOtherNetwork(mainNetwork));
 
 		setDirty();
+
+		return mainNetwork;
 	}
 
 	private void splitNetworks(ServerCable originCable) {
 		// Get all adjacent cables. This accounts for diabled sides.
-		List<ServerCable> adjacents = getAdjacents(originCable);
+		List<ServerCable> adjacents = originCable.getAdjacents();
 
 		if (adjacents.size() > 0) {
 			// Because all adjacent cables belong to this network, the first one's network
@@ -481,48 +488,6 @@ public class CableNetworkManager extends SavedData {
 		Networks.remove(id);
 		LOGGER.debug(String.format("Removed Network with Id: %1$s.", id));
 		setDirty();
-	}
-
-	private List<ServerCable> getAdjacents(ServerCable cable) {
-		List<ServerCable> wrappers = new ArrayList<ServerCable>();
-		if (cable.isSparse()) {
-			for (BlockPos connection : cable.getSparseConnections()) {
-				wrappers.add(getCable(connection));
-			}
-		} else {
-			for (Direction dir : Direction.values()) {
-				// Skip checking that side if that side is disabled.
-				if (cable.isDisabledOnSide(dir)) {
-					continue;
-				}
-
-				// Check if a cable exists on the provided side and it is enabled on that side
-				// and of the same type.
-				ServerCable adjacent = getCable(cable.getPos().relative(dir));
-
-				if (adjacent == null) {
-					continue;
-				}
-
-				if (adjacent.isDisabledOnSide(dir.getOpposite())) {
-					continue;
-				}
-
-				if (adjacent.getNetwork() == null) {
-					continue;
-				}
-
-				if (!adjacent.getNetwork().canAcceptCable(adjacent, cable)) {
-					continue;
-				}
-
-				if (adjacent.shouldConnectTo(cable)) {
-					wrappers.add(adjacent);
-				}
-			}
-		}
-
-		return wrappers;
 	}
 
 }
