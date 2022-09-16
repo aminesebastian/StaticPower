@@ -49,7 +49,7 @@ public class DigistoreModel extends AbstractBakedModel {
 		}
 
 		// Get the data used in rendering.
-		Direction facing = state.getValue(StaticPowerBlockEntityBlock.FACING);
+		Direction facing = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
 		ItemStack card = data.getData(TileEntityDigistore.RENDERING_STATE).card;
 
 		// Create the output array.

@@ -3,6 +3,7 @@ package theking530.staticpower.items.tools;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
@@ -31,6 +32,10 @@ public class CableNetworkAnalyzer extends StaticPowerItem {
 				for (Component text : cable.getNetwork().getReaderOutput()) {
 					player.sendMessage(text, player.getUUID());
 				}
+
+				player.sendMessage(new TextComponent("Cable Location: ").append(pos.toString()), player.getUUID());
+				player.sendMessage(new TextComponent("Cable Sparse Links: ").append("" + cable.getSparseLinks().size()), player.getUUID());
+
 				return InteractionResult.SUCCESS;
 			}
 		}

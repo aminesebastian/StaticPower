@@ -1,17 +1,14 @@
 package theking530.staticpower.cables.item;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderItemCable;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class TileEntityItemCable extends BlockEntityBase {

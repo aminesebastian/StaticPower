@@ -77,7 +77,7 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 			// skip it.
 			if (CableNetworkManager.get(world).isTrackingCable(targetPos)) {
 				ServerCable otherCable = CableNetworkManager.get(world).getCable(targetPos);
-				if (otherCable.containsProperty(RedstoneCableComponent.CONFIGURATION_KEY)) {
+				if (otherCable.getDataTag().contains(RedstoneCableComponent.CONFIGURATION_KEY)) {
 					// Get the configuration for the other cable
 					RedstoneCableConfiguration otherConfiguration = getConfigurationForCable(otherCable);
 					String otherSelector = otherConfiguration.getSideConfig(side.getOpposite()).getSelector();

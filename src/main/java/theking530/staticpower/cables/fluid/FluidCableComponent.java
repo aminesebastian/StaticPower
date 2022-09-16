@@ -22,7 +22,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.drain.DrainAttachment;
@@ -276,9 +275,9 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
-		cable.setProperty(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.setProperty(FLUID_RATE_DATA_TAG_KEY, capacity);
-		cable.setProperty(FLUID_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
+		cable.getDataTag().putInt(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putInt(FLUID_RATE_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putBoolean(FLUID_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 
 		// Initialize the disabled state.
 		for (Direction dir : Direction.values()) {

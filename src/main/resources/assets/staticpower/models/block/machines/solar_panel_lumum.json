@@ -1,9 +1,0 @@
-{
-  "parent": "forge:block/default",
-  "loader": "forge:obj",
-  "model": "staticpower:models/block/machines/solar_panel_lumum.obj",
-  "flip-v": true,
-  "textures": {
-	"particle": "staticpower:blocks/machines/solar_panel_lumum"
-  }
-}

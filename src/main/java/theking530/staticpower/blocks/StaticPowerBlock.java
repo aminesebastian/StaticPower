@@ -22,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -51,16 +50,26 @@ import theking530.staticpower.items.tools.StaticWrench;
  */
 public class StaticPowerBlock extends Block implements IItemBlockProvider, IRenderLayerProvider, IWrenchable, ITooltipProvider {
 	/**
+	 * Rotation property used by blocks who don't use {@link #HORIZONTAL_FACING} but
+	 * still need the option to rotate to either face X, Y, or Z. (Does not have to
+	 * be used).
+	 */
+	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+	/**
 	 * Facing property used by blocks that require keeping track of the direction
 	 * they face (does not have to be used).
 	 */
-	public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+	public static final DirectionProperty HORIZONTAL_FACING = BlockStateProperties.HORIZONTAL_FACING;
 	/**
-	 * Rotation property used by blocks who don't use {@link #FACING} but still need
-	 * the option to rotate to either face X, Y, or Z. (Does not have to be used).
+	 * Facing property used by blocks that require keeping track of the direction
+	 * they face including up and down (does not have to be used).
 	 */
-	public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+	public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
+	public enum FacingType {
+		NONE, AXIS, HORIZONTAL_FACING, FACING
+	}
+	
 	/**
 	 * Constructor for a static power block.
 	 * 
@@ -150,7 +159,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		return InteractionResult.PASS;
 	}
 
-	public void onStaticPowerBlockPlaced(BlockPlaceContext context,Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
+	public void onStaticPowerBlockPlaced(BlockPlaceContext context, Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
 
 	}
 
@@ -277,7 +286,7 @@ public class StaticPowerBlock extends Block implements IItemBlockProvider, IRend
 		if (world.getBlockEntity(pos) != null && world.getBlockEntity(pos) instanceof BlockEntityBase) {
 			((BlockEntityBase) world.getBlockEntity(pos)).onPlaced(context, state, placer, stack);
 		}
-		onStaticPowerBlockPlaced(context,world, pos, state, placer, stack);
+		onStaticPowerBlockPlaced(context, world, pos, state, placer, stack);
 	}
 
 	@SuppressWarnings("deprecation")

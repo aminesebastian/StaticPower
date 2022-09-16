@@ -66,7 +66,7 @@ public class BlockPowerMonitor extends StaticPowerMachineBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		Direction facingDirection = state.getValue(StaticPowerBlockEntityBlock.FACING);
+		Direction facingDirection = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
 		if (facingDirection.getAxis() == Direction.Axis.Z) {
 			return Z_AXIS_SHAPE;
 		} else {

@@ -54,7 +54,7 @@ public class CableNetworkGraph {
 			destinations = mapper.getDestinations();
 
 			// Raise the network joined event.
-			mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(owningNetwork, true));
+			mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(owningNetwork));
 		} catch (Exception e) {
 			throw new RuntimeException(String.format("An error occured when attempting to scan a network starting at cable position: %1$s.", scanStartPosition), e);
 		}

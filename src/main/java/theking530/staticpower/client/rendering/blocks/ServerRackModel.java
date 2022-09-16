@@ -70,7 +70,7 @@ public class ServerRackModel extends AbstractBakedModel {
 		}
 
 		// Get the data used in rendering.
-		Direction facing = state.getValue(StaticPowerBlockEntityBlock.FACING);
+		Direction facing = state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING);
 		ItemStack[] cards = data.getData(TileEntityDigistoreServerRack.CARD_RENDERING_STATE).cards;
 
 		// Create the output array.

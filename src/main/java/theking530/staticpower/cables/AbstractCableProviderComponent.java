@@ -1,8 +1,11 @@
 package theking530.staticpower.cables;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.annotation.Nullable;
@@ -10,6 +13,8 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
@@ -52,6 +57,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	protected final ItemStack[] covers;
 	/** List of valid attachment classes. */
 	private final HashSet<Class<? extends AbstractCableAttachment>> validAttachments;
+	private final Map<Long, SparseCableLink> sparseLinks;
 	private boolean isInitializeWithCableManager;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
@@ -69,6 +75,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		disabledSides = new boolean[] { false, false, false, false, false, false };
 		attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
+		sparseLinks = new HashMap<Long, SparseCableLink>();
 		isInitializeWithCableManager = false;
 	}
 
@@ -215,6 +222,15 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		builder.withInitial(CABLE_RENDERING_STATE, getRenderingState());
 	}
 
+	public Collection<SparseCableLink> getSparseLinks() {
+		if (!isClientSide()) {
+			ServerCable trakcedCable = this.getCable().get();
+			return trakcedCable.getSparseLinks();
+		} else {
+			return sparseLinks.values();
+		}
+	}
+
 	public CableRenderingState getRenderingState() {
 		return new CableRenderingState(getConnectionStates(), getAttachmentModels(), attachments, covers, disabledSides, getPos());
 	}
@@ -254,7 +270,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 				// this is just a failsafe.
 				initializeCableProperties(manager.getCable(getPos()));
 			}
-			synchronizeServerToClient();
 		}
 
 		isInitializeWithCableManager = true;
@@ -263,9 +278,85 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	/**
 	 * This method is called when we want to synchronize variables over from the
 	 * server to the client. The implementation of how this is handled is left to
-	 * the implementer.
+	 * the implementer. This is called from the {@link ServerCable}.
 	 */
-	protected void synchronizeServerToClient() {
+	public void gatherCableStateSynchronizationValues(ServerCable cable, CompoundTag tag) {
+		// Serialize the sparse links..
+		ListTag sparseLinkTag = new ListTag();
+		cable.getSparseLinks().forEach(link -> {
+			sparseLinkTag.add(link.serialize());
+		});
+		tag.put("sparse_links", sparseLinkTag);
+	}
+
+	public void syncCableStateFromServer(CompoundTag tag) {
+		sparseLinks.clear();
+		ListTag sparseLinkTags = tag.getList("sparse_links", Tag.TAG_COMPOUND);
+		for (Tag sparseLinkTag : sparseLinkTags) {
+			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
+			sparseLinks.put(link.linkId(), link);
+		}
+	}
+
+	public boolean isSparselyConnectedTo(BlockPos location) {
+		if (!isClientSide()) {
+			ServerCable trakcedCable = CableNetworkManager.get(getLevel()).getCable(location);
+			if (trakcedCable != null) {
+				return trakcedCable.isLinkedTo(location);
+			}
+		} else {
+			for (SparseCableLink link : sparseLinks.values()) {
+				if (link.linkToPosition().equals(location)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	public SparseCableLink addSparseConnection(BlockPos location, CompoundTag tag) {
+		if (!isClientSide()) {
+			ServerCable tracked = getCable().get();
+			if (tracked != null) {
+				SparseCableLink addedLink = tracked.addSparseLink(location, tag);
+				if (addedLink != null) {
+					sparseConnectionAdded(addedLink);
+				}
+				return addedLink;
+			}
+		}
+		return null;
+	}
+
+	protected void sparseConnectionAdded(SparseCableLink link) {
+
+	}
+
+	public List<SparseCableLink> removeSparseConnections(BlockPos location) {
+		if (!isClientSide()) {
+			ServerCable tracked = getCable().get();
+			if (tracked != null) {
+				List<SparseCableLink> removedLinks = tracked.removeSparseLinks(location);
+				sparseConnectionsRemoved(removedLinks);
+				return removedLinks;
+			}
+		}
+		return null;
+	}
+
+	public List<SparseCableLink> breakAllSparseLinks() {
+		if (!isClientSide()) {
+			ServerCable tracked = getCable().get();
+			if (tracked != null) {
+				List<SparseCableLink> result = tracked.breakAllSparseLinks();
+				sparseConnectionsRemoved(result);
+				return result;
+			}
+		}
+		return null;
+	}
+
+	protected void sparseConnectionsRemoved(List<SparseCableLink> links) {
 
 	}
 
@@ -353,7 +444,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			// Initialize the data container on the server.
 			if (!getLevel().isClientSide) {
 				ServerCable cable = CableNetworkManager.get(getLevel()).getCable(getPos());
-				cable.reinitializeAttachmentDataForSide(side, attachmentItem.getRegistryName());
+				cable.addAttachmentDataForSide(side, attachmentItem.getRegistryName());
 				attachmentItem.initializeServerDataContainer(attachments[side.ordinal()], side, this, cable.getAttachmentDataContainerForSide(side));
 			}
 
@@ -385,7 +476,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			// Remove the attachment and return it.
 			attachments[side.ordinal()] = ItemStack.EMPTY;
 			// Clear the attachment data from the server.
-			if (!getLevel().isClientSide) {
+			if (!isClientSide()) {
 				CableNetworkManager.get(getLevel()).getCable(getPos()).clearAttachmentDataForSide(side);
 			}
 

@@ -19,6 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.ICableStateSyncTarget;
 import theking530.staticpower.cables.SparseCableLink;
 import theking530.staticpower.cables.SparseCableLink.SparseCableConnectionType;
 
@@ -102,30 +103,49 @@ public class ServerCable {
 		dataTag = tag.getCompound(DATA_TAG_KEY);
 	}
 
-	public boolean addSparseLink(BlockPos linkToPosition) {
-		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition)) {
+	public SparseCableLink addSparseLink(BlockPos linkToPosition, CompoundTag data) {
+		if (!linkToPosition.equals(getPos()) && !isLinkedTo(linkToPosition) && isSparse()) {
+			long linkId = CableNetworkManager.get(getWorld()).getAndIncrementCurentSparseLinkId();
 			ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(linkToPosition);
-			otherCable.sparseLinks.put(getPos(), new SparseCableLink(getPos(), SparseCableConnectionType.STARTING));
+			otherCable.sparseLinks.put(getPos(), new SparseCableLink(linkId, getPos(), data, SparseCableConnectionType.STARTING));
+			otherCable.synchronizeServerState();
 
-			sparseLinks.put(linkToPosition, new SparseCableLink(linkToPosition, SparseCableConnectionType.ENDING));
+			SparseCableLink endLink = new SparseCableLink(linkId, linkToPosition, data, SparseCableConnectionType.ENDING);
+			sparseLinks.put(linkToPosition, endLink);
 			CableNetworkManager.get(getWorld()).joinSparseCables(this, otherCable);
-			return true;
+			synchronizeServerState();
+			return endLink;
 		}
-		return false;
+		return null;
 	}
 
-	public boolean removeSparseLink(BlockPos linkedToPosition) {
-		if (!linkedToPosition.equals(getPos())) {
-			if (sparseLinks.remove(linkedToPosition) != null) {
+	public List<SparseCableLink> breakAllSparseLinks(BlockPos... linkedToPosition) {
+		return removeSparseLinks(sparseLinks.values().stream().map((x) -> x.linkToPosition()).toList().toArray(new BlockPos[0]));
+	}
 
-				ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(linkedToPosition);
+	public List<SparseCableLink> removeSparseLinks(BlockPos... linkedToPosition) {
+		List<SparseCableLink> output = new ArrayList<SparseCableLink>();
+		List<ServerCable> targets = new ArrayList<ServerCable>();
+		for (BlockPos pos : linkedToPosition) {
+			SparseCableLink removedLink = sparseLinks.remove(pos);
+			if (removedLink != null) {
+				ServerCable otherCable = CableNetworkManager.get(getWorld()).getCable(pos);
 				otherCable.sparseLinks.remove(getPos());
-
-				CableNetworkManager.get(getWorld()).separateSparseCables(this, otherCable);
-				return true;
+				targets.add(otherCable);
+				output.add(removedLink);
 			}
 		}
-		return false;
+
+		// If we did break any connections, try to separate ourselves off those targets.
+		if (output.size() > 0) {
+			CableNetworkManager.get(getWorld()).separateSparseCables(this, targets);
+			for (ServerCable other : targets) {
+				other.synchronizeServerState();
+			}
+			synchronizeServerState();
+		}
+
+		return output;
 	}
 
 	public boolean isLinkedTo(BlockPos position) {
@@ -183,75 +203,7 @@ public class ServerCable {
 		return wrappers;
 	}
 
-	public boolean containsProperty(String key) {
-		return dataTag.contains(key);
-	}
-
-	public int getIntProperty(String key) {
-		return dataTag.getInt(key);
-	}
-
-	public int getByteProperty(String key) {
-		return dataTag.getByte(key);
-	}
-
-	public float getFloatProperty(String key) {
-		return dataTag.getFloat(key);
-	}
-
-	public long getLongProperty(String key) {
-		return dataTag.getLong(key);
-	}
-
-	public double getDoubleProperty(String key) {
-		return dataTag.getDouble(key);
-	}
-
-	public boolean getBooleanProperty(String key) {
-		return dataTag.getBoolean(key);
-	}
-
-	public String getStringProperty(String key) {
-		return dataTag.getString(key);
-	}
-
-	public CompoundTag getTagProperty(String key) {
-		return dataTag.getCompound(key);
-	}
-
-	public void setProperty(String key, int value) {
-		dataTag.putInt(key, value);
-	}
-
-	public void setProperty(String key, byte value) {
-		dataTag.putByte(key, value);
-	}
-
-	public void setProperty(String key, boolean value) {
-		dataTag.putBoolean(key, value);
-	}
-
-	public void setProperty(String key, float value) {
-		dataTag.putFloat(key, value);
-	}
-
-	public void setProperty(String key, long value) {
-		dataTag.putLong(key, value);
-	}
-
-	public void setProperty(String key, double value) {
-		dataTag.putDouble(key, value);
-	}
-
-	public void setProperty(String key, String value) {
-		dataTag.putString(key, value);
-	}
-
-	public void setProperty(String key, CompoundTag value) {
-		dataTag.put(key, value);
-	}
-
-	public CompoundTag getCompleteDataTag() {
+	public CompoundTag getDataTag() {
 		return dataTag;
 	}
 
@@ -259,7 +211,7 @@ public class ServerCable {
 		attachmentData.put(side, new ServerAttachmentDataContainer(side));
 	}
 
-	public void reinitializeAttachmentDataForSide(Direction side, ResourceLocation id) {
+	public void addAttachmentDataForSide(Direction side, ResourceLocation id) {
 		attachmentData.put(side, new ServerAttachmentDataContainer(id, side));
 	}
 
@@ -286,7 +238,7 @@ public class ServerCable {
 	 * @param network
 	 * @param updateBlock
 	 */
-	public void onNetworkJoined(CableNetwork network, boolean updateBlock) {
+	public void onNetworkJoined(CableNetwork network) {
 		// Save the network.
 		Network = network;
 
@@ -298,19 +250,23 @@ public class ServerCable {
 		}
 
 		// Update the owning block.
-		if (updateBlock) {
-			updateCableBlock();
-		}
+		synchronizeServerState();
+		updateCableBlock();
 	}
 
 	public void onNetworkLeft(CableNetwork oldNetwork) {
-		for (ServerCable otherCable : oldNetwork.getGraph().getCables().values()) {
+		Network = null;
+		synchronizeServerState();
+		updateCableBlock();
+	}
+
+	public void onRemoved() {
+		for (ServerCable otherCable : Network.getGraph().getCables().values()) {
 			if (otherCable.isLinkedTo(getPos())) {
 				otherCable.sparseLinks.remove(getPos());
+				otherCable.synchronizeServerState();
 			}
 		}
-		Network = null;
-		updateCableBlock();
 	}
 
 	public HashSet<ResourceLocation> getSupportedNetworkModules() {
@@ -344,6 +300,14 @@ public class ServerCable {
 
 	public void setDisabledStateOnSide(Direction side, boolean disabledState) {
 		disabledSides[side.ordinal()] = disabledState;
+		synchronizeServerState();
+	}
+
+	public void synchronizeServerState() {
+		ICableStateSyncTarget target = (ICableStateSyncTarget) getWorld().getExistingBlockEntity(getPos());
+		if (target != null) {
+			target.synchronizeServerToClient(this, new CompoundTag());
+		}
 	}
 
 	public CompoundTag writeToNbt(CompoundTag tag) {

@@ -153,7 +153,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 			}
 
 			// Update the power usage on the server.
-			cable.setProperty(POWER_USAGE_TAG, attachmentPowerUsage + powerUsage);
+			cable.getDataTag().putDouble(POWER_USAGE_TAG, attachmentPowerUsage + powerUsage);
 		} catch (Exception e) {
 			StaticPower.LOGGER
 					.error(String.format("An error occured when attempting to update the power usage of a digistore cable provider owned by a tile entity at location: %1$s of type: %2$s",

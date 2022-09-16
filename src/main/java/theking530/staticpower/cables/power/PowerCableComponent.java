@@ -77,10 +77,10 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
-		cable.setProperty(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
-		cable.setProperty(POWER_LOSS, powerLoss);
-		cable.setProperty(POWER_MAX, maxPower);
-		cable.setProperty(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
+		cable.getDataTag().putByte(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
+		cable.getDataTag().putDouble(POWER_LOSS, powerLoss);
+		cable.getDataTag().putDouble(POWER_MAX, maxPower);
+		cable.getDataTag().putBoolean(POWER_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 	}
 
 	@Override

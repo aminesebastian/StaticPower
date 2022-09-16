@@ -60,14 +60,19 @@ import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.SerializationUtilities;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blockentities.components.team.TeamComponent;
+import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableStateSyncPacket;
+import theking530.staticpower.cables.ICableStateSyncTarget;
+import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.TileEntityBasicSyncPacket;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class BlockEntityBase extends BlockEntity implements MenuProvider, IBreakSerializeable {
+public abstract class BlockEntityBase extends BlockEntity implements MenuProvider, IBreakSerializeable, ICableStateSyncTarget {
 	public static final Logger LOGGER = LogManager.getLogger(BlockEntityBase.class);
 	@UpdateSerialize
 	/**
@@ -133,7 +138,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	public void tick() {
 		if (!hasPostInitRun) {
 			hasPostInitRun = true;
-			postInit(level, worldPosition, level.getBlockState(worldPosition));
+			postInit(level, worldPosition, getBlockState());
 			for (AbstractTileEntityComponent comp : components.values()) {
 				comp.onInitializedInWorld(level, worldPosition, !hasFirstPlacedMethodRun);
 			}
@@ -148,8 +153,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// If an update is queued, perform the update.
 		if (updateRequestQueue.size() > 0) {
 			// Debug the update.
-			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getBlockPos().toString(),
-					getLevel().getBlockState(getBlockPos()), updateRequestQueue.size()));
+			StaticPower.LOGGER.debug(String.format("Updating block at position: %1$s with name: %2$s with %3$d updates queued!", getBlockPos().toString(), getBlockState(),
+					updateRequestQueue.size()));
 
 			// Calculate the flag to use.
 			int flags = 0;
@@ -360,16 +365,11 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	public Direction getFacingDirection() {
-		// If the world is null, return UP and log the error.
-		if (getLevel() == null) {
-			LOGGER.error("There was an attempt to get the facing direction before the block has been fully placed in the world! TileEntity: %1$s at position: %2$s.",
-					getDisplayName().getString(), worldPosition);
-			return Direction.UP;
-		}
-
 		// Attempt to get the block state for horizontal facing.
-		if (getLevel().getBlockState(worldPosition).hasProperty(HorizontalDirectionalBlock.FACING)) {
-			return getLevel().getBlockState(getBlockPos()).getValue(HorizontalDirectionalBlock.FACING);
+		if (getBlockState().hasProperty(StaticPowerBlock.HORIZONTAL_FACING)) {
+			return getBlockState().getValue(StaticPowerBlock.HORIZONTAL_FACING);
+		} else if (getBlockState().hasProperty(StaticPowerBlock.FACING)) {
+			return getBlockState().getValue(StaticPowerBlock.FACING);
 		} else {
 			return Direction.UP;
 		}
@@ -766,6 +766,37 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	protected void getAdditionalModelData(ModelDataMap.Builder builder) {
 
+	}
+
+	public void synchronizeServerToClient(ServerCable cable, CompoundTag tag) {
+		if (getLevel().isClientSide()) {
+			throw new RuntimeException("#synchronizeServerToClient() should never be called from the client!");
+		}
+
+		// Iterate through all the cable providers (should realistically just be one).
+		for (AbstractTileEntityComponent component : components.values()) {
+			if (component instanceof AbstractCableProviderComponent) {
+				AbstractCableProviderComponent cableComp = (AbstractCableProviderComponent) component;
+				cableComp.gatherCableStateSynchronizationValues(cable, tag);
+			}
+		}
+
+		// Send the sync packet.
+		CableStateSyncPacket syncPacket = new CableStateSyncPacket(getBlockPos(), tag);
+		StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), 64, syncPacket);
+	}
+
+	public void recieveCableSyncState(CompoundTag tag) {
+		if (!getLevel().isClientSide()) {
+			throw new RuntimeException("We should not be receiving the connection state sync on the server!");
+		}
+
+		for (AbstractTileEntityComponent component : components.values()) {
+			if (component instanceof AbstractCableProviderComponent) {
+				AbstractCableProviderComponent cableComp = (AbstractCableProviderComponent) component;
+				cableComp.syncCableStateFromServer(tag);
+			}
+		}
 	}
 
 	/**

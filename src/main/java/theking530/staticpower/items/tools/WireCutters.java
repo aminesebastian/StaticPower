@@ -5,15 +5,23 @@ import java.util.function.Supplier;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticpower.StaticPowerConfig;
+import theking530.staticpower.blockentities.power.wireconnector.BlockEntityWireConnector;
+import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class WireCutters extends StaticPowerItem {
@@ -24,6 +32,20 @@ public class WireCutters extends StaticPowerItem {
 		super(new Item.Properties().stacksTo(1));
 		this.tier = tier;
 		this.repairItem = repairItem;
+	}
+
+	@Override
+	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+		if (!world.isClientSide()) {
+			if (world.getBlockState(pos).getBlock() instanceof BlockWireConnector) {
+				BlockEntityWireConnector connector = (BlockEntityWireConnector) world.getBlockEntity(pos);
+				AbstractCableProviderComponent cableComp = connector.getComponent(AbstractCableProviderComponent.class);
+				cableComp.breakAllSparseLinks();
+				return InteractionResult.SUCCESS;
+			}
+		}
+
+		return InteractionResult.PASS;
 	}
 
 	@Override

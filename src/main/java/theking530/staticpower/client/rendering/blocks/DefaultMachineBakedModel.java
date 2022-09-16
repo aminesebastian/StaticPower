@@ -176,9 +176,9 @@ public class DefaultMachineBakedModel extends AbstractBakedModel {
 			Vector3f negOffset = SDMath.transformVectorByDirection(offsetSide, new Vector3f(0.0f, 0.0f, -0.005f));
 
 			// Check if we have a facing property.
-			if (state != null && state.hasProperty(StaticPowerBlockEntityBlock.FACING)) {
+			if (state != null && state.hasProperty(StaticPowerBlockEntityBlock.HORIZONTAL_FACING)) {
 				BlockSide blockSide = SideConfigurationUtilities.getBlockSide(side,
-						state.getValue(StaticPowerBlockEntityBlock.FACING));
+						state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
 
 				// If we do, see if we have a requested offset. If we do, apply it.
 				if (sideOffsets.containsKey(blockSide)) {

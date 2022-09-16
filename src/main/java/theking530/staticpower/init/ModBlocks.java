@@ -515,8 +515,8 @@ public class ModBlocks {
 	// Rectifiers
 	public static final RegistryObject<BlockRectifier> RectifierBasic = registerBlock("rectifier_basic", () -> new BlockRectifier(StaticPowerTiers.BASIC));
 
-	// Wire Connectors
-	public static final RegistryObject<BlockWireConnector> WireConnectorBasic = registerBlock("wire_terminus_basic", () -> new BlockWireConnector(StaticPowerTiers.BASIC));
+	// Wire Terminals
+	public static final RegistryObject<BlockWireConnector> WireConnectorBasic = registerBlock("wire_terminal_basic", () -> new BlockWireConnector(StaticPowerTiers.BASIC));
 
 	// Monitors
 	public static final RegistryObject<BlockPowerMonitor> PowerMonitor = registerBlock("power_monitor", () -> new BlockPowerMonitor());

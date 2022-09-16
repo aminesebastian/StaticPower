@@ -1,8 +1,8 @@
 {
     "variants": {
-		"facing=north": { "model": "staticpower:block/machines/solar_panel_lumum", "y": 270 },
-        "facing=south": { "model": "staticpower:block/machines/solar_panel_lumum", "y": 90 },
-        "facing=west":  { "model": "staticpower:block/machines/solar_panel_lumum", "y": 180 },
-        "facing=east":  { "model": "staticpower:block/machines/solar_panel_lumum" }
+		"facing=north": { "model": "staticpower:block/power/solar_panels/solar_panel_lumum" },
+        "facing=south": { "model": "staticpower:block/power/solar_panels/solar_panel_lumum", "y": 180 },
+        "facing=west":  { "model": "staticpower:block/power/solar_panels/solar_panel_lumum", "y": 270 },
+        "facing=east":  { "model": "staticpower:block/power/solar_panels/solar_panel_lumum", "y": 90 }
     }
 }

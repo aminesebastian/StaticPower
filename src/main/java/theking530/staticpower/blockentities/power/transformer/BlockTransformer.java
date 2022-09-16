@@ -53,7 +53,7 @@ public class BlockTransformer extends StaticPowerMachineBlock {
 
 	@Override
 	public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-		if (state.getValue(StaticPowerBlockEntityBlock.FACING).getAxis() == Axis.Z) {
+		if (state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING).getAxis() == Axis.Z) {
 			return Z_AXIS_SHAPE;
 		} else {
 			return X_AXIS_SHAPE;

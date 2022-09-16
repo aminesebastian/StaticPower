@@ -176,14 +176,6 @@ public abstract class AbstractTileEntityComponent {
 		return isEnabled;
 	}
 
-	protected Direction getOwningTileEntityFacing() {
-		BlockState currentBlockState = getTileEntity().getBlockState();
-		if (currentBlockState.hasProperty(StaticPowerBlockEntityBlock.FACING)) {
-			return currentBlockState.getValue(StaticPowerBlockEntityBlock.FACING);
-		}
-		return null;
-	}
-
 	public void setEnabled(boolean isEnabled) {
 		if (this.isEnabled != isEnabled) {
 			this.isEnabled = isEnabled;

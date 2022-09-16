@@ -166,7 +166,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 			// A single cable connection does not have anypower loss (for gameplay reasons,
 			// no need to be too mean).
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(end);
-			double maxPower = cable.getDoubleProperty(PowerCableComponent.POWER_MAX);
+			double maxPower = cable.getDataTag().getDouble(PowerCableComponent.POWER_MAX);
 			return new ElectricalPathProperties(0, maxPower, List.of(cable));
 		}
 
@@ -187,13 +187,12 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 			// destination.
 			ServerCable cable = CableNetworkManager.get(this.Network.getWorld()).getCable(entry.getPosition());
 			if (cable != null) {
-				cablePowerLoss += (cable.getDoubleProperty(PowerCableComponent.POWER_LOSS));
-
+				cablePowerLoss += (cable.getDataTag().getDouble(PowerCableComponent.POWER_LOSS)) * entry.getDistance();
 				if (!cables.contains(cable)) {
 					cables.add(cable);
 				}
 
-				double cableMaxPower = cable.getDoubleProperty(PowerCableComponent.POWER_MAX);
+				double cableMaxPower = cable.getDataTag().getDouble(PowerCableComponent.POWER_MAX);
 				if (cableMaxPower < maxPowerPerTick) {
 					maxPowerPerTick = cableMaxPower;
 				}
@@ -268,7 +267,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 		// If the input voltage is higher than the voltage of a cable, break it. Use ALL
 		// the power.
 		for (ServerCable cable : properties.cables) {
-			StaticPowerVoltage voltage = StaticPowerVoltage.values()[cable.getIntProperty(PowerCableComponent.VOLTAGE_ORDINAL)];
+			StaticPowerVoltage voltage = StaticPowerVoltage.values()[cable.getDataTag().getByte(PowerCableComponent.VOLTAGE_ORDINAL)];
 			if (stack.getVoltage() > voltage.getVoltage()) {
 				if (!simulate) {
 					Network.getWorld().destroyBlock(cable.getPos(), false);

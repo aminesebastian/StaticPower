@@ -65,7 +65,8 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 			} else {
 				return getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE)
 						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE)
-						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ? CableConnectionState.TILE_ENTITY : CableConnectionState.NONE;
+						|| otherProvider.getSupportedNetworkModuleTypes().contains(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE) ? CableConnectionState.TILE_ENTITY
+								: CableConnectionState.NONE;
 			}
 		} else if (!firstWorldLoaded && otherProvider == null) {
 			if (canConnectTo(getLevel(), getPos(), side.getOpposite())) {
@@ -77,7 +78,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
-		cable.setProperty(CONFIGURATION_KEY, configuration.serializeNBT());
+		cable.getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
 	}
 
 	@SuppressWarnings("deprecation")
@@ -147,7 +148,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 			getTileEntity().addRenderingUpdateRequest();
 		} else {
 			if (CableNetworkManager.get(getLevel()).isTrackingCable(getPos())) {
-				CableNetworkManager.get(getLevel()).getCable(getPos()).setProperty(CONFIGURATION_KEY, configuration.serializeNBT());
+				CableNetworkManager.get(getLevel()).getCable(getPos()).getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
 				getLevel().updateNeighborsAt(this.getPos(), getLevel().getBlockState(getPos()).getBlock());
 			}
 		}

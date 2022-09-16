@@ -151,8 +151,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable) {
-		cable.setProperty(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.setProperty(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
+		cable.getDataTag().putDouble(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putDouble(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
 	}
 
 	@Override

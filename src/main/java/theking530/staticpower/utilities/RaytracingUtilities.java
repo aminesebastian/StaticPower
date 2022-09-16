@@ -37,7 +37,6 @@ public class RaytracingUtilities {
 		float f6 = f3 * f4;
 		float f7 = f2 * f4;
 		double d0 = player.getAttribute(net.minecraftforge.common.ForgeMod.REACH_DISTANCE.get()).getValue();
-		;
 		Vec3 vector3d1 = vector3d.add((double) f6 * d0, (double) f5 * d0, (double) f7 * d0);
 		return worldIn.clip(new ClipContext(vector3d, vector3d1, ClipContext.Block.OUTLINE, fluidMode, player));
 	}

@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -127,7 +126,8 @@ public class NetworkPathFinder {
 				visitedPositions.add(adjacent);
 
 				// Cache the predecessor to this location.
-				predecessors.put(adjacent, new PathEntry(curr, positionsToScan.get(adjacent)));
+				float distance = curr.distManhattan(adjacent);
+				predecessors.put(adjacent, new PathEntry(curr, positionsToScan.get(adjacent), distance));
 
 				// Now we add the position to the BFS queue and continue.
 				bfsQueue.add(adjacent);
@@ -170,30 +170,19 @@ public class NetworkPathFinder {
 			curr = predecessors.get(curr.getPosition());
 		}
 		// Add the starting cable - direction doesn't matter here.
-		pathEntries.add(new PathEntry(startingCablePosition, null));
+		pathEntries.add(new PathEntry(startingCablePosition, null, 0));
 
 		// The whole path is currently reversed, so unreverse it.
 		Collections.reverse(pathEntries);
 
 		// Add the last cable and the end position.
-		pathEntries.add(new PathEntry(lastCable, WorldUtilities.getFacingFromPos(lastCable, endingPosition)));
-		pathEntries.add(new PathEntry(endingPosition, WorldUtilities.getFacingFromPos(lastCable, endingPosition)));
+		pathEntries.add(new PathEntry(lastCable, WorldUtilities.getFacingFromPos(lastCable, endingPosition), 0));
+		pathEntries.add(new PathEntry(endingPosition, WorldUtilities.getFacingFromPos(lastCable, endingPosition), 0));
 
 		float length = 1;
-		if (pathEntries.size() > 1) {
-			for (int i = 1; i < pathEntries.size(); i++) {
-				PathEntry previous = pathEntries.get(i - 1);
-				PathEntry current = pathEntries.get(i);
-				float distance = current.getPosition().distManhattan(previous.getPosition());
-				length += distance;
-			}
+		for (PathEntry entry : pathEntries) {
+			length += entry.getDistance();
 		}
-//		for (PathEntry entry : pathEntries) {
-//			ServerCable cable = CableNetworkManager.get(world).getCable(entry.getPosition());
-//			if (cable != null) {
-//				length += lengthProvider.apply(cable);
-//			}
-//		}
 
 		// Convert the list to an array and create the final path.
 		PathEntry[] entries = new PathEntry[pathEntries.size()];

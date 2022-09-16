@@ -41,7 +41,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 	public void getReaderOutput(List<Component> components) {
 		float averageThermalConductivity = 0.0f;
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
-			averageThermalConductivity += cable.getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
+			averageThermalConductivity += cable.getDataTag().getDouble(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 		}
 		averageThermalConductivity /= Network.getGraph().getCables().size();
 
@@ -80,7 +80,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 			}
 
 			// Capture the cable's conductivity.
-			float cableConductivity = cable.getFloatProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
+			float cableConductivity = cable.getDataTag().getFloat(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 
 			// Temporarily change the conductivity of the network for this cable.
 			heatStorage.setConductivity(cableConductivity);
@@ -107,8 +107,8 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 					// Distribute the heat to the destinations.
 					for (IHeatStorage wrapper : destinations.keySet()) {
 						// Get the thermal conductivity of the cable connected to this destination.
-						double cableConductivity = CableNetworkManager.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable())
-								.getDoubleProperty(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
+						double cableConductivity = CableNetworkManager.get(world).getCable(destinations.get(wrapper).getFirstConnectedCable()).getDataTag()
+								.getDouble(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
 
 						// Get the thermal conductivity of the attached cable.
 						int toSupply = (int) Math.min(cableConductivity * wrapper.getConductivity(), outputPerDestination);
@@ -135,8 +135,8 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 		// Get all the cables in the network and get their cable components.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If they have a heat cable component, get the capacity.
-			if (cable.containsProperty(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY)) {
-				total += cable.getIntProperty(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY);
+			if (cable.getDataTag().contains(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY)) {
+				total += cable.getDataTag().getInt(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY);
 				count++;
 			}
 		}

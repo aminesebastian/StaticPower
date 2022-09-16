@@ -18,7 +18,7 @@ public class BlockRefineryController extends StaticPowerMachineBlock {
 
 	@Override
 	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		return HasGuiType.ALWAYS;
+		return HasGuiType.NEVER; // TO-DO: Change this back to always.
 	}
 
 	@Override

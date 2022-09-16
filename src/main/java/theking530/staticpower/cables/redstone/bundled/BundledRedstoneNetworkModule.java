@@ -73,7 +73,7 @@ public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule 
 										hitModules.add(redstoneModule);
 
 										RedstoneCableConfiguration configuration = new RedstoneCableConfiguration();
-										configuration.deserializeNBT(targetCable.getTagProperty(RedstoneCableComponent.CONFIGURATION_KEY));
+										configuration.deserializeNBT(targetCable.getDataTag().getCompound(RedstoneCableComponent.CONFIGURATION_KEY));
 
 										if (!configuration.getSideConfig(dir.getOpposite()).isInputSide()) {
 											for (String selector : redstoneModule.getAllSupportedSelectors()) {

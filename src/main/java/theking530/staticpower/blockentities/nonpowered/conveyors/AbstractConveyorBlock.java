@@ -52,7 +52,7 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 
 	@Override
 	protected void setFacingBlockStateOnPlacement(Level world, BlockPos pos, BlockState state, LivingEntity placer, ItemStack stack) {
-		world.setBlock(pos, state.setValue(FACING, placer.getDirection()), 2);
+		world.setBlock(pos, state.setValue(HORIZONTAL_FACING, placer.getDirection()), 2);
 	}
 
 	@Override
@@ -70,15 +70,15 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 		cacheVoxelShapes();
 		// Get the appropriate shape.
 		if (context instanceof EntityCollisionContext && ((EntityCollisionContext) context).getEntity() instanceof Player) {
-			return INTERACTION_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.FACING));
+			return INTERACTION_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
 		} else {
-			return ENTITY_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.FACING));
+			return ENTITY_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
 		}
 	}
 
 	@Override
 	public VoxelShape getInteractionShape(BlockState state, BlockGetter worldIn, BlockPos pos) {
-		return ENTITY_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.FACING));
+		return ENTITY_SHAPES.get(state.getValue(StaticPowerBlockEntityBlock.HORIZONTAL_FACING));
 	}
 
 	@Override
@@ -98,10 +98,10 @@ public abstract class AbstractConveyorBlock extends StaticPowerMachineBlock impl
 	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
 		// We only rotate here, no need to check the mode of the wrench.
 		if (facing != Direction.UP && facing != Direction.DOWN) {
-			if (facing != world.getBlockState(pos).getValue(FACING)) {
-				world.setBlock(pos, world.getBlockState(pos).setValue(FACING, facing), 1 | 2);
+			if (facing != world.getBlockState(pos).getValue(HORIZONTAL_FACING)) {
+				world.setBlock(pos, world.getBlockState(pos).setValue(HORIZONTAL_FACING, facing), 1 | 2);
 			} else {
-				world.setBlock(pos, world.getBlockState(pos).setValue(FACING, facing.getOpposite()), 1 | 2);
+				world.setBlock(pos, world.getBlockState(pos).setValue(HORIZONTAL_FACING, facing.getOpposite()), 1 | 2);
 			}
 		}
 		return InteractionResult.SUCCESS;

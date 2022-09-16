@@ -641,6 +641,8 @@
 	
 	"block.staticpower.rectifier_basic": "Basic Rectifier",
 	
+	"block.staticpower.wire_terminal_basic": "LV Wire Terminal",
+	
 	"block.staticpower.cable_power_basic": "Power Cable",
 	"block.staticpower.cable_power_advanced": "Advanced Power Cable",
 	"block.staticpower.cable_power_static": "Static Power Cable",
@@ -1138,6 +1140,9 @@
 	"gui.staticpower.remaining_heat_time": "Remaining Heat Time:",
 	"gui.staticpower.tool_speed_multiplier": "Mining Speed",
 	"gui.staticpower.transformer_upgrade_tooltip": "Upgrades a Machine from %1$s to %2$s",
+	
+	"gui.staticpower.wire_coil_connecting": "Connecting to [%1$s]",
+	
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox",
 	"key.categories.staticpower": "Static Power",

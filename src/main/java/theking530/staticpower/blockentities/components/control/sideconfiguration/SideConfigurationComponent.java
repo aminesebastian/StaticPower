@@ -46,28 +46,28 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		ALL_SIDES_NEVER.setSide(BlockSide.BACK, false, MachineSideMode.Never);
 		ALL_SIDES_NEVER.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
 		ALL_SIDES_NEVER.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
-		
+
 		ALL_SIDES_OUTPUT.setSide(BlockSide.TOP, true, MachineSideMode.Output);
 		ALL_SIDES_OUTPUT.setSide(BlockSide.BOTTOM, true, MachineSideMode.Output);
 		ALL_SIDES_OUTPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Output);
 		ALL_SIDES_OUTPUT.setSide(BlockSide.BACK, true, MachineSideMode.Output);
 		ALL_SIDES_OUTPUT.setSide(BlockSide.LEFT, true, MachineSideMode.Output);
 		ALL_SIDES_OUTPUT.setSide(BlockSide.RIGHT, true, MachineSideMode.Output);
-		
+
 		ALL_SIDES_INPUT.setSide(BlockSide.TOP, true, MachineSideMode.Input);
 		ALL_SIDES_INPUT.setSide(BlockSide.BOTTOM, true, MachineSideMode.Input);
 		ALL_SIDES_INPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Input);
 		ALL_SIDES_INPUT.setSide(BlockSide.BACK, true, MachineSideMode.Input);
 		ALL_SIDES_INPUT.setSide(BlockSide.LEFT, true, MachineSideMode.Input);
 		ALL_SIDES_INPUT.setSide(BlockSide.RIGHT, true, MachineSideMode.Input);
-		
+
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.TOP, true, MachineSideMode.Output);
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.FRONT, false, MachineSideMode.Never);
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.BACK, false, MachineSideMode.Never);
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.LEFT, false, MachineSideMode.Never);
 		TOP_SIDE_ONLY_OUTPUT.setSide(BlockSide.RIGHT, false, MachineSideMode.Never);
-		
+
 		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.TOP, false, MachineSideMode.Never);
 		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.BOTTOM, false, MachineSideMode.Never);
 		FRONT_BACK_INPUT_OUTPUT.setSide(BlockSide.FRONT, true, MachineSideMode.Input);
@@ -82,7 +82,6 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	private final BiConsumer<BlockSide, MachineSideMode> callback;
 	private final BiPredicate<BlockSide, MachineSideMode> sideModeFilter;
 
-
 	public SideConfigurationComponent(String name, BiConsumer<BlockSide, MachineSideMode> onConfigurationChangedCallback, BiPredicate<BlockSide, MachineSideMode> sideModeFilter) {
 		this(name, onConfigurationChangedCallback, sideModeFilter, DEFAULT_SIDE_CONFIGURATION);
 	}
@@ -93,7 +92,8 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		this.callback = onConfigurationChangedCallback;
 		this.sideModeFilter = sideModeFilter;
 		this.defaultConfiguration = defaultConfiguration;
-		configuration = new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never };
+		configuration = new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never,
+				MachineSideMode.Never };
 		enabledState = new boolean[] { false, false, false, false, false, false };
 	}
 
@@ -120,7 +120,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		// TODO: Cache this.
 		MachineSideMode[] output = new MachineSideMode[6];
 
-		Direction facing = getOwningTileEntityFacing();
+		Direction facing = getTileEntity().getFacingDirection();
 		for (Direction dir : Direction.values()) {
 			BlockSide side = SideConfigurationUtilities.getBlockSide(dir, facing);
 			output[dir.ordinal()] = configuration[side.ordinal()];
@@ -136,7 +136,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 * @return The mode that block side is set to.
 	 */
 	public MachineSideMode getWorldSpaceDirectionConfiguration(@Nonnull Direction direction) {
-		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(direction, getOwningTileEntityFacing());
+		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(direction, getTileEntity().getFacingDirection());
 		return getBlockSideConfiguration(worldSpaceSide);
 	}
 
@@ -145,13 +145,13 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	public SideConfigurationComponent setWorldSpaceEnabledState(@Nonnull Direction direction, boolean enabled) {
-		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(direction, getOwningTileEntityFacing());
+		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(direction, getTileEntity().getFacingDirection());
 		setBlockSideEnabledState(worldSpaceSide, enabled);
 		return this;
 	}
 
 	public boolean getWorldSpaceEnabledState(@Nonnull Direction direction) {
-		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(direction, getOwningTileEntityFacing());
+		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(direction, getTileEntity().getFacingDirection());
 		return getBlockSideEnabledState(worldSpaceSide);
 	}
 
@@ -171,7 +171,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	 * @param newMode The new mode for that side.
 	 */
 	public void setWorldSpaceDirectionConfiguration(@Nonnull Direction facing, @Nonnull MachineSideMode newMode) {
-		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(facing, getOwningTileEntityFacing());
+		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(facing, getTileEntity().getFacingDirection());
 		setBlockSpaceConfiguration(worldSpaceSide, newMode);
 	}
 
@@ -205,7 +205,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		int currentModeIndex = getWorldSpaceDirectionConfiguration(side).ordinal();
 		// Capture the original side mode.
 		MachineSideMode originalMode = getWorldSpaceDirectionConfiguration(side);
-		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(side, getOwningTileEntityFacing());
+		BlockSide worldSpaceSide = SideConfigurationUtilities.getBlockSide(side, getTileEntity().getFacingDirection());
 
 		MachineSideMode newMode;
 		// Loop until we hit an acceptable side mode.

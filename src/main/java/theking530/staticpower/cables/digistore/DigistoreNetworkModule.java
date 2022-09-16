@@ -92,7 +92,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 				}
 
 				// If this cable has a power usage tag, capture it as a power user.
-				if (cable.containsProperty(DigistoreCableProviderComponent.POWER_USAGE_TAG)) {
+				if (cable.getDataTag().contains(DigistoreCableProviderComponent.POWER_USAGE_TAG)) {
 					powerUsingDigistores.add(cable);
 				}
 
@@ -164,7 +164,7 @@ public class DigistoreNetworkModule extends AbstractCableNetworkModule {
 	public int getPowerUsage() {
 		int usage = 0;
 		for (ServerCable cable : powerUsingDigistores) {
-			usage += cable.getIntProperty(DigistoreCableProviderComponent.POWER_USAGE_TAG);
+			usage += cable.getDataTag().getInt(DigistoreCableProviderComponent.POWER_USAGE_TAG);
 		}
 		return usage;
 	}

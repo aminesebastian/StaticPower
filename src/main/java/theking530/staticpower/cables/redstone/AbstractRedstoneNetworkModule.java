@@ -106,7 +106,7 @@ public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetwork
 
 	protected RedstoneCableConfiguration getConfigurationForCable(ServerCable cable) {
 		RedstoneCableConfiguration configuration = new RedstoneCableConfiguration();
-		configuration.deserializeNBT(cable.getTagProperty(RedstoneCableComponent.CONFIGURATION_KEY));
+		configuration.deserializeNBT(cable.getDataTag().getCompound(RedstoneCableComponent.CONFIGURATION_KEY));
 		return configuration;
 	}
 

@@ -104,7 +104,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 
 				// Get the cable and skip if its industrial.
 				ServerCable cable = CableNetworkManager.get(world).getCable(cablePos);
-				if (cable.getBooleanProperty(FluidCableComponent.FLUID_INDUSTRIAL_DATA_TAG_KEY)) {
+				if (cable.getDataTag().getBoolean(FluidCableComponent.FLUID_INDUSTRIAL_DATA_TAG_KEY)) {
 					//continue;
 				}
 
@@ -131,7 +131,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		// Supply the fluid.
 		for (FluidInterfaceWrapper tank : fluidHandlers) {
 			// Get the transfer rate.
-			int transferRate = tank.cable.getIntProperty(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
+			int transferRate = tank.cable.getDataTag().getInt(FluidCableComponent.FLUID_RATE_DATA_TAG_KEY);
 
 			// Calculate how much fluid we can offer. If it is less than or equal to 0, do
 			// nothing.
@@ -206,8 +206,8 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		// Get all the cables in the network and get their cable components.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If they have a fluid cable component, get the capacity.
-			if (cable.containsProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY)) {
-				total += cable.getIntProperty(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY);
+			if (cable.getDataTag().contains(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY)) {
+				total += cable.getDataTag().getInt(FluidCableComponent.FLUID_CAPACITY_DATA_TAG_KEY);
 			}
 		}
 

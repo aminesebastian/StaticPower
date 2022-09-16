@@ -117,10 +117,12 @@ public class Path {
 	public static class PathEntry {
 		private final BlockPos position;
 		private final Direction entryDirection;
+		private final float distance;
 
-		public PathEntry(BlockPos position, Direction directionOfApproach) {
+		public PathEntry(BlockPos position, Direction directionOfApproach, float distance) {
 			this.position = position;
 			entryDirection = directionOfApproach;
+			this.distance = distance;
 		}
 
 		/**
@@ -149,12 +151,17 @@ public class Path {
 			if (entryDirection != null) {
 				nbt.putInt("direction", entryDirection.ordinal());
 			}
+			nbt.putFloat("dist", distance);
 
 			return nbt;
 		}
 
+		public float getDistance() {
+			return distance;
+		}
+
 		public static PathEntry createFromNbt(CompoundTag nbt) {
-			return new PathEntry(BlockPos.of(nbt.getLong("position")), nbt.contains("direction") ? Direction.values()[nbt.getInt("direction")] : null);
+			return new PathEntry(BlockPos.of(nbt.getLong("position")), nbt.contains("direction") ? Direction.values()[nbt.getInt("direction")] : null, nbt.getFloat("dist"));
 		}
 
 		@Override

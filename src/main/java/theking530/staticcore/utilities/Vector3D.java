@@ -2,6 +2,7 @@ package theking530.staticcore.utilities;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 
 public class Vector3D extends AbstractVector<Vector3D> {
 	public static final Vector3D ZERO = new Vector3D(0, 0, 0);
@@ -11,7 +12,7 @@ public class Vector3D extends AbstractVector<Vector3D> {
 
 	}
 
-	public Vector3D(BlockPos pos) {
+	public Vector3D(Vec3i pos) {
 		this(pos.getX(), pos.getY(), pos.getZ());
 	}
 

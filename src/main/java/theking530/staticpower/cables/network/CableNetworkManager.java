@@ -16,7 +16,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
@@ -43,6 +42,7 @@ public class CableNetworkManager extends SavedData {
 	private static long currentCraftingId = 0;
 	private static long currentPatternId = 0;
 	private static long currentItemParcelId = 0;
+	private static long curentSparseLinkId = 0;
 
 	private final Level World;
 	private final HashMap<BlockPos, ServerCable> WorldCables;
@@ -65,6 +65,9 @@ public class CableNetworkManager extends SavedData {
 		}
 //		WorldCables.clear();
 //		Networks.clear();
+//		if(Networks.size() > 0) {
+//			System.out.println(Networks.size());	
+//		}
 	}
 
 	public void tick() {
@@ -88,10 +91,6 @@ public class CableNetworkManager extends SavedData {
 		// Then, remove them.
 		for (long id : toRemove) {
 			Networks.remove(id);
-		}
-
-		if (Networks.size() > 0) {
-			System.out.println(Networks.size());
 		}
 	}
 
@@ -136,15 +135,30 @@ public class CableNetworkManager extends SavedData {
 		mergeNetworksIntoOne(Arrays.asList(initiator, target), World, initiator.getPos());
 	}
 
-	public void separateSparseCables(ServerCable initiator, ServerCable target) {
+	public void separateSparseCables(ServerCable initiator, List<ServerCable> targets) {
 		if (initiator.Network == null) {
 			throw new RuntimeException(String.format("Attempted to join sparse cables with initiator: %1$s with a null network.", initiator.getPos()));
 		}
-		if (target.Network == null) {
-			throw new RuntimeException(String.format("Attempted to join sparse cables with target: %1$s with a null network.", target.getPos()));
+
+		for (ServerCable target : targets) {
+			if (target.Network != null) {
+				target.Network.updateGraph(World, target.getPos(), firstTick);
+			}
 		}
 
-		splitNetworks(initiator);
+		if (initiator.Network != null) {
+			initiator.Network.updateGraph(World, initiator.getPos(), firstTick);
+		}
+
+		for (ServerCable target : targets) {
+			if (target.Network == null) {
+				formNetworkAt(World, target.getPos());
+			}
+		}
+
+		if (initiator.Network == null) {
+			formNetworkAt(World, initiator.getPos());
+		}
 	}
 
 	public void refreshCable(ServerCable cable) {
@@ -217,6 +231,7 @@ public class CableNetworkManager extends SavedData {
 
 		// If the cable was part of a network, perform the split algorithm.
 		if (cable.getNetwork() != null) {
+			cable.onRemoved();
 			splitNetworks(cable);
 		}
 	}
@@ -270,7 +285,22 @@ public class CableNetworkManager extends SavedData {
 	}
 
 	public void incrementCurrentItemParcelId() {
-		currentItemParcelId++;
+		curentSparseLinkId++;
+		setDirty();
+	}
+
+	public long getCurentSparseLinkId() {
+		return curentSparseLinkId;
+	}
+
+	public long getAndIncrementCurentSparseLinkId() {
+		// Increment first just to be safe in case someone forgets to increment.
+		incrementCurentSparseLinkId();
+		return curentSparseLinkId;
+	}
+
+	public void incrementCurentSparseLinkId() {
+		curentSparseLinkId++;
 		setDirty();
 	}
 
@@ -303,6 +333,11 @@ public class CableNetworkManager extends SavedData {
 			currentPatternId = tag.getLong("pattern_id");
 		}
 
+		// Load the link id.
+		if (tag.contains("curent_sparse_link_id")) {
+			curentSparseLinkId = tag.getLong("curent_sparse_link_id");
+		}
+
 		ListTag cables = tag.getList("cables", Tag.TAG_COMPOUND);
 		for (Tag cableTag : cables) {
 			CompoundTag cableTagCompound = (CompoundTag) cableTag;
@@ -332,6 +367,7 @@ public class CableNetworkManager extends SavedData {
 		tag.putLong("crafting_id", currentCraftingId);
 		tag.putLong("pattern_id", currentPatternId);
 		tag.putLong("current_parcel_id", currentItemParcelId);
+		tag.putLong("curent_sparse_link_id", curentSparseLinkId);
 
 		ListTag cables = new ListTag();
 		WorldCables.values().forEach(cable -> {
@@ -463,8 +499,6 @@ public class CableNetworkManager extends SavedData {
 			// Mark this cable network as dirty.
 			setDirty();
 		} else {
-			// If the adjacents list is empty, then this was the only cable in this network,
-			// remove the whole network.
 			LOGGER.debug("Removing empty network {}", originCable.getNetwork().getId());
 			removeNetwork(originCable.getNetwork().getId());
 		}

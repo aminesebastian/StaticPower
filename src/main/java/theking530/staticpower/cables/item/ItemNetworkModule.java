@@ -391,8 +391,8 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			// Get the current and next max move times (how many ticks it takes to travele
 			// through a single pipe).
 			int currentMoveTime = packet.getCurrentMoveTime();
-			int nextPipeMinMoveTime = (int) (20 / CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition())
-					.getDoubleProperty(ItemCableComponent.ITEM_CABLE_MAX_TRANSFER_SPEED));
+			int nextPipeMinMoveTime = (int) (20 / CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
+					.getDouble(ItemCableComponent.ITEM_CABLE_MAX_TRANSFER_SPEED));
 			nextPipeMinMoveTime = SDMath.clamp(nextPipeMinMoveTime, 1, Integer.MAX_VALUE);
 
 			// If our current move time is lower than the move time allowed by the next
@@ -402,12 +402,12 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 			// pipe's min move time, and we cannot go slower than the maximum default move
 			// time.
 			if (currentMoveTime < nextPipeMinMoveTime) {
-				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition())
-						.getDoubleProperty(ItemCableComponent.ITEM_CABLE_FRICTION_FACTOR_TAG);
+				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
+						.getDouble(ItemCableComponent.ITEM_CABLE_FRICTION_FACTOR_TAG);
 				currentMoveTime = SDMath.clamp(currentMoveTime, 2, nextPipeMinMoveTime);
 			} else if (currentMoveTime > nextPipeMinMoveTime) {
-				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition())
-						.getDoubleProperty(ItemCableComponent.ITEM_CABLE_ACCELERATION_FACTOR_TAG);
+				currentMoveTime *= CableNetworkManager.get(Network.getWorld()).getCable(packet.getCurrentEntry().getPosition()).getDataTag()
+						.getDouble(ItemCableComponent.ITEM_CABLE_ACCELERATION_FACTOR_TAG);
 				currentMoveTime = SDMath.clamp(currentMoveTime, nextPipeMinMoveTime, ItemCableComponent.MAXIMUM_MOVE_TIME);
 			}
 
