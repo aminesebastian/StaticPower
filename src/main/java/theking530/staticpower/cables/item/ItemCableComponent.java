@@ -13,8 +13,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -73,7 +76,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		// Only do this on the client.
-		if (getLevel().isClientSide) {
+		if (!isClientSide()) {
 			for (ItemRoutingParcelClient packet : containedPackets.values()) {
 				packet.incrementMoveTimer();
 			}
@@ -81,9 +84,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	public void onOwningTileEntityRemoved() {
+	public void onOwningBlockEntityBroken(BlockState state, BlockState newState, boolean isMoving) {
 		// Only perform the following on the server.
-		if (!getLevel().isClientSide) {
+		if (!isClientSide()) {
 			// Get the network.
 			CableNetwork network = CableNetworkManager.get(getLevel()).getCable(getPos()).getNetwork();
 			if (network == null) {
@@ -98,7 +101,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 			itemNetworkModule.onItemCableBroken(getPos());
 		}
 
-		super.onOwningTileEntityRemoved();
+		super.onOwningBlockEntityBroken(state, newState, isMoving);
 	}
 
 	public double getMaxTransferSpeed() {
@@ -107,7 +110,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 	public void addTransferingItem(ItemRoutingParcelClient routingPacket) {
 		containedPackets.put(routingPacket.getId(), routingPacket);
-		if (!getLevel().isClientSide) {
+		if (!isClientSide()) {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())),
 					new ItemCableAddedPacket(this, routingPacket));
 		}
@@ -116,7 +119,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 
 	public void removeTransferingItem(long parcelId) {
 		containedPackets.remove(parcelId);
-		if (!getLevel().isClientSide) {
+		if (!isClientSide()) {
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> getLevel().getChunkAt(getPos())),
 					new ItemCableRemovedPacket(this, parcelId));
 		}
@@ -160,7 +163,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		cable.getDataTag().putDouble(ITEM_CABLE_MAX_TRANSFER_SPEED, maxTransferSpeed);
 		cable.getDataTag().putDouble(ITEM_CABLE_FRICTION_FACTOR_TAG, frictionFactor);
 		cable.getDataTag().putDouble(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);
@@ -193,7 +196,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		if (cap == CapabilityItemHandler.ITEM_HANDLER_CAPABILITY && side != null) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getLevel().isClientSide) {
+				if (isClientSide()) {
 					disabled = isSideDisabled(side);
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is

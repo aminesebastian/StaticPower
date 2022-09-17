@@ -48,7 +48,7 @@ public class BlockEntityPumpJack extends BlockEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Set the default side configuration.
-		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input));
+		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input), true);
 
 		// Enable face interaction.
 		enableFaceInteraction();

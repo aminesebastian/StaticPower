@@ -65,9 +65,6 @@ public class CableNetworkManager extends SavedData {
 		}
 //		WorldCables.clear();
 //		Networks.clear();
-//		if(Networks.size() > 0) {
-//			System.out.println(Networks.size());	
-//		}
 	}
 
 	public void tick() {
@@ -110,6 +107,8 @@ public class CableNetworkManager extends SavedData {
 
 		// If sparse, just create the network. Adding a sparse cable is automatically a
 		// new network always.
+		// TODO: IS this still the case with the new support for sparse and non sparse
+		// in the same network?
 		if (cable.isSparse()) {
 			formNetworkAt(cable.getWorld(), cable.getPos());
 			return;
@@ -172,18 +171,13 @@ public class CableNetworkManager extends SavedData {
 
 		// Get all the adjacents.
 		List<ServerCable> adjacents = cable.getAdjacents();
+		adjacents.add(cable);
 		if (!adjacents.isEmpty()) {
-			for (ServerCable adjacent : adjacents) {
-				if (adjacent.Network == cable.Network) {
-					adjacent.Network.updateGraph(World, adjacent.getPos(), true);
-					break;
-				}
-			}
+			mergeNetworksIntoOne(adjacents, cable.getWorld(), cable.getPos());
 		} else {
 			cable.onNetworkLeft(cable.Network);
+			formNetworkAt(cable.getWorld(), cable.getPos());
 		}
-
-		setDirty();
 
 		// After the new graph has been updated, loop through the original network
 		// cables and repair their network states as needed.
@@ -192,11 +186,6 @@ public class CableNetworkManager extends SavedData {
 			if (originalCable.Network == null) {
 				// Get it's adjacent.
 				List<ServerCable> newAdjacents = originalCable.getAdjacents();
-				// In the context of adjacent networks, this cable should be considered as well
-				// for sparse cables.
-				if (cable.isSparse()) {
-					newAdjacents.add(cable);
-				}
 
 				// If there are no adjacents, create a new network. Otherwise, attempt to join
 				// it.
@@ -205,12 +194,10 @@ public class CableNetworkManager extends SavedData {
 				} else {
 					mergeNetworksIntoOne(newAdjacents, originalCable.getWorld(), originalCable.getPos());
 				}
-
-				if (originalCable.Network == null) {
-					System.out.println("STILL NULL NETWORK");
-				}
 			}
 		}
+
+		setDirty();
 	}
 
 	public void removeCable(BlockPos pos) {

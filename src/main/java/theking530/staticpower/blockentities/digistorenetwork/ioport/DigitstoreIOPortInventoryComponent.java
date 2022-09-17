@@ -10,13 +10,13 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
 
-public class DigitstoreIOPortInventoryComponent extends AbstractTileEntityComponent implements IItemHandler {
+public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityComponent implements IItemHandler {
 
 	public DigitstoreIOPortInventoryComponent(String name) {
 		super(name);

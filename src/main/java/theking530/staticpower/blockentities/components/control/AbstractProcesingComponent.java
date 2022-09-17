@@ -5,7 +5,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.PowerStack;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
@@ -13,7 +13,7 @@ import theking530.staticpower.blockentities.components.serialization.SaveSeriali
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
-public abstract class AbstractProcesingComponent extends AbstractTileEntityComponent {
+public abstract class AbstractProcesingComponent extends AbstractBlockEntityComponent {
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
 	protected PowerStorageComponent powerComponent;

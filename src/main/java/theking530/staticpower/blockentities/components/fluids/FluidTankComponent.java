@@ -12,7 +12,7 @@ import net.minecraftforge.fluids.IFluidTank;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.api.upgrades.UpgradeTypes;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -23,7 +23,7 @@ import theking530.staticpower.fluid.StaticPowerFluidTank;
 import theking530.staticpower.items.upgrades.VoidUpgrade;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class FluidTankComponent extends AbstractTileEntityComponent implements IFluidHandler, IFluidTank {
+public class FluidTankComponent extends AbstractBlockEntityComponent implements IFluidHandler, IFluidTank {
 	public static final int FLUID_SYNC_MAX_DELTA = 50;
 	public static final int FLUID_SYNC_MAX_TICKS = 10;
 

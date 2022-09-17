@@ -20,7 +20,6 @@ import net.minecraftforge.common.util.LazyOptional;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.serialization.SerializationUtilities;
-import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 
 /**
  * Abstract class for any {@link TileEntity} components. Each component recieves
@@ -30,21 +29,18 @@ import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
  * @author Amine Sebastian
  *
  */
-public abstract class AbstractTileEntityComponent {
+public abstract class AbstractBlockEntityComponent {
 
 	private String name;
 	private boolean isEnabled;
 	private BlockEntityBase tileEntity;
-	/** Indicates that the world and chunk have been loaded. */
-	private boolean worldLoaded;
 
 	private final List<Field> saveSerializeableFields;
 	private final List<Field> updateSerializeableFields;
 
-	public AbstractTileEntityComponent(String name) {
+	public AbstractBlockEntityComponent(String name) {
 		this.name = name;
 		this.isEnabled = true;
-		worldLoaded = false;
 		this.saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		this.updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
 	}
@@ -56,34 +52,29 @@ public abstract class AbstractTileEntityComponent {
 	public void onRemovedFromOwner(BlockEntityBase owner) {
 	}
 
-	public void onOwningTileEntityPostInit(boolean isInitialPlacement) {
-
-	}
-
-	public void onOwningTileEntityRemoved() {
-
-	}
-
-	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
-
-	}
-
-	public void preProcessUpdate() {
-	}
-
-	public void postProcessUpdate() {
-	}
-
-	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
-		worldLoaded = true;
-	}
-
-	protected boolean isWorldLoaded() {
-		return worldLoaded;
+	/**
+	 * This is called after the owning block entity is loaded every since time. This
+	 * is NOT unique to just when the block is placed, it is also when loading the
+	 * game or area.
+	 * 
+	 * @param level
+	 * @param pos
+	 * @param state
+	 */
+	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
 	}
 
 	/**
-	 * This method is called when the owning tile entity is first placed in the
+	 * This is called after the owning entity is removed from the world. This is NOT
+	 * unique to just when the block is broken. This is also when the area unloads
+	 * or the game is closing.
+	 */
+	public void onOwningBlockEntityUnloaded() {
+
+	}
+
+	/**
+	 * This method is called when the owning block entity is first placed in the
 	 * world.
 	 * 
 	 * @param context TODO
@@ -91,8 +82,25 @@ public abstract class AbstractTileEntityComponent {
 	 * @param placer
 	 * @param stack
 	 */
-	public void onPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	public void onOwningBlockEntityFirstPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 
+	}
+
+	/**
+	 * This method is called when the owning block entity is broken.
+	 * 
+	 * @param state
+	 * @param newState
+	 * @param isMoving
+	 */
+	public void onOwningBlockEntityBroken(BlockState state, BlockState newState, boolean isMoving) {
+
+	}
+
+	public void preProcessUpdate() {
+	}
+
+	public void postProcessUpdate() {
 	}
 
 	/**

@@ -8,11 +8,11 @@ import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 
-public class PowerDistributionComponent extends AbstractTileEntityComponent {
+public class PowerDistributionComponent extends AbstractBlockEntityComponent {
 
 	@Nullable
 	private IStaticPowerStorage autoDistributionSource;

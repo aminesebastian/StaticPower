@@ -21,14 +21,14 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
 import net.minecraftforge.items.ItemHandlerHelper;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class InventoryComponent extends AbstractTileEntityComponent implements Iterable<ItemStack>, IItemHandlerModifiable {
+public class InventoryComponent extends AbstractBlockEntityComponent implements Iterable<ItemStack>, IItemHandlerModifiable {
 	public enum InventoryChangeType {
 		ADDED, REMOVED, MODIFIED
 	}

@@ -4,11 +4,11 @@ import java.util.function.Supplier;
 
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 
-public class RedstonePulseReactorComponent extends AbstractTileEntityComponent {
+public class RedstonePulseReactorComponent extends AbstractBlockEntityComponent {
 	private final Supplier<Boolean> onPulseEvent;
 	private Supplier<Boolean> canProcess;
 	@SaveSerialize

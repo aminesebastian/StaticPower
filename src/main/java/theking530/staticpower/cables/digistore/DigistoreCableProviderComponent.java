@@ -4,7 +4,9 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.StaticPower;
@@ -180,7 +182,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		// Update the power usage.
 		updatePowerUsage(cable);
 	}

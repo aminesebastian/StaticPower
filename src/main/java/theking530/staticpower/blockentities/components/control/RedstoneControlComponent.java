@@ -1,7 +1,7 @@
 package theking530.staticpower.blockentities.components.control;
 
 import net.minecraft.nbt.CompoundTag;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 
 /**
@@ -10,7 +10,7 @@ import theking530.staticpower.blockentities.components.control.redstonecontrol.R
  * @author amine
  *
  */
-public class RedstoneControlComponent extends AbstractTileEntityComponent {
+public class RedstoneControlComponent extends AbstractBlockEntityComponent {
 	private RedstoneMode redstoneMode;
 
 	public RedstoneControlComponent(String name, RedstoneMode defaultMode) {

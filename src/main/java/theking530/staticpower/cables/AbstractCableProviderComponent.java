@@ -17,7 +17,9 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,7 +27,7 @@ import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.network.AbstractCableNetworkModule;
@@ -36,7 +38,7 @@ import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public abstract class AbstractCableProviderComponent extends AbstractTileEntityComponent {
+public abstract class AbstractCableProviderComponent extends AbstractBlockEntityComponent {
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<CableRenderingState> CABLE_RENDERING_STATE = new ModelProperty<>();
 	/** The type of this cable. */
@@ -58,7 +60,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	/** List of valid attachment classes. */
 	private final HashSet<Class<? extends AbstractCableAttachment>> validAttachments;
 	private final Map<Long, SparseCableLink> sparseLinks;
-	private boolean isInitializeWithCableManager;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
@@ -72,31 +73,22 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		validAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
 
 		// Initialize the disabled sides, connection states, and attachments arrays.
-		disabledSides = new boolean[] { false, false, false, false, false, false };
+		disabledSides = new boolean[] { true, true, true, true, true, true }; // Default to disabled until the server sends us the first update.
 		attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
 		sparseLinks = new HashMap<Long, SparseCableLink>();
-		isInitializeWithCableManager = false;
 	}
 
 	@Override
 	public void preProcessUpdate() {
-		if (getLevel().isClientSide || (!getLevel().isClientSide && getNetwork() != null)) {
+		// Tick either on the client or on the server if the server cable has a network.
+		if (isClientSide() || (!isClientSide() && getNetwork() != null)) {
 			for (Direction dir : Direction.values()) {
 				if (!attachments[dir.ordinal()].isEmpty()) {
 					ItemStack attachment = attachments[dir.ordinal()];
 					((AbstractCableAttachment) attachment.getItem()).attachmentTick(attachment, dir, this);
 				}
 			}
-		}
-	}
-
-	@Override
-	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
-		super.onInitializedInWorld(world, pos, firstTimePlaced);
-		// Update the rendering state on all connected blocks.
-		if (getLevel().isClientSide()) {
-			updateRenderingStateOnAllAdjacent();
 		}
 	}
 
@@ -125,8 +117,8 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	@Override
-	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
-		super.onOwningBlockBroken(state, newState, isMoving);
+	public void onOwningBlockEntityBroken(BlockState state, BlockState newState, boolean isMoving) {
+		super.onOwningBlockEntityBroken(state, newState, isMoving);
 		// Drop the covers and attachments.
 		for (Direction dir : Direction.values()) {
 			// Drop any attachments.
@@ -164,38 +156,16 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	}
 
 	/**
-	 * On the client, this sets the local disabled state. On the server, this sets
-	 * the {@link ServerCable}'s disabled state.
+	 * This should only be called on the server. Once set on the ServerCable, it
+	 * gets synchronized back down to the client.
 	 * 
 	 * @param side
 	 * @param disabledState
 	 */
 	public void setSideDisabledState(Direction side, boolean disabledState) {
-		if (disabledState != disabledSides[side.ordinal()]) {
-			disabledSides[side.ordinal()] = disabledState;
-			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
-			getTileEntity().requestModelDataUpdate();
-			if (!isClientSide()) {
-				CableNetworkManager.get(getLevel()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
-			}
+		if (!isClientSide()) {
+			CableNetworkManager.get(getLevel()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
 		}
-	}
-
-	/**
-	 * This is a hacky way for us to be able to set the initial disabled state. If
-	 * calling this, it's likely you'll have to also call
-	 * {@link #ServerCable.setDisabledStateOnSide(Direction, boolean)} on the
-	 * {@link ServerCable} as well.
-	 * 
-	 * @param side
-	 * @param disabledState
-	 */
-	protected void silentlySetSideDisabledState(Direction side, boolean disabledState) {
-		if (isInitializeWithCableManager) {
-			throw new RuntimeException(
-					"Setting the disabled state with fromInitialization set to true should only be done before the cable is initialized with the cable manager.");
-		}
-		disabledSides[side.ordinal()] = disabledState;
 	}
 
 	/**
@@ -252,35 +222,38 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * wrapper in the network for this cable. If not, we provide one.
 	 */
 	@Override
-	public void onOwningTileEntityPostInit(boolean isInitialPlacement) {
-		super.onOwningTileEntityPostInit(isInitialPlacement);
+	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
+		super.onOwningBlockEntityLoaded(level, pos, state);
+
+		// Update the rendering state on all connected blocks.
+		if (isClientSide()) {
+			updateRenderingStateOnAllAdjacent();
+		}
+	}
+
+	@Override
+	public void onOwningBlockEntityFirstPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		super.onOwningBlockEntityFirstPlaced(context, state, placer, stack);
 
 		// If we're on the server, check to see if the cable network manager for this
 		// world is tracking a cable at this position. If it is not, add this cable for
 		// tracking.
-		if (!getTileEntity().getLevel().isClientSide) {
+		if (!isClientSide()) {
 			// Get the network manager.
-			CableNetworkManager manager = CableNetworkManager.get(getLevel());
+			CableNetworkManager manager = CableNetworkManager.get(context.getLevel());
 
 			// If we are not tracking this cable, then this is a new one.
 			if (!manager.isTrackingCable(getPos())) {
 				// Create and initialize it, then add it to the network manager.
 				ServerCable wrapper = createCable();
-				initializeCableProperties(wrapper);
+				initializeCableProperties(wrapper, context, state, placer, stack);
 				manager.addCable(wrapper);
 
 				// Raise an event on this component for any additional work that needs to be
 				// done.
 				onCableFirstAddedToNetwork(wrapper);
-			} else {
-				// Since we are tracking this cable, just add the initialization step.
-				// Whatever we set here may be overloaded by the saved nbt data on the cable, so
-				// this is just a failsafe.
-				initializeCableProperties(manager.getCable(getPos()));
 			}
 		}
-
-		isInitializeWithCableManager = true;
 	}
 
 	/**
@@ -289,12 +262,20 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * the implementer. This is called from the {@link ServerCable}.
 	 */
 	public void gatherCableStateSynchronizationValues(ServerCable cable, CompoundTag tag) {
-		// Serialize the sparse links..
+		// Serialize the sparse links.
 		ListTag sparseLinkTag = new ListTag();
 		cable.getSparseLinks().forEach(link -> {
 			sparseLinkTag.add(link.serialize());
 		});
 		tag.put("sparse_links", sparseLinkTag);
+
+		// Serialize the disabledStates.
+		byte[] disabled = new byte[6];
+		for (Direction dir : Direction.values()) {
+			disabled[dir.ordinal()] = (byte) (cable.isDisabledOnSide(dir) ? 1 : 0);
+			disabledSides[dir.ordinal()] = cable.isDisabledOnSide(dir);
+		}
+		tag.putByteArray("disabled", disabled);
 	}
 
 	public void syncCableStateFromServer(CompoundTag tag) {
@@ -304,6 +285,14 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
 			sparseLinks.put(link.linkId(), link);
 		}
+
+		// Deserialize the disabledStates.
+		byte[] disabled = tag.getByteArray("disabled");
+		for (int i = 0; i < 6; i++) {
+			disabledSides[i] = disabled[i] == 1;
+		}
+
+		getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), false);
 	}
 
 	public boolean isSparselyConnectedTo(BlockPos location) {
@@ -635,7 +624,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
-		if (!getLevel().isClientSide) {
+		if (!isClientSide()) {
 			Optional<ServerCable> cable = getCable();
 			if (cable.isPresent()) {
 				if (cable.get().getNetwork().hasModule(moduleType)) {
@@ -657,7 +646,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 	 * @return
 	 */
 	public Optional<ServerCable> getCable() {
-		if (!getLevel().isClientSide) {
+		if (!isClientSide()) {
 			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getLevel());
 			ServerCable cable = manager.getCable(getTileEntity().getBlockPos());
 			if (cable != null && cable.getNetwork() != null) {
@@ -684,9 +673,11 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super.serializeUpdateNbt(nbt, fromUpdate);
 
 		// Serialize the disabled states.
+		byte[] disabled = new byte[6];
 		for (int i = 0; i < disabledSides.length; i++) {
-			nbt.putBoolean("disabledState" + i, disabledSides[i]);
+			disabled[i] = (byte) (disabledSides[i] ? 1 : 0);
 		}
+		nbt.putByteArray("disabled", disabled);
 
 		// Serialize the attachments.
 		for (int i = 0; i < attachments.length; i++) {
@@ -710,8 +701,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 		super.deserializeUpdateNbt(nbt, fromUpdate);
 
 		// Deserialize the disabled states.
+		byte[] disabled = nbt.getByteArray("disabled");
 		for (int i = 0; i < disabledSides.length; i++) {
-			disabledSides[i] = nbt.getBoolean("disabledState" + i);
+			disabledSides[i] = disabled[i] == 1;
 		}
 
 		// Deserialize the attachments.
@@ -736,6 +728,9 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			CompoundTag itemNbt = nbt.getCompound("cover" + i);
 			covers[i] = ItemStack.of(itemNbt);
 		}
+
+		this.updateRenderingStateForCable();
+		this.updateRenderingStateOnAllAdjacent();
 	}
 
 	protected ServerCable createCable() {
@@ -746,7 +741,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	}
 
-	protected void initializeCableProperties(ServerCable cable) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 
 	}
 

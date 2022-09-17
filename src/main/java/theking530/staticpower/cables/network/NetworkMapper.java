@@ -43,16 +43,16 @@ public class NetworkMapper {
 		// Check the starting position.
 		ServerCable startingCable = CableNetworkManager.get(world).getCable(startingPos);
 		scanLocation(world, startingCable, null, startingPos);
-		if(startingCable.isSparse()) {
-			for (Direction dir : Direction.values()) {
-				if (!startingCable.isLinkedTo(startingPos.relative(dir))) {
-					scanLocationForDestinations(world, startingCable, dir, startingPos.relative(dir));
-				}
-			}
-		}
-		
+//		if (startingCable.isSparse()) {
+//			for (Direction dir : Direction.values()) {
+//				if (!startingCable.isLinkedTo(startingPos.relative(dir))) {
+//					scanLocationForDestinations(world, startingCable, dir, startingPos.relative(dir));
+//				}
+//			}
+//		}
+
 		// Kick off the recursion.
-		_updateNetworkWorker(world, visited, startingPos);
+		recurseAroundCable(world, visited, startingPos);
 	}
 
 	public Set<ServerCable> getDiscoveredCables() {
@@ -75,61 +75,29 @@ public class NetworkMapper {
 		return startingPosition;
 	}
 
-	protected void _updateNetworkWorker(Level world, HashSet<BlockPos> visited, BlockPos currentPosition) {
-		// If we're testing on a position that contains a cable and the cable is
-		// disabled on the side we're testing, skip it. Do NOT mark that side as visited
-		// though, as another cable may get to it that is enabled on that side.
+	protected void recurseAroundCable(Level world, HashSet<BlockPos> visited, BlockPos currentPosition) {
+		if (!CableNetworkManager.get(world).isTrackingCable(currentPosition)) {
+			return;
+		}
+
 		ServerCable cable = CableNetworkManager.get(world).getCable(currentPosition);
-
-		// If sparse, check the connections, otherwise, check all sides.
-		if (cable.isSparse()) {
-			for (SparseCableLink link : cable.getSparseLinks()) {
-				BlockPos linkPosition = link.linkToPosition();
-				if (visited.contains(linkPosition)) {
-					continue;
-				}
-
-				// Attempt to cache this location if needed. If true, we found a cable and we
-				// continue mapping.
-				if (scanLocation(world, cable, null, linkPosition)) {
-					// Add the block to the visited list.
-					visited.add(linkPosition);
-
-					// Look around this sparse cable for any destinations. Add in an extra check to
-					// ensure we don't scan another connected cable as a destination.
-					for (Direction dir : Direction.values()) {
-						if (!cable.isLinkedTo(linkPosition.relative(dir))) {
-							scanLocationForDestinations(world, cable, dir, linkPosition.relative(dir));
-						}
-					}
-
-					// Recurse.
-					_updateNetworkWorker(world, visited, linkPosition);
-				}
+		for (CableScanLocation scanLoc : cable.getScanLocations()) {
+			BlockPos linkPosition = scanLoc.getLocation();
+			if (cable != null && !scanLoc.isSparseLink() && cable.isDisabledOnSide(scanLoc.getSide())) {
+				continue;
 			}
-		} else {
-			for (Direction facing : Direction.values()) {
-				if (cable != null && cable.isDisabledOnSide(facing)) {
-					continue;
-				}
 
-				// Get the next position to test. If we've visited it before, skip it.
-				BlockPos testPos = currentPosition.relative(facing);
-				if (visited.contains(testPos)) {
-					continue;
-				}
+			if (visited.contains(linkPosition)) {
+				continue;
+			}
 
-				// Attempt to cache this location if needed. If true, we found a cable and we
-				// continue mapping, otherwise, we stop here and just check for destinations.
-				if (scanLocation(world, cable, facing, testPos)) {
-					// Add the block to the visited list.
-					visited.add(testPos);
-
-					// Recurse.
-					_updateNetworkWorker(world, visited, testPos);
-				} else {
-					scanLocationForDestinations(world, cable, facing, testPos);
-				}
+			// Attempt to cache this location if needed. If true, we found a cable and we
+			// continue mapping, otherwise, we stop here and just check for destinations.
+			if (scanLocation(world, cable, scanLoc.getSide(), linkPosition)) {
+				visited.add(linkPosition);
+				recurseAroundCable(world, visited, linkPosition);
+			} else {
+				scanLocationForDestinations(world, cable, scanLoc.getSide(), linkPosition);
 			}
 		}
 	}

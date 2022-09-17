@@ -38,9 +38,8 @@ public class BlockEntityTransformer extends BlockEntityConfigurable {
 
 		// Enable face interaction.
 		enableFaceInteraction();
-		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.FRONT_BACK_INPUT_OUTPUT);
-		ioSideConfiguration.setToDefault();
-
+		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.FRONT_BACK_INPUT_OUTPUT, true);
+		
 		// Capture the current and voltage ranges.
 		possibleOutputVoltageRange = getTierObject().powerConfiguration.getTransformerVoltageRange();
 		maximumPossibleOutputCurrent = getTierObject().powerConfiguration.defaultMaximumPowerOutput.get();

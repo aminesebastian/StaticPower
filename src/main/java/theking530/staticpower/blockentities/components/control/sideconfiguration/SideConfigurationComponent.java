@@ -10,9 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 
 /**
@@ -21,7 +22,7 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
  * @author Amine Sebastian
  *
  */
-public class SideConfigurationComponent extends AbstractTileEntityComponent {
+public class SideConfigurationComponent extends AbstractBlockEntityComponent {
 	public enum SideIncrementDirection {
 		FORWARD, BACKWARDS;
 	}
@@ -95,6 +96,7 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		configuration = new MachineSideMode[] { MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never, MachineSideMode.Never,
 				MachineSideMode.Never };
 		enabledState = new boolean[] { false, false, false, false, false, false };
+		setToDefault(true);
 	}
 
 	@Override
@@ -104,10 +106,8 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
-		if (firstTimePlaced) {
-			setToDefault(false);
-		}
+	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
+		super.onOwningBlockEntityLoaded(level, pos, state);
 	}
 
 	/**
@@ -187,8 +187,16 @@ public class SideConfigurationComponent extends AbstractTileEntityComponent {
 		callback.accept(side, newMode);
 	}
 
-	public void setDefaultConfiguration(DefaultSideConfiguration configuration) {
+	public void setDefaultConfiguration(DefaultSideConfiguration configuration, boolean setToDefault) {
 		defaultConfiguration = configuration;
+		if (setToDefault) {
+			setToDefault();
+		}
+
+	}
+
+	public void setDefaultConfiguration(DefaultSideConfiguration configuration) {
+		setDefaultConfiguration(configuration, false);
 	}
 
 	/**

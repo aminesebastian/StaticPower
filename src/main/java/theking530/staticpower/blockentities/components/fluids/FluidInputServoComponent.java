@@ -8,11 +8,11 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 
-public class FluidInputServoComponent extends AbstractTileEntityComponent {
+public class FluidInputServoComponent extends AbstractBlockEntityComponent {
 	private int inputRate;
 	private IFluidHandler owningTank;
 	private Predicate<FluidStack> filter;

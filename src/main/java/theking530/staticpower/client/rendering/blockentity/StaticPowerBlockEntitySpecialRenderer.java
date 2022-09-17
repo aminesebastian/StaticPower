@@ -18,7 +18,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
 import theking530.staticpower.blockentities.BlockEntityBase;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class StaticPowerBlockEntitySpecialRenderer<T extends BlockEntityBase> implements BlockEntityRenderer<T> {
@@ -55,7 +55,7 @@ public abstract class StaticPowerBlockEntitySpecialRenderer<T extends BlockEntit
 		// Draw the tile entity.
 		try {
 			// Update the rendering values for the components.
-			for (AbstractTileEntityComponent comp : tileEntity.getComponents()) {
+			for (AbstractBlockEntityComponent comp : tileEntity.getComponents()) {
 				comp.updateBeforeRendering(partialTicks);
 			}
 

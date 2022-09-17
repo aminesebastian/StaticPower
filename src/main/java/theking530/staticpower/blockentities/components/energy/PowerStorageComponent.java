@@ -21,7 +21,7 @@ import theking530.api.energy.utilities.StaticPowerEnergyUtilities.ElectricalExpl
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
@@ -30,7 +30,7 @@ import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class PowerStorageComponent extends AbstractTileEntityComponent implements ISidedStaticPowerStorage {
+public class PowerStorageComponent extends AbstractBlockEntityComponent implements ISidedStaticPowerStorage {
 	public static final int ELECTRICAL_EXPLOSION_TICKS = 40;
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 64;
 	private static final double ENERGY_SYNC_MAX_DELTA = 10;

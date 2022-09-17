@@ -22,6 +22,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.ICableStateSyncTarget;
 import theking530.staticpower.cables.SparseCableLink;
 import theking530.staticpower.cables.SparseCableLink.SparseCableConnectionType;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class ServerCable {
 	public enum CableConnectionState {
@@ -160,14 +161,24 @@ public class ServerCable {
 		return sparseLinks.values();
 	}
 
+	/**
+	 * Includes all non-disabled directions and also any sparse link positions.
+	 * 
+	 * @return
+	 */
 	public List<CableScanLocation> getScanLocations() {
 		List<CableScanLocation> output = new ArrayList<CableScanLocation>();
 		for (Direction dir : Direction.values()) {
+			// Skip checking that side if that side is disabled.
+			if (isDisabledOnSide(dir)) {
+				continue;
+			}
 			output.add(new CableScanLocation(getPos().relative(dir), dir, false));
 		}
 
 		for (SparseCableLink link : getSparseLinks()) {
-			output.add(new CableScanLocation(link.linkToPosition(), null, true));
+			Direction side = WorldUtilities.getDirectionBetweenBlocks(getPos(), link.linkToPosition());
+			output.add(new CableScanLocation(link.linkToPosition(), side, true));
 		}
 
 		return output;
@@ -310,8 +321,18 @@ public class ServerCable {
 	}
 
 	public void setDisabledStateOnSide(Direction side, boolean disabledState) {
-		disabledSides[side.ordinal()] = disabledState;
-		synchronizeServerState();
+		if (disabledSides[side.ordinal()] != disabledState) {
+			disabledSides[side.ordinal()] = disabledState;
+
+			// Only do this if we are already part of a network. This method could be called
+			// after a ServerCable is created but before it's added to the manager, so we do
+			// this check to be safe.
+			if (Network != null) {
+				CableNetworkManager.get(World).refreshCable(this);
+			}
+
+			synchronizeServerState();
+		}
 	}
 
 	public void synchronizeServerState() {

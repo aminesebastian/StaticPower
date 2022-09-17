@@ -9,6 +9,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -77,7 +80,7 @@ public class RedstoneCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		cable.getDataTag().put(CONFIGURATION_KEY, configuration.serializeNBT());
 	}
 

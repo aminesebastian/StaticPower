@@ -6,11 +6,11 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.staticpower.blockentities.BlockEntityBase;
 
 public class ComponentUtilities {
-	public static <T extends AbstractTileEntityComponent> Optional<T> getComponent(Class<T> componentClass, BlockEntity tileEntity) {
+	public static <T extends AbstractBlockEntityComponent> Optional<T> getComponent(Class<T> componentClass, BlockEntity tileEntity) {
 		return getComponent(componentClass, null, tileEntity);
 	}
 
-	public static <T extends AbstractTileEntityComponent> Optional<T> getComponent(Class<T> componentClass, String componentName, BlockEntity tileEntity) {
+	public static <T extends AbstractBlockEntityComponent> Optional<T> getComponent(Class<T> componentClass, String componentName, BlockEntity tileEntity) {
 		// If the tile entity isn't of the right type, return empty.
 		if (!(tileEntity instanceof BlockEntityBase)) {
 			return Optional.empty();

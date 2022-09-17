@@ -11,12 +11,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 
-public class CompoundInventoryComponent extends AbstractTileEntityComponent implements IItemHandlerModifiable {
+public class CompoundInventoryComponent extends AbstractBlockEntityComponent implements IItemHandlerModifiable {
 
 	private final List<InventoryComponentWrapper> inventories;
 	private final int slotCount;

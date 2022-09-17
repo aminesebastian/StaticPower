@@ -31,6 +31,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import theking530.staticcore.utilities.Vector3D;
 
 public class WorldUtilities {
 
@@ -70,6 +71,14 @@ public class WorldUtilities {
 		}
 	}
 
+	/**
+	 * Checks where one block pos is relative to another. This ONLY works for block
+	 * positions exactly one block apart.
+	 * 
+	 * @param source
+	 * @param query
+	 * @return
+	 */
 	public static Direction getFacingFromPos(BlockPos source, BlockPos query) {
 		if (source != null && query != null) {
 			if (source.getY() > query.getY()) {
@@ -92,6 +101,14 @@ public class WorldUtilities {
 			}
 		}
 		return Direction.UP;
+	}
+	public static Direction getDirectionBetweenBlocks(BlockPos source, BlockPos query) {
+		Vector3D thisPos = new Vector3D(source);
+		Vector3D linkPos = new Vector3D(query);
+		Vector3D pointingVector = linkPos.substract(thisPos);
+		pointingVector.normalize();
+		
+		return Direction.getNearest(pointingVector.getX(), pointingVector.getY(), pointingVector.getZ());
 	}
 
 	public static void writeBlockPosToNBT(CompoundTag nbt, BlockPos pos, String name) {
@@ -188,7 +205,7 @@ public class WorldUtilities {
 		Fluid content = fluid.getFluid();
 		BlockState blockstate = world.getBlockState(pos);
 		Block block = blockstate.getBlock();
-		Material material = blockstate.getMaterial ();
+		Material material = blockstate.getMaterial();
 		boolean flag = blockstate.canBeReplaced(content);
 		boolean flag1 = blockstate.isAir() || flag || block instanceof LiquidBlockContainer && ((LiquidBlockContainer) block).canPlaceLiquid(world, pos, blockstate, content);
 		if (!flag1) {
@@ -214,7 +231,7 @@ public class WorldUtilities {
 
 			if (!world.setBlock(pos, content.defaultFluidState().createLegacyBlock(), 11) && !blockstate.getFluidState().isSource()) {
 				return false;
-			} else if(blockstate.isAir()){
+			} else if (blockstate.isAir()) {
 				playBucketEmptySound(fluid, player, world, pos);
 				return true;
 			}

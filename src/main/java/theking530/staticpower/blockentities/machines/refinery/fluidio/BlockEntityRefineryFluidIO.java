@@ -73,15 +73,13 @@ public class BlockEntityRefineryFluidIO extends BaseRefineryBlockEntity implemen
 			ioSideConfiguration.setDefaultConfiguration(
 					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3)
 							.setSide(BlockSide.FRONT, true, MachineSideMode.Output4).setSide(BlockSide.BOTTOM, true, MachineSideMode.Output2)
-							.setSide(BlockSide.LEFT, true, MachineSideMode.Output3).setSide(BlockSide.BACK, true, MachineSideMode.Output4));
-
+							.setSide(BlockSide.LEFT, true, MachineSideMode.Output3).setSide(BlockSide.BACK, true, MachineSideMode.Output4), true);
 		} else {
 			ioSideConfiguration.setDefaultConfiguration(
 					new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input2).setSide(BlockSide.RIGHT, true, MachineSideMode.Input2)
 							.setSide(BlockSide.FRONT, true, MachineSideMode.Input2).setSide(BlockSide.BOTTOM, true, MachineSideMode.Input3)
-							.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3));
+							.setSide(BlockSide.LEFT, true, MachineSideMode.Input3).setSide(BlockSide.BACK, true, MachineSideMode.Input3), true);
 		}
-		ioSideConfiguration.setToDefault();
 	}
 
 	@Override

@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
@@ -16,13 +17,13 @@ import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.utilities.TriFunction;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class HeatStorageComponent extends AbstractTileEntityComponent implements IHeatStorage {
+public class HeatStorageComponent extends AbstractBlockEntityComponent implements IHeatStorage {
 	public enum HeatManipulationAction {
 		COOL, HEAT
 	}
@@ -88,8 +89,8 @@ public class HeatStorageComponent extends AbstractTileEntityComponent implements
 	}
 
 	@Override
-	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
-		super.onInitializedInWorld(world, pos, firstTimePlaced);
+	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
+		super.onOwningBlockEntityLoaded(level, pos, state);
 		heatStorage.setCurrentHeat(HeatStorageUtilities.getBiomeAmbientTemperature(getLevel(), getPos()));
 	}
 

@@ -21,8 +21,8 @@ public abstract class AbstractConveyorBlockEntity extends BlockEntityConfigurabl
 	}
 
 	@Override
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		super.postInit(world, pos, state);
+	protected void onLoadedInWorld(Level world, BlockPos pos, BlockState state) {
+		super.onLoadedInWorld(world, pos, state);
 		configureConveyorComponent(conveyor, StaticPowerConfig.getTier(tier), world, pos, state);
 	}
 

@@ -9,7 +9,6 @@ public class Vector3D extends AbstractVector<Vector3D> {
 
 	public Vector3D(float x, float y, float z) {
 		super(x, y, z);
-
 	}
 
 	public Vector3D(Vec3i pos) {
@@ -71,6 +70,11 @@ public class Vector3D extends AbstractVector<Vector3D> {
 
 	public Vector3D substract(float x, float y, float z) {
 		subtract(new Vector3D(x, y, z));
+		return this;
+	}
+
+	public Vector3D substract(Vector3D other) {
+		subtract(other);
 		return this;
 	}
 

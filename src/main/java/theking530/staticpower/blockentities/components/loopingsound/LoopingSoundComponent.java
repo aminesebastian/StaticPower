@@ -5,10 +5,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.loading.FMLEnvironment;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class LoopingSoundComponent extends AbstractTileEntityComponent {
+public class LoopingSoundComponent extends AbstractBlockEntityComponent {
 	private final ISoundComponentProxy proxy;
 	private int soundReactionTime;
 
@@ -91,7 +91,7 @@ public class LoopingSoundComponent extends AbstractTileEntityComponent {
 	}
 
 	@Override
-	public void onOwningTileEntityRemoved() {
+	public void onOwningBlockEntityUnloaded() {
 		stopPlayingSound();
 	}
 }

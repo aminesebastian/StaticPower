@@ -17,7 +17,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,6 +28,7 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.cables.SparseCableLink;
 import theking530.staticpower.cables.SparseCableLink.SparseCableConnectionType;
 import theking530.staticpower.cables.network.CableNetworkManager;
@@ -39,7 +42,7 @@ import theking530.staticpower.utilities.WorldUtilities;
 public class WirePowerCableComponent extends PowerCableComponent {
 
 	public WirePowerCableComponent(String name, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
-		super(name, CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE, false, voltage, maxPower, powerLoss);
+		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE, false, voltage, maxPower, powerLoss);
 	}
 
 	@Override
@@ -48,18 +51,30 @@ public class WirePowerCableComponent extends PowerCableComponent {
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
-		super.initializeCableProperties(cable);
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		super.initializeCableProperties(cable, context, state, placer, stack);
+
+		Direction attachToSide = state.getValue(StaticPowerBlock.FACING).getOpposite();
+		for (Direction side : Direction.values()) {
+			if (side != attachToSide) {
+				cable.setDisabledStateOnSide(side, true);
+			}
+		}
 	}
 
 	@Override
-	public void onInitializedInWorld(Level world, BlockPos pos, boolean firstTimePlaced) {
-		super.onInitializedInWorld(world, pos, firstTimePlaced);
+	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
+		super.onOwningBlockEntityLoaded(level, pos, state);
 		CustomRenderer.TEMP_CABLES.add(this);
 	}
 
 	@Override
-	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
+	public void setSideDisabledState(Direction side, boolean disabledState) {
+		// DO NOT DELETE THIS, WE CLEAR THIS METHOD OUT FOR A REASON.
+	}
+
+	@Override
+	public void onOwningBlockEntityBroken(BlockState state, BlockState newState, boolean isMoving) {
 		CustomRenderer.TEMP_CABLES.remove(this);
 
 		if (!isClientSide()) {
@@ -70,8 +85,7 @@ public class WirePowerCableComponent extends PowerCableComponent {
 			}
 		}
 
-
-		super.onOwningBlockBroken(state, newState, isMoving);
+		super.onOwningBlockEntityBroken(state, newState, isMoving);
 	}
 
 	@Override

@@ -72,8 +72,8 @@ public class BlockEntityBattery extends BlockEntityMachine {
 
 		// Enable face interaction.
 		enableFaceInteraction();
-		this.ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION);
-
+		this.ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.DEFAULT_SIDE_CONFIGURATION, true);
+		
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor", powerStorage));
 		powerStorage.setSideConfiguration(ioSideConfiguration);

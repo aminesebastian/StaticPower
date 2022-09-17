@@ -16,10 +16,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.entities.conveyorbeltentity.ConveyorBeltEntity;
 
-public class ConveyorMotionComponent extends AbstractTileEntityComponent {
+public class ConveyorMotionComponent extends AbstractBlockEntityComponent {
 	private AABB entitySearchBounds;
 	private Vector3D velocity;
 	private double compensationRate;

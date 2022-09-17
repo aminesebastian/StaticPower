@@ -7,7 +7,6 @@ import net.minecraft.core.Direction;
 
 public class CableScanLocation {
 	private final BlockPos location;
-	@Nullable
 	private final Direction side;
 	private final boolean isSparseLink;
 
@@ -21,7 +20,6 @@ public class CableScanLocation {
 		return location;
 	}
 
-	@Nullable
 	public Direction getSide() {
 		return side;
 	}

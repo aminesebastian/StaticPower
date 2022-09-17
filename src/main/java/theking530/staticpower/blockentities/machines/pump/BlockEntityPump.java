@@ -72,7 +72,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
-			//TYPE_IRON.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
+			// TYPE_IRON.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
 			TYPE_BASIC.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
 			TYPE_ADVANCED.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
 			TYPE_STATIC.setTileEntitySpecialRenderer(BlockEntityRenderPump::new);
@@ -121,7 +121,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 
 		// Set the default side configuration.
-		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input));
+		ioSideConfiguration.setDefaultConfiguration(new DefaultSideConfiguration().setSide(BlockSide.TOP, true, MachineSideMode.Input), true);
 
 		// Enable face interaction.
 		enableFaceInteraction();

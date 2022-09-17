@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -225,12 +226,16 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	public void onOwningTileEntityPostInit(boolean isInitialPlacement) {
-		super.onOwningTileEntityPostInit(isInitialPlacement);
+	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
+		super.onOwningBlockEntityLoaded(level, pos, state);
 	}
 
 	@Override
-	public void onPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		cable.getDataTag().putInt(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putInt(FLUID_RATE_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putBoolean(FLUID_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
+
 		List<Direction> sidesToDisable = new ArrayList<>();
 
 		FluidStack existingStack = FluidStack.EMPTY;
@@ -268,20 +273,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 		if (multipleFluids) {
 			for (Direction dir : sidesToDisable) {
-				silentlySetSideDisabledState(dir, true);
+				cable.setDisabledStateOnSide(dir, true);
 			}
-		}
-	}
-
-	@Override
-	protected void initializeCableProperties(ServerCable cable) {
-		cable.getDataTag().putInt(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.getDataTag().putInt(FLUID_RATE_DATA_TAG_KEY, capacity);
-		cable.getDataTag().putBoolean(FLUID_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
-
-		// Initialize the disabled state.
-		for (Direction dir : Direction.values()) {
-			cable.setDisabledStateOnSide(dir, isSideDisabled(dir));
 		}
 	}
 

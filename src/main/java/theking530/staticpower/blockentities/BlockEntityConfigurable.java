@@ -50,8 +50,8 @@ public class BlockEntityConfigurable extends BlockEntityBase {
 	}
 
 	@Override
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		super.postInit(world, pos, state);
+	protected void onLoadedInWorld(Level world, BlockPos pos, BlockState state) {
+		super.onLoadedInWorld(world, pos, state);
 		
 		// Get all inventories for this tile entitiy.
 		List<InventoryComponent> inventories = getComponents(InventoryComponent.class);
@@ -109,7 +109,7 @@ public class BlockEntityConfigurable extends BlockEntityBase {
 		disableFaceInteraction = true;
 
 		// If the post init has run, then update the enabled state in the world.
-		if (hasPostInitRun()) {
+		if (isFullyLoadedInWorld()) {
 			ioSideConfiguration.setBlockSideEnabledState(BlockSide.FRONT, false);
 		}
 	}
@@ -123,7 +123,7 @@ public class BlockEntityConfigurable extends BlockEntityBase {
 		disableFaceInteraction = false;
 
 		// If the post init has run, then update the enabled state in the world.
-		if (hasPostInitRun()) {
+		if (isFullyLoadedInWorld()) {
 			ioSideConfiguration.setBlockSideEnabledState(BlockSide.FRONT, true);
 		}
 	}

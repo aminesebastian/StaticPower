@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Queue;
 import java.util.function.BiFunction;
 
@@ -14,9 +13,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.cables.SparseCableLink;
 import theking530.staticpower.cables.network.CableNetworkGraph;
 import theking530.staticpower.cables.network.CableNetworkManager;
+import theking530.staticpower.cables.network.CableScanLocation;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -89,48 +88,23 @@ public class NetworkPathFinder {
 				throw new RuntimeException(String.format("Attempted to use a null cable in a network path find. Error occured at location: %1$s.", curr));
 			}
 
-			// The following block of code builds the list of positions to scan around the
-			// current cable.
-			Map<BlockPos, Direction> positionsToScan = new HashMap<>();
-			if (cable.isSparse()) {
-				for (SparseCableLink link : cable.getSparseLinks()) {
-					if (!existingCables.contains(link.linkToPosition()) || visitedPositions.contains(link.linkToPosition())) {
-						continue;
-					}
-					positionsToScan.put(link.linkToPosition(), Direction.UP);
+			for (CableScanLocation scanLoc : cable.getScanLocations()) {
+				// Get the adjacent and check if we have visited it before. If we have, skip it.
+				// Also, skip it if it's not part of our graph nodes list.
+				// Finally, skip it if the filter fails.
+				if (!existingCables.contains(scanLoc.getLocation()) || visitedPositions.contains(scanLoc.getLocation())) {
+					continue;
 				}
-			} else {
-				// Scan all adjacent blocks.
-				for (Direction dir : Direction.values()) {
-					// Skip checking that block at this point in time because the cable is disabled
-					// on that side. We may hit the block on this side again, but it will be later
-					// when the path is longer.
-					if (cable.isDisabledOnSide(dir)) {
-						continue;
-					}
 
-					// Get the adjacent and check if we have visited it before. If we have, skip it.
-					// Also, skip it if it's not part of our graph nodes list.
-					// Finally, skip it if the filter fails.
-					BlockPos adjacent = curr.relative(dir);
-					if (!existingCables.contains(adjacent) || visitedPositions.contains(adjacent)) {
-						continue;
-					}
-					positionsToScan.put(adjacent, dir);
-				}
-			}
-
-			// Scan all positions captured in the previous step.
-			for (BlockPos adjacent : positionsToScan.keySet()) {
 				// Mark the adjacent as visited
-				visitedPositions.add(adjacent);
-
+				visitedPositions.add(scanLoc.getLocation());
+				
 				// Cache the predecessor to this location.
-				float distance = curr.distManhattan(adjacent);
-				predecessors.put(adjacent, new PathEntry(curr, positionsToScan.get(adjacent), distance));
+				float distance = curr.distManhattan(scanLoc.getLocation());
+				predecessors.put(scanLoc.getLocation(), new PathEntry(curr, scanLoc.getSide(), distance));
 
 				// Now we add the position to the BFS queue and continue.
-				bfsQueue.add(adjacent);
+				bfsQueue.add(scanLoc.getLocation());
 			}
 		}
 

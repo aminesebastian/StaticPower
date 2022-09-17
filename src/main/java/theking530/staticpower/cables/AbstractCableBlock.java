@@ -180,21 +180,18 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 			}
 		}
 
-		// If we didnt return earlier, we probably hit the cable itseelf, lets see if we
-		// can disable or enabled part of it.
-		Direction hitSide = !hoverResult.isEmpty() ? hoverResult.direction : facing;
-		component.setSideDisabledState(hitSide, !component.isSideDisabled(hitSide));
+		if (!world.isClientSide()) {
+			// If we didnt return earlier, we probably hit the cable itseelf, lets see if we
+			// can disable or enabled part of it.
+			Direction hitSide = !hoverResult.isEmpty() ? hoverResult.direction : facing;
+			component.setSideDisabledState(hitSide, !component.isSideDisabled(hitSide));
 
-		// Update the cable opposite from the side we just toggled if a cable exists
-		// there.
-		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.relative(hitSide));
-		if (oppositeComponent != null) {
-			oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
-		}
-
-		// Refresh the cable on the server.
-		if (!world.isClientSide) {
-			CableNetworkManager.get(world).refreshCable(CableNetworkManager.get(world).getCable(pos));
+			// Update the cable opposite from the side we just toggled if a cable exists
+			// there.
+			AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.relative(hitSide));
+			if (oppositeComponent != null) {
+				oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
+			}
 		}
 
 		return InteractionResult.SUCCESS;

@@ -8,8 +8,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.energy.CapabilityStaticPower;
@@ -76,7 +79,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		cable.getDataTag().putByte(VOLTAGE_ORDINAL, (byte) voltage.ordinal());
 		cable.getDataTag().putDouble(POWER_LOSS, powerLoss);
 		cable.getDataTag().putDouble(POWER_MAX, maxPower);

@@ -11,7 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
@@ -19,7 +19,7 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class OutputServoComponent extends AbstractTileEntityComponent {
+public class OutputServoComponent extends AbstractBlockEntityComponent {
 	public static final int DEFAULT_OUTPUT_TIME = 20;
 
 	private int outputTimer;

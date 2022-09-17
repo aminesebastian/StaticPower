@@ -38,7 +38,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -54,7 +53,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
-import theking530.staticpower.blockentities.components.AbstractTileEntityComponent;
+import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.SerializationUtilities;
@@ -80,13 +79,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * This value is also saved, so it will only be false the first time this tile
 	 * entity is placed.
 	 */
-	private boolean hasFirstPlacedMethodRun;
-	/**
-	 * This is set to true after the first tick this tile entity has experienced.
-	 * This value is NOT saved, so it will be false the first time this tile entity
-	 * is placed and every subsequent time it is loaded.
-	 */
-	private boolean hasPostInitRun;
+	private boolean isFullyLoadedInWorld;
 	/**
 	 * Indicates whether or not this tile entity is valid.
 	 */
@@ -94,7 +87,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	/**
 	 * Collection of all the components on this tile entity.
 	 */
-	private LinkedHashMap<String, AbstractTileEntityComponent> components;
+	private LinkedHashMap<String, AbstractBlockEntityComponent> components;
 	/**
 	 * Cached list of all fields that are save serializable.
 	 */
@@ -118,10 +111,10 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	public BlockEntityBase(BlockEntityTypeAllocator<? extends BlockEntity> allocator, BlockPos pos, BlockState state) {
 		super(allocator.getType(), pos, state);
-		components = new LinkedHashMap<String, AbstractTileEntityComponent>();
+		components = new LinkedHashMap<String, AbstractBlockEntityComponent>();
 		updateRequestQueue = new LinkedList<BlockEntityUpdateRequest>();
 		isValid = true;
-		hasFirstPlacedMethodRun = false;
+		isFullyLoadedInWorld = false;
 		saveSerializeableFields = SerializationUtilities.getSaveSerializeableFields(this);
 		updateSerializeableFields = SerializationUtilities.getUpdateSerializeableFields(this);
 		registerComponent(teamComponent = new TeamComponent("team"));
@@ -136,14 +129,6 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	public void tick() {
-		if (!hasPostInitRun) {
-			hasPostInitRun = true;
-			postInit(level, worldPosition, getBlockState());
-			for (AbstractTileEntityComponent comp : components.values()) {
-				comp.onInitializedInWorld(level, worldPosition, !hasFirstPlacedMethodRun);
-			}
-			hasFirstPlacedMethodRun = true;
-		}
 		// Pre process all the components.
 		preProcessUpdateComponents();
 
@@ -197,10 +182,22 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		postProcessUpdateComponents();
 	}
 
-	protected void postInit(Level world, BlockPos pos, BlockState state) {
-		for (AbstractTileEntityComponent component : components.values()) {
-			component.onOwningTileEntityPostInit(hasFirstPlacedMethodRun);
+	protected void onLoadedInWorld(Level world, BlockPos pos, BlockState state) {
+
+	}
+
+	@Override
+	public final void onLoad() {
+		onLoadedInWorld(getLevel(), getBlockPos(), getBlockState());
+		for (AbstractBlockEntityComponent comp : components.values()) {
+			comp.onOwningBlockEntityLoaded(getLevel(), getBlockPos(), getBlockState());
 		}
+		super.onLoad();
+		isFullyLoadedInWorld = true;
+	}
+
+	public boolean isFullyLoadedInWorld() {
+		return isFullyLoadedInWorld;
 	}
 
 	@Override
@@ -211,8 +208,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	@Override
 	public void setRemoved() {
-		for (AbstractTileEntityComponent component : components.values()) {
-			component.onOwningTileEntityRemoved();
+		for (AbstractBlockEntityComponent component : components.values()) {
+			component.onOwningBlockEntityUnloaded();
 		}
 
 		// Call the super AFTER everything has been cleaned up.
@@ -263,8 +260,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	public void onPlaced(BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-		for (AbstractTileEntityComponent comp : components.values()) {
-			comp.onPlaced(context, state, placer, stack);
+		for (AbstractBlockEntityComponent comp : components.values()) {
+			comp.onOwningBlockEntityFirstPlaced(context, state, placer, stack);
 		}
 	}
 
@@ -277,8 +274,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	public void onBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
-		for (AbstractTileEntityComponent comp : components.values()) {
-			comp.onOwningBlockBroken(state, newState, isMoving);
+		for (AbstractBlockEntityComponent comp : components.values()) {
+			comp.onOwningBlockEntityBroken(state, newState, isMoving);
 		}
 		isValid = false;
 
@@ -313,13 +310,13 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	public void onNeighborChanged(BlockState currentState, BlockPos neighborPos, boolean isMoving) {
-		for (AbstractTileEntityComponent comp : components.values()) {
+		for (AbstractBlockEntityComponent comp : components.values()) {
 			comp.onNeighborChanged(currentState, neighborPos, isMoving);
 		}
 	}
 
 	public void onNeighborReplaced(BlockState state, Direction direction, BlockState facingState, BlockPos FacingPos) {
-		for (AbstractTileEntityComponent comp : components.values()) {
+		for (AbstractBlockEntityComponent comp : components.values()) {
 			comp.onNeighborReplaced(state, direction, facingState, FacingPos);
 		}
 	}
@@ -385,7 +382,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * 
 	 * @param component The component to register.
 	 */
-	public void registerComponent(AbstractTileEntityComponent component) {
+	public void registerComponent(AbstractBlockEntityComponent component) {
 		components.put(component.getComponentName(), component);
 		component.onRegistered(this);
 	}
@@ -397,8 +394,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * 
 	 * @param component The component to register.
 	 */
-	public void registerComponentOverride(AbstractTileEntityComponent component) {
-		LinkedHashMap<String, AbstractTileEntityComponent> temp = new LinkedHashMap<String, AbstractTileEntityComponent>();
+	public void registerComponentOverride(AbstractBlockEntityComponent component) {
+		LinkedHashMap<String, AbstractBlockEntityComponent> temp = new LinkedHashMap<String, AbstractBlockEntityComponent>();
 		temp.put(component.getComponentName(), component);
 		temp.putAll(components);
 		components = temp;
@@ -411,7 +408,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * @param component The component to remove.
 	 * @return True if the component was removed, false otherwise.
 	 */
-	public boolean removeComponent(AbstractTileEntityComponent component) {
+	public boolean removeComponent(AbstractBlockEntityComponent component) {
 		return components.remove(component.getComponentName()) != null;
 	}
 
@@ -420,7 +417,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * 
 	 * @return The list of all components registered to this tile entity.
 	 */
-	public Collection<AbstractTileEntityComponent> getComponents() {
+	public Collection<AbstractBlockEntityComponent> getComponents() {
 		return components.values();
 	}
 
@@ -432,9 +429,9 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * @return A list of tile entity components that inherit from the provided type.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractTileEntityComponent> List<T> getComponents(Class<T> type) {
+	public <T extends AbstractBlockEntityComponent> List<T> getComponents(Class<T> type) {
 		List<T> output = new ArrayList<>();
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				output.add((T) component);
 			}
@@ -451,7 +448,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * @return The component with the provided name if one exists, null otherwise.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type, String componentName) {
+	public <T extends AbstractBlockEntityComponent> T getComponent(Class<T> type, String componentName) {
 		if (components.containsKey(componentName)) {
 			return (T) components.get(componentName);
 		}
@@ -469,8 +466,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * @return A reference to the component if found, or null otherwise.
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends AbstractTileEntityComponent> T getComponent(Class<T> type) {
-		for (AbstractTileEntityComponent component : components.values()) {
+	public <T extends AbstractBlockEntityComponent> T getComponent(Class<T> type) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				return (T) component;
 			}
@@ -485,8 +482,8 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * @return True if this tile entity has at least one component of that type,
 	 *         false otherwise.
 	 */
-	public <T extends AbstractTileEntityComponent> boolean hasComponentOfType(Class<T> type) {
-		for (AbstractTileEntityComponent component : components.values()) {
+	public <T extends AbstractBlockEntityComponent> boolean hasComponentOfType(Class<T> type) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			if (type.isInstance(component)) {
 				return true;
 			}
@@ -494,15 +491,11 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		return false;
 	}
 
-	public boolean hasPostInitRun() {
-		return hasPostInitRun;
-	}
-
 	/**
 	 * Calls the pre-process methods on all the components.
 	 */
 	private void preProcessUpdateComponents() {
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			component.preProcessUpdate();
 		}
 	}
@@ -511,7 +504,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	 * Calls the post-process methods on all the components.
 	 */
 	private void postProcessUpdateComponents() {
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			component.postProcessUpdate();
 		}
 	}
@@ -537,7 +530,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	public int getWeakPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		int output = 0;
-		for (AbstractTileEntityComponent comp : components.values()) {
+		for (AbstractBlockEntityComponent comp : components.values()) {
 			output = Math.max(output, comp.getWeakPower(blockState, blockAccess, pos, side));
 		}
 		return output;
@@ -545,7 +538,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	public int getStrongPower(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
 		int output = 0;
-		for (AbstractTileEntityComponent comp : components.values()) {
+		for (AbstractBlockEntityComponent comp : components.values()) {
 			output = Math.max(output, comp.getStrongPower(blockState, blockAccess, pos, side));
 		}
 		return output;
@@ -553,7 +546,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		for (AbstractTileEntityComponent comp : components.values()) {
+		for (AbstractBlockEntityComponent comp : components.values()) {
 			LazyOptional<T> capability = comp.provideCapability(cap, side);
 			if (capability.isPresent()) {
 				return capability;
@@ -602,7 +595,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
 			component.serializeUpdateNbt(componentTag, fromUpdate);
 			nbt.put(component.getComponentName(), componentTag);
@@ -620,7 +613,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			if (nbt.contains(component.getComponentName())) {
 				component.deserializeUpdateNbt(nbt.getCompound(component.getComponentName()), fromUpdate);
 			}
@@ -644,7 +637,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// Serialize each component to its own NBT tag and then add that to the master
 		// tag. Catch errors on a per component basis to prevent one component from
 		// breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			CompoundTag componentTag = nbt.contains(component.getComponentName()) ? nbt.getCompound(component.getComponentName()) : new CompoundTag();
 			component.serializeSaveNbt(componentTag);
 			nbt.put(component.getComponentName(), componentTag);
@@ -662,7 +655,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	public void deserializeSaveNbt(CompoundTag nbt) {
 		// Iterate through all the components and deserialize each one. Catch errors on
 		// a per component basis to prevent one component from breaking all the rest.
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			if (nbt.contains(component.getComponentName())) {
 				component.deserializeSaveNbt(nbt.getCompound(component.getComponentName()));
 			}
@@ -683,7 +676,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// modified
 		// during post init and therefore, for a tick or two, the client has the wrong
 		// data.
-		if (hasPostInitRun) {
+		if (this.isFullyLoadedInWorld) {
 			serializeUpdateNbt(nbtTagCompound, true);
 		}
 		return ClientboundBlockEntityDataPacket.create(this, (entity) -> nbtTagCompound);
@@ -698,7 +691,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		super.onDataPacket(net, pkt);
 		// Because we wait for post init from the #getUpdatePacket() method, we must
 		// wait here too.
-		if (hasPostInitRun && pkt.getTag() != null) {
+		if (this.isFullyLoadedInWorld && pkt.getTag() != null) {
 			deserializeUpdateNbt(pkt.getTag(), true);
 		}
 
@@ -757,7 +750,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	@Override
 	public IModelData getModelData() {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			component.getModelData(builder);
 		}
 		getAdditionalModelData(builder);
@@ -774,7 +767,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		}
 
 		// Iterate through all the cable providers (should realistically just be one).
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			if (component instanceof AbstractCableProviderComponent) {
 				AbstractCableProviderComponent cableComp = (AbstractCableProviderComponent) component;
 				cableComp.gatherCableStateSynchronizationValues(cable, tag);
@@ -791,7 +784,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 			throw new RuntimeException("We should not be receiving the connection state sync on the server!");
 		}
 
-		for (AbstractTileEntityComponent component : components.values()) {
+		for (AbstractBlockEntityComponent component : components.values()) {
 			if (component instanceof AbstractCableProviderComponent) {
 				AbstractCableProviderComponent cableComp = (AbstractCableProviderComponent) component;
 				cableComp.syncCableStateFromServer(tag);

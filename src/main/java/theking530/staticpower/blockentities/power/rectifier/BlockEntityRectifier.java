@@ -28,8 +28,7 @@ public class BlockEntityRectifier extends BlockEntityConfigurable {
 
 		// Enable face interaction.
 		enableFaceInteraction();
-		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.FRONT_BACK_INPUT_OUTPUT);
-		ioSideConfiguration.setToDefault();
+		ioSideConfiguration.setDefaultConfiguration(SideConfigurationComponent.FRONT_BACK_INPUT_OUTPUT, true);
 
 		// Add the power distributor.
 		registerComponent(powerDistributor = new PowerDistributionComponent("PowerDistributor"));

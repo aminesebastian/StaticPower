@@ -7,8 +7,11 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import theking530.api.heat.CapabilityHeatable;
@@ -150,7 +153,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	protected void initializeCableProperties(ServerCable cable) {
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
 		cable.getDataTag().putDouble(HEAT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.getDataTag().putDouble(HEAT_CONDUCTIVITY_TAG_KEY, transferRate);
 	}
