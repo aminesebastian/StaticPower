@@ -6,8 +6,8 @@ import theking530.staticpower.StaticPowerConfig;
 
 public enum StaticPowerVoltage {
 	ZERO("no_voltage", () -> 0.0), LOW("low_voltage", StaticPowerConfig.SERVER.lowVoltage), MEDIUM("medium_voltage", StaticPowerConfig.SERVER.mediumVoltage),
-	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage), VERY_HIGH("very_high_voltage", StaticPowerConfig.SERVER.veryHighVoltage),
-	EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage);
+	HIGH("high_voltage", StaticPowerConfig.SERVER.highVoltage),
+	EXTREME("extreme_voltage", StaticPowerConfig.SERVER.extremeVoltage), BONKERS("bonkers_voltage", StaticPowerConfig.SERVER.bonkersVoltage);
 
 	private static final double POWER_LOSS_ADJUSTMENT_PER_VOLTAGE = 1.0 / (StaticPowerVoltage.values().length - 1);
 	private String unlocalizedName;

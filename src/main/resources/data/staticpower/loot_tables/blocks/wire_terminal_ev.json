@@ -6,7 +6,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "staticpower:wire_terminal_basic"
+          "name": "staticpower:wire_terminal_ev"
         }
       ],
       "conditions": [

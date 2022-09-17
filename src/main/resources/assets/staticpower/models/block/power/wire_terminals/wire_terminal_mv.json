@@ -1,0 +1,9 @@
+{
+	"parent": "staticpower:block/power/wire_terminals/wire_terminal_lv",
+	"textures": {
+		"particle": "staticpower:blocks/heat_sink_copper",
+		"terminal_side": "staticpower:blocks/heat_sink_copper",
+		"terminal_top": "staticpower:blocks/heat_sink_copper_top",
+		"base": "staticpower:blocks/machines/sides/advanced_machine_top"
+	}
+}

@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" c ",
+		"ici",
+		"iii"
+	],
+	"key": {
+		"c": {
+			"item": "staticpower:coil_platinum"
+		},
+		"i": {
+			"item": "staticpower:ingot_lumum"
+		}
+	},
+	"result": {
+		"item": "staticpower:wire_terminal_bv",
+		"count": 2
+	}
+}

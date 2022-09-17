@@ -20,6 +20,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
@@ -37,8 +38,8 @@ import theking530.staticpower.utilities.WorldUtilities;
 
 public class WirePowerCableComponent extends PowerCableComponent {
 
-	public WirePowerCableComponent(String name) {
-		super(name, CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE, false, StaticPowerVoltage.LOW, 100, 1);
+	public WirePowerCableComponent(String name, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
+		super(name, CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE, false, voltage, maxPower, powerLoss);
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class WirePowerCableComponent extends PowerCableComponent {
 	}
 
 	@Override
-	public void onOwningTileEntityRemoved() {
+	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
 		CustomRenderer.TEMP_CABLES.remove(this);
 
 		if (!isClientSide()) {
@@ -69,7 +70,8 @@ public class WirePowerCableComponent extends PowerCableComponent {
 			}
 		}
 
-		super.onOwningTileEntityRemoved();
+
+		super.onOwningBlockBroken(state, newState, isMoving);
 	}
 
 	@Override
@@ -122,7 +124,7 @@ public class WirePowerCableComponent extends PowerCableComponent {
 	}
 
 	public void renderConnections(PoseStack pose) {
-		if (!isClientSide()) {
+		if (!isClientSide() || !getTileEntity().isValid()) {
 			return;
 		}
 

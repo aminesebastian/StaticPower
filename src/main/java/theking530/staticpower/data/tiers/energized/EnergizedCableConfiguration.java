@@ -52,7 +52,7 @@ public class EnergizedCableConfiguration {
 
 		@Override
 		protected StaticPowerVoltage getCableMaxVoltage() {
-			return StaticPowerVoltage.VERY_HIGH;
+			return StaticPowerVoltage.MEDIUM;
 		}
 
 		@Override
@@ -63,6 +63,16 @@ public class EnergizedCableConfiguration {
 		@Override
 		protected double getCablePowerLossPerBlock() {
 			return 0.05;
+		}
+
+		@Override
+		protected StaticPowerVoltage getWireTerminalMaxVoltage() {
+			return StaticPowerVoltage.EXTREME;
+		}
+
+		@Override
+		protected double getWireTerminalMaxPower() {
+			return 500;
 		}
 	}
 

@@ -56,13 +56,21 @@ public class Multimeter extends StaticPowerItem {
 
 					// Get the multimeter output and log it to the chat. Then clear it.
 					List<Component> messages = new ArrayList<Component>();
-					cable.getNetwork().<PowerNetworkModule>getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE).getMultimeterOutput(messages, firstLocation, pos);
+					PowerNetworkModule module = cable.getNetwork().<PowerNetworkModule>getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+					if (module == null) {
+						module = cable.getNetwork().<PowerNetworkModule>getModule(CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE);
+					}
+					if (module == null) {
+						return InteractionResult.FAIL;
+					}
+					module.getMultimeterOutput(messages, firstLocation, pos);
 					for (Component message : messages) {
 						player.sendMessage(message, player.getUUID());
 					}
 					return InteractionResult.SUCCESS;
 				} else {
-					if (cable.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
+					if (cable.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)
+							|| cable.supportsNetworkModule(CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE)) {
 						setFirstSampleLocation(item, pos);
 						return InteractionResult.SUCCESS;
 					}

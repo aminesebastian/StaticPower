@@ -48,16 +48,16 @@ public class GuiAutoCraftingTable extends StaticPowerTileEntityGui<ContainerAuto
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		// Check if we have a recipe currently processing.
-		CraftingRecipe recipe = getTileEntity().getCurrentProcessingRecipe().orElse(null);
+		CraftingRecipe recipe = getTileEntity().processingComponent.getCurrentProcessingRecipe().orElse(null);
 
 		// If we do not, check to see if we have a potential recipe.
 		if (recipe == null) {
-			recipe = getTileEntity().getCurrentRecipe().orElse(null);
+			recipe = getTileEntity().processingComponent.getPendingProcessingRecipe().orElse(null);
 		}
 
 		// If there is a recipe, draw a phantom output.
 		if (recipe != null) {
-			GuiDrawUtilities.drawItem(stack, recipe.getResultItem(), 129, 38, 0.3f);
+			GuiDrawUtilities.drawItem(stack, recipe.getResultItem(), 129, 38, 10, 0.3f);
 		}
 	}
 }

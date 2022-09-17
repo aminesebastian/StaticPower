@@ -36,9 +36,10 @@ public class AbstractGuiSolderingTable<T extends AbstractSolderingTable, K exten
 				// Use wrappers for the lambda
 				AtomicInteger xWrap = new AtomicInteger(x);
 				AtomicInteger yWrap = new AtomicInteger(y);
-				FakeSlotButton slotButton = new FakeSlotButton(getTileEntity().patternInventory.getStackInSlot(x + (y * 3)), getPatternRecipeXOffset() + 62 + x * 18, 20 + y * 18, (button, mouse) -> {
-					recipeButtonPressed(button, mouse, xWrap.get(), yWrap.get());
-				});
+				FakeSlotButton slotButton = new FakeSlotButton(getTileEntity().patternInventory.getStackInSlot(x + (y * 3)), getPatternRecipeXOffset() + 62 + x * 18, 20 + y * 18,
+						(button, mouse) -> {
+							recipeButtonPressed(button, mouse, xWrap.get(), yWrap.get());
+						});
 
 				// Add the button to the recipe button array and register it.
 				recipeFakeSlots.add(slotButton);
@@ -51,7 +52,9 @@ public class AbstractGuiSolderingTable<T extends AbstractSolderingTable, K exten
 	public void updateData() {
 		for (int y = 0; y < 3; y++) {
 			for (int x = 0; x < 3; x++) {
-				recipeFakeSlots.get(x + (y * 3)).setItemStack(getTileEntity().patternInventory.getStackInSlot(x + (y * 3)));
+				ItemStack stack = getTileEntity().patternInventory.getStackInSlot(x + (y * 3));
+				stack.setCount(1);
+				recipeFakeSlots.get(x + (y * 3)).setItemStack(stack);
 			}
 		}
 	}

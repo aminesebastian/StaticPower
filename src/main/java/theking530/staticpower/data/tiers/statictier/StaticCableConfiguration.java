@@ -49,9 +49,10 @@ public class StaticCableConfiguration {
 		public PowerCableConfiguration(Builder builder) {
 			super(builder);
 		}
+
 		@Override
 		protected StaticPowerVoltage getCableMaxVoltage() {
-			return StaticPowerVoltage.HIGH;
+			return StaticPowerVoltage.MEDIUM;
 		}
 
 		@Override
@@ -62,6 +63,16 @@ public class StaticCableConfiguration {
 		@Override
 		protected double getCablePowerLossPerBlock() {
 			return 0.1;
+		}
+
+		@Override
+		protected StaticPowerVoltage getWireTerminalMaxVoltage() {
+			return StaticPowerVoltage.HIGH;
+		}
+
+		@Override
+		protected double getWireTerminalMaxPower() {
+			return 250;
 		}
 	}
 

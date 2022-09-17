@@ -612,7 +612,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 					if (component.areSlotsLockable()) {
 						// If the slot is locked, render the phantom item & the lock indicator.
 						if (component.isSlotLocked(slot.getSlotIndex())) {
-							GuiDrawUtilities.drawItem(matrixStack, component.getLockedSlotFilter(slot.getSlotIndex()), slot.x, slot.y, 0.5f);
+							GuiDrawUtilities.drawItem(matrixStack, component.getLockedSlotFilter(slot.getSlotIndex()), slot.x, slot.y, 10, 0.5f);
 							RenderSystem.enableDepthTest();
 						}
 

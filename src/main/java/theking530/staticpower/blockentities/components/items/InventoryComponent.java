@@ -497,6 +497,8 @@ public class InventoryComponent extends AbstractTileEntityComponent implements I
 	 */
 	public InventoryComponent lockSlot(int slot, @Nonnull ItemStack filteredItem) {
 		if (areSlotsLockable) {
+			filteredItem.copy();
+			filteredItem.setCount(1);
 			lockedSlots.set(slot, filteredItem);
 		}
 		return this;

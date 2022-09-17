@@ -64,6 +64,16 @@ public class BasicCableConfiguration {
 		protected double getCablePowerLossPerBlock() {
 			return 1;
 		}
+
+		@Override
+		protected StaticPowerVoltage getWireTerminalMaxVoltage() {
+			return StaticPowerVoltage.LOW;
+		}
+
+		@Override
+		protected double getWireTerminalMaxPower() {
+			return 60;
+		}
 	}
 
 	public static class CableAttachmentConfiguration extends TierCableAttachmentConfiguration {

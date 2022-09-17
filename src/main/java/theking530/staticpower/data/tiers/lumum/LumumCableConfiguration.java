@@ -52,7 +52,7 @@ public class LumumCableConfiguration {
 
 		@Override
 		protected StaticPowerVoltage getCableMaxVoltage() {
-			return StaticPowerVoltage.EXTREME;
+			return StaticPowerVoltage.HIGH;
 		}
 
 		@Override
@@ -63,6 +63,16 @@ public class LumumCableConfiguration {
 		@Override
 		protected double getCablePowerLossPerBlock() {
 			return 0.01;
+		}
+
+		@Override
+		protected StaticPowerVoltage getWireTerminalMaxVoltage() {
+			return StaticPowerVoltage.BONKERS;
+		}
+
+		@Override
+		protected double getWireTerminalMaxPower() {
+			return 1000;
 		}
 	}
 

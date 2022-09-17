@@ -126,6 +126,7 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	@Override
 	public void onOwningBlockBroken(BlockState state, BlockState newState, boolean isMoving) {
+		super.onOwningBlockBroken(state, newState, isMoving);
 		// Drop the covers and attachments.
 		for (Direction dir : Direction.values()) {
 			// Drop any attachments.
@@ -140,6 +141,13 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 			if (hasCover(dir)) {
 				WorldUtilities.dropItem(getLevel(), getPos(), removeCover(dir));
 			}
+		}
+
+		// If we're on the server, get the cable manager and remove the cable at the
+		// current position.
+		if (!isClientSide()) {
+			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getLevel());
+			manager.removeCable(getTileEntity().getBlockPos());
 		}
 	}
 
@@ -358,26 +366,6 @@ public abstract class AbstractCableProviderComponent extends AbstractTileEntityC
 
 	protected void sparseConnectionsRemoved(List<SparseCableLink> links) {
 
-	}
-
-	/**
-	 * When the owning tile entity is removed from the world, we remove the cable
-	 * wrapper for this tile entity as well.
-	 */
-	@Override
-	public void onOwningTileEntityRemoved() {
-		super.onOwningTileEntityRemoved();
-		// If we're on the server, get the cable manager and remove the cable at the
-		// current position.
-		if (!getLevel().isClientSide) {
-			CableNetworkManager manager = CableNetworkManager.get(getTileEntity().getLevel());
-			manager.removeCable(getTileEntity().getBlockPos());
-		}
-
-		// Update the rendering state on all connected blocks.
-		if (getLevel().isClientSide()) {
-			updateRenderingStateOnAllAdjacent();
-		}
 	}
 
 	/**

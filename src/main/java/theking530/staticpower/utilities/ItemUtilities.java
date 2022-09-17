@@ -9,11 +9,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticpower.init.ModTags;
 
 public class ItemUtilities {
-	public static boolean filterItems(IItemHandler inventoryOfFilterItems, ItemStack itemToCheck, boolean whitelist,
-			boolean matchNBT, boolean matchOreDict, boolean matchMod) {
+	public static boolean filterItems(IItemHandler inventoryOfFilterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
 		List<ItemStack> invItems = new LinkedList<ItemStack>();
 		for (int i = 0; i < inventoryOfFilterItems.getSlots(); i++) {
 			invItems.add(inventoryOfFilterItems.getStackInSlot(i));
@@ -21,8 +22,7 @@ public class ItemUtilities {
 		return filterItems(invItems, itemToCheck, whitelist, matchNBT, matchOreDict, matchMod);
 	}
 
-	public static boolean filterItems(List<ItemStack> filterItems, ItemStack itemToCheck, boolean whitelist,
-			boolean matchNBT, boolean matchOreDict, boolean matchMod) {
+	public static boolean filterItems(List<ItemStack> filterItems, ItemStack itemToCheck, boolean whitelist, boolean matchNBT, boolean matchOreDict, boolean matchMod) {
 		if (itemToCheck.isEmpty()) {
 			return false;
 		}
@@ -38,8 +38,7 @@ public class ItemUtilities {
 		if (!match && matchMod) {
 			for (int i = 0; i < filterItems.size(); i++) {
 				if (!filterItems.get(i).isEmpty()) {
-					if (filterItems.get(i).getItem().getRegistryName().getNamespace() == itemToCheck.getItem()
-							.getRegistryName().getNamespace()) {
+					if (filterItems.get(i).getItem().getRegistryName().getNamespace() == itemToCheck.getItem().getRegistryName().getNamespace()) {
 						match = true;
 						break;
 					}
@@ -64,8 +63,7 @@ public class ItemUtilities {
 			match = false;
 			for (int i = 0; i < filterItems.size(); i++) {
 				if (!filterItems.get(i).isEmpty()) {
-					if (filterItems.get(i).hasTag() && itemToCheck.hasTag()
-							&& ItemStack.tagMatches(filterItems.get(i), itemToCheck)) {
+					if (filterItems.get(i).hasTag() && itemToCheck.hasTag() && ItemStack.tagMatches(filterItems.get(i), itemToCheck)) {
 						match = true;
 						break;
 					}
@@ -139,8 +137,7 @@ public class ItemUtilities {
 		return output;
 	}
 
-	public static FriendlyByteBuf writeLargeStackItemToBuffer(ItemStack stack, boolean limitedTag,
-			FriendlyByteBuf buffer) {
+	public static FriendlyByteBuf writeLargeStackItemToBuffer(ItemStack stack, boolean limitedTag, FriendlyByteBuf buffer) {
 		if (stack.isEmpty()) {
 			buffer.writeBoolean(false);
 		} else {
@@ -170,4 +167,6 @@ public class ItemUtilities {
 			return itemstack;
 		}
 	}
+
+
 }

@@ -64,5 +64,15 @@ public class CreativeCableConfiguration {
 		protected double getCablePowerLossPerBlock() {
 			return 0;
 		}
+
+		@Override
+		protected StaticPowerVoltage getWireTerminalMaxVoltage() {
+			return StaticPowerVoltage.EXTREME;
+		}
+
+		@Override
+		protected double getWireTerminalMaxPower() {
+			return Double.MAX_VALUE;
+		}
 	}
 }

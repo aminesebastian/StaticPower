@@ -641,7 +641,11 @@
 	
 	"block.staticpower.rectifier_basic": "Basic Rectifier",
 	
-	"block.staticpower.wire_terminal_basic": "LV Wire Terminal",
+	"block.staticpower.wire_terminal_lv": "LV Wire Terminal",
+	"block.staticpower.wire_terminal_mv": "MV Wire Terminal",
+	"block.staticpower.wire_terminal_hv": "HV Wire Terminal",
+	"block.staticpower.wire_terminal_ev": "EV Wire Terminal",
+	"block.staticpower.wire_terminal_bv": "BV Wire Terminal",
 	
 	"block.staticpower.cable_power_basic": "Power Cable",
 	"block.staticpower.cable_power_advanced": "Advanced Power Cable",
@@ -981,15 +985,15 @@
 	"gui.staticpower.voltage.full_name.low_voltage": "Low Voltage",
 	"gui.staticpower.voltage.full_name.medium_voltage": "Medium Voltage",
 	"gui.staticpower.voltage.full_name.high_voltage": "High Voltage",
-	"gui.staticpower.voltage.full_name.very_high_voltage": "Very High Voltage",
 	"gui.staticpower.voltage.full_name.extreme_voltage": "Extreme Voltage",
+	"gui.staticpower.voltage.full_name.bonkers_voltage": "Bonkers Voltage",
 	
 	"gui.staticpower.voltage.short_name.no_voltage": "Zero",
 	"gui.staticpower.voltage.short_name.low_voltage": "LV",
 	"gui.staticpower.voltage.short_name.medium_voltage": "MV",
 	"gui.staticpower.voltage.short_name.high_voltage": "HV",
-	"gui.staticpower.voltage.short_name.very_high_voltage": "VHV",
 	"gui.staticpower.voltage.short_name.extreme_voltage": "EV",
+	"gui.staticpower.voltage.short_name.bonkers_voltage": "BV",
 	
 	"gui.staticpower.length": "Length",
 	"gui.staticpower.heat_transfer": "Heat Transfer",

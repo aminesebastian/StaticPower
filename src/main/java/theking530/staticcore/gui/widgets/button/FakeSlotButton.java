@@ -30,6 +30,7 @@ public class FakeSlotButton extends StandardButton {
 	public FakeSlotButton(ItemStack icon, int xPos, int yPos, BiConsumer<StandardButton, MouseButton> onClicked) {
 		super(xPos, yPos, 18, 18, onClicked);
 		itemIcon = icon;
+		this.setClickSoundEnabled(false);
 	}
 
 	/**

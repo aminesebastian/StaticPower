@@ -32,10 +32,10 @@ public class BaseTransformerUpgrade extends BaseUpgrade {
 			toVoltage = StaticPowerVoltage.HIGH;
 		} else if (getTier() == StaticPowerTiers.ENERGIZED) {
 			fromVoltage = StaticPowerVoltage.HIGH;
-			toVoltage = StaticPowerVoltage.VERY_HIGH;
-		} else if (getTier() == StaticPowerTiers.LUMUM) {
-			fromVoltage = StaticPowerVoltage.VERY_HIGH;
 			toVoltage = StaticPowerVoltage.EXTREME;
+		} else if (getTier() == StaticPowerTiers.LUMUM) {
+			fromVoltage = StaticPowerVoltage.EXTREME;
+			toVoltage = StaticPowerVoltage.BONKERS;
 		}
 
 		tooltip.add(new TranslatableComponent("gui.staticpower.transformer_upgrade_tooltip", new TranslatableComponent(fromVoltage.getShortName()),

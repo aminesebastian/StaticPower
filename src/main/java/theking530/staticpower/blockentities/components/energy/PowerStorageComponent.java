@@ -1,7 +1,5 @@
 package theking530.staticpower.blockentities.components.energy;
 
-import java.util.List;
-
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -169,12 +167,12 @@ public class PowerStorageComponent extends AbstractTileEntityComponent implement
 					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.HIGH));
 				}
 			} else if (powerUpgrade.getTierId() == StaticPowerTiers.ENERGIZED) {
-				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.VERY_HIGH)) {
-					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.VERY_HIGH));
-				}
-			} else if (powerUpgrade.getTierId() == StaticPowerTiers.LUMUM) {
 				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.EXTREME)) {
 					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.EXTREME));
+				}
+			} else if (powerUpgrade.getTierId() == StaticPowerTiers.LUMUM) {
+				if (storage.getInputVoltageRange().maximumVoltage().isLessThan(StaticPowerVoltage.BONKERS)) {
+					storage.setInputVoltageRange(new StaticVoltageRange(baseInputVoltageRange.minimumVoltage(), StaticPowerVoltage.BONKERS));
 				}
 			}
 		}

@@ -5,19 +5,19 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
+import theking530.staticpower.container.FakeCraftingInventory;
 import theking530.staticpower.data.crafting.AbstractMachineRecipe;
 import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 
-public class RecipeProcessingComponent<T extends Recipe<Container>> extends AbstractProcesingComponent {
+public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProcesingComponent {
 	public enum RecipeProcessingPhase {
 		PRE_PROCESSING, PROCESSING
 	}
@@ -217,6 +217,12 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Abst
 		// Check for the recipe.
 		if (recipeType == RecipeType.SMELTING) {
 			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.SMELTING, new SimpleContainer(matchParameters.getItems()[0]), getLevel());
+		} else if (recipeType == RecipeType.CRAFTING) {
+			FakeCraftingInventory craftingInv = new FakeCraftingInventory(3, 3);
+			for (int i = 0; i < 9; i++) {
+				craftingInv.setItem(i, matchParameters.getItems()[i]);
+			}
+			return (Optional<T>) getLevel().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftingInv, getLevel());
 		} else {
 			RecipeType<AbstractStaticPowerRecipe> spRecipe = (RecipeType<AbstractStaticPowerRecipe>) recipeType;
 			if (spRecipe != null) {
@@ -244,6 +250,10 @@ public class RecipeProcessingComponent<T extends Recipe<Container>> extends Abst
 
 	public Optional<T> getCurrentProcessingRecipe() {
 		return getRecipe(RecipeProcessingPhase.PROCESSING);
+	}
+
+	public Optional<T> getPendingProcessingRecipe() {
+		return getRecipe(RecipeProcessingPhase.PRE_PROCESSING);
 	}
 
 	@SuppressWarnings("unchecked")

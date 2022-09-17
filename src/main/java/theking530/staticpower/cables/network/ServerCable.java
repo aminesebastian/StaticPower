@@ -160,29 +160,40 @@ public class ServerCable {
 		return sparseLinks.values();
 	}
 
+	public List<CableScanLocation> getScanLocations() {
+		List<CableScanLocation> output = new ArrayList<CableScanLocation>();
+		for (Direction dir : Direction.values()) {
+			output.add(new CableScanLocation(getPos().relative(dir), dir, false));
+		}
+
+		for (SparseCableLink link : getSparseLinks()) {
+			output.add(new CableScanLocation(link.linkToPosition(), null, true));
+		}
+
+		return output;
+	}
+
 	public List<ServerCable> getAdjacents() {
 		List<ServerCable> wrappers = new ArrayList<ServerCable>();
-		if (isSparse()) {
-			for (SparseCableLink link : getSparseLinks()) {
-				ServerCable cable = CableNetworkManager.get(getWorld()).getCable(link.linkToPosition());
+		for (CableScanLocation scanLoc : getScanLocations()) {
+			if (scanLoc.isSparseLink()) {
+				ServerCable cable = CableNetworkManager.get(getWorld()).getCable(scanLoc.getLocation());
 				wrappers.add(cable);
-			}
-		} else {
-			for (Direction dir : Direction.values()) {
+			} else {
 				// Skip checking that side if that side is disabled.
-				if (isDisabledOnSide(dir)) {
+				if (isDisabledOnSide(scanLoc.getSide())) {
 					continue;
 				}
 
 				// Check if a cable exists on the provided side and it is enabled on that side
 				// and of the same type.
-				ServerCable adjacent = CableNetworkManager.get(getWorld()).getCable(getPos().relative(dir));
+				ServerCable adjacent = CableNetworkManager.get(getWorld()).getCable(scanLoc.getLocation());
 
 				if (adjacent == null) {
 					continue;
 				}
 
-				if (adjacent.isDisabledOnSide(dir.getOpposite())) {
+				if (adjacent.isDisabledOnSide(scanLoc.getSide().getOpposite())) {
 					continue;
 				}
 

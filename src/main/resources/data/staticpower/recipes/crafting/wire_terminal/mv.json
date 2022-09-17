@@ -1,0 +1,20 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		" c ",
+		"ici",
+		"iii"
+	],
+	"key": {
+		"c": {
+			"item": "staticpower:coil_copper"
+		},
+		"i": {
+			"tag": "forge:ingots/brass"
+		}
+	},
+	"result": {
+		"item": "staticpower:wire_terminal_mv",
+		"count": 2
+	}
+}

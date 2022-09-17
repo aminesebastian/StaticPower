@@ -310,4 +310,13 @@ public class InventoryUtilities {
 			throw new RuntimeException("Failed to clear inventory of contents.");
 		}
 	}
+
+	public static ItemStackHandler duplicateItemStackHandler(IItemHandler handler) {
+		// Create a duplicate inventory.
+		ItemStackHandler duplicateInventory = new ItemStackHandler(handler.getSlots());
+		for (int i = 0; i < handler.getSlots(); i++) {
+			duplicateInventory.setStackInSlot(i, handler.getStackInSlot(i).copy());
+		}
+		return duplicateInventory;
+	}
 }

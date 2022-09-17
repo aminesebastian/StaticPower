@@ -42,7 +42,7 @@ public abstract class AbstractSolderingTable extends BlockEntityMachine implemen
 		powerStorage.setEnabled(false);
 	}
 
-	public boolean hasRequiredItems() {
+	public boolean hasRequiredItems(SolderingRecipe recipe) {
 		// If there is no soldering iron, return false. If there is, but it cannot be
 		// used to solder, return false.
 		if (requiresSolderingIron()) {
@@ -56,14 +56,6 @@ public abstract class AbstractSolderingTable extends BlockEntityMachine implemen
 			}
 		}
 
-		// Check if we have a recipe.
-		Optional<SolderingRecipe> recipe = getCurrentRecipe();
-
-		// If there is no recipe, return false.
-		if (!recipe.isPresent()) {
-			return false;
-		}
-
 		// Create a duplicate inventory.
 		ItemStackHandler duplicateInventory = new ItemStackHandler(inventory.getSlots());
 		for (int i = 0; i < inventory.getSlots(); i++) {
@@ -74,12 +66,12 @@ public abstract class AbstractSolderingTable extends BlockEntityMachine implemen
 		boolean flag = false;
 
 		// Iterate through all the ingredients in the recipe.
-		for (int i = 0; i < recipe.get().getIngredients().size(); i++) {
+		for (int i = 0; i < recipe.getIngredients().size(); i++) {
 			// Set the flag to false.
 			flag = false;
 
 			// Get the ingredient.
-			Ingredient ing = recipe.get().getIngredients().get(i);
+			Ingredient ing = recipe.getIngredients().get(i);
 
 			// Skip empty ingredients.
 			if (ing.equals(Ingredient.EMPTY)) {
@@ -124,7 +116,7 @@ public abstract class AbstractSolderingTable extends BlockEntityMachine implemen
 			}
 
 			// Break out of the loop if we're out of items.
-			if (!hasRequiredItems()) {
+			if (!hasRequiredItems(recipe)) {
 				break;
 			}
 

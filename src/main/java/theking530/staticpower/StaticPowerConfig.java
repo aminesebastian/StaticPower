@@ -242,8 +242,8 @@ public class StaticPowerConfig {
 		public final ConfigValue<Double> lowVoltage;
 		public final ConfigValue<Double> mediumVoltage;
 		public final ConfigValue<Double> highVoltage;
-		public final ConfigValue<Double> veryHighVoltage;
 		public final ConfigValue<Double> extremeVoltage;
+		public final ConfigValue<Double> bonkersVoltage;
 
 		public StaticPowerServerConfig(ForgeConfigSpec.Builder builder) {
 			builder.push("Generation");
@@ -355,10 +355,10 @@ public class StaticPowerConfig {
 						.define("MediumVoltage", 100.0);
 				highVoltage = builder.comment("The voltage level associated with high voltage power.").translation(StaticPower.MOD_ID + ".config." + "highVoltage")
 						.define("HighVoltage", 1000.0);
-				veryHighVoltage = builder.comment("The voltage level associated with very high voltage power.").translation(StaticPower.MOD_ID + ".config." + "veryHighVoltage")
-						.define("VeryHighVoltage", 10000.0);
 				extremeVoltage = builder.comment("The voltage level associated with extreme voltage power.").translation(StaticPower.MOD_ID + ".config." + "extremeVoltage")
-						.define("ExtremeVoltage", 100000.0);
+						.define("ExtremeVoltage", 10000.0);
+				bonkersVoltage = builder.comment("The voltage level associated with bonkers voltage power.").translation(StaticPower.MOD_ID + ".config." + "bonkersVoltage")
+						.define("BonkersVoltage", 100000.0);
 			}
 			builder.pop();
 
