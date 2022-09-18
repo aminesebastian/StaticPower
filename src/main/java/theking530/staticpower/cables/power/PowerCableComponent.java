@@ -1,17 +1,14 @@
 package theking530.staticpower.cables.power;
 
 import java.util.Optional;
+import java.util.Set;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -23,10 +20,10 @@ import theking530.api.energy.StaticVoltageRange;
 import theking530.api.energy.sided.ISidedStaticPowerStorage;
 import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
 	public static final String VOLTAGE_ORDINAL = "power_voltage_ordinal";
@@ -98,19 +95,8 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
-		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
-			if (!otherProvider.isSideDisabled(side.getOpposite())) {
-				return CableConnectionState.CABLE;
-			}
-		}
-		if (te != null) {
-			if (te.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, side.getOpposite()).isPresent()) {
-				return CableConnectionState.TILE_ENTITY;
-			}
-		}
-		return CableConnectionState.NONE;
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+		types.add(ModCableDestinations.Power.get());
 	}
 
 	@Override

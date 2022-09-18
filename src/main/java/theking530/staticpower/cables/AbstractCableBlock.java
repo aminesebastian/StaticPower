@@ -36,7 +36,6 @@ import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
-import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
@@ -90,6 +89,10 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 
 	@Override
 	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		if (world.isClientSide()) {
+			return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
+		}
+
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
@@ -129,31 +132,38 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 
 	@Override
 	public InteractionResult sneakWrenchBlock(Player player, SneakWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
+		if (world.isClientSide()) {
+			return super.sneakWrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
+		}
+
 		// Drop the block.
-		if (returnDrops && !world.isClientSide) {
+		if (returnDrops) {
 			BlockState state = world.getBlockState(pos);
 			List<ItemStack> stacks = Block.getDrops(state, (ServerLevel) world, pos, world.getBlockEntity(pos));
 			for (ItemStack stack : stacks) {
 				WorldUtilities.dropItem(world, pos, stack);
 			}
 			this.spawnAfterBreak(state, (ServerLevel) world, pos, wrench);
-		}
 
-		// Perform this on both the client and the server so the client updates any
-		// render changes (any conected cables).
-		world.setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
-		world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2, 512);
+			// Perform this on both the client and the server so the client updates any
+			// render changes (any conected cables).
+			world.setBlock(pos, Blocks.AIR.defaultBlockState(), 1 | 2);
+			world.markAndNotifyBlock(pos, world.getChunkAt(pos), world.getBlockState(pos), world.getBlockState(pos), 1 | 2, 512);
+		}
 
 		return InteractionResult.SUCCESS;
 	}
 
 	@Override
 	public InteractionResult wrenchBlock(Player player, RegularWrenchMode mode, ItemStack wrench, Level world, BlockPos pos, Direction facing, boolean returnDrops) {
-		super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
+		if (world.isClientSide()) {
+			return super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
+		}
+
 		// Get the cable component and make sure its valid.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
-			return InteractionResult.FAIL;
+			return super.wrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 		}
 
 		// Check for the hover result.
@@ -180,18 +190,16 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 			}
 		}
 
-		if (!world.isClientSide()) {
-			// If we didnt return earlier, we probably hit the cable itseelf, lets see if we
-			// can disable or enabled part of it.
-			Direction hitSide = !hoverResult.isEmpty() ? hoverResult.direction : facing;
-			component.setSideDisabledState(hitSide, !component.isSideDisabled(hitSide));
+		// If we didnt return earlier, we probably hit the cable itseelf, lets see if we
+		// can disable or enabled part of it.
+		Direction hitSide = !hoverResult.isEmpty() ? hoverResult.direction : facing;
+		component.setSideDisabledState(hitSide, !component.isSideDisabled(hitSide));
 
-			// Update the cable opposite from the side we just toggled if a cable exists
-			// there.
-			AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.relative(hitSide));
-			if (oppositeComponent != null) {
-				oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
-			}
+		// Update the cable opposite from the side we just toggled if a cable exists
+		// there.
+		AbstractCableProviderComponent oppositeComponent = CableUtilities.getCableWrapperComponent(world, pos.relative(hitSide));
+		if (oppositeComponent != null) {
+			oppositeComponent.setSideDisabledState(hitSide.getOpposite(), component.isSideDisabled(hitSide));
 		}
 
 		return InteractionResult.SUCCESS;

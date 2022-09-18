@@ -13,8 +13,8 @@ import net.minecraftforge.items.IItemHandler;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 
 public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityComponent implements IItemHandler {
 

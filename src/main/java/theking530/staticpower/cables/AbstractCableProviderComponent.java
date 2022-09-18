@@ -1,12 +1,12 @@
 package theking530.staticpower.cables;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -21,7 +21,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -30,12 +29,14 @@ import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
-import theking530.staticpower.utilities.ItemUtilities;
+import theking530.staticpower.cables.network.data.CableSideConnectionState;
+import theking530.staticpower.cables.network.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class AbstractCableProviderComponent extends AbstractBlockEntityComponent {
@@ -43,27 +44,17 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	public static final ModelProperty<CableRenderingState> CABLE_RENDERING_STATE = new ModelProperty<>();
 	/** The type of this cable. */
 	private final HashSet<ResourceLocation> supportedNetworkModules;
-	/**
-	 * Keeps track of which sides of the cable are disabled. This value is a client
-	 * copy of the master value which exists on the server.
-	 */
-	private final boolean[] disabledSides;
-	/**
-	 * Cache for the connection states. This is updated every time a new baked model
-	 * is requested AND also, on first placement.
-	 */
-//	protected final CableConnectionState[] connectionStates;
-	/** Container for all the attachments on this cable. */
-	protected final ItemStack[] attachments;
-	/** Container for all the covers on this cable. */
-	protected final ItemStack[] covers;
 	/** List of valid attachment classes. */
 	private final HashSet<Class<? extends AbstractCableAttachment>> validAttachments;
-	private final Map<Long, SparseCableLink> sparseLinks;
+
+	/** The client replicated list of sparse links. */
+	private final Map<Long, SparseCableLink> clientSparseLinks;
+	/** The client replicated list of connection states. */
+	private final CableSideConnectionState[] clientConnectionStates;
 
 	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
 		super(name);
-		// Capture the types.
+		// Capture the module types.
 		supportedNetworkModules = new HashSet<ResourceLocation>();
 		for (ResourceLocation module : supportedModules) {
 			supportedNetworkModules.add(module);
@@ -72,22 +63,31 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		// Initialize the valid attachments set.
 		validAttachments = new HashSet<Class<? extends AbstractCableAttachment>>();
 
-		// Initialize the disabled sides, connection states, and attachments arrays.
-		disabledSides = new boolean[] { true, true, true, true, true, true }; // Default to disabled until the server sends us the first update.
-		attachments = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
-		covers = new ItemStack[] { ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY, ItemStack.EMPTY };
-		sparseLinks = new HashMap<Long, SparseCableLink>();
+		// Initialize the sided data. Initialize the disabled sides to true until we
+		// recieve an update from the server.
+		clientConnectionStates = new CableSideConnectionState[6];
+		for (Direction dir : Direction.values()) {
+			clientConnectionStates[dir.ordinal()] = CableSideConnectionState.createEmpty();
+			clientConnectionStates[dir.ordinal()].setDisabled(true);
+		}
+		clientSparseLinks = new HashMap<Long, SparseCableLink>();
 	}
 
 	@Override
 	public void preProcessUpdate() {
-		// Tick either on the client or on the server if the server cable has a network.
-		if (isClientSide() || (!isClientSide() && getNetwork() != null)) {
-			for (Direction dir : Direction.values()) {
-				if (!attachments[dir.ordinal()].isEmpty()) {
-					ItemStack attachment = attachments[dir.ordinal()];
-					((AbstractCableAttachment) attachment.getItem()).attachmentTick(attachment, dir, this);
+		// Tick the attachments.
+		for (Direction dir : Direction.values()) {
+			ItemStack attachment = ItemStack.EMPTY;
+			if (isClientSide()) {
+				attachment = clientConnectionStates[dir.ordinal()].getAttachment();
+			} else {
+				if (getCable().isPresent()) {
+					attachment = getCable().get().getAttachmentOnSide(dir);
 				}
+			}
+
+			if (!attachment.isEmpty()) {
+				((AbstractCableAttachment) attachment.getItem()).attachmentTick(attachment, dir, this);
 			}
 		}
 	}
@@ -102,6 +102,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			if (cable != null && cable.getNetwork() != null) {
 				cable.getNetwork().updateGraph((ServerLevel) getLevel(), getPos(), true);
 			}
+		} else {
+			updateRenderingStateForCable();
 		}
 	}
 
@@ -144,80 +146,6 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	}
 
 	/**
-	 * Checks to see if the provided side is disabled. This only checks the client
-	 * synced value, so we must ensure the server value is synced to the client
-	 * always.
-	 * 
-	 * @param side
-	 * @return
-	 */
-	public boolean isSideDisabled(Direction side) {
-		return disabledSides[side.ordinal()];
-	}
-
-	/**
-	 * This should only be called on the server. Once set on the ServerCable, it
-	 * gets synchronized back down to the client.
-	 * 
-	 * @param side
-	 * @param disabledState
-	 */
-	public void setSideDisabledState(Direction side, boolean disabledState) {
-		if (!isClientSide()) {
-			CableNetworkManager.get(getLevel()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
-		}
-	}
-
-	/**
-	 * Gets the connection state on the provided side.
-	 * 
-	 * @param side
-	 * @return
-	 */
-	public CableConnectionState getConnectionState(Direction side) {
-		return getUncachedConnectionState(side, getLevel().getBlockEntity(getPos().relative(side)), getPos().relative(side), false);
-	}
-
-	/**
-	 * Gets the connection states on all sides.
-	 * 
-	 * @return
-	 */
-	public CableConnectionState[] getConnectionStates() {
-		CableConnectionState[] output = new CableConnectionState[6];
-		for (Direction dir : Direction.values()) {
-			output[dir.ordinal()] = getConnectionState(dir);
-		}
-		return output;
-	}
-
-	/**
-	 * Allows us to provide additional data about state of the cable for rendering
-	 * purposes.
-	 */
-	@Override
-	public void getModelData(ModelDataMap.Builder builder) {
-		builder.withInitial(CABLE_RENDERING_STATE, getRenderingState());
-	}
-
-	public Collection<SparseCableLink> getSparseLinks() {
-		if (!isClientSide()) {
-			ServerCable trakcedCable = this.getCable().get();
-			return trakcedCable.getSparseLinks();
-		} else {
-			return sparseLinks.values();
-		}
-	}
-
-	public CableRenderingState getRenderingState() {
-		return new CableRenderingState(getConnectionStates(), getAttachmentModels(), attachments, covers, disabledSides, getPos());
-	}
-
-	public HashSet<ResourceLocation> getSupportedNetworkModuleTypes() {
-		return this.supportedNetworkModules;
-	}
-
-	/**
 	 * When the owning tile entity is validated, we check to see if there is a cable
 	 * wrapper in the network for this cable. If not, we provide one.
 	 */
@@ -227,7 +155,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 
 		// Update the rendering state on all connected blocks.
 		if (isClientSide()) {
-			updateRenderingStateOnAllAdjacent();
+			requestServerCableSyncFromClient();
 		}
 	}
 
@@ -257,42 +185,66 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	}
 
 	/**
-	 * This method is called when we want to synchronize variables over from the
-	 * server to the client. The implementation of how this is handled is left to
-	 * the implementer. This is called from the {@link ServerCable}.
+	 * Checks to see if the provided side is disabled. This only checks the client
+	 * synced value, so we must ensure the server value is synced to the client
+	 * always.
+	 * 
+	 * @param side
+	 * @return
 	 */
-	public void gatherCableStateSynchronizationValues(ServerCable cable, CompoundTag tag) {
-		// Serialize the sparse links.
-		ListTag sparseLinkTag = new ListTag();
-		cable.getSparseLinks().forEach(link -> {
-			sparseLinkTag.add(link.serialize());
-		});
-		tag.put("sparse_links", sparseLinkTag);
-
-		// Serialize the disabledStates.
-		byte[] disabled = new byte[6];
-		for (Direction dir : Direction.values()) {
-			disabled[dir.ordinal()] = (byte) (cable.isDisabledOnSide(dir) ? 1 : 0);
-			disabledSides[dir.ordinal()] = cable.isDisabledOnSide(dir);
+	public boolean isSideDisabled(Direction side) {
+		if (!isClientSide()) {
+			return CableNetworkManager.get(getLevel()).getCable(getPos()).isDisabledOnSide(side);
+		} else {
+			return clientConnectionStates[side.ordinal()].isDisabled();
 		}
-		tag.putByteArray("disabled", disabled);
 	}
 
-	public void syncCableStateFromServer(CompoundTag tag) {
-		sparseLinks.clear();
-		ListTag sparseLinkTags = tag.getList("sparse_links", Tag.TAG_COMPOUND);
-		for (Tag sparseLinkTag : sparseLinkTags) {
-			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
-			sparseLinks.put(link.linkId(), link);
+	/**
+	 * This should only be called on the server. Once set on the ServerCable, it
+	 * gets synchronized back down to the client.
+	 * 
+	 * @param side
+	 * @param disabledState
+	 */
+	public void setSideDisabledState(Direction side, boolean disabledState) {
+		if (!isClientSide()) {
+			CableNetworkManager.get(getLevel()).getCable(getPos()).setDisabledStateOnSide(side, disabledState);
+		} else {
+			StaticPower.LOGGER.warn(String.format(
+					"AbstractCableProviderComponent#setSideDisabledState should only be called from the server! This is a no-op on the client. Called from Position: %1$s.",
+					getPos()));
 		}
+	}
 
-		// Deserialize the disabledStates.
-		byte[] disabled = tag.getByteArray("disabled");
-		for (int i = 0; i < 6; i++) {
-			disabledSides[i] = disabled[i] == 1;
+	/**
+	 * Allows us to provide additional data about state of the cable for rendering
+	 * purposes.
+	 */
+	@Override
+	public void getModelData(ModelDataMap.Builder builder) {
+		builder.withInitial(CABLE_RENDERING_STATE, getRenderingState());
+	}
+
+	public Collection<SparseCableLink> getSparseLinks() {
+		if (!isClientSide()) {
+			ServerCable trakcedCable = this.getCable().get();
+			return trakcedCable.getSparseLinks();
+		} else {
+			return clientSparseLinks.values();
 		}
+	}
 
-		getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), false);
+	public CableRenderingState getRenderingState() {
+		ResourceLocation[] attachmentModels = new ResourceLocation[6];
+		for (Direction dir : Direction.values()) {
+			attachmentModels[dir.ordinal()] = getAttachmentModel(dir, clientConnectionStates[dir.ordinal()]);
+		}
+		return new CableRenderingState(clientConnectionStates, attachmentModels, getPos());
+	}
+
+	public Set<ResourceLocation> getSupportedNetworkModuleTypes() {
+		return this.supportedNetworkModules;
 	}
 
 	public boolean isSparselyConnectedTo(BlockPos location) {
@@ -302,7 +254,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 				return trakcedCable.isLinkedTo(location);
 			}
 		} else {
-			for (SparseCableLink link : sparseLinks.values()) {
+			for (SparseCableLink link : clientSparseLinks.values()) {
 				if (link.linkToPosition().equals(location)) {
 					return true;
 				}
@@ -386,92 +338,8 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		}
 	}
 
-	/**
-	 * Adds a valid attachment class that can be attached to this cable.
-	 * 
-	 * @param attachmentClass
-	 */
-	protected void addValidAttachmentClass(Class<? extends AbstractCableAttachment> attachmentClass) {
-		validAttachments.add(attachmentClass);
-	}
-
-	/**
-	 * Attaches an attachment to the provided side. Returns true if the attachment
-	 * was added. Returns false otherwise.
-	 * 
-	 * @param attachment The attachment itemstack to add.
-	 * @param side       The side to attach it to.
-	 * @return True if the attachment was applied, false otherwise.
-	 */
-	public boolean attachAttachment(ItemStack attachment, Direction side) {
-		// Check if we can attach the attachment.
-		if (!canAttachAttachment(attachment)) {
-			return false;
-		}
-
-		// If there is no attachment on the provided side, add it.
-		if (attachments[side.ordinal()].isEmpty()) {
-			attachments[side.ordinal()] = attachment.copy();
-			attachments[side.ordinal()].setCount(1);
-
-			// Raise the on added method on the attachment.
-			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachments[side.ordinal()].getItem();
-			attachmentItem.onAddedToCable(attachments[side.ordinal()], side, this);
-
-			// Initialize the data container on the server.
-			if (!getLevel().isClientSide) {
-				ServerCable cable = CableNetworkManager.get(getLevel()).getCable(getPos());
-				cable.addAttachmentDataForSide(side, attachmentItem.getRegistryName());
-				attachmentItem.initializeServerDataContainer(attachments[side.ordinal()], side, this, cable.getAttachmentDataContainerForSide(side));
-			}
-
-			// Re-sync the tile entity.
-			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
-			return true;
-		}
-
-		return false;
-	}
-
-	/**
-	 * Removes an attachment from the provided side and returns the itemstack for
-	 * the attachment. If there is no attachment, returns an empty Itemstack.
-	 * 
-	 * @param side The side to remove from.
-	 * @return
-	 */
-	public ItemStack removeAttachment(Direction side) {
-		// Ensure we have an attachment on the provided side.
-		if (hasAttachment(side) && canRemoveAttachment(side)) {
-			// Get the attachment for the side.
-			ItemStack output = attachments[side.ordinal()];
-
-			// Raise the on removed method on the attachment.
-			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) output.getItem();
-			attachmentItem.onRemovedFromCable(output, side, this);
-
-			// Remove the attachment and return it.
-			attachments[side.ordinal()] = ItemStack.EMPTY;
-			// Clear the attachment data from the server.
-			if (!isClientSide()) {
-				CableNetworkManager.get(getLevel()).getCable(getPos()).clearAttachmentDataForSide(side);
-			}
-
-			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
-			getLevel().getChunkSource().getLightEngine().checkBlock(getPos());
-			return output;
-		}
-		return ItemStack.EMPTY;
-	}
-
-	/**
-	 * Indicates whether or not the attachment on the provided side can be removed.
-	 * 
-	 * @param side
-	 * @return
-	 */
-	public boolean canRemoveAttachment(Direction side) {
-		return true;
+	public CableConnectionType getConnectionTypeOnSide(Direction side) {
+		return this.clientConnectionStates[side.ordinal()].getConnectionType();
 	}
 
 	/**
@@ -482,15 +350,14 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 * @param side       The side to attach it to.
 	 * @return True if the cover was applied, false otherwise.
 	 */
-	public boolean attachCover(ItemStack attachment, Direction side) {
-		// If there is no cover on the provided side, add it.
-		if (covers[side.ordinal()].isEmpty()) {
-			covers[side.ordinal()] = attachment.copy();
-			covers[side.ordinal()].setCount(1);
-
-			// Re-sync the tile entity.
-			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
-			return true;
+	public boolean attachCover(ItemStack cover, Direction side) {
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				return cable.addCoverToSide(side, cover);
+			} else {
+				StaticPower.LOGGER.error(String.format("Encountered null cable when attempting to place a cover at: %1$s.", getPos()));
+			}
 		}
 		return false;
 	}
@@ -503,60 +370,15 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 * @return
 	 */
 	public ItemStack removeCover(Direction side) {
-		// Ensure we have an attachment on the provided side.
-		if (hasCover(side)) {
-			// Get the attachment for the side.
-			ItemStack output = covers[side.ordinal()];
-
-			// Remove the attachment and return it.
-			covers[side.ordinal()] = ItemStack.EMPTY;
-
-			// Re-sync the tile entity.
-			getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighbors(), true);
-			return output;
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				return cable.removeCoverFromSide(side);
+			} else {
+				StaticPower.LOGGER.error(String.format("Encountered null cable when attempting to remove a cover at: %1$s.", getPos()));
+			}
 		}
 		return ItemStack.EMPTY;
-	}
-
-	/**
-	 * Checks to see if an attachment is attached on that side.
-	 * 
-	 * @param side The side to check for.
-	 * @return Returns true if a attachment is applied on the provided side.
-	 */
-	public boolean hasAttachment(Direction side) {
-		return !attachments[side.ordinal()].isEmpty();
-	}
-
-	/**
-	 * Checks to see if this component has any attachments of the provided type.
-	 * 
-	 * @param attachmentClass The attachment class to check.
-	 * @return True if the cable has at least one attachment of this type.
-	 */
-	public boolean hasAttachmentOfType(Class<? extends AbstractCableAttachment> attachmentClass) {
-		for (Direction dir : Direction.values()) {
-			if (attachmentClass.isInstance(attachments[dir.ordinal()].getItem())) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	/**
-	 * Gets a list of all attachments of the provided class.
-	 * 
-	 * @param attachmentClass The attachment class to check for.
-	 * @return
-	 */
-	public List<ItemStack> getAttachmentsOfType(Class<? extends AbstractCableAttachment> attachmentClass) {
-		List<ItemStack> outputs = new ArrayList<ItemStack>();
-		for (Direction dir : Direction.values()) {
-			if (attachmentClass.isInstance(attachments[dir.ordinal()].getItem())) {
-				outputs.add(attachments[dir.ordinal()]);
-			}
-		}
-		return outputs;
 	}
 
 	/**
@@ -566,7 +388,15 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 * @return Returns true if a cover is applied on the provided side.
 	 */
 	public boolean hasCover(Direction side) {
-		return !covers[side.ordinal()].isEmpty();
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				return cable.hasCoverOnSide(side);
+			}
+		} else {
+			return clientConnectionStates[side.ordinal()].hasCover();
+		}
+		return false;
 	}
 
 	/**
@@ -577,29 +407,15 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 * @return
 	 */
 	public ItemStack getCover(Direction side) {
-		return covers[side.ordinal()];
-	}
-
-	/**
-	 * Gets the attachment on the provided side. If no attachment is present,
-	 * returns an empty itemstack.
-	 * 
-	 * @param side The side to check for.
-	 * @return
-	 */
-	public ItemStack getAttachment(Direction side) {
-		return attachments[side.ordinal()];
-	}
-
-	/**
-	 * Checks to see if the provided attachment passes the redstone test.
-	 * 
-	 * @param attachment
-	 * @return
-	 */
-	public boolean doesAttachmentPassRedstoneTest(ItemStack attachment) {
-		AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
-		return RedstoneMode.evaluateRedstoneMode(attachmentItem.getRedstoneMode(attachment), getLevel(), getPos());
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				return cable.getCoverOnSide(side);
+			}
+		} else {
+			return clientConnectionStates[side.ordinal()].getCover();
+		}
+		return ItemStack.EMPTY;
 	}
 
 	/**
@@ -623,7 +439,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 * @param moduleType The resource location model type.
 	 * @return
 	 */
-	public <T extends AbstractCableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
+	public <T extends CableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
 		if (!isClientSide()) {
 			Optional<ServerCable> cable = getCable();
 			if (cable.isPresent()) {
@@ -634,6 +450,18 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		}
 		return Optional.empty();
 	}
+
+	private ServerCable createCable() {
+		Set<CableDestination> types = new HashSet<CableDestination>();
+		getSupportedDestinationTypes(types);
+		return new ServerCable(getLevel(), getPos(), shouldCreateSparseCable(), getSupportedNetworkModuleTypes(), types);
+	}
+
+	protected boolean shouldCreateSparseCable() {
+		return false;
+	}
+
+	protected abstract void getSupportedDestinationTypes(Set<CableDestination> types);
 
 	/**
 	 * Gets the cable this component represents from this network if present. We
@@ -656,6 +484,14 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return Optional.empty();
 	}
 
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+
+	}
+
+	protected void onCableFirstAddedToNetwork(ServerCable cable) {
+
+	}
+
 	public boolean areCableCompatible(AbstractCableProviderComponent otherProvider, Direction side) {
 		if (otherProvider.hasAttachment(side) || this.hasAttachment(side.getOpposite())) {
 			return false;
@@ -668,98 +504,169 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return false;
 	}
 
-	@Override
-	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
-		super.serializeUpdateNbt(nbt, fromUpdate);
-
-		// Serialize the disabled states.
-		byte[] disabled = new byte[6];
-		for (int i = 0; i < disabledSides.length; i++) {
-			disabled[i] = (byte) (disabledSides[i] ? 1 : 0);
-		}
-		nbt.putByteArray("disabled", disabled);
-
-		// Serialize the attachments.
-		for (int i = 0; i < attachments.length; i++) {
-			CompoundTag itemNbt = new CompoundTag();
-			attachments[i].save(itemNbt);
-			nbt.put("attachment" + i, itemNbt);
-		}
-
-		// Serialize the covers.
-		for (int i = 0; i < covers.length; i++) {
-			CompoundTag itemNbt = new CompoundTag();
-			covers[i].save(itemNbt);
-			nbt.put("cover" + i, itemNbt);
-		}
-
-		return nbt;
+	/**
+	 * Adds a valid attachment class that can be attached to this cable.
+	 * 
+	 * @param attachmentClass
+	 */
+	protected void addValidAttachmentClass(Class<? extends AbstractCableAttachment> attachmentClass) {
+		validAttachments.add(attachmentClass);
 	}
 
-	@Override
-	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
-		super.deserializeUpdateNbt(nbt, fromUpdate);
-
-		// Deserialize the disabled states.
-		byte[] disabled = nbt.getByteArray("disabled");
-		for (int i = 0; i < disabledSides.length; i++) {
-			disabledSides[i] = disabled[i] == 1;
-		}
-
-		// Deserialize the attachments.
-		for (int i = 0; i < attachments.length; i++) {
-			CompoundTag itemNbt = nbt.getCompound("attachment" + i);
-			ItemStack incomingAttachment = ItemStack.of(itemNbt);
-
-			// If the attachments have changed on the server, just check for the lights to
-			// be safe (digistore lights for example). TODO Watch the performance of this.
-			if (!ItemUtilities.areItemStacksStackable(incomingAttachment, attachments[i])) {
-				if (getLevel() != null) {
-					getLevel().getChunkSource().getLightEngine().checkBlock(getPos());
-				}
+	/**
+	 * Attaches an attachment to the provided side. Returns true if the attachment
+	 * was added. Returns false otherwise.
+	 * 
+	 * @param attachment The attachment itemstack to add.
+	 * @param side       The side to attach it to.
+	 * @return True if the attachment was applied, false otherwise.
+	 */
+	public boolean attachAttachment(ItemStack attachment, Direction side) {
+		if (!isClientSide()) {
+			// Check if we can attach the attachment.
+			if (!canAttachAttachment(attachment)) {
+				return false;
 			}
 
-			// Update the local attachment.
-			attachments[i] = ItemStack.of(itemNbt);
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				// Use a copy of the attachment to be safe.
+				attachment = attachment.copy();
+
+				if (cable.addAttachmentToSide(side, attachment)) {
+					// Raise the on added method on the attachment.
+					AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
+					attachmentItem.onAddedToCable(attachment, side, this);
+					cable.synchronizeServerState();
+					return true;
+				}
+			} else {
+				StaticPower.LOGGER.error(String.format("Encountered null cable when attempting to remove a cover at: %1$s.", getPos()));
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Removes an attachment from the provided side and returns the itemstack for
+	 * the attachment. If there is no attachment, returns an empty Itemstack.
+	 * 
+	 * @param side The side to remove from.
+	 * @return
+	 */
+	public ItemStack removeAttachment(Direction side) {
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				ItemStack removedAttachment = cable.removeAttachmentFromSide(side);
+				if (!removedAttachment.isEmpty()) {
+					// Raise the on added method on the attachment.
+					AbstractCableAttachment attachmentItem = (AbstractCableAttachment) removedAttachment.getItem();
+					attachmentItem.onRemovedFromCable(removedAttachment, side, this);
+					return removedAttachment;
+				}
+			} else {
+				StaticPower.LOGGER.error(String.format("Encountered null cable when attempting to remove a cover at: %1$s.", getPos()));
+			}
 		}
 
-		// Deserialize the covers.
-		for (int i = 0; i < covers.length; i++) {
-			CompoundTag itemNbt = nbt.getCompound("cover" + i);
-			covers[i] = ItemStack.of(itemNbt);
+		return ItemStack.EMPTY;
+	}
+
+	/**
+	 * Indicates whether or not the attachment on the provided side can be removed.
+	 * 
+	 * @param side
+	 * @return
+	 */
+	public boolean canRemoveAttachment(Direction side) {
+		return true;
+	}
+
+	/**
+	 * Checks to see if an attachment is attached on that side.
+	 * 
+	 * @param side The side to check for.
+	 * @return Returns true if a attachment is applied on the provided side.
+	 */
+	public boolean hasAttachment(Direction side) {
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				return cable.hasAttachmentOnSide(side);
+			}
+		} else {
+			return clientConnectionStates[side.ordinal()].hasAttachment();
+		}
+		return false;
+	}
+
+	/**
+	 * Checks to see if this component has any attachments of the provided type.
+	 * 
+	 * @param attachmentClass The attachment class to check.
+	 * @return True if the cable has at least one attachment of this type.
+	 */
+	public boolean hasAttachmentOfType(Class<? extends AbstractCableAttachment> attachmentClass) {
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable == null) {
+				StaticPower.LOGGER
+						.error(String.format("Encountered null cable when attempting to check for an attachment of type: %1$s at %2$s.", attachmentClass.toString(), getPos()));
+				return false;
+			}
+			for (Direction dir : Direction.values()) {
+				if (attachmentClass.isInstance(cable.getAttachmentOnSide(dir).getItem())) {
+					return true;
+				}
+			}
+		} else {
+			for (Direction dir : Direction.values()) {
+				if (attachmentClass.isInstance(getAttachment(dir).getItem())) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Gets the attachment on the provided side. If no attachment is present,
+	 * returns an empty itemstack.
+	 * 
+	 * @param side The side to check for.
+	 * @return
+	 */
+	public ItemStack getAttachment(Direction side) {
+		if (!isClientSide()) {
+			ServerCable cable = this.getCable().orElse(null);
+			if (cable != null) {
+				return cable.getAttachmentOnSide(side);
+			}
+		} else {
+			return clientConnectionStates[side.ordinal()].getAttachment();
+		}
+		return ItemStack.EMPTY;
+	}
+
+	protected ResourceLocation getAttachmentModel(Direction side, CableSideConnectionState connectionState) {
+		if (!hasAttachment(side)) {
+			return null;
 		}
 
-		this.updateRenderingStateForCable();
-		this.updateRenderingStateOnAllAdjacent();
+		AbstractCableAttachment item = (AbstractCableAttachment) getAttachment(side).getItem();
+		return item.getModel(getAttachment(side), getLevel(), getPos());
 	}
 
-	protected ServerCable createCable() {
-		return new ServerCable(getLevel(), getPos(), false, getSupportedNetworkModuleTypes());
-	}
-
-	protected void onCableFirstAddedToNetwork(ServerCable cable) {
-
-	}
-
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
-
-	}
-
-	protected ResourceLocation[] getAttachmentModels() {
-		ResourceLocation[] output = new ResourceLocation[] { null, null, null, null, null, null };
-		for (Direction dir : Direction.values()) {
-			output[dir.ordinal()] = getAttachmentModelForSide(dir);
-		}
-		return output;
-	}
-
-	protected ResourceLocation getAttachmentModelForSide(Direction side) {
-		if (!attachments[side.ordinal()].isEmpty()) {
-			ItemStack attachmentItemStack = attachments[side.ordinal()];
-			AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachmentItemStack.getItem();
-			return attachmentItem.getModel(attachmentItemStack, this);
-		}
-		return null;
+	/**
+	 * Checks to see if the provided attachment passes the redstone test.
+	 * 
+	 * @param attachment
+	 * @return
+	 */
+	public boolean doesAttachmentPassRedstoneTest(ItemStack attachment) {
+		AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
+		return RedstoneMode.evaluateRedstoneMode(attachmentItem.getRedstoneMode(attachment), getLevel(), getPos());
 	}
 
 	protected boolean canAttachAttachment(ItemStack attachment) {
@@ -772,5 +679,52 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return false;
 	}
 
-	protected abstract CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded);
+	/**
+	 * This method is called when we want to synchronize variables over from the
+	 * server to the client. The implementation of how this is handled is left to
+	 * the implementer. This is called from the {@link ServerCable}.
+	 */
+	public void gatherCableStateSynchronizationValues(ServerCable cable, CompoundTag tag) {
+
+	}
+
+	public void syncCableStateFromServer(CompoundTag tag) {
+		clientSparseLinks.clear();
+		ListTag sparseLinkTags = tag.getList("sparse_links", Tag.TAG_COMPOUND);
+		for (Tag sparseLinkTag : sparseLinkTags) {
+			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
+			clientSparseLinks.put(link.linkId(), link);
+		}
+
+		// Deserialize the sided data.
+		ListTag sidedTags = tag.getList("sided_data", Tag.TAG_COMPOUND);
+		for (int i = 0; i < sidedTags.size(); i++) {
+			clientConnectionStates[i] = CableSideConnectionState.deserialize(sidedTags.getCompound(i));
+		}
+
+		getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.blockUpdateAndNotifyNeighborsAndRender(), false);
+	}
+
+	protected void requestServerCableSyncFromClient() {
+		if (isClientSide()) {
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new CableStateSyncRequestPacket(getPos()));
+		} else {
+			StaticPower.LOGGER.error(String.format("Attempted to request cable state synchronization from the server at position: %1$s. This is a no-op.", getPos().toString()));
+		}
+	}
+
+	@Override
+	public CompoundTag serializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
+		super.serializeUpdateNbt(nbt, fromUpdate);
+
+		return nbt;
+	}
+
+	@Override
+	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
+		super.deserializeUpdateNbt(nbt, fromUpdate);
+
+
+	}
+
 }

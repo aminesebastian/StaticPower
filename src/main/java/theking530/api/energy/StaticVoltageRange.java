@@ -5,7 +5,7 @@ import theking530.staticcore.utilities.SDMath;
 
 public record StaticVoltageRange(StaticPowerVoltage minimumVoltage, StaticPowerVoltage maximumVoltage) {
 
-	public static final StaticVoltageRange ANY_VOLTAGE = new StaticVoltageRange(StaticPowerVoltage.LOW, StaticPowerVoltage.EXTREME);
+	public static final StaticVoltageRange ANY_VOLTAGE = new StaticVoltageRange(StaticPowerVoltage.LOW, StaticPowerVoltage.BONKERS);
 	public static final StaticVoltageRange ZERO_VOLTAGE = new StaticVoltageRange(StaticPowerVoltage.ZERO, StaticPowerVoltage.ZERO);
 
 	public boolean isVoltageInRange(StaticPowerVoltage voltage) {

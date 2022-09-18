@@ -14,17 +14,17 @@ import theking530.api.heat.HeatStorage;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.DestinationWrapper;
-import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
-import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.data.DestinationWrapper;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
-public class HeatNetworkModule extends AbstractCableNetworkModule {
+public class HeatNetworkModule extends CableNetworkModule {
 	private HeatStorage heatStorage;
 
 	public HeatNetworkModule() {
@@ -165,7 +165,7 @@ public class HeatNetworkModule extends AbstractCableNetworkModule {
 
 		// Check each destination and capture the ones that can recieve heat.
 		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-			if (wrapper.hasTileEntity() && wrapper.supportsType(DestinationType.HEAT) && !Network.getGraph().getCables().containsKey(pos)) {
+			if (wrapper.hasTileEntity() && wrapper.supportsType(ModCableDestinations.Heat.get()) && !Network.getGraph().getCables().containsKey(pos)) {
 				IHeatStorage otherHeatStorage = wrapper.getTileEntity().getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, wrapper.getFirstConnectedDestinationSide())
 						.orElse(null);
 				if (otherHeatStorage != null && otherHeatStorage.heat(heatStorage.getCurrentHeat(), HeatTransferAction.SIMULATE) > 0) {

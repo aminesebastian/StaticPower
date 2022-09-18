@@ -1,5 +1,7 @@
 package theking530.staticpower.cables.scaffold;
 
+import java.util.Set;
+
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
@@ -8,8 +10,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.network.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 
 public class ScaffoldCableComponent extends AbstractCableProviderComponent {
 	public ScaffoldCableComponent(String name) {
@@ -22,13 +25,17 @@ public class ScaffoldCableComponent extends AbstractCableProviderComponent {
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+
+	}
+
+	protected CableConnectionType getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
 		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
 		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
 			if (!otherProvider.isSideDisabled(side.getOpposite())) {
-				return CableConnectionState.CABLE;
+				return CableConnectionType.CABLE;
 			}
 		}
-		return CableConnectionState.NONE;
+		return CableConnectionType.NONE;
 	}
 }

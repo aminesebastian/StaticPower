@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 
 /**
  * Much thanks to raoulvdberge and RefinedPipes for offering a ton of wisdom on
@@ -124,10 +125,10 @@ public class CableNetworkManager extends SavedData {
 	}
 
 	public void joinSparseCables(ServerCable initiator, ServerCable target) {
-		if (initiator.Network == null) {
+		if (initiator.network == null) {
 			throw new RuntimeException(String.format("Attempted to join sparse cables with initiator: %1$s with a null network.", initiator.getPos()));
 		}
-		if (target.Network == null) {
+		if (target.network == null) {
 			throw new RuntimeException(String.format("Attempted to join sparse cables with target: %1$s with a null network.", target.getPos()));
 		}
 
@@ -135,39 +136,39 @@ public class CableNetworkManager extends SavedData {
 	}
 
 	public void separateSparseCables(ServerCable initiator, List<ServerCable> targets) {
-		if (initiator.Network == null) {
+		if (initiator.network == null) {
 			throw new RuntimeException(String.format("Attempted to join sparse cables with initiator: %1$s with a null network.", initiator.getPos()));
 		}
 
 		for (ServerCable target : targets) {
-			if (target.Network != null) {
-				target.Network.updateGraph(World, target.getPos(), firstTick);
+			if (target.network != null) {
+				target.network.updateGraph(World, target.getPos(), firstTick);
 			}
 		}
 
-		if (initiator.Network != null) {
-			initiator.Network.updateGraph(World, initiator.getPos(), firstTick);
+		if (initiator.network != null) {
+			initiator.network.updateGraph(World, initiator.getPos(), firstTick);
 		}
 
 		for (ServerCable target : targets) {
-			if (target.Network == null) {
+			if (target.network == null) {
 				formNetworkAt(World, target.getPos());
 			}
 		}
 
-		if (initiator.Network == null) {
+		if (initiator.network == null) {
 			formNetworkAt(World, initiator.getPos());
 		}
 	}
 
 	public void refreshCable(ServerCable cable) {
-		if (cable.Network == null) {
+		if (cable.network == null) {
 			throw new RuntimeException(String.format("Attempted to refresh a cable with a null network at position: %1$s.", cable.getPos()));
 		}
 
 		// Get the original network's cables.
 		List<ServerCable> originalNetworkCables = new LinkedList<ServerCable>();
-		originalNetworkCables.addAll(cable.Network.getGraph().getCables().values());
+		originalNetworkCables.addAll(cable.network.getGraph().getCables().values());
 
 		// Get all the adjacents.
 		List<ServerCable> adjacents = cable.getAdjacents();
@@ -175,7 +176,7 @@ public class CableNetworkManager extends SavedData {
 		if (!adjacents.isEmpty()) {
 			mergeNetworksIntoOne(adjacents, cable.getWorld(), cable.getPos());
 		} else {
-			cable.onNetworkLeft(cable.Network);
+			cable.onNetworkLeft(cable.network);
 			formNetworkAt(cable.getWorld(), cable.getPos());
 		}
 
@@ -183,7 +184,7 @@ public class CableNetworkManager extends SavedData {
 		// cables and repair their network states as needed.
 		for (ServerCable originalCable : originalNetworkCables) {
 			// If the original cable does not have a network, attempt to give it one.
-			if (originalCable.Network == null) {
+			if (originalCable.network == null) {
 				// Get it's adjacent.
 				List<ServerCable> newAdjacents = originalCable.getAdjacents();
 
@@ -325,19 +326,19 @@ public class CableNetworkManager extends SavedData {
 			curentSparseLinkId = tag.getLong("curent_sparse_link_id");
 		}
 
-		ListTag cables = tag.getList("cables", Tag.TAG_COMPOUND);
-		for (Tag cableTag : cables) {
-			CompoundTag cableTagCompound = (CompoundTag) cableTag;
-			ServerCable cable = new ServerCable(world, cableTagCompound);
-			output.WorldCables.put(cable.getPos(), cable);
-		}
-
 		ListTag nets = tag.getList("networks", Tag.TAG_COMPOUND);
 		for (Tag netTag : nets) {
 			CompoundTag netTagCompound = (CompoundTag) netTag;
 			CableNetwork network = CableNetwork.create(netTagCompound);
 			network.setWorld(world);
 			output.Networks.put(network.getId(), network);
+		}
+		
+		ListTag cables = tag.getList("cables", Tag.TAG_COMPOUND);
+		for (Tag cableTag : cables) {
+			CompoundTag cableTagCompound = (CompoundTag) cableTag;
+			ServerCable cable = new ServerCable(world, cableTagCompound);
+			output.WorldCables.put(cable.getPos(), cable);
 		}
 
 		// Get the current network Id.

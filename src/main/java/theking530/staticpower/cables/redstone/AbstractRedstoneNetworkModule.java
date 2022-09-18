@@ -14,13 +14,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 
-public abstract class AbstractRedstoneNetworkModule extends AbstractCableNetworkModule {
+public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 	protected Map<ServerCable, CableConfigurationWrapper> outputCables;
 	protected Map<ServerCable, CableConfigurationWrapper> inputCables;
 	protected SignalContainer signals;

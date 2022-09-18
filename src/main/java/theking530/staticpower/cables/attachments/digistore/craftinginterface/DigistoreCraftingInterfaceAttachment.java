@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -14,6 +15,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -28,7 +30,7 @@ import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -55,7 +57,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
-		attachment.getTag().putInt(CRAFTING_INTERFACE_TIMER_TAG, 0);
+		getAttachmentTag(attachment).putInt(CRAFTING_INTERFACE_TIMER_TAG, 0);
 	}
 
 	@Override
@@ -116,20 +118,20 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundTag());
 		}
-		if (!attachment.getTag().contains(CRAFTING_INTERFACE_TIMER_TAG)) {
-			attachment.getTag().putInt(CRAFTING_INTERFACE_TIMER_TAG, 0);
+		if (!getAttachmentTag(attachment).contains(CRAFTING_INTERFACE_TIMER_TAG)) {
+			getAttachmentTag(attachment).putInt(CRAFTING_INTERFACE_TIMER_TAG, 0);
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer = attachment.getTag().getInt(CRAFTING_INTERFACE_TIMER_TAG);
+		int currentTimer =getAttachmentTag(attachment).getInt(CRAFTING_INTERFACE_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
 		if (currentTimer >= StaticPowerConfig.SERVER.digistoreExporterRate.get()) {
-			attachment.getTag().putInt(CRAFTING_INTERFACE_TIMER_TAG, 0);
+			getAttachmentTag(attachment).putInt(CRAFTING_INTERFACE_TIMER_TAG, 0);
 			return true;
 		} else {
-			attachment.getTag().putInt(CRAFTING_INTERFACE_TIMER_TAG, currentTimer);
+			getAttachmentTag(attachment).putInt(CRAFTING_INTERFACE_TIMER_TAG, currentTimer);
 			return false;
 		}
 	}
@@ -170,7 +172,7 @@ public class DigistoreCraftingInterfaceAttachment extends AbstractDigistoreCable
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
 		return StaticPowerAdditionalModels.CABLE_DIGISTORE_CRAFTING_INTERFACE_ATTACHMENT;
 	}
 

@@ -128,21 +128,23 @@ public class JadePluginImplementation implements IWailaPlugin {
 
 					// Draw stored power bar.
 					if (displayInputParameters) {
-						if (minVoltage == maxVoltage) {
-							JadePluginImplementation.drawValue(tooltip,
-									new TranslatableComponent("gui.staticpower.input_voltage").append(": ").append(new TranslatableComponent(minVoltage.getShortName())),
-									INPUT_VOLTAGE_RENDERER);
-						} else if (minVoltage == StaticPowerVoltage.ZERO) {
-							JadePluginImplementation.drawValue(tooltip,
-									new TranslatableComponent("gui.staticpower.input_voltage").append(": <").append(new TranslatableComponent(maxVoltage.getShortName())),
-									INPUT_VOLTAGE_RENDERER);
-						} else if (maxVoltage == StaticPowerVoltage.EXTREME) {
-							JadePluginImplementation.drawValue(tooltip,
-									new TranslatableComponent("gui.staticpower.input_voltage").append(": >").append(new TranslatableComponent(minVoltage.getShortName())),
-									INPUT_VOLTAGE_RENDERER);
-						} else {
-							JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
-									.append(PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
+						if (minVoltage != StaticPowerVoltage.LOW && maxVoltage != StaticPowerVoltage.BONKERS) {
+							if (minVoltage == maxVoltage) {
+								JadePluginImplementation.drawValue(tooltip,
+										new TranslatableComponent("gui.staticpower.input_voltage").append(": ").append(new TranslatableComponent(minVoltage.getShortName())),
+										INPUT_VOLTAGE_RENDERER);
+							} else if (minVoltage == StaticPowerVoltage.ZERO) {
+								JadePluginImplementation.drawValue(tooltip,
+										new TranslatableComponent("gui.staticpower.input_voltage").append(": <").append(new TranslatableComponent(maxVoltage.getShortName())),
+										INPUT_VOLTAGE_RENDERER);
+							} else if (maxVoltage == StaticPowerVoltage.BONKERS) {
+								JadePluginImplementation.drawValue(tooltip,
+										new TranslatableComponent("gui.staticpower.input_voltage").append(": >").append(new TranslatableComponent(minVoltage.getShortName())),
+										INPUT_VOLTAGE_RENDERER);
+							} else {
+								JadePluginImplementation.drawValue(tooltip, new TranslatableComponent("gui.staticpower.input_voltage").append(": ")
+										.append(PowerTextFormatting.formatVoltageRangeToString(new StaticVoltageRange(minVoltage, maxVoltage))), INPUT_VOLTAGE_RENDERER);
+							}
 						}
 					}
 

@@ -3,6 +3,7 @@ package theking530.staticpower;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -10,6 +11,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import theking530.staticcore.initialization.StaticCoreRegistry;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.tiers.advanced.StaticPowerTierAdvanced;
 import theking530.staticpower.data.tiers.aluminum.StaticPowerTierAluminum;
@@ -46,13 +48,15 @@ public class StaticPower {
 	public static final String MOD_ID = "staticpower";
 	public static final CreativeModeTab CREATIVE_TAB = new StaticPowerItemGroup();
 
-	public StaticPower() {
+
+	public StaticPower()
+	{
 		try {
 			IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
-				
+
 			// Enable forge's milk.
 			ForgeMod.enableMilkFluid();
-			
+
 			StaticPowerConfig.preInitialize();
 
 			StaticPowerConfig.registerTier(StaticPowerTiers.WOOD, StaticPowerTierWood::new);
@@ -86,6 +90,9 @@ public class StaticPower {
 			ModNetworkMessages.init();
 			ModTrees.init();
 			ModEntities.init(eventBus);
+
+			ModCableDestinations.init(eventBus);
+
 			StaticCoreRegistry.postInitialize();
 //			
 //			MinecraftForge.EVENT_BUS.register(this);

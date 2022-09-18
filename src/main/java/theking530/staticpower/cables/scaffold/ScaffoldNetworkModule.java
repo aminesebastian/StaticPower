@@ -5,10 +5,10 @@ import java.util.List;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 
-public class ScaffoldNetworkModule extends AbstractCableNetworkModule {
+public class ScaffoldNetworkModule extends CableNetworkModule {
 
 	public ScaffoldNetworkModule() {
 		super(CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE);

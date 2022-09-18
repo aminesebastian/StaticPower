@@ -1,10 +1,13 @@
 package theking530.staticpower.cables.attachments.digistore.terminalbase;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 
@@ -29,14 +32,14 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractDigist
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
-		attachment.getOrCreateTag().putInt(TERMINAL_SEARCH_MODE, DigistoreSyncedSearchMode.DEFAULT.ordinal());
-		attachment.getTag().putInt(TERMINAL_SORT_TYPE, DigistoreInventorySortType.COUNT.ordinal());
-		attachment.getTag().putBoolean(TERMINAL_SORT_DESC, true);
+		getAttachmentTag(attachment).putInt(TERMINAL_SEARCH_MODE, DigistoreSyncedSearchMode.DEFAULT.ordinal());
+		getAttachmentTag(attachment).putInt(TERMINAL_SORT_TYPE, DigistoreInventorySortType.COUNT.ordinal());
+		getAttachmentTag(attachment).putBoolean(TERMINAL_SORT_DESC, true);
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
-		DigistoreCableProviderComponent digistoreCable = (DigistoreCableProviderComponent) cableComponent;
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
+		DigistoreCableProviderComponent digistoreCable = CableUtilities.getCableWrapperComponent(level, pos);
 		return digistoreCable.isManagerPresent() ? model : noManagerModel;
 	}
 
@@ -51,26 +54,26 @@ public abstract class AbstractDigistoreTerminalAttachment extends AbstractDigist
 	}
 
 	public static DigistoreInventorySortType getSortType(ItemStack attachment) {
-		return DigistoreInventorySortType.values()[attachment.getTag().getInt(TERMINAL_SORT_TYPE)];
+		return DigistoreInventorySortType.values()[getAttachmentTag(attachment).getInt(TERMINAL_SORT_TYPE)];
 	}
 
 	public static void setSortType(ItemStack attachment, DigistoreInventorySortType type) {
-		attachment.getOrCreateTag().putInt(TERMINAL_SORT_TYPE, type.ordinal());
+		getAttachmentTag(attachment).putInt(TERMINAL_SORT_TYPE, type.ordinal());
 	}
 
 	public static DigistoreSyncedSearchMode getSearchMode(ItemStack attachment) {
-		return DigistoreSyncedSearchMode.values()[attachment.getTag().getInt(TERMINAL_SEARCH_MODE)];
+		return DigistoreSyncedSearchMode.values()[getAttachmentTag(attachment).getInt(TERMINAL_SEARCH_MODE)];
 	}
 
 	public static void setSearchMode(ItemStack attachment, DigistoreSyncedSearchMode mode) {
-		attachment.getOrCreateTag().putInt(TERMINAL_SEARCH_MODE, mode.ordinal());
+		getAttachmentTag(attachment).putInt(TERMINAL_SEARCH_MODE, mode.ordinal());
 	}
 
 	public static boolean getSortDescending(ItemStack attachment) {
-		return attachment.getTag().getBoolean(TERMINAL_SORT_DESC);
+		return getAttachmentTag(attachment).getBoolean(TERMINAL_SORT_DESC);
 	}
 
 	public static void setSortDescending(ItemStack attachment, boolean descnding) {
-		attachment.getOrCreateTag().putBoolean(TERMINAL_SORT_DESC, descnding);
+		getAttachmentTag(attachment).putBoolean(TERMINAL_SORT_DESC, descnding);
 	}
 }

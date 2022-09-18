@@ -1,16 +1,13 @@
 package theking530.staticpower.cables.heat;
 
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -19,10 +16,10 @@ import theking530.api.heat.IHeatStorage;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {
@@ -159,18 +156,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
-		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
-			if (!otherProvider.isSideDisabled(side.getOpposite())) {
-				return CableConnectionState.CABLE;
-			}
-		} else if (te != null && otherProvider == null) {
-			if (te.getCapability(CapabilityHeatable.HEAT_STORAGE_CAPABILITY, side.getOpposite()).isPresent()) {
-				return CableConnectionState.TILE_ENTITY;
-			}
-		}
-		return CableConnectionState.NONE;
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+		types.add(ModCableDestinations.Heat.get());
 	}
 
 	@Override

@@ -1,9 +1,9 @@
 package theking530.staticpower.client.rendering;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -28,22 +28,18 @@ import theking530.staticpower.blockentities.power.wireconnector.WirePowerCableCo
 public class CustomRenderer {
 	private BlockModel model = new BlockModel();
 	private static HashMap<BlockEntity, HashMap<String, DrawCubeRequest>> CubeRenderRequests = new HashMap<BlockEntity, HashMap<String, DrawCubeRequest>>();
-	public static List<WirePowerCableComponent> TEMP_CABLES = new ArrayList<>();
+	public static Map<BlockPos, WirePowerCableComponent> TEMP_CABLES = new HashMap<>();
 
 	public void render(RenderLevelStageEvent event) {
+		// Get the current matrix stack.
+		PoseStack matrixStack = event.getPoseStack();
+
+		// Start our own stack entry and project us into world space.
+		matrixStack.pushPose();
+		Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+		matrixStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
+
 		if (event.getStage() == Stage.AFTER_TRANSLUCENT_BLOCKS) {
-			// Get the current matrix stack.
-			PoseStack matrixStack = event.getPoseStack();
-
-			// Start our own stack entry and project us into world space.
-			matrixStack.pushPose();
-			Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
-			matrixStack.translate(-projectedView.x, -projectedView.y, -projectedView.z);
-
-			// Transform so we don't z-fight.
-			matrixStack.scale(1.0f, 1.001f, 1.0f);
-			matrixStack.translate(0.0f, -0.0042f, 0.0f);
-
 			// Prepare a list of entries to remove if the te has been removed from the
 			// world.
 			List<BlockEntity> teEntriesToRemove = new LinkedList<BlockEntity>();
@@ -66,14 +62,16 @@ public class CustomRenderer {
 			for (BlockEntity te : teEntriesToRemove) {
 				CubeRenderRequests.remove(te);
 			}
-
-			for (WirePowerCableComponent temp : TEMP_CABLES) {
-				temp.renderConnections(matrixStack);
-			}
-
-			// Pop our stack entry.
-			matrixStack.popPose();
 		}
+
+		if (event.getStage() == Stage.AFTER_TRANSLUCENT_BLOCKS) {
+			for (WirePowerCableComponent temp : TEMP_CABLES.values()) {
+				temp.renderConnections(event.getPoseStack(), event.getCamera(), event.getFrustum());
+			}
+		}
+
+		// Pop our stack entry.
+		matrixStack.popPose();
 	}
 
 	public static float getDeltaTime() {

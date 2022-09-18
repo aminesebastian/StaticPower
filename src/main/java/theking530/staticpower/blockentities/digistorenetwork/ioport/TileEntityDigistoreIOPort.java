@@ -13,7 +13,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.init.ModBlocks;
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {

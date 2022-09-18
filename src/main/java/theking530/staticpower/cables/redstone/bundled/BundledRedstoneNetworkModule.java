@@ -11,12 +11,12 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
@@ -67,7 +67,7 @@ public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule 
 							// network.
 							if (CableNetworkModuleTypes.doesNetworkSupportRedstoneAnyRedstoneModule(targetCable.getNetwork())) {
 								// Then, capture all the selectors on that network (and keep the max value).
-								for (AbstractCableNetworkModule module : targetCable.getNetwork().getModules()) {
+								for (CableNetworkModule module : targetCable.getNetwork().getModules()) {
 									if (module instanceof RedstoneNetworkModule) {
 										RedstoneNetworkModule redstoneModule = (RedstoneNetworkModule) module;
 										hitModules.add(redstoneModule);

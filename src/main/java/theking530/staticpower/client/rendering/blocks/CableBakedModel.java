@@ -26,7 +26,7 @@ import net.minecraftforge.client.model.data.IModelData;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableRenderingState;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.network.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticpower.client.rendering.CoverBuilder;
 
 @OnlyIn(Dist.CLIENT)
@@ -52,7 +52,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		if (tileData.hasProperty(AbstractCableProviderComponent.CABLE_RENDERING_STATE)) {
 			// Get the model properties and set the rendering world.
 			CableRenderingState renderingState = tileData.getData(AbstractCableProviderComponent.CABLE_RENDERING_STATE);
-			renderingState.setRenderingWorld(world);
+			renderingState.setRenderingLevel(world);
 		} else {
 			LOGGER.error("Cable is missing one of the required model data properties.");
 		}
@@ -82,7 +82,7 @@ public class CableBakedModel extends AbstractBakedModel {
 		RenderType layer = MinecraftForgeClient.getRenderType();
 		if (side == null) {
 			for (Direction dir : Direction.values()) {
-				if (renderingState.covers[dir.ordinal()] != null) {
+				if (renderingState.hasCover(dir)) {
 					coverBuilder.buildFacadeQuads(state, renderingState, layer, rand, newQuads, dir);
 				}
 			}
@@ -90,11 +90,11 @@ public class CableBakedModel extends AbstractBakedModel {
 
 		// If we have a simple straight connection, just add that mode. Otherwise, add
 		// the core and then apply any additional models.
-		if (Straight != null && CableUtilities.isCableStraightConnection(renderingState.connectionStates)) {
-			newQuads.addAll(rotateQuadsToFaceDirection(Straight, CableUtilities.getStraightConnectionSide(renderingState.connectionStates), side, state, rand));
+		if (Straight != null && CableUtilities.isCableStraightConnection(renderingState)) {
+			newQuads.addAll(rotateQuadsToFaceDirection(Straight, CableUtilities.getStraightConnectionSide(renderingState), side, state, rand));
 			for (Direction dir : Direction.values()) {
-				if (renderingState.attachments[dir.ordinal()] != null) {
-					BakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
+				if (renderingState.hasAttachment(dir)) {
+					BakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.getAttachmentModelId(dir));
 					newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 				}
@@ -106,24 +106,24 @@ public class CableBakedModel extends AbstractBakedModel {
 			// Add the attachments and connecting pieces.
 			for (Direction dir : Direction.values()) {
 				// If a side is disabled, skip it.
-				if (renderingState.disabledSides[dir.ordinal()]) {
+				if (renderingState.isDisabledOnSide(dir)) {
 					continue;
 				}
 
 				// Get the connection state.
-				CableConnectionState connectionState = renderingState.connectionStates[dir.ordinal()];
+				CableConnectionType connectionState = renderingState.getConnectionType(dir);
 
 				// Decide what to render based on the connection state.
-				if (connectionState == CableConnectionState.CABLE) {
+				if (connectionState == CableConnectionType.CABLE) {
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
-				} else if (connectionState == CableConnectionState.TILE_ENTITY || renderingState.attachments[dir.ordinal()] != null) {
+				} else if (connectionState == CableConnectionType.TILE_ENTITY || renderingState.hasAttachment(dir)) {
 					// Rotate and render the extension model to the entity or attachment.
 					newQuads.addAll(rotateQuadsToFaceDirection(Extension, dir, side, state, rand));
 
 					// If there is an actual attachment, render that. Otherwise, just render the
 					// default attachment for this cable.
-					if (renderingState.attachments[dir.ordinal()] != null) {
-						BakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.attachments[dir.ordinal()]);
+					if (renderingState.hasAttachment(dir)) {
+						BakedModel model = Minecraft.getInstance().getModelManager().getModel(renderingState.getAttachmentModelId(dir));
 						newQuads.addAll(rotateQuadsToFaceDirection(model, dir, side, state, rand));
 					} else {
 						newQuads.addAll(rotateQuadsToFaceDirection(Attachment, dir, side, state, rand));

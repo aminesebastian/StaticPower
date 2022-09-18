@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.network;
+package theking530.staticpower.cables.network.modules;
 
 import java.util.List;
 import java.util.Set;
@@ -8,12 +8,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+import theking530.staticpower.cables.network.CableNetwork;
+import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 
-public abstract class AbstractCableNetworkModule {
+public abstract class CableNetworkModule {
 	protected CableNetwork Network;
 	private final ResourceLocation Type;
 
-	public AbstractCableNetworkModule(ResourceLocation type) {
+	public CableNetworkModule(ResourceLocation type) {
 		Type = type;
 	}
 

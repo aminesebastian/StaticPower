@@ -20,6 +20,7 @@ import theking530.staticpower.blockentities.nonpowered.solderingtable.PacketSync
 import theking530.staticpower.blockentities.power.powermonitor.PacketPowerMonitorSync;
 import theking530.staticpower.blockentities.power.transformer.TransformerControlSyncPacket;
 import theking530.staticpower.cables.CableStateSyncPacket;
+import theking530.staticpower.cables.CableStateSyncRequestPacket;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketClearDigistoreCraftingTerminal;
 import theking530.staticpower.cables.attachments.digistore.craftingterminal.PacketRestorePreviousCraftingRecipe;
 import theking530.staticpower.cables.attachments.digistore.patternencoder.PacketPatternEncoderClearRecipe;
@@ -100,5 +101,6 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketSetSelectedResearch.class);
 		
 		StaticPowerMessageHandler.registerMessage(CableStateSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(CableStateSyncRequestPacket.class);
 	}
 }

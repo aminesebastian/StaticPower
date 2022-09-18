@@ -4,10 +4,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
-import javax.annotation.Nullable;
-
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -16,7 +14,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -25,15 +22,15 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.network.PacketDistributor;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ItemCableComponent extends AbstractCableProviderComponent {
@@ -75,8 +72,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		// Only do this on the client.
-		if (!isClientSide()) {
+		// Only do this on the client. The item module will do it on the server.
+		// THIS IS FOR VISUAL SMOOTHNESS ONLY.
+		if (isClientSide()) {
 			for (ItemRoutingParcelClient packet : containedPackets.values()) {
 				packet.incrementMoveTimer();
 			}
@@ -169,25 +167,9 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 		cable.getDataTag().putDouble(ITEM_CABLE_ACCELERATION_FACTOR_TAG, accelerationFactor);
 	}
 
-	/**
-	 * USED ONLY to render client blocks.
-	 */
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		// Check to see if there is a cable on this side that can connect to this one.
-		// If true, connect. If not, check if there is a TE that we can connect to. If
-		// not, return non.
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
-		if (otherProvider != null && otherProvider.areCableCompatible(this, side)) {
-			if (!otherProvider.isSideDisabled(side.getOpposite())) {
-				return CableConnectionState.CABLE;
-			}
-		} else if (te != null) {
-			if (te.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).isPresent()) {
-				return CableConnectionState.TILE_ENTITY;
-			}
-		}
-		return CableConnectionState.NONE;
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+		types.add(ModCableDestinations.Item.get());
 	}
 
 	@Override

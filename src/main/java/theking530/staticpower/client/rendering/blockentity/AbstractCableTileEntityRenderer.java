@@ -21,7 +21,7 @@ import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.item.ItemRoutingParcelClient;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.network.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
@@ -35,8 +35,8 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		this.shouldPreRotateTowardsFacingDirection = false;
 	}
 
-	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay) {
+	protected void renderItemRoutingParcel(ItemRoutingParcelClient packet, T te, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLight, int combinedOverlay) {
 
 		// Get the travel direction and return early if one does not exist.
 		Direction dir = packet.getItemAnimationDirection();
@@ -54,11 +54,11 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 
 		// Determine which scale to use when drawing.
 		if (render3D) {
-			WorldRenderingUtilities.drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE, getItemParcelRotation(renderRotation),
-					partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			WorldRenderingUtilities.drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), BLOCK_RENDER_SCALE,
+					getItemParcelRotation(renderRotation), partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		} else {
-			WorldRenderingUtilities.drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE, getItemParcelRotation(renderRotation),
-					partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+			WorldRenderingUtilities.drawItemInWorld(te, packet.getContainedItem(), TransformType.FIXED, getItemParcelAnimationOffset(lerpValue, dir), ITEM_RENDER_SCALE,
+					getItemParcelRotation(renderRotation), partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		}
 	}
 
@@ -78,11 +78,11 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, PoseStack matrixStack, AbstractCableProviderComponent cableComponent) {
 		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-		fluidColor.setAlpha(1.0f); // Force the opacity  to 1.0f to have the texture control the opaicty.
-		
+		fluidColor.setAlpha(1.0f); // Force the opacity to 1.0f to have the texture control the opaicty.
+
 		boolean wasExtensionDrawn = false;
 		for (Direction dir : Direction.values()) {
-			if (cableComponent.getConnectionState(dir) != CableConnectionState.NONE && !cableComponent.isSideDisabled(dir)) {
+			if (cableComponent.getConnectionTypeOnSide(dir) != CableConnectionType.NONE && !cableComponent.isSideDisabled(dir)) {
 				wasExtensionDrawn = true;
 				drawExtensions(dir, sprite, filledPercentage, radius, fluidColor, matrixStack);
 			}
@@ -98,7 +98,8 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		float minWidth = 0.22f * filledAmount;
 		float minWidthOffset = (-0.1f * filledAmount) + 0.5f;
 		float floorOffset = 0.06f - (filledAmount * 0.06f);
-		CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, minWidthOffset - floorOffset, 0.5f - radius), new Vector3f(diameter, minWidth, diameter), fluidColor, matrixStack, sprite);
+		CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, minWidthOffset - floorOffset, 0.5f - radius), new Vector3f(diameter, minWidth, diameter), fluidColor, matrixStack,
+				sprite);
 	}
 
 	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, PoseStack matrixStack) {
@@ -111,11 +112,11 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		} else if (side == Direction.NORTH) {
 			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, 0.5f - radius, 0.01f), new Vector3f(diameter, diameter * filledAmount, 0.6f), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.DOWN) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount),
-					fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset),
+					new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.UP) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.39f, 0.5f - radius + yAxisOffset), new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount),
-					fluidColor, matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.39f, 0.5f - radius + yAxisOffset),
+					new Vector3f(diameter * filledAmount, 0.6f, diameter * filledAmount), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.WEST) {
 			CUBE_MODEL.drawPreviewCube(new Vector3f(0.01f, 0.5f - radius, 0.5f - radius), new Vector3f(0.6f, diameter * filledAmount, diameter), fluidColor, matrixStack, sprite);
 		} else if (side == Direction.EAST) {

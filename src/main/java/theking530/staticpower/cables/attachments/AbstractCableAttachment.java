@@ -6,6 +6,7 @@ import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -15,6 +16,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
@@ -26,11 +28,11 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsHoverResult;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.ServerAttachmentDataContainer;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class AbstractCableAttachment extends StaticPowerItem {
+	public static final String ATTACHMENT_TAG = "attachment_tag";
 	public static final String REDSTONE_MODE_TAG = "redstone_mode";
 	private static final Vector3D DEFAULT_BOUNDS = new Vector3D(3.0f, 3.0f, 3.0f);
 
@@ -40,46 +42,53 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 
 	@Override
 	protected InteractionResult onStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
-		if (world.getBlockState(pos).getBlock() instanceof AbstractCableBlock) {
+		if (!world.isClientSide() && world.getBlockState(pos).getBlock() instanceof AbstractCableBlock) {
 			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(world, pos);
 			if (cableComponent != null) {
 				AbstractCableBlock block = (AbstractCableBlock) world.getBlockState(pos).getBlock();
 				CableBoundsHoverResult hoverResult = block.cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 				if (!hoverResult.isEmpty() && hoverResult.type == CableBoundsHoverType.HELD_ATTACHMENT && cableComponent.attachAttachment(item, hoverResult.direction)) {
-					if (!world.isClientSide) {
-						cableComponent.setSideDisabledState(hoverResult.direction, false);
-						item.setCount(item.getCount() - 1);
-					} else {
-						world.playSound(player, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));
-					}
+					cableComponent.setSideDisabledState(hoverResult.direction, false);
+					item.setCount(item.getCount() - 1);
+					world.playSound(null, pos, SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));
 					return InteractionResult.SUCCESS;
 				}
 			}
 		}
-		return InteractionResult.PASS;
+		// Always return success here so we consume the right click. If we don't, when
+		// applying the attachment we will get shot into the UI on placement.
+		return InteractionResult.SUCCESS;
 	}
 
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		// Allocate the redstone mode if neeed.
-		attachment.getOrCreateTag().putInt(REDSTONE_MODE_TAG, RedstoneMode.High.ordinal());
+		attachment.getOrCreateTag().put(ATTACHMENT_TAG, new CompoundTag());
+		getAttachmentTag(attachment).putInt(REDSTONE_MODE_TAG, RedstoneMode.High.ordinal());
 	}
 
 	public void onRemovedFromCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		IItemHandler upgradeInv = getUpgradeInventory(attachment);
 		InventoryUtilities.clearInventory(upgradeInv);
-		attachment.getTag().remove(REDSTONE_MODE_TAG);
-	}
-
-	public void initializeServerDataContainer(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, ServerAttachmentDataContainer dataContainer) {
+		attachment.getTag().remove(ATTACHMENT_TAG);
 	}
 
 	public void attachmentTick(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 
 	}
 
+	protected static CompoundTag getAttachmentTag(ItemStack attachment) {
+		if (attachment.hasTag()) {
+			return attachment.getTag().getCompound(ATTACHMENT_TAG);
+		}
+		throw new RuntimeException("Attempted to access attachment tag when attacment is not attached to a cable!");
+	}
+
 	public void setRedstoneMode(ItemStack attachment, RedstoneMode mode, AbstractCableProviderComponent cable) {
-		attachment.getTag().putInt(REDSTONE_MODE_TAG, mode.ordinal());
+		getAttachmentTag(attachment).putInt(REDSTONE_MODE_TAG, mode.ordinal());
 		cable.getTileEntity().setChanged();
+		if(cable.getCable().isPresent()) {
+			cable.getCable().get().synchronizeServerState();
+		}
 	}
 
 	public void getAdditionalDrops(ItemStack attachment, AbstractCableProviderComponent cable, List<ItemStack> drops) {
@@ -95,8 +104,8 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 	}
 
 	public RedstoneMode getRedstoneMode(ItemStack attachment) {
-		if (attachment.getTag().contains(REDSTONE_MODE_TAG)) {
-			return RedstoneMode.values()[attachment.getTag().getInt(REDSTONE_MODE_TAG)];
+		if (getAttachmentTag(attachment).contains(REDSTONE_MODE_TAG)) {
+			return RedstoneMode.values()[getAttachmentTag(attachment).getInt(REDSTONE_MODE_TAG)];
 		}
 		return RedstoneMode.High;
 	}
@@ -113,7 +122,7 @@ public abstract class AbstractCableAttachment extends StaticPowerItem {
 		return DEFAULT_BOUNDS;
 	}
 
-	public abstract ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent);
+	public abstract ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos);
 
 	public boolean shouldAppearOnPickBlock(ItemStack attachment) {
 		return true;

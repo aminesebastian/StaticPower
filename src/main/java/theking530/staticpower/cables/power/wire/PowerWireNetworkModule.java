@@ -4,7 +4,7 @@ import java.util.List;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModule;
 
 public class PowerWireNetworkModule extends PowerNetworkModule {

@@ -142,7 +142,7 @@ public class Team {
 
 		ListTag playersTag = tag.getList("players", Tag.TAG_COMPOUND);
 		players.addAll(NBTUtilities.deserialize(playersTag, (playerTag) -> {
-			return playerTag.getString("id");
+			return ((CompoundTag) playerTag).getString("id");
 		}));
 
 		researchContainer.deserialize(tag.getCompound("research"), this);

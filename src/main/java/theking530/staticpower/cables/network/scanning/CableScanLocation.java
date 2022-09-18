@@ -1,4 +1,4 @@
-package theking530.staticpower.cables.network;
+package theking530.staticpower.cables.network.scanning;
 
 import javax.annotation.Nullable;
 

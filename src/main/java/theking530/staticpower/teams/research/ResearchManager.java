@@ -3,7 +3,6 @@ package theking530.staticpower.teams.research;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import java.util.LinkedList;
 import java.util.List;
 
 import net.minecraft.nbt.CompoundTag;
@@ -183,13 +182,13 @@ public class ResearchManager {
 		ListTag completedResearchList = tag.getList("completedResearch", Tag.TAG_COMPOUND);
 		completedResearch.clear();
 		completedResearch.addAll(NBTUtilities.deserialize(completedResearchList, (research) -> {
-			return new ResourceLocation(research.getString("name"));
+			return new ResourceLocation(((CompoundTag) research).getString("name"));
 		}));
 
 		activeResearch.clear();
 		ListTag activeResearchList = tag.getList("activeResearch", Tag.TAG_COMPOUND);
 		NBTUtilities.deserialize(activeResearchList, (research) -> {
-			return ResearchInstance.deserialize(research, this);
+			return ResearchInstance.deserialize(((CompoundTag) research), this);
 		}).forEach((active) -> {
 			activeResearch.put(active.getId(), active);
 		});

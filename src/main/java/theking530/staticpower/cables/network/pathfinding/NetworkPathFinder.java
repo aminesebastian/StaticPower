@@ -15,9 +15,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.cables.network.CableNetworkGraph;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableScanLocation;
 import theking530.staticpower.cables.network.ServerCable;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
+import theking530.staticpower.cables.network.scanning.CableScanLocation;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class NetworkPathFinder {

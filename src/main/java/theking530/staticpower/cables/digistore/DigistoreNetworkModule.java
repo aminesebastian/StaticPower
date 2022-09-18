@@ -21,14 +21,14 @@ import theking530.staticpower.cables.attachments.digistore.craftinginterface.Dig
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class DigistoreNetworkModule extends AbstractCableNetworkModule {
+public class DigistoreNetworkModule extends CableNetworkModule {
 	public static final int CRAFTING_TIME = 10;
 
 	private final List<IDigistoreInventory> digistores;

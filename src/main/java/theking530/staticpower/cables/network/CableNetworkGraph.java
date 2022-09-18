@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.network.data.DestinationWrapper;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 
 public class CableNetworkGraph {
 	protected static final Logger LOGGER = LogManager.getLogger(CableNetworkGraph.class);
@@ -40,7 +42,7 @@ public class CableNetworkGraph {
 				// A cable may have been removed and added to a different network. We don't want
 				// to invalidate that cable's new network, so only remove IF the cable was
 				// removed FROM this network directly.
-				if (cable.Network == owningNetwork) {
+				if (cable.network == owningNetwork) {
 					cable.onNetworkLeft(owningNetwork);
 				}
 			});
@@ -48,10 +50,16 @@ public class CableNetworkGraph {
 			// Clear the old values.
 			cables.clear();
 			destinations.clear();
-			
-			// Cache the new values.
-			mapper.getDiscoveredCables().forEach(cable -> cables.put(cable.getPos(), cable));
+
+			// Cache the new values. We have to do two loops for the discovered cables as
+			// cables require access to all the cables.
 			destinations = mapper.getDestinations();
+			mapper.getDiscoveredCables().forEach(cable -> {
+				cables.put(cable.getPos(), cable);
+			});
+			mapper.getDiscoveredCables().forEach(cable -> {
+				cable.onNetworkUpdated(owningNetwork);
+			});
 
 			// Raise the network joined event.
 			mapper.getNewlyAddedCables().forEach(cable -> cable.onNetworkJoined(owningNetwork));

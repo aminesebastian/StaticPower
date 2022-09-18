@@ -20,20 +20,18 @@ public class NBTUtilities {
 		return output;
 	}
 
-	public static <T> ListTag serialize(Iterable<T> iterable, Function<T, CompoundTag> callback) {
+	public static <T> ListTag serialize(Iterable<T> iterable, Function<T, Tag> callback) {
 		ListTag output = new ListTag();
 		iterable.forEach(player -> {
-			CompoundTag newTag = callback.apply(player);
-			output.add(newTag);
+			output.add(callback.apply(player));
 		});
 		return output;
 	}
 
-	public static <T> List<T> deserialize(ListTag tagList, Function<CompoundTag, T> callback) {
+	public static <T> List<T> deserialize(ListTag tagList, Function<Tag, T> callback) {
 		List<T> output = new ArrayList<T>();
 		for (Tag tag : tagList) {
-			CompoundTag tagCompound = (CompoundTag) tag;
-			output.add(callback.apply(tagCompound));
+			output.add(callback.apply(tag));
 		}
 
 		return output;

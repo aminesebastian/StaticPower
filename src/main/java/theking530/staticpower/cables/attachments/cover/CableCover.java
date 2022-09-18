@@ -37,23 +37,20 @@ public class CableCover extends Item implements ICustomModelSupplier {
 
 	@Override
 	public InteractionResult useOn(UseOnContext context) {
-		if (context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof AbstractCableBlock) {
+		if (!context.getLevel().isClientSide()) {
 			AbstractCableProviderComponent cableComponent = CableUtilities.getCableWrapperComponent(context.getLevel(), context.getClickedPos());
-			if (cableComponent != null) {
+			if (cableComponent != null && context.getLevel().getBlockState(context.getClickedPos()).getBlock() instanceof AbstractCableBlock) {
 				AbstractCableBlock block = (AbstractCableBlock) context.getLevel().getBlockState(context.getClickedPos()).getBlock();
 				Direction hoveredDirection = block.cableBoundsCache.getHoveredAttachmentOrCover(context.getClickedPos(), context.getPlayer()).direction;
 				if (hoveredDirection != null && cableComponent.attachCover(context.getItemInHand(), hoveredDirection)) {
-					if (!context.getLevel().isClientSide) {
-						context.getItemInHand().setCount(context.getItemInHand().getCount() - 1);
-					} else {
-						context.getLevel().playSound(context.getPlayer(), context.getClickedPos(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.15F,
-								(float) (0.5F + Math.random() * 2.0));
-					}
-					return InteractionResult.SUCCESS;
+					context.getItemInHand().setCount(context.getItemInHand().getCount() - 1);
+					context.getLevel().playSound(null, context.getClickedPos(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.15F, (float) (0.5F + Math.random() * 2.0));
 				}
 			}
 		}
-		return InteractionResult.PASS;
+
+		// Always return success so we consume the use. Safer this way.
+		return InteractionResult.SUCCESS;
 	}
 
 	public ItemStack makeCoverForBlock(BlockState blockState) {

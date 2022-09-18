@@ -29,6 +29,8 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.registries.NewRegistryEvent;
+import net.minecraftforge.registries.RegistryBuilder;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.energy.CapabilityStaticPower;
@@ -36,6 +38,7 @@ import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.blockentities.machines.cropfarmer.BlockEntityBasicFarmer;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.CactusCropHarvester;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.GenericCropHarvester;
@@ -46,8 +49,9 @@ import theking530.staticpower.cables.digistore.DigistoreNetworkModuleFactory;
 import theking530.staticpower.cables.fluid.FluidNetworkModuleFactory;
 import theking530.staticpower.cables.heat.HeatNetworkModuleFactory;
 import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
-import theking530.staticpower.cables.network.CableNetworkModuleRegistry;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleRegistry;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
 import theking530.staticpower.cables.power.wire.PowerWireNetworkModuleFactory;
 import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModuleFactory;
@@ -72,33 +76,33 @@ public class StaticPowerModEventsCommon {
 	@SubscribeEvent
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
 		// Register network modules.
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_NETWORK_MODULE, new PowerNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE, new PowerWireNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.ITEM_NETWORK_MODULE, new ItemNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.FLUID_NETWORK_MODULE, new FluidNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE, new DigistoreNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.HEAT_NETWORK_MODULE, new HeatNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE, new ScaffoldNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_NETWORK_MODULE, new PowerNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_WIRE_NETWORK_MODULE, new PowerWireNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.ITEM_NETWORK_MODULE, new ItemNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.FLUID_NETWORK_MODULE, new FluidNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE, new DigistoreNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.HEAT_NETWORK_MODULE, new HeatNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE, new ScaffoldNetworkModuleFactory());
 
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE, new BundledRedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE, new BundledRedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE, new RedstoneNetworkModuleFactory());
 
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_RED, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_RED, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GOLD, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_YELLOW, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GREEN, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GREEN, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_AQUA, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_AQUA, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_BLUE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLUE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_LIGHT_PURPLE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_PURPLE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_WHITE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GRAY, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GRAY, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.get().registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLACK, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_RED, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_RED, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GOLD, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_YELLOW, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GREEN, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GREEN, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_AQUA, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_AQUA, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_BLUE, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLUE, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_LIGHT_PURPLE, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_PURPLE, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_WHITE, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GRAY, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GRAY, new RedstoneNetworkModuleFactory());
+		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLACK, new RedstoneNetworkModuleFactory());
 
 		// Register farming harvesters.
 		BlockEntityBasicFarmer.registerHarvester(new GenericCropHarvester());
@@ -118,6 +122,12 @@ public class StaticPowerModEventsCommon {
 		});
 
 		LOGGER.info("Static Power Common Setup Completed!");
+	}
+
+	@SubscribeEvent
+	public static void registerCustomRegistries(@Nonnull NewRegistryEvent event) {
+		event.create(new RegistryBuilder<CableDestination>().setName(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY).setType(CableDestination.class).setIDRange(0,
+				Integer.MAX_VALUE - 1));
 	}
 
 	@SubscribeEvent

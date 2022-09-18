@@ -19,17 +19,17 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.DestinationWrapper;
-import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
-import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.data.DestinationWrapper;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 import theking530.staticpower.utilities.MetricConverter;
 
-public class FluidNetworkModule extends AbstractCableNetworkModule {
+public class FluidNetworkModule extends CableNetworkModule {
 	private final FluidTank networkTank;
 
 	public FluidNetworkModule() {
@@ -43,9 +43,9 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		if (networkTank.getFluid().isEmpty()) {
 			return;
 		}
-		
+
 		// Correct the fluid amount if we somehow ended up going over.
-		if(networkTank.getFluidAmount() > networkTank.getCapacity()) {
+		if (networkTank.getFluidAmount() > networkTank.getCapacity()) {
 			FluidStack existing = networkTank.getFluid();
 			existing.setAmount(networkTank.getCapacity());
 			networkTank.setFluid(existing);
@@ -56,7 +56,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 		// our tank and are not full.
 		HashMap<BlockPos, DestinationWrapper> destinations = new HashMap<BlockPos, DestinationWrapper>();
 		Network.getGraph().getDestinations().forEach((pos, wrapper) -> {
-			if (wrapper.supportsType(DestinationType.FLUID)) {
+			if (wrapper.supportsType(ModCableDestinations.Fluid.get())) {
 				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, wrapper.getFirstConnectedDestinationSide())
 						.orElse(null);
 				if (handler != null && handler.fill(networkTank.getFluid(), FluidAction.SIMULATE) > 0) {
@@ -86,7 +86,7 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				}
 
 				// Skip destinations that don't support fluid interaction.
-				if (!destination.supportsTypeOnSide(cableSide, DestinationType.FLUID)) {
+				if (!destination.supportsTypeOnSide(cableSide, ModCableDestinations.Fluid.get())) {
 					continue;
 				}
 
@@ -105,16 +105,16 @@ public class FluidNetworkModule extends AbstractCableNetworkModule {
 				// Get the cable and skip if its industrial.
 				ServerCable cable = CableNetworkManager.get(world).getCable(cablePos);
 				if (cable.getDataTag().getBoolean(FluidCableComponent.FLUID_INDUSTRIAL_DATA_TAG_KEY)) {
-					//continue;
+					// continue;
 				}
 
 				// Don't insert on block sides that have an extractor.
-				if (cable.getAttachmentDataContainerForSide(cableSide.getOpposite()).hasProperty(ExtractorAttachment.INPUT_BLOCKED)) {
-					if (cable.getAttachmentDataContainerForSide(cableSide.getOpposite()).getBooleanProperty(ExtractorAttachment.INPUT_BLOCKED)) {
+				if (cable.hasAttachmentOnSide(cableSide) && cable.getAttachmentOnSide(cableSide).hasTag()) {
+					if (cable.getAttachmentOnSide(cableSide).getTag().contains(ExtractorAttachment.INPUT_BLOCKED)) {
 						continue;
 					}
 				}
-
+				
 				// If we made it this far, add the handler to the list.
 				fluidHandlers.add(new FluidInterfaceWrapper(handler, cable));
 			}

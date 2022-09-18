@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -39,8 +41,7 @@ import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.item.ItemNetworkModule;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.ServerAttachmentDataContainer;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -73,7 +74,8 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cableComponent) {
 		super.onAddedToCable(attachment, side, cableComponent);
-		attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+		getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, 0);
+		getAttachmentTag(attachment).putBoolean(INPUT_BLOCKED, true);
 	}
 
 	@Override
@@ -126,33 +128,24 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	public boolean incrementExtractionTimer(ItemStack attachment) {
-
-		if (!attachment.hasTag()) {
-			attachment.setTag(new CompoundTag());
-		}
-		if (!attachment.getTag().contains(EXTRACTION_TIMER_TAG)) {
-			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+		if (!getAttachmentTag(attachment).contains(EXTRACTION_TIMER_TAG)) {
+			getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, 0);
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer = attachment.getTag().getInt(EXTRACTION_TIMER_TAG);
+		int currentTimer = getAttachmentTag(attachment).getInt(EXTRACTION_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
 		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractorRate.get()) {
-			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, 0);
+			getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, 0);
 			return true;
 		} else {
-			attachment.getTag().putInt(EXTRACTION_TIMER_TAG, currentTimer);
+			getAttachmentTag(attachment).putInt(EXTRACTION_TIMER_TAG, currentTimer);
 
 			return false;
 		}
 
-	}
-
-	@Override
-	public void initializeServerDataContainer(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, ServerAttachmentDataContainer dataContainer) {
-		dataContainer.addProperty(INPUT_BLOCKED, true);
 	}
 
 	@Override
@@ -166,7 +159,7 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
 		return model;
 	}
 

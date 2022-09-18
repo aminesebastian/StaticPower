@@ -82,6 +82,13 @@ public abstract class AbstractVector<T extends AbstractVector> implements Clonea
 		return (T) this;
 	}
 
+	public T negate() {
+		for (int i = 0; i < values.length; i++) {
+			values[i] /= -1;
+		}
+		return (T) this;
+	}
+
 	public float getLength() {
 		float sum = 0;
 		for (Float val : values) {

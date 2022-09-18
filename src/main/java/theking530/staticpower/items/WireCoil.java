@@ -7,6 +7,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -58,6 +60,7 @@ public class WireCoil extends StaticPowerItem {
 									String.format("Linked wire connector at location %1$s to position %2$s.", pos.toShortString(), initialLocation.toShortString()));
 							player.sendMessage(message, player.getUUID());
 							clearPendingLocation(item);
+							world.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.75f, 1.0f);
 							return InteractionResult.SUCCESS;
 						}
 					}
@@ -66,6 +69,7 @@ public class WireCoil extends StaticPowerItem {
 						setFirstSampleLocation(item, pos);
 						MutableComponent message = new TextComponent(String.format("First connection position set to %1$s .", pos.toShortString()));
 						player.sendMessage(message, player.getUUID());
+						world.playSound(null, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.PLAYERS, 0.75f, 1.0f);
 						return InteractionResult.SUCCESS;
 					}
 				}

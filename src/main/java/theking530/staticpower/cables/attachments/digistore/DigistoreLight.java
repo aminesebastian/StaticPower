@@ -4,12 +4,14 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 
@@ -20,8 +22,8 @@ public class DigistoreLight extends DigistoreScreen {
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
-		DigistoreCableProviderComponent digistoreCable = (DigistoreCableProviderComponent) cableComponent;
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
+		DigistoreCableProviderComponent digistoreCable = CableUtilities.getCableWrapperComponent(level, pos);
 		return digistoreCable.isManagerPresent() ? StaticPowerAdditionalModels.CABLE_DIGISTORE_LIGHT_ATTACHMENT_ON : StaticPowerAdditionalModels.CABLE_DIGISTORE_LIGHT_ATTACHMENT;
 	}
 

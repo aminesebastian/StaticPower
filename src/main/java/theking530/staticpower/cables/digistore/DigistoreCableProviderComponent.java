@@ -1,21 +1,17 @@
 package theking530.staticpower.cables.digistore;
 
-import javax.annotation.Nullable;
+import java.util.Set;
 
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.cables.CableUtilities;
 import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCableAttachment;
 import theking530.staticpower.cables.attachments.digistore.DigistoreLight;
 import theking530.staticpower.cables.attachments.digistore.DigistoreScreen;
@@ -28,9 +24,10 @@ import theking530.staticpower.cables.attachments.digistore.patternencoder.Digist
 import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.ServerCable;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	public static final String POWER_USAGE_TAG = "power_usage";
@@ -137,8 +134,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 				updatePowerUsage(CableNetworkManager.get(getLevel()).getCable(getPos()));
 			}
 		} else {
-			StaticPower.LOGGER
-					.warn(String.format("Updating the power usage should only be performed on the server! A call from the client was made at position: %1$s.", getPos().toString()));
+			StaticPower.LOGGER.warn(
+					String.format("Updating the power usage should only be performed on the server! A call from the client was made at position: %1$s.", getPos().toString()));
 		}
 	}
 
@@ -147,18 +144,21 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		try {
 			// Update the cable value on the server.
 			double attachmentPowerUsage = 0;
-			for (ItemStack attachment : attachments) {
-				if (attachment.getItem() instanceof AbstractDigistoreCableAttachment) {
-					AbstractDigistoreCableAttachment attachmentItem = (AbstractDigistoreCableAttachment) attachment.getItem();
-					attachmentPowerUsage += attachmentItem.getPowerUsage(attachment);
+			for (Direction dir : Direction.values()) {
+				if (hasAttachment(dir)) {
+					ItemStack attachment = getAttachment(dir);
+					if (attachment.getItem() instanceof AbstractDigistoreCableAttachment) {
+						AbstractDigistoreCableAttachment attachmentItem = (AbstractDigistoreCableAttachment) attachment.getItem();
+						attachmentPowerUsage += attachmentItem.getPowerUsage(attachment);
+					}
 				}
 			}
 
 			// Update the power usage on the server.
 			cable.getDataTag().putDouble(POWER_USAGE_TAG, attachmentPowerUsage + powerUsage);
 		} catch (Exception e) {
-			StaticPower.LOGGER
-					.error(String.format("An error occured when attempting to update the power usage of a digistore cable provider owned by a tile entity at location: %1$s of type: %2$s",
+			StaticPower.LOGGER.error(
+					String.format("An error occured when attempting to update the power usage of a digistore cable provider owned by a tile entity at location: %1$s of type: %2$s",
 							getPos(), getTileEntity().getClass()));
 		}
 	}
@@ -188,20 +188,8 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	}
 
 	@Override
-	protected CableConnectionState getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
-		AbstractCableProviderComponent otherProvider = CableUtilities.getCableWrapperComponent(getLevel(), blockPosition);
-
-		if (te instanceof TileEntityDigistoreWire && otherProvider != null && otherProvider.areCableCompatible(this, side)) {
-			if (!otherProvider.isSideDisabled(side.getOpposite())) {
-				return CableConnectionState.CABLE;
-			}
-		} else if (te instanceof BlockEntityBase) {
-			BlockEntityBase baseTe = (BlockEntityBase) te;
-			if (baseTe.hasComponentOfType(DigistoreCableProviderComponent.class)) {
-				return CableConnectionState.TILE_ENTITY;
-			}
-		}
-		return CableConnectionState.NONE;
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+		types.add(ModCableDestinations.Digistore.get());
 	}
 
 	protected void setIsOnBlockState(boolean on) {

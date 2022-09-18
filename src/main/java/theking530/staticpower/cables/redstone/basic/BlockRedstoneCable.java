@@ -32,8 +32,8 @@ import theking530.staticpower.cables.AbstractCableBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.CableBoundsHoverResult;
 import theking530.staticpower.cables.CableBoundsHoverResult.CableBoundsHoverType;
+import theking530.staticpower.cables.network.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticpower.cables.CableUtilities;
-import theking530.staticpower.cables.network.ServerCable.CableConnectionState;
 import theking530.staticpower.cables.redstone.basic.gui.ContainerBasicRedstoneIO;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.client.rendering.blocks.CableBakedModel;
@@ -87,7 +87,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
 			if (hoverResult.type == CableBoundsHoverType.DEFAULT_ATTACHMENT) {
 				Direction cableSide = hoverResult.direction;
-				return component.getConnectionState(cableSide) == CableConnectionState.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
+				return component.getConnectionTypeOnSide(cableSide) == CableConnectionType.TILE_ENTITY ? HasGuiType.ALWAYS : HasGuiType.NEVER;
 			}
 		} else {
 			LOGGER.error(String.format("Encountered invalid cable provider component at position: %1$s when attempting to open the redstone cable gui.", pos));

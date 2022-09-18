@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -16,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -29,7 +31,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.item.ItemNetworkModule;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -57,7 +59,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	@Override
 	public void onAddedToCable(ItemStack attachment, Direction side, AbstractCableProviderComponent cable) {
 		super.onAddedToCable(attachment, side, cable);
-		attachment.getTag().putInt(RETRIEVEAL_TIMER_TAG, 0);
+		getAttachmentTag(attachment).putInt(RETRIEVEAL_TIMER_TAG, 0);
 	}
 
 	@Override
@@ -109,20 +111,20 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		if (!attachment.hasTag()) {
 			attachment.setTag(new CompoundTag());
 		}
-		if (!attachment.getTag().contains(RETRIEVEAL_TIMER_TAG)) {
-			attachment.getTag().putInt(RETRIEVEAL_TIMER_TAG, 0);
+		if (!getAttachmentTag(attachment).contains(RETRIEVEAL_TIMER_TAG)) {
+			getAttachmentTag(attachment).putInt(RETRIEVEAL_TIMER_TAG, 0);
 		}
 
 		// Get the current timer and the extraction rate.
-		int currentTimer = attachment.getTag().getInt(RETRIEVEAL_TIMER_TAG);
+		int currentTimer = getAttachmentTag(attachment).getInt(RETRIEVEAL_TIMER_TAG);
 
 		// Increment the current timer.
 		currentTimer += 1;
 		if (currentTimer >= StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableRetrievalRate.get()) {
-			attachment.getTag().putInt(RETRIEVEAL_TIMER_TAG, 0);
+			getAttachmentTag(attachment).putInt(RETRIEVEAL_TIMER_TAG, 0);
 			return true;
 		} else {
-			attachment.getTag().putInt(RETRIEVEAL_TIMER_TAG, currentTimer);
+			getAttachmentTag(attachment).putInt(RETRIEVEAL_TIMER_TAG, currentTimer);
 
 			return false;
 		}
@@ -139,7 +141,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 	}
 
 	@Override
-	public ResourceLocation getModel(ItemStack attachment, AbstractCableProviderComponent cableComponent) {
+	public ResourceLocation getModel(ItemStack attachment, BlockAndTintGetter level, BlockPos pos) {
 		return model;
 	}
 

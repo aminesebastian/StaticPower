@@ -7,101 +7,61 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraftforge.registries.ForgeRegistry;
+import net.minecraftforge.registries.RegistryManager;
+import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.ICableStateSyncTarget;
 import theking530.staticpower.cables.SparseCableLink;
 import theking530.staticpower.cables.SparseCableLink.SparseCableConnectionType;
+import theking530.staticpower.cables.network.data.CableSideConnectionState;
+import theking530.staticpower.cables.network.data.CableSideConnectionState.CableConnectionType;
+import theking530.staticpower.cables.network.destinations.CableDestination;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleRegistry;
+import theking530.staticpower.cables.network.scanning.CableScanLocation;
+import theking530.staticpower.utilities.NBTUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class ServerCable {
-	public enum CableConnectionState {
-		NONE, CABLE, TILE_ENTITY
-	}
+	protected final Level level;
+	private final BlockPos position;
+	protected CableNetwork network;
+	protected final Set<ResourceLocation> supportedNetworkModules;
 
-	public static final String DATA_TAG_KEY = "data";
-	protected CableNetwork Network;
-	protected final Level World;
-	protected final HashSet<ResourceLocation> supportedNetworkModules;
-	private final BlockPos Position;
-	private final boolean[] disabledSides;
-	/** This tag should be used to store any data about this server cable. */
 	private final CompoundTag dataTag;
-	private final Map<Direction, ServerAttachmentDataContainer> attachmentData;
+	private final CableSideConnectionState[] sidedData;
 
 	private final boolean isSparse;
 	private final Map<BlockPos, SparseCableLink> sparseLinks;
+	private final Set<CableDestination> supportedDestinationTypes;
 
-	public ServerCable(Level world, BlockPos position, boolean sparse, HashSet<ResourceLocation> supportedModules) {
-		Position = position;
-		World = world;
+	public ServerCable(Level level, BlockPos position, boolean sparse, Set<ResourceLocation> supportedNetworkModules, Set<CableDestination> supportedDestinationTypes) {
+		this.position = position;
+		this.level = level;
+		this.isSparse = sparse;
+		this.supportedNetworkModules = supportedNetworkModules;
+		this.supportedDestinationTypes = supportedDestinationTypes;
 		dataTag = new CompoundTag();
-		attachmentData = new HashMap<Direction, ServerAttachmentDataContainer>();
-		for (Direction dir : Direction.values()) {
-			attachmentData.put(dir, new ServerAttachmentDataContainer(dir));
-		}
-		supportedNetworkModules = supportedModules;
-		disabledSides = new boolean[] { false, false, false, false, false, false };
 		sparseLinks = new HashMap<BlockPos, SparseCableLink>();
-		isSparse = sparse;
-	}
 
-	public ServerCable(Level world, CompoundTag tag) {
-		// Set the world.
-		World = world;
-
-		// Get the position.
-		Position = BlockPos.of(tag.getLong("position"));
-
-		// Create the disabled sides.
-		disabledSides = new boolean[] { false, false, false, false, false, false };
-
-		isSparse = tag.getBoolean("sparse");
-
-		// Create the links.
-		sparseLinks = new HashMap<BlockPos, SparseCableLink>();
-		ListTag sparseLinkTags = tag.getList("sparse_links", Tag.TAG_COMPOUND);
-		for (Tag sparseLinkTag : sparseLinkTags) {
-			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
-			sparseLinks.put(link.linkToPosition(), link);
-		}
-
-		// Deserialize the attachments.
-		attachmentData = new HashMap<Direction, ServerAttachmentDataContainer>();
-		CompoundTag attachmentNBT = tag.getCompound("attachments");
+		sidedData = new CableSideConnectionState[6];
 		for (Direction dir : Direction.values()) {
-			String key = String.valueOf(dir.ordinal());
-			if (attachmentNBT.contains(key)) {
-				attachmentData.put(dir, ServerAttachmentDataContainer.createFromTag(attachmentNBT.getCompound(String.valueOf(dir.ordinal()))));
-			} else {
-				attachmentData.put(dir, new ServerAttachmentDataContainer(dir));
-			}
+			sidedData[dir.ordinal()] = CableSideConnectionState.createEmpty();
 		}
-
-		// Get the supported network types.
-		supportedNetworkModules = new HashSet<ResourceLocation>();
-		ListTag modules = tag.getList("supported_modules", Tag.TAG_COMPOUND);
-		for (Tag moduleTag : modules) {
-			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
-			supportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
-		}
-
-		// Serialize the disabled sides.
-		for (int i = 0; i < 6; i++) {
-			disabledSides[i] = tag.getBoolean("disabled" + i);
-		}
-
-		dataTag = tag.getCompound(DATA_TAG_KEY);
 	}
 
 	public SparseCableLink addSparseLink(BlockPos linkToPosition, CompoundTag data) {
@@ -216,7 +176,7 @@ public class ServerCable {
 					continue;
 				}
 
-				if (adjacent.shouldConnectTo(this)) {
+				if (adjacent.shouldConnectToCable(this)) {
 					wrappers.add(adjacent);
 				}
 			}
@@ -229,45 +189,88 @@ public class ServerCable {
 		return dataTag;
 	}
 
-	public void clearAttachmentDataForSide(Direction side) {
-		attachmentData.put(side, new ServerAttachmentDataContainer(side));
+	public ItemStack removeAttachmentFromSide(Direction side) {
+		if (hasAttachmentOnSide(side)) {
+			ItemStack attachment = sidedData[side.ordinal()].removeAttachment();
+			synchronizeServerState();
+			return attachment;
+		}
+		return ItemStack.EMPTY;
 	}
 
-	public void addAttachmentDataForSide(Direction side, ResourceLocation id) {
-		attachmentData.put(side, new ServerAttachmentDataContainer(id, side));
+	public boolean addAttachmentToSide(Direction side, ItemStack attachment) {
+		if (!hasAttachmentOnSide(side)) {
+			sidedData[side.ordinal()].setAttachment(attachment);
+			synchronizeServerState();
+			return true;
+		}
+		return false;
 	}
 
-	public ServerAttachmentDataContainer getAttachmentDataContainerForSide(Direction side) {
-		return attachmentData.get(side);
+	public ItemStack getAttachmentOnSide(Direction side) {
+		return sidedData[side.ordinal()].getAttachment();
+	}
+
+	public boolean hasAttachmentOnSide(Direction side) {
+		return !getAttachmentOnSide(side).isEmpty();
+	}
+
+	public ItemStack removeCoverFromSide(Direction side) {
+		if (hasCoverOnSide(side)) {
+			ItemStack cover = sidedData[side.ordinal()].removeCover();
+			synchronizeServerState();
+			return cover;
+		}
+		return ItemStack.EMPTY;
+	}
+
+	public boolean addCoverToSide(Direction side, ItemStack cover) {
+		if (!hasCoverOnSide(side)) {
+			sidedData[side.ordinal()].setCover(cover);
+			synchronizeServerState();
+			return true;
+		}
+		return false;
+	}
+
+	public ItemStack getCoverOnSide(Direction side) {
+		return sidedData[side.ordinal()].getCover();
+	}
+
+	public boolean hasCoverOnSide(Direction side) {
+		return !getCoverOnSide(side).isEmpty();
 	}
 
 	public BlockPos getPos() {
-		return Position;
+		return position;
 	}
 
 	public CableNetwork getNetwork() {
-		return Network;
+		return network;
 	}
 
 	public Level getWorld() {
-		return World;
+		return level;
+	}
+
+	public Set<CableDestination> getSupportedDestinationTypes() {
+		return supportedDestinationTypes;
 	}
 
 	/**
-	 * Lets this cable wrapper know it joined a network. The ONLY time to call it
-	 * with updateBlock == false is when first loading the world.
+	 * Lets this cable wrapper know it joined a network.
 	 * 
 	 * @param network
 	 * @param updateBlock
 	 */
 	public void onNetworkJoined(CableNetwork network) {
 		// Save the network.
-		Network = network;
+		this.network = network;
 
 		// Add all the supported modules if they're not present.
 		for (ResourceLocation moduleType : supportedNetworkModules) {
 			if (!network.hasModule(moduleType)) {
-				network.addModule(CableNetworkModuleRegistry.get().create(moduleType));
+				network.addModule(CableNetworkModuleRegistry.create(moduleType));
 			}
 		}
 
@@ -276,14 +279,28 @@ public class ServerCable {
 		updateCableBlock();
 	}
 
+	public void onNetworkUpdated(CableNetwork network) {
+		for (Direction dir : Direction.values()) {
+			BlockPos toTest = getPos().relative(dir);
+			if (network.getGraph().getCables().containsKey(toTest)) {
+				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.CABLE);
+			} else if (network.getGraph().getDestinations().containsKey(toTest)) {
+				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.TILE_ENTITY);
+			} else {
+				sidedData[dir.ordinal()].setConnectionType(CableConnectionType.NONE);
+			}
+		}
+		synchronizeServerState();
+	}
+
 	public void onNetworkLeft(CableNetwork oldNetwork) {
-		Network = null;
+		network = null;
 		synchronizeServerState();
 		updateCableBlock();
 	}
 
 	public void onRemoved() {
-		for (ServerCable otherCable : Network.getGraph().getCables().values()) {
+		for (ServerCable otherCable : network.getGraph().getCables().values()) {
 			if (otherCable.isLinkedTo(getPos())) {
 				otherCable.sparseLinks.remove(getPos());
 				otherCable.synchronizeServerState();
@@ -291,7 +308,7 @@ public class ServerCable {
 		}
 	}
 
-	public HashSet<ResourceLocation> getSupportedNetworkModules() {
+	public Set<ResourceLocation> getSupportedNetworkModules() {
 		return supportedNetworkModules;
 	}
 
@@ -299,7 +316,7 @@ public class ServerCable {
 		return supportedNetworkModules.contains(moduleType);
 	}
 
-	public boolean shouldConnectTo(ServerCable otherCable) {
+	public boolean shouldConnectToCable(ServerCable otherCable) {
 		for (ResourceLocation moduleType : otherCable.getSupportedNetworkModules()) {
 			if (supportsNetworkModule(moduleType)) {
 				return true;
@@ -308,27 +325,31 @@ public class ServerCable {
 		return false;
 	}
 
+	public boolean shouldConnectToDestination(Level world, BlockPos pos, Direction side) {
+		return false;
+	}
+
 	/**
 	 * This updates the tile entity that this wrapper represents.
 	 */
 	public void updateCableBlock() {
-		BlockState state = World.getBlockState(Position);
-		World.sendBlockUpdated(Position, state, state, 1 | 2);
+		BlockState state = level.getBlockState(position);
+		level.sendBlockUpdated(position, state, state, 1 | 2);
 	}
 
 	public boolean isDisabledOnSide(Direction side) {
-		return disabledSides[side.ordinal()];
+		return sidedData[side.ordinal()].isDisabled();
 	}
 
 	public void setDisabledStateOnSide(Direction side, boolean disabledState) {
-		if (disabledSides[side.ordinal()] != disabledState) {
-			disabledSides[side.ordinal()] = disabledState;
+		if (sidedData[side.ordinal()].isDisabled() != disabledState) {
+			sidedData[side.ordinal()].setDisabled(disabledState);
 
 			// Only do this if we are already part of a network. This method could be called
 			// after a ServerCable is created but before it's added to the manager, so we do
 			// this check to be safe.
-			if (Network != null) {
-				CableNetworkManager.get(World).refreshCable(this);
+			if (network != null) {
+				CableNetworkManager.get(level).refreshCable(this);
 			}
 
 			synchronizeServerState();
@@ -338,13 +359,74 @@ public class ServerCable {
 	public void synchronizeServerState() {
 		ICableStateSyncTarget target = (ICableStateSyncTarget) getWorld().getExistingBlockEntity(getPos());
 		if (target != null) {
-			target.synchronizeServerToClient(this, new CompoundTag());
+			CompoundTag defaultData = new CompoundTag();
+
+			// Serialize the sparse links.
+			ListTag sparseLinkTag = new ListTag();
+			getSparseLinks().forEach(link -> {
+				sparseLinkTag.add(link.serialize());
+			});
+			defaultData.put("sparse_links", sparseLinkTag);
+
+			// Serialize the connection data.
+			ListTag sidedTags = new ListTag();
+			for (CableSideConnectionState data : sidedData) {
+				sidedTags.add(data.serialize());
+			}
+			defaultData.put("sided_data", sidedTags);
+
+			target.synchronizeServerToClient(this, defaultData);
 		}
 	}
 
+	public ServerCable(Level world, CompoundTag tag) {
+		// Set the world.
+		level = world;
+
+		position = BlockPos.of(tag.getLong("position"));
+		isSparse = tag.getBoolean("sparse");
+
+		// Get the supported network types.
+		supportedNetworkModules = new HashSet<ResourceLocation>();
+		ListTag modules = tag.getList("supported_modules", Tag.TAG_COMPOUND);
+		for (Tag moduleTag : modules) {
+			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
+			supportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
+		}
+
+		// Create the links.
+		sparseLinks = new HashMap<BlockPos, SparseCableLink>();
+		ListTag sparseLinkTags = tag.getList("sparse_links", Tag.TAG_COMPOUND);
+		for (Tag sparseLinkTag : sparseLinkTags) {
+			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
+			sparseLinks.put(link.linkToPosition(), link);
+		}
+
+		// Deserialize the sided data.
+		ListTag sidedTags = tag.getList("sided_data", Tag.TAG_COMPOUND);
+		sidedData = new CableSideConnectionState[sidedTags.size()];
+		for (int i = 0; i < sidedTags.size(); i++) {
+			sidedData[i] = CableSideConnectionState.deserialize(sidedTags.getCompound(i));
+		}
+
+		// Deserialize the destination types.
+		supportedDestinationTypes = new HashSet<CableDestination>();
+		List<CableDestination> destinations = NBTUtilities.deserialize(tag.getList("destination_types", Tag.TAG_STRING), (destTag) -> {
+			ResourceLocation key = new ResourceLocation(destTag.getAsString());
+
+			ForgeRegistry<CableDestination> registry = RegistryManager.ACTIVE.getRegistry(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY);
+			return registry.getValue(key);
+		});
+		for (CableDestination destination : destinations) {
+			supportedDestinationTypes.add(destination);
+		}
+
+		dataTag = tag.getCompound("data");
+	}
+
 	public CompoundTag writeToNbt(CompoundTag tag) {
-		// Serialize the position.
-		tag.putLong("position", Position.asLong());
+		tag.putLong("position", position.asLong());
+		tag.putBoolean("sparse", isSparse);
 
 		// Serialize the supported module types.
 		ListTag supportedModules = new ListTag();
@@ -355,11 +437,6 @@ public class ServerCable {
 		});
 		tag.put("supported_modules", supportedModules);
 
-		// Serialize the disabled sides.
-		for (int i = 0; i < 6; i++) {
-			tag.putBoolean("disabled" + i, disabledSides[i]);
-		}
-
 		// Serialize the sparse links..
 		ListTag sparseLinkTag = new ListTag();
 		sparseLinks.values().forEach(link -> {
@@ -367,18 +444,21 @@ public class ServerCable {
 		});
 		tag.put("sparse_links", sparseLinkTag);
 
-		// Serialize if sparse.
-		tag.putBoolean("sparse", isSparse);
-
-		// Serialize the attachments.
-		CompoundTag attachmentTags = new CompoundTag();
-		for (Direction dir : Direction.values()) {
-			attachmentTags.put(String.valueOf(dir.ordinal()), attachmentData.get(dir).serialize());
+		// Serialize the sided data.
+		ListTag sidedTags = new ListTag();
+		for (CableSideConnectionState data : sidedData) {
+			sidedTags.add(data.serialize());
 		}
-		tag.put("attachments", attachmentTags);
+		tag.put("sided_data", sidedTags);
+
+		// Serialize the destination types.
+		ListTag destinationList = NBTUtilities.serialize(supportedDestinationTypes, (dest) -> {
+			return StringTag.valueOf(dest.getRegistryName().toString());
+		});
+		tag.put("destination_types", destinationList);
 
 		// Serialize the data.
-		tag.put(DATA_TAG_KEY, dataTag);
+		tag.put("data", dataTag);
 
 		return tag;
 	}
@@ -392,9 +472,9 @@ public class ServerCable {
 	 * @return
 	 */
 	public List<AbstractCableProviderComponent> getCableProviderComponents() {
-		BlockEntityBase baseTe = (BlockEntityBase) World.getChunkAt(getPos()).getBlockEntity(getPos(), LevelChunk.EntityCreationType.QUEUED);
+		BlockEntityBase baseTe = (BlockEntityBase) level.getChunkAt(getPos()).getBlockEntity(getPos(), LevelChunk.EntityCreationType.QUEUED);
 		if (baseTe == null) {
-			throw new RuntimeException(String.format("A cable wrapper exists without a cooresponding AbstractCableProviderComponent at BlockPos: %1$s.", Position));
+			throw new RuntimeException(String.format("A cable wrapper exists without a cooresponding AbstractCableProviderComponent at BlockPos: %1$s.", position));
 		}
 		return baseTe.getComponents(AbstractCableProviderComponent.class);
 	}
@@ -408,11 +488,11 @@ public class ServerCable {
 			return false;
 		}
 		ServerCable cable = (ServerCable) other;
-		return World.equals(cable.World) && Position.equals(cable.Position);
+		return level.equals(cable.level) && position.equals(cable.position);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(World, Position);
+		return Objects.hash(level, position);
 	}
 }

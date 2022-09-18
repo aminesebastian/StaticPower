@@ -1,9 +1,10 @@
-package theking530.staticpower.cables.network;
+package theking530.staticpower.cables.network.modules;
 
 import java.util.HashSet;
 
 import net.minecraft.resources.ResourceLocation;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.cables.network.CableNetwork;
 
 public class CableNetworkModuleTypes {
 	public static final ResourceLocation POWER_WIRE_NETWORK_MODULE = new ResourceLocation(StaticPower.MOD_ID, "module_power_wire_network");

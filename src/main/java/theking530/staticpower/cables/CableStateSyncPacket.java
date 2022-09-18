@@ -38,7 +38,7 @@ public class CableStateSyncPacket extends NetworkMessage {
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {
-			ICableStateSyncTarget target = (ICableStateSyncTarget) Minecraft.getInstance().player.level.getBlockEntity(cablePos);
+			ICableStateSyncTarget target = (ICableStateSyncTarget) Minecraft.getInstance().player.level.getExistingBlockEntity(cablePos);
 			if (target != null) {
 				target.recieveCableSyncState(tag);
 			}

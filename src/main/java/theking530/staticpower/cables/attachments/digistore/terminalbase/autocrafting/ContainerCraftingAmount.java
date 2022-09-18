@@ -15,7 +15,7 @@ import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBun
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 

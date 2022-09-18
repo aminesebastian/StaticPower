@@ -29,19 +29,19 @@ import net.minecraftforge.items.ItemStackHandler;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.digistorenetwork.ioport.DigitstoreIOPortInventoryComponent;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.DestinationWrapper;
-import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.data.DestinationWrapper;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class ItemNetworkModule extends AbstractCableNetworkModule {
+public class ItemNetworkModule extends CableNetworkModule {
 	private static final Logger LOGGER = LogManager.getLogger(ItemNetworkModule.class);
 	protected HashMap<BlockPos, LinkedList<ItemRoutingParcel>> ActiveParcels;
 
@@ -661,6 +661,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 	 * @return
 	 */
 	protected ItemCableComponent getItemCableComponentAtPosition(BlockPos position) {
+		// TODO: This shouldn't be a thing (reaching across from Server to Component)
 		if (Network.getWorld().getBlockEntity(position) instanceof BlockEntityBase) {
 			return ((BlockEntityBase) Network.getWorld().getBlockEntity(position)).getComponent(ItemCableComponent.class);
 		}
@@ -690,7 +691,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// Iterate through all the destinations in the graph.
 		for (DestinationWrapper dest : Network.getGraph().getDestinations().values()) {
 			// Skip any destinations that don't support item transfer.
-			if (!dest.supportsType(DestinationType.ITEM)) {
+			if (!dest.supportsType(ModCableDestinations.Item.get())) {
 				continue;
 			}
 
@@ -782,7 +783,7 @@ public class ItemNetworkModule extends AbstractCableNetworkModule {
 		// Iterate through all the destinations in the graph.
 		for (DestinationWrapper dest : Network.getGraph().getDestinations().values()) {
 			// Skip any destinations that don't support item transfer.
-			if (!dest.supportsType(DestinationType.ITEM)) {
+			if (!dest.supportsType(ModCableDestinations.Item.get())) {
 				continue;
 			}
 

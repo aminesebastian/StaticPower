@@ -6,7 +6,7 @@ import net.minecraftforge.common.capabilities.CapabilityToken;
 import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 
 public class CapabilityDigistoreInventory {
-	public static Capability<IDigistoreInventory> DIGISTORE_INVENTORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
+	public static final Capability<IDigistoreInventory> DIGISTORE_INVENTORY_CAPABILITY = CapabilityManager.get(new CapabilityToken<>() {
 	});
 
 	public static void register(RegisterCapabilitiesEvent event) {

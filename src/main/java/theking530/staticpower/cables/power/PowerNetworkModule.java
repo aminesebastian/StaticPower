@@ -25,18 +25,18 @@ import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticpower.cables.network.AbstractCableNetworkModule;
 import theking530.staticpower.cables.network.CableNetwork;
 import theking530.staticpower.cables.network.CableNetworkManager;
-import theking530.staticpower.cables.network.CableNetworkModuleTypes;
-import theking530.staticpower.cables.network.DestinationWrapper;
-import theking530.staticpower.cables.network.DestinationWrapper.DestinationType;
-import theking530.staticpower.cables.network.NetworkMapper;
 import theking530.staticpower.cables.network.ServerCable;
+import theking530.staticpower.cables.network.data.DestinationWrapper;
+import theking530.staticpower.cables.network.destinations.ModCableDestinations;
+import theking530.staticpower.cables.network.modules.CableNetworkModule;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.cables.network.pathfinding.Path;
 import theking530.staticpower.cables.network.pathfinding.Path.PathEntry;
+import theking530.staticpower.cables.network.scanning.NetworkMapper;
 
-public class PowerNetworkModule extends AbstractCableNetworkModule implements IStaticPowerStorage {
+public class PowerNetworkModule extends CableNetworkModule implements IStaticPowerStorage {
 	protected record CachedPowerDestination(IStaticPowerStorage power, BlockPos cable, BlockPos desintationPos) {
 	}
 
@@ -120,7 +120,7 @@ public class PowerNetworkModule extends AbstractCableNetworkModule implements IS
 				continue;
 			}
 
-			if (wrapper.supportsType(DestinationType.POWER)) {
+			if (wrapper.supportsType(ModCableDestinations.Power.get())) {
 				IStaticPowerStorage powerStorage = wrapper.getTileEntity().getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY, connectedSide).orElse(null);
 				if (powerStorage != null) {
 					output.add(new CachedPowerDestination(powerStorage, cablePos, wrapper.getPos()));
