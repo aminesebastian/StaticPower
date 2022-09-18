@@ -2,6 +2,7 @@ package theking530.staticcore.utilities;
 
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.phys.Vec3;
 
 public class Vector3D extends AbstractVector<Vector3D> {
 	public static final Vector3D ZERO = new Vector3D(0, 0, 0);
@@ -12,6 +13,10 @@ public class Vector3D extends AbstractVector<Vector3D> {
 
 	public Vector3D(Vec3i pos) {
 		this(pos.getX(), pos.getY(), pos.getZ());
+	}
+
+	public Vector3D(Vec3 pos) {
+		this((float) pos.x(), (float) pos.y(), (float) pos.z());
 	}
 
 	public Vector3D(Direction direction) {
@@ -63,17 +68,18 @@ public class Vector3D extends AbstractVector<Vector3D> {
 	}
 
 	public Vector3D add(float x, float y, float z) {
-		add(new Vector3D(x, y, z));
+		super.add(new Vector3D(x, y, z));
 		return this;
 	}
 
-	public Vector3D substract(float x, float y, float z) {
-		subtract(new Vector3D(x, y, z));
+	public Vector3D subtract(float x, float y, float z) {
+		super.subtract(new Vector3D(x, y, z));
 		return this;
 	}
 
-	public Vector3D substract(Vector3D other) {
-		subtract(other);
+	@Override
+	public Vector3D subtract(Vector3D other) {
+		super.subtract(other);
 		return this;
 	}
 

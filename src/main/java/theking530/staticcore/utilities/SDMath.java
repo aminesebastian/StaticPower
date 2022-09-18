@@ -7,6 +7,7 @@ import com.mojang.math.Matrix4f;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 public class SDMath {
 	public static final Matrix4f IDENTITY;
@@ -158,11 +159,38 @@ public class SDMath {
 		return vector;
 	}
 
-	public static float getAngleBetweenVectors(AbstractVector start, AbstractVector finish) {
-		AbstractVector normStart = start.copy();
-		AbstractVector normEnd = finish.copy();
-		float dot = normStart.dot(normEnd);
-		float magnitudes = start.getLength() * finish.getLength();
-		return (float) Math.acos(dot / magnitudes);
+	public static Vec3 getPointAlongQuadraticBezierCurve(float alpha, Vec3 start, Vec3 controlPoint, Vec3 end) {
+		double x = (1 - alpha) * (1 - alpha) * start.x() + 2 * (1 - alpha) * alpha * controlPoint.x() + alpha * alpha * end.x();
+		double y = (1 - alpha) * (1 - alpha) * start.y() + 2 * (1 - alpha) * alpha * controlPoint.y() + alpha * alpha * end.y();
+		double z = (1 - alpha) * (1 - alpha) * start.z() + 2 * (1 - alpha) * alpha * controlPoint.z() + alpha * alpha * end.z();
+		return new Vec3(x, y, z);
+
+	}
+
+	public static Vec3 getQuadrativeBezierDerivative(float alpha, Vec3 start, Vec3 controlPoint, Vec3 end) {
+		Vec3 d1 = new Vec3(2 * (controlPoint.x() - start.x()), 2 * (controlPoint.y() - start.y()), 2 * (controlPoint.z() - start.z()));
+		Vec3 d2 = new Vec3(2 * (end.x() - controlPoint.x()), 2 * (end.y() - controlPoint.y()), 2 * (controlPoint.z() - start.z()));
+
+		double x = (1 - alpha) * d1.x() + alpha * d2.x();
+		double y = (1 - alpha) * d1.y() + alpha * d2.y();
+		double z = (1 - alpha) * d1.z() + alpha * d2.z();
+
+		return new Vec3(x, y, z);
+	}
+
+	public static Vec3 getQuadraticBezierSecondDerivative(float alpha, Vec3 start, Vec3 controlPoint, Vec3 end) {
+		double x = 2 * (end.x() - 2 * controlPoint.x() + start.x());
+		double y = 2 * (end.y() - 2 * controlPoint.y() + start.y());
+		double z = 2 * (end.z() - 2 * controlPoint.z() + start.z());
+		return new Vec3(x, y, z);
+	}
+
+	public static Vec3 getQuadraticBezierNormal(float alpha, Vec3 start, Vec3 controlPoint, Vec3 end) {
+		Vec3 deriv = getQuadrativeBezierDerivative(alpha, start, controlPoint, end).normalize();
+		Vec3 secondDeriv = getQuadraticBezierSecondDerivative(alpha, start, controlPoint, end);
+		Vec3 b = deriv.add(secondDeriv).normalize();
+		Vec3 r = b.cross(deriv).normalize();
+		Vec3 normal = r.cross(deriv).normalize();
+		return new Vec3(normal.x, normal.y, normal.z);
 	}
 }

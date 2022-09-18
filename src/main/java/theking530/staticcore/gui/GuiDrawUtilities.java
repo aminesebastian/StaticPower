@@ -603,6 +603,6 @@ public class GuiDrawUtilities {
 	public static Vector3D getScaleFromMatrix(PoseStack pose) {
 		Vector3D zero = GuiDrawUtilities.translatePositionByMatrix(pose, 0, 0, 0);
 		Vector3D one = GuiDrawUtilities.translatePositionByMatrix(pose, 1, 1, 1);
-		return one.substract(zero.getX(), zero.getY(), zero.getZ());
+		return one.subtract(zero.getX(), zero.getY(), zero.getZ());
 	}
 }

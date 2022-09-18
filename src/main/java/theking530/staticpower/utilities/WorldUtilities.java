@@ -105,7 +105,7 @@ public class WorldUtilities {
 	public static Direction getDirectionBetweenBlocks(BlockPos source, BlockPos query) {
 		Vector3D thisPos = new Vector3D(source);
 		Vector3D linkPos = new Vector3D(query);
-		Vector3D pointingVector = linkPos.substract(thisPos);
+		Vector3D pointingVector = linkPos.subtract(thisPos);
 		pointingVector.normalize();
 		
 		return Direction.getNearest(pointingVector.getX(), pointingVector.getY(), pointingVector.getZ());

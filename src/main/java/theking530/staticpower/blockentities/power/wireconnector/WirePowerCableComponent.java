@@ -31,6 +31,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -139,10 +140,10 @@ public class WirePowerCableComponent extends PowerCableComponent {
 		return true;
 	}
 
-	public Vector3D getWireAttachLocation() {
+	public Vec3 getWireAttachLocation() {
 		Vector3D normal = new Vector3D(getTileEntity().getFacingDirection().getNormal());
 		normal.multiply(0.2f);
-		return new Vector3D(getPos().getX() + 0.5f - normal.getX(), getPos().getY() + 0.5f - normal.getY(), getPos().getZ() + 0.5f - normal.getZ());
+		return new Vec3(getPos().getX() + 0.5f - normal.getX(), getPos().getY() + 0.5f - normal.getY(), getPos().getZ() + 0.5f - normal.getZ());
 	}
 
 	public void renderConnections(PoseStack pose, Camera camera, Frustum frustum) {
@@ -162,10 +163,10 @@ public class WirePowerCableComponent extends PowerCableComponent {
 					continue;
 				}
 
-				Vector3D start = startBe.getComponent(WirePowerCableComponent.class).getWireAttachLocation();
-				Vector3D end = getWireAttachLocation().add(0.001f, 0.001f, 0.001f);
+				Vec3 start = startBe.getComponent(WirePowerCableComponent.class).getWireAttachLocation();
+				Vec3 end = getWireAttachLocation().add(0.001f, 0.001f, 0.001f);
 
-				AABB cableBounds = new AABB(start.getX(), start.getY(), start.getZ(), end.getX(), end.getY(), end.getZ());
+				AABB cableBounds = new AABB(start.x(), start.y(), start.z(), end.x(), end.y(), end.z());
 				if (frustum.isVisible(cableBounds)) {
 					drawCable(pose, camera, frustum, start, end);
 				}
@@ -175,46 +176,51 @@ public class WirePowerCableComponent extends PowerCableComponent {
 		RenderSystem.enableCull();
 	}
 
-	protected void drawCable(PoseStack pose, Camera camera, Frustum frustum, Vector3D start, Vector3D end) {
+	protected void drawCable(PoseStack pose, Camera camera, Frustum frustum, Vec3 start, Vec3 end) {
 		Matrix4f matrix = pose.last().pose();
-		float wireThickness = 0.02f;
+		float wireThickness = 0.01f;
 
 		int slicesPerBlock = 10;
-		float distance = start.copy().substract(end).getLength();
+		double distance = start.subtract(end).length();
 
 		Tesselator tessellator = Tesselator.getInstance();
 		BufferBuilder bufferbuilder = tessellator.getBuilder();
 		bufferbuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR);
 
-		Vector3D controlPoint = start.copy().add(end).divide(2.0f);
-		controlPoint.substract(0, distance / 10, 0.0f);
+		Vec3 controlPoint = start.add(end).multiply(0.5, 0.5, 0.5).subtract(0, distance / 10, 0.0f);
 
-		List<WirePoint> points = generatePontsOnWire(start, controlPoint, end);
+		List<WirePoint> points = generatePontsOnWire(slicesPerBlock, start, controlPoint, end);
 
 		for (WirePoint point : points) {
-			Vector3D segStart = point.start();
-			Vector3D segEnd = point.end();
-			Vector3D normal = point.normal();
+			Vector3D segStart = new Vector3D(point.start());
+			Vector3D segEnd = new Vector3D(point.end());
+			Vector3D normal = new Vector3D(point.normal());
 			normal.multiply(wireThickness);
+			Vector3D biTangent = new Vector3D(point.biTangent());
+			biTangent.normalize();
+			biTangent.multiply(wireThickness);
 
+			// Lighting
 			Color startColor = new Color(1, 0.55f, 0.1f);
 			Color endColor = startColor.copy();
+			{
 
-			BlockPos startPos = new BlockPos((int) segStart.getX(), (int) segStart.getY(), (int) segStart.getZ());
-			BlockPos endPos = new BlockPos((int) segEnd.getX(), (int) segEnd.getY(), (int) segEnd.getZ());
+				BlockPos startPos = new BlockPos((int) segStart.getX(), (int) segStart.getY(), (int) segStart.getZ());
+				BlockPos endPos = new BlockPos((int) segEnd.getX(), (int) segEnd.getY(), (int) segEnd.getZ());
 
-			int startLightLevel = getLightLevelAtPosition(startPos);
-			int endLightLevel = getLightLevelAtPosition(endPos);
+				int startLightLevel = getLightLevelAtPosition(startPos);
+				int endLightLevel = getLightLevelAtPosition(endPos);
 
-			float startDarkenAmount = 1 - (startLightLevel / 16.0f);
-			startDarkenAmount *= 0.75f;
-			startColor.darken(startDarkenAmount, startDarkenAmount, startDarkenAmount, 0);
-			startColor.desaturate(startDarkenAmount * 1.25f);
+				float startDarkenAmount = 1 - (startLightLevel / 16.0f);
+				startDarkenAmount *= 0.75f;
+				startColor.darken(startDarkenAmount, startDarkenAmount, startDarkenAmount, 0);
+				startColor.desaturate(startDarkenAmount * 1.25f);
 
-			float endDarkenAmount = 1 - (endLightLevel / 16.0f);
-			endDarkenAmount *= 0.75f;
-			endColor.darken(endDarkenAmount, endDarkenAmount, endDarkenAmount, 0);
-			endColor.desaturate(endDarkenAmount * 1.25f);
+				float endDarkenAmount = 1 - (endLightLevel / 16.0f);
+				endDarkenAmount *= 0.75f;
+				endColor.darken(endDarkenAmount, endDarkenAmount, endDarkenAmount, 0);
+				endColor.desaturate(endDarkenAmount * 1.25f);
+			}
 
 			bufferbuilder.vertex(matrix, segStart.getX() + normal.getX(), segStart.getY() + normal.getY(), segStart.getZ() + normal.getZ())
 					.color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
@@ -225,52 +231,17 @@ public class WirePowerCableComponent extends PowerCableComponent {
 			bufferbuilder.vertex(matrix, segStart.getX() - normal.getX(), segStart.getY() - normal.getY(), segStart.getZ() - normal.getZ())
 					.color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
 
-			bufferbuilder.vertex(matrix, segStart.getX() + normal.getX(), segStart.getY(), segStart.getZ() + normal.getZ())
+			bufferbuilder.vertex(matrix, segStart.getX() + biTangent.getX(), segStart.getY() + biTangent.getY(), segStart.getZ() + biTangent.getZ())
 					.color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
-			bufferbuilder.vertex(matrix, segEnd.getX() + normal.getX(), segEnd.getY(), segEnd.getZ() + normal.getZ())
+			bufferbuilder.vertex(matrix, segEnd.getX() + biTangent.getX(), segEnd.getY() + biTangent.getY(), segEnd.getZ() + biTangent.getZ())
 					.color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-			bufferbuilder.vertex(matrix, segEnd.getX() - normal.getX(), segEnd.getY(), segEnd.getZ() - normal.getZ())
+			bufferbuilder.vertex(matrix, segEnd.getX() - biTangent.getX(), segEnd.getY() - biTangent.getY(), segEnd.getZ() - biTangent.getZ())
 					.color(endColor.getRed(), endColor.getGreen(), endColor.getBlue(), endColor.getAlpha()).endVertex();
-			bufferbuilder.vertex(matrix, segStart.getX() - normal.getX(), segStart.getY(), segStart.getZ() - normal.getZ())
+			bufferbuilder.vertex(matrix, segStart.getX() - biTangent.getX(), segStart.getY() - biTangent.getY(), segStart.getZ() - biTangent.getZ())
 					.color(startColor.getRed(), startColor.getGreen(), startColor.getBlue(), startColor.getAlpha()).endVertex();
+
 		}
 		tessellator.end();
-	}
-
-	protected Vector3D findPointAlongBezierCurver(float alpha, Vector3D start, Vector3D end, Vector3D controlPoint) {
-		float x = (1 - alpha) * (1 - alpha) * start.getX() + 2 * (1 - alpha) * alpha * controlPoint.getX() + alpha * alpha * end.getX();
-		float y = (1 - alpha) * (1 - alpha) * start.getY() + 2 * (1 - alpha) * alpha * controlPoint.getY() + alpha * alpha * end.getY();
-		float z = (1 - alpha) * (1 - alpha) * start.getZ() + 2 * (1 - alpha) * alpha * controlPoint.getZ() + alpha * alpha * end.getZ();
-		return new Vector3D(x, y, z);
-
-	}
-
-	protected Vec3 getDerivativeAt(float alpha, Vector3D start, Vector3D controlPoint, Vector3D end) {
-		Vector3D d1 = new Vector3D(2 * (controlPoint.getX() - start.getX()), 2 * (controlPoint.getY() - start.getY()), 2 * (controlPoint.getZ() - start.getZ()));
-		Vector3D d2 = new Vector3D(2 * (end.getX() - controlPoint.getX()), 2 * (end.getY() - controlPoint.getY()), 2 * (controlPoint.getZ() - start.getZ()));
-
-		float x = (1 - alpha) * d1.getX() + alpha * d2.getX();
-		float y = (1 - alpha) * d1.getY() + alpha * d2.getY();
-		float z = (1 - alpha) * d1.getZ() + alpha * d2.getZ();
-
-		return new Vec3(x, y, z);
-	}
-
-	protected Vec3 getSecondDerivativeAt(float alpha, Vector3D start, Vector3D controlPoint, Vector3D end) {
-		float x = (-2 * (controlPoint.getX() - start.getX())) + (2 * (end.getX() - controlPoint.getX()));
-		float y = (-2 * (controlPoint.getY() - start.getY())) + (2 * (end.getY() - controlPoint.getY()));
-		float z = (-2 * (controlPoint.getZ() - start.getZ())) + (2 * (end.getZ() - controlPoint.getZ()));
-
-		return new Vec3(x, y, z);
-	}
-
-	protected Vector3D getNormalAt(float alpha, Vector3D start, Vector3D controlPoint, Vector3D end) {
-		Vec3 deriv = getDerivativeAt(alpha, start, controlPoint, end).normalize();
-		Vec3 secondDeriv = getSecondDerivativeAt(alpha, start, controlPoint, end);
-		Vec3 b = deriv.add(secondDeriv).normalize();
-		Vec3 r = b.cross(deriv).normalize();
-		Vec3 normal = r.cross(deriv).normalize();
-		return new Vector3D((float) normal.x, (float) normal.y, (float) normal.z);
 	}
 
 	protected int getLightLevelAtPosition(BlockPos position) {
@@ -283,33 +254,37 @@ public class WirePowerCableComponent extends PowerCableComponent {
 		return (int) Mth.clamp(light * 1.5f, 0, 15);
 	}
 
-	public List<WirePoint> generatePontsOnWire(Vector3D start, Vector3D controlPoint, Vector3D end) {
+	public List<WirePoint> generatePontsOnWire(int slicesPerBlock, Vec3 start, Vec3 controlPoint, Vec3 end) {
 		List<WirePoint> output = new ArrayList<WirePoint>();
 
-		int slicesPerBlock = 10;
-		float distance = start.copy().substract(end).getLength();
+		double distance = start.subtract(end).length();
 		int slices = (int) (Math.floor(distance) * slicesPerBlock);
 		float sliceSize = 1.0f / slices;
 
-		output.add(new WirePoint(start, findPointAlongBezierCurver(sliceSize, start, end, controlPoint), getNormalAt(0, start, controlPoint, end)));
+		Vec3 tangent = SDMath.getQuadrativeBezierDerivative(0, start, controlPoint, end);
+		Vec3 normal = SDMath.getQuadraticBezierNormal(0, start, controlPoint, end);
+		Vec3 biTangent = tangent.cross(normal);
+		output.add(new WirePoint(start, SDMath.getPointAlongQuadraticBezierCurve(sliceSize, start, controlPoint, end), tangent, normal, biTangent));
 
 		for (int i = 0; i < slices; i++) {
 			float t = (float) i / slices;
 			WirePoint previous = output.get(i);
 
-			Vector3D newNormal = getNormalAt(t, start, controlPoint, end);
+			Vec3 newTangent = SDMath.getQuadrativeBezierDerivative(0, start, controlPoint, end);
+			Vec3 newNormal = SDMath.getQuadraticBezierNormal(t, start, controlPoint, end);
 			if (newNormal.dot(previous.normal) < 0) {
-				newNormal.negate();
+				newNormal.multiply(-1, -1, -1);
 			}
+			Vec3 newBiTangent = tangent.cross(normal);
 
-			Vector3D pointStart = findPointAlongBezierCurver(t, start, end, controlPoint);
-			Vector3D pointEnd = findPointAlongBezierCurver(t + sliceSize, start, end, controlPoint);
-			output.add(new WirePoint(pointStart, pointEnd, newNormal));
+			Vec3 pointStart = SDMath.getPointAlongQuadraticBezierCurve(t, start, controlPoint, end);
+			Vec3 pointEnd = SDMath.getPointAlongQuadraticBezierCurve(t + sliceSize, start, controlPoint, end);
+			output.add(new WirePoint(pointStart, pointEnd, newTangent, newNormal, newBiTangent));
 		}
 
 		return output;
 	}
 
-	public record WirePoint(Vector3D start, Vector3D end, Vector3D normal) {
+	public record WirePoint(Vec3 start, Vec3 end, Vec3 tangent, Vec3 normal, Vec3 biTangent) {
 	}
 }
