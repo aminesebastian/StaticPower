@@ -10,7 +10,7 @@
 			"item": "staticpower:plate_lumum"
 		},
 		"w": {
-			"tag": "forge:wires/platinum"
+			"tag": "forge:nuggets/platinum"
 		},
 		"r": {
 			"item": "staticpower:crystal_lumum"

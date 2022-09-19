@@ -14,7 +14,7 @@
 		}
 	},
 	"result": {
-		"item": "staticpower:coil_copper",
+		"item": "staticpower:wire_coil_copper",
 		"count": 4
 	}
 }

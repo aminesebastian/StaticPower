@@ -56,8 +56,8 @@ import theking530.staticpower.blockentities.components.items.ItemStackHandlerFil
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
-import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderTreeFarmer;
+import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
@@ -174,10 +174,10 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			position.add(new Vector3f((offsetDirection.getX() * range) - range, 0.0f, (offsetDirection.getZ() * range) - range));
 			position.add(new Vector3f(offsetDirection.getX(), 0.0f, offsetDirection.getZ()));
 			// Add the entry.
-			CustomRenderer.addCubeRenderer(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
+			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
-			CustomRenderer.removeCubeRenderer(this, "range");
+			RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
 		}
 	}
 
@@ -313,7 +313,6 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 
 	protected boolean isFarmableBlock(BlockPos pos) {
 		// Get the block at the position.
-		Block block = getLevel().getBlockState(pos).getBlock();
 		BlockState state = getLevel().getBlockState(pos);
 
 		// Perform these sanity checks as a quick optimization (the ingredient test is

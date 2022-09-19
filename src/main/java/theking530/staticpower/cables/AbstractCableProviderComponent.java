@@ -305,6 +305,9 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return null;
 	}
 
+	protected void clientSparseLinkArrayChanged() {
+	}
+
 	protected void sparseConnectionsRemoved(List<SparseCableLink> links) {
 
 	}
@@ -454,10 +457,10 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	private ServerCable createCable() {
 		Set<CableDestination> types = new HashSet<CableDestination>();
 		getSupportedDestinationTypes(types);
-		return new ServerCable(getLevel(), getPos(), shouldCreateSparseCable(), getSupportedNetworkModuleTypes(), types);
+		return new ServerCable(getLevel(), getPos(), isSpraseCable(), getSupportedNetworkModuleTypes(), types);
 	}
 
-	protected boolean shouldCreateSparseCable() {
+	public boolean isSpraseCable() {
 		return false;
 	}
 
@@ -689,11 +692,27 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	}
 
 	public void syncCableStateFromServer(CompoundTag tag) {
+		// Capture the existing ids.
+		Set<Long> changeDetection = new HashSet<Long>();
+		changeDetection.addAll(clientSparseLinks.values().stream().map(x -> x.linkId()).toList());
+
+		// Clear out the sparse links and then accept the new data.
 		clientSparseLinks.clear();
 		ListTag sparseLinkTags = tag.getList("sparse_links", Tag.TAG_COMPOUND);
 		for (Tag sparseLinkTag : sparseLinkTags) {
 			SparseCableLink link = SparseCableLink.fromTag((CompoundTag) sparseLinkTag);
 			clientSparseLinks.put(link.linkId(), link);
+
+			if (changeDetection.contains(link.linkId())) {
+				changeDetection.remove(link.linkId());
+			} else {
+				changeDetection.add(link.linkId());
+			}
+		}
+
+		// Check to see if there was a change.
+		if (!changeDetection.isEmpty()) {
+			clientSparseLinkArrayChanged();
 		}
 
 		// Deserialize the sided data.
@@ -723,7 +742,6 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	@Override
 	public void deserializeUpdateNbt(CompoundTag nbt, boolean fromUpdate) {
 		super.deserializeUpdateNbt(nbt, fromUpdate);
-
 
 	}
 

@@ -1,22 +1,27 @@
 {
 	"itemGroup.StaticPower": "Static Power",
 	"item.staticpower.thermometer": "Thermometer",
+	
 	"item.staticpower.wrench": "Wrench",
 	"item.staticpower.wrench_static": "Static Wrench",
 	"item.staticpower.wrench_energized": "Energized Wrench",
 	"item.staticpower.wrench_lumum": "Lumum Wrench",
+	
 	"item.staticpower.magnet_weak": "Weak Magnet",
 	"item.staticpower.magnet_basic": "Magnet",
 	"item.staticpower.magnet_advanced": "Advanced Magnet",
 	"item.staticpower.magnet_static": "Static Magnet",
 	"item.staticpower.magnet_energized": "Energized Magnet",
 	"item.staticpower.magnet_lumum": "Lumum Magnet",
+	
 	"item.staticpower.tutorial_boock": "Static Text Book",
+	
 	"item.staticpower.wire_cutters_iron": "Iron Wire Cutters",
 	"item.staticpower.wire_cutters_zinc": "Zinc Wire Cutters",
 	"item.staticpower.wire_cutters_bronze": "Bronze Wire Cutters",
 	"item.staticpower.wire_cutters_tungsten": "Tungsten Wire Cutters",
 	"item.staticpower.wire_cutters_creative": "Creative Wire Cutters",
+	
 	"item.staticpower.hammer_iron": "Iron Hammer",
 	"item.staticpower.hammer_zinc": "Zinc Hammer",
 	"item.staticpower.hammer_copper": "Copper Hammer",
@@ -24,25 +29,44 @@
 	"item.staticpower.hammer_bronze": "Bronze Hammer",
 	"item.staticpower.hammer_tungsten": "Tungsten Hammer",
 	"item.staticpower.hammer_creative": "Creative Hammer",
+	
 	"item.staticpower.soldering_iron": "Soldering Iron",
 	"item.staticpower.soldering_iron_electric": "Electric Soldering Iron",
+	
 	"item.staticpower.saw_iron": "Iron Saw",
 	"item.staticpower.saw_tungsten": "Tungsten Saw",
 	"item.staticpower.saw_diamond": "Diamond Saw",
 	"item.staticpower.saw_ruby": "Ruby Saw",
 	"item.staticpower.saw_sapphire": "Sapphire Saw",
+	
 	"item.staticpower.wire_copper": "Copper Wire",
-	"item.staticpower.wire_tin": "Tin Wire",
-	"item.staticpower.wire_silver": "Silver Wire",
+	"item.staticpower.wire_brass": "Brass Wire",
 	"item.staticpower.wire_gold": "Gold Wire",
-	"item.staticpower.wire_platinum": "Platinum Wire",
 	"item.staticpower.wire_aluminum": "Aluminum Wire",
-	"item.staticpower.coil_copper": "Copper Wire Coil",
-	"item.staticpower.coil_silver": "Silver Wire Coil",
-	"item.staticpower.coil_gold": "Gold Wire Coil",
-	"item.staticpower.coil_aluminum": "Aluminum Wire Coil",
-	"item.staticpower.coil_platinum": "Platinum Wire Coil",
-	"item.staticpower.coil_tin": "Tin Wire Coil",
+	"item.staticpower.wire_static": "Static Wire",
+	"item.staticpower.wire_energized": "Energized Wire",
+	"item.staticpower.wire_lumum": "Lumum Wire",
+	
+	"item.staticpower.wire_insulated_copper": "Insulated Copper Wire",
+	"item.staticpower.wire_insulated_brass": "Insulated Brass Wire",
+	"item.staticpower.wire_insulated_static": "Insulated Static Wire",
+	"item.staticpower.wire_insulated_energized": "Insulated Energized Wire",
+	"item.staticpower.wire_insulated_lumum": "Insulated Lumum Wire",
+	
+	"item.staticpower.wire_coil_copper": "LV Wire Coil",
+	"item.staticpower.wire_coil_brass": "MV Wire Coil",
+	"item.staticpower.wire_coil_static": "HV Wire Coil",
+	"item.staticpower.wire_coil_energized": "EV Wire Coil",
+	"item.staticpower.wire_coil_lumum": "BV Wire Coil",
+	
+	"item.staticpower.wire_coil_insulated_copper": "Insulated LV Wire Coil",
+	"item.staticpower.wire_coil_insulated_brass": "Insulated MV Wire Coil",
+	"item.staticpower.wire_coil_insulated_static": "Insulated HV Wire Coil",
+	"item.staticpower.wire_coil_insulated_energized": "Insulated EV Wire Coil",
+	"item.staticpower.wire_coil_insulated_lumum": "Insulated BV Wire Coil",
+	
+	"item.staticpower.wire_coil_digistore": "Digistore Wire Coil",
+	
 	"item.staticpower.internal_clock": "Internal Clock",
 	"item.staticpower.inverted_logic_gate_power_sync": "Inverted Logic Gate Power Sync",
 	"item.staticpower.logic_gate_power_sync": "Logic Gate Power Sync",
@@ -61,6 +85,7 @@
 	"item.staticpower.io_port": "I/O Port",
 	"item.staticpower.transistor": "Transistor",
 	"item.staticpower.rusty_iron_scrap": "Rusty Iron Scrap",
+	
 	"item.staticpower.blade_iron": "Iron Blade",
 	"item.staticpower.blade_bronze": "Bronze Blade",
 	"item.staticpower.blade_advanced": "Advanced Blade",
@@ -69,6 +94,7 @@
 	"item.staticpower.blade_energized": "Energized Blade",
 	"item.staticpower.blade_lumum": "Lumum Blade",
 	"item.staticpower.blade_creative": "Creative Blade",
+	
 	"item.staticpower.drill_bit_iron": "Iron Drill Bit",
 	"item.staticpower.drill_bit_bronze": "Bronze Drill Bit",
 	"item.staticpower.drill_bit_advanced": "Advanced Drill Bit",
@@ -77,6 +103,7 @@
 	"item.staticpower.drill_bit_energized": "Energized Drill Bit",
 	"item.staticpower.drill_bit_lumum": "Lumum Drill Bit",
 	"item.staticpower.drill_bit_creative": "Creative Drill Bit",
+	
 	"item.staticpower.chainsaw_blade_iron": "Iron Chainsaw Blade",
 	"item.staticpower.chainsaw_blade_bronze": "Bronze Chainsaw Blade",
 	"item.staticpower.chainsaw_blade_advanced": "Advanced Chainsaw Blade",
@@ -85,22 +112,27 @@
 	"item.staticpower.chainsaw_blade_energized": "Energized Chainsaw Blade",
 	"item.staticpower.chainsaw_blade_lumum": "Lumum Chainsaw Blade",
 	"item.staticpower.chainsaw_blade_creative": "Creative Chainsaw Blade",
+	
 	"item.staticpower.mining_drill_basic": "Mining Drill",
 	"item.staticpower.mining_drill_advanced": "Advanced Mining Drill",
 	"item.staticpower.mining_drill_static": "Static Mining Drill",
 	"item.staticpower.mining_drill_energized": "Energized Mining Drill",
 	"item.staticpower.mining_drill_lumum": "Lumum Mining Drill",
+	
 	"item.staticpower.chainsaw_basic": "Chainsaw",
 	"item.staticpower.chainsaw_advanced": "Advanced Chainsaw",
 	"item.staticpower.chainsaw_static": "Static Chainsaw",
 	"item.staticpower.chainsaw_energized": "Energized Chainsaw",
 	"item.staticpower.chainsaw_lumum": "Lumum Chainsaw",
+	
 	"item.staticpower.processor_basic": "Basic Processor",
 	"item.staticpower.processor_advanced": "Advanced Processor",
 	"item.staticpower.processor_static": "Static Processor",
 	"item.staticpower.processor_energized": "Energized Processor",
 	"item.staticpower.processor_lumum": "Lumum Processor",
+	
 	"item.staticpower.card_basic": "Basic Card",
+	
 	"item.staticpower.turbine_blades_wood": "Wooden Turbine Blades",
 	"item.staticpower.turbine_blades_basic": "Basic Turbine Blades",
 	"item.staticpower.turbine_blades_advanced": "Advanced Turbine Blades",
@@ -108,35 +140,44 @@
 	"item.staticpower.turbine_blades_energized": "Energized Turbine Blades",
 	"item.staticpower.turbine_blades_lumum": "Lumum Turbine Blades",
 	"item.staticpower.turbine_blades_creative": "Creative Turbine Blades",
+	
 	"item.staticpower.card_advanced": "Advanced Card",
 	"item.staticpower.card_static": "Static Card",
 	"item.staticpower.card_energized": "Energized Card",
 	"item.staticpower.card_lumum": "Lumum Card",
 	"item.staticpower.digistore_core": "Digistore Core",
+	
 	"item.staticpower.distillery_grain": "Distillery Grain",
 	"item.staticpower.bread_potato": "Potato Bread",
 	"item.staticpower.flour_potato": "Potato Flour",
 	"item.staticpower.flour_wheat": "Wheat Flour",
+	
 	"item.staticpower.pie_apple": "Apple Pie",
 	"item.staticpower.pie_static": "Static Pie",
 	"item.staticpower.pie_energized": "Energized Pie",
 	"item.staticpower.pie_lumum": "Lumum Pie",
+	
 	"item.staticpower.smutton_raw": "Raw S'Mutton",
 	"item.staticpower.smutton_cooked": "Cooked S'Mutton",
 	"item.staticpower.eeef_raw": "Raw Eeef",
 	"item.staticpower.eeef_cooked": "Cooked Eeef",
 	"item.staticpower.eather": "Eather",
+	
 	"item.staticpower.crop_static": "Static Crop",
 	"item.staticpower.crop_energized": "Energized Crop",
 	"item.staticpower.crop_lumum": "Lumum Crop",
+	"item.staticpower.crop_depleted": "Depleted Crop",
+	
 	"item.staticpower.seed_static": "Static Seed",
 	"item.staticpower.seed_energized": "Energized Seed",
 	"item.staticpower.seed_lumum": "Lumum Seed",
-	"item.staticpower.crop_depleted": "Depleted Crop",
+	
 	"item.staticpower.slag": "Slag",
+	
 	"item.staticpower.crystal_static": "Static Crystal",
 	"item.staticpower.crystal_energized": "Energized Crystal",
 	"item.staticpower.crystal_lumum": "Lumum Crystal",
+	
 	"item.staticpower.raw_rusty_iron": "Raw Rusty Iron",
 	"item.staticpower.raw_tin": "Raw Tin",
 	"item.staticpower.raw_silver": "Raw Silver",
@@ -150,6 +191,7 @@
 	"item.staticpower.raw_energized": "Raw Energized Metal",
 	"item.staticpower.raw_lumum": "Raw Lumum Metal",
 	"item.staticpower.raw_uranium": "Raw Uranium",
+	
 	"item.staticpower.ingot_tin": "Tin Ingot",
 	"item.staticpower.ingot_silver": "Silver Ingot",
 	"item.staticpower.ingot_lead": "Lead Ingot",
@@ -184,6 +226,7 @@
 	"item.staticpower.ingot_iron_heated": "Heated Iron Ingot",
 	"item.staticpower.ingot_copper_heated": "Heated Copper Ingot",
 	"item.staticpower.ingot_gold_heated": "Heated Gold Ingot",
+	
 	"item.staticpower.nugget_copper": "Copper Nugget",
 	"item.staticpower.nugget_tin": "Tin Nugget",
 	"item.staticpower.nugget_silver": "Silver Nugget",
@@ -200,10 +243,13 @@
 	"item.staticpower.nugget_redstone_alloy": "Redstone Alloy Nugget",
 	"item.staticpower.nugget_brass": "Brass Nugget",
 	"item.staticpower.nugget_bronze": "Bronze Nugget",
+	
 	"item.staticpower.gem_sapphire": "Sapphire",
 	"item.staticpower.gem_ruby": "Ruby",
+	
 	"item.staticpower.latex_chunk": "Latex Chunk",
 	"item.staticpower.rubber_wood_bark": "Rubber Wood Bark",
+	
 	"item.staticpower.dust_copper": "Copper Dust",
 	"item.staticpower.dust_gold": "Gold Dust",
 	"item.staticpower.dust_iron": "Iron Dust",
@@ -235,6 +281,7 @@
 	"item.staticpower.dust_wood": "Saw Dust",
 	"item.staticpower.dust_saltpeter": "Saltpeter",
 	"item.staticpower.dust_sulfur": "Sulfur",
+	
 	"item.staticpower.rod_copper": "Copper Rod",
 	"item.staticpower.rod_gold": "Gold Rod",
 	"item.staticpower.rod_iron": "Iron Rod",
@@ -261,6 +308,7 @@
 	"item.staticpower.rod_quartz": "Quartz Rod",
 	"item.staticpower.rod_lapis": "Lapis Rod",
 	"item.staticpower.rod_latex": "Latex Rod",
+	
 	"item.staticpower.chunks_copper": "Copper Ore Chunks",
 	"item.staticpower.chunks_gold": "Gold Ore Chunks",
 	"item.staticpower.chunks_iron": "Iron Ore Chunks",
@@ -280,6 +328,7 @@
 	"item.staticpower.chunks_redstone": "Redstone Ore Chunks",
 	"item.staticpower.chunks_lapis": "Lapis Ore Chunks",
 	"item.staticpower.chunks_quartz": "Quartz Chunks",
+	
 	"item.staticpower.gear_gold": "Gold Gear",
 	"item.staticpower.gear_iron": "Iron Gear",
 	"item.staticpower.gear_copper": "Copper Gear",
@@ -298,6 +347,7 @@
 	"item.staticpower.gear_redstone_alloy": "Redstone Alloy Gear",
 	"item.staticpower.gear_brass": "Brass Gear",
 	"item.staticpower.gear_bronze": "Bronze Gear",
+	
 	"item.staticpower.gear_box_gold": "Gold Gear Box",
 	"item.staticpower.gear_box_iron": "Iron Gear Box",
 	"item.staticpower.gear_box_copper": "Copper Gear Box",
@@ -316,6 +366,7 @@
 	"item.staticpower.gear_box_redstone_alloy": "Redstone Alloy Gear Box",
 	"item.staticpower.gear_box_brass": "Brass Gear Box",
 	"item.staticpower.gear_box_bronze": "Bronze Gear Box",
+	
 	"item.staticpower.plate_gold": "Gold Plate",
 	"item.staticpower.plate_iron": "Iron Plate",
 	"item.staticpower.plate_copper": "Copper Plate",
@@ -334,6 +385,7 @@
 	"item.staticpower.plate_redstone_alloy": "Redstone Alloy Plate",
 	"item.staticpower.plate_brass": "Brass Plate",
 	"item.staticpower.plate_bronze": "Bronze Plate",
+	
 	"item.staticpower.mold_blank": "Blank Mold",
 	"item.staticpower.mold_gear": "Gear Mold",
 	"item.staticpower.mold_plate": "Plate Mold",
@@ -344,20 +396,24 @@
 	"item.staticpower.mold_block": "Block Mold",
 	"item.staticpower.mold_drill_bit": "Drill Bit Mold",
 	"item.staticpower.mold_rod": "Rod Mold",
+	
 	"item.staticpower.cable_network_analyzer": "Cable Network Analyzer",
 	"item.staticpower.multimeter": "Multimeter",
+	
 	"item.staticpower.portable_battery_basic": "Basic Portable Battery",
 	"item.staticpower.portable_battery_advanced": "Advanced Portable Battery",
 	"item.staticpower.portable_battery_static": "Static Portable Battery",
 	"item.staticpower.portable_battery_energized": "Energized Portable Battery",
 	"item.staticpower.portable_battery_lumum": "Lumum Portable Battery",
 	"item.staticpower.portable_battery_creative": "Creative Portable Battery",
+	
 	"item.staticpower.battery_pack_basic": "Basic Battery Pack",
 	"item.staticpower.battery_pack_advanced": "Advanced Battery Pack",
 	"item.staticpower.battery_pack_static": "Static Battery Pack",
 	"item.staticpower.battery_pack_energized": "Energized Battery Pack",
 	"item.staticpower.battery_pack_lumum": "Lumum Battery Pack",
 	"item.staticpower.battery_pack_creative": "Creative Battery Pack",
+	
 	"item.staticpower.fluid_capsule_iron": "Iron Capsule",
 	"item.staticpower.fluid_capsule_basic": "Basic Capsule",
 	"item.staticpower.fluid_capsule_advanced": "Advanced Capsule",
@@ -365,11 +421,15 @@
 	"item.staticpower.fluid_capsule_energized": "Energized Capsule",
 	"item.staticpower.fluid_capsule_lumum": "Lumum Capsule",
 	"item.staticpower.fluid_capsule_creative": "Creative Capsule",
+	
+	"item.staticpower.backpack_diggers": "Digger's Backpack",
+	
 	"item.staticpower.filter_item_basic": "Basic Item Filter",
 	"item.staticpower.filter_item_advanced": "Advanced Item Filter",
 	"item.staticpower.filter_item_static": "Static Item Filter",
 	"item.staticpower.filter_item_energized": "Energized Item Filter",
 	"item.staticpower.filter_item_lumum": "Lumum Item Filter",
+	
 	"item.staticpower.bucket_tree_sap": "Tree Sap Bucket",
 	"item.staticpower.bucket_infernal_tree_sap": "Infernal Tree Sap Bucket",
 	"item.staticpower.bucket_ethanol": "Ethanol Bucket",
@@ -448,6 +508,7 @@
 	"item.staticpower.bottle_juice_carrot": "Carrot Juice Bottle",
 	"item.staticpower.bottle_juice_berry": "Berry Juice Bottle",
 	"item.staticpower.bottle_juice_melon": "Melon Juice Bottle",
+	
 	"item.staticpower.cable_attachment_basic_extractor": "Basic Extractor",
 	"item.staticpower.cable_attachment_advanced_extractor": "Advanced Extractor",
 	"item.staticpower.cable_attachment_static_extractor": "Static Extractor",
@@ -475,6 +536,7 @@
 	"item.staticpower.cable_attachment_digistore_screen": "Screen",
 	"item.staticpower.cable_attachment_sprinkler": "Sprinkler",
 	"item.staticpower.cable_attachment_drain": "Drain",
+	
 	"item.staticpower.digistore_card_basic": "Basic Digistore Card",
 	"item.staticpower.digistore_card_advanced": "Advanced Digistore Card",
 	"item.staticpower.digistore_card_static": "Static Digistore Card",
@@ -494,8 +556,11 @@
 	"item.staticpower.digistore_card_stacked_lumum": "Lumum Digistore Stacked Card",
 	"item.staticpower.digistore_card_stacked_creative": "Creative Digistore Stacked Card",
 	"item.staticpower.digistore_pattern_card": "Pattern Card",
+	
 	"item.staticpower.digistore_wireless_terminal": "Wireless Terminal",
+	
 	"item.staticpower.cover": "Cover",
+	
 	"item.staticpower.upgrade_plate_basic": "Basic Upgrade Plate",
 	"item.staticpower.upgrade_plate_advanced": "Advanced Upgrade Plate",
 	"item.staticpower.upgrade_plate_static": "Static Upgrade Plate",
@@ -646,6 +711,7 @@
 	"block.staticpower.wire_terminal_hv": "HV Wire Terminal",
 	"block.staticpower.wire_terminal_ev": "EV Wire Terminal",
 	"block.staticpower.wire_terminal_bv": "BV Wire Terminal",
+	"block.staticpower.wire_terminal_digistore": "Digistore Wire Terminal",
 	
 	"block.staticpower.cable_power_basic": "Power Cable",
 	"block.staticpower.cable_power_advanced": "Advanced Power Cable",
@@ -696,11 +762,9 @@
 	"block.staticpower.cable_item_lumum": "Lumum Item Tube",
 	"block.staticpower.cable_item_creative": "Creative Item Tube",
 	"block.staticpower.cable_digistore": "Digistore Cable",
-	"block.staticpower.cable_heat_copper": "Copper Heat Pipe",
-	"block.staticpower.cable_heat_tin": "Tin Heat Pipe",
-	"block.staticpower.cable_heat_silver": "Silver Heat Pipe",
-	"block.staticpower.cable_heat_gold": "Gold Heat Pipe",
 	"block.staticpower.cable_heat_aluminum": "Aluminum Heat Pipe",
+	"block.staticpower.cable_heat_copper": "Copper Heat Pipe",
+	"block.staticpower.cable_heat_gold": "Gold Heat Pipe",
 	"block.staticpower.cable_scaffold": "Scaffold",
 	"block.staticpower.tank_iron": "Iron Tank",
 	"block.staticpower.tank_basic": "Tank",
@@ -814,8 +878,6 @@
 	"block.staticpower.machine_block_lumum": "Lumum Machine Block",
 	"block.staticpower.heat_sink_aluminum": "Aluminum Heat Sink",
 	"block.staticpower.heat_sink_copper": "Copper Heat Sink",
-	"block.staticpower.heat_sink_tin": "Tin Heat Sink",
-	"block.staticpower.heat_sink_silver": "Silver Heat Sink",
 	"block.staticpower.heat_sink_gold": "Gold Heat Sink",
 	"block.staticpower.smeep_wool": "S'Meep Wool",
 	"block.staticpower.conveyor_straight_basic": "Conveyor",

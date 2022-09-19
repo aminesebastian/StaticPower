@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -14,11 +15,34 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.blockentities.power.wireconnector.BlockEntityWireConnector;
+import theking530.staticcore.utilities.Color;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
+import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.cables.CableUtilities;
 
 public class WireCoil extends StaticPowerItem {
 	private static final String INITIAL_LOCATOIN_TAG_NAME = "initial_connecting_point";
+	private final Color wireColor;
+	private final float wireThickness;
+	private final ResourceLocation cableModuleType;
+
+	public WireCoil(Color wireColor, float wireThickness, ResourceLocation cableModuleType) {
+		this.wireColor = wireColor;
+		this.wireThickness = wireThickness;
+		this.cableModuleType = cableModuleType;
+	}
+
+	public Color getColor() {
+		return wireColor;
+	}
+
+	public float getWireThickness() {
+		return wireThickness;
+	}
+
+	public boolean canApplyToTerminal(ItemStack coil, AbstractCableProviderComponent component) {
+		return component.getSupportedNetworkModuleTypes().contains(cableModuleType);
+	}
 
 	@Override
 	public Component getName(ItemStack item) {
@@ -36,40 +60,14 @@ public class WireCoil extends StaticPowerItem {
 	protected InteractionResult onPreStaticPowerItemUsedOnBlock(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
 		if (!world.isClientSide()) {
 			if (player.isCrouching()) {
-				item.removeTagKey(INITIAL_LOCATOIN_TAG_NAME);
+				clearPendingLocation(item);
 				return InteractionResult.SUCCESS;
 			} else {
 				if (isPendingSecondLocation(item)) {
-					if (world.getBlockState(pos).getBlock() instanceof BlockWireConnector) {
-						BlockPos initialLocation = getFirstLocation(item);
-						if (!(world.getBlockState(initialLocation).getBlock() instanceof BlockWireConnector)) {
-							clearPendingLocation(item);
-							MutableComponent message = new TextComponent(
-									String.format("Wire connector no longer exists at initial position %1$s .", initialLocation.toShortString()));
-							player.sendMessage(message, player.getUUID());
-							return InteractionResult.FAIL;
-						}
-
-						BlockEntityWireConnector connector = (BlockEntityWireConnector) world.getBlockEntity(pos);
-						if (connector.addConnectedConnector(initialLocation, getLinkDataTag(context, world, pos, face, player, item)) != null) {
-							if (!player.isCreative()) {
-								item.shrink(1);
-							}
-
-							MutableComponent message = new TextComponent(
-									String.format("Linked wire connector at location %1$s to position %2$s.", pos.toShortString(), initialLocation.toShortString()));
-							player.sendMessage(message, player.getUUID());
-							clearPendingLocation(item);
-							world.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.75f, 1.0f);
-							return InteractionResult.SUCCESS;
-						}
-					}
+					tryCompleteConnection(world, player, item, pos);
+					return InteractionResult.SUCCESS;
 				} else {
-					if (world.getBlockState(pos).getBlock() instanceof BlockWireConnector) {
-						setFirstSampleLocation(item, pos);
-						MutableComponent message = new TextComponent(String.format("First connection position set to %1$s .", pos.toShortString()));
-						player.sendMessage(message, player.getUUID());
-						world.playSound(null, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.PLAYERS, 0.75f, 1.0f);
+					if (trySetFirstSampleLocation(world, player, item, pos)) {
 						return InteractionResult.SUCCESS;
 					}
 				}
@@ -79,7 +77,7 @@ public class WireCoil extends StaticPowerItem {
 		return InteractionResult.PASS;
 	}
 
-	protected CompoundTag getLinkDataTag(UseOnContext context, Level world, BlockPos pos, Direction face, Player player, ItemStack item) {
+	protected CompoundTag getLinkDataTag(Level world, BlockPos pos, Player player, ItemStack item) {
 		CompoundTag output = new CompoundTag();
 
 		ItemStack wire = item.copy();
@@ -87,14 +85,60 @@ public class WireCoil extends StaticPowerItem {
 
 		// Make sure we clear this first before we upload the item to connector data
 		// tag.
-		wire.removeTagKey(INITIAL_LOCATOIN_TAG_NAME);
+		clearPendingLocation(wire);
 
 		output.put("wire", wire.serializeNBT());
 		return output;
 	}
 
-	public void setFirstSampleLocation(ItemStack stack, BlockPos pos) {
+	public boolean trySetFirstSampleLocation(Level world, Player player, ItemStack stack, BlockPos pos) {
+		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
+		if (component == null || !component.isSpraseCable()) {
+			return false;
+		}
+
 		stack.getOrCreateTag().putLong(INITIAL_LOCATOIN_TAG_NAME, pos.asLong());
+		MutableComponent message = new TextComponent(String.format("First connection position set to %1$s .", pos.toShortString()));
+		player.sendMessage(message, player.getUUID());
+		world.playSound(null, pos, SoundEvents.LEASH_KNOT_PLACE, SoundSource.PLAYERS, 0.75f, 1.0f);
+		return true;
+	}
+
+	public boolean tryCompleteConnection(Level world, Player player, ItemStack item, BlockPos pos) {
+		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
+		if (component == null || !component.isSpraseCable()) {
+			return false;
+		}
+
+		BlockPos initialLocation = getFirstLocation(item);
+		if (!(world.getBlockState(initialLocation).getBlock() instanceof BlockWireConnector)) {
+			clearPendingLocation(item);
+			MutableComponent message = new TextComponent(String.format("Wire connector no longer exists at initial position %1$s .", initialLocation.toShortString()));
+			player.sendMessage(message, player.getUUID());
+			return false;
+		}
+
+		// Check to make sure this wire coil will work on this component type.
+		if (!canApplyToTerminal(item, component)) {
+			MutableComponent message = new TextComponent(String.format("This wire is not useable on a terminal of this type!", initialLocation.toShortString()));
+			player.sendMessage(message, player.getUUID());
+			return false;
+		}
+
+		if (component.addSparseConnection(initialLocation, getLinkDataTag(world, pos, player, item)) != null) {
+			if (!player.isCreative()) {
+				item.shrink(1);
+			}
+
+			MutableComponent message = new TextComponent(
+					String.format("Linked wire connector at location %1$s to position %2$s.", pos.toShortString(), initialLocation.toShortString()));
+			player.sendMessage(message, player.getUUID());
+			clearPendingLocation(item);
+			world.playSound(null, pos, SoundEvents.LEASH_KNOT_BREAK, SoundSource.PLAYERS, 0.75f, 1.0f);
+			return true;
+		}
+
+		return false;
 	}
 
 	public BlockPos getFirstLocation(ItemStack stack) {

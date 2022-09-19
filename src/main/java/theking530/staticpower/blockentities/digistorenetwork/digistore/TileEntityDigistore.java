@@ -61,7 +61,7 @@ public class TileEntityDigistore extends BaseDigistoreTileEntity implements IIte
 	private boolean locked;
 
 	public TileEntityDigistore(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, 1000);
+		super(TYPE, pos, state, 1);
 		registerComponent(inventory = (DigistoreInventoryComponent) new DigistoreInventoryComponent("Inventory", 1).setShiftClickEnabled(true));
 		inventory.setFilter(new ItemStackHandlerFilter() {
 			@Override

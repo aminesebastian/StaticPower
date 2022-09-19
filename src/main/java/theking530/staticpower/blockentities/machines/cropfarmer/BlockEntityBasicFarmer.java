@@ -33,22 +33,22 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blockentities.machines.cropfarmer.IFarmerHarvester.HarvestResult;
-import theking530.staticpower.client.rendering.CustomRenderer;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderFarmer;
+import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
@@ -162,7 +162,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 		if (shouldDraw) {
 			// If we were already drawing, remove and re-do it.
 			if (shouldDrawRadiusPreview) {
-				CustomRenderer.removeCubeRenderer(this, "range");
+				RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
 			}
 			// Set the scale equal to the range * 2 plus 1.
 			Vector3f scale = new Vector3f((range * 2) + 1, 1.0f, (range * 2) + 1);
@@ -171,10 +171,10 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 			position.add(new Vector3f(-range, 0.0f, -range));
 
 			// Add the entry.
-			CustomRenderer.addCubeRenderer(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
+			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
-			CustomRenderer.removeCubeRenderer(this, "range");
+			RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
 		}
 
 		// Update the drawing value.

@@ -27,6 +27,8 @@ import theking530.staticcore.item.ICustomModelSupplier;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
+import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
+import theking530.staticpower.client.rendering.renderers.WireRenderer;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModKeyBindings;
 import theking530.staticpower.teams.research.ActiveResearchHUD;
@@ -91,6 +93,10 @@ public class StaticPowerForgeEventsProxy {
 			}
 		});
 		StaticPowerForgeBusClient.addHUDElement(new ActiveResearchHUD());
+		
+		// Register the custom renderers.
+		StaticPowerForgeBusClient.addCustomRenderer(new WireRenderer());
+		StaticPowerForgeBusClient.addCustomRenderer(new RadiusPreviewRenderer());
 
 		// Log the completion.
 		LOGGER.info("Static Power Client Setup Completed!");

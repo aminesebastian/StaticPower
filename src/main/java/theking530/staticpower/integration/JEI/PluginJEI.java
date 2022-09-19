@@ -412,10 +412,6 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.CopperHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.GoldHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SilverHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.TinHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
 
 		registration.addRecipeCatalyst(new ItemStack(ModItems.BronzeMetalHammer.get()), HammerRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.CreativeMetalHammer.get()), HammerRecipeCategory.TYPE);

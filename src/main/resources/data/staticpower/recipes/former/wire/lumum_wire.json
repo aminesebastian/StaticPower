@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:former_recipe",
+	"input": {
+		"item": "staticpower:ingot_lumum"
+	},
+	"mold": {
+		"item": "staticpower:mold_wire"
+	},
+	"output": {
+		"item": "staticpower:wire_lumum",
+		"count": 9
+	}
+}

@@ -22,7 +22,7 @@ public class TileEntityPatternStorage extends BaseDigistoreTileEntity {
 	public final InventoryComponent patternInventory;
 
 	public TileEntityPatternStorage(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, 10000);
+		super(TYPE, pos, state, 10);
 
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 18).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
 			@Override

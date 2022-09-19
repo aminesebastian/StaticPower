@@ -22,7 +22,7 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 			ModBlocks.DigistoreIOPort);
 
 	public TileEntityDigistoreIOPort(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, 5000);
+		super(TYPE, pos, state, 5);
 		registerComponent(new DigitstoreIOPortInventoryComponent("IONetwork"));
 	}
 

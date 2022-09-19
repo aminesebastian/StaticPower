@@ -23,18 +23,18 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
-import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent.HeatManipulationAction;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.blockentities.components.items.InventoryComponent.InventoryChangeType;
 import theking530.staticpower.blockentities.components.loopingsound.LoopingSoundComponent;
-import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
@@ -280,7 +280,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 		if (shouldDraw) {
 			// If we were already drawing, remove and re-do it.
 			if (shouldDrawRadiusPreview) {
-				CustomRenderer.removeCubeRenderer(this, "range");
+				RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
 			}
 
 			// Get the radius.
@@ -293,10 +293,10 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 			position.add(new Vector3f(-radius, 0.0f, -radius));
 
 			// Add the entry.
-			CustomRenderer.addCubeRenderer(this, "range", position, scale, new Color(1.0f, 0.1f, 0.2f, 0.25f));
+			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new Color(1.0f, 0.1f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
-			CustomRenderer.removeCubeRenderer(this, "range");
+			RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
 		}
 
 		// Update the drawing value.

@@ -36,12 +36,6 @@ public class BlockEntityHeatSink extends BlockEntityMachine implements MenuProvi
 	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_COPPER = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
 			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.COPPER), ModBlocks.CopperHeatSink);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_TIN = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
-			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.TIN), ModBlocks.TinHeatSink);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_SILVER = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
-			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.SILVER), ModBlocks.SilverHeatSink);
-	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityHeatSink> TYPE_GOLD = new BlockEntityTypeAllocator<BlockEntityHeatSink>(
 			(allocator, pos, state) -> new BlockEntityHeatSink(allocator, pos, state, StaticPowerTiers.GOLD), ModBlocks.GoldHeatSink);
 

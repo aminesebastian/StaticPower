@@ -548,11 +548,6 @@ public class GuiDrawUtilities {
 		GuiDrawUtilities.drawRectangle(pose, width, height, x, y, 0,
 				new Color(DEFAULT_SLOT_CORNER_COLOR.getRed(), DEFAULT_SLOT_CORNER_COLOR.getGreen(), DEFAULT_SLOT_CORNER_COLOR.getBlue(), 1.0f - alpha));
 		RenderSystem.disableBlend();
-
-		if (item.getCount() > 1) {
-			GuiDrawUtilities.drawString(pose, String.valueOf(item.getCount()), x + 17, y + 16, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
-		}
-
 		RenderSystem.enableDepthTest();
 	}
 

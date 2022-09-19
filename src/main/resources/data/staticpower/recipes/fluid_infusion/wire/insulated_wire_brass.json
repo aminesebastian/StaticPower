@@ -1,0 +1,13 @@
+{
+	"type": "staticpower:fluid_infusion_recipe",
+	"input": {
+		"tag": "forge:wires/brass"
+	},
+	"fluid": {
+		"fluid": "staticpower:latex",
+		"volume": 100
+	},
+	"result": {
+		"item": "staticpower:wire_insulated_brass"
+	}
+}

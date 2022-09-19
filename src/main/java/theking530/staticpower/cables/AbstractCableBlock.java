@@ -89,10 +89,6 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 
 	@Override
 	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-		if (world.isClientSide()) {
-			return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
-		}
-
 		// Get the component at the location.
 		AbstractCableProviderComponent component = CableUtilities.getCableWrapperComponent(world, pos);
 		if (component == null) {
@@ -114,7 +110,7 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 
 				// If the item requests a GUI, open it.
 				if (attachmentItem.hasGui(attachment)) {
-					if (!world.isClientSide) {
+					if (!world.isClientSide()) {
 						NetworkGUI.openGui((ServerPlayer) player, attachmentItem.getUIContainerProvider(attachment, component, hoveredDirection), buff -> {
 							buff.writeInt(hoveredDirection.ordinal());
 							buff.writeBlockPos(pos);
@@ -126,7 +122,6 @@ public abstract class AbstractCableBlock extends StaticPowerBlockEntityBlock imp
 		}
 
 		// IF we didn't return earlier, go to the super call.
-		// hit.hitInfo = hoverResult;
 		return super.onStaticPowerBlockActivated(state, world, pos, player, hand, hit);
 	}
 

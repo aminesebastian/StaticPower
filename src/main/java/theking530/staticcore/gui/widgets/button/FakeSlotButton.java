@@ -55,7 +55,10 @@ public class FakeSlotButton extends StandardButton {
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		if (!itemIcon.isEmpty()) {
-			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, showAdvanced ? Default.ADVANCED : Default.NORMAL));
+			// Do not ever show advanced tooltips here as those contain the registry name
+			// and NBT tag count.
+			// Not the same as StaticPower Advanced tooltips.
+			tooltips.addAll(itemIcon.getTooltipLines(Minecraft.getInstance().player, Default.NORMAL));
 		}
 	}
 

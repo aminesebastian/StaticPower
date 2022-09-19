@@ -24,7 +24,7 @@ public class TileEntityDigistoreManager extends BaseDigistoreTileEntity {
 	public final BatteryInventoryComponent batteryInventory;
 
 	public TileEntityDigistoreManager(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state, 10000);
+		super(TYPE, pos, state, 10);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(energyStorage = new PowerStorageComponent("MainEnergyStorage", StaticPowerTiers.ENERGIZED).setUpgradeInventory(upgradesInventory));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", energyStorage));

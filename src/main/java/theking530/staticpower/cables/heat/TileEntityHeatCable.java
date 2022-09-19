@@ -20,12 +20,6 @@ public class TileEntityHeatCable extends BlockEntityBase {
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_COPPER = new BlockEntityTypeAllocator<TileEntityHeatCable>(
 			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.CopperHeatCable);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_TIN = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.TinHeatCable);
-	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_SILVER = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.SilverHeatCable);
-	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_GOLD = new BlockEntityTypeAllocator<TileEntityHeatCable>(
 			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.GoldHeatCable);
 

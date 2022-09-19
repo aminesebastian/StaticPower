@@ -44,6 +44,12 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 				GuiDrawUtilities.drawString(matrixStack, "*", xPosition + 3, yPosition + 6, 0.0f, 1.0f, Color.EIGHT_BIT_YELLOW, true);
 			}
 
+			if (ingredient.getItem().getCount() > 1) {
+				GuiDrawUtilities.drawString(matrixStack,
+						String.valueOf(ingredient.getItem().getCount()), xPosition + 17, yPosition + 16, 100.0f, 1.0f, Color.EIGHT_BIT_WHITE,
+						true);
+			}
+
 			RenderSystem.disableBlend();
 		}
 	}

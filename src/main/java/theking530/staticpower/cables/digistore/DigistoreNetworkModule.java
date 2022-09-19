@@ -122,9 +122,6 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	}
 
 	public boolean isManagerPresent() {
-		if (manager == null) {
-			Network.updateGraph(Network.getWorld(), Network.getOrigin(), true);
-		}
 		return manager != null && manager.energyStorage.getStoredPower() >= getPowerUsage();
 	}
 

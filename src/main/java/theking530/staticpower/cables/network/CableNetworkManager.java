@@ -106,15 +106,6 @@ public class CableNetworkManager extends SavedData {
 
 		setDirty();
 
-		// If sparse, just create the network. Adding a sparse cable is automatically a
-		// new network always.
-		// TODO: IS this still the case with the new support for sparse and non sparse
-		// in the same network?
-		if (cable.isSparse()) {
-			formNetworkAt(cable.getWorld(), cable.getPos());
-			return;
-		}
-
 		// If we have a non sparse cable, see if it can join an adjacent network.
 		List<ServerCable> adjacents = cable.getAdjacents();
 		if (adjacents.isEmpty()) {

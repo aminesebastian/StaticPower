@@ -72,10 +72,6 @@ public class BlockHeatCable extends AbstractCableBlock {
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.COPPER) {
 			return TileEntityHeatCable.TYPE_COPPER.create(pos, state);
-		} else if (tier == StaticPowerTiers.TIN) {
-			return TileEntityHeatCable.TYPE_TIN.create(pos, state);
-		} else if (tier == StaticPowerTiers.SILVER) {
-			return TileEntityHeatCable.TYPE_SILVER.create(pos, state);
 		} else if (tier == StaticPowerTiers.GOLD) {
 			return TileEntityHeatCable.TYPE_GOLD.create(pos, state);
 		} else if (tier == StaticPowerTiers.ALUMINUM) {

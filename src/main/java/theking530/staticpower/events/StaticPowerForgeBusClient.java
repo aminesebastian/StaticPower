@@ -1,8 +1,9 @@
 package theking530.staticpower.events;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +34,6 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.DrawSelectionEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.client.event.EntityViewRenderEvent.FogColors;
-import net.minecraftforge.client.event.EntityViewRenderEvent.FogDensity;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
@@ -51,7 +51,7 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.StaticPowerExtensionGui;
 import theking530.staticpower.client.gui.StaticPowerHUDElement;
-import theking530.staticpower.client.rendering.CustomRenderer;
+import theking530.staticpower.client.rendering.renderers.ICustomRenderer;
 import theking530.staticpower.fluid.AbstractStaticPowerFluid;
 import theking530.staticpower.items.tools.AbstractMultiHarvestTool;
 import theking530.staticpower.utilities.PlayerUtilities;
@@ -68,18 +68,33 @@ import theking530.staticpower.utilities.RaytracingUtilities;
 public class StaticPowerForgeBusClient {
 	protected static Field currentBlockDamageMP;
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerForgeBusClient.class);
-	private static final CustomRenderer CUSTOM_RENDERER = new CustomRenderer();
-	private static final List<StaticPowerExtensionGui> UI_EXTENSIONS = new ArrayList<>();
-	private static final List<StaticPowerExtensionGui> BOUND_UI_EXTENSIONS = new ArrayList<>();
-	private static final List<StaticPowerHUDElement> HUD_ELEMENTS = new ArrayList<>();
+	private static final Set<StaticPowerExtensionGui> UI_EXTENSIONS = new HashSet<>();
+	private static final Set<StaticPowerExtensionGui> BOUND_UI_EXTENSIONS = new HashSet<>();
+	private static final Set<StaticPowerHUDElement> HUD_ELEMENTS = new HashSet<>();
+	private static final Set<ICustomRenderer> CUSTOM_RENDERERS = new HashSet<>();
 
 	public static void addHUDElement(StaticPowerHUDElement element) {
 		HUD_ELEMENTS.add(element);
 	}
 
+	public static void addCustomRenderer(ICustomRenderer renderer) {
+		CUSTOM_RENDERERS.add(renderer);
+	}
+
 	@SubscribeEvent
 	public static void render(RenderLevelStageEvent event) {
-		CUSTOM_RENDERER.render(event);
+		// Start our own stack entry and project us into world space.
+		event.getPoseStack().pushPose();
+		Vec3 projectedView = Minecraft.getInstance().gameRenderer.getMainCamera().getPosition();
+		event.getPoseStack().translate(-projectedView.x, -projectedView.y, -projectedView.z);
+
+		// Renderer all the renderers.
+		for (ICustomRenderer renderer : CUSTOM_RENDERERS) {
+			renderer.render(Minecraft.getInstance().level, event);
+		}
+
+		// Pop our stack entry.
+		event.getPoseStack().popPose();
 		renderMultiHarvesteBlockBreakEffect(event);
 	}
 
@@ -127,11 +142,6 @@ public class StaticPowerForgeBusClient {
 				GuiDrawUtilities.drawScreenOverlay(fluid.getAttributes().getOverlayTexture(), abstractFluid.getOverlayColor(), 0.75f, 512, 512);
 			}
 		}
-	}
-
-	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
-	public static void onEvent(FogDensity event) {
-
 	}
 
 	@SubscribeEvent

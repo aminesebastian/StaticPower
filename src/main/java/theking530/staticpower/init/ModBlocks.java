@@ -16,6 +16,7 @@ import theking530.staticpower.blockentities.digistorenetwork.ioport.BlockDigisto
 import theking530.staticpower.blockentities.digistorenetwork.manager.BlockDigistoreManager;
 import theking530.staticpower.blockentities.digistorenetwork.patternstorage.BlockPatternStorage;
 import theking530.staticpower.blockentities.digistorenetwork.severrack.BlockDigistoreServerRack;
+import theking530.staticpower.blockentities.digistorenetwork.wireterminal.BlockDigistoreWireConnector;
 import theking530.staticpower.blockentities.machines.autocrafter.BlockAutoCraftingTable;
 import theking530.staticpower.blockentities.machines.autosmith.BlockAutoSmith;
 import theking530.staticpower.blockentities.machines.autosolderingtable.BlockAutoSolderingTable;
@@ -402,8 +403,6 @@ public class ModBlocks {
 
 	public static final RegistryObject<BlockHeatSink> AluminumHeatSink = registerBlock("heat_sink_aluminum", () -> new BlockHeatSink(StaticPowerTiers.ALUMINUM));
 	public static final RegistryObject<BlockHeatSink> CopperHeatSink = registerBlock("heat_sink_copper", () -> new BlockHeatSink(StaticPowerTiers.COPPER));
-	public static final RegistryObject<BlockHeatSink> TinHeatSink = registerBlock("heat_sink_tin", () -> new BlockHeatSink(StaticPowerTiers.TIN));
-	public static final RegistryObject<BlockHeatSink> SilverHeatSink = registerBlock("heat_sink_silver", () -> new BlockHeatSink(StaticPowerTiers.SILVER));
 	public static final RegistryObject<BlockHeatSink> GoldHeatSink = registerBlock("heat_sink_gold", () -> new BlockHeatSink(StaticPowerTiers.GOLD));
 
 	public static final RegistryObject<BlockSolarPanel> SolarPanelBasic = registerBlock("solar_panel_basic", () -> new BlockSolarPanel(StaticPowerTiers.BASIC));
@@ -468,11 +467,9 @@ public class ModBlocks {
 	public static final RegistryObject<BlockIndustrialFluidCable> IndustrialFluidCableCreative = registerBlock("cable_industrial_fluid_creative",
 			() -> new BlockIndustrialFluidCable(StaticPowerTiers.CREATIVE));
 
-	public static final RegistryObject<BlockHeatCable> CopperHeatCable = registerBlock("cable_heat_copper", () -> new BlockHeatCable(StaticPowerTiers.COPPER));
-	public static final RegistryObject<BlockHeatCable> TinHeatCable = registerBlock("cable_heat_tin", () -> new BlockHeatCable(StaticPowerTiers.TIN));
-	public static final RegistryObject<BlockHeatCable> SilverHeatCable = registerBlock("cable_heat_silver", () -> new BlockHeatCable(StaticPowerTiers.SILVER));
-	public static final RegistryObject<BlockHeatCable> GoldHeatCable = registerBlock("cable_heat_gold", () -> new BlockHeatCable(StaticPowerTiers.GOLD));
 	public static final RegistryObject<BlockHeatCable> AluminumHeatCable = registerBlock("cable_heat_aluminum", () -> new BlockHeatCable(StaticPowerTiers.ALUMINUM));
+	public static final RegistryObject<BlockHeatCable> CopperHeatCable = registerBlock("cable_heat_copper", () -> new BlockHeatCable(StaticPowerTiers.COPPER));
+	public static final RegistryObject<BlockHeatCable> GoldHeatCable = registerBlock("cable_heat_gold", () -> new BlockHeatCable(StaticPowerTiers.GOLD));
 
 	public static final RegistryObject<BlockScaffoldCable> ScaffoldCable = registerBlock("cable_scaffold", () -> new BlockScaffoldCable());
 
@@ -521,6 +518,7 @@ public class ModBlocks {
 	public static final RegistryObject<BlockWireConnector> WireConnectorHV = registerBlock("wire_terminal_hv", () -> new BlockWireConnector(StaticPowerTiers.STATIC));
 	public static final RegistryObject<BlockWireConnector> WireConnectorEV = registerBlock("wire_terminal_ev", () -> new BlockWireConnector(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BlockWireConnector> WireConnectorBV = registerBlock("wire_terminal_bv", () -> new BlockWireConnector(StaticPowerTiers.LUMUM));
+	public static final RegistryObject<BlockDigistoreWireConnector> WireConnectorDigistore = registerBlock("wire_terminal_digistore", () -> new BlockDigistoreWireConnector());
 
 	// Monitors
 	public static final RegistryObject<BlockPowerMonitor> PowerMonitor = registerBlock("power_monitor", () -> new BlockPowerMonitor());

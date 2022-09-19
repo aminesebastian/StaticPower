@@ -82,6 +82,11 @@ public class BlockEntityBattery extends BlockEntityMachine {
 		powerStorage.setOutputVoltage(getTierObject().powerConfiguration.batteryOutputVoltage.get());
 		powerStorage.setMaximumOutputPower(getTierObject().powerConfiguration.batteryMaximumPowerOutput.get());
 		powerStorage.setInputCurrentTypes(CurrentType.DIRECT, CurrentType.ALTERNATING);
+		
+		if(this.getTier() == StaticPowerTiers.CREATIVE) {
+			powerStorage.setMaximumInputPower(Double.MAX_VALUE);
+			powerStorage.setMaximumOutputPower(Double.MAX_VALUE);
+		}
 
 		// Add a battery input.
 		registerComponent(chargingInventory = new InventoryComponent("ChargingInventorySlot", 1));

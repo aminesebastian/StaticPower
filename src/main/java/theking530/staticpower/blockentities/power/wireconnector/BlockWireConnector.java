@@ -41,32 +41,30 @@ public class BlockWireConnector extends StaticPowerBlockEntityBlock {
 		for (Direction shape : Direction.values()) {
 			VoxelShape result = null;
 			if (shape == Direction.DOWN) {
-				result = Block.box(5.5D, 15.0D, 5.5D, 10.5D, 16.0D, 10.5D);
-				result = Shapes.join(result, Block.box(6.0D, 14.0D, 6.0D, 10D, 15.0D, 10D), BooleanOp.OR);
-				result = Shapes.join(result, Block.box(6.5D, 10.0D, 6.5D, 9.5D, 14.0D, 9.5D), BooleanOp.OR);
+				result = Block.box(5.5D, 15D, 5.5D, 10.5D, 16D, 10.5D);
+				result = Shapes.join(result, Block.box(6D, 10D, 6D, 10D, 15D, 10D), BooleanOp.OR);
 			} else if (shape == Direction.UP) {
-				result = Block.box(5.5D, 0.0D, 5.5D, 10.5D, 1.0D, 10.5D);
-				result = Shapes.join(result, Block.box(6.0D, 1.0D, 6.0D, 10D, 2.0D, 10D), BooleanOp.OR);
-				result = Shapes.join(result, Block.box(6.5D, 2.0D, 6.5D, 9.5D, 6.0D, 9.5D), BooleanOp.OR);
+				result = Block.box(5.5D, 0D, 5.5D, 10.5D, 1D, 10.5D);
+				result = Shapes.join(result, Block.box(6D, 1D, 6D, 10D, 6D, 10D), BooleanOp.OR);
 			} else if (shape == Direction.WEST) {
-				result = Block.box(15D, 5.5D, 5.5D, 16.0D, 10.5D, 10.5D);
-				result = Shapes.join(result, Block.box(14.0D, 6.0D, 6.0D, 15D, 10.0D, 10D), BooleanOp.OR);
-				result = Shapes.join(result, Block.box(10D, 6.5D, 6.5D, 14D, 9.5D, 9.5D), BooleanOp.OR);
+				result = Block.box(15D, 5.5D, 5.5D, 16D, 10.5D, 10.5D);
+				result = Shapes.join(result, Block.box(10D, 6D, 6D, 15D, 10D, 10D), BooleanOp.OR);
 			} else if (shape == Direction.EAST) {
-				result = Block.box(0D, 5.5D, 5.5D, 1.0D, 10.5D, 10.5D);
-				result = Shapes.join(result, Block.box(1.0D, 6.0D, 6.0D, 2D, 10.0D, 10D), BooleanOp.OR);
-				result = Shapes.join(result, Block.box(2D, 6.5D, 6.5D, 6D, 9.5D, 9.5D), BooleanOp.OR);
+				result = Block.box(0D, 5.5D, 5.5D, 1D, 10.5D, 10.5D);
+				result = Shapes.join(result, Block.box(1D, 6D, 6D, 6D, 10D, 10D), BooleanOp.OR);
 			} else if (shape == Direction.NORTH) {
-				result = Block.box(5.5D, 5.5D, 15D, 10.5D, 10.5D, 16.0D);
-				result = Shapes.join(result, Block.box(6.0D, 6.0D, 14.0D, 10D, 10.0D, 15D), BooleanOp.OR);
-				result = Shapes.join(result, Block.box(6.5D, 6.5D, 10.0D, 9.5D, 9.5D, 14D), BooleanOp.OR);
+				result = Block.box(5.5D, 5.5D, 15D, 10.5D, 10.5D, 16D);
+				result = Shapes.join(result, Block.box(6D, 6D, 10D, 10D, 10D, 15D), BooleanOp.OR);
 			} else if (shape == Direction.SOUTH) {
-				result = Block.box(5.5D, 5.5D, 0D, 10.5D, 10.5D, 1.0D);
-				result = Shapes.join(result, Block.box(6.0D, 6.0D, 1.0D, 10D, 10.0D, 2D), BooleanOp.OR);
-				result = Shapes.join(result, Block.box(6.5D, 6.5D, 2.0D, 9.5D, 9.5D, 6D), BooleanOp.OR);
+				result = Block.box(5.5D, 5.5D, 0.0D, 10.5D, 10.5D, 1D);
+				result = Shapes.join(result, Block.box(6D, 6D, 1D, 10D, 10D, 6D), BooleanOp.OR);
 			}
 			SHAPES.put(shape, result);
 		}
+	}
+
+	public BlockWireConnector() {
+		super();
 	}
 
 	public BlockWireConnector(ResourceLocation tier) {
@@ -77,9 +75,11 @@ public class BlockWireConnector extends StaticPowerBlockEntityBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
-		StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-		PowerTooltips.addVoltageInputTooltip(tooltip, new StaticVoltageRange(StaticPowerVoltage.LOW, tierObject.cablePowerConfiguration.wireTerminalMaxVoltage.get()));
-		PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.wireTerminalMaxPower.get());
+		if (tier != null) {
+			StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
+			PowerTooltips.addVoltageInputTooltip(tooltip, new StaticVoltageRange(StaticPowerVoltage.LOW, tierObject.cablePowerConfiguration.wireTerminalMaxVoltage.get()));
+			PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.wireTerminalMaxPower.get());
+		}
 	}
 
 	@Override

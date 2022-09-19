@@ -8,6 +8,7 @@ import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;
@@ -26,6 +27,7 @@ import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
+import theking530.staticpower.cables.network.modules.CableNetworkModuleTypes;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.items.BatteryPack;
@@ -42,6 +44,7 @@ import theking530.staticpower.items.ResearchItem;
 import theking530.staticpower.items.StaticPowerFood;
 import theking530.staticpower.items.StaticPowerItem;
 import theking530.staticpower.items.WireCoil;
+import theking530.staticpower.items.backpack.Backpack;
 import theking530.staticpower.items.crops.DepletedCrop;
 import theking530.staticpower.items.crops.StaticPlantCrop;
 import theking530.staticpower.items.crops.StaticPlantSeeds;
@@ -378,17 +381,42 @@ public class ModItems {
 
 	public static final RegistryObject<StaticPowerItem> WireAluminum = ITEMS.register("wire_aluminum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> WireCopper = ITEMS.register("wire_copper", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> WireTin = ITEMS.register("wire_tin", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> WireSilver = ITEMS.register("wire_silver", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireBrass = ITEMS.register("wire_brass", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireStatic = ITEMS.register("wire_static", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireEnergized = ITEMS.register("wire_energized", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireLumum = ITEMS.register("wire_lumum", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> WireGold = ITEMS.register("wire_gold", () -> new StaticPowerItem());
-	public static final RegistryObject<StaticPowerItem> WirePlatinum = ITEMS.register("wire_platinum", () -> new StaticPowerItem());
-	
-	public static final RegistryObject<StaticPowerItem> CoilCopper = ITEMS.register("coil_copper", () -> new WireCoil());
-	public static final RegistryObject<StaticPowerItem> CoilSilver = ITEMS.register("coil_silver", () -> new WireCoil());
-	public static final RegistryObject<StaticPowerItem> CoilGold = ITEMS.register("coil_gold", () -> new WireCoil());
-	public static final RegistryObject<StaticPowerItem> CoilPlatinum = ITEMS.register("coil_platinum", () -> new WireCoil());
-	public static final RegistryObject<StaticPowerItem> CoilAluminum = ITEMS.register("coil_aluminum", () -> new WireCoil());
-	public static final RegistryObject<StaticPowerItem> CoilTin = ITEMS.register("coil_tin", () -> new WireCoil());
+
+	public static final RegistryObject<StaticPowerItem> WireInsulatedCopper = ITEMS.register("wire_insulated_copper", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireInsulatedBrass = ITEMS.register("wire_insulated_brass", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireInsulatedStatic = ITEMS.register("wire_insulated_static", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireInsulatedEnergized = ITEMS.register("wire_insulated_energized", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> WireInsulatedLumum = ITEMS.register("wire_insulated_lumum", () -> new StaticPowerItem());
+
+	public static final RegistryObject<StaticPowerItem> WireCoilCopper = ITEMS.register("wire_coil_copper",
+			() -> new WireCoil(new Color(1, 0.55f, 0.1f), 0.015f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilBrass = ITEMS.register("wire_coil_brass",
+			() -> new WireCoil(new Color(1, 0.8f, 0.2f), 0.015f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilStatic = ITEMS.register("wire_coil_static",
+			() -> new WireCoil(new Color(0, 1.0f, 0.4f), 0.01f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilEnergized = ITEMS.register("wire_coil_energized",
+			() -> new WireCoil(new Color(0, 0.8f, 1.0f), 0.01f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilLumum = ITEMS.register("wire_coil_lumum",
+			() -> new WireCoil(new Color(0.6f, 0.2f, 1.0f), 0.01f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+
+	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedCopper = ITEMS.register("wire_coil_insulated_copper",
+			() -> new WireCoil(new Color(1, 0.55f, 0.1f), 0.03f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedBrass = ITEMS.register("wire_coil_insulated_brass",
+			() -> new WireCoil(new Color(1, 0.8f, 0.2f), 0.03f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedStatic = ITEMS.register("wire_coil_insulated_static",
+			() -> new WireCoil(new Color(0, 1.0f, 0.4f), 0.02f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedEnergized = ITEMS.register("wire_coil_insulated_energized",
+			() -> new WireCoil(new Color(0, 0.8f, 1.0f), 0.02f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+	public static final RegistryObject<StaticPowerItem> WireCoilInsulatedLumum = ITEMS.register("wire_coil_insulated_lumum",
+			() -> new WireCoil(new Color(0.6f, 0.2f, 1.0f), 0.02f, CableNetworkModuleTypes.POWER_NETWORK_MODULE));
+
+	public static final RegistryObject<StaticPowerItem> WireCoilDigistore = ITEMS.register("wire_coil_digistore",
+			() -> new WireCoil(new Color(0.205f, 0.347f, 0.617f), 0.02f, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
 
 	public static final RegistryObject<DrillBit> IronDrillBit = ITEMS.register("drill_bit_iron", () -> new DrillBit(Tiers.IRON, StaticPowerTiers.IRON));
 	public static final RegistryObject<DrillBit> BronzeDrillBit = ITEMS.register("drill_bit_bronze", () -> new DrillBit(Tiers.IRON, StaticPowerTiers.BRONZE));
@@ -443,6 +471,8 @@ public class ModItems {
 			() -> new PortableBattery(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<PortableBattery> LumumPortableBattery = ITEMS.register("portable_battery_lumum", () -> new PortableBattery(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<PortableBattery> CreativePortableBattery = ITEMS.register("portable_battery_creative", () -> new PortableBattery(StaticPowerTiers.CREATIVE));
+
+	public static final RegistryObject<Backpack> DiggersBackPack = ITEMS.register("backpack_diggers", () -> new Backpack(12));
 
 	public static final RegistryObject<BatteryPack> BasicBatteryPack = ITEMS.register("battery_pack_basic", () -> new BatteryPack(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BatteryPack> AdvancedBatteryPack = ITEMS.register("battery_pack_advanced", () -> new BatteryPack(StaticPowerTiers.ADVANCED));

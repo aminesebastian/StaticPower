@@ -25,7 +25,6 @@ import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.power.turbine.BlockEntityTurbine;
 import theking530.staticpower.blockentities.power.turbine.BlockEntityTurbine.TurbineRenderingState;
 import theking530.staticpower.client.rendering.BlockModel;
-import theking530.staticpower.client.rendering.CustomRenderer;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRenderer<BlockEntityTurbine> {
@@ -67,7 +66,7 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 				TurbineRenderingState renderingState = data.getData(BlockEntityTurbine.TURBINE_RENDERING_STATE);
 
 				// Increment the rotation (or decrement, that will be handled automatically).
-				renderingState.rotate(CustomRenderer.getDeltaTime());
+				renderingState.rotate(Minecraft.getInstance().getDeltaFrameTime());
 
 				// Push a new matrix.
 				matrixStack.pushPose();
