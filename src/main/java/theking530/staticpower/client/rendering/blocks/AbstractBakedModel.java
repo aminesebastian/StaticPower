@@ -14,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
 import com.mojang.math.Transformation;
 import com.mojang.math.Vector3f;
@@ -21,6 +22,7 @@ import com.mojang.math.Vector3f;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.FaceBakery;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -58,7 +60,7 @@ public abstract class AbstractBakedModel implements BakedModel {
 	}
 
 	public AbstractBakedModel(BakedModel baseModel) {
-		BaseModel = baseModel;
+		this.BaseModel = baseModel;
 	}
 
 	@Override
@@ -144,10 +146,21 @@ public abstract class AbstractBakedModel implements BakedModel {
 		return BaseModel.isCustomRenderer();
 	}
 
+	@Override
+	public boolean usesBlockLight() {
+		return BaseModel.usesBlockLight();
+	}
+
 	@SuppressWarnings("deprecation")
 	@Override
 	public TextureAtlasSprite getParticleIcon() {
 		return BaseModel.getParticleIcon();
+	}
+
+	@Override
+	public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
+		BaseModel.handlePerspective(cameraTransformType, mat);
+		return this;
 	}
 
 	@Override

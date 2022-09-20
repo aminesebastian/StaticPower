@@ -1,0 +1,14 @@
+{
+	"replace": false,
+	"values": [
+		"staticpower:raw_aluminum",
+		"staticpower:raw_lead",
+		"staticpower:raw_magnesium",
+		"staticpower:raw_platinum",
+		"staticpower:raw_silver",
+		"staticpower:raw_tin",
+		"staticpower:raw_tungsten",
+		"staticpower:raw_uranium",
+		"staticpower:raw_zinc"
+	]
+}

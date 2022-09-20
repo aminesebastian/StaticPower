@@ -8,18 +8,15 @@ import java.util.Random;
 
 import javax.annotation.Nullable;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
 import net.minecraft.client.renderer.block.model.BlockFaceUV;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
@@ -33,9 +30,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.fluids.FluidAttributes;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import theking530.api.energy.item.EnergyHandlerItemStackUtilities;
 import theking530.api.energy.item.ItemStackStaticPowerEnergyCapability;
 import theking530.staticpower.client.StaticPowerSprites;
@@ -120,14 +114,12 @@ public class PortableBatteryItemModel implements BakedModel {
 
 	private class PortableBatteryModel extends AbstractBakedModel {
 		private final float filledRatio;
-		private final BakedModel baseModel;
 		private List<BakedQuad> quads = null;
 		private boolean creative;
 
 		protected PortableBatteryModel(BakedModel baseModel, float filledRatio, boolean creative) {
 			super(baseModel);
 			this.filledRatio = filledRatio;
-			this.baseModel = baseModel;
 			this.creative = creative;
 		}
 
@@ -160,61 +152,6 @@ public class PortableBatteryItemModel implements BakedModel {
 						ModelUtilities.IDENTITY, null, false, new ResourceLocation("dummy_name")));
 			}
 			return quads;
-		}
-
-		@Override
-		public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat) {
-			BaseModel.handlePerspective(cameraTransformType, mat);
-			return this;
-		}
-
-		@Override
-		public boolean isGui3d() {
-			return false;
-		}
-
-		@Override
-		public boolean usesBlockLight() {
-			return baseModel.usesBlockLight();
-		}
-
-		@Override
-		public boolean isCustomRenderer() {
-			return false;
-		}
-
-		@Override
-		public ItemOverrides getOverrides() {
-			return ItemOverrides.EMPTY;
-		}
-
-		@Override
-		public boolean useAmbientOcclusion() {
-			return false;
-		}
-
-		@Override
-		public TextureAtlasSprite getParticleIcon() {
-			return null;
-		}
-
-	}
-
-	public static class CapsuleColorProvider implements ItemColor {
-		@Override
-		public int getColor(ItemStack stack, int tintIndex) {
-			if (tintIndex != 1) {
-				return -1;
-			}
-
-			// Get the fluid handler.
-			IFluidHandlerItem handler = FluidUtil.getFluidHandler(stack).orElse(null);
-			if (handler == null || handler.getFluidInTank(0).isEmpty()) {
-				return -1;
-			} else {
-				FluidAttributes attributes = handler.getFluidInTank(0).getFluid().getAttributes();
-				return attributes.getColor(handler.getFluidInTank(0));
-			}
 		}
 	}
 }

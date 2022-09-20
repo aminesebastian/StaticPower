@@ -16,7 +16,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.Entity.RemovalReason;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -87,16 +86,8 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 			// Get the distance away.
 			double distance = Math.sqrt(x * x + y * y + z * z);
 
-			// If the entity is right next to us, suck it in. Otherwise, pull it towards us.
-			if (distance < 1.1f) {
-				if (player.getInventory().add(entity.getItem())) {
-					if (entity.getItem().isEmpty()) {
-						entity.remove(RemovalReason.UNLOADED_WITH_PLAYER);
-						world.addParticle(ParticleTypes.PORTAL, player.getX() + 0.5, player.getY() + 0.5, player.getZ() + 0.5, 0.0D, 0.0D, 0.0D);
-						world.playSound(null, player.blockPosition(), SoundEvents.CHICKEN_EGG, SoundSource.BLOCKS, 0.5F, 1.5F);
-					}
-				}
-			} else {
+			// Pull any item entities that are outside our capture radius closer to us.
+			if (distance > 1.1f) {
 				double var11 = 1.0 - distance / 15.0;
 				if (var11 > 0.0D) {
 					var11 *= var11;
@@ -138,9 +129,13 @@ public class Magnet extends StaticPowerEnergyStoringItem {
 	@Override
 	public void inventoryTick(ItemStack stack, Level worldIn, Entity entityIn, int itemSlot, boolean isSelected) {
 		super.inventoryTick(stack, worldIn, entityIn, itemSlot, isSelected);
+		Player player = (Player) entityIn;
+		if (player == null) {
+			return;
+		}
 
 		// Toggle the state if the toggle magnet button was just pressed.
-		if (ModKeyBindings.TOGGLE_MAGNET.wasJustPressed()) {
+		if (!worldIn.isClientSide() && ModKeyBindings.TOGGLE_MAGNET.wasJustPressed()) {
 			worldIn.playSound(null, entityIn.blockPosition(), SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.2f, !isActivated(stack) ? 1.0f : 0.5f);
 			toggleActivated(stack);
 		}

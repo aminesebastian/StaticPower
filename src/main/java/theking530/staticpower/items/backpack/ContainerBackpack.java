@@ -1,5 +1,7 @@
 package theking530.staticpower.items.backpack;
 
+import javax.annotation.Nonnull;
+
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
@@ -16,6 +18,7 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerItemContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
+import theking530.staticpower.utilities.InventoryUtilities;
 
 public class ContainerBackpack extends StaticPowerItemContainer<Backpack> {
 	@ContainerTypePopulator
@@ -58,6 +61,19 @@ public class ContainerBackpack extends StaticPowerItemContainer<Backpack> {
 
 		this.addSlotsInGrid(inventory, 0, xOffset, 21, maxPerRow, (i, x, y) -> new StaticPowerContainerSlot(inventory, i, x, y) {
 			@Override
+			public boolean mayPlace(@Nonnull ItemStack stack) {
+				if (!super.mayPlace(stack)) {
+					return false;
+				}
+
+				if (!ContainerBackpack.this.getBackpack().canAcceptItem(ContainerBackpack.this.getItemStack(), stack)) {
+					return false;
+				}
+
+				return true;
+			}
+
+			@Override
 			public void setChanged() {
 				super.setChanged();
 
@@ -77,24 +93,20 @@ public class ContainerBackpack extends StaticPowerItemContainer<Backpack> {
 
 	@Override
 	public boolean canDragTo(Slot slot) {
-		return false;
+		return true;
+	}
+
+	protected Backpack getBackpack() {
+		return (Backpack) this.getItemStack().getItem();
 	}
 
 	@Override
 	protected boolean playerItemShiftClicked(ItemStack stack, Player player, Slot slot, int slotIndex) {
-		boolean alreadyExists = false;
-		int firstEmptySlot = -1;
-
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			if (firstEmptySlot == -1 && inventory.getStackInSlot(i).isEmpty()) {
-				firstEmptySlot = i;
-			}
-			if (ItemHandlerHelper.canItemStacksStack(inventory.getStackInSlot(i), stack)) {
-				alreadyExists = true;
-			}
-		}
-		if (!alreadyExists && !moveItemStackTo(stack, firstEmptySlot, firstEmptySlot + 1, false)) {
-			return true;
+		if (ContainerBackpack.this.getBackpack().canAcceptItem(ContainerBackpack.this.getItemStack(), stack)) {
+			int initialCount = stack.getCount();
+			ItemStack remaining = InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
+			stack.setCount(remaining.getCount());
+			return remaining.getCount() != initialCount;
 		}
 		return false;
 	}

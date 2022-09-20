@@ -332,8 +332,6 @@ public class StaticPowerRecipeRegistry {
 
 				// Add the recipe if is not a duplicate, otherwise, skip it.
 				addRecipe(bucketRecipe);
-				LOGGER.debug(String.format("Registering a dynamic bottler recipe for item: %1$s and fluid: %2$s.", emptyContainer.getHoverName().getString(),
-						fluid.getAttributes().getDisplayName(fluidStack).getString()));
 			}
 		}
 		// Log the completion.

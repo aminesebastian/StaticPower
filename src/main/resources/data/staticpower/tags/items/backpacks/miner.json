@@ -1,0 +1,8 @@
+{
+	"replace": false,
+	"values": [
+		"#forge:ores",
+		"#forge:raw_materials",
+		"#forge:gems"
+	]
+}

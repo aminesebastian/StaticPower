@@ -1,6 +1,6 @@
 {
 	"parent": "item/generated",
 	"textures": {
-		"layer0": "staticpower:items/backpacks/diggers"
+		"layer0": "staticpower:items/backpacks/farmer"
 	}
 }

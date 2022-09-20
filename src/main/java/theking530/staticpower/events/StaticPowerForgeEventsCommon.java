@@ -27,6 +27,7 @@ import net.minecraftforge.event.AddReloadListenerEvent;
 import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.event.entity.player.ItemTooltipEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
@@ -59,6 +60,7 @@ import theking530.staticpower.entities.player.datacapability.StaticPowerPlayerDa
 import theking530.staticpower.init.ModCommands.ResearchCommands;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModKeyBindings;
+import theking530.staticpower.items.backpack.Backpack;
 import theking530.staticpower.items.tools.Hammer;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.TeamManager;
@@ -183,6 +185,24 @@ public class StaticPowerForgeEventsCommon {
 	}
 
 	@SubscribeEvent
+	public static void onItemPickedUp(EntityItemPickupEvent event) {
+		if (event.getEntityLiving() instanceof Player) {
+			Player player = (Player) event.getEntityLiving();
+			for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
+				if (player.getInventory().getItem(i).getItem() instanceof Backpack) {
+					Backpack backpackItem = (Backpack) player.getInventory().getItem(i).getItem();
+					backpackItem.playerPickedUpItem(player.getInventory().getItem(i), event.getItem(), player);
+
+					// If there is no more item to insert, just break.
+					if (event.getItem().getItem().isEmpty()) {
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	@SubscribeEvent
 	@OnlyIn(Dist.CLIENT)
 	public static void onAddItemTooltip(ItemTooltipEvent event) {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -273,7 +293,7 @@ public class StaticPowerForgeEventsCommon {
 		}
 	}
 
-	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = true)
+	@SubscribeEvent(priority = EventPriority.NORMAL, receiveCanceled = false)
 	public static void onKeyEvent(KeyInputEvent event) {
 		ModKeyBindings.onKeyEvent(event);
 	}

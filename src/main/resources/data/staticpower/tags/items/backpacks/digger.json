@@ -1,0 +1,12 @@
+{
+	"replace": false,
+	"values": [
+		"#minecraft:dirt",
+		"#forge:netherrack",
+		"#forge:obsidian",
+		"#forge:sand",
+		"#forge:sandstone",
+		"#forge:cobblestone",
+		"#forge:end_stones"
+	]
+}

@@ -14,7 +14,7 @@
 	"item.staticpower.magnet_energized": "Energized Magnet",
 	"item.staticpower.magnet_lumum": "Lumum Magnet",
 	
-	"item.staticpower.tutorial_boock": "Static Text Book",
+	"item.staticpower.tutorial_book": "Static Text Book",
 	
 	"item.staticpower.wire_cutters_iron": "Iron Wire Cutters",
 	"item.staticpower.wire_cutters_zinc": "Zinc Wire Cutters",
@@ -422,7 +422,15 @@
 	"item.staticpower.fluid_capsule_lumum": "Lumum Capsule",
 	"item.staticpower.fluid_capsule_creative": "Creative Capsule",
 	
-	"item.staticpower.backpack_diggers": "Digger's Backpack",
+	"item.staticpower.backpack": "Backpack",
+	"item.staticpower.backpack_builder": "Builder's Backpack",
+	"item.staticpower.backpack_digger": "Digger's Backpack",
+	"item.staticpower.backpack_hunter": "Hunter's Backpack",
+	"item.staticpower.backpack_lumberjack": "Lumberjack's Backpack",
+	"item.staticpower.backpack_miner": "Miner's Backpack",
+	"item.staticpower.backpack_farmer": "Farmer's Backpack",
+	"item.staticpower.backpack_engineer": "Engineer's Backpack",
+	"item.staticpower.backpack_tool": "Tool Backpack",
 	
 	"item.staticpower.filter_item_basic": "Basic Item Filter",
 	"item.staticpower.filter_item_advanced": "Advanced Item Filter",
@@ -1208,6 +1216,12 @@
 	"gui.staticpower.transformer_upgrade_tooltip": "Upgrades a Machine from %1$s to %2$s",
 	
 	"gui.staticpower.wire_coil_connecting": "Connecting to [%1$s]",
+	
+	"gui.staticpower.backpack_mode_updated": "Backpack mode changed to: %1$s",
+	"gui.staticpower.backpack_mode.default": "Default",
+	"gui.staticpower.backpack_mode.refill": "Refill",
+	"gui.staticpower.backpack_mode.locked": "Locked",
+	"gui.staticpower.backpack_mode.reload": "Reload",
 	
 	"entity.staticpower.smeep": "S'Meep",
 	"entity.staticpower.enox": "Enox",

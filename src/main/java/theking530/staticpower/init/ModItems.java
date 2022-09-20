@@ -472,7 +472,16 @@ public class ModItems {
 	public static final RegistryObject<PortableBattery> LumumPortableBattery = ITEMS.register("portable_battery_lumum", () -> new PortableBattery(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<PortableBattery> CreativePortableBattery = ITEMS.register("portable_battery_creative", () -> new PortableBattery(StaticPowerTiers.CREATIVE));
 
-	public static final RegistryObject<Backpack> DiggersBackPack = ITEMS.register("backpack_diggers", () -> new Backpack(12));
+	public static final RegistryObject<Backpack> Backpack = ITEMS.register("backpack", () -> new Backpack(12));
+
+	public static final RegistryObject<Backpack> BuildersBackPack = ITEMS.register("backpack_builder", () -> new Backpack(12, ModTags.BUILDER_BACKPACK));
+	public static final RegistryObject<Backpack> DiggersBackPack = ITEMS.register("backpack_digger", () -> new Backpack(12, ModTags.DIGGER_BACKPACK));
+	public static final RegistryObject<Backpack> HuntersPack = ITEMS.register("backpack_hunter", () -> new Backpack(12, ModTags.HUNTER_BACKPACK));
+	public static final RegistryObject<Backpack> LumberjacksBackPack = ITEMS.register("backpack_lumberjack", () -> new Backpack(12, ModTags.LUMBERJACK_BACKPACK));
+	public static final RegistryObject<Backpack> MinersBackpack = ITEMS.register("backpack_miner", () -> new Backpack(12, ModTags.MINER_BACKPACK));
+	public static final RegistryObject<Backpack> FarmersBackpack = ITEMS.register("backpack_farmer", () -> new Backpack(12, ModTags.FARMER_BACKPACK));
+	public static final RegistryObject<Backpack> EngineersBackpack = ITEMS.register("backpack_engineer", () -> new Backpack(12, ModTags.ENGINEER_BACKPACK));
+	public static final RegistryObject<Backpack> ToolsBackpack = ITEMS.register("backpack_tool", () -> new Backpack(12, ModTags.TOOL_BACKPACK));
 
 	public static final RegistryObject<BatteryPack> BasicBatteryPack = ITEMS.register("battery_pack_basic", () -> new BatteryPack(StaticPowerTiers.BASIC));
 	public static final RegistryObject<BatteryPack> AdvancedBatteryPack = ITEMS.register("battery_pack_advanced", () -> new BatteryPack(StaticPowerTiers.ADVANCED));

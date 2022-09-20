@@ -73,7 +73,7 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation PORTABLE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_filled_bar");
 	public static final ResourceLocation PORTABLE_CREATIVE_BATTERY_FILL_BAR = registerSprite("items/batteries/portable_battery_creative_filled_bar");
-	
+
 	public static final ResourceLocation THERMOMETER_FILL_BAR = registerSprite("items/tools/thermometer_fill");
 
 	public static final ResourceLocation PORTABLE_BATTERY_PACK_FILL_BAR = registerSprite("items/batteries/battery_pack_filled_bar");
@@ -100,6 +100,10 @@ public class StaticPowerSprites {
 
 	public static final ResourceLocation TOOL_POWER_BAR = registerSprite("items/tools/tool_power_bar");
 
+	public static final ResourceLocation ITEM_ICON_LOCKED = registerSprite("items/item_icon/mode_locked");
+	public static final ResourceLocation ITEM_ICON_REFILL = registerSprite("items/item_icon/mode_refill");
+	public static final ResourceLocation ITEM_ICON_RELOAD = registerSprite("items/item_icon/mode_reload");
+
 	public static final ResourceLocation CONCRETE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_concrete_mask");
 	public static final ResourceLocation OIL_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_oil_mask");
 	public static final ResourceLocation DYE_BUCKET_FLUID_MASK = registerSprite("items/buckets/bucket_dye_mask");
@@ -111,7 +115,7 @@ public class StaticPowerSprites {
 	public static final ResourceLocation STATIC_CHEST = registerSprite("entity/chest/static_chest");
 	public static final ResourceLocation ENERGIZED_CHEST = registerSprite("entity/chest/energized_chest");
 	public static final ResourceLocation LUMUM_CHEST = registerSprite("entity/chest/lumum_chest");
-	
+
 	private static ResourceLocation registerSprite(String path) {
 		ResourceLocation sprite = new ResourceLocation(StaticPower.MOD_ID, path);
 		SPRITES.add(sprite);
