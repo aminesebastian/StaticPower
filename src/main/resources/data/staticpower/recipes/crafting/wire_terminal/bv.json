@@ -1,16 +1,19 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		" c ",
-		"ici",
-		"iii"
+		"wiw",
+		"wiw",
+		"bbb"
 	],
 	"key": {
-		"c": {
-			"item": "staticpower:coil_platinum"
+		"b": {
+			"tag": "forge:ingots/silver"
 		},
 		"i": {
-			"item": "staticpower:ingot_lumum"
+			"tag": "forge:ingots/iron"
+		},
+		"w": {
+			"item": "staticpower:wire_lumum"
 		}
 	},
 	"result": {

@@ -13,7 +13,7 @@
 			"item": "staticpower:portable_battery_basic"
 		},
 		"c": {
-			"item": "staticpower:coil_gold"
+			"item": "staticpower:wire_coil_brass"
 		},
 		"g": {
 			"tag": "forge:dusts/redstone"

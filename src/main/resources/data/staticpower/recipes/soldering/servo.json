@@ -10,7 +10,7 @@
 			"tag": "forge:plates/tin"
 		},
 		"c": {
-			"item": "staticpower:coil_copper"
+			"item": "staticpower:wire_coil_copper"
 		},
 		"w": {
 			"tag": "forge:nuggets/tin"

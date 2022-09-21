@@ -3,6 +3,7 @@
 	"values": [
 		"#staticpower:soldering_iron",
 		"#staticpower:wire_cutters",
-		"#staticpower:hammer"
+		"#staticpower:hammer",
+		"#staticpower:saw"
 	]
 }

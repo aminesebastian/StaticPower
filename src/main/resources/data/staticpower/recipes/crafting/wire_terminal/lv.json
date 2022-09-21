@@ -1,16 +1,19 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		" c ",
-		"ici",
-		"iii"
+		"wiw",
+		"wiw",
+		"bbb"
 	],
 	"key": {
-		"c": {
-			"item": "staticpower:coil_aluminum"
+		"b": {
+			"item": "minecraft:brick"
 		},
 		"i": {
-			"tag": "forge:ingots/tin"
+			"tag": "forge:ingots/iron"
+		},
+		"w": {
+			"tag": "forge:wire/copper"
 		}
 	},
 	"result": {

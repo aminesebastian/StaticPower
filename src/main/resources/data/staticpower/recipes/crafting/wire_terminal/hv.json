@@ -1,16 +1,19 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		" c ",
-		"ici",
-		"iii"
+		"wiw",
+		"wiw",
+		"bbb"
 	],
 	"key": {
-		"c": {
-			"item": "staticpower:coil_silver"
+		"b": {
+			"tag": "forge:ingots/silver"
 		},
 		"i": {
-			"item": "staticpower:ingot_static"
+			"tag": "forge:ingots/iron"
+		},
+		"w": {
+			"item": "staticpower:wire_static"
 		}
 	},
 	"result": {

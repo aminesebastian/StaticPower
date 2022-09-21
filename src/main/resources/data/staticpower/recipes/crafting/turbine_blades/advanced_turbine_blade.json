@@ -10,7 +10,7 @@
 			"tag": "forge:ingots/brass"
 		},
 		"g": {
-			"item": "staticpower:gear_box_gold"
+			"item": "staticpower:gear_box_brass"
 		}
 	},
 	"result": {
