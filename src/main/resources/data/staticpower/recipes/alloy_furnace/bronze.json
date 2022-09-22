@@ -1,0 +1,9 @@
+{
+	"type": "staticpower:alloy_furnace_recipe",
+	"input1": { "tag": "forge:ingots/copper", "count": 3  },
+	"input2": { "tag": "forge:ingots/tin" },
+	"output": {
+		"item": "staticpower:ingot_bronze",
+		"count": 4
+	}
+}

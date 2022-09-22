@@ -137,7 +137,7 @@ public class BlockEntityCrucible extends BlockEntityMachine {
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
 		if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		// Set the power usage.
@@ -168,7 +168,7 @@ public class BlockEntityCrucible extends BlockEntityMachine {
 			if (!fluidTankComponent.getFluid().isEmpty() && fluidTankComponent.getFluid().getFluid() != recipe.getOutputFluid().getFluid()) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
 			} else {
-				return ProcessingCheckState.outputTankCannotTakeFluid();
+				return ProcessingCheckState.fluidOutputFull();
 			}
 		}
 		return ProcessingCheckState.ok();

@@ -92,7 +92,7 @@ public class BlockEntityEvaporator extends BlockEntityConfigurable {
 			}
 			// Check the fluid capacity.
 			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
-				return ProcessingCheckState.outputTankCannotTakeFluid();
+				return ProcessingCheckState.fluidOutputFull();
 			}
 			// Check the heat level.
 			if (heatStorage.getCurrentHeat() < recipe.getRequiredHeat()) {

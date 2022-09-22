@@ -80,7 +80,7 @@ public class BlockEntityCondenser extends BlockEntityConfigurable {
 			}
 			// Check the fluid capacity.
 			if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
-				return ProcessingCheckState.outputTankCannotTakeFluid();
+				return ProcessingCheckState.fluidOutputFull();
 			}
 
 			// Check the heat level.
@@ -127,9 +127,12 @@ public class BlockEntityCondenser extends BlockEntityConfigurable {
 		}
 
 		// If we can't store the filled output in the output slot, return false.
-		if (!(outputTankComponent.getFluid().isEmpty() || outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid()))
-				|| outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
+		if (outputTankComponent.getFluidAmount() + recipe.getOutputFluid().getAmount() > outputTankComponent.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();
+		}
+
+		if (!outputTankComponent.getFluid().isEmpty() && !outputTankComponent.getFluid().isFluidEqual(recipe.getOutputFluid())) {
+			return ProcessingCheckState.outputFluidDoesNotMatch();
 		}
 
 		// Drain the input fluid.

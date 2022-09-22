@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.ForgeHooks;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
@@ -23,10 +24,11 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
+import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.loopingsound.LoopingSoundComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnaceRecipe;
+import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -49,7 +51,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
-	public final RecipeProcessingComponent<FusionFurnaceRecipe> processingComponent;
+	public final RecipeProcessingComponent<AlloyFurnaceRecipe> processingComponent;
 	public final LoopingSoundComponent furnaceSoundComponent;
 
 	@UpdateSerialize
@@ -62,31 +64,32 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 		disableFaceInteraction();
 
 		registerComponent(furnaceSoundComponent = new LoopingSoundComponent("FurnaceSoundComponent", 20));
-
-		// Setup the input inventory with no filtering (no point since there are
-		// multiple inputs).
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2).setMode(MachineSideMode.Input2).setShiftClickEnabled(true));
-		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1).setMode(MachineSideMode.Input3).setShiftClickEnabled(true));
-
-		// Setup all the other inventories.
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
+		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input2).setShiftClickEnabled(true));
+		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input3).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
+			public boolean canInsertItem(int slot, ItemStack stack) {
+				return ForgeHooks.getBurnTime(stack, RecipeType.SMELTING) > 0;
+			}
+		}));
 
-		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
-				FusionFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
-
-		// Initialize the processing component to work with the redstone control
-		// component, upgrade component and energy component.
-		processingComponent.setShouldControlBlockState(true);
+		registerComponent(processingComponent = new RecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
+				AlloyFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true));
 	}
 
 	public void process() {
 		if (!getLevel().isClientSide()) {
+			// Use fuel always, just like a vanilla furnace.
+			// This has to be done first so that the next logic can supply new fuel if we
+			// have it before we check to stop the processing.
+			if (burnTimeRemaining > 0) {
+				burnTimeRemaining--;
+			}
+
 			// If we have a recipe that we can place in the output, if we don't have any
 			// remaining
 			// fuel, use some.
-			Optional<FusionFurnaceRecipe> recipe = processingComponent.getPendingProcessingRecipe();
+			Optional<AlloyFurnaceRecipe> recipe = processingComponent.getPendingProcessingRecipe();
 			if (recipe.isPresent() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.get().getOutput().getItem())) {
 				int burnTime = ForgeHooks.getBurnTime(fuelInventory.getStackInSlot(0), null);
 				if (burnTimeRemaining <= 0 && burnTime > 0) {
@@ -96,15 +99,13 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 				}
 			}
 
-			// Use fuel always, just like a vanilla furnace.
-			if (burnTimeRemaining > 0) {
-				burnTimeRemaining--;
-			}
-
 			if (burnTimeRemaining > 0) {
 				furnaceSoundComponent.startPlayingSound(SoundEvents.BLASTFURNACE_FIRE_CRACKLE.getRegistryName(), SoundSource.BLOCKS, 1f, 1.0f, getBlockPos(), 64);
 			} else {
 				furnaceSoundComponent.stopPlayingSound();
+				if (processingComponent.getCurrentProcessingTime() > 0) {
+					processingComponent.cancelProcessing();
+				}
 			}
 		}
 	}
@@ -129,30 +130,23 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 		}
 	}
 
-	protected void moveInputs(FusionFurnaceRecipe recipe) {
-		// Transfer the items.
-		for (int i = 0; i < 2; i++) {
-			int count = recipe.getRequiredCountOfItem(inputInventory.getStackInSlot(i));
-			if (count > 0) {
-				transferItemInternally(count, inputInventory, i, internalInventory, i);
-			}
-		}
+	protected void moveInputs(AlloyFurnaceRecipe recipe) {
+		transferItemInternally(recipe.getInput1().getCount(), inputInventory, 0, internalInventory, 0);
+		transferItemInternally(recipe.getInput2().getCount(), inputInventory, 1, internalInventory, 1);
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 	}
 
-	protected ProcessingCheckState canProcessRecipe(FusionFurnaceRecipe recipe, RecipeProcessingPhase location) {
-		if (recipe.getBlockAlloyFurnace()) {
-			return ProcessingCheckState.error("This recipe is not valid for the alloy furnace!");
-		}
+	protected ProcessingCheckState canProcessRecipe(AlloyFurnaceRecipe recipe, RecipeProcessingPhase location) {
 		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getOutput().getItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (burnTimeRemaining <= 0) {
-			return ProcessingCheckState.error("Out of fuel!");
+			return ProcessingCheckState.error("gui.staticpower.alert.out_of_fuel");
 		}
 		return ProcessingCheckState.ok();
 	}
 
-	protected void processingCompleted(FusionFurnaceRecipe recipe) {
+	protected void processingCompleted(AlloyFurnaceRecipe recipe) {
 		// Insert the output into the output inventory.
 		ItemStack output = recipe.getOutput().calculateOutput();
 		InventoryUtilities.insertItemIntoInventory(outputInventory, output, false);

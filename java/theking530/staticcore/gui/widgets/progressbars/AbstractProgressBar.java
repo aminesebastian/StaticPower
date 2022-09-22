@@ -9,6 +9,7 @@ import javax.annotation.Nullable;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
@@ -73,7 +74,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	 * If the processing is stopped due to an error, this message will indicate what
 	 * that error is to the user.
 	 */
-	protected String processingErrorMessage;
+	protected MutableComponent processingErrorMessage;
 	/**
 	 * Instance of the error drawable.
 	 */
@@ -160,14 +161,15 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
 		if (isProcessingErrored) {
-			String[] splitTooltips = processingErrorMessage.split("\\$");
+			String[] splitTooltips = processingErrorMessage.getString().split("\\$");
 			for (String tip : splitTooltips) {
 				tooltips.add(new TextComponent(tip));
 			}
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
 				String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
-				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
+				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime)
+						.append(new TranslatableComponent("gui.staticpower.seconds.short")));
 			} else {
 				String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
 				tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
@@ -194,7 +196,7 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 	}
 
 	@SuppressWarnings("unchecked")
-	public T setErrorMessage(String message) {
+	public T setErrorMessage(MutableComponent message) {
 		processingErrorMessage = message;
 		return (T) this;
 	}

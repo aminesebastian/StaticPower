@@ -43,14 +43,15 @@ public class ProcessingComponentStateWidget extends AbstractGuiWidget<Processing
 		DecimalFormat decimalFormat = new DecimalFormat("#.#");
 
 		if (machineProcessingComponent.isProcessingStoppedDueToError()) {
-			String[] splitTooltips = machineProcessingComponent.getProcessingErrorMessage().split("\\$");
+			String[] splitTooltips = machineProcessingComponent.getProcessingErrorMessage().getString().split("\\$");
 			for (String tip : splitTooltips) {
 				tooltips.add(new TextComponent(tip));
 			}
 		} else if (machineProcessingComponent.getCurrentProcessingTime() > 0) {
-			String remainingTime = decimalFormat
-					.format((machineProcessingComponent.getMaxProcessingTime() - machineProcessingComponent.getCurrentProcessingTime()) / (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
-			tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
+			String remainingTime = decimalFormat.format((machineProcessingComponent.getMaxProcessingTime() - machineProcessingComponent.getCurrentProcessingTime())
+					/ (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
+			tooltips.add(
+					new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
 		} else {
 			String maxTime = decimalFormat.format(machineProcessingComponent.getMaxProcessingTime() / (machineProcessingComponent.getTimeUnitsPerTick() * 20.0f));
 			tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));

@@ -194,7 +194,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine {
 			return stack.getCapability(CapabilityAttributable.ATTRIBUTABLE_CAPABILITY).isPresent();
 		} else {
 			// Test for modifier materials.
-			List<AutoSmithRecipe> recipes = StaticPowerRecipeRegistry.getRecipesOfType(AutoSmithRecipe.RECIPE_TYPE);
+			List<AutoSmithRecipe> recipes = getLevel().getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
 			for (AutoSmithRecipe recipe : recipes) {
 				if (recipe.getModifierMaterial().test(stack)) {
 					return true;

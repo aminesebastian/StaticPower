@@ -10,6 +10,7 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
@@ -20,7 +21,6 @@ import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.registries.RegistryManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.thermalconductivity.ThermalConductivityRecipe;
 import theking530.staticpower.utilities.ItemUtilities;
 
@@ -35,7 +35,7 @@ public class ThermalConductivityRecipeProvider implements IRecipeManagerPlugin {
 		RECIPES = new ArrayList<ThermalConductivityJEIRecipeWrapper>();
 
 		// Get all thermal conductivity recipes.
-		List<ThermalConductivityRecipe> originalRecipes = StaticPowerRecipeRegistry.getRecipesOfType(ThermalConductivityRecipe.RECIPE_TYPE);
+		List<ThermalConductivityRecipe> originalRecipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(ThermalConductivityRecipe.RECIPE_TYPE);
 
 		// Iterate through all the recipes.
 		for (ThermalConductivityRecipe recipe : originalRecipes) {

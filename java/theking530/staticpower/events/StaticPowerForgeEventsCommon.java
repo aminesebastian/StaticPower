@@ -103,7 +103,6 @@ public class StaticPowerForgeEventsCommon {
 	@SubscribeEvent
 	public static void onServerAboutToStart(ServerAboutToStartEvent serverStarted) {
 		DATA_PATH = serverStarted.getServer().getWorldPath(new LevelResource("data"));
-		StaticPowerRecipeRegistry.onResourcesReloaded(serverStarted.getServer().getRecipeManager());
 		StaticPowerGameDataManager.clearAllGameData();
 	}
 

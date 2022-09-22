@@ -1187,13 +1187,14 @@
 	"gui.staticpower.extractor_rate_format": "Extracts items every %1$d ticks & fluid every tick.",
 	"gui.staticpower.extractor_fluid_rate": "%1$s per Extraction",
 	"gui.staticpower.extractor_stack_size": "%1$d items per Extraction",
-	"gui.staticpower.filter_tooltip": "Stop unwanted items from going into inventories! No more messy chests!",
-	"gui.staticpower.retriever_tooltip": "Pulls items from any connected inventories. Why push when you can pull!",
 	"gui.staticpower.retriever_rate_format": "Extracts every %1$d ticks",
 	"gui.staticpower.retriever_stack_size": "%1$d items per Extraction",
 	"gui.staticpower.conveyor_speed_multiplier": "Speed: ",
 	"gui.staticpower.conveyor_supplier_stack_size": "Maximum Stack Size: ",
 	"gui.staticpower.conveyor_extractor_stack_size": "Maximum Stack Size: ",
+	
+	"gui.staticpower.filter_tooltip": "Stop unwanted items from going into inventories! No more messy chests!",
+	"gui.staticpower.retriever_tooltip": "Pulls items from any connected inventories. Why push when you can pull!",
 	"gui.staticpower.digistore_terminal_tooltip": "Take a look at your digistore network's contents. You see everything....EVERYTHING!",
 	"gui.staticpower.digistore_crafting_terminal_tooltip": "Craft straight from your digistore network! Use it to craft a crafting table, I dare you, you luddite.",
 	"gui.staticpower.digistore_pattern_encoder": "Why craft when your soon-to-be robot overlords can do it for you? Teach them how to do it! Encode auto-crafting patterns.",
@@ -1204,6 +1205,7 @@
 	"gui.staticpower.regulator_tooltip": "Keeps an inventory always  topped up to a specified amount!",
 	"gui.staticpower.crafting_interface_tooltip": "Give it recipes, watch it go! Attach to any machines and the machines become part of the digistore network.",
 	"gui.staticpower.digistore_wireless_terminal_advanced_tooltip": "Bound to terminal: %1$s",
+	
 	"gui.staticpower.experience": "%s XP",
 	"gui.staticpower.fertlization": "Fertilization",
 	"gui.staticpower.fertlization_bonus": "Fertilization Bonus: %s",
@@ -1215,6 +1217,17 @@
 	"gui.staticpower.remaining_heat_time": "Remaining Heat Time:",
 	"gui.staticpower.tool_speed_multiplier": "Mining Speed",
 	"gui.staticpower.transformer_upgrade_tooltip": "Upgrades a Machine from %1$s to %2$s",
+	
+	"gui.staticpower.alert.out_of_fuel": "Out of fuel!",
+	"gui.staticpower.alert.requires_different_input_fluid": "Requires different input fluid.",
+	"gui.staticpower.alert.not_enough_fluid": "Requires more fluid.",
+	"gui.staticpower.alert.fluid_output_full": "Output tank does not have enough space!",
+	"gui.staticpower.alert.fluid_output_mismatch": "Recipe fluid does not match fluid in tank.",
+	"gui.staticpower.alert.not_enough_power": "Not enough power! %1$s required!",
+	"gui.staticpower.alert.power_output_full": "Energy storage is full!",
+	"gui.staticpower.alert.internal_buffer_not_empty": "Machine's internal buffer not empty.",
+	"gui.staticpower.alert.machine_ouput_cannot_fit_recipe": "Recipe output cannot be placed in machine output.",
+	"gui.staticpower.alert.digistore_manager_missing": "Digistore Manager not present or out of power!",
 	
 	"gui.staticpower.wire_coil_connecting": "Connecting to [%1$s]",
 	

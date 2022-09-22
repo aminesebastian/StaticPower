@@ -48,6 +48,10 @@ public class MachineRecipeProcessingSection {
 		return new MachineRecipeProcessingSection(defaultTime, defaultPowerCost, minimumHeat, heatUse);
 	}
 
+	public static MachineRecipeProcessingSection fromJson(int defaultTime, JsonObject json) {
+		return fromJson(defaultTime, 0, 0, 0, json);
+	}
+
 	public static MachineRecipeProcessingSection fromJson(int defaultTime, double defaultPowerCost, JsonObject json) {
 		return fromJson(defaultTime, defaultPowerCost, 0, 0, json);
 	}

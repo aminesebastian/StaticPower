@@ -10,17 +10,19 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SimpleRecipeSerializer;
 import net.minecraft.world.level.Level;
-import theking530.staticpower.StaticPower;
 import theking530.staticpower.cables.attachments.cover.CableCover;
+import theking530.staticpower.data.crafting.wrappers.StaticPowerRecipeType;
+import theking530.staticpower.data.crafting.wrappers.crucible.CrucibleRecipe;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.items.tools.CoverSaw;
 
 public class CoverRecipe extends CustomRecipe {
 	public static final SimpleRecipeSerializer<CoverRecipe> SERIALIZER_INSTANCE;
 	public static final String ID = "cover_recipe";
-	public static final ResourceLocation SERIALIZER_ID = new ResourceLocation(StaticPower.MOD_ID, "cover_recipe");
+	public static final RecipeType<CrucibleRecipe> RECIPE_TYPE = new StaticPowerRecipeType<CrucibleRecipe>();
 
 	static {
 		SERIALIZER_INSTANCE = new SimpleRecipeSerializer<>(name -> new CoverRecipe(name));

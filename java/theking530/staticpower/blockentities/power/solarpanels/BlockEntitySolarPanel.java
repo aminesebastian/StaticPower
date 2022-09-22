@@ -81,7 +81,7 @@ public class BlockEntitySolarPanel extends BlockEntityBase {
 	// Functionality
 	public void generateRF() {
 		if (isGenerating()) {
-			double generateAmount = generationPerTick;
+			double generateAmount = getTierObject().powerConfiguration.solarPanelPowerGeneration.get();
 			if (getLevel().isRaining()) {
 				generateAmount /= 2;
 			}

@@ -40,13 +40,8 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 		// Get the output.
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.parseFromJSON(json.getAsJsonObject("output"));
 
-		boolean blockAlloyFurnace = false;
-		if (json.has("blockAlloyFurnace")) {
-			blockAlloyFurnace = json.get("blockAlloyFurnace").getAsBoolean();
-		}
-
 		// Craete the recipe.
-		return new FusionFurnaceRecipe(recipeId, inputs, output, blockAlloyFurnace, processing);
+		return new FusionFurnaceRecipe(recipeId, inputs, output, processing);
 	}
 
 	@Override
@@ -59,9 +54,8 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 
 		ProbabilityItemStackOutput output = ProbabilityItemStackOutput.readFromBuffer(buffer);
 
-		boolean blockAlloyFurnace = buffer.readBoolean();
 		// Craete the recipe.
-		return new FusionFurnaceRecipe(recipeId, inputs, output, blockAlloyFurnace, MachineRecipeProcessingSection.fromBuffer(buffer));
+		return new FusionFurnaceRecipe(recipeId, inputs, output, MachineRecipeProcessingSection.fromBuffer(buffer));
 	}
 
 	@Override
@@ -74,7 +68,6 @@ public class FusionFurnaceRecipeSerializer extends StaticPowerRecipeSerializer<F
 
 		recipe.getOutput().writeToBuffer(buffer);
 		recipe.getProcessingSection().writeToBuffer(buffer);
-		buffer.writeBoolean(recipe.getBlockAlloyFurnace());
 	}
 
 	@Override

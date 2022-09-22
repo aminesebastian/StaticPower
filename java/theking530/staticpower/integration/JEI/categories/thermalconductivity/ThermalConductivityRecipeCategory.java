@@ -34,7 +34,6 @@ import theking530.staticcore.utilities.Color;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
-import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.integration.JEI.PluginJEI;
@@ -67,6 +66,11 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	}
 
 	@Override
+	public RecipeType<ThermalConductivityJEIRecipeWrapper> getRecipeType() {
+		return TYPE;
+	}
+
+	@Override
 	public Class<? extends ThermalConductivityJEIRecipeWrapper> getRecipeClass() {
 		return ThermalConductivityJEIRecipeWrapper.class;
 	}
@@ -74,12 +78,6 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 	@Override
 	public IDrawable getIcon() {
 		return icon;
-	}
-
-	@Override
-	@Nonnull
-	public RecipeType<ThermalConductivityJEIRecipeWrapper> getRecipeType() {
-		return TYPE;
 	}
 
 	@SuppressWarnings("deprecation")

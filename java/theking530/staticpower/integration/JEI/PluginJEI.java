@@ -2,17 +2,16 @@ package theking530.staticpower.integration.JEI;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.annotation.Nullable;
+import java.util.Objects;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
-import mezz.jei.api.constants.VanillaRecipeCategoryUid;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.ingredients.IIngredientType;
+import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IModIngredientRegistration;
@@ -22,10 +21,12 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
 import mezz.jei.api.runtime.IJeiRuntime;
-import mezz.jei.plugins.vanilla.crafting.VanillaRecipes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.machines.autocrafter.ContainerAutoCraftingTable;
 import theking530.staticpower.blockentities.machines.autosolderingtable.ContainerAutoSolderingTable;
@@ -34,7 +35,8 @@ import theking530.staticpower.cables.attachments.digistore.craftingterminal.Cont
 import theking530.staticpower.cables.attachments.digistore.patternencoder.ContainerDigistorePatternEncoder;
 import theking530.staticpower.client.gui.StaticPowerContainerGui;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
-import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
+import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
 import theking530.staticpower.data.crafting.wrappers.castingbasin.CastingRecipe;
 import theking530.staticpower.data.crafting.wrappers.cauldron.CauldronRecipe;
@@ -62,39 +64,40 @@ import theking530.staticpower.data.crafting.wrappers.tumbler.TumblerRecipe;
 import theking530.staticpower.data.crafting.wrappers.vulcanizer.VulcanizerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModItems;
-import theking530.staticpower.integration.JEI.categories.bottler.BottleRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.caster.CasterRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.cauldron.CauldronRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.centrifuge.CentrifugeRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.condenser.CondenserRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.covers.CoverRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.crucible.CrucibleRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.evaporator.EvaporatorRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.fermenter.FermenterRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.fertilization.FertilizerRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.fluidgenerator.FluidGeneratorRecipeCateogry;
-import theking530.staticpower.integration.JEI.categories.fluidinfuser.FluidInfuserRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.former.FormerRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.fusionfurnace.FusionFurnaceRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.hammer.HammerRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.lathe.LatheRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.lumbermill.LumberMillRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.mixer.MixerRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.packager.PackagerRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.poweredfurnace.PoweredFurnaceRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.poweredgrinder.PoweredGrinderRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.refinery.RefineryRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.AlloyFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.BottleRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.CasterRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.CauldronRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.CentrifugeRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.CondenserRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.CoverRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.CrucibleRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.EvaporatorRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.FermenterRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.FertilizerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.FluidGeneratorRecipeCateogry;
+import theking530.staticpower.integration.JEI.categories.FluidInfuserRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.FormerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.FusionFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.HammerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.LatheRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.LumberMillRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.MixerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.PackagerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.PoweredFurnaceRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.PoweredGrinderRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.RefineryRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.SolderingTableRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.SolidGeneratorRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.SqueezerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.TumblerRecipeCategory;
+import theking530.staticpower.integration.JEI.categories.VulcanizerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.smithing.SmithingRecipeProvider;
-import theking530.staticpower.integration.JEI.categories.solderingtable.SolderingTableRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.solidgenerator.SolidGeneratorRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.squeezer.SqueezerRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeCategory;
 import theking530.staticpower.integration.JEI.categories.thermalconductivity.ThermalConductivityRecipeProvider;
-import theking530.staticpower.integration.JEI.categories.tumbler.TumblerRecipeCategory;
-import theking530.staticpower.integration.JEI.categories.vulcanizer.VulcanizerRecipeCategory;
-import theking530.staticpower.integration.JEI.ingredients.ProbabilityItemStackHelper;
-import theking530.staticpower.integration.JEI.ingredients.ProbabilityItemStackRenderer;
+import theking530.staticpower.integration.JEI.ingredients.probabilitystack.ProbabilityItemStackHelper;
+import theking530.staticpower.integration.JEI.ingredients.probabilitystack.ProbabilityItemStackRenderer;
 import theking530.staticpower.items.StaticPowerEnergyStoringItem;
 import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 
@@ -102,63 +105,8 @@ import theking530.staticpower.items.fluidcapsule.FluidCapsule;
 public class PluginJEI implements IModPlugin {
 	public static final IIngredientType<ProbabilityItemStackOutput> PROBABILITY_ITEM_STACK = () -> ProbabilityItemStackOutput.class;
 	public static IJeiRuntime RUNTIME;
-	@Nullable
-	private LumberMillRecipeCategory lumberMillCategory;
-	@Nullable
-	private FormerRecipeCategory formerCategory;
-	@Nullable
-	private PoweredGrinderRecipeCategory poweredGrinderCategory;
-	@Nullable
-	private PoweredFurnaceRecipeCategory poweredFurnaceCategory;
-	@Nullable
-	private FermenterRecipeCategory fermenterCategory;
-	@Nullable
-	private SqueezerRecipeCategory squeezerCategory;
-	@Nullable
-	private BottleRecipeCategory bottlerCategory;
-	@Nullable
-	private SolidGeneratorRecipeCategory solidGeneratorCategory;
-	@Nullable
-	private SolderingTableRecipeCategory solderingTableCategory;
-	@Nullable
-	private FluidInfuserRecipeCategory fluidInfuserCategory;
-	@Nullable
-	private CentrifugeRecipeCategory centrifugeCategory;
-	@Nullable
-	private FusionFurnaceRecipeCategory fusionFurnaceCateogry;
-	@Nullable
-	private EvaporatorRecipeCategory evaporationCategory;
-	@Nullable
-	private CondenserRecipeCategory condensationCategory;
-	@Nullable
-	private FluidGeneratorRecipeCateogry fuidGeneratorRecipeCateogry;
-	@Nullable
-	private VulcanizerRecipeCategory vulcanizerRecipeCategory;
-	@Nullable
-	private SmithingRecipeCategory smithingRecipeCategory;
-	@Nullable
-	private LatheRecipeCategory latheRecipeCategory;
-	@Nullable
-	private MixerRecipeCategory mixerRecipeCategory;
-	@Nullable
-	private CrucibleRecipeCategory crucibleRecipeCategory;
-	@Nullable
-	private CasterRecipeCategory casterRecipeCategory;
-	@Nullable
-	private TumblerRecipeCategory tumblerRecipeCategory;
-	@Nullable
-	private ThermalConductivityRecipeCategory thermalConductivityRecipeCategory;
-	@Nullable
-	private PackagerRecipeCategory packagerRecipeCategory;
-	@Nullable
-	private HammerRecipeCategory hammerRecipeCategory;
-	@Nullable
-	private CauldronRecipeCategory cauldronRecipeCategory;
-	@Nullable
-	private FertilizerRecipeCategory fertilizerRecipeCategory;
-	@Nullable
-	private RefineryRecipeCategory refineryRecipeCategory;
 
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Override
 	public void registerGuiHandlers(IGuiHandlerRegistration registration) {
 		registration.addGuiContainerHandler(StaticPowerContainerGui.class, new JEIContainerHandler());
@@ -171,6 +119,7 @@ public class PluginJEI implements IModPlugin {
 		ProbabilityItemStackHelper itemStackHelper = new ProbabilityItemStackHelper(registration);
 		ProbabilityItemStackRenderer itemStackRenderer = new ProbabilityItemStackRenderer();
 		registration.register(PROBABILITY_ITEM_STACK, probabilityStacks, itemStackHelper, itemStackRenderer);
+
 	}
 
 	@Override
@@ -178,117 +127,39 @@ public class PluginJEI implements IModPlugin {
 		IJeiHelpers jeiHelpers = registration.getJeiHelpers();
 		IGuiHelper guiHelper = jeiHelpers.getGuiHelper();
 
-		// Lumber Mill
-		lumberMillCategory = new LumberMillRecipeCategory(guiHelper);
-		registration.addRecipeCategories(lumberMillCategory);
+		registerCategory(registration, new LumberMillRecipeCategory(guiHelper));
+		registerCategory(registration, new FormerRecipeCategory(guiHelper));
+		registerCategory(registration, new PoweredFurnaceRecipeCategory(guiHelper));
+		registerCategory(registration, new PoweredGrinderRecipeCategory(guiHelper));
+		registerCategory(registration, new FermenterRecipeCategory(guiHelper));
+		registerCategory(registration, new SqueezerRecipeCategory(guiHelper));
+		registerCategory(registration, new BottleRecipeCategory(guiHelper));
+		registerCategory(registration, new SolidGeneratorRecipeCategory(guiHelper));
+		registerCategory(registration, new SolderingTableRecipeCategory(guiHelper));
+		registerCategory(registration, new FluidInfuserRecipeCategory(guiHelper));
+		registerCategory(registration, new CentrifugeRecipeCategory(guiHelper));
+		registerCategory(registration, new FusionFurnaceRecipeCategory(guiHelper));
+		registerCategory(registration, new EvaporatorRecipeCategory(guiHelper));
+		registerCategory(registration, new CondenserRecipeCategory(guiHelper));
+		registerCategory(registration, new FluidGeneratorRecipeCateogry(guiHelper));
+		registerCategory(registration, new VulcanizerRecipeCategory(guiHelper));
+		registerCategory(registration, new SmithingRecipeCategory(guiHelper));
+		registerCategory(registration, new LatheRecipeCategory(guiHelper));
+		registerCategory(registration, new MixerRecipeCategory(guiHelper));
+		registerCategory(registration, new CrucibleRecipeCategory(guiHelper));
+		registerCategory(registration, new CasterRecipeCategory(guiHelper));
+		registerCategory(registration, new TumblerRecipeCategory(guiHelper));
+		registerCategory(registration, new ThermalConductivityRecipeCategory(guiHelper));
+		registerCategory(registration, new PackagerRecipeCategory(guiHelper));
+		registerCategory(registration, new HammerRecipeCategory(guiHelper));
+		registerCategory(registration, new CauldronRecipeCategory(guiHelper));
+		registerCategory(registration, new FertilizerRecipeCategory(guiHelper));
+		registerCategory(registration, new RefineryRecipeCategory(guiHelper));
+		registerCategory(registration, new AlloyFurnaceRecipeCategory(guiHelper));
+	}
 
-		// Former
-		formerCategory = new FormerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(formerCategory);
-
-		// Powered Furnace
-		poweredFurnaceCategory = new PoweredFurnaceRecipeCategory(guiHelper);
-		registration.addRecipeCategories(poweredFurnaceCategory);
-
-		// Powered Grinder
-		poweredGrinderCategory = new PoweredGrinderRecipeCategory(guiHelper);
-		registration.addRecipeCategories(poweredGrinderCategory);
-
-		// Fermenter
-		fermenterCategory = new FermenterRecipeCategory(guiHelper);
-		registration.addRecipeCategories(fermenterCategory);
-
-		// Squeezer
-		squeezerCategory = new SqueezerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(squeezerCategory);
-
-		// Bottler
-		bottlerCategory = new BottleRecipeCategory(guiHelper);
-		registration.addRecipeCategories(bottlerCategory);
-
-		// Solid Generator
-		solidGeneratorCategory = new SolidGeneratorRecipeCategory(guiHelper);
-		registration.addRecipeCategories(solidGeneratorCategory);
-
-		// Soldering Iron
-		solderingTableCategory = new SolderingTableRecipeCategory(guiHelper);
-		registration.addRecipeCategories(solderingTableCategory);
-
-		// Fluid Infuser
-		fluidInfuserCategory = new FluidInfuserRecipeCategory(guiHelper);
-		registration.addRecipeCategories(fluidInfuserCategory);
-
-		// Centrifuge
-		centrifugeCategory = new CentrifugeRecipeCategory(guiHelper);
-		registration.addRecipeCategories(centrifugeCategory);
-
-		// Fusion Furnace
-		fusionFurnaceCateogry = new FusionFurnaceRecipeCategory(guiHelper);
-		registration.addRecipeCategories(fusionFurnaceCateogry);
-
-		// Evaporator
-		evaporationCategory = new EvaporatorRecipeCategory(guiHelper);
-		registration.addRecipeCategories(evaporationCategory);
-
-		// Condenser
-		condensationCategory = new CondenserRecipeCategory(guiHelper);
-		registration.addRecipeCategories(condensationCategory);
-
-		// Fluid Generator
-		fuidGeneratorRecipeCateogry = new FluidGeneratorRecipeCateogry(guiHelper);
-		registration.addRecipeCategories(fuidGeneratorRecipeCateogry);
-
-		// Vulcanizer
-		vulcanizerRecipeCategory = new VulcanizerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(vulcanizerRecipeCategory);
-
-		// Smithing
-		smithingRecipeCategory = new SmithingRecipeCategory(guiHelper);
-		registration.addRecipeCategories(smithingRecipeCategory);
-
-		// Lathe
-		latheRecipeCategory = new LatheRecipeCategory(guiHelper);
-		registration.addRecipeCategories(latheRecipeCategory);
-
-		// Mixer
-		mixerRecipeCategory = new MixerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(mixerRecipeCategory);
-
-		// Crucible
-		crucibleRecipeCategory = new CrucibleRecipeCategory(guiHelper);
-		registration.addRecipeCategories(crucibleRecipeCategory);
-
-		// Caster
-		casterRecipeCategory = new CasterRecipeCategory(guiHelper);
-		registration.addRecipeCategories(casterRecipeCategory);
-
-		// Tumbler
-		tumblerRecipeCategory = new TumblerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(tumblerRecipeCategory);
-
-		// Thermal Conductivity
-		thermalConductivityRecipeCategory = new ThermalConductivityRecipeCategory(guiHelper);
-		registration.addRecipeCategories(thermalConductivityRecipeCategory);
-
-		// Packager
-		packagerRecipeCategory = new PackagerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(packagerRecipeCategory);
-
-		// Hammer
-		hammerRecipeCategory = new HammerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(hammerRecipeCategory);
-
-		// Cauldron
-		cauldronRecipeCategory = new CauldronRecipeCategory(guiHelper);
-		registration.addRecipeCategories(cauldronRecipeCategory);
-
-		// Fertilization
-		fertilizerRecipeCategory = new FertilizerRecipeCategory(guiHelper);
-		registration.addRecipeCategories(fertilizerRecipeCategory);
-
-		// Refinery
-		refineryRecipeCategory = new RefineryRecipeCategory(guiHelper);
-		registration.addRecipeCategories(refineryRecipeCategory);
+	protected void registerCategory(IRecipeCategoryRegistration registration, IRecipeCategory<?> category) {
+		registration.addRecipeCategories(category);
 	}
 
 	@Override
@@ -344,37 +215,39 @@ public class PluginJEI implements IModPlugin {
 
 	@Override
 	public void registerRecipes(IRecipeRegistration registration) {
-		VanillaRecipes vanillaRecipes = new VanillaRecipes();
+		@SuppressWarnings("resource")
+		RecipeManager recipeManager = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
 
-		registration.addRecipes(LumberMillRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(LumberMillRecipe.RECIPE_TYPE));
-		registration.addRecipes(PoweredFurnaceRecipeCategory.TYPE, vanillaRecipes.getFurnaceRecipes(poweredFurnaceCategory));
-		registration.addRecipes(FormerRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(FormerRecipe.RECIPE_TYPE));
-		registration.addRecipes(SolderingTableRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(SolderingRecipe.RECIPE_TYPE));
+		registration.addRecipes(LumberMillRecipeCategory.TYPE, recipeManager.getAllRecipesFor(LumberMillRecipe.RECIPE_TYPE));
+		registration.addRecipes(PoweredFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(RecipeType.SMELTING));
+		registration.addRecipes(FormerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FormerRecipe.RECIPE_TYPE));
+		registration.addRecipes(SolderingTableRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SolderingRecipe.RECIPE_TYPE));
 		registration.addRecipes(ThermalConductivityRecipeCategory.TYPE, ThermalConductivityRecipeProvider.getRecipes());
-		registration.addRecipes(HammerRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(HammerRecipe.RECIPE_TYPE));
-		registration.addRecipes(CauldronRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(CauldronRecipe.RECIPE_TYPE));
-		registration.addRecipes(FertilizerRecipeCategory.TYPE, StaticPowerRecipeRegistry.getRecipesOfType(FertalizerRecipe.RECIPE_TYPE));
-
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(GrinderRecipe.RECIPE_TYPE), PoweredGrinderRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FermenterRecipe.RECIPE_TYPE), FermenterRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SqueezerRecipe.RECIPE_TYPE), SqueezerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(BottleRecipe.RECIPE_TYPE), BottleRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(SolidFuelRecipe.RECIPE_TYPE), SolidGeneratorRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidInfusionRecipe.RECIPE_TYPE), FluidInfuserRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CentrifugeRecipe.RECIPE_TYPE), CentrifugeRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FusionFurnaceRecipe.RECIPE_TYPE), FusionFurnaceRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(EvaporatorRecipe.RECIPE_TYPE), EvaporatorRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(FluidGeneratorRecipe.RECIPE_TYPE), FluidGeneratorRecipeCateogry.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CondensationRecipe.RECIPE_TYPE), CondenserRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(VulcanizerRecipe.RECIPE_TYPE), VulcanizerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(LatheRecipe.RECIPE_TYPE), LatheRecipeCategory.UID);
-		registration.addRecipes(SmithingRecipeProvider.getRecipes(), SmithingRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(MixerRecipe.RECIPE_TYPE), MixerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CrucibleRecipe.RECIPE_TYPE), CrucibleRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(CastingRecipe.RECIPE_TYPE), CasterRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(TumblerRecipe.RECIPE_TYPE), TumblerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(PackagerRecipe.RECIPE_TYPE), PackagerRecipeCategory.UID);
-		registration.addRecipes(StaticPowerRecipeRegistry.getRecipesOfType(RefineryRecipe.RECIPE_TYPE), RefineryRecipeCategory.UID);
+		registration.addRecipes(HammerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(HammerRecipe.RECIPE_TYPE));
+		registration.addRecipes(CauldronRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CauldronRecipe.RECIPE_TYPE));
+		registration.addRecipes(FertilizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FertalizerRecipe.RECIPE_TYPE));
+		registration.addRecipes(AlloyFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(AlloyFurnaceRecipe.RECIPE_TYPE));
+		registration.addRecipes(PoweredGrinderRecipeCategory.TYPE, recipeManager.getAllRecipesFor(GrinderRecipe.RECIPE_TYPE));
+		registration.addRecipes(CentrifugeRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CentrifugeRecipe.RECIPE_TYPE));
+		registration.addRecipes(SolidGeneratorRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SolidFuelRecipe.RECIPE_TYPE));
+		registration.addRecipes(LatheRecipeCategory.TYPE, recipeManager.getAllRecipesFor(LatheRecipe.RECIPE_TYPE));
+		registration.addRecipes(TumblerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(TumblerRecipe.RECIPE_TYPE));
+		registration.addRecipes(SmithingRecipeCategory.TYPE, SmithingRecipeProvider.getRecipes());
+		registration.addRecipes(PackagerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(PackagerRecipe.RECIPE_TYPE));
+		registration.addRecipes(FermenterRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FermenterRecipe.RECIPE_TYPE));
+		registration.addRecipes(SqueezerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(SqueezerRecipe.RECIPE_TYPE));
+		registration.addRecipes(BottleRecipeCategory.TYPE, recipeManager.getAllRecipesFor(BottleRecipe.RECIPE_TYPE));
+		registration.addRecipes(FluidInfuserRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FluidInfusionRecipe.RECIPE_TYPE));
+		registration.addRecipes(FluidGeneratorRecipeCateogry.TYPE, recipeManager.getAllRecipesFor(FluidGeneratorRecipe.RECIPE_TYPE));
+		registration.addRecipes(CasterRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CastingRecipe.RECIPE_TYPE));
+		registration.addRecipes(CasterRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CastingRecipe.RECIPE_TYPE));
+		registration.addRecipes(FusionFurnaceRecipeCategory.TYPE, recipeManager.getAllRecipesFor(FusionFurnaceRecipe.RECIPE_TYPE));
+		registration.addRecipes(EvaporatorRecipeCategory.TYPE, recipeManager.getAllRecipesFor(EvaporatorRecipe.RECIPE_TYPE));
+		registration.addRecipes(CondenserRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CondensationRecipe.RECIPE_TYPE));
+		registration.addRecipes(VulcanizerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(VulcanizerRecipe.RECIPE_TYPE));
+		registration.addRecipes(MixerRecipeCategory.TYPE, recipeManager.getAllRecipesFor(MixerRecipe.RECIPE_TYPE));
+		registration.addRecipes(CrucibleRecipeCategory.TYPE, recipeManager.getAllRecipesFor(CrucibleRecipe.RECIPE_TYPE));
+		registration.addRecipes(RefineryRecipeCategory.TYPE, recipeManager.getAllRecipesFor(RefineryRecipe.RECIPE_TYPE));
 	}
 
 	@Override
@@ -384,27 +257,29 @@ public class PluginJEI implements IModPlugin {
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Former.get()), FormerRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolderingTable.get()), SolderingTableRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSolderingTable.get()), SolderingTableRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AlloyFurnace.get()), AlloyFurnaceRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder.get()), PoweredGrinderRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge.get()), CentrifugeRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator.get()), SolidGeneratorRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSmith.get()), SmithingRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Lathe.get()), LatheRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler.get()), TumblerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Packager.get()), PackagerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Fermenter.get()), FermenterRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Squeezer.get()), SqueezerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Bottler.get()), BottleRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser.get()), FluidInfuserRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator.get()), FluidGeneratorRecipeCateogry.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Caster.get()), CasterRecipeCategory.TYPE);
 
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.PoweredGrinder.get()), PoweredGrinderRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Fermenter.get()), FermenterRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Squeezer.get()), SqueezerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Bottler.get()), BottleRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.SolidGenerator.get()), SolidGeneratorRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable.get()), VanillaRecipeCategoryUid.CRAFTING);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidInfuser.get()), FluidInfuserRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Centrifuge.get()), CentrifugeRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FusionFurnace.get()), FusionFurnaceRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Evaporator.get()), EvaporatorRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FluidGenerator.get()), FluidGeneratorRecipeCateogry.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Condenser.get()), CondenserRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Vulcanizer.get()), VulcanizerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoSmith.get()), SmithingRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Lathe.get()), LatheRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Mixer.get()), MixerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Crucible.get()), CrucibleRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Caster.get()), CasterRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Tumbler.get()), TumblerRecipeCategory.UID);
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Packager.get()), PackagerRecipeCategory.UID);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AutoCraftingTable.get()), RecipeTypes.CRAFTING);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.FusionFurnace.get()), FusionFurnaceRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Evaporator.get()), EvaporatorRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Condenser.get()), CondenserRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Vulcanizer.get()), VulcanizerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Mixer.get()), MixerRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.Crucible.get()), CrucibleRecipeCategory.TYPE);
+		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RefineryController.get()), RefineryRecipeCategory.TYPE);
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatCable.get()), ThermalConductivityRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.AluminumHeatSink.get()), ThermalConductivityRecipeCategory.TYPE);
@@ -426,8 +301,6 @@ public class PluginJEI implements IModPlugin {
 
 		registration.addRecipeCatalyst(new ItemStack(ModBlocks.BasicFarmer.get()), FertilizerRecipeCategory.TYPE);
 		registration.addRecipeCatalyst(new ItemStack(ModItems.SprinklerAttachment.get()), FertilizerRecipeCategory.TYPE);
-
-		registration.addRecipeCatalyst(new ItemStack(ModBlocks.RefineryController.get()), RefineryRecipeCategory.UID);
 	}
 
 	@Override

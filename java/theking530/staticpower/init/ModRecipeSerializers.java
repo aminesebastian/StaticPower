@@ -9,6 +9,8 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
+import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -104,6 +106,8 @@ public class ModRecipeSerializers {
 	public static final RegistryObject<TumblerRecipeSerializer> TUMBLER_SERIALIZER = SERIALIZERS.register(TumblerRecipe.ID, () -> TumblerRecipeSerializer.INSTANCE);
 	public static final RegistryObject<TurbineRecipeSerializer> TURBINE_SERIALIZER = SERIALIZERS.register(TurbineRecipe.ID, () -> TurbineRecipeSerializer.INSTANCE);
 	public static final RegistryObject<VulcanizerRecipeSerializer> VULCANIZER_SERIALIZER = SERIALIZERS.register(VulcanizerRecipe.ID, () -> VulcanizerRecipeSerializer.INSTANCE);
+	public static final RegistryObject<AlloyFurnaceRecipeSerializer> ALLOY_FURNACE_SERIALIZER = SERIALIZERS.register(AlloyFurnaceRecipe.ID,
+			() -> AlloyFurnaceRecipeSerializer.INSTANCE);
 
 	public static void init(IEventBus eventBus) {
 		SERIALIZERS.register(eventBus);
@@ -116,7 +120,7 @@ public class ModRecipeSerializers {
 		Registry.register(Registry.RECIPE_TYPE, CauldronRecipe.ID, CauldronRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, CentrifugeRecipe.ID, CentrifugeRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, CondensationRecipe.ID, CondensationRecipe.RECIPE_TYPE);
-//		Registry.register(Registry.RECIPE_TYPE, CoverRecipe.ID, CoverRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, CoverRecipe.ID, CoverRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, CrucibleRecipe.ID, CrucibleRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, EnchanterRecipe.ID, EnchanterRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, EvaporatorRecipe.ID, EvaporatorRecipe.RECIPE_TYPE);
@@ -139,5 +143,6 @@ public class ModRecipeSerializers {
 		Registry.register(Registry.RECIPE_TYPE, TumblerRecipe.ID, TumblerRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, TurbineRecipe.ID, TurbineRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, VulcanizerRecipe.ID, VulcanizerRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, AlloyFurnaceRecipe.ID, AlloyFurnaceRecipe.RECIPE_TYPE);
 	}
 }

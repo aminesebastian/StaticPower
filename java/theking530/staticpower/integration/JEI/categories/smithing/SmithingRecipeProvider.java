@@ -8,6 +8,7 @@ import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.advanced.IRecipeManagerPlugin;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +17,7 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.autosmith.AutoSmithRecipe;
+import theking530.staticpower.data.research.Research;
 
 public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	private static List<SmithingRecipeJEIWrapper> RECIPES;
@@ -44,13 +46,13 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 
 			// Check to see if it is a valid smithing output.
 			if (isValidSmithingOutput(itemStack)) {
-				return Collections.singletonList(SmithingRecipeCategory.UID);
+				return Collections.singletonList(SmithingRecipeCategory.TYPE.getUid());
 			}
 		} else if (focus.getRole() == RecipeIngredientRole.INPUT && focus.getTypedValue().getIngredient() instanceof ItemStack) {
 			// Check if the input is used in any smithing recipes or is itself smithable.
 			ItemStack itemStack = (ItemStack) focus.getTypedValue().getIngredient();
 			if (isValidSmithingInput(itemStack)) {
-				return Collections.singletonList(SmithingRecipeCategory.UID);
+				return Collections.singletonList(SmithingRecipeCategory.TYPE.getUid());
 			}
 		}
 
@@ -61,7 +63,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	@Override
 	public <T> List<T> getRecipes(IRecipeCategory<T> recipeCategory) {
 		// Check the category.
-		if (recipeCategory != null && !SmithingRecipeCategory.UID.equals(recipeCategory.getRecipeType().getUid())) {
+		if (recipeCategory != null && !SmithingRecipeCategory.TYPE.getUid().equals(recipeCategory.getRecipeType().getUid())) {
 			return Collections.emptyList();
 		}
 
@@ -81,7 +83,7 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T, V> List<T> getRecipes(IRecipeCategory<T> recipeCategory, IFocus<V> focus) {
-		if (!SmithingRecipeCategory.UID.equals(recipeCategory.getRecipeType().getUid())) {
+		if (!SmithingRecipeCategory.TYPE.getUid().equals(recipeCategory.getRecipeType().getUid())) {
 			return Collections.emptyList();
 		}
 
@@ -101,7 +103,8 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		List<SmithingRecipeJEIWrapper> output = new ArrayList<SmithingRecipeJEIWrapper>();
 
 		// Get all smithing reciepes.
-		List<AutoSmithRecipe> recipes = StaticPowerRecipeRegistry.getRecipesOfType(AutoSmithRecipe.RECIPE_TYPE);
+		@SuppressWarnings("resource")
+		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
 
 		// Iterate through all the recipes.
 		for (AutoSmithRecipe recipe : recipes) {
@@ -129,7 +132,8 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		}
 
 		// Test for smith targets that dont have attributable marks.
-		List<AutoSmithRecipe> recipes = StaticPowerRecipeRegistry.getRecipesOfType(AutoSmithRecipe.RECIPE_TYPE);
+		@SuppressWarnings("resource")
+		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
 		for (AutoSmithRecipe recipe : recipes) {
 			if (!recipe.isWildcardRecipe() && recipe.getSmithTarget().test(stack)) {
 				return true;
@@ -146,7 +150,8 @@ public class SmithingRecipeProvider implements IRecipeManagerPlugin {
 		}
 
 		// Test for modifier materials or input materials.
-		List<AutoSmithRecipe> recipes = StaticPowerRecipeRegistry.getRecipesOfType(AutoSmithRecipe.RECIPE_TYPE);
+		@SuppressWarnings("resource")
+		List<AutoSmithRecipe> recipes = Minecraft.getInstance().level.getRecipeManager().getAllRecipesFor(AutoSmithRecipe.RECIPE_TYPE);
 		for (AutoSmithRecipe recipe : recipes) {
 			if (recipe.getModifierMaterial().test(stack)) {
 				return true;

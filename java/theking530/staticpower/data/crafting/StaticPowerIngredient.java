@@ -9,6 +9,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * TODO: Better way to handle the "counts". Perhaps a custom JEI renderer.
+ * 
  * @author amine
  *
  */
@@ -43,9 +44,6 @@ public class StaticPowerIngredient {
 	}
 
 	public boolean test(ItemStack stackToTest) {
-		for (ItemStack stack : ingredient.getItems()) {
-			stack.setCount(count);
-		}
 		return ingredient.test(stackToTest);
 	}
 
@@ -84,7 +82,13 @@ public class StaticPowerIngredient {
 				inputCount = jsonObject.get("count").getAsInt();
 			}
 		}
-
+		
+		// Set the counts when we create the recipe. This is only for JEI.
+//		ItemStack[] stacks = input.getItems();
+//		for (ItemStack stack : stacks) {
+//			stack.setCount(inputCount);
+//		}
+//		
 		// Create the ingredient wrapper..
 		return new StaticPowerIngredient(input, inputCount);
 	}
@@ -92,6 +96,14 @@ public class StaticPowerIngredient {
 	public void write(FriendlyByteBuf buffer) {
 		ingredient.toNetwork(buffer);
 		buffer.writeInt(count);
+	}
+
+	public StaticPowerIngredient copy() {
+		return new StaticPowerIngredient(ingredient, count);
+	}
+
+	public StaticPowerIngredient copy(int count) {
+		return new StaticPowerIngredient(ingredient, count);
 	}
 
 	public static StaticPowerIngredient read(FriendlyByteBuf buffer) {

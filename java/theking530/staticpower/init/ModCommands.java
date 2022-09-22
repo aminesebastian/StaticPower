@@ -31,7 +31,7 @@ public class ModCommands {
 				Player player = commandContext.getSource().getPlayerOrException();
 				Team team = TeamManager.get().getTeamForPlayer(player);
 				if (team != null) {
-					team.getResearchManager().unlockAllResearch();
+					team.getResearchManager().unlockAllResearch(player.level);
 				}
 			} catch (Exception e) {
 				StaticPower.LOGGER.error("An error occured when executing the unlock all research command.", e);

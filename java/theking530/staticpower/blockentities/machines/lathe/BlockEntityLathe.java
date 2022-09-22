@@ -129,7 +129,7 @@ public class BlockEntityLathe extends BlockEntityMachine {
 		}
 
 		if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 		return ProcessingCheckState.ok();
 	}

@@ -10,7 +10,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.StaticPower;
 
 public abstract class BaseJEIRecipeCategory<T extends Recipe<Container>> implements IRecipeCategory<T> {
 	protected IGuiHelper guiHelper;

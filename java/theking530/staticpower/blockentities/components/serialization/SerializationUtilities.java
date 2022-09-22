@@ -12,6 +12,8 @@ import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
@@ -136,6 +138,9 @@ public class SerializationUtilities {
 					INBTSerializable<CompoundTag> serializeable = (INBTSerializable<CompoundTag>) field.get(object);
 					CompoundTag serialized = serializeable.serializeNBT();
 					nbt.put(field.getName(), serialized);
+				} else if (MutableComponent.class.isInstance(field.get(object))) {
+					Component component = (Component) field.get(object);
+					nbt.putString(field.getName(), Component.Serializer.toJson(component));
 				} else {
 					LOGGER.error(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
 				}
@@ -199,6 +204,9 @@ public class SerializationUtilities {
 				} else if (t == FluidStack.class) {
 					FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt.getCompound(field.getName()));
 					field.set(object, stack);
+				} else if (MutableComponent.class.isInstance(field.get(object))) {
+					MutableComponent component = Component.Serializer.fromJson(nbt.getString(field.getName()));
+					field.set(object, component);
 				} else if (INBTSerializable.class.isAssignableFrom(t)) {
 					@SuppressWarnings("unchecked")
 					INBTSerializable<CompoundTag> serializeable = (INBTSerializable<CompoundTag>) field.get(object);

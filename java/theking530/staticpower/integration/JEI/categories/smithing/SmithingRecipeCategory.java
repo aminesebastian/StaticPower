@@ -8,13 +8,14 @@ import javax.annotation.Nonnull;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.forge.ForgeTypes;
 import mezz.jei.api.gui.ITickTimer;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.ingredient.IGuiFluidStackGroup;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.recipe.RecipeType;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
@@ -23,7 +24,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.attributes.capability.IAttributable;
 import theking530.api.attributes.defenitions.AbstractAttributeDefenition;
@@ -42,11 +42,7 @@ import theking530.staticpower.integration.JEI.BaseJEIRecipeCategory;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipeJEIWrapper> {
-	public static final ResourceLocation UID = new ResourceLocation(StaticPower.MOD_ID, "auto_smith");
-	private static final int INTPUT_SLOT = 0;
-	private static final int MODIFIER_SLOT = 1;
-	private static final int FLUID_MODIFIER_SLOT = 2;
-	private static final int OUTPUT_SLOT = 3;
+	public static final RecipeType<SmithingRecipeJEIWrapper> TYPE = new RecipeType<>(new ResourceLocation(StaticPower.MOD_ID, "auto_smith"), SmithingRecipeJEIWrapper.class);
 
 	private final TranslatableComponent locTitle;
 	private final IDrawable background;
@@ -60,14 +56,8 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 		super(guiHelper);
 		locTitle = new TranslatableComponent(ModBlocks.AutoSmith.get().getDescriptionId());
 		background = guiHelper.createBlankDrawable(170, 60);
-		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM, new ItemStack(ModBlocks.AutoSmith.get()));
+		icon = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(ModBlocks.AutoSmith.get()));
 		pBar = new AutoSmithProgressBar(49, 19);
-	}
-
-	@Override
-	@Nonnull
-	public ResourceLocation getUid() {
-		return UID;
 	}
 
 	@Override
@@ -83,6 +73,11 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 	}
 
 	@Override
+	public RecipeType<SmithingRecipeJEIWrapper> getRecipeType() {
+		return TYPE;
+	}
+
+	@Override
 	public Class<? extends SmithingRecipeJEIWrapper> getRecipeClass() {
 		return SmithingRecipeJEIWrapper.class;
 	}
@@ -92,6 +87,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 		return icon;
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void draw(SmithingRecipeJEIWrapper recipe, PoseStack matrixStack, double mouseX, double mouseY) {
 		GuiDrawUtilities.drawSlot(matrixStack, 16, 16, 50, 0, 0);
@@ -181,37 +177,13 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 	}
 
 	@Override
-	public void setIngredients(SmithingRecipeJEIWrapper recipe, IIngredients ingredients) {
-		// Add the input item.
-		List<Ingredient> input = new ArrayList<Ingredient>();
-		input.add(recipe.getInput());
-		input.add(recipe.getRecipe().getModifierMaterial().getIngredient());
-		ingredients.setInputIngredients(input);
+	public void setRecipe(IRecipeLayoutBuilder builder, SmithingRecipeJEIWrapper recipe, IFocusGroup ingredients) {
+		builder.addSlot(RecipeIngredientRole.INPUT, 50,0).addIngredients(recipe.getInput());
+		builder.addSlot(RecipeIngredientRole.INPUT, 80, 20).addIngredients(recipe.getRecipe().getModifierMaterial().getIngredient());
+		builder.addSlot(RecipeIngredientRole.INPUT, 77, 4).addIngredient(ForgeTypes.FLUID_STACK, recipe.getRecipe().getModifierFluid())
+				.setFluidRenderer(getFluidTankDisplaySize(recipe.getRecipe().getModifierFluid()), false, 16, 52);
 
-		// Set the filled bottle output itemstack.
-		ingredients.setOutput(VanillaTypes.ITEM, recipe.getResultItem());
-
-		// Set the input fluid.
-		ingredients.setInput(VanillaTypes.FLUID, recipe.getRecipe().getModifierFluid());
-	}
-
-	@Override
-	public void setRecipe(IRecipeLayout recipeLayout, SmithingRecipeJEIWrapper recipe, IIngredients ingredients) {
-		// Add the input and output slots.
-		IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
-		guiItemStacks.init(INTPUT_SLOT, true, 49, -1);
-		guiItemStacks.init(MODIFIER_SLOT, true, 79, 19);
-		guiItemStacks.init(OUTPUT_SLOT, false, 49, 41);
-
-		// Set the items.
-		guiItemStacks.set(ingredients);
-
-		// Add the fluid.
-		IGuiFluidStackGroup fluids = recipeLayout.getFluidStacks();
-		if (!recipe.getRecipe().getModifierFluid().isEmpty()) {
-			fluids.init(FLUID_MODIFIER_SLOT, true, 77, 4, 16, 52, getFluidTankDisplaySize(recipe.getRecipe().getModifierFluid()), false, null);
-			fluids.set(ingredients);
-		}
+		builder.addSlot(RecipeIngredientRole.OUTPUT, 50, 42).addItemStack(recipe.getResultItem());
 
 		powerTimer = guiHelper.createTickTimer(recipe.getRecipe().getProcessingTime(), (int) (recipe.getRecipe().getProcessingTime() * recipe.getRecipe().getPowerCost()), true);
 		processingTimer = guiHelper.createTickTimer(recipe.getRecipe().getProcessingTime(), recipe.getRecipe().getProcessingTime(), false);

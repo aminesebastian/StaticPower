@@ -3,8 +3,6 @@ package theking530.staticpower.blockentities.power.solidgenerator;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Direction.AxisDirection;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;

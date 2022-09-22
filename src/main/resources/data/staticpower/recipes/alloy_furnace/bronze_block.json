@@ -1,0 +1,9 @@
+{
+	"type": "staticpower:alloy_furnace_recipe",
+	"input1": { "tag": "forge:storage_blocks/copper", "count": 3 },
+	"input2": { "tag": "forge:storage_blocks/tin" },
+	"output": {
+		"item": "staticpower:block_bronze",
+		"count": 4
+	}
+}

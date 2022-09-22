@@ -11,6 +11,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -118,9 +119,9 @@ public class ResearchManager {
 		return true;
 	}
 
-	public void unlockAllResearch() {
+	public void unlockAllResearch(Level level) {
 		completedResearch.clear();
-		for (Research research : ResearchLevels.getAllResearch().values()) {
+		for (Research research : ResearchLevels.getAllResearch(level).values()) {
 			completedResearch.add(research.getId());
 		}
 		selectedResearch = null;

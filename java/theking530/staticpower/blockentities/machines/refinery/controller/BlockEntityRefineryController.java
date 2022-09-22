@@ -386,15 +386,15 @@ public class BlockEntityRefineryController extends BlockEntityMachine {
 		}
 
 		if (getOutputTank(0).fill(output1, action) != output1.getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		if (getOutputTank(1).fill(output2, action) != output2.getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		if (getOutputTank(2).fill(output3, action) != output3.getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		return ProcessingCheckState.ok();

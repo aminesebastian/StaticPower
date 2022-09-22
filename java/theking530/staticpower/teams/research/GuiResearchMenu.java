@@ -192,7 +192,7 @@ public class GuiResearchMenu extends StaticPowerDetatchedGui {
 		Vector2D targetPan = new Vector2D(0, 0);
 		boolean lockTargetPan = false;
 
-		ResearchLevels levels = ResearchLevels.getAllResearchLevels();
+		ResearchLevels levels = ResearchLevels.getAllResearchLevels(Minecraft.getInstance().level);
 		for (int y = 0; y < levels.getLevels().size(); y++) {
 			ResearchLevel level = levels.getLevels().get(y);
 			for (int i = 0; i < level.getResearch().size(); i++) {

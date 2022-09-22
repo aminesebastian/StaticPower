@@ -118,7 +118,7 @@ public class BlockEntityFermenter extends BlockEntityMachine {
 			return ProcessingCheckState.outputFluidDoesNotMatch();
 		}
 		if (fluidTankComponent.getFluid().getAmount() + recipe.getOutputFluidStack().getAmount() > fluidTankComponent.getCapacity()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		int slot = getSlotToProccess();
@@ -134,7 +134,7 @@ public class BlockEntityFermenter extends BlockEntityMachine {
 			return ProcessingCheckState.outputFluidDoesNotMatch();
 		}
 		if (fluidTankComponent.getFluid().getAmount() + recipe.getOutputFluidStack().getAmount() > fluidTankComponent.getCapacity()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 		return ProcessingCheckState.ok();
 	}

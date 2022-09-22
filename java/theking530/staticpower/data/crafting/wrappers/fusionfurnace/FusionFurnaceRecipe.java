@@ -20,14 +20,11 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 
 	private final List<StaticPowerIngredient> inputs;
 	private final ProbabilityItemStackOutput output;
-	private final boolean blockAlloyFurnace;
 
-	public FusionFurnaceRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output, boolean blockAlloyFurnace,
-			MachineRecipeProcessingSection processing) {
+	public FusionFurnaceRecipe(ResourceLocation name, List<StaticPowerIngredient> inputs, ProbabilityItemStackOutput output, MachineRecipeProcessingSection processing) {
 		super(name, processing);
 		this.inputs = inputs;
 		this.output = output;
-		this.blockAlloyFurnace = blockAlloyFurnace;
 	}
 
 	public List<StaticPowerIngredient> getInputs() {
@@ -36,10 +33,6 @@ public class FusionFurnaceRecipe extends AbstractMachineRecipe {
 
 	public ProbabilityItemStackOutput getOutput() {
 		return output;
-	}
-
-	public boolean getBlockAlloyFurnace() {
-		return blockAlloyFurnace;
 	}
 
 	public int getRequiredCountOfItem(ItemStack item) {

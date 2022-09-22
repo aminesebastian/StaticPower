@@ -23,7 +23,7 @@ import theking530.staticpower.items.ResearchItem;
 public class Research extends AbstractStaticPowerRecipe {
 	public static final String ID = "research";
 	public static final RecipeType<Research> RECIPE_TYPE = new StaticPowerRecipeType<Research>();
-	
+
 	private final String title;
 	private final String description;
 	private final Vector2D visualOffset;
@@ -35,10 +35,11 @@ public class Research extends AbstractStaticPowerRecipe {
 	private final List<ItemStack> rewards;
 	private final List<ResourceLocation> advancements;
 	private final boolean hiddenUntilAvailable;
-	private final Color color;
+	private Color color;
 
-	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, int sortOrder, List<ResourceLocation> prerequisites, List<StaticPowerIngredient> requirements,
-			List<ItemStack> rewards, List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon, boolean hiddenUntilAvailable, Color color) {
+	public Research(ResourceLocation name, String title, String description, Vector2D visualOffset, int sortOrder, List<ResourceLocation> prerequisites,
+			List<StaticPowerIngredient> requirements, List<ItemStack> rewards, List<ResearchUnlock> unlocks, List<ResourceLocation> advancements, ResearchIcon icon,
+			boolean hiddenUntilAvailable, Color color) {
 		super(name);
 		this.title = title;
 		this.description = description;
@@ -51,11 +52,7 @@ public class Research extends AbstractStaticPowerRecipe {
 		this.advancements = advancements;
 		this.hiddenUntilAvailable = hiddenUntilAvailable;
 		this.sortOrder = sortOrder;
-		if (color == null) {
-			this.color = calculateColor();
-		} else {
-			this.color = color;
-		}
+		this.color = color;
 	}
 
 	public List<ResourceLocation> getAdvancements() {
@@ -103,6 +100,10 @@ public class Research extends AbstractStaticPowerRecipe {
 	}
 
 	public Color getColor() {
+		if (color == null) {
+			// We have to lazy load like this to not break tags.
+			color = calculateColor();
+		}
 		return color;
 	}
 

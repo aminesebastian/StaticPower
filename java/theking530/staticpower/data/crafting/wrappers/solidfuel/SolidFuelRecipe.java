@@ -23,7 +23,7 @@ public class SolidFuelRecipe extends AbstractStaticPowerRecipe {
 		this.fuelAmount = ForgeHooks.getBurnTime(item, RECIPE_TYPE);
 	}
 
-	public ItemStack getFuel() {
+	public ItemStack getInput() {
 		return item;
 	}
 

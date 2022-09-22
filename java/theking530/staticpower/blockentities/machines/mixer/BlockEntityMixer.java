@@ -110,7 +110,7 @@ public class BlockEntityMixer extends BlockEntityMachine {
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
 		if (fluidOutput.fill(recipe.getOutput(), FluidAction.SIMULATE) != recipe.getOutput().getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		transferItemInternally(recipe.getPrimaryItemInput().getCount(), input1Inventory, 0, internalInventory, 0);
@@ -127,7 +127,7 @@ public class BlockEntityMixer extends BlockEntityMachine {
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
 		if (fluidOutput.fill(recipe.getOutput(), FluidAction.SIMULATE) != recipe.getOutput().getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 		return ProcessingCheckState.ok();
 	}

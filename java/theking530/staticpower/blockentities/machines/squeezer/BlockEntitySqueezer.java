@@ -119,7 +119,7 @@ public class BlockEntitySqueezer extends BlockEntityMachine {
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
 		if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		// Transfer the items to the internal inventory.
@@ -144,7 +144,7 @@ public class BlockEntitySqueezer extends BlockEntityMachine {
 			if (!fluidTankComponent.getFluid().isEmpty() && fluidTankComponent.getFluid().getFluid() != recipe.getOutputFluid().getFluid()) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
 			} else {
-				return ProcessingCheckState.outputTankCannotTakeFluid();
+				return ProcessingCheckState.fluidOutputFull();
 			}
 		}
 		return ProcessingCheckState.ok();

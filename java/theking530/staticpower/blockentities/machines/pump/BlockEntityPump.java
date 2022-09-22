@@ -149,7 +149,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 
 		}
 		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) > fluidTankComponent.getCapacity()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		return ProcessingCheckState.ok();
@@ -164,7 +164,7 @@ public class BlockEntityPump extends BlockEntityMachine {
 	public ProcessingCheckState pump() {
 		// Do nothing if the tank is near full.
 		if ((fluidTankComponent.getFluidAmount() + FluidAttributes.BUCKET_VOLUME) > fluidTankComponent.getCapacity()) {
-			return ProcessingCheckState.outputTankCannotTakeFluid();
+			return ProcessingCheckState.fluidOutputFull();
 		}
 
 		// If the positions to pump is empty, try to start again.

@@ -1,6 +1,8 @@
 package theking530.staticpower.blockentities.components.control;
 
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.PowerStack;
 import theking530.api.upgrades.UpgradeTypes;
@@ -20,7 +22,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 	protected RedstoneControlComponent redstoneControlComponent;
 
 	@UpdateSerialize
-	protected String processingErrorMessage;
+	protected MutableComponent processingErrorMessage;
 	@UpdateSerialize
 	protected boolean processingStoppedDueToError;
 
@@ -82,7 +84,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		this.processingSpeedUpgradeMultiplier = 1.0f;
 		this.hasProcessingPowerCost = false;
 		this.powerUsageIncreaseMultiplier = 1.0f;
-		this.processingErrorMessage = "";
+		this.processingErrorMessage = new TextComponent("");
 		this.processingStoppedDueToError = false;
 		this.powerMultiplier = 1.0f;
 	}
@@ -482,11 +484,11 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		return (int) (((float) (currentProcessingTime) / processingTime) * scaleValue);
 	}
 
-	public String getProcessingErrorMessage() {
+	public MutableComponent getProcessingErrorMessage() {
 		return processingErrorMessage;
 	}
 
-	protected void setProcessingErrorMessage(String errorMessage) {
+	protected void setProcessingErrorMessage(MutableComponent errorMessage) {
 		processingErrorMessage = errorMessage;
 	}
 
@@ -555,9 +557,13 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		}
 
 		private final ProcessingState state;
-		private final String errorMessage;
+		private final MutableComponent errorMessage;
 
 		private ProcessingCheckState(ProcessingState state, String errorMessage) {
+			this(state, new TranslatableComponent(errorMessage));
+		}
+
+		private ProcessingCheckState(ProcessingState state, MutableComponent errorMessage) {
 			this.state = state;
 			this.errorMessage = errorMessage;
 		}
@@ -566,7 +572,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			return state;
 		}
 
-		public String getErrorMessage() {
+		public MutableComponent getErrorMessage() {
 			return errorMessage;
 		}
 
@@ -602,40 +608,40 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			return new ProcessingCheckState(ProcessingState.ERROR, errorMessage);
 		}
 
+		public static ProcessingCheckState error(MutableComponent errorMessage) {
+			return new ProcessingCheckState(ProcessingState.ERROR, errorMessage);
+		}
+
 		public static ProcessingCheckState notCorrectFluid() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Requires different input fluid.");
+			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.requires_different_input_fluid");
 		}
 
 		public static ProcessingCheckState notEnoughFluid() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Requires more fluid.");
-		}
-
-		public static ProcessingCheckState fluidOutputFull() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Output tank does not have enough space!");
+			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.not_enough_fluid");
 		}
 
 		public static ProcessingCheckState notEnoughPower(double requiredPower) {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Not enough power! " + PowerTextFormatting.formatPowerRateToString(requiredPower).getString() + " required!");
+			return new ProcessingCheckState(ProcessingState.ERROR, new TranslatableComponent("gui.staticpower.alert.not_enough_power", requiredPower));
 		}
 
 		public static ProcessingCheckState powerOutputFull() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Energy storage is full!");
+			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.power_output_full");
 		}
 
-		public static ProcessingCheckState outputTankCannotTakeFluid() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Tank does not have enough space for recipe output.");
+		public static ProcessingCheckState fluidOutputFull() {
+			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.fluid_output_full");
 		}
 
 		public static ProcessingCheckState outputFluidDoesNotMatch() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe fluid does not match fluid in tank.");
+			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.fluid_output_mismatch");
 		}
 
 		public static ProcessingCheckState internalInventoryNotEmpty() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Machine's internal buffer not empty.");
+			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.internal_buffer_not_empty");
 		}
 
 		public static ProcessingCheckState outputsCannotTakeRecipe() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "Recipe output cannot be placed in machine output.");
+			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.machine_ouput_cannot_fit_recipe");
 		}
 	}
 }

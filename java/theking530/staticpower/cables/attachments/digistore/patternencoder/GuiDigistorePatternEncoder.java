@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.entity.player.Inventory;
 import theking530.staticcore.gui.widgets.button.SpriteButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
@@ -88,7 +89,7 @@ public class GuiDigistorePatternEncoder extends AbstractGuiDigistoreTerminal<Con
 		if (getCableComponent().isManagerPresent()) {
 			progressBar.setErrorState(false);
 		} else {
-			progressBar.setErrorState(true).setErrorMessage("Digistore Manager not present or out of power!");
+			progressBar.setErrorState(true).setErrorMessage(new TranslatableComponent("gui.staticpower.alert.digistore_manager_missing"));
 		}
 	}
 
