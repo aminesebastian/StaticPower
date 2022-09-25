@@ -3,14 +3,12 @@ package theking530.staticpower;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.tiers.advanced.StaticPowerTierAdvanced;
@@ -34,6 +32,8 @@ import theking530.staticpower.data.tiers.tungsten.StaticPowerTierTungsten;
 import theking530.staticpower.data.tiers.wood.StaticPowerTierWood;
 import theking530.staticpower.data.tiers.zinc.StaticPowerTierZinc;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
@@ -92,10 +92,9 @@ public class StaticPower {
 			ModEntities.init(eventBus);
 
 			ModCableDestinations.init(eventBus);
+			ModCableModules.init(eventBus);
 
 			StaticCoreRegistry.postInitialize();
-//			
-//			MinecraftForge.EVENT_BUS.register(this);
 		} catch (Exception e) {
 			LOGGER.error("An error occured during Static Power initialization.", e);
 		}

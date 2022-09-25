@@ -12,9 +12,9 @@ import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
+import theking530.staticpower.init.ModCableModules;
 
 public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityComponent implements IItemHandler {
 
@@ -29,7 +29,7 @@ public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityCompo
 
 	@Override
 	public ItemStack getStackInSlot(int slot) {
-		return ItemStack.EMPTY	;
+		return ItemStack.EMPTY;
 	}
 
 	@Override
@@ -74,8 +74,8 @@ public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityCompo
 
 		// Get the module if it exists.
 		ServerCable cable = CableNetworkManager.get(getLevel()).getCable(getPos());
-		if (cable.getNetwork() != null && cable.getNetwork().hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
-			return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
+		if (cable.getNetwork() != null && cable.getNetwork().hasModule(ModCableModules.Digistore.get())) {
+			return Optional.of(cable.getNetwork().getModule(ModCableModules.Digistore.get()));
 		}
 
 		// Otherwise, return empty.

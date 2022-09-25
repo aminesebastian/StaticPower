@@ -66,8 +66,8 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", 1, RecipeType.SMELTING, this::getMatchParameters, this::canProcessRecipe,
-				this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, RecipeType.SMELTING, this::getMatchParameters,
+				this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

@@ -17,7 +17,6 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPowerConfig;
@@ -26,6 +25,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class DrainAttachment extends AbstractCableAttachment {
@@ -97,12 +97,12 @@ public class DrainAttachment extends AbstractCableAttachment {
 			return false;
 		}
 
-		FluidNetworkModule module = fluidCable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).orElse(null);
+		FluidNetworkModule module = fluidCable.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).orElse(null);
 		if (module == null) {
 			return false;
 		}
 
-		FluidStack drained = module.getFluidStorage().drain(1000, FluidAction.SIMULATE);
+		FluidStack drained = module.supply(cable.getPos(), 1000, FluidAction.SIMULATE);
 		if (drained.getAmount() < 1000) {
 			return false;
 		}
@@ -111,7 +111,7 @@ public class DrainAttachment extends AbstractCableAttachment {
 			return false;
 		}
 
-		module.getFluidStorage().drain(1000, FluidAction.EXECUTE);
+		module.supply(cable.getPos(), 1000, FluidAction.EXECUTE);
 		return false;
 	}
 

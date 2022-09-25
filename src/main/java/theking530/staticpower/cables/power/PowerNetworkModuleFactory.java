@@ -1,13 +1,12 @@
 package theking530.staticpower.cables.power;
 
-import net.minecraft.resources.ResourceLocation;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.ICableNetworkModuleFactory;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 
-public class PowerNetworkModuleFactory implements ICableNetworkModuleFactory {
+public class PowerNetworkModuleFactory extends CableNetworkModuleType {
 
 	@Override
-	public CableNetworkModule create(ResourceLocation moduleName) {
+	public CableNetworkModule create() {
 		return new PowerNetworkModule();
 	}
 }

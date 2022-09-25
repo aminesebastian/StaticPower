@@ -77,7 +77,7 @@ public class BlockEntityCrucible extends BlockEntityMachine {
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CrucibleRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.crucibleProcessingTime.get(),
-				CrucibleRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+				RecipeProcessingComponent.MOVE_TIME, CrucibleRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

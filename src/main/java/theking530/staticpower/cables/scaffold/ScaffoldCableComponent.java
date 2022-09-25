@@ -11,12 +11,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.init.ModCableModules;
 
 public class ScaffoldCableComponent extends AbstractCableProviderComponent {
 	public ScaffoldCableComponent(String name) {
-		super(name, CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE);
+		super(name, ModCableModules.Scaffold.get());
 	}
 
 	@Override

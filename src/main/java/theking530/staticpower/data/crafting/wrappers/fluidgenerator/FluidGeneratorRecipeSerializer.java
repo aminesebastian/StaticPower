@@ -19,10 +19,15 @@ public class FluidGeneratorRecipeSerializer extends StaticPowerRecipeSerializer<
 		// Capture the contained fluid.
 		JsonObject fluidObject = json.get("fluid").getAsJsonObject();
 		FluidStack containedFluid = StaticPowerJsonParsingUtilities.parseFluidStack(fluidObject);
-
+		if (containedFluid.isEmpty()) {
+			throw new RuntimeException(String.format("Cannot read recipe: %1$s with empty generation fluid!", recipeId.toString()));
+		}
+		
 		// Capture the generated power.
 		int powerAmount = json.get("power").getAsInt();
-
+		if (powerAmount <= 0) {
+			throw new RuntimeException(String.format("Cannot read recipe: %1$s with less-than-or-zero power generation!", recipeId.toString()));
+		}
 		// Create the recipe.
 		return new FluidGeneratorRecipe(recipeId, containedFluid, powerAmount);
 	}

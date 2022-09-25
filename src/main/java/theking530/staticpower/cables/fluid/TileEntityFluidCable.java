@@ -8,6 +8,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderFluidCable;
+import theking530.staticpower.data.tiers.categories.cables.TierFluidCableConfiguration;
 import theking530.staticpower.init.ModBlocks;
 
 public class TileEntityFluidCable extends BlockEntityBase {
@@ -72,8 +73,11 @@ public class TileEntityFluidCable extends BlockEntityBase {
 
 	public TileEntityFluidCable(BlockEntityTypeAllocator<TileEntityFluidCable> allocator, BlockPos pos, BlockState state, float radius, boolean isIndustrial) {
 		super(allocator, pos, state);
-		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial,
-				isIndustrial ? getTierObject().cableFluidConfiguration.cableIndustrialFluidCapacity.get() : getTierObject().cableFluidConfiguration.cableFluidCapacity.get()));
+
+		TierFluidCableConfiguration config = getTierObject().cableFluidConfiguration;
+		int transferRate = isIndustrial ? config.cableIndustrialFluidTransferRate.get() : config.cableFluidTransferRate.get();
+
+		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial, transferRate * 5, transferRate));
 		fluidRenderRadius = radius;
 	}
 }

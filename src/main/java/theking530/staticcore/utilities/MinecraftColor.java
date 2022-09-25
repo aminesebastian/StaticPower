@@ -42,7 +42,9 @@ public enum MinecraftColor {
 	public Color getColor() {
 		return color;
 	}
-
+	public String getName() { 
+		return dyeColor.getName();
+	}
 	public DyeColor getDyeColor() {
 		return dyeColor;
 	}

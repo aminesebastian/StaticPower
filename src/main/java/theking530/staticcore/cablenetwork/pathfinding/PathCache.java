@@ -13,8 +13,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import theking530.staticcore.cablenetwork.CableNetwork;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 
 public class PathCache {
 	public static final Logger LOGGER = LogManager.getLogger(PathCache.class);
@@ -34,7 +34,7 @@ public class PathCache {
 	 * @param destination
 	 * @return
 	 */
-	public boolean hasPath(BlockPos source, BlockPos destination, ResourceLocation moduleType) {
+	public boolean hasPath(BlockPos source, BlockPos destination, CableNetworkModuleType moduleType) {
 		return Cache.get(destination) != null && Cache.get(destination).get(source) != null
 				&& Cache.get(destination).get(source).stream().anyMatch(path -> path.getSupportedNetworkType().equals(moduleType));
 	}
@@ -46,7 +46,7 @@ public class PathCache {
 	 * @param destination
 	 * @return
 	 */
-	public @Nullable List<Path> getPaths(BlockPos cablePosition, BlockPos destination, ResourceLocation moduleType) {
+	public @Nullable List<Path> getPaths(BlockPos cablePosition, BlockPos destination, CableNetworkModuleType moduleType) {
 		if (cablePosition == null) {
 			LOGGER.error("Attemtping to find a path with a null source position.");
 			return Collections.emptyList();
@@ -72,7 +72,7 @@ public class PathCache {
 	 * @param destination
 	 * @return
 	 */
-	private List<Path> cacheNewPath(BlockPos source, BlockPos destination, ResourceLocation moduleType) {
+	private List<Path> cacheNewPath(BlockPos source, BlockPos destination, CableNetworkModuleType moduleType) {
 		// Perform the path finding.
 		NetworkPathFinder pathFinder = new NetworkPathFinder(OwningNetwork.getGraph(), OwningNetwork.getWorld(), source, destination, moduleType, (cable, dist) -> 1.0f);
 		List<Path> paths = pathFinder.executeAlgorithm();

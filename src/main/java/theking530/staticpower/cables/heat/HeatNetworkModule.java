@@ -18,17 +18,17 @@ import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 
 public class HeatNetworkModule extends CableNetworkModule {
 	private HeatStorage heatStorage;
 
 	public HeatNetworkModule() {
-		super(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
+		super(ModCableModules.Heat.get());
 		// The actual input and output rates are controlled by the individual cables.
 		heatStorage = new HeatStorage(0, 0, Float.MAX_VALUE);
 	}
@@ -38,7 +38,7 @@ public class HeatNetworkModule extends CableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<Component> components) {
+	public void getReaderOutput(List<Component> components, BlockPos pos) {
 		float averageThermalConductivity = 0.0f;
 		for (ServerCable cable : Network.getGraph().getCables().values()) {
 			averageThermalConductivity += cable.getDataTag().getDouble(HeatCableComponent.HEAT_CONDUCTIVITY_TAG_KEY);
@@ -130,14 +130,12 @@ public class HeatNetworkModule extends CableNetworkModule {
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		// Allocate the total capacity.
 		int total = 0;
-		int count = 0;
 
 		// Get all the cables in the network and get their cable components.
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			// If they have a heat cable component, get the capacity.
 			if (cable.getDataTag().contains(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY)) {
 				total += cable.getDataTag().getInt(HeatCableComponent.HEAT_CAPACITY_DATA_TAG_KEY);
-				count++;
 			}
 		}
 
@@ -149,8 +147,8 @@ public class HeatNetworkModule extends CableNetworkModule {
 	@Override
 	public void onAddedToNetwork(CableNetwork other) {
 		super.onAddedToNetwork(other);
-		if (other.hasModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE)) {
-			HeatNetworkModule module = (HeatNetworkModule) other.getModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
+		if (other.hasModule(ModCableModules.Heat.get())) {
+			HeatNetworkModule module = (HeatNetworkModule) other.getModule(ModCableModules.Heat.get());
 			module.getHeatStorage().heat(heatStorage.getCurrentHeat(), HeatTransferAction.EXECUTE);
 		}
 	}

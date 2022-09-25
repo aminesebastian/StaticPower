@@ -5,21 +5,21 @@ import java.util.Set;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModule;
+import theking530.staticpower.init.ModCableModules;
 
 public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 
-	public RedstoneNetworkModule(ResourceLocation name) {
-		super(name);
+	public RedstoneNetworkModule(CableNetworkModuleType type) {
+		super(type);
 	}
 
 	@Override
@@ -84,8 +84,8 @@ public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 					if (!selector.equals("naked") && !otherSelector.equals("naked") && !otherSelector.equals(selector)) {
 						checkWorld = false;
 					}
-				} else if (otherCable.getNetwork().hasModule(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE)) {
-					power = otherCable.getNetwork().<BundledRedstoneNetworkModule>getModule(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE).getNetworkSignalStrength(selector);
+				} else if (otherCable.getNetwork().hasModule(ModCableModules.BundledRedstone.get())) {
+					power = otherCable.getNetwork().<BundledRedstoneNetworkModule>getModule(ModCableModules.BundledRedstone.get()).getNetworkSignalStrength(selector);
 					checkWorld = false;
 				}
 			}

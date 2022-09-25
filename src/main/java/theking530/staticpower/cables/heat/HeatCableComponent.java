@@ -15,11 +15,11 @@ import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {
@@ -33,7 +33,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	private int clientSideHeatCapacity;
 
 	public HeatCableComponent(String name, int capacity, float conductivity) {
-		super(name, CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
+		super(name, ModCableModules.Heat.get());
 		this.capacity = capacity;
 		this.transferRate = conductivity;
 	}
@@ -41,8 +41,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		if (!getLevel().isClientSide) {
-			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
+		if (!isClientSide()) {
+			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
 				boolean shouldUpdate = Math.abs(network.getHeatStorage().getCurrentHeat() - clientSideHeat) >= HeatStorageComponent.HEAT_SYNC_MAX_DELTA;
 				shouldUpdate |= network.getHeatStorage().getOverheatThreshold() != clientSideHeatCapacity;
 				shouldUpdate |= clientSideHeat == 0 && network.getHeatStorage().getCurrentHeat() > 0;
@@ -55,8 +55,8 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	}
 
 	public void updateClientValues() {
-		if (!getLevel().isClientSide) {
-			this.<HeatNetworkModule>getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE).ifPresent(network -> {
+		if (!isClientSide()) {
+			this.<HeatNetworkModule>getNetworkModule(ModCableModules.Heat.get()).ifPresent(network -> {
 				clientSideHeat = network.getHeatStorage().getCurrentHeat();
 				clientSideHeatCapacity = network.getHeatStorage().getOverheatThreshold();
 
@@ -146,7 +146,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 	 * @return
 	 */
 	public Optional<HeatNetworkModule> getHeatNetworkModule() {
-		return getNetworkModule(CableNetworkModuleTypes.HEAT_NETWORK_MODULE);
+		return getNetworkModule(ModCableModules.Heat.get());
 	}
 
 	@Override
@@ -166,7 +166,7 @@ public class HeatCableComponent extends AbstractCableProviderComponent implement
 		if (cap == CapabilityHeatable.HEAT_STORAGE_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getLevel().isClientSide) {
+				if (isClientSide()) {
 					disabled = isSideDisabled(side);
 				} else {
 					Optional<ServerCable> cable = getCable();

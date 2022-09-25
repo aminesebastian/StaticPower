@@ -36,8 +36,7 @@ import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleRegistry;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticpower.StaticPower;
@@ -48,14 +47,6 @@ import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.Gener
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.NetherWartCropHarvester;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.StemCropHarvester;
 import theking530.staticpower.blockentities.machines.cropfarmer.harvesters.SugarCaneCropHarvester;
-import theking530.staticpower.cables.digistore.DigistoreNetworkModuleFactory;
-import theking530.staticpower.cables.fluid.FluidNetworkModuleFactory;
-import theking530.staticpower.cables.heat.HeatNetworkModuleFactory;
-import theking530.staticpower.cables.item.ItemNetworkModuleFactory;
-import theking530.staticpower.cables.power.PowerNetworkModuleFactory;
-import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModuleFactory;
-import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModuleFactory;
-import theking530.staticpower.cables.scaffold.ScaffoldNetworkModuleFactory;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.loot.StaticPowerLootModifier;
 import theking530.staticpower.entities.player.datacapability.CapabilityStaticPowerPlayerData;
@@ -74,33 +65,6 @@ public class StaticPowerModEventsCommon {
 
 	@SubscribeEvent
 	public static void commonSetupEvent(FMLCommonSetupEvent event) {
-		// Register network modules.
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.POWER_NETWORK_MODULE, new PowerNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.ITEM_NETWORK_MODULE, new ItemNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.FLUID_NETWORK_MODULE, new FluidNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE, new DigistoreNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.HEAT_NETWORK_MODULE, new HeatNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE, new ScaffoldNetworkModuleFactory());
-
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE, new BundledRedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE, new RedstoneNetworkModuleFactory());
-
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_RED, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_RED, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GOLD, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_YELLOW, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GREEN, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GREEN, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_AQUA, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_AQUA, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_BLUE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLUE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_LIGHT_PURPLE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_PURPLE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_WHITE, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_GRAY, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_DARK_GRAY, new RedstoneNetworkModuleFactory());
-		CableNetworkModuleRegistry.registerCableNetworkAttachmentFactory(CableNetworkModuleTypes.REDSTONE_NETWORK_MODULE_BLACK, new RedstoneNetworkModuleFactory());
 
 		// Register farming harvesters.
 		BlockEntityBasicFarmer.registerHarvester(new GenericCropHarvester());
@@ -125,6 +89,8 @@ public class StaticPowerModEventsCommon {
 	@SubscribeEvent
 	public static void registerCustomRegistries(@Nonnull NewRegistryEvent event) {
 		event.create(new RegistryBuilder<CableDestination>().setName(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY).setType(CableDestination.class).setIDRange(0,
+				Integer.MAX_VALUE - 1));
+		event.create(new RegistryBuilder<CableNetworkModuleType>().setName(StaticPowerRegistries.CABLE_MODULE_REGISTRY).setType(CableNetworkModuleType.class).setIDRange(0,
 				Integer.MAX_VALUE - 1));
 	}
 

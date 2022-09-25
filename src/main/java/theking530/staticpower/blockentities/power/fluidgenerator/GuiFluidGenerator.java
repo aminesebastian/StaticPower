@@ -38,11 +38,15 @@ public class GuiFluidGenerator extends StaticPowerTileEntityGui<ContainerFluidGe
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+		getTabManager()
+				.registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 	}
 
 	@Override
 	public void updateData() {
+		// We set the max progress high because the fire progress bar is inverted, so we
+		// want to provide a LOW percentage.
+		fireBar.setMaxProgress(getTileEntity().fluidTankComponent.getFluidAmount());
 		if (getTileEntity().processingComponent.getIsOnBlockState()) {
 			fireBar.setCurrentProgress(0);
 		} else {

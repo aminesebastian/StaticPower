@@ -37,6 +37,7 @@ public class ItemCableAddedPacket extends NetworkMessage {
 		parcelNbt = buffer.readNbt();
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {

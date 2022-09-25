@@ -1,6 +1,8 @@
 package theking530.staticpower.blockentities.components.fluids;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -44,6 +46,7 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 	@UpdateSerialize
 	private int defaultCapacity;
 
+	private Map<Direction, FluidComponentCapabilityInterface> sidedInterfaces;
 	private boolean issueSyncPackets;
 	private int timeSinceLastSync;
 	private float lastUpdatePartialTick;
@@ -51,7 +54,6 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 	private float visualFillLevel;
 
 	protected final HashSet<MachineSideMode> capabilityExposeModes;
-	private final FluidComponentCapabilityInterface capabilityInterface;
 	private UpgradeInventoryComponent upgradeInventory;
 
 	public FluidTankComponent(String name, int capacity) {
@@ -61,10 +63,13 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 	public FluidTankComponent(String name, int capacity, Predicate<FluidStack> fluidStackFilter) {
 		super(name);
 		fluidStorage = new StaticPowerFluidTank(capacity, fluidStackFilter);
+		sidedInterfaces = new HashMap<>();
+		for (Direction dir : Direction.values()) {
+			sidedInterfaces.put(dir, new FluidComponentCapabilityInterface(dir));
+		}
 		canFill = true;
 		canDrain = true;
 		issueSyncPackets = true;
-		capabilityInterface = new FluidComponentCapabilityInterface();
 		capabilityExposeModes = new HashSet<MachineSideMode>();
 		this.lastSyncFluidStack = FluidStack.EMPTY;
 		upgradeMultiplier = 1.0f;
@@ -270,10 +275,13 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 		if (isEnabled() && (exposeAsCapability || side == null) && cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			// Check if the owner is side configurable. If it is, check to make sure it's
 			// not disabled, if not, return the inventory.
-			Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
-			if (side == null || !sideConfig.isPresent() || capabilityExposeModes.contains(sideConfig.get().getWorldSpaceDirectionConfiguration(side))) {
-				capabilityInterface.updateDirection(side);
-				return LazyOptional.of(() -> capabilityInterface).cast();
+			if (side == null) {
+				return LazyOptional.of(() -> this).cast();
+			} else {
+				Optional<SideConfigurationComponent> sideConfig = ComponentUtilities.getComponent(SideConfigurationComponent.class, getTileEntity());
+				if (!sideConfig.isPresent() || capabilityExposeModes.contains(sideConfig.get().getWorldSpaceDirectionConfiguration(side))) {
+					return LazyOptional.of(() -> sidedInterfaces.get(side)).cast();
+				}
 			}
 		}
 		return LazyOptional.empty();
@@ -344,9 +352,9 @@ public class FluidTankComponent extends AbstractBlockEntityComponent implements 
 	}
 
 	public class FluidComponentCapabilityInterface implements IFluidHandler {
-		private Direction direction;
+		private final Direction direction;
 
-		public void updateDirection(Direction direction) {
+		public FluidComponentCapabilityInterface(Direction direction) {
 			this.direction = direction;
 		}
 

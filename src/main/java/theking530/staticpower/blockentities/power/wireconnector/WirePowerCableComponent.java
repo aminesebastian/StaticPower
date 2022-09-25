@@ -17,8 +17,6 @@ import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.SparseCableLink;
 import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
@@ -27,12 +25,14 @@ import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.cables.power.PowerCableComponent;
 import theking530.staticpower.client.rendering.WireRenderCache;
 import theking530.staticpower.client.rendering.renderers.WireRenderer;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.items.WireCoil;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class WirePowerCableComponent extends PowerCableComponent {
 	public WirePowerCableComponent(String name, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
-		super(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE, false, voltage, maxPower, powerLoss);
+		super(name, ModCableModules.Power.get(), false, voltage, maxPower, powerLoss);
 	}
 
 	@Override

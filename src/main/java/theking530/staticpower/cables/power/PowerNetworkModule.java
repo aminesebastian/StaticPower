@@ -14,7 +14,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
@@ -24,20 +23,24 @@ import theking530.api.energy.IStaticPowerStorage;
 import theking530.api.energy.PowerStack;
 import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
-import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.pathfinding.Path;
 import theking530.staticcore.cablenetwork.pathfinding.Path.PathEntry;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticcore.gui.text.PowerTextFormatting;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 
 public class PowerNetworkModule extends CableNetworkModule implements IStaticPowerStorage {
 	protected record CachedPowerDestination(IStaticPowerStorage power, BlockPos cable, BlockPos desintationPos) {
+	}
+
+	private record ElectricalPathProperties(double powerLoss, double maxPower, List<ServerCable> cables) {
+		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, Collections.emptyList());
 	}
 
 	private final List<CachedPowerDestination> destinations;
@@ -47,10 +50,10 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	private int lastSuppliedDestinationIndex;
 
 	public PowerNetworkModule() {
-		this(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+		this(ModCableModules.Power.get());
 	}
 
-	public PowerNetworkModule(ResourceLocation type) {
+	public PowerNetworkModule(CableNetworkModuleType type) {
 		super(type);
 		destinations = new ArrayList<>();
 		lastSuppliedDestinationIndex = 0;
@@ -64,14 +67,6 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	@Override
 	public void tick(Level world) {
-	}
-
-	@Override
-	public void onAddedToNetwork(CableNetwork other) {
-		super.onAddedToNetwork(other);
-		if (other.hasModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
-
-		}
 	}
 
 	@Override
@@ -132,7 +127,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 	}
 
 	@Override
-	public void getReaderOutput(List<Component> output) {
+	public void getReaderOutput(List<Component> output, BlockPos pos) {
 		output.add(new TextComponent(String.format("Supplying: %1$d destinations.", destinations.size())));
 		output.add(new TranslatableComponent("gui.staticpower.voltage").append(": ")
 				.append(ChatFormatting.BLUE.toString() + PowerTextFormatting.formatVoltageToString(lastProvidedVoltage).getString()));
@@ -140,7 +135,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 
 	public void getMultimeterOutput(List<Component> output, BlockPos startingLocation, BlockPos endingLocation) {
 		output.add(new TextComponent(""));
-		getReaderOutput(output);
+		getReaderOutput(output, null);
 		ElectricalPathProperties properties = getPropertiesBetweenPoints(startingLocation, endingLocation);
 
 		if (lastProvidedVoltage != 0) {
@@ -170,7 +165,7 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			return new ElectricalPathProperties(0, maxPower, List.of(cable));
 		}
 
-		List<Path> paths = Network.getPathCache().getPaths(start, end, this.getType());
+		List<Path> paths = Network.getPathCache().getPaths(start, end, getType());
 		if (paths.isEmpty()) {
 			return ElectricalPathProperties.EMPTY;
 		}
@@ -317,9 +312,5 @@ public class PowerNetworkModule extends CableNetworkModule implements IStaticPow
 			}
 		}
 		return suppliedPower;
-	}
-
-	private record ElectricalPathProperties(double powerLoss, double maxPower, List<ServerCable> cables) {
-		public static final ElectricalPathProperties EMPTY = new ElectricalPathProperties(0, 0, Collections.emptyList());
 	}
 }

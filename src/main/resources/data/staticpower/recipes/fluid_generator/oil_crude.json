@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:fluid_generator_recipe",
 	"fluid": {
-		"fluid": "staticpower:oil_crued",
+		"fluid": "staticpower:oil_crude",
 		"volume": 1
 	},
 	"power": 12

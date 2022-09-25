@@ -1,7 +1,7 @@
 {
 	"type": "staticpower:fluid_generator_recipe",
 	"fluid": {
-		"fluid": "staticpower:seed_oil",
+		"fluid": "staticpower:oil_seed",
 		"volume": 1
 	},
 	"power": 7

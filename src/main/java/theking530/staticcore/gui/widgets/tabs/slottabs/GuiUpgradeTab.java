@@ -100,7 +100,11 @@ public class GuiUpgradeTab extends BaseGuiTab {
 		} else if (slots.size() == 3) {
 			setExpandedSize(26, 83);
 			for (int i = 0; i < slots.size(); i++) {
-				slots.get(i).x = (int) (this.getXPosition() + 6);
+				if (getTabSide() == TabSide.RIGHT) {
+					slots.get(i).x = (int) (this.getXPosition() + 5);
+				} else {
+					slots.get(i).x = (int) (this.getXPosition() + 6);
+				}
 				slots.get(i).y = (int) (this.getYPosition() + 24 + (i * 18));
 			}
 		} else if (slots.size() == 4) {

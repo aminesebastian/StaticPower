@@ -71,13 +71,13 @@ public class AdvancedCableConfiguration {
 		}
 
 		@Override
-		protected int getCableFluidCapacity() {
-			return 250;
+		protected int getCableFluidtransferRate() {
+			return 100;
 		}
 
 		@Override
-		protected int getCableIndustrialFluidCapacity() {
-			return 2500;
+		protected int getCableIndustrialFluidTransferRate() {
+			return 250;
 		}
 	}
 

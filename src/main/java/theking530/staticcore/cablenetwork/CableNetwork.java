@@ -24,9 +24,10 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleRegistry;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.pathfinding.PathCache;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
+import theking530.staticpower.StaticPowerRegistries;
 
 /**
  * @author Amine Sebastian
@@ -40,7 +41,7 @@ public class CableNetwork {
 	private BlockPos origin;
 	private boolean initialScanCompleted;
 	private Level level;
-	private HashMap<ResourceLocation, CableNetworkModule> modules;
+	private HashMap<CableNetworkModuleType, CableNetworkModule> modules;
 	private boolean networkUpdatesDisabled;
 
 	public CableNetwork(BlockPos origin, long id) {
@@ -48,7 +49,7 @@ public class CableNetwork {
 		this.origin = origin;
 		pathCache = new PathCache(this);
 		graph = new CableNetworkGraph(this);
-		modules = new HashMap<ResourceLocation, CableNetworkModule>();
+		modules = new HashMap<CableNetworkModuleType, CableNetworkModule>();
 		networkUpdatesDisabled = false;
 	}
 
@@ -80,7 +81,7 @@ public class CableNetwork {
 		}
 	}
 
-	public boolean hasModule(ResourceLocation type) {
+	public boolean hasModule(CableNetworkModuleType type) {
 		return modules.containsKey(type);
 	}
 
@@ -96,7 +97,7 @@ public class CableNetwork {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends CableNetworkModule> T getModule(ResourceLocation type) {
+	public <T extends CableNetworkModule> T getModule(CableNetworkModuleType type) {
 		// If we have already registered an module of this type, throw an error.
 		if (!hasModule(type)) {
 			throw new RuntimeException(String.format("Attempted to get a module of a type: %1$s that does not exist on this network.", type));
@@ -167,7 +168,7 @@ public class CableNetwork {
 		}
 	}
 
-	public List<Component> getReaderOutput() {
+	public List<Component> getReaderOutput(BlockPos fromPos) {
 		// Allocate the output list.
 		List<Component> output = new LinkedList<Component>();
 		output.add(new TextComponent(""));
@@ -175,7 +176,7 @@ public class CableNetwork {
 
 		// Capture the output contents of the modules.
 		for (CableNetworkModule module : modules.values()) {
-			module.getReaderOutput(output);
+			module.getReaderOutput(output, fromPos);
 		}
 
 		return output;
@@ -242,7 +243,7 @@ public class CableNetwork {
 			ResourceLocation moduleType = new ResourceLocation(moduleTagCompound.getString("type"));
 
 			// Create the module.
-			CableNetworkModule moduleInstance = CableNetworkModuleRegistry.create(moduleType, moduleTagCompound);
+			CableNetworkModule moduleInstance = StaticPowerRegistries.CableModuleRegsitry().getValue(moduleType).create();
 
 			// Add the attachment to the attachments list.
 			network.addModule(moduleInstance);
@@ -261,7 +262,7 @@ public class CableNetwork {
 		ListTag moduleTagList = new ListTag();
 		modules.values().forEach(module -> {
 			CompoundTag moduleTag = new CompoundTag();
-			moduleTag.putString("type", module.getType().toString());
+			moduleTag.putString("type", module.getType().getRegistryName().toString());
 			module.writeToNbt(moduleTag);
 			moduleTagList.add(moduleTag);
 		});

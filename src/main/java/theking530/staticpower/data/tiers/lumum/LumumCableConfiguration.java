@@ -14,13 +14,13 @@ public class LumumCableConfiguration {
 		}
 
 		@Override
-		protected int getCableFluidCapacity() {
-			return 5000;
+		protected int getCableFluidtransferRate() {
+			return 600;
 		}
 
 		@Override
-		protected int getCableIndustrialFluidCapacity() {
-			return 50000;
+		protected int getCableIndustrialFluidTransferRate() {
+			return 2000;
 		}
 	}
 

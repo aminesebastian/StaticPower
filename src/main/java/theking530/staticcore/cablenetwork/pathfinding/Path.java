@@ -8,15 +8,17 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
+import theking530.staticpower.StaticPowerRegistries;
 
 public class Path {
 	private final BlockPos sourceLocation;
 	private final BlockPos destinationLocation;
 	private final PathEntry[] path;
 	private final float length;
-	private final ResourceLocation supportedNetworkType;
+	private final CableNetworkModuleType supportedNetworkType;
 
-	public Path(BlockPos source, BlockPos destination, ResourceLocation supportedNetworkType, float length, PathEntry... path) {
+	public Path(BlockPos source, BlockPos destination, CableNetworkModuleType supportedNetworkType, float length, PathEntry... path) {
 		sourceLocation = source;
 		destinationLocation = destination;
 		this.path = path;
@@ -41,7 +43,7 @@ public class Path {
 		// Get the source and destination locations.
 		sourceLocation = BlockPos.of(nbt.getLong("source"));
 		destinationLocation = BlockPos.of(nbt.getLong("destination"));
-		supportedNetworkType = new ResourceLocation(nbt.getString("supported_network_module"));
+		supportedNetworkType = StaticPowerRegistries.CableModuleRegsitry().getValue(new ResourceLocation(nbt.getString("supported_network_module")));
 	}
 
 	public BlockPos getSourceLocation() {
@@ -68,7 +70,7 @@ public class Path {
 		return path;
 	}
 
-	public ResourceLocation getSupportedNetworkType() {
+	public CableNetworkModuleType getSupportedNetworkType() {
 		return supportedNetworkType;
 	}
 
@@ -110,7 +112,7 @@ public class Path {
 		}
 		nbt.put("entries", pathNBTList);
 		nbt.putFloat("length", length);
-		nbt.putString("supported_network_module", supportedNetworkType.toString());
+		nbt.putString("supported_network_module", supportedNetworkType.getRegistryName().toString());
 		return nbt;
 	}
 

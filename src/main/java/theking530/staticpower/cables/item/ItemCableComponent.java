@@ -24,13 +24,13 @@ import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ItemCableComponent extends AbstractCableProviderComponent {
@@ -50,7 +50,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 	private final Map<Direction, ItemCableSideWrapper> sideWrappers;
 
 	public ItemCableComponent(String name, ResourceLocation tier, double maxTransferSpeed, double frictionFactor, double accelerationFactor) {
-		super(name, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+		super(name, ModCableModules.Item.get());
 		containedPackets = new HashMap<Long, ItemRoutingParcelClient>();
 		this.maxTransferSpeed = maxTransferSpeed;
 		this.frictionFactor = frictionFactor;
@@ -93,7 +93,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 			}
 
 			// Get the module.
-			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+			ItemNetworkModule itemNetworkModule = (ItemNetworkModule) network.getModule(ModCableModules.Item.get());
 
 			// Tell the network module this cable was broken.
 			itemNetworkModule.onItemCableBroken(getPos());
@@ -259,7 +259,7 @@ public class ItemCableComponent extends AbstractCableProviderComponent {
 				ItemStack insertStack = stack.copy();
 				insertStack.setCount(Math.min(stack.getCount(), getSlotLimit(slot)));
 
-				owningCable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+				owningCable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
 					// Attempt to insert the stack into the cable. We will use the default
 					// extraction speed.
 					ItemStack remainingAmount = network.transferItemStack(insertStack, getPos(), side.getOpposite(), false,

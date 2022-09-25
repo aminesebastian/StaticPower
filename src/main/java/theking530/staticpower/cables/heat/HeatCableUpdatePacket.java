@@ -39,6 +39,7 @@ public class HeatCableUpdatePacket extends NetworkMessage {
 		capacity = buffer.readInt();
 	}
 
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {

@@ -17,7 +17,6 @@ import theking530.api.digistore.IDigistoreInventory;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.digistorenetwork.manager.TileEntityDigistoreManager;
@@ -26,6 +25,7 @@ import theking530.staticpower.cables.attachments.digistore.craftinginterface.Dig
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends CableNetworkModule {
@@ -42,7 +42,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	private int craftingTimer;
 
 	public DigistoreNetworkModule() {
-		super(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+		super(ModCableModules.Digistore.get());
 		digistores = new LinkedList<IDigistoreInventory>();
 		transactionManager = new DigistoreNetworkTransactionManager(this);
 		powerUsingDigistores = new LinkedList<ServerCable>();
@@ -199,14 +199,14 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	@Override
 	public void onAddedToNetwork(CableNetwork other) {
 		super.onAddedToNetwork(other);
-		if (other.hasModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE)) {
-			DigistoreNetworkModule module = (DigistoreNetworkModule) other.getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+		if (other.hasModule(ModCableModules.Digistore.get())) {
+			DigistoreNetworkModule module = (DigistoreNetworkModule) other.getModule(ModCableModules.Digistore.get());
 			module.craftingManager.mergeWithOtherManager(craftingManager);
 		}
 	}
 
 	@Override
-	public void getReaderOutput(List<Component> output) {
+	public void getReaderOutput(List<Component> output, BlockPos pos) {
 		// Get the total amount of items.
 		int items = 0;
 		for (IDigistoreInventory inv : digistores) {

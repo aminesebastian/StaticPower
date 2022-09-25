@@ -65,8 +65,8 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SolidFuelRecipe>("ProcessingComponent", 1, SolidFuelRecipe.RECIPE_TYPE, this::getMatchParameters,
-				this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<SolidFuelRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, SolidFuelRecipe.RECIPE_TYPE,
+				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

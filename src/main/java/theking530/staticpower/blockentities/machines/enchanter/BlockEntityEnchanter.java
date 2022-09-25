@@ -70,8 +70,8 @@ public class BlockEntityEnchanter extends BlockEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<EnchanterRecipe>("ProcessingComponent", 1, EnchanterRecipe.RECIPE_TYPE, this::getMatchParameters,
-				this::canStartProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<EnchanterRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, EnchanterRecipe.RECIPE_TYPE,
+				this::getMatchParameters, this::canStartProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

@@ -35,6 +35,7 @@ public class ItemCableRemovedPacket extends NetworkMessage {
 		removedParcel = buffer.readLong();
 	}
 
+	@SuppressWarnings("resource")
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {

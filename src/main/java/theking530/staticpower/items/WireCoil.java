@@ -1,5 +1,7 @@
 package theking530.staticpower.items;
 
+import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -7,7 +9,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableUtilities;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.utilities.Color;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -24,9 +26,9 @@ public class WireCoil extends StaticPowerItem {
 	private static final String INITIAL_LOCATOIN_TAG_NAME = "initial_connecting_point";
 	private final Color wireColor;
 	private final float wireThickness;
-	private final ResourceLocation cableModuleType;
+	private final Supplier<CableNetworkModuleType> cableModuleType;
 
-	public WireCoil(Color wireColor, float wireThickness, ResourceLocation cableModuleType) {
+	public WireCoil(Color wireColor, float wireThickness, Supplier<CableNetworkModuleType> cableModuleType) {
 		this.wireColor = wireColor;
 		this.wireThickness = wireThickness;
 		this.cableModuleType = cableModuleType;
@@ -41,7 +43,7 @@ public class WireCoil extends StaticPowerItem {
 	}
 
 	public boolean canApplyToTerminal(ItemStack coil, AbstractCableProviderComponent component) {
-		return component.getSupportedNetworkModuleTypes().contains(cableModuleType);
+		return component.getSupportedNetworkModuleTypes().contains(cableModuleType.get());
 	}
 
 	@Override

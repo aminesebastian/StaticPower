@@ -40,6 +40,7 @@ public class FluidCableUpdatePacket extends NetworkMessage {
 		filledPercentage = buffer.readFloat();
 	}
 
+	@SuppressWarnings({ "resource", "deprecation" })
 	@Override
 	public void handle(Supplier<Context> ctx) {
 		ctx.get().enqueueWork(() -> {

@@ -63,8 +63,8 @@ public class BlockEntityLathe extends BlockEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<LatheRecipe>("ProcessingComponent", 1, LatheRecipe.RECIPE_TYPE, this::getMatchParameters,
-				this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<LatheRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, LatheRecipe.RECIPE_TYPE,
+				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

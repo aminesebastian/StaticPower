@@ -29,7 +29,7 @@ public class CableNetworkAnalyzer extends StaticPowerItem {
 				// Get the cable.
 				ServerCable cable = CableNetworkManager.get(world).getCable(pos);
 				// Get all the messages that should be written to the output and write them.
-				for (Component text : cable.getNetwork().getReaderOutput()) {
+				for (Component text : cable.getNetwork().getReaderOutput(pos)) {
 					player.sendMessage(text, player.getUUID());
 				}
 

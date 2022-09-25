@@ -14,13 +14,13 @@ public class BasicCableConfiguration {
 		}
 
 		@Override
-		protected int getCableFluidCapacity() {
-			return 100;
+		protected int getCableFluidtransferRate() {
+			return 50;
 		}
 
 		@Override
-		protected int getCableIndustrialFluidCapacity() {
-			return 1000;
+		protected int getCableIndustrialFluidTransferRate() {
+			return 125;
 		}
 	}
 

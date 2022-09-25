@@ -74,7 +74,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 		}));
 
 		registerComponent(processingComponent = new RecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
-				AlloyFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true));
+				RecipeProcessingComponent.MOVE_TIME, AlloyFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true));
 	}
 
 	public void process() {

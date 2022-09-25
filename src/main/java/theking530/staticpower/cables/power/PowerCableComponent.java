@@ -5,7 +5,6 @@ import java.util.Set;
 
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -21,9 +20,10 @@ import theking530.api.energy.sided.ISidedStaticPowerStorage;
 import theking530.api.energy.sided.SidedStaticPowerCapabilityWrapper;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
 	public static final String VOLTAGE_ORDINAL = "power_voltage_ordinal";
@@ -31,7 +31,7 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	public static final String POWER_LOSS = "power_resistance";
 	public static final String POWER_INDUSTRIAL_DATA_TAG_KEY = "power_cable_industrial";
 
-	private final ResourceLocation moduleType;
+	private final CableNetworkModuleType moduleType;
 	private final SidedStaticPowerCapabilityWrapper capabilityWrapper;
 	private final double powerLoss;
 	private final double maxPower;
@@ -39,10 +39,10 @@ public class PowerCableComponent extends AbstractCableProviderComponent implemen
 	private final boolean isIndustrial;
 
 	public PowerCableComponent(String name, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
-		this(name, CableNetworkModuleTypes.POWER_NETWORK_MODULE, isIndustrial, voltage, maxPower, powerLoss);
+		this(name, ModCableModules.Power.get(), isIndustrial, voltage, maxPower, powerLoss);
 	}
 
-	public PowerCableComponent(String name, ResourceLocation powerModuleType, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
+	public PowerCableComponent(String name, CableNetworkModuleType powerModuleType, boolean isIndustrial, StaticPowerVoltage voltage, double maxPower, double powerLoss) {
 		super(name, powerModuleType);
 		capabilityWrapper = new SidedStaticPowerCapabilityWrapper(this);
 

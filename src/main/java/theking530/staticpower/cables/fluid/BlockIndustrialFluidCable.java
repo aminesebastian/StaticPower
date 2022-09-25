@@ -43,8 +43,7 @@ public class BlockIndustrialFluidCable extends AbstractCableBlock {
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		GuiTextUtilities.addColoredBulletTooltip(tooltip, "gui.staticpower.max_fluid_rate", ChatFormatting.AQUA,
-				GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableFluidConfiguration.cableIndustrialFluidCapacity.get()).getString());
-
+				GuiTextUtilities.formatFluidRateToString(StaticPowerConfig.getTier(tier).cableFluidConfiguration.cableIndustrialFluidTransferRate.get()).getString());
 		tooltip.add(new TranslatableComponent("gui.staticpower.industrial_cable_warning").withStyle(Style.EMPTY.withColor(ChatFormatting.RED).withItalic(true)));
 	}
 

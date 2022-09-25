@@ -103,10 +103,10 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 
 		// Process.
 		performedWorkLastTick = false;
-		process();
+		boolean performedWork = process();
 
 		// Check for changing to the off state.
-		if (!processing) {
+		if (!performedWork) {
 			// If the block state is on, and processing is false, start the blockStateOff
 			// timer. If it elapses, set the block state to off. Otherwise, start
 			// incrementing it.
@@ -124,11 +124,11 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			// Update the block's on state.
 			setIsOnBlockState(true);
 			// Set that we performed work on the last tick.
-			performedWorkLastTick = true;
+			performedWorkLastTick = performedWork;
 		}
 	}
 
-	public void process() {
+	public boolean process() {
 		// Check if we have not started.
 		if (!hasStarted) {
 			// If we have not, check the starting state.
@@ -138,6 +138,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			if (startProcessingState.isError()) {
 				processingStoppedDueToError = true;
 				processingErrorMessage = startProcessingState.getErrorMessage();
+				return false;
 			} else {
 				// Set the error state to false.
 				processingStoppedDueToError = false;
@@ -159,6 +160,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			if (canContinueProcessing.isError()) {
 				processingStoppedDueToError = true;
 				processingErrorMessage = canContinueProcessing.getErrorMessage();
+				return false;
 			} else {
 				// Get out of the error state.
 				processingStoppedDueToError = false;
@@ -168,6 +170,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 					processing = true;
 				} else if (canContinueProcessing.isCancel()) {
 					cancelProcessing();
+					return false;
 				}
 			}
 		}
@@ -176,7 +179,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		if (processing) {
 			// If the processing is paused, do nothing.
 			if (processingPaused) {
-				return;
+				return false;
 			}
 
 			// Use power if requested to.
@@ -194,6 +197,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 				if (completedState.isError()) {
 					processingStoppedDueToError = true;
 					processingErrorMessage = completedState.getErrorMessage();
+					return false;
 				} else {
 					// If it is cancel or an ok, finish processing. If it is skip, do nothing.
 					if (completedState.isOk() || completedState.isCancel()) {
@@ -208,7 +212,9 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			} else {
 				currentProcessingTime += tickDownRate;
 			}
+			return true;
 		}
+		return false;
 	}
 
 	/**

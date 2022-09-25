@@ -1,4 +1,4 @@
-package theking530.staticcore.cablenetwork.destinations;
+package theking530.staticpower.init;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -7,6 +7,7 @@ import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.destinations.types.CableDestinationCapability;
 import theking530.staticcore.cablenetwork.destinations.types.CableDestinationDigistore;
 import theking530.staticcore.cablenetwork.destinations.types.CableDestinationRedstone;

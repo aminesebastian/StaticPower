@@ -14,13 +14,13 @@ public class EnergizedCableConfiguration {
 		}
 
 		@Override
-		protected int getCableFluidCapacity() {
-			return 2500;
+		protected int getCableFluidtransferRate() {
+			return 300;
 		}
 
 		@Override
-		protected int getCableIndustrialFluidCapacity() {
-			return 25000;
+		protected int getCableIndustrialFluidTransferRate() {
+			return 1000;
 		}
 	}
 

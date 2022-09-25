@@ -8,20 +8,21 @@ public abstract class TierFluidCableConfiguration {
 	/***************************
 	 * Fluid Cable Configuration
 	 ***************************/
-	public final ConfigValue<Integer> cableFluidCapacity;
-	public final ConfigValue<Integer> cableIndustrialFluidCapacity;
+	public final ConfigValue<Integer> cableFluidTransferRate;
+
+	public final ConfigValue<Integer> cableIndustrialFluidTransferRate;
 
 	public TierFluidCableConfiguration(ForgeConfigSpec.Builder builder) {
 		builder.push("Fluid");
-		cableFluidCapacity = builder.comment("The amount of fluid that can be stored in a regular fluid pipe of this tier.")
-				.translation(StaticPower.MOD_ID + ".config." + "cableFluidCapacity").define("CableFluidCapacity", this.getCableFluidCapacity());
+		cableFluidTransferRate = builder.comment("The amount of fluid that can be transfered by a regular fluid pipe of this tier into a connected destination.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableFluidTransferRate").define("CableFluidTransferRate", getCableFluidtransferRate());
 
-		cableIndustrialFluidCapacity = builder.comment("The amount of fluid that can be stored in an industrial fluid pipe of this tier.")
-				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialFluidCapacity").define("CableIndustrialFluidCapacity", this.getCableIndustrialFluidCapacity());
+		cableIndustrialFluidTransferRate = builder.comment("The amount of fluid that can be transfered by an industrial fluid pipe of this tier into a connected destination.")
+				.translation(StaticPower.MOD_ID + ".config." + "cableIndustrialFluidTransferRate").define("CableIndustrialFluidTransferRate", getCableIndustrialFluidTransferRate());
 		builder.pop();
 	}
 
-	protected abstract int getCableFluidCapacity();
+	protected abstract int getCableFluidtransferRate();
 
-	protected abstract int getCableIndustrialFluidCapacity();
+	protected abstract int getCableIndustrialFluidTransferRate();
 }

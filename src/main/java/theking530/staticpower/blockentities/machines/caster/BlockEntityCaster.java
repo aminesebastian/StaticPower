@@ -65,7 +65,7 @@ public class BlockEntityCaster extends BlockEntityMachine {
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CastingRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.casterProcessingTime.get(),
-				CastingRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+				RecipeProcessingComponent.MOVE_TIME, CastingRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

@@ -14,12 +14,12 @@ public class CreativeCableConfiguration {
 		}
 
 		@Override
-		protected int getCableFluidCapacity() {
+		protected int getCableFluidtransferRate() {
 			return Integer.MAX_VALUE;
 		}
 
 		@Override
-		protected int getCableIndustrialFluidCapacity() {
+		protected int getCableIndustrialFluidTransferRate() {
 			return Integer.MAX_VALUE;
 		}
 	}

@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.FarmBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.StaticPowerRarities;
 import theking530.staticcore.utilities.Vector3D;
@@ -35,6 +34,7 @@ import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.init.ModFluids;
 
 public class SprinklerAttachment extends AbstractCableAttachment {
@@ -94,8 +94,8 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 		// Use fluid and spawn the experience orb.
 		if (!fluidCable.getLevel().isClientSide) {
-			fluidCable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				int drained = network.getFluidStorage().drain(5, FluidAction.EXECUTE).getAmount();
+			fluidCable.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
+				int drained = network.supply(fluidCable.getPos(), 5, FluidAction.EXECUTE).getAmount();
 				Vector3D direction = new Vector3D(side);
 
 				// Create the XP Orb Entity.
@@ -127,7 +127,6 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 	 * @param fluidCable
 	 * @return True if a fertilization recipe exists, false otherwise.
 	 */
-	@SuppressWarnings("deprecation")
 	protected boolean handleFertilization(ItemStack attachment, Direction side, FluidStack fluidContained, FluidCableComponent fluidCable) {
 		// Get the fertilization recipe. If one does not exist, return early.
 		FertalizerRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FertalizerRecipe.RECIPE_TYPE, new RecipeMatchParameters(fluidContained)).orElse(null);
@@ -155,8 +154,8 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 
 				// Spawn the particle.
 				fluidCable.getLevel().addParticle(ParticleTypes.FALLING_WATER, fluidCable.getPos().getX() + random + 0.5f + direction.getX(),
-						fluidCable.getPos().getY() + random + 0.5f + direction.getY(), fluidCable.getPos().getZ() + random + 0.5f + direction.getZ(), velocity.getX(), velocity.getY(),
-						velocity.getZ());
+						fluidCable.getPos().getY() + random + 0.5f + direction.getY(), fluidCable.getPos().getZ() + random + 0.5f + direction.getZ(), velocity.getX(),
+						velocity.getY(), velocity.getZ());
 			}
 		} else {
 			// Get the fertilization chance and divide it by 20. Handle cases where the
@@ -168,8 +167,8 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 			growthChange /= 20;
 
 			// Use fluid.
-			fluidCable.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				network.getFluidStorage().drain(1, FluidAction.EXECUTE);
+			fluidCable.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
+				network.supply(fluidCable.getPos(), 1, FluidAction.EXECUTE);
 			});
 
 			// Allocate the target position. If it remains null, do nothing.
@@ -211,8 +210,8 @@ public class SprinklerAttachment extends AbstractCableAttachment {
 					if (tempCrop.isValidBonemealTarget(fluidCable.getLevel(), target, cropState, false)) {
 						tempCrop.performBonemeal((ServerLevel) fluidCable.getLevel(), fluidCable.getLevel().random, target, cropState);
 						// Spawn some fertilziation particles.
-						((ServerLevel) fluidCable.getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, target.getX() + 0.5D, target.getY() + 1.0D, target.getZ() + 0.5D, 1, 0.0D, 0.0D,
-								0.0D, 0.0D);
+						((ServerLevel) fluidCable.getLevel()).sendParticles(ParticleTypes.HAPPY_VILLAGER, target.getX() + 0.5D, target.getY() + 1.0D, target.getZ() + 0.5D, 1, 0.0D,
+								0.0D, 0.0D, 0.0D);
 					}
 				}
 			}

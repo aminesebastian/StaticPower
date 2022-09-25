@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.container.ContainerOpener;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
@@ -39,6 +38,7 @@ import theking530.staticpower.cables.digistore.crafting.network.PacketCancelDigi
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.InventoryUtilities;
@@ -390,7 +390,7 @@ public abstract class AbstractContainerDigistoreTerminal<T extends Item> extends
 		}
 
 		// Return the module.
-		return Optional.of(cable.getNetwork().getModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE));
+		return Optional.of(cable.getNetwork().getModule(ModCableModules.Digistore.get()));
 	}
 
 	protected void onManagerStateChanged(boolean isPresent) {

@@ -35,6 +35,7 @@ import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
@@ -47,7 +48,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	/** KEEP IN MIND: This is purely cosmetic and on the client side. */
 	public static final ModelProperty<CableRenderingState> CABLE_RENDERING_STATE = new ModelProperty<>();
 	/** The type of this cable. */
-	private final HashSet<ResourceLocation> supportedNetworkModules;
+	private final HashSet<CableNetworkModuleType> supportedNetworkModules;
 	/** List of valid attachment classes. */
 	private final HashSet<Class<? extends AbstractCableAttachment>> validAttachments;
 
@@ -56,11 +57,11 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	/** The client replicated list of connection states. */
 	private final CableSideConnectionState[] clientConnectionStates;
 
-	public AbstractCableProviderComponent(String name, ResourceLocation... supportedModules) {
+	public AbstractCableProviderComponent(String name, CableNetworkModuleType... supportedModules) {
 		super(name);
 		// Capture the module types.
-		supportedNetworkModules = new HashSet<ResourceLocation>();
-		for (ResourceLocation module : supportedModules) {
+		supportedNetworkModules = new HashSet<CableNetworkModuleType>();
+		for (CableNetworkModuleType module : supportedModules) {
 			supportedNetworkModules.add(module);
 		}
 
@@ -247,7 +248,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		return new CableRenderingState(clientConnectionStates, attachmentModels, getPos());
 	}
 
-	public Set<ResourceLocation> getSupportedNetworkModuleTypes() {
+	public Set<CableNetworkModuleType> getSupportedNetworkModuleTypes() {
 		return this.supportedNetworkModules;
 	}
 
@@ -446,7 +447,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 * @param moduleType The resource location model type.
 	 * @return
 	 */
-	public <T extends CableNetworkModule> Optional<T> getNetworkModule(ResourceLocation moduleType) {
+	public <T extends CableNetworkModule> Optional<T> getNetworkModule(CableNetworkModuleType moduleType) {
 		if (!isClientSide()) {
 			Optional<ServerCable> cable = getCable();
 			if (cable.isPresent()) {
@@ -503,7 +504,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		if (otherProvider.hasAttachment(side) || this.hasAttachment(side.getOpposite())) {
 			return false;
 		}
-		for (ResourceLocation moduleType : otherProvider.getSupportedNetworkModuleTypes()) {
+		for (CableNetworkModuleType moduleType : otherProvider.getSupportedNetworkModuleTypes()) {
 			if (supportedNetworkModules.contains(moduleType)) {
 				return true;
 			}

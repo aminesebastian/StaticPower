@@ -45,8 +45,6 @@ public class StaticPowerFluidBundle {
 		public String name;
 		private String textureName;
 		private Consumer<FluidAttributes.Builder> extraAttributes;
-		private boolean shouldRegisterBucketItem;
-
 		private Color fogColor;
 		private Color overlayColor;
 
@@ -59,7 +57,6 @@ public class StaticPowerFluidBundle {
 		public StaticPowerFluidBuilder(String name, Color color) {
 			this.name = name;
 			this.textureName = name;
-			this.shouldRegisterBucketItem = true;
 			this.setFogColor(color);
 		}
 
@@ -70,7 +67,6 @@ public class StaticPowerFluidBundle {
 
 		public StaticPowerFluidBuilder addAutoBucket(boolean dynamicModel, ResourceLocation bucketMask) {
 			bucket = ModItems.ITEMS.register("bucket_" + name, () -> new StaticPowerFluidBucket(dynamicModel, bucketMask, source));
-			shouldRegisterBucketItem = true;
 			return this;
 		}
 

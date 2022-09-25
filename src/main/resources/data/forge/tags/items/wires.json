@@ -3,6 +3,10 @@
   "values": [
 	"staticpower:wire_copper",
 	"staticpower:wire_gold",
-	"staticpower:wire_aluminum"
+	"staticpower:wire_aluminum",
+	"staticpower:wire_brass",
+	"staticpower:wire_static",
+	"staticpower:wire_energized",
+	"staticpower:wire_lumum"
   ]
 }

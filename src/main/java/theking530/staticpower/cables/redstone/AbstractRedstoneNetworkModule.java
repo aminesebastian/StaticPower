@@ -11,12 +11,12 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 
@@ -31,7 +31,7 @@ public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 	@SuppressWarnings("unused")
 	private String lastRescanSource;
 
-	public AbstractRedstoneNetworkModule(ResourceLocation type) {
+	public AbstractRedstoneNetworkModule(CableNetworkModuleType type) {
 		super(type);
 		signals = new SignalContainer();
 		canProvidePower = true;
@@ -80,14 +80,15 @@ public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 	public abstract void updateNetworkValues(Level world, NetworkMapper mapper);
 
 	@Override
-	public void getReaderOutput(List<Component> components) {
+	public void getReaderOutput(List<Component> components, BlockPos pos) {
 
 	}
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		lastNetworkMap = mapper;
-		//System.out.println("Updating graph of type: " + getType() + " from position: " + startingPosition);
+		// System.out.println("Updating graph of type: " + getType() + " from position:
+		// " + startingPosition);
 	}
 
 	protected static boolean neighborNotifyEvent(Level world, @Nonnull BlockPos pos, @Nullable BlockState state) {
@@ -116,7 +117,6 @@ public abstract class AbstractRedstoneNetworkModule extends CableNetworkModule {
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	protected void updateAroundCable(Level world, ServerCable cable) {
 		CableNetworkManager manager = CableNetworkManager.get(world);
 		try {

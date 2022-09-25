@@ -30,13 +30,13 @@ import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.cablenetwork.pathfinding.Path;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.digistorenetwork.ioport.DigitstoreIOPortInventoryComponent;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -46,7 +46,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 	protected HashMap<BlockPos, LinkedList<ItemRoutingParcel>> ActiveParcels;
 
 	public ItemNetworkModule() {
-		super(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+		super(ModCableModules.Item.get());
 		ActiveParcels = new HashMap<BlockPos, LinkedList<ItemRoutingParcel>>();
 	}
 
@@ -104,8 +104,8 @@ public class ItemNetworkModule extends CableNetworkModule {
 	@Override
 	public void onAddedToNetwork(CableNetwork other) {
 		super.onAddedToNetwork(other);
-		if (other.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
-			ItemNetworkModule module = (ItemNetworkModule) other.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+		if (other.hasModule(ModCableModules.Item.get())) {
+			ItemNetworkModule module = (ItemNetworkModule) other.getModule(ModCableModules.Item.get());
 
 			for (Entry<BlockPos, LinkedList<ItemRoutingParcel>> entry : ActiveParcels.entrySet()) {
 				if (!module.ActiveParcels.containsKey(entry.getKey())) {
@@ -217,8 +217,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 		// Calculate the shortest path.
 		for (RetrivalSourceWrapper source : sources) {
 			// Get all the potential paths.
-			List<Path> paths = Network.getPathCache().getPaths(source.getDestinationWrapper().getFirstConnectedCable(), destinationPosition,
-					CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+			List<Path> paths = Network.getPathCache().getPaths(source.getDestinationWrapper().getFirstConnectedCable(), destinationPosition, ModCableModules.Item.get());
 
 			// Iterate through all the paths to the proposed tile entity.
 			for (Path path : paths) {
@@ -575,11 +574,11 @@ public class ItemNetworkModule extends CableNetworkModule {
 		// Check to ensure that the other cable has a network.
 		CableNetwork otherNetwork = otherNetworkCable.getNetwork();
 		if (otherNetwork != null) {
-			if (!otherNetwork.hasModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE)) {
+			if (!otherNetwork.hasModule(ModCableModules.Item.get())) {
 				return false;
 			}
 			// Transfer this parcel to that network.
-			ItemNetworkModule otherItemModule = otherNetwork.getModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+			ItemNetworkModule otherItemModule = otherNetwork.getModule(ModCableModules.Item.get());
 
 			// Loop until we're able to fully transfer the parcel OR we run out of options.
 			ItemStack lastTransferedAmount = ItemStack.EMPTY;
@@ -729,7 +728,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 	 */
 	public @Nullable Path getShortestPathToDestination(ItemStack stack, BlockPos sourcePosition, BlockPos destination, boolean ignoreCableRestrictions) {
 		// Get all the potential paths.
-		List<Path> paths = Network.getPathCache().getPaths(sourcePosition, destination, CableNetworkModuleTypes.ITEM_NETWORK_MODULE);
+		List<Path> paths = Network.getPathCache().getPaths(sourcePosition, destination, ModCableModules.Item.get());
 		Path shortestPath = null;
 		float shortestPathLength = Float.MAX_VALUE;
 
@@ -879,7 +878,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<Component> output) {
+	public void getReaderOutput(List<Component> output, BlockPos pos) {
 		// Calculate the number of active parcels.
 		int activeParcels = 0;
 		for (LinkedList<ItemRoutingParcel> parcels : ActiveParcels.values()) {

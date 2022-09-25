@@ -6,7 +6,6 @@ import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.ServerCable;
@@ -14,10 +13,10 @@ import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 
 public abstract class CableNetworkModule {
 	protected CableNetwork Network;
-	private final ResourceLocation Type;
+	private final CableNetworkModuleType type;
 
-	public CableNetworkModule(ResourceLocation type) {
-		Type = type;
+	public CableNetworkModule(CableNetworkModuleType type) {
+		this.type = type;
 	}
 
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
@@ -29,15 +28,15 @@ public abstract class CableNetworkModule {
 	}
 
 	public void onAddedToNetwork(CableNetwork network) {
-		Network = network;
+		this.Network = network;
 	}
 
 	public void onJoinedOtherNetwork(CableNetwork network) {
 
 	}
 
-	public ResourceLocation getType() {
-		return Type;
+	public CableNetworkModuleType getType() {
+		return type;
 	}
 
 	public CableNetwork getNetwork() {
@@ -56,7 +55,7 @@ public abstract class CableNetworkModule {
 		return true;
 	}
 
-	public abstract void getReaderOutput(List<Component> components);
+	public abstract void getReaderOutput(List<Component> components, BlockPos pos);
 
 	public void preWorldTick(Level world) {
 	}

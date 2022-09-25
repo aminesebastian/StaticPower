@@ -63,7 +63,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine {
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CraftingRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(),
-				RecipeType.CRAFTING, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true)
+				RecipeProcessingComponent.MOVE_TIME, RecipeType.CRAFTING, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true)
 				.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get()));
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);

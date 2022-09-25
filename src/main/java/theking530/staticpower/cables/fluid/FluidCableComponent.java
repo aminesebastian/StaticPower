@@ -4,9 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicReference;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,28 +21,31 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.drain.DrainAttachment;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
-	public static final String FLUID_CAPACITY_DATA_TAG_KEY = "fluid_capacity";
-	public static final String FLUID_RATE_DATA_TAG_KEY = "fluid_transfer_rate";
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
-	public static final float UPDATE_THRESHOLD = 0.1f;
+	public static final float FLUID_UPDATE_THRESHOLD = 25;
+	public static final float MAX_TICKS_BEFORE_UPDATE = 10;
+
 	private final int capacity;
+	private final int transferRate;
 	private final boolean isIndustrial;
 	private FluidStack lastUpdateFluidStack;
 	private float lastUpdateFilledPercentage;
 	private float visualFilledPercentage;
+	private int subThresholdUpdateTime;
 
-	public FluidCableComponent(String name, boolean isIndustrial, int capacity) {
-		super(name, CableNetworkModuleTypes.FLUID_NETWORK_MODULE);
+	public FluidCableComponent(String name, boolean isIndustrial, int capacity, int transferRate) {
+		super(name, ModCableModules.Fluid.get());
 		this.capacity = capacity;
+		this.transferRate = transferRate;
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
 		visualFilledPercentage = 0.0f;
@@ -62,13 +62,22 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
-		if (!getLevel().isClientSide) {
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				boolean shouldUpdate = !network.getFluidStorage().getFluid().isFluidEqual(lastUpdateFluidStack);
-				shouldUpdate |= Math.abs(lastUpdateFilledPercentage - getFilledPercentage()) > UPDATE_THRESHOLD;
-				shouldUpdate |= lastUpdateFilledPercentage > 0 && this.getFluidInTank(0).isEmpty();
+		if (!isClientSide()) {
+			this.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
+				boolean shouldUpdate = !network.getStoredFluid().isFluidEqual(lastUpdateFluidStack);
+				int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
+				if (delta > FLUID_UPDATE_THRESHOLD) {
+					shouldUpdate = true;
+				} else if (delta > 0) {
+					subThresholdUpdateTime++;
+				} else {
+					subThresholdUpdateTime = 0;
+				}
+				shouldUpdate |= subThresholdUpdateTime > MAX_TICKS_BEFORE_UPDATE;
+
 				if (shouldUpdate) {
 					synchronizeServerToClient();
+					subThresholdUpdateTime = 0;
 				}
 			});
 		}
@@ -84,9 +93,9 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	protected void synchronizeServerToClient() {
-		if (!getLevel().isClientSide) {
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				lastUpdateFluidStack = network.getFluidStorage().getFluid();
+		if (!isClientSide()) {
+			this.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
+				lastUpdateFluidStack = network.getStoredFluid(getPos());
 				lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
 
 				// Only send the packet to nearby players since these packets get sent
@@ -98,7 +107,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	public void recieveUpdateRenderValues(FluidStack stack, float fluidAmount) {
-		if (getLevel().isClientSide) {
+		if (isClientSide()) {
 			lastUpdateFluidStack = stack;
 			lastUpdateFilledPercentage = Math.min(1.0f, fluidAmount);
 			getTileEntity().requestModelDataUpdate();
@@ -106,14 +115,19 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	public float getFilledPercentage() {
-		if (getLevel().isClientSide) {
+		if (isClientSide()) {
 			return lastUpdateFilledPercentage;
 		} else {
-			AtomicReference<Float> output = new AtomicReference<Float>(0.0f);
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				output.set((float) network.getFluidStorage().getFluidAmount() / network.getFluidStorage().getCapacity());
-			});
-			return output.get();
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				if (module.getStoredFluid().isEmpty()) {
+					return 0;
+				}
+
+				FluidCableProxy proxy = module.getFluidProxyAtLocation(getPos());
+				return (float) proxy.getStored() / proxy.getCapacity();
+			}
+			return 0;
 		}
 	}
 
@@ -122,43 +136,39 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	public int getCapacity() {
-		return capacity;
+		return transferRate;
 	}
 
 	@Override
 	public int getTanks() {
-		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicInteger recieve = new AtomicInteger(0);
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				recieve.set(network.getFluidStorage().getTanks());
-			});
-			return recieve.get();
-		} else {
-			return lastUpdateFluidStack.isEmpty() ? 0 : 1;
-		}
+		return 1;
 	}
 
 	@Override
 	public FluidStack getFluidInTank(int tank) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicReference<FluidStack> fluid = new AtomicReference<FluidStack>(FluidStack.EMPTY);
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				fluid.set(network.getFluidStorage().getFluidInTank(tank));
-			});
-			return fluid.get();
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				return module.getStoredFluid(getPos());
+			}
+			return FluidStack.EMPTY;
 		} else {
 			return lastUpdateFluidStack;
 		}
 	}
 
+	public Optional<FluidNetworkModule> getFluidModule() {
+		return getNetworkModule(ModCableModules.Fluid.get());
+	}
+
 	@Override
 	public int getTankCapacity(int tank) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicInteger recieve = new AtomicInteger(0);
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				recieve.set(network.getFluidStorage().getTankCapacity(tank));
-			});
-			return recieve.get();
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				return module.getCapacity(getPos());
+			}
+			return 0;
 		} else {
 			return 0;
 		}
@@ -167,11 +177,11 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public boolean isFluidValid(int tank, FluidStack stack) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicBoolean recieve = new AtomicBoolean(false);
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				recieve.set(network.getFluidStorage().isFluidValid(tank, stack));
-			});
-			return recieve.get();
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				return module.isFluidValid(stack);
+			}
+			return false;
 		} else {
 			return false;
 		}
@@ -180,11 +190,11 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			AtomicInteger recieve = new AtomicInteger(0);
-			this.<FluidNetworkModule>getNetworkModule(CableNetworkModuleTypes.FLUID_NETWORK_MODULE).ifPresent(network -> {
-				recieve.set(network.getFluidStorage().fill(resource, action));
-			});
-			return recieve.get();
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				return module.fill(getPos(), resource, action);
+			}
+			return 0;
 		} else {
 			return 0;
 		}
@@ -206,7 +216,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			boolean disabled = false;
 			if (side != null) {
-				if (getLevel().isClientSide) {
+				if (isClientSide()) {
 					disabled = isSideDisabled(side);
 				} else {
 					// If the cable is not valid, just assume disabled. Could be that the cable is
@@ -231,9 +241,10 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
-		cable.getDataTag().putInt(FLUID_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.getDataTag().putInt(FLUID_RATE_DATA_TAG_KEY, capacity);
-		cable.getDataTag().putBoolean(FLUID_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
+		cable.getDataTag().putInt(FluidCableProxy.FLUID_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putInt(FluidCableProxy.FLUID_TRANSFER_RATE_DATA_TAG_KEY, transferRate);
+		cable.getDataTag().putInt(FluidCableProxy.FLUID_STORED_DATA_TAG_KEY, 0);
+		cable.getDataTag().putBoolean(FluidCableProxy.FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 
 		List<Direction> sidesToDisable = new ArrayList<>();
 

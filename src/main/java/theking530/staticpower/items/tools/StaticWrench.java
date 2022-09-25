@@ -101,7 +101,8 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 	}
 
 	public void playWrenchSound(Level world, BlockPos pos) {
-		world.playSound(null, pos, SoundEvents.LANTERN_HIT, SoundSource.BLOCKS, 0.5F, (float) (0.7F + Math.random() * 0.5));
+		world.playSound(null, pos, SoundEvents.LANTERN_HIT, SoundSource.BLOCKS, 0.35F, (float) (0.5F + Math.random() * 0.5));
+		world.playSound(null, pos, SoundEvents.SPYGLASS_USE, SoundSource.BLOCKS, 1.5f, 1f);
 	}
 
 	@Override

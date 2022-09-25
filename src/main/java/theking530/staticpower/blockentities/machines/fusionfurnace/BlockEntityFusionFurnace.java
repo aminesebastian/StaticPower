@@ -53,7 +53,7 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine {
 		// Setup the processing component.
 		registerComponent(
 				processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(),
-						FusionFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+						RecipeProcessingComponent.MOVE_TIME, FusionFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

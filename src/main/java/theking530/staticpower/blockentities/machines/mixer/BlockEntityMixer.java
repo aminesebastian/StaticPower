@@ -62,8 +62,8 @@ public class BlockEntityMixer extends BlockEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<MixerRecipe>("ProcessingComponent", 1, MixerRecipe.RECIPE_TYPE, this::getMatchParameters,
-				this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<MixerRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, MixerRecipe.RECIPE_TYPE,
+				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.

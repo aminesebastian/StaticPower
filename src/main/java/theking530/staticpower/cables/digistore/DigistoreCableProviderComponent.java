@@ -10,8 +10,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
@@ -28,6 +26,8 @@ import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusA
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	public static final String POWER_USAGE_TAG = "power_usage";
@@ -56,7 +56,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 	 * @param powerUsage
 	 */
 	public DigistoreCableProviderComponent(String name, double powerUsage) {
-		super(name, CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE);
+		super(name, ModCableModules.Digistore.get());
 		shouldControlOnBlockState = false;
 		this.powerUsage = powerUsage;
 		addValidAttachmentClass(DigistoreTerminal.class);
@@ -75,7 +75,7 @@ public class DigistoreCableProviderComponent extends AbstractCableProviderCompon
 		super.preProcessUpdate();
 		// Check to see if the manager is present. If not, update the tile entity.
 		if (!getLevel().isClientSide) {
-			this.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(network -> {
+			this.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(network -> {
 				if (managerPresent != network.isManagerPresent()) {
 					managerPresent = network.isManagerPresent();
 					getTileEntity().addUpdateRequest(BlockEntityUpdateRequest.syncDataOnly(true), false);

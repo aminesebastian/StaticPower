@@ -21,8 +21,8 @@ public class FireProgressBar extends AbstractProgressBar<FireProgressBar> {
 		float topOffset = getSize().getY() * (visualCurrentProgresPercentage);
 
 		if (visualCurrentProgresPercentage > 0) {
-			GuiDrawUtilities.drawTexture(matrix, GuiTextures.FIRE_PROGRESS_BAR, getSize().getX(), getSize().getY() * (1.0f - visualCurrentProgresPercentage), 0, 0 + topOffset, 0.0f, 0.0f,
-					0.40625f * visualCurrentProgresPercentage, 0.4375f, 0.40625f);
+			GuiDrawUtilities.drawTexture(matrix, GuiTextures.FIRE_PROGRESS_BAR, getSize().getX(), getSize().getY() * (1.0f - visualCurrentProgresPercentage), 0, 0 + topOffset,
+					0.0f, 0.0f, 0.40625f * visualCurrentProgresPercentage, 0.4375f, 0.40625f);
 		}
 
 		if (isProcessingErrored) {

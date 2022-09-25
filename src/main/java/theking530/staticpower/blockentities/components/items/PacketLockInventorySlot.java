@@ -4,6 +4,8 @@ import java.util.function.Supplier;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent.Context;
@@ -46,6 +48,7 @@ public class PacketLockInventorySlot extends NetworkMessage {
 		buf.writeUtf(componentName);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public void handle(Supplier<Context> context) {
 		context.get().enqueueWork(() -> {
@@ -62,8 +65,12 @@ public class PacketLockInventorySlot extends NetworkMessage {
 
 						// Update the locked state.
 						if (locked) {
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.SPYGLASS_USE, SoundSource.BLOCKS, 1, 1.25f);
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.15f, 1.25f);
 							component.lockSlot(slot, filteredIem);
 						} else {
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.SPYGLASS_USE, SoundSource.BLOCKS, 1, 1);
+							tileEntity.getLevel().playSound(null, tileEntity.getBlockPos(), SoundEvents.UI_BUTTON_CLICK, SoundSource.BLOCKS, 0.15f, 1f);
 							component.unlockSlot(slot);
 						}
 					}

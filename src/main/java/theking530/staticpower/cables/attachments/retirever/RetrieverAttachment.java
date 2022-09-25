@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.item.ItemStackCapabilityInventory;
 import theking530.staticcore.item.ItemStackMultiCapabilityProvider;
 import theking530.staticcore.utilities.StaticPowerRarities;
@@ -33,6 +32,7 @@ import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class RetrieverAttachment extends AbstractCableAttachment {
@@ -86,7 +86,7 @@ public class RetrieverAttachment extends AbstractCableAttachment {
 		IItemHandler targetInventory = adjacentEntity.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, side.getOpposite()).orElse(null);
 
 		// Attempt to retrieve the item.
-		cable.<ItemNetworkModule>getNetworkModule(CableNetworkModuleTypes.ITEM_NETWORK_MODULE).ifPresent(network -> {
+		cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
 			for (int i = 0; i < filterInventory.getSlots(); i++) {
 				ItemStack filterItem = InventoryUtilities.getRandomItemStackFromInventory(filterInventory, 1, true);
 				if (filterItem.isEmpty()) {

@@ -96,6 +96,12 @@ public class GuiFluidContainerTab extends BaseGuiTab {
 		bottomSlot.y = (int) (this.getYPosition() + 60);
 		topSlot.x = (int) (getXPosition() + 6);
 		bottomSlot.x = (int) (getXPosition() + 6);
+		
+		if(!topSlot.getItem().isEmpty() || !bottomSlot.getItem().isEmpty()) {
+			showNotificationBadge = true;
+		}else {
+			showNotificationBadge = false;
+		}
 	}
 
 	@Override

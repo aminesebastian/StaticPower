@@ -10,6 +10,8 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -127,7 +129,8 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	public void revertToParent() {
 		// Open prompt for crafting if we can actually craft some.
 		// Create the container opener.
-		ContainerOpener<?> requestUi = new ContainerOpener<>(opener.getParent().getName(), (x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
+		ContainerOpener<?> requestUi = new ContainerOpener<>(opener.getParent().getName(),
+				(x, y, z) -> opener.getParent().duplicateForRevert(x, y, opener.getParent().getRevertDataPacket()));
 
 		// Open the UI.
 		NetworkGUI.openGui((ServerPlayer) getPlayerInventory().player, requestUi, buff -> {
@@ -210,7 +213,8 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, 16, slotFactory);
 	}
 
-	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		return addSlotsInGrid(inventory, startingIndex, inventory.getSlots(), xPos, yPos, maxPerRow, slotSize, slotFactory);
 	}
 
@@ -232,7 +236,8 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return outputs;
 	}
 
-	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected List<Slot> addSlotsInGrid(Container inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		List<Slot> outputs = new ArrayList<Slot>();
 		maxPerRow = Math.min(inventory.getContainerSize(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
@@ -245,7 +250,8 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return outputs;
 	}
 
-	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize, TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
+	protected void addSlotsInPerfectSquare(IItemHandler inventory, int startingIndex, int xPos, int yPos, int maxPerRow, int slotSize,
+			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		addSlotsInGrid(inventory, startingIndex, xPos, yPos, maxPerRow, slotSize, slotFactory);
 		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
 		int adjustedSlotSize = slotSize + 2;

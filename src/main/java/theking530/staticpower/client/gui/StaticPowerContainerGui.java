@@ -90,7 +90,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		outputSlotSize = 24;
 		inputSlotSize = 16;
 		isScreenSizeChanging = false;
-		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
+		lockedSprite = new SpriteDrawable(StaticPowerSprites.ITEM_ICON_LOCKED, 12, 12);
 		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
 		registerWidget(tabManager = new GuiTabManager());
 		container.setName(title);
@@ -148,7 +148,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 				if (itemHandlerSlot.getItemHandler() instanceof InventoryComponent) {
 					InventoryComponent component = (InventoryComponent) itemHandlerSlot.getItemHandler();
 					if (component.isSlotLocked(slot.getSlotIndex())) {
-						lockedSprite.draw(stack, slot.x + 4, slot.y + 4);
+						lockedSprite.draw(stack, slot.x + 2f, slot.y + 2f);
 					}
 				}
 			}

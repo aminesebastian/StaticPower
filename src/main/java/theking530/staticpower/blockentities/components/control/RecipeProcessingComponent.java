@@ -33,9 +33,12 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 	@UpdateSerialize
 	private int moveTimer;
+	@UpdateSerialize
+	private int moveTime;
 
-	public RecipeProcessingComponent(String name, int processingTime, RecipeType<T> recipeType, Function<RecipeProcessingPhase, RecipeMatchParameters> getMatchParameters,
-			BiFunction<T, RecipeProcessingPhase, ProcessingCheckState> canProcessRecipe, Consumer<T> performInputMove, Consumer<T> recipeProcessingCompleted) {
+	public RecipeProcessingComponent(String name, int processingTime, int moveTime, RecipeType<T> recipeType,
+			Function<RecipeProcessingPhase, RecipeMatchParameters> getMatchParameters, BiFunction<T, RecipeProcessingPhase, ProcessingCheckState> canProcessRecipe,
+			Consumer<T> performInputMove, Consumer<T> recipeProcessingCompleted) {
 		super(name, processingTime, true);
 
 		// Capture the recipe type.
@@ -48,11 +51,12 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		this.getMatchParameters = getMatchParameters;
 
 		// Set the initial move timer.
+		this.moveTime = moveTime;
 		moveTimer = 0;
 	}
 
 	@Override
-	public void process() {
+	public boolean process() {
 		// If we are not processing, check to see if we can perform a move from input to
 		// processing inventory. If erorred, set the error state. If not error, but not
 		// okay (cancel/skip), return early. If okay, continue as usual.
@@ -61,15 +65,16 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 			if (moveState.isError()) {
 				this.processingErrorMessage = moveState.getErrorMessage();
 				this.processingStoppedDueToError = true;
+				return false;
 			}
 
 			// If the move was not successful, return early.
 			if (!moveState.isOk()) {
-				return;
+				return false;
 			}
 		}
 
-		super.process();
+		return super.process();
 	}
 
 	public ProcessingCheckState performMove() {
@@ -77,7 +82,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		moveTimer++;
 
 		// Check if it elapsed..
-		if (moveTimer > MOVE_TIME) {
+		if (moveTimer > moveTime) {
 			// Reset the move timer.
 			moveTimer = 0;
 
@@ -202,7 +207,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	protected ProcessingCheckState processingCompleted() {
 		// If we can immediately start processing again, do so without a move delay.
 		if (canMoveInputsToInternal().isOk()) {
-			moveTimer = MOVE_TIME;
+			moveTimer = moveTime;
 		}
 		return ProcessingCheckState.ok();
 	}

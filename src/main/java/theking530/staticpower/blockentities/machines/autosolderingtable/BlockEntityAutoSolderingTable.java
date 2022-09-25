@@ -64,7 +64,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable {
 		// Setup the processing component.
 		registerComponent(
 				processingComponent = new RecipeProcessingComponent<SolderingRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoSolderingTableProcessingTime.get(),
-						SolderingRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true)
+						RecipeProcessingComponent.MOVE_TIME, SolderingRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true)
 						.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoSolderingTablePowerUsage.get()));
 
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);

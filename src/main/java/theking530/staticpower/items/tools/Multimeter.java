@@ -20,8 +20,8 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticpower.cables.power.PowerNetworkModule;
+import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class Multimeter extends StaticPowerItem {
@@ -56,7 +56,7 @@ public class Multimeter extends StaticPowerItem {
 
 					// Get the multimeter output and log it to the chat. Then clear it.
 					List<Component> messages = new ArrayList<Component>();
-					PowerNetworkModule module = cable.getNetwork().<PowerNetworkModule>getModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE);
+					PowerNetworkModule module = cable.getNetwork().<PowerNetworkModule>getModule(ModCableModules.Power.get());
 
 					module.getMultimeterOutput(messages, firstLocation, pos);
 					for (Component message : messages) {
@@ -64,7 +64,7 @@ public class Multimeter extends StaticPowerItem {
 					}
 					return InteractionResult.SUCCESS;
 				} else {
-					if (cable.supportsNetworkModule(CableNetworkModuleTypes.POWER_NETWORK_MODULE)) {
+					if (cable.supportsNetworkModule(ModCableModules.Power.get())) {
 						setFirstSampleLocation(item, pos);
 						return InteractionResult.SUCCESS;
 					}

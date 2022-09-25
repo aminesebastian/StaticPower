@@ -11,11 +11,11 @@ import java.util.function.BiFunction;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableNetworkGraph;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.pathfinding.Path.PathEntry;
 import theking530.staticcore.cablenetwork.scanning.CableScanLocation;
 import theking530.staticpower.utilities.WorldUtilities;
@@ -27,12 +27,12 @@ public class NetworkPathFinder {
 	private final BlockPos endingPosition;
 	private final HashSet<BlockPos> visitedPositions;
 	private final HashMap<BlockPos, PathEntry> predecessors;
-	private final ResourceLocation supportedNetworkType;
+	private final CableNetworkModuleType supportedNetworkType;
 	private final Queue<BlockPos> bfsQueue;
 	private final Level world;
 	private final BiFunction<ServerCable, Double, Float> lengthProvider;
 
-	public NetworkPathFinder(CableNetworkGraph graph, Level world, BlockPos startingCablePosition, BlockPos targetPosition, ResourceLocation supportedNetworkType,
+	public NetworkPathFinder(CableNetworkGraph graph, Level world, BlockPos startingCablePosition, BlockPos targetPosition, CableNetworkModuleType supportedNetworkType,
 			BiFunction<ServerCable, Double, Float> lengthProvider) {
 		// Capture all the positions in the network graph.
 		existingCables = new HashSet<BlockPos>();
@@ -98,7 +98,7 @@ public class NetworkPathFinder {
 
 				// Mark the adjacent as visited
 				visitedPositions.add(scanLoc.getLocation());
-				
+
 				// Cache the predecessor to this location.
 				float distance = curr.distManhattan(scanLoc.getLocation());
 				predecessors.put(scanLoc.getLocation(), new PathEntry(curr, scanLoc.getSide(), distance));

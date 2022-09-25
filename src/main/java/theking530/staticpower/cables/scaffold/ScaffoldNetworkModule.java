@@ -2,16 +2,17 @@ package theking530.staticpower.cables.scaffold;
 
 import java.util.List;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
+import theking530.staticpower.init.ModCableModules;
 
 public class ScaffoldNetworkModule extends CableNetworkModule {
 
 	public ScaffoldNetworkModule() {
-		super(CableNetworkModuleTypes.SCAFFOLD_NETWORK_MODULE);
+		super(ModCableModules.Scaffold.get());
 	}
 
 	@Override
@@ -25,7 +26,7 @@ public class ScaffoldNetworkModule extends CableNetworkModule {
 	}
 
 	@Override
-	public void getReaderOutput(List<Component> components) {
+	public void getReaderOutput(List<Component> components, BlockPos pos) {
 
 	}
 

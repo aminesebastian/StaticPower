@@ -20,13 +20,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraftforge.registries.ForgeRegistry;
-import net.minecraftforge.registries.RegistryManager;
 import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleRegistry;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.cablenetwork.scanning.CableScanLocation;
 import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -38,7 +36,7 @@ public class ServerCable {
 	protected final Level level;
 	private final BlockPos position;
 	protected CableNetwork network;
-	protected final Set<ResourceLocation> supportedNetworkModules;
+	protected final Set<CableNetworkModuleType> supportedNetworkModules;
 
 	private final CompoundTag dataTag;
 	private final CableSideConnectionState[] sidedData;
@@ -47,7 +45,7 @@ public class ServerCable {
 	private final Map<BlockPos, SparseCableLink> sparseLinks;
 	private final Set<CableDestination> supportedDestinationTypes;
 
-	public ServerCable(Level level, BlockPos position, boolean sparse, Set<ResourceLocation> supportedNetworkModules, Set<CableDestination> supportedDestinationTypes) {
+	public ServerCable(Level level, BlockPos position, boolean sparse, Set<CableNetworkModuleType> supportedNetworkModules, Set<CableDestination> supportedDestinationTypes) {
 		this.position = position;
 		this.level = level;
 		this.isSparse = sparse;
@@ -266,9 +264,9 @@ public class ServerCable {
 		this.network = network;
 
 		// Add all the supported modules if they're not present.
-		for (ResourceLocation moduleType : supportedNetworkModules) {
+		for (CableNetworkModuleType moduleType : supportedNetworkModules) {
 			if (!network.hasModule(moduleType)) {
-				network.addModule(CableNetworkModuleRegistry.create(moduleType));
+				network.addModule(moduleType.create());
 			}
 		}
 
@@ -306,16 +304,16 @@ public class ServerCable {
 		}
 	}
 
-	public Set<ResourceLocation> getSupportedNetworkModules() {
+	public Set<CableNetworkModuleType> getSupportedNetworkModules() {
 		return supportedNetworkModules;
 	}
 
-	public boolean supportsNetworkModule(ResourceLocation moduleType) {
+	public boolean supportsNetworkModule(CableNetworkModuleType moduleType) {
 		return supportedNetworkModules.contains(moduleType);
 	}
 
 	public boolean shouldConnectToCable(ServerCable otherCable) {
-		for (ResourceLocation moduleType : otherCable.getSupportedNetworkModules()) {
+		for (CableNetworkModuleType moduleType : otherCable.getSupportedNetworkModules()) {
 			if (supportsNetworkModule(moduleType)) {
 				return true;
 			}
@@ -385,11 +383,12 @@ public class ServerCable {
 		isSparse = tag.getBoolean("sparse");
 
 		// Get the supported network types.
-		supportedNetworkModules = new HashSet<ResourceLocation>();
+		supportedNetworkModules = new HashSet<CableNetworkModuleType>();
 		ListTag modules = tag.getList("supported_modules", Tag.TAG_COMPOUND);
 		for (Tag moduleTag : modules) {
 			CompoundTag moduleTagCompound = (CompoundTag) moduleTag;
-			supportedNetworkModules.add(new ResourceLocation(moduleTagCompound.getString("module_type")));
+			ResourceLocation registryName = new ResourceLocation(moduleTagCompound.getString("module_type"));
+			supportedNetworkModules.add(StaticPowerRegistries.CableModuleRegsitry().getValue(registryName));
 		}
 
 		// Create the links.
@@ -411,9 +410,7 @@ public class ServerCable {
 		supportedDestinationTypes = new HashSet<CableDestination>();
 		List<CableDestination> destinations = NBTUtilities.deserialize(tag.getList("destination_types", Tag.TAG_STRING), (destTag) -> {
 			ResourceLocation key = new ResourceLocation(destTag.getAsString());
-
-			ForgeRegistry<CableDestination> registry = RegistryManager.ACTIVE.getRegistry(StaticPowerRegistries.CABLE_DESTINATION_REGISTRY);
-			return registry.getValue(key);
+			return StaticPowerRegistries.CableDestinationRegistry().getValue(key);
 		});
 		for (CableDestination destination : destinations) {
 			supportedDestinationTypes.add(destination);
@@ -430,7 +427,7 @@ public class ServerCable {
 		ListTag supportedModules = new ListTag();
 		supportedNetworkModules.forEach(moduleType -> {
 			CompoundTag moduleTag = new CompoundTag();
-			moduleTag.putString("module_type", moduleType.toString());
+			moduleTag.putString("module_type", moduleType.getRegistryName().toString());
 			supportedModules.add(moduleTag);
 		});
 		tag.put("supported_modules", supportedModules);

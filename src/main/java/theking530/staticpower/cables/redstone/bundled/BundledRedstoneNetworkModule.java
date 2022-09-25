@@ -15,19 +15,19 @@ import theking530.staticcore.cablenetwork.CableNetwork;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModule;
+import theking530.staticpower.init.ModCableModules;
 
 public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 	@SuppressWarnings("unused")
 	private static final Logger LOGGER = LogManager.getLogger(BundledRedstoneNetworkModule.class);
 
 	public BundledRedstoneNetworkModule() {
-		super(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE);
+		super(ModCableModules.BundledRedstone.get());
 	}
 
 	@Override
@@ -65,7 +65,7 @@ public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule 
 						if (!targetCable.isDisabledOnSide(dir.getOpposite())) {
 							// If that cable supports a regular redstone network, get the instance of that
 							// network.
-							if (CableNetworkModuleTypes.doesNetworkSupportRedstoneAnyRedstoneModule(targetCable.getNetwork())) {
+							if (ModCableModules.doesNetworkSupportRedstoneAnyRedstoneModule(targetCable.getNetwork())) {
 								// Then, capture all the selectors on that network (and keep the max value).
 								for (CableNetworkModule module : targetCable.getNetwork().getModules()) {
 									if (module instanceof RedstoneNetworkModule) {

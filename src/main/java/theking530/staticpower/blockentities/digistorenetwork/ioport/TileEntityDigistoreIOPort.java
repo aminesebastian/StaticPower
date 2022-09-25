@@ -9,12 +9,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModCableModules;
 
 public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 	@BlockEntityTypePopulator()
@@ -32,7 +32,7 @@ public class TileEntityDigistoreIOPort extends BaseDigistoreTileEntity {
 			return InteractionResult.CONSUME;
 		}
 
-		digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(CableNetworkModuleTypes.DIGISTORE_NETWORK_MODULE).ifPresent(module -> {
+		digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
 			// Do nothing if there is no manager.
 			if (!module.isManagerPresent()) {
 				return;

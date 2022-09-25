@@ -23,6 +23,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
@@ -98,10 +99,14 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 		flameBar.setMaxProgress(processingTimer.getMaxValue());
 		flameBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
-		@SuppressWarnings("resource")
-		Font fontRenderer = Minecraft.getInstance().font;
 		String powerGeneration = PowerTextFormatting.formatPowerRateToString(recipe.getPowerGeneration()).getString();
-		fontRenderer.draw(matrixStack, powerGeneration, 51 - (fontRenderer.width(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
+		GuiDrawUtilities.drawStringCentered(matrixStack, powerGeneration, 51, 32, 1, 1, Color.EIGHT_BIT_DARK_GREY, false);
+
+		double ticksPerBucket = 1000 / Math.max(recipe.getFluid().getAmount(), 1);
+		double generationPerBucket = ticksPerBucket * recipe.getPowerGeneration();
+		String powerPerTick = PowerTextFormatting.formatPowerToString(generationPerBucket).getString();
+		GuiDrawUtilities.drawStringLeftAligned(matrixStack, powerPerTick, 43, 12, 1, 1, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawItem(matrixStack, new ItemStack(recipe.getFluid().getFluid().getBucket()), 25, 1, 1);
 
 	}
 

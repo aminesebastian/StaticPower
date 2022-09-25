@@ -51,7 +51,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 		super(TYPE, pos, state);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", 0, FluidGeneratorRecipe.RECIPE_TYPE,
+		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", 0, 0, FluidGeneratorRecipe.RECIPE_TYPE,
 				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 
@@ -70,7 +70,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 	@Override
 	public void process() {
 		if (!getLevel().isClientSide()) {
-			if (processingComponent.getIsOnBlockState()) {
+			if (processingComponent.isPerformingWork()) {
 				generatingSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.1f, 0.75f, getBlockPos(), 64);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
@@ -83,7 +83,8 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 	}
 
 	protected void moveInputs(FluidGeneratorRecipe recipe) {
-
+		powerStorage.setMaximumOutputPower(recipe.getPowerGeneration());
+		powerStorage.setMaximumInputPower(recipe.getPowerGeneration());
 	}
 
 	protected ProcessingCheckState canProcessRecipe(FluidGeneratorRecipe recipe, RecipeProcessingPhase location) {

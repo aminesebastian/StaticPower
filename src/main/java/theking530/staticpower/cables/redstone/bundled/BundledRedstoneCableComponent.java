@@ -9,18 +9,19 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.cablenetwork.destinations.ModCableDestinations;
-import theking530.staticcore.cablenetwork.modules.CableNetworkModuleTypes;
+import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
+import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
+import theking530.staticpower.init.ModCableDestinations;
+import theking530.staticpower.init.ModCableModules;
 
 public class BundledRedstoneCableComponent extends AbstractCableProviderComponent {
 	public BundledRedstoneCableComponent(String name) {
-		super(name, CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE);
+		super(name, ModCableModules.BundledRedstone.get());
 	}
 
 	protected CableConnectionType getUncachedConnectionState(Direction side, @Nullable BlockEntity te, BlockPos blockPosition, boolean firstWorldLoaded) {
@@ -33,7 +34,10 @@ public class BundledRedstoneCableComponent extends AbstractCableProviderComponen
 			} else {
 				// Check the intersection between the basic redstone networks and the network of
 				// the other provider.
-				Set<ResourceLocation> intersection = new HashSet<ResourceLocation>(CableNetworkModuleTypes.REDSTONE_MODULES);
+				Set<CableNetworkModuleType> intersection = new HashSet<CableNetworkModuleType>();
+				for (MinecraftColor color : MinecraftColor.values()) {
+					intersection.add(ModCableModules.RedstoneModules.get(color).get());
+				}
 				intersection.retainAll(otherProvider.getSupportedNetworkModuleTypes());
 				return intersection.size() > 0 ? CableConnectionType.TILE_ENTITY : CableConnectionType.NONE;
 			}
@@ -47,7 +51,7 @@ public class BundledRedstoneCableComponent extends AbstractCableProviderComponen
 	}
 
 	public Optional<BundledRedstoneNetworkModule> getRedstoneNetworkModule() {
-		return getNetworkModule(CableNetworkModuleTypes.BUNDLED_REDSTONE_NETWORK_MODULE);
+		return getNetworkModule(ModCableModules.BundledRedstone.get());
 	}
 
 	@Override

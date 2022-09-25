@@ -28,7 +28,8 @@ public class BlockEntityRenderTank extends StaticPowerBlockEntitySpecialRenderer
 	}
 
 	@Override
-	protected void renderTileEntityBase(BlockEntityTank tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	protected void renderTileEntityBase(BlockEntityTank tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+			int combinedOverlay) {
 		// Render the contained fluid if it exists.
 		if (tileEntity.fluidTankComponent.getVisualFillLevel() > 0) {
 			// Get the fluid.
@@ -44,8 +45,8 @@ public class BlockEntityRenderTank extends StaticPowerBlockEntitySpecialRenderer
 			float height = tileEntity.fluidTankComponent.getVisualFillLevel();
 
 			float yPosition = isGas ? 14.0f * TEXEL - (12.01f * TEXEL * height) : 1.99f * TEXEL;
-			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor, matrixStack, sprite,
-					new Vector3D(1.0f, height, 1.0f));
+			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, 11.98f * TEXEL * height, 11.95f * TEXEL), fluidColor,
+					matrixStack, sprite, new Vector3D(1.0f, height, 1.0f));
 
 		}
 
@@ -55,8 +56,8 @@ public class BlockEntityRenderTank extends StaticPowerBlockEntitySpecialRenderer
 			@SuppressWarnings("deprecation")
 			TextureAtlas blocksTexture = ForgeModelBakery.instance().getSpriteMap().getAtlas(TextureAtlas.LOCATION_BLOCKS);
 			TextureAtlasSprite sprite = blocksTexture.getSprite(StaticPowerSprites.BLANK_TEXTURE);
-			CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL), new Color(0.4f, 0.45f, 0.55f, 0.35f),
-					matrixStack, sprite);
+			CUBE_MODEL.drawPreviewCube(new Vector3f(1.95f * TEXEL, 2f * TEXEL, 1.95f * TEXEL), new Vector3f(12.1f * TEXEL, 12.1f * TEXEL, 12.1f * TEXEL),
+					new Color(0.4f, 0.45f, 0.55f, 0.35f), matrixStack, sprite);
 		}
 	}
 }

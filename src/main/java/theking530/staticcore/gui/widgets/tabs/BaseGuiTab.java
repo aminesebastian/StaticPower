@@ -260,9 +260,9 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 
 		if (icon != null) {
 			if (this.tabSide == TabSide.LEFT) {
-				icon.draw(getParent().getLastRenderMatrix(), -18.5f, this.getPosition().getY() + 4, -tabIndex * 5);
+				icon.draw(getParent().getLastRenderMatrix(), -18.5f, this.getPosition().getY() + 5, -tabIndex * 13);
 			} else {
-				icon.draw(matrix, 4f, 5f, -tabIndex * 5);
+				icon.draw(matrix, 4f, 5f, -tabIndex * 13);
 			}
 
 			if (showNotificationBadge && tabState == TabState.CLOSED) {
