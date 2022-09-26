@@ -183,7 +183,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			}
 
 			// Use power if requested to.
-			if (hasProcessingPowerCost && powerComponent != null && powerComponent != null && currentProcessingTime < processingTime) {
+			if (hasProcessingPowerCost && powerComponent != null && currentProcessingTime < processingTime) {
 				powerComponent.drainPower(getPowerUsage(), false);
 			}
 

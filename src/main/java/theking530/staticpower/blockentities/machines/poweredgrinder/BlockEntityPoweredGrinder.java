@@ -100,7 +100,7 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
+		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, 0, internalInventory, 0);
 
 		// Set the power usage and processing time.
 		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());

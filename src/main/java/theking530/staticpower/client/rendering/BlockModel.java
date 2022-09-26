@@ -1,10 +1,16 @@
 package theking530.staticpower.client.rendering;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Vector3f;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -45,11 +51,39 @@ public class BlockModel {
 	}
 
 	public void drawPreviewSide(PoseStack matrixStack, Direction side, Vector3f position, Vector3f scale, TextureAtlasSprite sprite, Color tint, Vector3D uv) {
-		// Get the buffer.
 		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-
-		// Get the vertex builder and set the color.
 		VertexConsumer builder = buffer.getBuffer(RenderType.translucentMovingBlock());
+		drawPreviewSide(matrixStack, builder, side, position, scale, sprite, tint, uv);
+		buffer.endBatch(RenderType.translucentMovingBlock());
+	}
+
+	public void drawPreviewCubeGui(Vector3f position, Vector3f scale, Color tint, PoseStack matrixStack) {
+		// Bind a blank texture.
+		TextureAtlasSprite sprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(StaticPowerSprites.BLANK_TEXTURE);
+		drawPreviewCubeGui(position, scale, tint, matrixStack, sprite, IDENTITY_VECTOR);
+	}
+
+	public void drawPreviewCubeGui(Vector3f position, Vector3f scale, Color tint, PoseStack matrixStack, TextureAtlasSprite sprite, Vector3D uv) {
+		// Draw each block side.
+		for (Direction dir : Direction.values()) {
+			drawPreviewSideGui(matrixStack, dir, position, scale, sprite, tint, uv);
+		}
+	}
+
+	public void drawPreviewSideGui(PoseStack matrixStack, Direction side, Vector3f position, Vector3f scale, TextureAtlasSprite sprite, Color tint, Vector3D uv) {
+		RenderSystem.setShader(GameRenderer::getPositionColorTexShader);
+		RenderSystem.enableBlend();
+		Tesselator tesselator = Tesselator.getInstance();
+		BufferBuilder builder = tesselator.getBuilder();
+		builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_COLOR_TEX);
+		drawPreviewSide(matrixStack, builder, side, position, scale, sprite, tint, uv);
+		tesselator.end();
+		RenderSystem.disableBlend();
+	}
+
+	protected void drawPreviewSide(PoseStack matrixStack, VertexConsumer builder, Direction side, Vector3f position, Vector3f scale, TextureAtlasSprite sprite, Color tint,
+			Vector3D uv) {
+		// Get the vertex builder and set the color.
 		builder.color(tint.getRed(), tint.getBlue(), tint.getGreen(), tint.getAlpha());
 
 		// Push a new matrix and set the translation ands scale.
@@ -119,6 +153,5 @@ public class BlockModel {
 
 		// Pop the matrix and finish rendering.
 		matrixStack.popPose();
-		buffer.endBatch(RenderType.translucentMovingBlock());
 	}
 }

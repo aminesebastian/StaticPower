@@ -126,8 +126,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 				amountToBalance *= sign;
 
 				if (amountToBalance > 0) {
-					int filled = secondProxy.fill(Math.abs(amountToBalance), false);
-					firstProxy.drain(filled, false);
+					int drained = firstProxy.drain(amountToBalance, FluidAction.EXECUTE);
+					secondProxy.fill(drained, FluidAction.EXECUTE);
 					secondProxy.addSuppliedFromDirection(dir);
 				}
 
@@ -204,7 +204,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void getReaderOutput(List<Component> output, BlockPos pos) {
-		String storedFluid = new MetricConverter(getStoredFluidAmount()).getValueAsString(true);
+		String storedFluid = new MetricConverter(getStoredFluid().getAmount()).getValueAsString(true);
 		String maximumFluid = new MetricConverter(totalCapacity).getValueAsString(true);
 
 		String storedFluidAtPos = new MetricConverter(cableProxies.get(pos).getStored()).getValueAsString(true);
@@ -230,7 +230,18 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	public FluidStack getStoredFluid() {
-		return networkFluid.copy();
+		if (networkFluid.isEmpty()) {
+			return FluidStack.EMPTY;
+		}
+
+		int stored = 0;
+		for (FluidCableProxy proxy : this.cableProxies.values()) {
+			stored += proxy.getStored();
+		}
+
+		FluidStack output = networkFluid.copy();
+		output.setAmount(stored);
+		return output;
 	}
 
 	public FluidStack getStoredFluid(BlockPos pos) {
@@ -255,14 +266,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		return proxy.getCapacity();
-	}
-
-	public int getStoredFluidAmount() {
-		int stored = 0;
-		for (FluidCableProxy proxy : this.cableProxies.values()) {
-			stored += proxy.getStored();
-		}
-		return stored;
 	}
 
 	@Nullable
@@ -302,7 +305,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		if (isFluidValid(resource)) {
-			int filled = proxyAtPos.fill(resource.getAmount(), action == FluidAction.EXECUTE ? false : true);
+			int filled = proxyAtPos.fill(resource.getAmount(), action);
 			if (filled > 0 && action == FluidAction.EXECUTE) {
 				if (networkFluid.isEmpty()) {
 					networkFluid = resource.copy();
@@ -326,12 +329,12 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return FluidStack.EMPTY;
 		}
 
-		int drained = proxyAtPos.drain(amount, action == FluidAction.EXECUTE ? false : true);
-		FluidStack output = getStoredFluid().copy();
+		int drained = proxyAtPos.drain(amount, action);
+		FluidStack output = networkFluid.copy();
 		output.setAmount(drained);
 
 		if (action == FluidAction.EXECUTE) {
-			networkFluid.shrink(drained);
+			networkFluid.shrink(amount);
 		}
 
 		return output;

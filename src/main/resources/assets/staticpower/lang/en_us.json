@@ -693,6 +693,10 @@
 	"block.staticpower.machine_refinery_heat_vent": "Refinery Heat Vent",
 	"block.staticpower.machine_refinery_tower": "Refinery Tower",
 	"block.staticpower.machine_refinery_boiler": "Refinery Boiler",
+	
+	"block.staticpower.machine_hydroponic_pod": "Hydroponic Pod",
+	"block.staticpower.machine_hydroponic_farmer": "Hydroponic Farmer",
+	
 	"block.staticpower.laboratory": "Research Laboratory",
 	"block.staticpower.power_monitor": "Power Monitor",
 	"block.staticpower.direct_dropper": "Bull's Eye Dropper",

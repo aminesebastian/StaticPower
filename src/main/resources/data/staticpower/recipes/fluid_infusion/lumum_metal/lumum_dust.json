@@ -1,13 +1,13 @@
 {
 	"type": "staticpower:fluid_infusion_recipe",
 	"input": {
-		"tag": "forge:ingots/iron"
+		"tag": "forge:dusts/platinum"
 	},
 	"fluid": {
-		"fluid": "staticpower:fluid_static",
+		"fluid": "staticpower:fluid_lumum",
 		"volume": 250
 	},
 	"result": {
-		"item": "staticpower:ingot_static"
+		"item": "staticpower:ingot_lumum"
 	}
 }

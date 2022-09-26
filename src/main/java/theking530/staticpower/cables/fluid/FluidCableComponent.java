@@ -31,8 +31,10 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
-	public static final float FLUID_UPDATE_THRESHOLD = 25;
-	public static final float MAX_TICKS_BEFORE_UPDATE = 10;
+	// This is intentionally high, we only want to force update if the difference is
+	// VAST, otherwise, let the MAX_TICKS driven update do the work.
+	public static final float FLUID_UPDATE_THRESHOLD = 500;
+	public static final float MAX_TICKS_BEFORE_UPDATE = 5;
 
 	private final int capacity;
 	private final int transferRate;
@@ -68,13 +70,11 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 				int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
 				if (delta > FLUID_UPDATE_THRESHOLD) {
 					shouldUpdate = true;
-				} else if (delta > 0) {
+				} else if (!network.getStoredFluid(getPos()).isEmpty()) {
 					subThresholdUpdateTime++;
-				} else {
-					subThresholdUpdateTime = 0;
 				}
-				shouldUpdate |= subThresholdUpdateTime > MAX_TICKS_BEFORE_UPDATE;
 
+				shouldUpdate |= subThresholdUpdateTime >= MAX_TICKS_BEFORE_UPDATE;
 				if (shouldUpdate) {
 					synchronizeServerToClient();
 					subThresholdUpdateTime = 0;

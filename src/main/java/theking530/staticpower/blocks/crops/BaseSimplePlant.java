@@ -21,6 +21,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BonemealableBlock;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -34,6 +35,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.IPlantable;
+import theking530.staticpower.blocks.StaticPowerFarmland;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
 /**
@@ -185,7 +187,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 */
 	@Override
 	protected boolean mayPlaceOn(BlockState state, BlockGetter worldIn, BlockPos pos) {
-		return true;
+		return state.is(Blocks.FARMLAND) || state.getBlock() instanceof StaticPowerFarmland;
 	}
 
 	/**
@@ -271,7 +273,7 @@ public class BaseSimplePlant extends CropBlock implements IPlantable, Bonemealab
 	 */
 	@Override
 	public boolean canSurvive(BlockState state, LevelReader worldIn, BlockPos pos) {
-		return true;
+		return (worldIn.getRawBrightness(pos, 0) >= 8 || worldIn.canSeeSky(pos)) && super.canSurvive(state, worldIn, pos);
 	}
 
 	/**

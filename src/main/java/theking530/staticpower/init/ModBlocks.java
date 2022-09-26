@@ -31,6 +31,8 @@ import theking530.staticpower.blockentities.machines.fermenter.BlockFermenter;
 import theking530.staticpower.blockentities.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.blockentities.machines.former.BlockFormer;
 import theking530.staticpower.blockentities.machines.fusionfurnace.BlockFusionFurnace;
+import theking530.staticpower.blockentities.machines.hydroponicfarmer.BlockHydroponicFarmer;
+import theking530.staticpower.blockentities.machines.hydroponicpod.BlockHydroponicPod;
 import theking530.staticpower.blockentities.machines.laboratory.BlockLaboratory;
 import theking530.staticpower.blockentities.machines.lathe.BlockLathe;
 import theking530.staticpower.blockentities.machines.lumbermill.BlockLumberMill;
@@ -40,7 +42,6 @@ import theking530.staticpower.blockentities.machines.poweredfurnace.BlockPowered
 import theking530.staticpower.blockentities.machines.poweredgrinder.BlockPoweredGrinder;
 import theking530.staticpower.blockentities.machines.pump.BlockPump;
 import theking530.staticpower.blockentities.machines.pump.PumpTube;
-import theking530.staticpower.blockentities.machines.pumpjack.BlockPumpJack;
 import theking530.staticpower.blockentities.machines.refinery.boiler.BlockRefineryBoiler;
 import theking530.staticpower.blockentities.machines.refinery.controller.BlockRefineryController;
 import theking530.staticpower.blockentities.machines.refinery.fluidio.input.BlockRefineryFluidInput;
@@ -282,7 +283,6 @@ public class ModBlocks {
 	public static final RegistryObject<BlockPump> EnergizedPump = registerBlock("pump_energized", () -> new BlockPump(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BlockPump> LumumPump = registerBlock("pump_lumum", () -> new BlockPump(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockPump> CreativePump = registerBlock("pump_creative", () -> new BlockPump(StaticPowerTiers.CREATIVE));
-	public static final RegistryObject<BlockPumpJack> PumpJack = registerBlock("pump_jack", () -> new BlockPumpJack());
 
 	public static final RegistryObject<BlockVacuumChest> VacuumChest = registerBlock("chest_vacuum", () -> new BlockVacuumChest());
 	public static final RegistryObject<BlockStaticChest> BasicChest = registerBlock("chest_basic", () -> new BlockStaticChest(StaticPowerTiers.BASIC));
@@ -329,6 +329,9 @@ public class ModBlocks {
 	public static final RegistryObject<BlockAutomaticPlacer> AutomaticPlacer = registerBlock("automatic_placer", () -> new BlockAutomaticPlacer());
 	public static final RegistryObject<BlockRandomItemGenerator> RandomItemGenerator = registerBlock("random_item_generator", () -> new BlockRandomItemGenerator());
 	public static final RegistryObject<BlockEnchanter> Enchanter = registerBlock("machine_enchanter", () -> new BlockEnchanter());
+	
+	public static final RegistryObject<BlockHydroponicFarmer> HydroponicFarmer = registerBlock("machine_hydroponic_farmer", () -> new BlockHydroponicFarmer());
+	public static final RegistryObject<BlockHydroponicPod> HydroponicPod = registerBlock("machine_hydroponic_pod", () -> new BlockHydroponicPod());
 	
 	public static final RegistryObject<BlockAlloyFurnace> AlloyFurnace = registerBlock("alloy_furnace", () -> new BlockAlloyFurnace());
 

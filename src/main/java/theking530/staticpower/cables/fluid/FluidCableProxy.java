@@ -5,6 +5,7 @@ import java.util.Set;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.utilities.SDMath;
 
@@ -63,17 +64,17 @@ public class FluidCableProxy {
 		return cable.getDataTag().getBoolean(FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY);
 	}
 
-	public int fill(int amount, boolean simulate) {
+	public int fill(int amount, FluidAction action) {
 		int toFill = Math.min(getCapacity() - getStored(), amount);
-		if (!simulate) {
+		if (action == FluidAction.EXECUTE) {
 			setStored(getStored() + toFill);
 		}
 		return toFill;
 	}
 
-	public int drain(int amount, boolean simulate) {
+	public int drain(int amount, FluidAction action) {
 		int toDrain = Math.min(getStored(), amount);
-		if (!simulate) {
+		if (action == FluidAction.EXECUTE) {
 			setStored(getStored() - toDrain);
 		}
 		return toDrain;

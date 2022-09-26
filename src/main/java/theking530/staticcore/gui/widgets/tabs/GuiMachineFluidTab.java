@@ -15,7 +15,7 @@ public class GuiMachineFluidTab extends AbstractInfoTab {
 	protected FluidTankComponent fluidTank;
 
 	public GuiMachineFluidTab(FluidTankComponent tank) {
-		super("Fluid I/O", new Color(255, 255, 25), 80, new Color(0, 0.8f, 0.9f, 1), new ItemDrawable(Blocks.CAULDRON));
+		super("Fluid I/O", new Color(255, 255, 25), 85, new Color(0, 0.8f, 0.9f, 1), new ItemDrawable(Blocks.CAULDRON));
 		fluidTank = tank;
 	}
 

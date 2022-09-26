@@ -10,10 +10,6 @@ import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -24,10 +20,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.model.data.IModelData;
+import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticcore.utilities.Color;
 import theking530.staticcore.utilities.Vector2D;
+import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -80,7 +77,6 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		}
 	}
 
-	@SuppressWarnings("resource")
 	@Override
 	public void renderWidgetBackground(PoseStack matrix, int mouseX, int mouseY, float partialTicks) {
 		super.renderWidgetBackground(matrix, mouseX, mouseY, partialTicks);
@@ -92,27 +88,21 @@ public class GuiSideConfigTab extends BaseGuiTab {
 
 		drawDarkBackground(matrix, 12, 25, (int) getWidth() - 26, (int) getHeight() - 35);
 
-		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
-		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
-		BakedModel model = renderer.getBlockModel(tileEntity.getBlockState());
-		IModelData data = model.getModelData(Minecraft.getInstance().level, tileEntity.getBlockPos(), tileEntity.getBlockState(), tileEntity.getModelData());
-		matrix.pushPose();
-		matrix.translate(75f, 40.75f, 50);
-		matrix.scale(-39, 39, 39);
-		matrix.translate(0.5f, 0.5f, 0.5f);
-		matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
-		matrix.translate(-0.5f, -0.5f, -0.5f);
 		Lighting.setupForEntityInInventory();
-		renderer.renderSingleBlock(tileEntity.getBlockState(), matrix, buffer, 15728880, OverlayTexture.NO_OVERLAY, data);
-		buffer.endBatch();
+		Vector3D translation = new Vector3D(75f, 40.75f, 50);
+		Vector3D renderRotation = new Vector3D(rotation.getY(), rotation.getX(), 180);
+		Vector3D scale = new Vector3D(-39, 39, 39);
+		Matrix4f inverse = GuiDrawUtilities.drawBlockState(matrix, tileEntity.getBlockState(), tileEntity.getBlockPos(), tileEntity.getModelData(), translation, renderRotation,
+				scale);
+		Lighting.setupFor3DItems();
 
-		Matrix4f inverse = matrix.last().pose().copy();
 		inverse.invert();
 		Vector4f mouseMin = createMouseVector(inverse, mouseX, mouseY, 1000);
 		Vector4f mouseMax = createMouseVector(inverse, mouseX, mouseY, -1000);
 
 		BlockHitResult result = AABB.clip(Collections.singleton(BOUNDS), new Vec3(mouseMin.x(), mouseMin.y(), mouseMin.z()), new Vec3(mouseMax.x(), mouseMax.y(), mouseMax.z()),
 				new BlockPos(0, 0, 0));
+
 		if (result != null) {
 			highlightedSide = result.getDirection();
 			SideConfigurationComponent sideConfig = tileEntity.getComponent(SideConfigurationComponent.class);
@@ -124,10 +114,13 @@ public class GuiSideConfigTab extends BaseGuiTab {
 					color.setAlpha(0.75f);
 
 					matrix.pushPose();
+					matrix.translate(translation.getX(), translation.getY(), translation.getZ());
+					matrix.scale(scale.getX(), scale.getY(), scale.getZ());
 					matrix.translate(0.5f, 0.5f, 0.5f);
+					matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
 					matrix.mulPose(result.getDirection().getRotation());
 					matrix.translate(-0.5f, -0.5f, -0.5f);
-					HIGHLIGHT_RENDERER.drawPreviewCube(new Vector3f(0.3f, 1.01f, 0.3f), new Vector3f(0.4f, 0.025f, 0.4f), color, matrix);
+					HIGHLIGHT_RENDERER.drawPreviewCubeGui(new Vector3f(0.3f, 1.01f, 0.3f), new Vector3f(0.4f, 0.05f, 0.4f), color, matrix);
 					matrix.popPose();
 				} else {
 					highlightedSide = null; // Clear out the highlighted side if its a disabled side.
@@ -136,7 +129,6 @@ public class GuiSideConfigTab extends BaseGuiTab {
 		} else {
 			highlightedSide = null;
 		}
-		matrix.popPose();
 	}
 
 	private Vector4f createMouseVector(Matrix4f inverse, int mouseX, int mouseY, int distance) {
@@ -163,8 +155,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	@Override
 	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (mouseDownInside) {
-			rotationVelocity.setX((float) deltaX * -1.5f);
-			rotationVelocity.setY((float) deltaY * -1.5f);
+			rotationVelocity.setX((float) deltaX * -3f);
+			rotationVelocity.setY((float) deltaY * -3f);
 			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;

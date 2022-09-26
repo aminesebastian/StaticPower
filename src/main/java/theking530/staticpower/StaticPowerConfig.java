@@ -226,6 +226,9 @@ public class StaticPowerConfig {
 		public final ConfigValue<Double> squeezerPowerUsage;
 		public final ConfigValue<Integer> squeezerProcessingTime;
 
+		public final ConfigValue<Double> hydroponicFarmerPowerUsage;
+		public final ConfigValue<Integer> hydroponicFarmerProcessingTime;
+
 		public final ConfigValue<Double> vulcanizerPowerUsage;
 		public final ConfigValue<Integer> vulcanizerProcessingTime;
 
@@ -693,6 +696,15 @@ public class StaticPowerConfig {
 					squeezerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
 							.translation(StaticPower.MOD_ID + ".config." + "squeezerProcessingTime").define("SqueezerProcessingTime", 100);
+					builder.pop();
+				}
+				{
+					builder.push("Hydroponic Farmer");
+					hydroponicFarmerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SW). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "hydroponicFarmerPowerUsage").define("HydroponicFarmerPowerUsage", 5.0);
+					hydroponicFarmerProcessingTime = builder.comment(
+							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
+							.translation(StaticPower.MOD_ID + ".config." + "hydroponicFarmerProcessingTime").define("HydroponicFarmerProcessingTime", 1200);
 					builder.pop();
 				}
 				{

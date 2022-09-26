@@ -13,23 +13,30 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Matrix4f;
+import com.mojang.math.Quaternion;
+import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.utilities.Color;
@@ -549,6 +556,27 @@ public class GuiDrawUtilities {
 				new Color(DEFAULT_SLOT_CORNER_COLOR.getRed(), DEFAULT_SLOT_CORNER_COLOR.getGreen(), DEFAULT_SLOT_CORNER_COLOR.getBlue(), 1.0f - alpha));
 		RenderSystem.disableBlend();
 		RenderSystem.enableDepthTest();
+	}
+
+	@SuppressWarnings("resource")
+	public static Matrix4f drawBlockState(PoseStack pose, BlockState state, BlockPos pos, IModelData modelData, Vector3D translation, Vector3D rotation, Vector3D scale) {
+		BlockRenderDispatcher renderer = Minecraft.getInstance().getBlockRenderer();
+		MultiBufferSource.BufferSource buffer = Minecraft.getInstance().renderBuffers().bufferSource();
+		BakedModel model = renderer.getBlockModel(state);
+
+		IModelData data = model.getModelData(Minecraft.getInstance().level, pos, state, modelData);
+		pose.pushPose();
+		pose.translate(translation.getX(), translation.getY(), translation.getZ());
+		pose.scale(scale.getX(), scale.getY(), scale.getZ());
+		pose.translate(0.5f, 0.5f, 0.5f);
+		pose.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getX(), rotation.getY(), rotation.getZ())));
+		pose.translate(-0.5f, -0.5f, -0.5f);
+		renderer.renderSingleBlock(state, pose, buffer, 15728880, OverlayTexture.NO_OVERLAY, data);
+		buffer.endBatch();
+		
+		Matrix4f output = pose.last().pose().copy();
+		pose.popPose();
+		return output;
 	}
 
 	public static float getSinFunction(float period, float amplitude) {

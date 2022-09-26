@@ -1,13 +1,13 @@
 {
 	"type": "staticpower:fluid_infusion_recipe",
 	"input": {
-		"tag": "forge:raw_materials/platinum"
+		"tag": "forge:dusts/gold"
 	},
 	"fluid": {
-		"fluid": "staticpower:fluid_lumum",
+		"fluid": "staticpower:fluid_energized",
 		"volume": 250
 	},
 	"result": {
-		"item": "staticpower:raw_lumum"
+		"item": "staticpower:ingot_energized"
 	}
 }

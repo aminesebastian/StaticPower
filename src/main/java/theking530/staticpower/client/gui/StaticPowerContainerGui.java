@@ -526,10 +526,12 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 *                 border).
 	 */
 	public void drawEmptySlot(PoseStack matrixStack, int xPos, int yPos, int width, int height, MachineSideMode slotMode) {
+		// Important we draw the slots on a zlevel >= 1. 0 is reserved for GUI
+		// backgrounds and < 0 clips behind the GUI.
 		if (slotMode == MachineSideMode.NA) {
-			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 0);
+			GuiDrawUtilities.drawSlot(matrixStack, width, height, xPos, yPos, 1);
 		} else {
-			GuiDrawUtilities.drawSlotWithBorder(matrixStack, width, height, xPos, yPos, 0, slotMode.getColor());
+			GuiDrawUtilities.drawSlotWithBorder(matrixStack, width, height, xPos, yPos, 1, slotMode.getColor());
 		}
 	}
 

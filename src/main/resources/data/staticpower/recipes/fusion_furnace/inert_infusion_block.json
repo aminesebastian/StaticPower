@@ -2,7 +2,7 @@
 	"type": "staticpower:fusion_furnace_recipe",
 	"inputs": [
 		{
-			"tag": "forge:storage_blocks/iron"
+			"tag": "forge:storage_blocks/copper"
 		},
 		{
 			"tag": "forge:storage_blocks/gold"

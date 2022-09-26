@@ -46,6 +46,8 @@ import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipe;
 import theking530.staticpower.data.crafting.wrappers.grinder.GrinderRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipe;
 import theking530.staticpower.data.crafting.wrappers.hammer.HammerRecipeSerializer;
+import theking530.staticpower.data.crafting.wrappers.hydroponicfarming.HydroponicFarmingRecipe;
+import theking530.staticpower.data.crafting.wrappers.hydroponicfarming.HydroponicFarmingRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipeSerializer;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
@@ -108,6 +110,8 @@ public class ModRecipeSerializers {
 	public static final RegistryObject<VulcanizerRecipeSerializer> VULCANIZER_SERIALIZER = SERIALIZERS.register(VulcanizerRecipe.ID, () -> VulcanizerRecipeSerializer.INSTANCE);
 	public static final RegistryObject<AlloyFurnaceRecipeSerializer> ALLOY_FURNACE_SERIALIZER = SERIALIZERS.register(AlloyFurnaceRecipe.ID,
 			() -> AlloyFurnaceRecipeSerializer.INSTANCE);
+	public static final RegistryObject<HydroponicFarmingRecipeSerializer> HYDROPONIC_FARMER_SERIALIZER = SERIALIZERS.register(HydroponicFarmingRecipe.ID,
+			() -> HydroponicFarmingRecipeSerializer.INSTANCE);
 
 	public static void init(IEventBus eventBus) {
 		SERIALIZERS.register(eventBus);
@@ -144,5 +148,6 @@ public class ModRecipeSerializers {
 		Registry.register(Registry.RECIPE_TYPE, TurbineRecipe.ID, TurbineRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, VulcanizerRecipe.ID, VulcanizerRecipe.RECIPE_TYPE);
 		Registry.register(Registry.RECIPE_TYPE, AlloyFurnaceRecipe.ID, AlloyFurnaceRecipe.RECIPE_TYPE);
+		Registry.register(Registry.RECIPE_TYPE, HydroponicFarmingRecipe.ID, HydroponicFarmingRecipe.RECIPE_TYPE);
 	}
 }

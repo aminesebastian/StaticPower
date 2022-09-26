@@ -13,7 +13,7 @@
 			"item": "minecraft:furnace"
 		},
 		"i": {
-			"tag": "forge:ingots/iron"
+			"item": "staticpower:rusty_iron_scrap"
 		}
 	},
 	"result": {

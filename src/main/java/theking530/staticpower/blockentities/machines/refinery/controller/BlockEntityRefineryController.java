@@ -150,7 +150,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine {
 		refreshMultiBlock = true;
 
 		if (!getLevel().isClientSide()) {
-			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0) {
+			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0 && processingComponent.getCurrentOrPendingRecipe().isPresent()) {
 				double powerCost = StaticPowerConfig.SERVER.refineryPowerUsage.get();
 				boolean shouldHeat = processingComponent.isPerformingWork() || !heatStorage.isRecoveringFromMeltdown();
 				if (powerStorage.canSupplyPower(powerCost) && shouldHeat) {

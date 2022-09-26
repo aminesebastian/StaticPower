@@ -10,8 +10,6 @@ import org.apache.logging.log4j.Logger;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -282,6 +280,7 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 		return moveItemStackTo(stack, index, index + 1, false);
 	}
 
+	@Override
 	public ItemStack quickMoveStack(Player player, int invSlot) {
 		ItemStack itemstack = ItemStack.EMPTY;
 		Slot slot = (Slot) this.slots.get(invSlot);

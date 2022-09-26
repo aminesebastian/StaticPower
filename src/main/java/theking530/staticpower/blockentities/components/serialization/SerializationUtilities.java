@@ -145,7 +145,6 @@ public class SerializationUtilities {
 					LOGGER.error(String.format("Encountered serializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
 				}
 			} catch (Throwable e) {
-				LOGGER.debug(String.format("An error occured when attempting to serialize field: %1$s from object: %2$s to NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {
@@ -215,7 +214,6 @@ public class SerializationUtilities {
 					LOGGER.error(String.format("Encountered deserializeable field %1$s with unsupported type: %2$s.", field.getName(), t));
 				}
 			} catch (Throwable e) {
-				LOGGER.debug(String.format("An error occured when attempting to deserialize field: %1$s to object: %2$s from NBT.", field.getName(), object), e);
 			} finally {
 				// Reset the private state if needed.
 				if (!isAccessible) {

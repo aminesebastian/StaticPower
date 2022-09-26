@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.refinery.controller;
+package theking530.staticpower.blockentities.machines.hydroponicfarmer;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -10,10 +10,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockRefineryController extends StaticPowerMachineBlock {
+public class BlockHydroponicFarmer extends StaticPowerMachineBlock {
 
-	public BlockRefineryController() {
-		super(StaticPowerTiers.STATIC);
+	public BlockHydroponicFarmer() {
+		super(StaticPowerTiers.ADVANCED);
 	}
 
 	@Override
@@ -23,6 +23,6 @@ public class BlockRefineryController extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return BlockEntityRefineryController.TYPE.create(pos, state);
+		return BlockEntityHydroponicFarmer.TYPE.create(pos, state);
 	}
 }
