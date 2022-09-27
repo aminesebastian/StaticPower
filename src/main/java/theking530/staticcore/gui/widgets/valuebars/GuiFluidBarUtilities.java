@@ -25,7 +25,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 
 public class GuiFluidBarUtilities {
@@ -75,7 +75,7 @@ public class GuiFluidBarUtilities {
 	}
 
 	private static void drawFluidOverlay(PoseStack pose, float x, float y, float zLevel, float width, float height) {
-		Color linesColor = new Color(0.2f, 0.2f, 0.2f, 0.5f);
+		SDColor linesColor = new SDColor(0.2f, 0.2f, 0.2f, 0.5f);
 		for (int i = 0; i < height / 10; i++) {
 			if (y - height + 2 + (i * 10) < y) {
 				GuiDrawUtilities.drawRectangle(pose, width - 3, 0.5f, x, y - height + 2 + (i * 10), zLevel, linesColor);
@@ -92,7 +92,7 @@ public class GuiFluidBarUtilities {
 			return;
 		}
 
-		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+		SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 		FluidAttributes attributes = fluid.getFluid().getAttributes();
 		boolean isGas = fluid.getFluid().getAttributes().isGaseous();
 		float topColorTint = isGas ? 0.5f : 0.55f;

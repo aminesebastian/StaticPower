@@ -8,6 +8,7 @@ import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
 import theking530.staticcore.gui.widgets.tabs.slottabs.PacketGuiTabAddSlots;
+import theking530.staticpower.blockentities.components.control.ProcesingComponentSyncPacket;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticpower.blockentities.components.fluids.PacketFluidContainerComponent;
 import theking530.staticpower.blockentities.components.fluids.PacketFluidTankComponent;
@@ -88,6 +89,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketClearDigistoreCraftingTerminal.class);
 		StaticPowerMessageHandler.registerMessage(PacketUpdateRedstoneCableConfiguration.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncSolderingFakeSlotRecipe.class);
+		StaticPowerMessageHandler.registerMessage(ProcesingComponentSyncPacket.class);
 
 		StaticPowerMessageHandler.registerMessage(PacketSyncDigistoreInventory.class);
 		StaticPowerMessageHandler.registerMessage(PacketDigistoreFakeSlotClicked.class);
@@ -99,7 +101,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(StaticPowerGameDataLoadPacket.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetTeamComponentTeam.class);
 		StaticPowerMessageHandler.registerMessage(PacketSetSelectedResearch.class);
-		
+
 		StaticPowerMessageHandler.registerMessage(CableStateSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(CableStateSyncRequestPacket.class);
 	}

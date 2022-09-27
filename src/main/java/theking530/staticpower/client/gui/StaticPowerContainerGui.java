@@ -24,7 +24,7 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget.EInputResult;
 import theking530.staticcore.gui.widgets.TopLevelWidget;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
 import theking530.staticcore.gui.widgets.tabs.GuiTabManager;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -91,7 +91,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 		inputSlotSize = 16;
 		isScreenSizeChanging = false;
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.ITEM_ICON_LOCKED, 12, 12);
-		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
+		lockedSprite.setTint(new SDColor(1.0f, 1.0f, 1.0f, 0.95f));
 		registerWidget(tabManager = new GuiTabManager());
 		container.setName(title);
 	}
@@ -322,7 +322,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 			Vector2D containerLabelLocation = getContainerLabelDrawLocation();
 			Component containerName = getTitle();
 			String containerString = containerName.getString();
-			GuiDrawUtilities.drawStringCentered(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 1, 1.0f, Color.EIGHT_BIT_DARK_GREY, false);
+			GuiDrawUtilities.drawStringCentered(stack, containerString, containerLabelLocation.getX(), containerLabelLocation.getY(), 1, 1.0f, SDColor.EIGHT_BIT_DARK_GREY, false);
 		}
 
 		// Draw the inventory label if requested at the designated location.
@@ -486,7 +486,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 	 * @param borderTint      The tint to apply to the border (the two pixel rounded
 	 *                        corner border).
 	 */
-	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height, Color backgroundColor, Color borderTint) {
+	public void drawGenericBackground(PoseStack stack, int xPos, int yPos, int width, int height, SDColor backgroundColor, SDColor borderTint) {
 		GuiDrawUtilities.drawGenericBackground(stack, width, height, xPos + leftPos, yPos + topPos, 0.0f, backgroundColor);
 	}
 
@@ -629,7 +629,7 @@ public abstract class StaticPowerContainerGui<T extends StaticPowerContainer> ex
 						}
 
 						// Draw the yellow line lockable indicator.
-						GuiDrawUtilities.drawRectangle(matrixStack, slotSize, 1.0f, slot.x - sizePosOffset, slot.y - sizePosOffset + slotSize, 1.0f, new Color(0.9f, 0.8f, 0));
+						GuiDrawUtilities.drawRectangle(matrixStack, slotSize, 1.0f, slot.x - sizePosOffset, slot.y - sizePosOffset + slotSize, 1.0f, new SDColor(0.9f, 0.8f, 0));
 					}
 				}
 

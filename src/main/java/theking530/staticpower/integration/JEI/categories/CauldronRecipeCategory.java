@@ -32,7 +32,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
@@ -109,7 +109,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		Vector2D location = GuiDrawUtilities.translatePositionByMatrix(matrixStack, 0, 0);
 
 		// Render the time.
-		GuiDrawUtilities.drawStringCentered(matrixStack, "Cook time: " + recipe.getRequiredTimeInCauldron(), 65, 4, 0.0f, 0.8f, Color.EIGHT_BIT_YELLOW, true);
+		GuiDrawUtilities.drawStringCentered(matrixStack, "Cook time: " + recipe.getRequiredTimeInCauldron(), 65, 4, 0.0f, 0.8f, SDColor.EIGHT_BIT_YELLOW, true);
 
 		// Render the block.
 		PoseStack blockStack = new PoseStack();
@@ -138,7 +138,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		if (!recipe.getRequiredFluid().isEmpty()) {
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(recipe.getRequiredFluid());
-			Color fluidColor = GuiDrawUtilities.getFluidColor(recipe.getRequiredFluid());
+			SDColor fluidColor = GuiDrawUtilities.getFluidColor(recipe.getRequiredFluid());
 			float TEXEL = (1.0f / 16.0f);
 			float time = SDMath.clamp(timer.getValue(), 0, timer.getMaxValue() / 2);
 			float height = 1.0f;
@@ -161,7 +161,7 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 		if (!recipe.getOutputFluid().isEmpty()) {
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(recipe.getOutputFluid());
-			Color fluidColor = GuiDrawUtilities.getFluidColor(recipe.getOutputFluid());
+			SDColor fluidColor = GuiDrawUtilities.getFluidColor(recipe.getOutputFluid());
 			float TEXEL = (1.0f / 16.0f);
 			float time = SDMath.clamp(timer.getValue(), timer.getMaxValue() / 2, timer.getMaxValue());
 			time -= timer.getMaxValue() / 2;

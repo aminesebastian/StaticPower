@@ -4,10 +4,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 
 public class HorizontalBox extends AbstractGuiWidget<HorizontalBox> {
-	private Color color;
+	private SDColor color;
 	private boolean drawBackground;
 
 	public HorizontalBox(float xPosition, float yPosition, float width, float height) {
@@ -19,7 +19,7 @@ public class HorizontalBox extends AbstractGuiWidget<HorizontalBox> {
 		pose.translate(((index + 1) * distanceBetween), 0, 0);
 	}
 
-	public HorizontalBox setBackgroundColor(Color color) {
+	public HorizontalBox setBackgroundColor(SDColor color) {
 		this.color = color;
 		return this;
 	}

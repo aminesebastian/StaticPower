@@ -1,8 +1,10 @@
 package theking530.staticpower.blockentities.machines.hydroponicpod;
 
+import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -11,15 +13,16 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
+import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
+import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
-import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
@@ -27,9 +30,10 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
-import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
+import theking530.staticpower.blockentities.components.items.OutputServoComponent;
+import theking530.staticpower.blockentities.machines.cropfarmer.IFarmerHarvester.HarvestResult;
 import theking530.staticpower.blockentities.machines.hydroponicfarmer.BlockEntityHydroponicFarmer;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderHydroponicPod;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -37,6 +41,8 @@ import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.hydroponicfarming.HydroponicFarmingRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
+import theking530.staticpower.utilities.ItemUtilities;
+import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 	@BlockEntityTypePopulator()
@@ -45,6 +51,7 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent internalInventory;
+	public final InventoryComponent outputInventory;
 	public final RecipeProcessingComponent<HydroponicFarmingRecipe> processingComponent;
 
 	private BlockEntityHydroponicFarmer owningFarmer;
@@ -63,27 +70,40 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 			public boolean canInsertItem(int slot, ItemStack stack) {
 				return StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent();
 			}
-		}));
+		}).setSlotLimit(2));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
+		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 10, MachineSideMode.Output));
+		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<HydroponicFarmingRecipe>("ProcessingComponent",
 				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), RecipeProcessingComponent.MOVE_TIME, HydroponicFarmingRecipe.RECIPE_TYPE, this::getMatchParameters,
-				this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+				this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true));
 
-		// Setup the I/O servos.
-		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
 		owningFarmer = null;
 	}
 
+	@SuppressWarnings("resource")
 	public void process() {
-		if (hasFarmer() && isGrowing()) {
-			owningFarmer.fluidTankComponent.drain(1, FluidAction.EXECUTE);
+		if (processingComponent.getIsOnBlockState()) {
+			if (SDMath.diceRoll(0.03f)) {
+				float randomX = ((2 * getLevel().random.nextFloat()) - 1.0f) * 0.25f;
+				float randomZ = ((2 * getLevel().random.nextFloat()) - 1.0f) * 0.25f;
+				getLevel().addParticle(ParticleTypes.FALLING_DRIPSTONE_WATER, getBlockPos().getX() + randomX + 0.5, getBlockPos().getY() + 0.8,
+						getBlockPos().getZ() + randomZ + 0.5, 0.0f, 0.0f, 0.0f);
+			}
 		}
 
-		processingComponent.setMaxProcessingTime(100);
-		this.addUpdateRequest(BlockEntityUpdateRequest.blockUpdate(), true);
+		if (!getLevel().isClientSide()) {
+			// Only do the following if we have a farmer.
+			if (hasFarmer()) {
+				// Use fluid if we're growing.
+				if (isGrowing()) {
+					owningFarmer.fluidTankComponent.drain(1, FluidAction.EXECUTE);
+				}
+			}
+		}
 	}
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
@@ -95,12 +115,16 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 	}
 
 	protected ProcessingCheckState canProcessRecipe(HydroponicFarmingRecipe recipe, RecipeProcessingPhase location) {
-		if (owningFarmer == null) {
+		if (!hasFarmer()) {
 			return ProcessingCheckState.error("Missing farmer!");
 		}
 
-		if (owningFarmer.fluidTankComponent.drain(1, FluidAction.SIMULATE).getAmount() < 1) {
+		if (!hasWater()) {
 			return ProcessingCheckState.notEnoughFluid();
+		}
+
+		if (!InventoryUtilities.isInventoryEmpty(outputInventory)) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		return ProcessingCheckState.ok();
@@ -114,11 +138,29 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 	}
 
 	protected void processingCompleted(HydroponicFarmingRecipe recipe) {
+		// Iterate through all the drops. If the input is empty, check if any of the
+		// drops can be put back into the seed slot.
+		// If so, transfer. Then, whatever is left goes into the buffer.
+		HarvestResult results = getDrops();
+		for (ItemStack stack : results.getResults()) {
+			if (StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent()) {
+				if (inputInventory.getStackInSlot(0).isEmpty() || ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
+					ItemStack remaining = inputInventory.insertItem(0, stack.copy(), false);
+					stack.setCount(remaining.getCount());
+				}
+			}
+
+			if (!stack.isEmpty()) {
+				InventoryUtilities.insertItemIntoInventory(outputInventory, stack, false);
+			}
+		}
+
+		// Clear the internal inventory.
 		InventoryUtilities.clearInventory(internalInventory);
 	}
 
 	public boolean isGrowing() {
-		return processingComponent.getIsOnBlockState();
+		return hasFarmer() && processingComponent.getIsOnBlockState();
 	}
 
 	public float getGrowthPercentage() {
@@ -135,6 +177,7 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 	public void farmerCheckin(BlockEntityHydroponicFarmer farmer) {
 		owningFarmer = farmer;
 		processingComponent.setPowerComponent(owningFarmer.powerStorage);
+		processingComponent.setRedstoneControlComponent(owningFarmer.redstoneControlComponent);
 	}
 
 	public void farmerBroken() {
@@ -146,16 +189,54 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 		return owningFarmer != null;
 	}
 
-	public Optional<Block> getPlantBlockForRender() {
-		ItemStack seeds = inputInventory.getStackInSlot(0);
-		if (seeds.isEmpty()) {
-			seeds = internalInventory.getStackInSlot(0);
-			if (seeds.isEmpty()) {
-				return Optional.empty();
-			}
+	public boolean hasWater() {
+		return hasFarmer() && owningFarmer.fluidTankComponent.getStorage().getFluidAmount() > 0;
+	}
+
+	protected HarvestResult getDrops() {
+		Optional<BlockState> blockState = getPlantBlockStateForHarvest();
+		if (blockState.isEmpty()) {
+			return HarvestResult.empty();
 		}
 
-		BlockItem seedItem = (BlockItem) seeds.getItem();
+		List<ItemStack> outputItems = WorldUtilities.getBlockDrops(level, worldPosition, blockState.get());
+		return HarvestResult.noTool(outputItems);
+	}
+
+	public Optional<BlockState> getPlantBlockStateForHarvest() {
+		Optional<Block> block = getPlantBlockFromSeed(internalInventory.getStackInSlot(0));
+		if (block.isEmpty()) {
+			return Optional.empty();
+		}
+
+		BlockState result = block.get().defaultBlockState();
+		if (block.get() instanceof CropBlock) {
+			CropBlock crop = (CropBlock) block.get();
+			result = crop.getStateForAge(crop.getMaxAge());
+
+		} else if (block.get() instanceof StemBlock) {
+			StemBlock stem = (StemBlock) block.get();
+			StemGrownBlock fruit = stem.getFruit();
+			result = fruit.defaultBlockState();
+		}
+
+		return Optional.of(result);
+	}
+
+	public Optional<Block> getPlantBlockForDisplay() {
+		Optional<Block> block = getPlantBlockFromSeed(internalInventory.getStackInSlot(0));
+		if (block.isEmpty()) {
+			block = getPlantBlockFromSeed(inputInventory.getStackInSlot(0));
+		}
+		return block;
+	}
+
+	public Optional<Block> getPlantBlockFromSeed(ItemStack seed) {
+		if (seed.isEmpty()) {
+			return Optional.empty();
+		}
+
+		BlockItem seedItem = (BlockItem) seed.getItem();
 		if (seedItem == null) {
 			return Optional.empty();
 		}
@@ -176,11 +257,11 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 
 	@Override
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
-		return side == BlockSide.BACK ? (mode == MachineSideMode.Input || mode == MachineSideMode.Disabled) : false;
+		return side == BlockSide.BACK ? (mode == MachineSideMode.Output || mode == MachineSideMode.Disabled) : false;
 	}
 
 	@Override
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
-		return SideConfigurationComponent.BACK_INPUT_ONLY;
+		return SideConfigurationComponent.BACK_OUTPUT_ONLY;
 	}
 }

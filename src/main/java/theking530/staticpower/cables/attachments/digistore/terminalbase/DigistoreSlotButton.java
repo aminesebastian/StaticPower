@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.button.FakeSlotButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot;
 import theking530.staticpower.cables.digistore.DigistoreInventorySnapshot.DigistoreItemCraftableState;
 import theking530.staticpower.utilities.MetricConverter;
@@ -48,17 +48,17 @@ public class DigistoreSlotButton extends FakeSlotButton {
 			// Check if this item is ONLY craftable (meaning, there are 0 in the system).
 			if (DigistoreInventorySnapshot.getCraftableStateOfItem(itemIcon) == DigistoreItemCraftableState.ONLY_CRAFTABLE) {
 				// Draw a string that says: "Craft".
-				GuiDrawUtilities.drawString(stack, "Craft", 16, 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(stack, "Craft", 16, 15, 0.0f, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
 			} else {
 				// Pass the itemstack count through the metric converter.
 				MetricConverter count = new MetricConverter(itemIcon.getCount());
 
 				// Draw the item count string manually.
-				GuiDrawUtilities.drawString(stack, count.getValueAsString(true), 16, 15, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+				GuiDrawUtilities.drawString(stack, count.getValueAsString(true), 16, 15, 0.0f, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
 			}
 			stack.popPose();
 		} else {
-			GuiDrawUtilities.drawRectangle(stack, 16, 16, 0, 0, 200, new Color(0.0f, 0.0f, 0.0f, 0.5f));
+			GuiDrawUtilities.drawRectangle(stack, 16, 16, 0, 0, 200, new SDColor(0.0f, 0.0f, 0.0f, 0.5f));
 		}
 
 	}

@@ -6,7 +6,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -15,7 +15,7 @@ public class GuiMachineHeatTab extends AbstractInfoTab {
 	protected HeatStorageComponent heatStorage;
 
 	public GuiMachineHeatTab(HeatStorageComponent storage) {
-		super("Heat I/O", new Color(100, 255, 255), 105, new Color(1, 0.5f, 0.1f, 1.0f), new ItemDrawable(Items.CAMPFIRE));
+		super("Heat I/O", new SDColor(100, 255, 255), 105, new SDColor(1, 0.5f, 0.1f, 1.0f), new ItemDrawable(Items.CAMPFIRE));
 		heatStorage = storage;
 	}
 

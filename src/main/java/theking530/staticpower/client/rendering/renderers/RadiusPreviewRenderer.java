@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.client.event.RenderLevelStageEvent;
 import net.minecraftforge.client.event.RenderLevelStageEvent.Stage;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.rendering.BlockModel;
 import theking530.staticpower.client.rendering.DrawCubeRequest;
 
@@ -48,14 +48,14 @@ public class RadiusPreviewRenderer implements ICustomRenderer {
 		}
 	}
 
-	public static void addRadiusRenderRequest(BlockEntity tileEntity, String key, Vector3f position, Vector3f scale, Color color) {
+	public static void addRadiusRenderRequest(BlockEntity tileEntity, String key, Vector3f position, Vector3f scale, SDColor color) {
 		if (!CUBE_RENDER_REQUESTS.containsKey(tileEntity)) {
 			CUBE_RENDER_REQUESTS.put(tileEntity, new HashMap<String, DrawCubeRequest>());
 		}
 		CUBE_RENDER_REQUESTS.get(tileEntity).put(key, new DrawCubeRequest(position, scale, color));
 	}
 
-	public static void addRadiusRenderRequest(BlockEntity tileEntity, String key, BlockPos position, Vector3f scale, Color color) {
+	public static void addRadiusRenderRequest(BlockEntity tileEntity, String key, BlockPos position, Vector3f scale, SDColor color) {
 		addRadiusRenderRequest(tileEntity, key, new Vector3f(position.getX(), position.getY(), position.getZ()), scale, color);
 	}
 

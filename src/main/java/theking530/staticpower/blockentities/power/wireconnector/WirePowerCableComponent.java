@@ -17,7 +17,7 @@ import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.SparseCableLink;
 import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -65,7 +65,7 @@ public class WirePowerCableComponent extends PowerCableComponent {
 					Vec3 start = startBe.getComponent(WirePowerCableComponent.class).getWireAttachLocation();
 					Vec3 end = getWireAttachLocation().add(0.001f, 0.001f, 0.001f);
 					ItemStack wireStack = ItemStack.of(link.data().getCompound("wire"));
-					Color color = ((WireCoil) wireStack.getItem()).getColor();
+					SDColor color = ((WireCoil) wireStack.getItem()).getColor();
 					float thickness = ((WireCoil) wireStack.getItem()).getWireThickness();
 					WireRenderer.addWireRenderCache(getPos(), link.linkId(), new WireRenderCache(start, end, color, thickness, 5));
 				}

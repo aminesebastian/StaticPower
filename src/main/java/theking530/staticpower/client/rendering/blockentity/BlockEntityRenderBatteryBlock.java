@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.blockentities.power.battery.BlockEntityBattery;
@@ -48,7 +48,7 @@ public class BlockEntityRenderBatteryBlock extends StaticPowerBlockEntitySpecial
 
 			// Render the bar.
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.BATTERY_BLOCK_BAR, matrixStack, buffer, new Vector3D(0.225f, 0.225f, -0.03f),
-					new Vector3D(0.55f, height, 1.0f), uv, Color.WHITE);
+					new Vector3D(0.55f, height, 1.0f), uv, SDColor.WHITE);
 
 			matrixStack.popPose();
 		}

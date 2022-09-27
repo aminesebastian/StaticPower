@@ -19,7 +19,7 @@ import theking530.staticcore.gui.drawables.IDrawable;
 import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
@@ -71,9 +71,9 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	}
 
 	protected String title;
-	protected Color titleColor;
+	protected SDColor titleColor;
 	protected RectangleBounds cachedIconBounds;
-	protected Color tabColor;
+	protected SDColor tabColor;
 	protected IDrawable icon;
 	private int tabIndex;
 	private float animationTimer = 0;
@@ -95,7 +95,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, Color tabColor, IDrawable icon) {
+	public BaseGuiTab(String title, SDColor titleColor, int tabWidth, int tabHeight, SDColor tabColor, IDrawable icon) {
 		super(0, 0, COLLAPSED_SIZE.getX(), COLLAPSED_SIZE.getY());
 		this.expandedSize = new Vector2D(tabWidth, tabHeight);
 		this.tabColor = tabColor;
@@ -119,7 +119,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 * @param texture   The background texture of the tab.
 	 * @param item      The item that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, Color tabColor, Item item) {
+	public BaseGuiTab(String title, SDColor titleColor, int tabWidth, int tabHeight, SDColor tabColor, Item item) {
 		this(title, titleColor, tabWidth, tabHeight, tabColor, new ItemDrawable(item));
 	}
 
@@ -131,7 +131,7 @@ public abstract class BaseGuiTab extends AbstractGuiWidget<BaseGuiTab> {
 	 * @param texture   The background texture of the tab.
 	 * @param block     The block that should render as the icon for the tab.
 	 */
-	public BaseGuiTab(String title, Color titleColor, int tabWidth, int tabHeight, Color tabColor, Block block) {
+	public BaseGuiTab(String title, SDColor titleColor, int tabWidth, int tabHeight, SDColor tabColor, Block block) {
 		this(title, titleColor, tabWidth, tabHeight, tabColor, new ItemDrawable(block));
 	}
 

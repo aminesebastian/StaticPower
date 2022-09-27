@@ -19,13 +19,14 @@ public class CableDestinationDigistore extends CableDestination {
 			}
 
 			// TODO: This should be a capability check!
-			BlockEntityBase baseTe = (BlockEntityBase) entity;
-			if (baseTe != null) {
-				if (baseTe.hasComponentOfType(DigistoreCableProviderComponent.class)) {
-					return true;
+			if (entity instanceof BlockEntityBase) {
+				BlockEntityBase baseTe = (BlockEntityBase) entity;
+				if (baseTe != null) {
+					if (baseTe.hasComponentOfType(DigistoreCableProviderComponent.class)) {
+						return true;
+					}
 				}
 			}
-
 		}
 		return false;
 	}

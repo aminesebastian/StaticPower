@@ -47,7 +47,7 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.util.ObfuscationReflectionHelper;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.gui.StaticPowerExtensionGui;
 import theking530.staticpower.client.gui.StaticPowerHUDElement;
@@ -159,7 +159,7 @@ public class StaticPowerForgeBusClient {
 
 		if (fluid instanceof AbstractStaticPowerFluid) {
 			AbstractStaticPowerFluid abstractFluid = (AbstractStaticPowerFluid) fluid;
-			Color color = abstractFluid.getFogColor();
+			SDColor color = abstractFluid.getFogColor();
 			event.setRed(color.getRed());
 			event.setGreen(color.getGreen());
 			event.setBlue(color.getBlue());

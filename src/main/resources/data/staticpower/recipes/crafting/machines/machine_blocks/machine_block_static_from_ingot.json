@@ -2,14 +2,14 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
 		"ttt",
-		"tmt",
+		"tit",
 		"tpt"
 	],
 	"key": {
 		"t": {
 			"item": "staticpower:ingot_static"
 		},
-		"m": {
+		"i": {
 			"item": "staticpower:io_port"
 		},
 		"p": {

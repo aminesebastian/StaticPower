@@ -13,7 +13,7 @@ import theking530.api.energy.StaticPowerVoltage;
 import theking530.api.energy.StaticVoltageRange;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.gui.GuiTextures;
 
 public class GuiPowerBarUtilities {
@@ -42,9 +42,9 @@ public class GuiPowerBarUtilities {
 		matrixStack.translate(xpos, ypos, 0);
 		GuiDrawUtilities.drawSlot(matrixStack, width, height, 0, 0, 0);
 		float glowState = getPowerBarGlow();
-		GuiDrawUtilities.drawTexture(matrixStack, GuiTextures.POWER_BAR_BG, width, height, 0, 0, 1, 1, Color.WHITE);
+		GuiDrawUtilities.drawTexture(matrixStack, GuiTextures.POWER_BAR_BG, width, height, 0, 0, 1, 1, SDColor.WHITE);
 		GuiDrawUtilities.drawTexture(matrixStack, GuiTextures.POWER_BAR_FG, width, filledHeight, 0, height - filledHeight, 0, 0, 1 - percentFilled, 1, 1,
-				new Color(glowState, glowState, glowState, 1.0f));
+				new SDColor(glowState, glowState, glowState, 1.0f));
 		matrixStack.popPose();
 	}
 

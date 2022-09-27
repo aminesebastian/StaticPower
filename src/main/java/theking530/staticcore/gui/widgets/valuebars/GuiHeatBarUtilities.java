@@ -11,7 +11,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.gui.GuiTextures;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -51,24 +51,24 @@ public class GuiHeatBarUtilities {
 		stack.pushPose();
 		stack.translate(xpos, ypos, 0);
 		GuiDrawUtilities.drawSlot(stack, width, height, 0, 0, 0);
-		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_BG, width, height, 0, 0, 1, 1, Color.WHITE);
-		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_FG, width, filledHeight, 0, height - filledHeight, 0, 0, 1 - percentFilled, 1, 1, new Color(1, 1, 1, 1.0f));
-		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - filledHeight - 5, zLevel, 0, 0, 1, 1, Color.GREY);
+		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_BG, width, height, 0, 0, 1, 1, SDColor.WHITE);
+		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_FG, width, filledHeight, 0, height - filledHeight, 0, 0, 1 - percentFilled, 1, 1, new SDColor(1, 1, 1, 1.0f));
+		GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - filledHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREY);
 
 		if (overheatTemp != maximumTemp) {
 			float overheatHeight = ((overheatTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight) * height;
-			GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - overheatHeight - 5, zLevel, 0, 0, 1, 1, Color.RED);
+			GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - overheatHeight - 5, zLevel, 0, 0, 1, 1, SDColor.RED);
 		}
 
 		if (minimumTemp != IHeatStorage.MINIMUM_TEMPERATURE) {
 			float minimumHeight = ((minimumTemp - IHeatStorage.MINIMUM_TEMPERATURE) / totalHeight) * height;
-			GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - minimumHeight - 5, zLevel, 0, 0, 1, 1, Color.GREEN);
+			GuiDrawUtilities.drawTexture(stack, GuiTextures.HEAT_BAR_INDICATOR, width + 4.5f, 10, -2.25f, height - minimumHeight - 5, zLevel, 0, 0, 1, 1, SDColor.GREEN);
 		}
 
 		stack.popPose();
 	}
 
-	public static void drawHeatLevelIndicator(PoseStack stack, float width, Color color) {
+	public static void drawHeatLevelIndicator(PoseStack stack, float width, SDColor color) {
 		GuiDrawUtilities.drawRectangle(stack, width + 2, 1, -1, 0, 0, color);
 		GuiDrawUtilities.drawRectangle(stack, 1, 5, -2, -2, 0, color);
 		GuiDrawUtilities.drawRectangle(stack, 1, 5, width + 1, -2, 0, color);

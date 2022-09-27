@@ -9,7 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector4D;
 
@@ -18,20 +18,20 @@ public class SpriteDrawable implements IDrawable {
 	private ResourceLocation sprite;
 	private Vector2D size;
 	private Vector4D uv;
-	private Color tint;
+	private SDColor tint;
 
 	public SpriteDrawable(ResourceLocation sprite, float width, float height) {
 		this.sprite = sprite;
 		this.size = new Vector2D(width, height);
 		this.uv = new Vector4D(0, 0, 1, 1);
-		this.tint = Color.WHITE;
+		this.tint = SDColor.WHITE;
 	}
 
-	public void setTint(Color tint) {
+	public void setTint(SDColor tint) {
 		this.tint = tint;
 	}
 
-	public Color getTint() {
+	public SDColor getTint() {
 		return tint;
 	}
 

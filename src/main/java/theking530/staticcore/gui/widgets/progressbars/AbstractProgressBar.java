@@ -1,6 +1,5 @@
 package theking530.staticcore.gui.widgets.progressbars;
 
-import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +19,9 @@ import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent;
+import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
 import theking530.staticpower.client.StaticPowerSprites;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 /**
  * Abstract progress bar that can be used to render the current progress of a
@@ -158,8 +159,6 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 
 	@Override
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
-		DecimalFormat decimalFormat = new DecimalFormat("#.#");
-
 		if (isProcessingErrored) {
 			String[] splitTooltips = processingErrorMessage.getString().split("\\$");
 			for (String tip : splitTooltips) {
@@ -167,12 +166,11 @@ public abstract class AbstractProgressBar<T extends AbstractProgressBar<?>> exte
 			}
 		} else if (enableProgressTooltip) {
 			if (currentProgress > 0) {
-				String remainingTime = decimalFormat.format((maxProgress - currentProgress) / (tickDownRate * 20.0f));
-				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime)
-						.append(new TranslatableComponent("gui.staticpower.seconds.short")));
+				MutableComponent remainingTime = GuiTextUtilities.formatTicksToTimeUnit((int) ((maxProgress - currentProgress) / (tickDownRate)));
+				tooltips.add(new TranslatableComponent("gui.staticpower.remaining").append(": ").append(remainingTime));
 			} else {
-				String maxTime = decimalFormat.format(maxProgress / (tickDownRate * 20.0f));
-				tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime).append(new TranslatableComponent("gui.staticpower.seconds.short")));
+				MutableComponent maxTime = GuiTextUtilities.formatTicksToTimeUnit((int) (maxProgress / (tickDownRate)));
+				tooltips.add(new TranslatableComponent("gui.staticpower.max").append(": ").append(maxTime));
 			}
 		}
 	}

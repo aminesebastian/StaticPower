@@ -17,22 +17,22 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
 import theking530.staticpower.teams.research.ResearchManager;
 
 public class ResearchItem extends StaticPowerItem {
-	private final Color color;
+	private final SDColor color;
 	private final int researchTier;
 
-	public ResearchItem(Color color, int tier) {
+	public ResearchItem(SDColor color, int tier) {
 		super();
 		this.color = color;
 		this.researchTier = tier;
 	}
 
-	public Color getColor() {
+	public SDColor getColor() {
 		return color;
 	}
 

@@ -7,7 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import theking530.staticcore.gui.widgets.DataGraphWidget.IGraphDataSet;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 
@@ -106,15 +106,15 @@ public class WorldLineGraphRenderer {
 		int yLines = (int) Math.ceil(1f / gridSpacing * aspectRatio);
 
 		for (int i = 0; i < xLines; i++) {
-			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f), new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f, new Color(0.1f, 0.1f, 0.125f, 0.5f));
+			WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(i * gridSpacing, 0.0f, 0.0f), new Vector3D(i * gridSpacing, 1.0f, 0.0f), 10.0f, new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
 		}
 		for (int i = 0; i < yLines; i++) {
 			if (i == yLines / 2) {
 				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						10.0f, new Color(0.5f, 0.5f, 0.525f, 0.2f));
+						10.0f, new SDColor(0.5f, 0.5f, 0.525f, 0.2f));
 			} else {
 				WorldRenderingUtilities.drawLine(matrixStack, buffer, new Vector3D(0.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f), new Vector3D(1.0f, i * yGridSpacing + (yGridSpacing / 2), 0.0f),
-						10.0f, new Color(0.1f, 0.1f, 0.125f, 0.5f));
+						10.0f, new SDColor(0.1f, 0.1f, 0.125f, 0.5f));
 			}
 		}
 	}

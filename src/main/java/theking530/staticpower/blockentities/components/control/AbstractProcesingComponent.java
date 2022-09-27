@@ -1,5 +1,6 @@
 package theking530.staticpower.blockentities.components.control;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -7,15 +8,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.PowerStack;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.gui.text.PowerTextFormatting;
+import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
+import theking530.staticpower.blockentities.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractProcesingComponent extends AbstractBlockEntityComponent {
+	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
+
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
 	protected PowerStorageComponent powerComponent;
@@ -129,6 +135,10 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 	}
 
 	public boolean process() {
+		if (!isClientSide()) {
+			sendSynchronizationPacket();
+		}
+
 		// Check if we have not started.
 		if (!hasStarted) {
 			// If we have not, check the starting state.
@@ -555,6 +565,28 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			return currentState.getValue(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;
+	}
+
+	protected void sendSynchronizationPacket() {
+		if (getLevel().isClientSide()) {
+			StaticPower.LOGGER.warn("#synchronizeToClient (called at %1$s) should only be called from the server!", getPos().toString());
+			return;
+		}
+
+		// Send the packet to all clients within the requested radius.
+		ProcesingComponentSyncPacket msg = new ProcesingComponentSyncPacket(getPos(), this);
+		StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
+	}
+
+	public CompoundTag serializeClientSynchronizeData(CompoundTag nbt, boolean fromUpdate) {
+		this.serializeUpdateNbt(nbt, fromUpdate);
+
+		return nbt;
+	}
+
+	public void recieveClientSynchronizeData(CompoundTag nbt, boolean fromUpdate) {
+		this.deserializeUpdateNbt(nbt, fromUpdate);
+
 	}
 
 	public static class ProcessingCheckState {

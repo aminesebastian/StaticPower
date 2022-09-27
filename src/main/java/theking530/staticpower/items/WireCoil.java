@@ -18,23 +18,23 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.power.wireconnector.BlockWireConnector;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 
 public class WireCoil extends StaticPowerItem {
 	private static final String INITIAL_LOCATOIN_TAG_NAME = "initial_connecting_point";
-	private final Color wireColor;
+	private final SDColor wireColor;
 	private final float wireThickness;
 	private final Supplier<CableNetworkModuleType> cableModuleType;
 
-	public WireCoil(Color wireColor, float wireThickness, Supplier<CableNetworkModuleType> cableModuleType) {
+	public WireCoil(SDColor wireColor, float wireThickness, Supplier<CableNetworkModuleType> cableModuleType) {
 		this.wireColor = wireColor;
 		this.wireThickness = wireThickness;
 		this.cableModuleType = cableModuleType;
 	}
 
-	public Color getColor() {
+	public SDColor getColor() {
 		return wireColor;
 	}
 

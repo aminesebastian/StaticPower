@@ -20,7 +20,7 @@ import net.minecraftforge.client.model.ModelDataManager;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.power.turbine.BlockEntityTurbine;
 import theking530.staticpower.blockentities.power.turbine.BlockEntityTurbine.TurbineRenderingState;
@@ -113,7 +113,7 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 
 			// Get the fluid attributes and add alpha to the fluid.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
-			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 			fluidColor.setAlpha(0.2f);
 
 			// Get the height and y position.

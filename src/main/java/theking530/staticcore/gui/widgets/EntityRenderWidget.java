@@ -5,7 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.LivingEntity;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 
 public class EntityRenderWidget extends AbstractGuiWidget {
@@ -25,7 +25,7 @@ public class EntityRenderWidget extends AbstractGuiWidget {
 		GuiDrawUtilities.drawSlot(pose, getSize().getX(), getSize().getY(), 0, 0, 0);
 
 		// Then the background.
-		GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), 0, 0, 1.0f, Color.BLACK);
+		GuiDrawUtilities.drawRectangle(pose, getSize().getX(), getSize().getY(), 0, 0, 1.0f, SDColor.BLACK);
 
 		// Get the screen space position and offset it by the scale to center the
 		// entity.

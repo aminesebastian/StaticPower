@@ -9,7 +9,7 @@ import theking530.staticcore.gui.drawables.ItemDrawable;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.team.TeamComponent;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.teams.Team;
@@ -21,7 +21,7 @@ public class GuiResearchTab extends AbstractInfoTab {
 	public TextButton setTeamButton;
 
 	public GuiResearchTab(TeamComponent teamComponent) {
-		super("gui.staticpower.tab_title.research", new Color(255, 255, 255), 100, new Color(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(ModItems.ResearchTier1.get()));
+		super("gui.staticpower.tab_title.research", new SDColor(255, 255, 255), 100, new SDColor(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(ModItems.ResearchTier1.get()));
 		this.teamComponent = teamComponent;
 		registerWidget(setTeamButton = new TextButton(12, 25, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
 		setTeamButton.setTooltip(new TranslatableComponent("gui.staticpower.machine_set_team"));

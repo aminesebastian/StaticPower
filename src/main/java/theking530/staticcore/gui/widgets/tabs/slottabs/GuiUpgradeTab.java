@@ -9,7 +9,7 @@ import net.minecraft.world.item.Item;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.StaticPowerContainerSlot;
@@ -29,7 +29,7 @@ public class GuiUpgradeTab extends BaseGuiTab {
 	}
 
 	public GuiUpgradeTab(StaticPowerContainer container, InventoryComponent upgradesInventory, Item icon) {
-		super("Upgrades", Color.EIGHT_BIT_WHITE, 26, 83, new Color(1f, 1.0f, 0.1f), icon);
+		super("Upgrades", SDColor.EIGHT_BIT_WHITE, 26, 83, new SDColor(1f, 1.0f, 0.1f), icon);
 		this.container = container;
 		this.slots = new ArrayList<StaticPowerContainerSlot>();
 		this.upgradesInventory = upgradesInventory;

@@ -5,14 +5,14 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector4D;
 
 public class PanBox extends AbstractGuiWidget<PanBox> {
-	private Color color;
+	private SDColor color;
 	private boolean drawBackground;
 	private float interpolatedZoom;
 	private float targetZoom;
@@ -41,7 +41,7 @@ public class PanBox extends AbstractGuiWidget<PanBox> {
 		pose.translate(interpolatedPan.getX(), interpolatedPan.getY(), 0);
 	}
 
-	public PanBox setBackgroundColor(Color color) {
+	public PanBox setBackgroundColor(SDColor color) {
 		this.color = color;
 		return this;
 	}

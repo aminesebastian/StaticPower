@@ -24,7 +24,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -88,9 +88,9 @@ public class HammerRecipeCategory extends BaseJEIRecipeCategory<HammerRecipe> {
 		arrow.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		// Get the buffer and render the large hammer.
-		GuiDrawUtilities.drawSprite(matrixStack, new ResourceLocation("staticpower", "items/tools/hammer_iron"), 32, 32, 23, 5, 0, 0, 0, 1, 1, Color.WHITE);
+		GuiDrawUtilities.drawSprite(matrixStack, new ResourceLocation("staticpower", "items/tools/hammer_iron"), 32, 32, 23, 5, 0, 0, 0, 1, 1, SDColor.WHITE);
 		if (!recipe.isBlockType()) {
-			GuiDrawUtilities.drawString(matrixStack, "Requires Anvil", 89, 47, 0.0f, 1.0f, Color.EIGHT_BIT_GREY, false);
+			GuiDrawUtilities.drawString(matrixStack, "Requires Anvil", 89, 47, 0.0f, 1.0f, SDColor.EIGHT_BIT_GREY, false);
 		}
 	}
 

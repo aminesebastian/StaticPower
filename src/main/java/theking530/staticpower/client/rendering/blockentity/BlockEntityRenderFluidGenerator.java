@@ -9,7 +9,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.api.energy.utilities.StaticPowerEnergyUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
@@ -47,7 +47,7 @@ public class BlockEntityRenderFluidGenerator extends StaticPowerBlockEntitySpeci
 
 		// Draw the empty power bar.
 		WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.GUI_POWER_BAR_BG, matrixStack, buffer, new Vector3D(0.657f, 0.18f, 0.0001f),
-				new Vector3D(0.125f, 0.635f, 1.0f), new Vector4D(0.0f, 0.0f, 1.0f, 1.0f), Color.WHITE);
+				new Vector3D(0.125f, 0.635f, 1.0f), new Vector4D(0.0f, 0.0f, 1.0f, 1.0f), SDColor.WHITE);
 
 		// Draw the filled power bar.
 		if (tileEntity.powerStorage.getStoredPower() > 0) {
@@ -55,7 +55,7 @@ public class BlockEntityRenderFluidGenerator extends StaticPowerBlockEntitySpeci
 			float height = (float) StaticPowerEnergyUtilities.getStoredEnergyPercentScaled(tileEntity.powerStorage, 1.0f);
 			Vector4D uv = new Vector4D(0.0f, 1.0f - height, 1.0f, 1.0f);
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.GUI_POWER_BAR_FG, matrixStack, buffer, new Vector3D(0.657f, 0.18f, 0.0005f),
-					new Vector3D(0.125f, height * 0.635f, 1.0f), uv, Color.WHITE);
+					new Vector3D(0.125f, height * 0.635f, 1.0f), uv, SDColor.WHITE);
 		}
 	}
 }

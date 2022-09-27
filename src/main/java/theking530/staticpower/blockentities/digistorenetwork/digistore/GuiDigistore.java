@@ -18,7 +18,7 @@ import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticcore.network.NetworkMessage;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.MetricConverter;
@@ -72,7 +72,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 		super.drawForegroundExtras(stack, partialTicks, mouseX, mouseY);
 		if (inventory.getItemCapacity() > 0) {
 			if (mouseX >= leftPos + 76 && mouseX <= leftPos + 100 && mouseY >= topPos + 21 && mouseY <= topPos + 45) {
-				GuiDrawUtilities.drawRectangle(stack, 18, 18, 79, 19, 1.0f, new Color(200, 200, 200, 200).fromEightBitToFloat());
+				GuiDrawUtilities.drawRectangle(stack, 18, 18, 79, 19, 1.0f, new SDColor(200, 200, 200, 200).fromEightBitToFloat());
 			}
 		}
 	}
@@ -103,7 +103,7 @@ public class GuiDigistore extends StaticPowerTileEntityGui<ContainerDigistore, T
 			MetricConverter count = new MetricConverter(inventory.getTotalContainedCount());
 
 			// Draw the item count string.
-			GuiDrawUtilities.drawString(stack, count.getValueAsString(true), 98, 37, 0.0f, 0.5f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(stack, count.getValueAsString(true), 98, 37, 0.0f, 0.5f, SDColor.EIGHT_BIT_WHITE, true);
 		}
 	}
 }

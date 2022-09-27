@@ -9,13 +9,13 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.entities.AbstractSpawnableMobType;
 
 public class TypeSmeep extends AbstractSpawnableMobType<EntitySmeep> {
 	public TypeSmeep() {
-		super(Color.EIGHT_BIT_WHITE, new Color(54, 239, 88), EntityType.Builder.of(EntitySmeep::new, MobCategory.CREATURE).sized(0.9f, 1.3f));
+		super(SDColor.EIGHT_BIT_WHITE, new SDColor(54, 239, 88), EntityType.Builder.of(EntitySmeep::new, MobCategory.CREATURE).sized(0.9f, 1.3f));
 	}
 
 	@Override

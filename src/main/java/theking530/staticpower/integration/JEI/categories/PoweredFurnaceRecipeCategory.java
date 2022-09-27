@@ -25,7 +25,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -96,11 +96,11 @@ public class PoweredFurnaceRecipeCategory extends BaseJEIRecipeCategory<Smelting
 		float experience = recipe.getExperience();
 		if (experience > 0) {
 			TranslatableComponent experienceString = new TranslatableComponent("gui.staticpower.experience", experience);
-			GuiDrawUtilities.drawStringCentered(matrixStack, experienceString.getString(), 100, 10, 0.0f, 1f, Color.EIGHT_BIT_GREY, false);
+			GuiDrawUtilities.drawStringCentered(matrixStack, experienceString.getString(), 100, 10, 0.0f, 1f, SDColor.EIGHT_BIT_GREY, false);
 		}
 
 		int processingTicks = (int) (recipe.getCookingTime() * BlockEntityPoweredFurnace.DEFAULT_PROCESSING_TIME_MULT);
-		GuiDrawUtilities.drawStringCentered(matrixStack, GuiTextUtilities.formatTicksToTimeUnit(processingTicks).getString(), 110, 55, 0.0f, 1f, Color.EIGHT_BIT_GREY, false);
+		GuiDrawUtilities.drawStringCentered(matrixStack, GuiTextUtilities.formatTicksToTimeUnit(processingTicks).getString(), 110, 55, 0.0f, 1f, SDColor.EIGHT_BIT_GREY, false);
 	}
 
 	@Override

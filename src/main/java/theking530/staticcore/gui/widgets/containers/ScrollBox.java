@@ -4,13 +4,13 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.client.gui.GuiTextures;
 
 public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
-	private Color color;
+	private SDColor color;
 	private boolean drawBackground;
 	private float interpolatedScroll;
 	private float targetScroll;
@@ -49,7 +49,7 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 		}
 	}
 
-	public ScrollBox setBackgroundColor(Color color) {
+	public ScrollBox setBackgroundColor(SDColor color) {
 		this.color = color;
 		return this;
 	}
@@ -135,7 +135,7 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 				GuiDrawUtilities.drawSlot(pose, 10, getSize().getY() - 2, getSize().getX() - 10, 0, 0);
 			}
 
-			GuiDrawUtilities.drawTexture(pose, GuiTextures.SCROLL_HANDLE, 10, 15, getSize().getX() - 10, handlePosition, 0, 0, 0, 1, 1, Color.WHITE);
+			GuiDrawUtilities.drawTexture(pose, GuiTextures.SCROLL_HANDLE, 10, 15, getSize().getX() - 10, handlePosition, 0, 0, 0, 1, 1, SDColor.WHITE);
 		}
 	}
 

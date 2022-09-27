@@ -133,7 +133,7 @@ public class ItemNetworkModule extends CableNetworkModule {
 	 * @return
 	 */
 	public ItemStack transferItemStack(ItemStack stack, BlockPos cablePosition, @Nullable Direction pulledFromDirection, boolean simulate, double blocksPerSecond) {
-		return transferItemStack(stack, cablePosition, pulledFromDirection, simulate, false, blocksPerSecond);
+		return transferItemStack(stack, cablePosition, pulledFromDirection, simulate, simulate, blocksPerSecond);
 	}
 
 	/**

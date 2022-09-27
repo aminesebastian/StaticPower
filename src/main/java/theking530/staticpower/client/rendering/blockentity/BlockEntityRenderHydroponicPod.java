@@ -20,7 +20,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.machines.hydroponicpod.BlockEntityHydroponicPod;
 import theking530.staticpower.client.rendering.BlockModel;
@@ -36,12 +36,10 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 	@Override
 	public void renderTileEntityBase(BlockEntityHydroponicPod tileEntity, BlockPos pos, float partialTicks, PoseStack stack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
-		Optional<Block> block = tileEntity.getPlantBlockForRender();
+		Optional<Block> block = tileEntity.getPlantBlockForDisplay();
+
 		if (!block.isEmpty()) {
-
 			float growthPercentage = tileEntity.getGrowthPercentage();
-
-			float growTime = ((tileEntity.getLevel().getGameTime() + partialTicks) / 10) % 10;
 			if (block.get() instanceof CropBlock) {
 				CropBlock crop = (CropBlock) block.get();
 				int age = ((int) (growthPercentage * crop.getMaxAge())) % crop.getMaxAge();
@@ -49,12 +47,12 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 				GuiDrawUtilities.drawBlockState(stack, state, pos, EmptyModelData.INSTANCE, new Vector3D(0.175f, 0.1f, 0.175f), new Vector3D(0, 45, 0),
 						new Vector3D(0.65f, 0.65f, 0.65f));
 			} else if (block.get() instanceof StemBlock) {
-				float scale = ((growTime) / 10.0f) * 0.9f + 0.1f;
+				float scale = (growthPercentage * 0.9f) + 0.1f;
 				scale *= 0.5f;
 
 				// Draw the stem.
 				StemBlock stem = (StemBlock) block.get();
-				int age = (int) (growTime % (StemBlock.MAX_AGE + 1));
+				int age = (int) (growthPercentage * StemBlock.MAX_AGE);
 				BlockState stemState = stem.defaultBlockState();
 				stemState = stemState.setValue(StemBlock.AGE, age);
 				GuiDrawUtilities.drawBlockState(stack, stemState, pos, EmptyModelData.INSTANCE, new Vector3D(0.75f - (scale / 2), 0.1f, 0.75f - (scale / 2)), new Vector3D(0, 0, 0),
@@ -69,12 +67,14 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 
 		}
 
-		// Render the hydroponic fluid.
-		FluidStack fluid = new FluidStack(Fluids.WATER, 1);
-		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
-		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
-		float height = 0.2f;
-		CUBE_MODEL.drawPreviewCube(new Vector3f(2.1f * TEXEL, 2f * TEXEL, 2.1f * TEXEL), new Vector3f(11.8f * TEXEL, 12f * TEXEL * height, 11.8f * TEXEL), fluidColor, stack, sprite,
-				new Vector3D(1.0f, height, 1.0f));
+		if (tileEntity.hasWater()) {
+			// Render the hydroponic fluid.
+			FluidStack fluid = new FluidStack(Fluids.WATER, 1);
+			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
+			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+			float height = 0.2f;
+			CUBE_MODEL.drawPreviewCube(new Vector3f(2.1f * TEXEL, 2f * TEXEL, 2.1f * TEXEL), new Vector3f(11.8f * TEXEL, 12f * TEXEL * height, 11.8f * TEXEL), fluidColor, stack,
+					sprite, new Vector3D(1.0f, height, 1.0f));
+		}
 	}
 }

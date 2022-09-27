@@ -22,7 +22,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.network.NetworkMessage;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.BlockEntityBase;
@@ -48,7 +48,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	private Direction highlightedSide;
 
 	public GuiSideConfigTab(BlockEntityBase te) {
-		super("Side Config", Color.EIGHT_BIT_WHITE, 110, 105, new Color(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
+		super("Side Config", SDColor.EIGHT_BIT_WHITE, 110, 105, new SDColor(0.1f, 0.4f, 0.95f, 1.0f), te.getBlockState().getBlock());
 		tileEntity = te;
 		rotationVelocity = new Vector2D(0, 0);
 		mouseDownLocation = new Vector2D(0, 0);
@@ -110,7 +110,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 				boolean enabled = sideConfig.getWorldSpaceEnabledState(highlightedSide);
 				if (enabled) {
 					MachineSideMode mode = sideConfig.getWorldSpaceDirectionConfiguration(highlightedSide);
-					Color color = mode.getColor().copy();
+					SDColor color = mode.getColor().copy();
 					color.setAlpha(0.75f);
 
 					matrix.pushPose();

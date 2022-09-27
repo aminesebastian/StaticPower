@@ -12,35 +12,35 @@ import net.minecraft.world.level.block.state.StateDefinition.Builder;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 
 public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid implements IRenderLayerProvider {
 
 	public TagKey<Fluid> Tag;
-	private Color fogColor;
-	private Color overlayColor;
+	private SDColor fogColor;
+	private SDColor overlayColor;
 
-	public AbstractStaticPowerFluid(Properties properties, TagKey<Fluid> tag, Color fogColor, Color overlayColor) {
+	public AbstractStaticPowerFluid(Properties properties, TagKey<Fluid> tag, SDColor fogColor, SDColor overlayColor) {
 		super(properties);
 		this.fogColor = fogColor;
 		this.overlayColor = overlayColor;
 		Tag = tag;
 	}
 
-	public Color getFogColor() {
+	public SDColor getFogColor() {
 		return fogColor;
 	}
 
-	public void setFogColor(Color fogColor) {
+	public void setFogColor(SDColor fogColor) {
 		this.fogColor = fogColor;
 	}
 
-	public Color getOverlayColor() {
+	public SDColor getOverlayColor() {
 		return overlayColor;
 	}
 
-	public void setOverlayColor(Color overlayColor) {
+	public void setOverlayColor(SDColor overlayColor) {
 		this.overlayColor = overlayColor;
 	}
 
@@ -89,7 +89,7 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 
 	public static class Source extends AbstractStaticPowerFluid {
 
-		public Source(Properties properties,TagKey<Fluid> tag, Color fogColor, Color overlayColor) {
+		public Source(Properties properties,TagKey<Fluid> tag, SDColor fogColor, SDColor overlayColor) {
 			super(properties, tag, fogColor, overlayColor);
 		}
 
@@ -106,7 +106,7 @@ public abstract class AbstractStaticPowerFluid extends ForgeFlowingFluid impleme
 
 	public static class Flowing extends AbstractStaticPowerFluid {
 
-		public Flowing(Properties properties,TagKey<Fluid> tag, Color fogColor, Color overlayColor) {
+		public Flowing(Properties properties,TagKey<Fluid> tag, SDColor fogColor, SDColor overlayColor) {
 			super(properties, tag, fogColor, overlayColor);
 		}
 

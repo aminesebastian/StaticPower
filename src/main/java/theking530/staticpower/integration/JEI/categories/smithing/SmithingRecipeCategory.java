@@ -32,7 +32,7 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.AutoSmithProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -95,7 +95,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 		GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 48, 40, 0);
 
 		GuiDrawUtilities.drawSlot(matrixStack, 68, 60, 102, 0, 0);
-		GuiDrawUtilities.drawRectangle(matrixStack, 68, 60, 102, 0, 0.0f, Color.DARK_GREY);
+		GuiDrawUtilities.drawRectangle(matrixStack, 68, 60, 102, 0, 0.0f, SDColor.DARK_GREY);
 
 		// This doesn't actually draw the fluid, just the bars.
 		if (!recipe.getRecipe().getModifierFluid().isEmpty()) {
@@ -112,7 +112,7 @@ public class SmithingRecipeCategory extends BaseJEIRecipeCategory<SmithingRecipe
 
 		// Draw the attribute title.
 		Minecraft.getInstance().font.drawShadow(matrixStack, new TranslatableComponent("gui.staticpower.attributes").append(": ").getString(), 104.5f, 2,
-				Color.EIGHT_BIT_WHITE.encodeInInteger());
+				SDColor.EIGHT_BIT_WHITE.encodeInInteger());
 
 		// Create a copy of the input.
 		ItemStack copy = recipe.getInputItem().copy();

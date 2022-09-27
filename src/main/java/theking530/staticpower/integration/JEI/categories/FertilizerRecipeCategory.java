@@ -19,7 +19,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -75,7 +75,7 @@ public class FertilizerRecipeCategory extends BaseJEIRecipeCategory<FertalizerRe
 		TranslatableComponent bonus = new TranslatableComponent("gui.staticpower.fertlization_bonus",
 				GuiTextUtilities.formatNumberAsStringOneDecimal(recipe.getFertalizationAmount() * 100));
 		bonus.append(new TextComponent("%"));
-		GuiDrawUtilities.drawStringCentered(matrixStack, bonus.getString(), 65, 9, 0.0f, 1f, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringCentered(matrixStack, bonus.getString(), 65, 9, 0.0f, 1f, SDColor.EIGHT_BIT_DARK_GREY, false);
 	}
 
 	@Override

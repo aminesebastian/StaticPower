@@ -27,15 +27,15 @@ public class BlockEntityRenderFarmer extends StaticPowerBlockEntitySpecialRender
 			float firstSectionFilledPercent = Math.min(filledPercentage * 2.0f, 1.0f);
 			float secondSectionFilledPercentage = SDMath.clamp((filledPercentage - 0.5f) * 2.0f, 0.0f, 1.0f);
 
-			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.185f, 0.28f, 0.001f), new Vector3D(0.125f, firstSectionFilledPercent * 0.535f * 0.5f, 1.0f),
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.218f, 0.218f, 0.001f), new Vector3D(0.094f, firstSectionFilledPercent * 0.5625f * 0.5f, 1.0f),
 					new Vector4D(0.0f, 1.0f - firstSectionFilledPercent, 0.4f, 1.0f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
-			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.69f, 0.28f, 0.001f), new Vector3D(0.125f, firstSectionFilledPercent * 0.535f * 0.5f, 1.0f),
+			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.688f, 0.218f, 0.001f), new Vector3D(0.094f, firstSectionFilledPercent * 0.5625f * 0.5f, 1.0f),
 					new Vector4D(0.0f, 1.0f - firstSectionFilledPercent, 0.4f, 1.0f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
 			if (filledPercentage >= 0.5f) {
-				WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.185f, 0.545f, 0.001f), new Vector3D(0.125f, secondSectionFilledPercentage * 0.535f * 0.5f, 1.0f),
+				WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.218f, 0.499f, 0.001f), new Vector3D(0.094f, secondSectionFilledPercentage * 0.57f * 0.5f, 1.0f),
 						new Vector4D(1.0f, 1.0f - secondSectionFilledPercentage, 0.6f, 1.0f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
-				WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.69f, 0.545f, 0.001f), new Vector3D(0.125f, secondSectionFilledPercentage * 0.535f * 0.5f, 1.0f),
+				WorldRenderingUtilities.drawFluidQuadLit(tileEntity.fluidTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.688f, 0.499f, 0.001f), new Vector3D(0.094f, secondSectionFilledPercentage * 0.57f * 0.5f, 1.0f),
 						new Vector4D(1.0f, 1.0f - secondSectionFilledPercentage, 0.6f, 1.0f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 			}
 		}

@@ -29,7 +29,7 @@ import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarUtilities;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -100,12 +100,12 @@ public class FluidGeneratorRecipeCateogry extends BaseJEIRecipeCategory<FluidGen
 		flameBar.renderBehindItems(matrixStack, (int) mouseX, (int) mouseY, 0.0f, RectangleBounds.INFINITE_BOUNDS);
 
 		String powerGeneration = PowerTextFormatting.formatPowerRateToString(recipe.getPowerGeneration()).getString();
-		GuiDrawUtilities.drawStringCentered(matrixStack, powerGeneration, 51, 32, 1, 1, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringCentered(matrixStack, powerGeneration, 51, 32, 1, 1, SDColor.EIGHT_BIT_DARK_GREY, false);
 
 		double ticksPerBucket = 1000 / Math.max(recipe.getFluid().getAmount(), 1);
 		double generationPerBucket = ticksPerBucket * recipe.getPowerGeneration();
 		String powerPerTick = PowerTextFormatting.formatPowerToString(generationPerBucket).getString();
-		GuiDrawUtilities.drawStringLeftAligned(matrixStack, powerPerTick, 43, 12, 1, 1, Color.EIGHT_BIT_DARK_GREY, false);
+		GuiDrawUtilities.drawStringLeftAligned(matrixStack, powerPerTick, 43, 12, 1, 1, SDColor.EIGHT_BIT_DARK_GREY, false);
 		GuiDrawUtilities.drawItem(matrixStack, new ItemStack(recipe.getFluid().getFluid().getBucket()), 25, 1, 1);
 
 	}

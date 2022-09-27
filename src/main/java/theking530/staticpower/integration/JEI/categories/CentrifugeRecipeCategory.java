@@ -25,7 +25,7 @@ import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.CentrifugeProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -93,7 +93,7 @@ public class CentrifugeRecipeCategory extends BaseJEIRecipeCategory<CentrifugeRe
 
 		String rpmText = String.valueOf(recipe.getMinimumSpeed()) + " RPM";
 		GuiDrawUtilities.drawSlot(matrixStack, Minecraft.getInstance().font.width(rpmText) + 4, 11, 103, 12.5f, 0);
-		Minecraft.getInstance().font.drawShadow(matrixStack, rpmText, 105, 14, Color.EIGHT_BIT_WHITE.encodeInInteger());
+		Minecraft.getInstance().font.drawShadow(matrixStack, rpmText, 105, 14, SDColor.EIGHT_BIT_WHITE.encodeInInteger());
 
 		pBar.setCurrentProgress(processingTimer.getValue());
 		pBar.setMaxProgress(processingTimer.getMaxValue());

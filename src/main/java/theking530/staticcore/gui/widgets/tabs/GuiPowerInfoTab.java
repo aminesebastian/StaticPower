@@ -13,7 +13,7 @@ import theking530.api.energy.CurrentType;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.client.gui.GuiTextures;
@@ -29,7 +29,7 @@ public class GuiPowerInfoTab extends AbstractInfoTab {
 	private int connectedPowerLineWidth;
 
 	public GuiPowerInfoTab(PowerStorageComponent storage) {
-		super("Power I/O", new Color(242, 0, 255), 105, new Color(0.6f, 0.1f, 1.0f), new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
+		super("Power I/O", new SDColor(242, 0, 255), 105, new SDColor(0.6f, 0.1f, 1.0f), new SpriteDrawable(GuiTextures.POWER_TAB_ICON, 16, 16));
 		this.energyStorage = storage;
 
 		this.inputLabel = "gui.staticpower.power_tab.power_input";

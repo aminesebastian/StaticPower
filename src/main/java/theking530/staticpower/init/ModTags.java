@@ -41,6 +41,7 @@ public class ModTags {
 	public static final TagKey<Block> REFINERY_BLOCK = createBlockWrapper(new ResourceLocation(StaticPower.MOD_ID, "valid_refinery_block"));
 
 	public static final TagKey<Fluid> OIL = createFluidWrapper(new ResourceLocation("minecraft", "oil_crude"));
+	public static final TagKey<Fluid> WATER = createFluidWrapper(new ResourceLocation("minecraft", "water"));
 
 	public static boolean tagContainsItem(TagKey<Item> tag, Item item) {
 		return ForgeRegistries.ITEMS.tags().getTag(tag).contains(item);
@@ -50,8 +51,12 @@ public class ModTags {
 		return tagContainsItem(tag, itemStack.getItem());
 	}
 
-	public static boolean tagContainsBlock(TagKey<Block> tag, Block item) {
-		return ForgeRegistries.BLOCKS.tags().getTag(tag).contains(item);
+	public static boolean tagContainsBlock(TagKey<Block> tag, Block block) {
+		return ForgeRegistries.BLOCKS.tags().getTag(tag).contains(block);
+	}
+
+	public static boolean tagContainsFluid(TagKey<Fluid> tag, Fluid fluid) {
+		return ForgeRegistries.FLUIDS.tags().getTag(tag).contains(fluid);
 	}
 
 	public static TagKey<Item> createItemWrapper(ResourceLocation name) {

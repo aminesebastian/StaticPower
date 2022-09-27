@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
@@ -15,7 +15,7 @@ public class GuiMachineFluidTab extends AbstractInfoTab {
 	protected FluidTankComponent fluidTank;
 
 	public GuiMachineFluidTab(FluidTankComponent tank) {
-		super("Fluid I/O", new Color(255, 255, 25), 85, new Color(0, 0.8f, 0.9f, 1), new ItemDrawable(Blocks.CAULDRON));
+		super("Fluid I/O", new SDColor(255, 255, 25), 85, new SDColor(0, 0.8f, 0.9f, 1), new ItemDrawable(Blocks.CAULDRON));
 		fluidTank = tank;
 	}
 

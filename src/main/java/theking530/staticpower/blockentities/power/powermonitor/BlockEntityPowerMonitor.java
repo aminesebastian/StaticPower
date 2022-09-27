@@ -16,7 +16,7 @@ import theking530.api.energy.metrics.PowerTransferMetrics;
 import theking530.staticcore.gui.widgets.DataGraphWidget.FloatGraphDataSet;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -66,8 +66,8 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 		metrics = new PowerTransferMetrics();
 
 		// Initialize the default data.
-		recievedData = new FloatGraphDataSet(new Color(0.1f, 1.0f, 0.2f, 0.75f), Collections.emptyList());
-		providedData = new FloatGraphDataSet(new Color(1.0f, 0.1f, 0.2f, 0.75f), Collections.emptyList());
+		recievedData = new FloatGraphDataSet(new SDColor(0.1f, 1.0f, 0.2f, 0.75f), Collections.emptyList());
+		providedData = new FloatGraphDataSet(new SDColor(1.0f, 0.1f, 0.2f, 0.75f), Collections.emptyList());
 	}
 
 	@Override
@@ -162,8 +162,8 @@ public class BlockEntityPowerMonitor extends BlockEntityMachine implements IPowe
 	@Override
 	public void recieveMetrics(PowerTransferMetrics metrics) {
 		this.metrics = metrics;
-		recievedData = new FloatGraphDataSet(new Color(0.1f, 1.0f, 0.2f, 0.75f), metrics.getData(MetricsTimeUnit.SECONDS).getInputValues());
-		providedData = new FloatGraphDataSet(new Color(1.0f, 0.1f, 0.2f, 0.75f), metrics.getData(MetricsTimeUnit.SECONDS).getOutputValues());
+		recievedData = new FloatGraphDataSet(new SDColor(0.1f, 1.0f, 0.2f, 0.75f), metrics.getData(MetricsTimeUnit.SECONDS).getInputValues());
+		providedData = new FloatGraphDataSet(new SDColor(1.0f, 0.1f, 0.2f, 0.75f), metrics.getData(MetricsTimeUnit.SECONDS).getOutputValues());
 	}
 
 	/**

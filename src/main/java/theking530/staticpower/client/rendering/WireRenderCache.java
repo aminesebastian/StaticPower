@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector3D;
 
@@ -45,11 +45,11 @@ public class WireRenderCache {
 	private boolean lightingCacheDirty;
 	private boolean geometryCacheDirty;
 
-	private Color color;
+	private SDColor color;
 	private float wireThickness;
 	private float wireSagCoefficient;
 
-	public WireRenderCache(Vec3 start, Vec3 end, Color color, float wireThickness, float wireSagCoefficient) {
+	public WireRenderCache(Vec3 start, Vec3 end, SDColor color, float wireThickness, float wireSagCoefficient) {
 		this.start = start;
 		this.end = end;
 		this.cableBounds = new AABB(start.x(), start.y(), start.z(), end.x(), end.y(), end.z());
@@ -205,8 +205,8 @@ public class WireRenderCache {
 			Vector3D segEnd = new Vector3D(point.end());
 
 			// Lighting
-			Color startColor = color.copy();
-			Color endColor = startColor.copy();
+			SDColor startColor = color.copy();
+			SDColor endColor = startColor.copy();
 			{
 				BlockPos startPos = new BlockPos(segStart.getX(), segStart.getY(), segStart.getZ());
 				BlockPos endPos = new BlockPos(segEnd.getX(), segEnd.getY(), segEnd.getZ());

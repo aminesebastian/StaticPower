@@ -13,7 +13,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockBasicFarmer extends StaticPowerMachineBlock {
 
 	public BlockBasicFarmer() {
-		super(StaticPowerTiers.STATIC);
+		super(StaticPowerTiers.ADVANCED);
 	}
 
 	@Override

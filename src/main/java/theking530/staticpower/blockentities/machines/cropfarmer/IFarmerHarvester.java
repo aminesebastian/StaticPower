@@ -49,5 +49,9 @@ public interface IFarmerHarvester {
 		public static HarvestResult byHoe(List<ItemStack> results) {
 			return new HarvestResult(true, false, true, results);
 		}
+
+		public static HarvestResult noTool(List<ItemStack> results) {
+			return new HarvestResult(true, false, false, results);
+		}
 	}
 }

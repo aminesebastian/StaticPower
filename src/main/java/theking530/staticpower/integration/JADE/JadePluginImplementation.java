@@ -25,7 +25,7 @@ import theking530.api.energy.StaticVoltageRange;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.api.heat.IHeatStorage;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.digistorenetwork.digistore.BlockDigistore;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -39,17 +39,17 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static final ResourceLocation PROCESSING_BAR_RENDERER = new ResourceLocation(StaticPower.MOD_ID, "processing_bar");
 	public static final ResourceLocation FLUID_BAR_RENDERER = new ResourceLocation(StaticPower.MOD_ID, "fluid_bar");
 
-	public static final Color MAIN_SV_COLOR = new Color(0, 0.6f, 0.8f).fromFloatToEightBit();
-	public static final Color ALT_SV_COLOR = new Color(0, 0.458f, 1.0f).fromFloatToEightBit();
+	public static final SDColor MAIN_SV_COLOR = new SDColor(0, 0.6f, 0.8f).fromFloatToEightBit();
+	public static final SDColor ALT_SV_COLOR = new SDColor(0, 0.458f, 1.0f).fromFloatToEightBit();
 
-	public static final Color MAIN_HEAT_COLOR = new Color(1.0f, 0.517f, 0.f).fromFloatToEightBit();
-	public static final Color ALT_HEAT_COLOR = new Color(1.0f, 0.615f, 0.f).fromFloatToEightBit();
+	public static final SDColor MAIN_HEAT_COLOR = new SDColor(1.0f, 0.517f, 0.f).fromFloatToEightBit();
+	public static final SDColor ALT_HEAT_COLOR = new SDColor(1.0f, 0.615f, 0.f).fromFloatToEightBit();
 
-	public static final Color MAIN_PROCESSING_COLOR = new Color(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
-	public static final Color ALT_PROCESSING_COLOR = new Color(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
+	public static final SDColor MAIN_PROCESSING_COLOR = new SDColor(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
+	public static final SDColor ALT_PROCESSING_COLOR = new SDColor(0.67f, 0.67f, 0.67f).fromFloatToEightBit();
 
-	public static final Color MAIN_FLUID_COLOR = new Color(0, 0.18f, 0.88f).fromFloatToEightBit();
-	public static final Color ALT_FLUID_COLOR = new Color(0, 0.164f, 0.831f).fromFloatToEightBit();
+	public static final SDColor MAIN_FLUID_COLOR = new SDColor(0, 0.18f, 0.88f).fromFloatToEightBit();
+	public static final SDColor ALT_FLUID_COLOR = new SDColor(0, 0.164f, 0.831f).fromFloatToEightBit();
 
 	@Override
 	public void register(IRegistrar registrar) {
@@ -227,7 +227,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 		}
 	}
 
-	public static void drawBar(ITooltip tooltip, double currentValue, double maximum, Color mainColor, Color alternateColor, MutableComponent label, ResourceLocation name) {
+	public static void drawBar(ITooltip tooltip, double currentValue, double maximum, SDColor mainColor, SDColor alternateColor, MutableComponent label, ResourceLocation name) {
 		IElementHelper helper = tooltip.getElementHelper();
 		IProgressStyle progressStyle = helper.progressStyle().color(mainColor.encodeInInteger(), alternateColor.encodeInInteger());
 		tooltip.add(helper.progress((float) (currentValue / maximum), label, progressStyle, helper.borderStyle()).tag(name));

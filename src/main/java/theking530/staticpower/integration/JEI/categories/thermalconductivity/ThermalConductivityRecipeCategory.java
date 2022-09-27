@@ -30,7 +30,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -93,20 +93,20 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 		if (recipe.getRecipe().hasActiveTemperature()) {
 			String temperature = new TextComponent("Temperature: ").append(ChatFormatting.GOLD.toString())
 					.append(GuiTextUtilities.formatHeatRateToString(recipe.getRecipe().getTemperature())).getString();
-			GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
 			yPos += 11;
 		}
 
 		String temperature = new TextComponent("Conductivity: ").append(ChatFormatting.GREEN.toString())
 				.append(GuiTextUtilities.formatConductivityToString(recipe.getRecipe().getConductivity())).getString();
-		GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+		GuiDrawUtilities.drawString(matrixStack, temperature, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
 		yPos += 11;
 
 		if (recipe.getRecipe().hasOverheatingBehaviour()) {
 			String overheatTemp = new TextComponent("<- Overheat: ").append(ChatFormatting.RED.toString())
 					.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getOverheatedTemperature())).getString();
 			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
-			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
 			yPos += 11;
 		}
 
@@ -114,7 +114,7 @@ public class ThermalConductivityRecipeCategory extends BaseJEIRecipeCategory<The
 			String overheatTemp = new TextComponent("<- Freeze: ").append(ChatFormatting.RED.toString())
 					.append(GuiTextUtilities.formatHeatToString(recipe.getRecipe().getFreezingTemperature())).getString();
 			GuiDrawUtilities.drawSlot(matrixStack, 20, 20, 35, 16, 0);
-			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawString(matrixStack, overheatTemp, xPos, yPos, 0.0f, 1.0f, SDColor.EIGHT_BIT_WHITE, true);
 		}
 
 		if (!recipe.getFluidInput().isEmpty()) {

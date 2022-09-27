@@ -6,7 +6,7 @@ import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.gui.widgets.progressbars.SimpleProgressBar;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.research.Research;
 import theking530.staticpower.init.ModKeyBindings;
@@ -16,7 +16,7 @@ import theking530.staticpower.teams.research.ResearchManager.ResearchInstance;
 public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget> {
 	private final SimpleProgressBar progressBar;
 	private boolean drawBackground;
-	private Color backgroundTint;
+	private SDColor backgroundTint;
 	private Team team;
 	private Research research;
 	private ResearchInstance currentProgress;
@@ -26,7 +26,7 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 		registerWidget(progressBar = new SimpleProgressBar(0, 0, 86, 7));
 		progressBar.setMaxProgress(100);
 		drawBackground = true;
-		backgroundTint = new Color(1.0f, 0.8f, 1.2f, 0.07f);
+		backgroundTint = new SDColor(1.0f, 0.8f, 1.2f, 0.07f);
 	}
 
 	public Research getResearch() {
@@ -49,11 +49,11 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 		return this;
 	}
 
-	public Color getBackgroundTint() {
+	public SDColor getBackgroundTint() {
 		return backgroundTint;
 	}
 
-	public ActiveResearchWidget setBackgroundTint(Color backgroundTint) {
+	public ActiveResearchWidget setBackgroundTint(SDColor backgroundTint) {
 		this.backgroundTint = backgroundTint;
 		return this;
 	}
@@ -79,12 +79,12 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 
 			// Draw background.
 			if (drawBackground) {
-				GuiDrawUtilities.drawGenericBackground(pose, width, height, 0, 0, 0, new Color(1.0f, 0.8f, 1.2f, 0.9f));
+				GuiDrawUtilities.drawGenericBackground(pose, width, height, 0, 0, 0, new SDColor(1.0f, 0.8f, 1.2f, 0.9f));
 			}
 
 			// Draw icon.
 			GuiDrawUtilities.drawItem(pose, research.getIcon().getItemIcon(), 4, 4, 10, 1.0f);
-			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 23, 13, 0.0f, 0.75f, Color.EIGHT_BIT_WHITE, true);
+			GuiDrawUtilities.drawStringLeftAligned(pose, new TranslatableComponent(research.getTitle()).getString(), 23, 13, 0.0f, 0.75f, SDColor.EIGHT_BIT_WHITE, true);
 
 			// Draw progress bar.
 			progressBar.setPosition(20, 16);
@@ -103,7 +103,7 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 					GuiDrawUtilities.drawItem(pose, requirement.getIngredient().getItems()[0], getSize().getX() - 24 - xOffset, 23, 0, 12f, 12f);
 
 					GuiDrawUtilities.drawString(pose, Integer.toString(requirement.getCount() - currentProgress.getRequirementFullfillment(i)), getSize().getX() - 13f - xOffset, 31, 1, 0.5f,
-							Color.EIGHT_BIT_YELLOW, true);
+							SDColor.EIGHT_BIT_YELLOW, true);
 				}
 			}
 
@@ -117,7 +117,7 @@ public class ActiveResearchWidget extends AbstractGuiWidget<ActiveResearchWidget
 						.getString();
 			}
 
-			GuiDrawUtilities.drawStringLeftAligned(pose, openTooltip, 5, getSize().getY() - 5, 0, 0.5f, Color.EIGHT_BIT_YELLOW, true);
+			GuiDrawUtilities.drawStringLeftAligned(pose, openTooltip, 5, getSize().getY() - 5, 0, 0.5f, SDColor.EIGHT_BIT_YELLOW, true);
 		}
 	}
 }

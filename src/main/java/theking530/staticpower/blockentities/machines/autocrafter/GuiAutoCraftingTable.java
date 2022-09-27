@@ -14,7 +14,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -26,7 +26,7 @@ public class GuiAutoCraftingTable extends StaticPowerTileEntityGui<ContainerAuto
 		super(container, invPlayer, name, 176, 194);
 
 		lockedSprite = new SpriteDrawable(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, 8, 8);
-		lockedSprite.setTint(new Color(1.0f, 1.0f, 1.0f, 0.95f));
+		lockedSprite.setTint(new SDColor(1.0f, 1.0f, 1.0f, 0.95f));
 	}
 
 	@Override

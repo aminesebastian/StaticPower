@@ -51,6 +51,8 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 	private int shiftClickPriority;
 	@UpdateSerialize
 	private boolean exposeAsCapability;
+	@UpdateSerialize
+	private int slotLimit;
 
 	public InventoryComponent(String name, int size) {
 		this(name, size, MachineSideMode.Never);
@@ -70,6 +72,7 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 		for (int i = 0; i < size; i++) {
 			lockedSlots.add(null);
 		}
+		this.slotLimit = 64;
 
 		this.capabilityInterface = new InventoryComponentCapabilityInterface();
 		if (mode.isOutputMode()) {
@@ -88,7 +91,6 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 		for (int i = 0; i < Math.min(stacks.size(), lastStacks.size()); i++) {
 			ItemStack currentStack = stacks.get(i);
 			ItemStack lastStack = lastStacks.get(i);
-
 			// If both are empty, skip/
 			if (currentStack.isEmpty() && lastStack.isEmpty()) {
 				continue;
@@ -471,7 +473,12 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 
 	@Override
 	public int getSlotLimit(int slot) {
-		return 64;
+		return slotLimit;
+	}
+
+	public InventoryComponent setSlotLimit(int limit) {
+		slotLimit = limit;
+		return this;
 	}
 
 	public InventoryComponent setSlotsLockable(boolean lockable) {
@@ -573,7 +580,7 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 
 		@Override
 		public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
-			if (InventoryComponent.this.isCapabilityInsertEnabled()) {
+			if (InventoryComponent.this.isCapabilityInsertEnabled() && !InventoryComponent.this.inventoryMode.isOutputMode()) {
 				return InventoryComponent.this.insertItem(slot, stack, simulate);
 			}
 			return stack;
@@ -581,7 +588,7 @@ public class InventoryComponent extends AbstractBlockEntityComponent implements 
 
 		@Override
 		public ItemStack extractItem(int slot, int amount, boolean simulate) {
-			if (InventoryComponent.this.isCapabilityExtractEnabled()) {
+			if (InventoryComponent.this.isCapabilityExtractEnabled() && !InventoryComponent.this.inventoryMode.isInputMode()) {
 				return InventoryComponent.this.extractItem(slot, amount, simulate);
 			}
 			return ItemStack.EMPTY;

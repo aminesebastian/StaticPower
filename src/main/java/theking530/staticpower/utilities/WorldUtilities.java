@@ -102,12 +102,13 @@ public class WorldUtilities {
 		}
 		return Direction.UP;
 	}
+
 	public static Direction getDirectionBetweenBlocks(BlockPos source, BlockPos query) {
 		Vector3D thisPos = new Vector3D(source);
 		Vector3D linkPos = new Vector3D(query);
 		Vector3D pointingVector = linkPos.subtract(thisPos);
 		pointingVector.normalize();
-		
+
 		return Direction.getNearest(pointingVector.getX(), pointingVector.getY(), pointingVector.getZ());
 	}
 
@@ -186,12 +187,21 @@ public class WorldUtilities {
 	 * @return
 	 */
 	public static List<ItemStack> getBlockDrops(Level world, BlockPos pos) {
-		if (world.isClientSide) {
+		if (world.isClientSide()) {
 			throw new RuntimeException("The #getBlockDrops method was excuted on the client. This should only be excuted on the server.");
 		}
-		if (!world.isClientSide) {
+		if (!world.isClientSide()) {
 			NonNullList<ItemStack> output = NonNullList.create();
 			output.addAll(Block.getDrops(world.getBlockState(pos), (ServerLevel) world, pos, null));
+			return output;
+		}
+		return Collections.emptyList();
+	}
+
+	public static List<ItemStack> getBlockDrops(Level world, BlockPos pos, BlockState state) {
+		if (!world.isClientSide()) {
+			NonNullList<ItemStack> output = NonNullList.create();
+			output.addAll(Block.getDrops(state, (ServerLevel) world, pos, null));
 			return output;
 		}
 		return Collections.emptyList();

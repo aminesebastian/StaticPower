@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.heat.HeatStorageUtilities;
 import theking530.api.heat.IHeatStorage.HeatTransferAction;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
@@ -293,7 +293,7 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 			position.add(new Vector3f(-radius, 0.0f, -radius));
 
 			// Add the entry.
-			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new Color(1.0f, 0.1f, 0.2f, 0.25f));
+			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new SDColor(1.0f, 0.1f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
 			RadiusPreviewRenderer.removeRadiusRenderer(this, "range");

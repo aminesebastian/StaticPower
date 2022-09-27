@@ -28,7 +28,7 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
 import theking530.staticcore.gui.widgets.progressbars.FireProgressBar;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.StaticPower;
@@ -102,7 +102,7 @@ public class SolidGeneratorRecipeCategory extends BaseJEIRecipeCategory<SolidFue
 		@SuppressWarnings("resource")
 		Font fontRenderer = Minecraft.getInstance().font;
 		String powerGeneration = PowerTextFormatting.formatPowerRateToString(StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get()).getString();
-		fontRenderer.draw(matrixStack, powerGeneration, 51 - (fontRenderer.width(powerGeneration) / 2), 5, Color.EIGHT_BIT_DARK_GREY.encodeInInteger());
+		fontRenderer.draw(matrixStack, powerGeneration, 51 - (fontRenderer.width(powerGeneration) / 2), 5, SDColor.EIGHT_BIT_DARK_GREY.encodeInInteger());
 
 	}
 

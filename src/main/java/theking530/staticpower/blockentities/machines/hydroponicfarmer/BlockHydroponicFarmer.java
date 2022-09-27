@@ -13,7 +13,7 @@ import theking530.staticpower.data.StaticPowerTiers;
 public class BlockHydroponicFarmer extends StaticPowerMachineBlock {
 
 	public BlockHydroponicFarmer() {
-		super(StaticPowerTiers.ADVANCED);
+		super(StaticPowerTiers.STATIC);
 	}
 
 	@Override

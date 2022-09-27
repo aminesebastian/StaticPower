@@ -1,14 +1,13 @@
 package theking530.staticpower.blockentities.machines.hydroponicfarmer;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
@@ -20,21 +19,20 @@ import theking530.staticpower.blockentities.components.fluids.FluidTankComponent
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
-import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
-import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.machines.hydroponicpod.BlockEntityHydroponicPod;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModTags;
 
 public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityHydroponicFarmer> TYPE = new BlockEntityTypeAllocator<>(
 			(type, pos, state) -> new BlockEntityHydroponicFarmer(pos, state), ModBlocks.HydroponicFarmer);
+	public static final int MAX_PODS = 4;
 
-	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
@@ -52,12 +50,7 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 		StaticPowerTier tier = getTierObject();
 
 		// Setup the inventories.
-		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
-			public boolean canInsertItem(int slot, ItemStack stack) {
-				return stack.getItem() instanceof BlockItem;
-			}
-		}));
-		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
+		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
 		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
@@ -66,13 +59,12 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Setup the I/O servos.
-		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
-		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
+		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
-		// Setup the fluid tanks and servo.
-		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get()).setCapabilityExposedModes(MachineSideMode.Input)
-				.setUpgradeInventory(upgradesInventory));
-		fluidTankComponent.setCanDrain(false).setAutoSyncPacketsEnabled(true).setUpgradeInventory(upgradesInventory);
+		// Setup the fluid tank.
+		registerComponent(fluidTankComponent = new FluidTankComponent("FluidTank", tier.defaultTankCapacity.get(),
+				(fluidStack) -> ModTags.tagContainsFluid(ModTags.WATER, fluidStack.getFluid())));
+		fluidTankComponent.setCanDrain(false).setAutoSyncPacketsEnabled(true).setUpgradeInventory(upgradesInventory).setCapabilityExposedModes(MachineSideMode.Input);
 
 		// Create the fluid container component.
 		registerComponent(fluidContainerComponent = new FluidContainerInventoryComponent("FluidContainerServo", fluidTankComponent).setMode(FluidContainerInteractionMode.FILL));
@@ -82,7 +74,8 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 
 	public void process() {
 		// Check for pods.
-		for (int i = 0; i < 8; i++) {
+		pods.clear();
+		for (int i = 0; i < MAX_PODS; i++) {
 			BlockPos testPos = getBlockPos().above(i + 1);
 			BlockEntityHydroponicPod pod = (BlockEntityHydroponicPod) getLevel().getBlockEntity(testPos);
 
@@ -105,6 +98,10 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 				StaticPower.LOGGER.error("Encountered a null pod from a hydroponic farmer!");
 			}
 		}
+	}
+
+	public List<BlockEntityHydroponicPod> getPods() {
+		return pods.stream().sorted((first, second) -> first.getBlockPos().getY() - second.getBlockPos().getY()).toList();
 	}
 
 	public void podBroken(BlockEntityHydroponicPod pod) {

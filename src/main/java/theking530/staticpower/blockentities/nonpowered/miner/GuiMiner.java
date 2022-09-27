@@ -23,7 +23,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiHeatBarFromHeatStorage;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
@@ -84,9 +84,9 @@ public class GuiMiner extends StaticPowerTileEntityGui<ContainerMiner, BlockEnti
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 
-		GuiDrawUtilities.drawRectangle(stack, 1.0f, 55, 50, 20, 0.0f, Color.GREY);
+		GuiDrawUtilities.drawRectangle(stack, 1.0f, 55, 50, 20, 0.0f, SDColor.GREY);
 
-		GuiDrawUtilities.drawRectangle(stack, 1.0f, 55, 125, 20, 0.0f, Color.GREY);
+		GuiDrawUtilities.drawRectangle(stack, 1.0f, 55, 125, 20, 0.0f, SDColor.GREY);
 
 		if (getTileEntity().isDoneMining()) {
 			font.draw(stack, "Done!", 75, 64, 4210752);

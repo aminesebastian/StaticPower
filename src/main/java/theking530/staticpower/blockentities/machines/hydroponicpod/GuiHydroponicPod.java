@@ -14,9 +14,11 @@ import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.model.data.EmptyModelData;
 import theking530.staticcore.gui.GuiDrawUtilities;
+import theking530.staticcore.gui.widgets.progressbars.SquareProgressBar;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiHydroponicPod extends StaticPowerTileEntityGui<ContainierHydroponicPod, BlockEntityHydroponicPod> {
@@ -28,20 +30,23 @@ public class GuiHydroponicPod extends StaticPowerTileEntityGui<ContainierHydropo
 	@Override
 	public void initializeGui() {
 		getTabManager().registerTab(new GuiSideConfigTab(getTileEntity()));
+		registerWidget(new SquareProgressBar(79, 50, 18, 2).bindToMachineProcessingComponent(getTileEntity().processingComponent).setZLevel(100));
+		setOutputSlotSize(16);
 	}
 
 	@Override
 	protected void drawBackgroundExtras(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
-		int bgWidth = 40;
+		int bgWidth = 45;
 		int bgHeight = 60;
-		GuiDrawUtilities.drawSlotWithBorder(stack, bgWidth, bgHeight, ((getXSize() - bgWidth) / 2), 20, 0, null);
-		GuiDrawUtilities.drawRectangle(stack, bgWidth, bgHeight, ((getXSize() - bgWidth) / 2), 20, 0, Color.BLACK);
+		GuiDrawUtilities.drawSlotWithBorder(stack, bgWidth, bgHeight, ((getXSize() - bgWidth) / 2), 20, 0, MachineSideMode.Input.getColor());
+		GuiDrawUtilities.drawRectangle(stack, bgWidth, bgHeight, ((getXSize() - bgWidth) / 2), 20, 0, SDColor.BLACK);
+		GuiDrawUtilities.drawSlotWithBorder(stack, 16, 16, 80, 30, 100, MachineSideMode.Input.getColor());
 	}
 
 	@Override
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		long gameTime = getTileEntity().getLevel().getGameTime();
-		Optional<Block> block = getTileEntity().getPlantBlockForRender();
+		Optional<Block> block = getTileEntity().getPlantBlockForDisplay();
 		if (block.isEmpty()) {
 			return;
 		}
@@ -53,7 +58,7 @@ public class GuiHydroponicPod extends StaticPowerTileEntityGui<ContainierHydropo
 			GuiDrawUtilities.drawBlockState(stack, state, BlockPos.ZERO, EmptyModelData.INSTANCE, new Vector3D(72, 40, 1), new Vector3D(15, gameTime + partialTicks, 180),
 					new Vector3D(32, 32, -1));
 		} else if (block.get() instanceof StemBlock) {
-			float scale = (((gameTime % 50) + partialTicks) / 50.0f) * 13.0f + 13.0f;
+			float scale = getTileEntity().getGrowthPercentage() * 13.0f + 13.0f;
 
 			StemBlock stem = (StemBlock) block.get();
 			StemGrownBlock fruit = stem.getFruit();

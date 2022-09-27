@@ -223,7 +223,7 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 	protected List<Slot> addSlotsInGrid(IItemHandler inventory, int startingIndex, int slotCount, int xPos, int yPos, int maxPerRow, int slotSize,
 			TriFunction<Integer, Integer, Integer, Slot> slotFactory) {
 		List<Slot> outputs = new ArrayList<Slot>();
-		maxPerRow = Math.min(inventory.getSlots(), maxPerRow);
+		maxPerRow = Math.min(slotCount, maxPerRow);
 		int adjustedSlotSize = slotSize + 2;
 		int offset = (maxPerRow * adjustedSlotSize) / 2;
 		for (int i = 0; i < slotCount; i++) {

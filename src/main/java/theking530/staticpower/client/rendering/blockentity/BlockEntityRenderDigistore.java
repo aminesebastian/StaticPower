@@ -8,7 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
@@ -32,7 +32,7 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 					partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			MetricConverter metric = new MetricConverter(tileEntity.inventory.getTotalContainedCount());
-			WorldRenderingUtilities.drawTextInWorld(this.renderer, metric.getValueAsString(true), tileEntity, new Color(255.0f, 255.0f, 255.0f, 255.0f),
+			WorldRenderingUtilities.drawTextInWorld(this.renderer, metric.getValueAsString(true), tileEntity, new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
 					new Vector3D(0.5f, 0.323f, 1.0001f), 0.007f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		}
 		drawIndicators(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
@@ -54,12 +54,12 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 		// Draw each icon and offset by the icon size each time.
 		if (tileEntity.isLocked()) {
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_LOCKED_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.815f, 0.0001f),
-					new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Vector4D.DEFAULT_UV, Color.WHITE);
+					new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
 			offset += ICON_SIZE;
 		}
 		if (tileEntity.isVoidUpgradeInstalled()) {
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_VOID_INDICATOR, matrixStack, buffer, new Vector3D(0.5f + offset, 0.815f, 0.0001f),
-					new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Vector4D.DEFAULT_UV, Color.WHITE);
+					new Vector3D(ICON_SIZE, ICON_SIZE, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
 			offset += ICON_SIZE;
 		}
 	}
@@ -68,10 +68,10 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 		float filledRatio = tileEntity.inventory.getFilledRatio();
 		if (filledRatio < 1.0f) {
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR, matrixStack, buffer, new Vector3D(0.293f, 0.192f, 0.047f),
-					new Vector3D(0.413f * filledRatio, 0.029f, 1.0f), Vector4D.DEFAULT_UV, Color.WHITE);
+					new Vector3D(0.413f * filledRatio, 0.029f, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
 		} else {
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.DIGISTORE_FILL_BAR_FULL, matrixStack, buffer, new Vector3D(0.293f, 0.192f, 0.047f),
-					new Vector3D(0.413f * filledRatio, 0.029f, 1.0f), Vector4D.DEFAULT_UV, Color.WHITE);
+					new Vector3D(0.413f * filledRatio, 0.029f, 1.0f), Vector4D.DEFAULT_UV, SDColor.WHITE);
 		}
 	}
 }

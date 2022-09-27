@@ -17,7 +17,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.drawables.IDrawable;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractInfoTab extends BaseGuiTab {
@@ -28,7 +28,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 	private Map<String, List<Component>> info;
 	private int lineBreakIndex;
 
-	public AbstractInfoTab(String title, Color titleColor, int width, Color color, IDrawable icon) {
+	public AbstractInfoTab(String title, SDColor titleColor, int width, SDColor color, IDrawable icon) {
 		super(title, titleColor, width, 100, color, icon);
 		info = new LinkedHashMap<String, List<Component>>();
 		lineBreakIndex = 0;
@@ -111,7 +111,7 @@ public abstract class AbstractInfoTab extends BaseGuiTab {
 				// Render the info text.
 				for (String line : lines) {
 					if (!simulate) {
-						GuiDrawUtilities.drawStringLeftAligned(stack, line, 12, lineHeight + 1, 0, 1, Color.EIGHT_BIT_WHITE, true);
+						GuiDrawUtilities.drawStringLeftAligned(stack, line, 12, lineHeight + 1, 0, 1, SDColor.EIGHT_BIT_WHITE, true);
 					}
 					lineHeight += LINE_HEIGHT;
 				}

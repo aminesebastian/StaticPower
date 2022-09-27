@@ -44,6 +44,8 @@
 		"staticpower:machine_refinery_fluid_output",
 		"staticpower:machine_refinery_item_input",
 		"staticpower:machine_refinery_boiler",
-		"staticpower:machine_refinery_tower"
+		"staticpower:machine_refinery_tower",
+		"staticpower:machine_hydroponic_farmer",
+		"staticpower:machine_hydroponic_pod"
 	]
 }

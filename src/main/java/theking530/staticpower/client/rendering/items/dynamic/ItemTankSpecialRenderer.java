@@ -15,7 +15,7 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.client.rendering.BlockModel;
 
@@ -43,7 +43,7 @@ public class ItemTankSpecialRenderer extends AbstractStaticPowerItemStackRendere
 
 			// Get the fluid attributes.
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
-			Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 
 			// Calculate the height and determine if we should raise the fluid to the top
 			// if it is a gas.

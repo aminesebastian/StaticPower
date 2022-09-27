@@ -11,7 +11,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.RegistryObject;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
@@ -45,8 +45,8 @@ public class StaticPowerFluidBundle {
 		public String name;
 		private String textureName;
 		private Consumer<FluidAttributes.Builder> extraAttributes;
-		private Color fogColor;
-		private Color overlayColor;
+		private SDColor fogColor;
+		private SDColor overlayColor;
 
 		private ForgeFlowingFluid.Properties properties;
 		private RegistryObject<AbstractStaticPowerFluid.Source> source;
@@ -54,7 +54,7 @@ public class StaticPowerFluidBundle {
 		private RegistryObject<StaticPowerFluidBlock> block;
 		private RegistryObject<Item> bucket;
 
-		public StaticPowerFluidBuilder(String name, Color color) {
+		public StaticPowerFluidBuilder(String name, SDColor color) {
 			this.name = name;
 			this.textureName = name;
 			this.setFogColor(color);
@@ -74,7 +74,7 @@ public class StaticPowerFluidBundle {
 			return addAutoBucket(false, null);
 		}
 
-		public StaticPowerFluidBuilder setFogColor(Color color) {
+		public StaticPowerFluidBuilder setFogColor(SDColor color) {
 			fogColor = color.copy();
 			if (overlayColor == null) {
 				overlayColor = fogColor;
@@ -82,7 +82,7 @@ public class StaticPowerFluidBundle {
 			return this;
 		}
 
-		public StaticPowerFluidBuilder setOverlayColor(Color color) {
+		public StaticPowerFluidBuilder setOverlayColor(SDColor color) {
 			overlayColor = color.copy();
 			if (fogColor == null) {
 				fogColor = overlayColor;

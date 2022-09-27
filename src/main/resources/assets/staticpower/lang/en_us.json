@@ -168,10 +168,6 @@
 	"item.staticpower.crop_lumum": "Lumum Crop",
 	"item.staticpower.crop_depleted": "Depleted Crop",
 	
-	"item.staticpower.seed_static": "Static Seed",
-	"item.staticpower.seed_energized": "Energized Seed",
-	"item.staticpower.seed_lumum": "Lumum Seed",
-	
 	"item.staticpower.slag": "Slag",
 	
 	"item.staticpower.crystal_static": "Static Crystal",
@@ -640,6 +636,11 @@
 	"item.staticpower.research_tier_5": "Research Vol. 5",
 	"item.staticpower.research_tier_6": "Research Vol. 6",
 	"item.staticpower.research_tier_7": "Research Vol. 7",
+	
+	"block.staticpower.plant_static": "Static Seed",
+	"block.staticpower.plant_energized": "Energized Seed",
+	"block.staticpower.plant_lumum": "Lumum Seed",
+	
 	"block.staticpower.grass_static": "Static Grass",
 	"block.staticpower.grass_energized": "Energized Grass",
 	"block.staticpower.grass_lumum": "Lumum Static",
@@ -943,6 +944,7 @@
 	"block.staticpower.chest_static": "Static Chest",
 	"block.staticpower.chest_energized": "Energized Chest",
 	"block.staticpower.chest_lumum": "Lumum Chest",
+	
 	"fluid.staticpower.tree_sap": "Tree Sap",
 	"fluid.staticpower.infernal_tree_sap": "Infernal Tree Sap",
 	"fluid.staticpower.ethanol": "Ethanol",
@@ -1115,9 +1117,23 @@
 	"gui.staticpower.mode.output4": "Tertiary Output",
 	"gui.staticpower.mode.disabled": "Disabled",
 	"gui.staticpower.mode.never": "N/A",
+	
 	"gui.staticpower.ticks": "Ticks",
+	"gui.staticpower.ticks.short": "t",
+	
 	"gui.staticpower.seconds": "Seconds",
 	"gui.staticpower.seconds.short": "s",
+	
+	"gui.staticpower.minutes": "Minutes",
+	"gui.staticpower.minutes.short": "m",
+	
+	"gui.staticpower.hours": "Hours",
+	"gui.staticpower.hours.short": "h",
+	
+	"gui.staticpower.days": "Days",
+	"gui.staticpower.days.short": "d",
+	
+	
 	"gui.staticpower.max": "Max",
 	"gui.staticpower.rpm": "RPM",
 	"gui.staticpower.radius": "Radius",

@@ -8,8 +8,6 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 import theking530.staticpower.container.slots.BatteryItemSlot;
-import theking530.staticpower.container.slots.OutputSlot;
-import theking530.staticpower.container.slots.StaticPowerContainerSlot;
 
 public class ContainerHydroponicFarmer extends StaticPowerTileEntityContainer<BlockEntityHydroponicFarmer> {
 	@ContainerTypePopulator
@@ -31,14 +29,9 @@ public class ContainerHydroponicFarmer extends StaticPowerTileEntityContainer<Bl
 
 	@Override
 	public void initializeContainer() {
-		// Input
-		this.addSlot(new StaticPowerContainerSlot(getTileEntity().inputInventory, 0, 80, 25));
-
 		// Battery
-		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
+		addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
-		// Output
-		this.addSlot(new OutputSlot(getTileEntity().outputInventory, 0, 40, 60));
 		addAllPlayerSlots();
 	}
 }

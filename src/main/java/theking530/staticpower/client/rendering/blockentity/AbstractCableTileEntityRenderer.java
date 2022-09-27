@@ -17,7 +17,7 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.rendering.WorldRenderingUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
@@ -77,7 +77,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 
 	protected void drawFluidCable(FluidStack fluid, float filledPercentage, float radius, PoseStack matrixStack, AbstractCableProviderComponent cableComponent) {
 		TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
-		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+		SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 		fluidColor.setAlpha(1.0f); // Force the opacity to 1.0f to have the texture control the opaicty.
 
 		if (filledPercentage < 0.1f) {
@@ -96,7 +96,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		}
 	}
 
-	protected void drawFluidCore(TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, PoseStack matrixStack) {
+	protected void drawFluidCore(TextureAtlasSprite sprite, float filledAmount, float radius, SDColor fluidColor, PoseStack matrixStack) {
 		float diameter = radius * 2.0f - 0.01f;
 		radius -= 0.005f;
 		float minWidth = 0.22f * filledAmount;
@@ -106,7 +106,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 				sprite);
 	}
 
-	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, float radius, Color fluidColor, PoseStack matrixStack) {
+	protected void drawExtensions(Direction side, TextureAtlasSprite sprite, float filledAmount, float radius, SDColor fluidColor, PoseStack matrixStack) {
 		float diameter = (radius * 2.0f) - 0.01f;
 		radius -= 0.005f;
 		float yAxisOffset = radius * (1.0f - filledAmount);

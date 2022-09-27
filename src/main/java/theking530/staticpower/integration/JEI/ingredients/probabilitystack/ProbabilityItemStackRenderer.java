@@ -17,7 +17,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.item.TooltipFlag;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
@@ -39,14 +39,14 @@ public class ProbabilityItemStackRenderer implements IIngredientRenderer<Probabi
 			if (ingredient.getOutputChance() != 1.0f) {
 				String percentageString = GuiTextUtilities.formatNumberAsStringOneDecimal(ingredient.getOutputChance() * 100).getString() + "%";
 				int width = font.width(percentageString);
-				GuiDrawUtilities.drawString(matrixStack, percentageString, xPosition - 1.5f + (width / 2), yPosition + 2, 0.0f, 0.5f, Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawString(matrixStack, percentageString, xPosition - 1.5f + (width / 2), yPosition + 2, 0.0f, 0.5f, SDColor.EIGHT_BIT_YELLOW, true);
 			} else if (ingredient.getAdditionalBonus() > 0) {
-				GuiDrawUtilities.drawString(matrixStack, "*", xPosition + 3, yPosition + 6, 0.0f, 1.0f, Color.EIGHT_BIT_YELLOW, true);
+				GuiDrawUtilities.drawString(matrixStack, "*", xPosition + 3, yPosition + 6, 0.0f, 1.0f, SDColor.EIGHT_BIT_YELLOW, true);
 			}
 
 			if (ingredient.getItem().getCount() > 1) {
 				GuiDrawUtilities.drawString(matrixStack,
-						String.valueOf(ingredient.getItem().getCount()), xPosition + 17, yPosition + 16, 100.0f, 1.0f, Color.EIGHT_BIT_WHITE,
+						String.valueOf(ingredient.getItem().getCount()), xPosition + 17, yPosition + 16, 100.0f, 1.0f, SDColor.EIGHT_BIT_WHITE,
 						true);
 			}
 

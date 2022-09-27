@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
 import theking530.staticcore.utilities.Vector4D;
@@ -120,7 +120,7 @@ public class WorldRenderingUtilities {
 	 * @param combinedLight
 	 * @param combinedOverlay
 	 */
-	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, BlockEntityBase tileEntity, Color color, Vector3D offset, float scale, float partialTicks,
+	public static void drawTextInWorld(BlockEntityRenderDispatcher renderDispatcher, String text, BlockEntityBase tileEntity, SDColor color, Vector3D offset, float scale, float partialTicks,
 			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
 		if (text == null || text.isEmpty())
 			return;
@@ -149,7 +149,7 @@ public class WorldRenderingUtilities {
 	 * @param tint          The tint to apply.
 	 * @param combinedLight The combined light level at the block.
 	 */
-	public static void drawTexturedQuadLit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint, int combinedLight) {
+	public static void drawTexturedQuadLit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, SDColor tint, int combinedLight) {
 		matrixStack.pushPose();
 		VertexConsumer builder = buffer.getBuffer(RenderType.cutout());
 		@SuppressWarnings("deprecation")
@@ -171,11 +171,11 @@ public class WorldRenderingUtilities {
 		matrixStack.popPose();
 	}
 
-	public static void drawTexturedQuadUnlit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, Color tint) {
+	public static void drawTexturedQuadUnlit(ResourceLocation texture, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, SDColor tint) {
 		drawTexturedQuadLit(texture, matrixStack, buffer, offset, scale, uv, tint, 15728880);
 	}
 
-	public static void drawRectangleLit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Color tint, int combinedLight) {
+	public static void drawRectangleLit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, SDColor tint, int combinedLight) {
 		matrixStack.pushPose();
 		VertexConsumer builder = buffer.getBuffer(RenderType.translucent());
 
@@ -188,7 +188,7 @@ public class WorldRenderingUtilities {
 		matrixStack.popPose();
 	}
 
-	public static void drawRectangleUnlit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Color color) {
+	public static void drawRectangleUnlit(PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, SDColor color) {
 		drawRectangleLit(matrixStack, buffer, offset, scale, color, 15728880);
 	}
 
@@ -197,7 +197,7 @@ public class WorldRenderingUtilities {
 	}
 
 	public static void drawFluidQuadLit(FluidStack fluid, PoseStack matrixStack, MultiBufferSource buffer, Vector3D offset, Vector3D scale, Vector4D uv, int lightlevel) {
-		Color fluidColor = GuiDrawUtilities.getFluidColor(fluid);
+		SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 		TextureAtlasSprite icon = GuiDrawUtilities.getStillFluidSprite(fluid);
 		drawTexturedQuadLit(icon.getName(), matrixStack, buffer, offset, scale, uv, fluidColor, lightlevel);
 	}
@@ -206,7 +206,7 @@ public class WorldRenderingUtilities {
 		drawFluidQuadLit(fluid, matrixStack, buffer, offset, scale, uv, 15728880);
 	}
 
-	public static void drawLine(PoseStack matrixStack, MultiBufferSource buffer, Vector3D start, Vector3D end, float thickness, Color color) {
+	public static void drawLine(PoseStack matrixStack, MultiBufferSource buffer, Vector3D start, Vector3D end, float thickness, SDColor color) {
 		// TODO: Find a workaround for this! GlStateManager._lineWidth(thickness);
 		VertexConsumer builder = buffer.getBuffer(RenderType.lines());
 		builder.vertex(matrixStack.last().pose(), start.getX(), start.getY(), start.getZ()).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).normal(1.0f, 0.0f, 0.0f)

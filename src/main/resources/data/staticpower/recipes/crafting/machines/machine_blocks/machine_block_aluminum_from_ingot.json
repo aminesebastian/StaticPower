@@ -1,18 +1,18 @@
 {
 	"type": "minecraft:crafting_shaped",
 	"pattern": [
-		"iii",
-		"ipi",
-		"iri"
+		"ttt",
+		"tit",
+		"tpt"
 	],
 	"key": {
-		"i": {
+		"t": {
 			"tag": "forge:ingots/aluminum"
 		},
-		"p": {
+		"i": {
 			"item": "staticpower:io_port"
 		},
-		"r": {
+		"p": {
 			"tag": "forge:dusts/redstone"
 		}
 	},

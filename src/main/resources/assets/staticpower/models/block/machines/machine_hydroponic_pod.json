@@ -3,9 +3,10 @@
 	"textures": {
 		"particle": "block/glass",
 		"glass": "block/glass",
-		"machine_top": "staticpower:blocks/machines/sides/basic_machine_top",
-		"io_frame": "staticpower:blocks/machines/sides/basic_io_frame",
-		"machine_front": "staticpower:blocks/machines/sides/basic_machine_front"
+		"machine_top": "staticpower:blocks/machines/sides/static_machine_top",
+		"io_frame": "staticpower:blocks/machines/sides/static_io_frame",
+		"machine_front": "staticpower:blocks/machines/sides/static_machine_front",
+		"dirt": "block/coarse_dirt"
 	},
 	"elements": [
 		{
@@ -30,7 +31,7 @@
 				"east": {"uv": [0, 0, 16, 2], "texture": "#machine_top"},
 				"south": {"uv": [0, 0, 16, 2], "texture": "#machine_top"},
 				"west": {"uv": [0, 0, 16, 2], "texture": "#machine_top"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#machine_top"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#dirt"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#machine_top"}
 			}
 		},
@@ -53,7 +54,7 @@
 			"to": [11.5, 11.5, 15.999],
 			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 16, 16], "texture": "#machine_front"},
+				"north": {"uv": [0, 0, 16, 16], "texture": "#machine_top"},
 				"east": {"uv": [0, 0, 16, 2], "rotation": 90, "texture": "#machine_front"},
 				"south": {"uv": [0, 0, 16, 16], "texture": "#machine_front"},
 				"west": {"uv": [0, 0, 16, 2], "rotation": 270, "texture": "#machine_front"},

@@ -704,7 +704,7 @@ public class StaticPowerConfig {
 							.translation(StaticPower.MOD_ID + ".config." + "hydroponicFarmerPowerUsage").define("HydroponicFarmerPowerUsage", 5.0);
 					hydroponicFarmerProcessingTime = builder.comment(
 							"Controls how much time it takes to processing a recipe in this machine (in ticks [1 Second = 20 Ticks]). Individual recipes can override this value.")
-							.translation(StaticPower.MOD_ID + ".config." + "hydroponicFarmerProcessingTime").define("HydroponicFarmerProcessingTime", 1200);
+							.translation(StaticPower.MOD_ID + ".config." + "hydroponicFarmerProcessingTime").define("HydroponicFarmerProcessingTime", 12000);
 					builder.pop();
 				}
 				{

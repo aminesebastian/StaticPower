@@ -13,7 +13,7 @@ import net.minecraft.world.item.TooltipFlag.Default;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.GuiDrawUtilities;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 
 @OnlyIn(Dist.CLIENT)
@@ -82,7 +82,7 @@ public class FakeSlotButton extends StandardButton {
 
 		// Render the hover effect.
 		if (isHovered()) {
-			GuiDrawUtilities.drawRectangle(pose, 16, 16, 0, 0, 250, new Color(1.0f, 1.0f, 1.0f, 0.5f));
+			GuiDrawUtilities.drawRectangle(pose, 16, 16, 0, 0, 250, new SDColor(1.0f, 1.0f, 1.0f, 0.5f));
 		}
 	}
 }

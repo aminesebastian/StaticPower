@@ -129,6 +129,12 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 	}
 
 	public void tick() {
+		// Not sure if this is needed, but just in case, don't tick after we've been
+		// removed!
+		if (isRemoved()) {
+			return;
+		}
+
 		// Pre process all the components.
 		preProcessUpdateComponents();
 

@@ -10,7 +10,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.widgets.button.ItemButton;
 import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.tabs.BaseGuiTab;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.control.redstonecontrol.RedstoneMode;
 
 @OnlyIn(Dist.CLIENT)
@@ -21,7 +21,7 @@ public abstract class AbstractGuiRedstoneTab extends BaseGuiTab {
 	public ItemButton highRedstoneButton;
 
 	public AbstractGuiRedstoneTab(RedstoneMode currentMode) {
-		super("Redstone Control", Color.EIGHT_BIT_YELLOW, 120, 100, new Color(1, 0.1f, 0.1f, 1), Items.REDSTONE);
+		super("Redstone Control", SDColor.EIGHT_BIT_YELLOW, 120, 100, new SDColor(1, 0.1f, 0.1f, 1), Items.REDSTONE);
 
 		registerWidget(ignoreRedstoneButton = new ItemButton(Items.GUNPOWDER, 18, 26, 20, 20, (button, mouseButton) -> {
 			synchronizeRedstoneMode(RedstoneMode.Ignore);

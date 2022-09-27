@@ -14,7 +14,7 @@ import theking530.staticcore.gui.widgets.tabs.GuiMachinePowerInfoTab;
 import theking530.staticcore.gui.widgets.tabs.GuiSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.GuiTileEntityRedstoneTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.utilities.MetricConverter;
@@ -57,6 +57,6 @@ public class GuiTumbler extends StaticPowerTileEntityGui<ContainerTumbler, Block
 		String rpmText = metric.getValueAsString(true) + " RPM";
 		drawEmptySlot(stack, 123 - (Minecraft.getInstance().font.width(rpmText) / 2), 40, Minecraft.getInstance().font.width(rpmText) + 4, 11);
 		Minecraft.getInstance().font.drawShadow(stack, rpmText, 125 - (Minecraft.getInstance().font.width(rpmText) / 2), 42,
-				Color.EIGHT_BIT_WHITE.encodeInInteger());
+				SDColor.EIGHT_BIT_WHITE.encodeInInteger());
 	}
 }

@@ -35,7 +35,7 @@ public class ContainerStaticChest extends StaticPowerTileEntityContainer<BlockEn
 		Vector2D size = BlockEntityStaticChest.getInventorySize(getTileEntity());
 
 		// Add slots.
-		this.addSlotsInGrid(getTileEntity().inventory, 0, (int) (size.getXi() / 2), 18, rows, (index, x, y) -> {
+		this.addSlotsInGrid(getTileEntity().inventory, 0, (int) (size.getXi() / 2) + 1, 18, rows, (index, x, y) -> {
 			return new StaticPowerContainerSlot(getTileEntity().inventory, index, x, y);
 		});
 

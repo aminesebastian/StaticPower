@@ -36,7 +36,7 @@ import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticcore.utilities.Color;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
@@ -174,7 +174,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			position.add(new Vector3f((offsetDirection.getX() * range) - range, 0.0f, (offsetDirection.getZ() * range) - range));
 			position.add(new Vector3f(offsetDirection.getX(), 0.0f, offsetDirection.getZ()));
 			// Add the entry.
-			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new Color(0.1f, 1.0f, 0.2f, 0.25f));
+			RadiusPreviewRenderer.addRadiusRenderRequest(this, "range", position, scale, new SDColor(0.1f, 1.0f, 0.2f, 0.25f));
 		} else {
 			// Remove the entry.
 			RadiusPreviewRenderer.removeRadiusRenderer(this, "range");
