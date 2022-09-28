@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
-import theking530.staticpower.network.TileEntityBasicSyncPacket;
+import theking530.staticpower.network.BlockEntityBasicSyncPacket;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public abstract class StaticPowerTileEntityContainer<T extends BlockEntityBase> extends StaticPowerContainer {
@@ -45,7 +45,7 @@ public abstract class StaticPowerTileEntityContainer<T extends BlockEntityBase> 
 	}
 
 	/**
-	 * Override of the parent method to send a {@link TileEntityBasicSyncPacket} on
+	 * Override of the parent method to send a {@link BlockEntityBasicSyncPacket} on
 	 * a set interval as defined by {@link #syncTime}.
 	 */
 	@Override

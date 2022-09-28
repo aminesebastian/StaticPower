@@ -96,17 +96,17 @@ public class BlockFluidCable extends AbstractCableBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.BASIC) {
-			return TileEntityFluidCable.TYPE_BASIC.create(pos, state);
+			return BlockEntityFluidCable.TYPE_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return TileEntityFluidCable.TYPE_ADVANCED.create(pos, state);
+			return BlockEntityFluidCable.TYPE_ADVANCED.create(pos, state);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return TileEntityFluidCable.TYPE_STATIC.create(pos, state);
+			return BlockEntityFluidCable.TYPE_STATIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return TileEntityFluidCable.TYPE_ENERGIZED.create(pos, state);
+			return BlockEntityFluidCable.TYPE_ENERGIZED.create(pos, state);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return TileEntityFluidCable.TYPE_LUMUM.create(pos, state);
+			return BlockEntityFluidCable.TYPE_LUMUM.create(pos, state);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return TileEntityFluidCable.TYPE_CREATIVE.create(pos, state);
+			return BlockEntityFluidCable.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
 	}

@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.power.wireconnector;
+package theking530.staticpower.blockentities.power.lamp;
 
 import java.util.HashMap;
 import java.util.List;
@@ -9,7 +9,8 @@ import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -21,21 +22,17 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import theking530.api.energy.StaticPowerVoltage;
-import theking530.api.energy.StaticVoltageRange;
-import theking530.staticcore.gui.text.PowerTooltips;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
-import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 
-public class BlockWireConnector extends StaticPowerBlockEntityBlock {
+public class BlockLightSocket extends StaticPowerBlockEntityBlock {
 	public static final Map<Direction, VoxelShape> SHAPES = new HashMap<>();
 	static {
 		for (Direction shape : Direction.values()) {
@@ -63,23 +60,26 @@ public class BlockWireConnector extends StaticPowerBlockEntityBlock {
 		}
 	}
 
-	public BlockWireConnector() {
-		super();
+	public BlockLightSocket() {
+		super(StaticPowerTiers.BASIC);
 	}
 
-	public BlockWireConnector(ResourceLocation tier) {
-		super(tier);
+	@Override
+	public HasGuiType hasGuiScreen(BlockEntity tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+		return HasGuiType.NEVER;
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@Override
 	public void getTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip, boolean isShowingAdvanced) {
 		super.getTooltip(stack, worldIn, tooltip, isShowingAdvanced);
-		if (tier != null) {
-			StaticPowerTier tierObject = StaticPowerConfig.getTier(tier);
-			PowerTooltips.addVoltageInputTooltip(tooltip, new StaticVoltageRange(StaticPowerVoltage.LOW, tierObject.cablePowerConfiguration.wireTerminalMaxVoltage.get()));
-			PowerTooltips.addMaximumPowerTransferTooltip(tooltip, tierObject.cablePowerConfiguration.wireTerminalMaxPower.get());
-		}
+
+	}
+
+	@OnlyIn(Dist.CLIENT)
+	@Override
+	public void getAdvancedTooltip(ItemStack stack, @Nullable Level worldIn, List<Component> tooltip) {
+		super.getAdvancedTooltip(stack, worldIn, tooltip);
 	}
 
 	@Override
@@ -105,23 +105,21 @@ public class BlockWireConnector extends StaticPowerBlockEntityBlock {
 	}
 
 	@Override
-	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		if (tier == StaticPowerTiers.BASIC) {
-			return BlockEntityWireConnector.TYPE_BASIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return BlockEntityWireConnector.TYPE_ADVANCED.create(pos, state);
-		} else if (tier == StaticPowerTiers.STATIC) {
-			return BlockEntityWireConnector.TYPE_STATIC.create(pos, state);
-		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return BlockEntityWireConnector.TYPE_ENERGIZED.create(pos, state);
-		} else if (tier == StaticPowerTiers.LUMUM) {
-			return BlockEntityWireConnector.TYPE_LUMUM.create(pos, state);
-		}
-		return null;
+	public DirectionProperty getFacingType() {
+		return FACING;
 	}
 
 	@Override
-	public DirectionProperty getFacingType() {
-		return FACING;
+	public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+		BlockEntity te = world.getBlockEntity(pos);
+		if (te instanceof BlockEntityLightSocket) {
+			return ((BlockEntityLightSocket) te).isLit() ? 15 : 0;
+		}
+		return super.getLightEmission(state, world, pos);
+	}
+
+	@Override
+	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
+		return BlockEntityLightSocket.TYPE.create(pos, state);
 	}
 }

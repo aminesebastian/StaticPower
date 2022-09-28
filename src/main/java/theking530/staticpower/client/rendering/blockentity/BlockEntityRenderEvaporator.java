@@ -2,6 +2,7 @@ package theking530.staticpower.client.rendering.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -22,6 +23,7 @@ public class BlockEntityRenderEvaporator extends StaticPowerBlockEntitySpecialRe
 
 	@Override
 	public void renderTileEntityBase(BlockEntityEvaporator tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Evaporator");
 		int forwardBlockLightLevel = LevelRenderer.getLightColor(tileEntity.getLevel(), tileEntity.getBlockPos().relative(tileEntity.getFacingDirection()));
 
 		if (!tileEntity.inputTankComponent.isEmpty()) {
@@ -47,5 +49,6 @@ public class BlockEntityRenderEvaporator extends StaticPowerBlockEntitySpecialRe
 			WorldRenderingUtilities.drawFluidQuadLit(tileEntity.outputTankComponent.getFluid(), matrixStack, buffer, new Vector3D(0.5f, 0.815f - (0.283f * filledPercentage), 0.001f),
 					new Vector3D(0.282f, filledPercentage * 0.565f * 0.5f, 1.0f), new Vector4D(0.0f, 1.0f - filledPercentage, 1.0f, 1.0f), forwardBlockLightLevel);
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

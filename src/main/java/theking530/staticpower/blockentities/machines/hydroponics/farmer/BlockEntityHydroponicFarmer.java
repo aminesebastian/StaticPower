@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.hydroponicfarmer;
+package theking530.staticpower.blockentities.machines.hydroponics.farmer;
 
 import java.util.HashSet;
 import java.util.List;
@@ -19,10 +19,10 @@ import theking530.staticpower.blockentities.components.fluids.FluidTankComponent
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
+import theking530.staticpower.blockentities.machines.hydroponics.pod.BlockEntityHydroponicPod;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.blockentities.machines.hydroponicpod.BlockEntityHydroponicPod;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModTags;

@@ -7,12 +7,12 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.blockentities.digistorenetwork.BaseDigistoreTileEntity;
 import theking530.staticpower.init.ModBlocks;
 
-public class TileEntityDigistoreWire extends BaseDigistoreTileEntity {
+public class BlockEntityDigistoreWire extends BaseDigistoreTileEntity {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityDigistoreWire> TYPE = new BlockEntityTypeAllocator<TileEntityDigistoreWire>(
-			(type, pos, state) -> new TileEntityDigistoreWire(pos, state), ModBlocks.DigistoreWire);
+	public static final BlockEntityTypeAllocator<BlockEntityDigistoreWire> TYPE = new BlockEntityTypeAllocator<BlockEntityDigistoreWire>(
+			(type, pos, state) -> new BlockEntityDigistoreWire(pos, state), ModBlocks.DigistoreWire);
 
-	public TileEntityDigistoreWire(BlockPos pos, BlockState state) {
+	public BlockEntityDigistoreWire(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 	}
 

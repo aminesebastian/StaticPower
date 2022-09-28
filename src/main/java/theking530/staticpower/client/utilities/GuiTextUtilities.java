@@ -179,7 +179,7 @@ public class GuiTextUtilities {
 			output = new TextComponent("∞");
 		} else {
 			MetricConverter metricRate = new MetricConverter(fluidRate, -1);
-			output = new TextComponent(NUMBER_FORMATTER_ONE_DECIMAL.format(metricRate.getValue())).append(includeSpace ? " " : "").append(metricRate.getSuffix());
+			output = new TextComponent(NUMBER_FORMATTER_NO_DECIMAL.format(metricRate.getValue())).append(includeSpace ? " " : "").append(metricRate.getSuffix());
 		}
 
 		return output.append(FLUID_RATE_TRANSLATION);

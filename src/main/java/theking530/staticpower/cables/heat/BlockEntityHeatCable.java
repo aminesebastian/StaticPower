@@ -12,20 +12,20 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.init.ModBlocks;
 
-public class TileEntityHeatCable extends BlockEntityBase {
+public class BlockEntityHeatCable extends BlockEntityBase {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_ALUMINUM = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.AluminumHeatCable);
+	public static final BlockEntityTypeAllocator<BlockEntityHeatCable> TYPE_ALUMINUM = new BlockEntityTypeAllocator<BlockEntityHeatCable>(
+			(allocator, pos, state) -> new BlockEntityHeatCable(allocator, pos, state), ModBlocks.AluminumHeatCable);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_COPPER = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.CopperHeatCable);
+	public static final BlockEntityTypeAllocator<BlockEntityHeatCable> TYPE_COPPER = new BlockEntityTypeAllocator<BlockEntityHeatCable>(
+			(allocator, pos, state) -> new BlockEntityHeatCable(allocator, pos, state), ModBlocks.CopperHeatCable);
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<TileEntityHeatCable> TYPE_GOLD = new BlockEntityTypeAllocator<TileEntityHeatCable>(
-			(allocator, pos, state) -> new TileEntityHeatCable(allocator, pos, state), ModBlocks.GoldHeatCable);
+	public static final BlockEntityTypeAllocator<BlockEntityHeatCable> TYPE_GOLD = new BlockEntityTypeAllocator<BlockEntityHeatCable>(
+			(allocator, pos, state) -> new BlockEntityHeatCable(allocator, pos, state), ModBlocks.GoldHeatCable);
 
 	private final HeatCableComponent cableComponent;
 
-	public TileEntityHeatCable(BlockEntityTypeAllocator<TileEntityHeatCable> allocator, BlockPos pos, BlockState state) {
+	public BlockEntityHeatCable(BlockEntityTypeAllocator<BlockEntityHeatCable> allocator, BlockPos pos, BlockState state) {
 		super(allocator, pos, state);
 		registerComponent(cableComponent = new HeatCableComponent("HeatCableComponent", getTierObject().cableHeatConfiguration.heatCableCapacity.get(),
 				getTierObject().cableHeatConfiguration.heatCableConductivity.get()));

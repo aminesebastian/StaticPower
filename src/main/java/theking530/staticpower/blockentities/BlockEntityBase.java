@@ -68,7 +68,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.network.TileEntityBasicSyncPacket;
+import theking530.staticpower.network.BlockEntityBasicSyncPacket;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class BlockEntityBase extends BlockEntity implements MenuProvider, IBreakSerializeable, ICableStateSyncTarget {
@@ -234,7 +234,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	public void synchronizeDataToPlayersInRadius(int radius, boolean triggerRenderUpdate) {
 		if (!getLevel().isClientSide()) {
-			NetworkMessage msg = new TileEntityBasicSyncPacket(this, triggerRenderUpdate);
+			NetworkMessage msg = new BlockEntityBasicSyncPacket(this, triggerRenderUpdate);
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getBlockPos(), radius, msg);
 		} else {
 			StaticPower.LOGGER.warn(String.format("Calling #synchronizeDataToPlayersInRadius() on the client is a no-op. Called at position: %1$s.", getBlockPos().toString()));
@@ -243,7 +243,7 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	public void synchronizeDataToContainerListener(ServerPlayer player) {
 		if (!getLevel().isClientSide()) {
-			NetworkMessage msg = new TileEntityBasicSyncPacket(this, false);
+			NetworkMessage msg = new BlockEntityBasicSyncPacket(this, false);
 			StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.send(PacketDistributor.PLAYER.with(() -> (ServerPlayer) player), msg);
 		} else {
 			StaticPower.LOGGER.warn(String.format("Calling #synchronizeDataToContainerListener() on the client is a no-op. Called at position: %1$s.", getBlockPos().toString()));

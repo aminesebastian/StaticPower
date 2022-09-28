@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.hydroponicpod;
+package theking530.staticpower.blockentities.machines.hydroponics.pod;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +34,7 @@ import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.machines.cropfarmer.IFarmerHarvester.HarvestResult;
-import theking530.staticpower.blockentities.machines.hydroponicfarmer.BlockEntityHydroponicFarmer;
+import theking530.staticpower.blockentities.machines.hydroponics.farmer.BlockEntityHydroponicFarmer;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderHydroponicPod;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
@@ -87,7 +87,7 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 	@SuppressWarnings("resource")
 	public void process() {
 		if (processingComponent.getIsOnBlockState()) {
-			if (SDMath.diceRoll(0.03f)) {
+			if (SDMath.diceRoll(0.01f)) {
 				float randomX = ((2 * getLevel().random.nextFloat()) - 1.0f) * 0.25f;
 				float randomZ = ((2 * getLevel().random.nextFloat()) - 1.0f) * 0.25f;
 				getLevel().addParticle(ParticleTypes.FALLING_DRIPSTONE_WATER, getBlockPos().getX() + randomX + 0.5, getBlockPos().getY() + 0.8,
@@ -178,6 +178,7 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 		owningFarmer = farmer;
 		processingComponent.setPowerComponent(owningFarmer.powerStorage);
 		processingComponent.setRedstoneControlComponent(owningFarmer.redstoneControlComponent);
+		processingComponent.setUpgradeInventory(owningFarmer.upgradesInventory);
 	}
 
 	public void farmerBroken() {

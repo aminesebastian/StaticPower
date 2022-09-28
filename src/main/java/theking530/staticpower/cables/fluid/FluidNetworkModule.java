@@ -49,17 +49,19 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void preWorldTick(Level world) {
-		for (FluidCableProxy firstProxy : cableProxies.values()) {
-			firstProxy.clearSuppliedFromDirections();
-		}
-
-		// Balance the fluid amounts in the cables.
-		balanceCables();
+		supplyFluid();
 	}
 
 	@Override
 	public void tick(Level world) {
-		supplyFluid();
+		// Balance the fluid amounts in the cables.
+		for (FluidCableProxy firstProxy : cableProxies.values()) {
+			firstProxy.clearSuppliedFromDirections();
+			if (firstProxy.getStored() == 0) {
+				firstProxy.setPressure(0);
+			}
+		}
+		balanceCables();
 	}
 
 	protected void balanceCables() {
@@ -71,7 +73,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 			}
 
 			// Skip empty cables.
-			if (firstProxy.getStored() <= 0) {
+			if (firstProxy.getStored() <= 0 || firstProxy.getPressure() == 0) {
 				continue;
 			}
 
@@ -114,12 +116,11 @@ public class FluidNetworkModule extends CableNetworkModule {
 				if (secondProxy == null) {
 					continue;
 				}
-
-				int deltaFirstToSecond = firstProxy.getStored() - secondProxy.getStored();
-				if (deltaFirstToSecond == 0) {
+				if (secondProxy.getPressure() > firstProxy.getPressure()) {
 					continue;
 				}
 
+				int deltaFirstToSecond = firstProxy.getStored() - secondProxy.getStored();
 				int sign = (int) Math.signum(deltaFirstToSecond);
 				int absoluteDelta = Math.abs(deltaFirstToSecond);
 				int amountToBalance = Math.max(absoluteDelta - 1, 1);
@@ -127,9 +128,10 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 				if (amountToBalance > 0) {
 					int drained = firstProxy.drain(amountToBalance, FluidAction.EXECUTE);
-					secondProxy.fill(drained, FluidAction.EXECUTE);
+					secondProxy.fill(drained, secondProxy.getPressure(), FluidAction.EXECUTE);
 					secondProxy.addSuppliedFromDirection(dir);
 				}
+				secondProxy.setPressure(Math.max(0, firstProxy.getPressure() - 1f));
 
 				if (firstProxy.getStored() <= 0 || networkFluid.isEmpty()) {
 					break;
@@ -139,15 +141,17 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	public void supplyFluid() {
-		for (CachedFluidDestination dest : this.destinations.values().stream().flatMap(x -> x.stream()).toList()) {
+		for (CachedFluidDestination dest : destinations.values().stream().flatMap(x -> x.stream()).toList()) {
 			FluidCableProxy proxy = this.getFluidProxyAtLocation(dest.cable().getPos());
 			if (proxy == null) {
 				continue;
 			}
 
 			FluidStack simulatedDrained = supply(proxy.getPos(), proxy.getTransferRate(), FluidAction.SIMULATE);
-			int provided = dest.handler().fill(simulatedDrained, FluidAction.EXECUTE);
-			supply(proxy.getPos(), provided, FluidAction.EXECUTE);
+			if (simulatedDrained.getAmount() > 0) {
+				int drained = dest.handler().fill(simulatedDrained, FluidAction.EXECUTE);
+				supply(proxy.getPos(), drained, FluidAction.EXECUTE);
+			}
 		}
 	}
 
@@ -305,12 +309,10 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		if (isFluidValid(resource)) {
-			int filled = proxyAtPos.fill(resource.getAmount(), action);
+			int filled = proxyAtPos.fill(resource.getAmount(), 32.0f, action);
 			if (filled > 0 && action == FluidAction.EXECUTE) {
 				if (networkFluid.isEmpty()) {
 					networkFluid = resource.copy();
-				} else {
-					networkFluid.grow(resource.getAmount());
 				}
 			}
 			return filled;
@@ -334,7 +336,19 @@ public class FluidNetworkModule extends CableNetworkModule {
 		output.setAmount(drained);
 
 		if (action == FluidAction.EXECUTE) {
-			networkFluid.shrink(amount);
+			// Drop the pressure by the percent of fluid provided.
+			// If the cable goes empty, pressure goes to 0.
+			if (proxyAtPos.getStored() <= 0) {
+				proxyAtPos.setPressure(0);
+			} else {
+				float providedPercentage = (float) drained / amount;
+				float pressure = (1 - providedPercentage) * proxyAtPos.getPressure();
+				proxyAtPos.setPressure(pressure);
+			}
+
+			if (getStoredFluid().getAmount() < 0) {
+				networkFluid.setAmount(0);
+			}
 		}
 
 		return output;

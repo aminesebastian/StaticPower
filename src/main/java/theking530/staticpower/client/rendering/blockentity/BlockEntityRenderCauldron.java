@@ -3,6 +3,7 @@ package theking530.staticpower.client.rendering.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -18,15 +19,15 @@ import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderCauldron extends StaticPowerBlockEntitySpecialRenderer<BlockEntityCauldron> {
-	protected static final BlockModel CUBE_MODEL = new BlockModel();
 
 	public BlockEntityRenderCauldron(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderTileEntityBase(BlockEntityCauldron tileEntity, BlockPos pos, float partialTicks,
-			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+	protected void renderTileEntityBase(BlockEntityCauldron tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
+			int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Cauldron");
 		// Render the contained fluid if it exists.
 		if (tileEntity.internalTank.getFluidAmount() > 0) {
 			// Get the fluid.
@@ -38,9 +39,9 @@ public class BlockEntityRenderCauldron extends StaticPowerBlockEntitySpecialRend
 
 			// Calculate the height and position, then render.
 			float height = tileEntity.internalTank.getVisualFillLevel();
-			CUBE_MODEL.drawPreviewCube(new Vector3f(2 * TEXEL, 4 * TEXEL, 2 * TEXEL),
-					new Vector3f(12 * TEXEL, height * 11 * TEXEL, 12 * TEXEL), fluidColor, matrixStack, sprite,
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(2 * TEXEL, 4 * TEXEL, 2 * TEXEL), new Vector3f(12 * TEXEL, height * 11 * TEXEL, 12 * TEXEL), fluidColor, sprite,
 					new Vector3D(1.0f, height, 1.0f));
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

@@ -24,13 +24,14 @@ import theking530.staticpower.blockentities.components.AbstractBlockEntityCompon
 public abstract class StaticPowerBlockEntitySpecialRenderer<T extends BlockEntityBase> implements BlockEntityRenderer<T> {
 	public static final Logger LOGGER = LogManager.getLogger(StaticPowerBlockEntitySpecialRenderer.class);
 	protected static final float TEXEL = (1.0f / 16.0f);
-	protected ItemRenderer ItemRenderer;
+	
+	protected ItemRenderer itemRenderer;
+	protected BlockEntityRenderDispatcher blockRenderer;
 	protected boolean shouldPreRotateTowardsFacingDirection;
-	protected BlockEntityRenderDispatcher renderer;
 
 	public StaticPowerBlockEntitySpecialRenderer(BlockEntityRendererProvider.Context context) {
 		super();
-		renderer = context.getBlockEntityRenderDispatcher();
+		blockRenderer = context.getBlockEntityRenderDispatcher();
 		shouldPreRotateTowardsFacingDirection = true;
 	}
 
@@ -41,9 +42,11 @@ public abstract class StaticPowerBlockEntitySpecialRenderer<T extends BlockEntit
 	@Override
 	public void render(T tileEntity, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
 			int combinedLight, int combinedOverlay) {
+		
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer");
+		
 		BlockPos tileEntityPos = tileEntity.getBlockPos();
-		ItemRenderer = Minecraft.getInstance().getItemRenderer();
-
+		itemRenderer = Minecraft.getInstance().getItemRenderer();
 		matrixStack.pushPose();
 
 		// Rotate to face the side this tile is facing.
@@ -71,6 +74,8 @@ public abstract class StaticPowerBlockEntitySpecialRenderer<T extends BlockEntit
 		matrixStack.popPose();
 		Lighting.setupLevel(matrixStack.last().pose());
 		matrixStack.pushPose();
+		
+		Minecraft.getInstance().getProfiler().pop();
 	}
 
 	protected Direction getFacingDirection(T tileEntity) {

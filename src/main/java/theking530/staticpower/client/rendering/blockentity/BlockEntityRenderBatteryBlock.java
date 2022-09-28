@@ -2,6 +2,7 @@ package theking530.staticpower.client.rendering.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ public class BlockEntityRenderBatteryBlock extends StaticPowerBlockEntitySpecial
 	@Override
 	public void renderTileEntityBase(BlockEntityBattery tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Battery");
 		// Get the energy percentage.
 		float height = (float) StaticPowerEnergyUtilities.getStoredEnergyPercentScaled(tileEntity.powerStorage, 1.0f);
 
@@ -52,5 +54,6 @@ public class BlockEntityRenderBatteryBlock extends StaticPowerBlockEntitySpecial
 
 			matrixStack.popPose();
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

@@ -10,6 +10,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -42,6 +43,7 @@ public class WireRenderer implements ICustomRenderer {
 			return;
 		}
 
+		Minecraft.getInstance().getProfiler().push("StaticPower.WireRendering");
 		// Set up for rendering only once per render request.
 		RenderSystem.setShader(GameRenderer::getPositionColorShader);
 		RenderSystem.disableCull();
@@ -60,5 +62,6 @@ public class WireRenderer implements ICustomRenderer {
 		// Reset the render flags and close the tesselator when done.
 		tesselator.end();
 		RenderSystem.enableCull();
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

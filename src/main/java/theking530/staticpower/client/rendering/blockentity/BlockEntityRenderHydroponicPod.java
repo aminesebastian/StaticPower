@@ -5,6 +5,7 @@ import java.util.Optional;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -22,13 +23,11 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector3D;
-import theking530.staticpower.blockentities.machines.hydroponicpod.BlockEntityHydroponicPod;
+import theking530.staticpower.blockentities.machines.hydroponics.pod.BlockEntityHydroponicPod;
 import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecialRenderer<BlockEntityHydroponicPod> {
-	protected static final BlockModel CUBE_MODEL = new BlockModel();
-
 	public BlockEntityRenderHydroponicPod(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
@@ -36,9 +35,12 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 	@Override
 	public void renderTileEntityBase(BlockEntityHydroponicPod tileEntity, BlockPos pos, float partialTicks, PoseStack stack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.HydroponicPod");
 		Optional<Block> block = tileEntity.getPlantBlockForDisplay();
 
 		if (!block.isEmpty()) {
+
+			Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.HydroponicPod.Crop");
 			float growthPercentage = tileEntity.getGrowthPercentage();
 			if (block.get() instanceof CropBlock) {
 				CropBlock crop = (CropBlock) block.get();
@@ -64,17 +66,20 @@ public class BlockEntityRenderHydroponicPod extends StaticPowerBlockEntitySpecia
 				GuiDrawUtilities.drawBlockState(stack, state, pos, EmptyModelData.INSTANCE, new Vector3D(0.75f - scale, 0.1f, 0.75f - scale), new Vector3D(0, 45, 0),
 						new Vector3D(scale, scale, scale));
 			}
-
+			Minecraft.getInstance().getProfiler().pop();
 		}
 
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.HydroponicPod.Fluid");
 		if (tileEntity.hasWater()) {
 			// Render the hydroponic fluid.
 			FluidStack fluid = new FluidStack(Fluids.WATER, 1);
 			TextureAtlasSprite sprite = GuiDrawUtilities.getStillFluidSprite(fluid);
 			SDColor fluidColor = GuiDrawUtilities.getFluidColor(fluid);
 			float height = 0.2f;
-			CUBE_MODEL.drawPreviewCube(new Vector3f(2.1f * TEXEL, 2f * TEXEL, 2.1f * TEXEL), new Vector3f(11.8f * TEXEL, 12f * TEXEL * height, 11.8f * TEXEL), fluidColor, stack,
+			BlockModel.drawCubeInWorld(stack, new Vector3f(2.1f * TEXEL, 2f * TEXEL, 2.1f * TEXEL), new Vector3f(11.8f * TEXEL, 12f * TEXEL * height, 11.8f * TEXEL), fluidColor,
 					sprite, new Vector3D(1.0f, height, 1.0f));
 		}
+		Minecraft.getInstance().getProfiler().pop();
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

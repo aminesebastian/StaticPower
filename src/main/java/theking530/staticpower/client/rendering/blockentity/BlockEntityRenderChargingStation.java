@@ -28,6 +28,7 @@ public class BlockEntityRenderChargingStation extends StaticPowerBlockEntitySpec
 	@Override
 	public void renderTileEntityBase(BlockEntityChargingStation tileEntity, BlockPos pos, float partialTicks,
 			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.ChargingStation");
 		matrixStack.pushPose();
 		matrixStack.mulPose(new Quaternion(new Vector3f(0.0f, 0.0f, 0.0f), -90, true));
 		int forwardBlockLightLevel = LevelRenderer.getLightColor(tileEntity.getLevel(),
@@ -57,5 +58,6 @@ public class BlockEntityRenderChargingStation extends StaticPowerBlockEntitySpec
 			}
 		}
 		matrixStack.popPose();
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

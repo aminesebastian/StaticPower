@@ -28,6 +28,7 @@ public class BlockEntityRenderAutoCraftingTable
 	@Override
 	public void renderTileEntityBase(BlockEntityAutoCraftingTable tileEntity, BlockPos pos, float partialTicks,
 			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.AutoCrafter");
 		matrixStack.pushPose();
 		matrixStack.mulPose(new Quaternion(new Vector3f(0.0f, 0.0f, 0.0f), -90, true));
 		int forwardBlockLightLevel = WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity);
@@ -56,5 +57,6 @@ public class BlockEntityRenderAutoCraftingTable
 			}
 		}
 		matrixStack.popPose();
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

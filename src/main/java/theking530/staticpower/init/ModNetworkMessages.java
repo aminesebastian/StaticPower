@@ -47,7 +47,7 @@ import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPow
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.network.TileEntityBasicSyncPacket;
+import theking530.staticpower.network.BlockEntityBasicSyncPacket;
 import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
 
 public class ModNetworkMessages {
@@ -57,7 +57,7 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketSideConfigTab.class);
 		StaticPowerMessageHandler.registerMessage(PacketItemFilter.class);
 		StaticPowerMessageHandler.registerMessage(PacketLockDigistore.class);
-		StaticPowerMessageHandler.registerMessage(TileEntityBasicSyncPacket.class);
+		StaticPowerMessageHandler.registerMessage(BlockEntityBasicSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(ItemCableAddedPacket.class);
 		StaticPowerMessageHandler.registerMessage(ItemCableRemovedPacket.class);
 		StaticPowerMessageHandler.registerMessage(FluidCableUpdatePacket.class);

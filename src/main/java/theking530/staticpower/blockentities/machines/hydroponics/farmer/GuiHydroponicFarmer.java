@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.hydroponicfarmer;
+package theking530.staticpower.blockentities.machines.hydroponics.farmer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +18,8 @@ import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
-import theking530.staticpower.blockentities.machines.hydroponicpod.BlockEntityHydroponicPod;
-import theking530.staticpower.blockentities.machines.hydroponicpod.HydroponicPodProgressWidget;
+import theking530.staticpower.blockentities.machines.hydroponics.pod.BlockEntityHydroponicPod;
+import theking530.staticpower.blockentities.machines.hydroponics.pod.HydroponicPodProgressWidget;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
 public class GuiHydroponicFarmer extends StaticPowerTileEntityGui<ContainerHydroponicFarmer, BlockEntityHydroponicFarmer> {

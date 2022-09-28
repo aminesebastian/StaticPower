@@ -113,7 +113,7 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	public void enterGuiScreen(BlockEntityBase tileEntity, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		if (!world.isClientSide) {
 			CableBoundsHoverResult hoverResult = cableBoundsCache.getHoveredAttachmentOrCover(pos, player);
-			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (TileEntityRedstoneCable) tileEntity, hit.getDirection());
+			RedstoneCableContainerProvider provider = new RedstoneCableContainerProvider(this, (BlockEntityRedstoneCable) tileEntity, hit.getDirection());
 			NetworkGUI.openGui((ServerPlayer) player, provider, buf -> {
 				buf.writeBlockPos(pos);
 				buf.writeInt(hoverResult.direction.ordinal());
@@ -125,48 +125,48 @@ public class BlockRedstoneCable extends AbstractCableBlock {
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		switch (color) {
 		case "black":
-			return TileEntityRedstoneCable.TYPE_BASIC_BLACK.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_BLACK.create(pos, state);
 		case "dark_blue":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_BLUE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_BLUE.create(pos, state);
 		case "dark_green":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GREEN.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_GREEN.create(pos, state);
 		case "dark_aqua":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_AQUA.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_AQUA.create(pos, state);
 		case "dark_red":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_RED.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_RED.create(pos, state);
 		case "dark_purple":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_PURPLE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_PURPLE.create(pos, state);
 		case "gold":
-			return TileEntityRedstoneCable.TYPE_BASIC_GOLD.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_GOLD.create(pos, state);
 		case "gray":
-			return TileEntityRedstoneCable.TYPE_BASIC_GRAY.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_GRAY.create(pos, state);
 		case "dark_gray":
-			return TileEntityRedstoneCable.TYPE_BASIC_DARK_GRAY.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_DARK_GRAY.create(pos, state);
 		case "blue":
-			return TileEntityRedstoneCable.TYPE_BASIC_BLUE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_BLUE.create(pos, state);
 		case "green":
-			return TileEntityRedstoneCable.TYPE_BASIC_GREEN.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_GREEN.create(pos, state);
 		case "aqua":
-			return TileEntityRedstoneCable.TYPE_BASIC_AQUA.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_AQUA.create(pos, state);
 		case "red":
-			return TileEntityRedstoneCable.TYPE_BASIC_RED.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_RED.create(pos, state);
 		case "light_purple":
-			return TileEntityRedstoneCable.TYPE_BASIC_LIGHT_PURPLE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_LIGHT_PURPLE.create(pos, state);
 		case "yellow":
-			return TileEntityRedstoneCable.TYPE_BASIC_YELLOW.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_YELLOW.create(pos, state);
 		case "white":
-			return TileEntityRedstoneCable.TYPE_BASIC_WHITE.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_WHITE.create(pos, state);
 		default:
-			return TileEntityRedstoneCable.TYPE_BASIC_NAKED.create(pos, state);
+			return BlockEntityRedstoneCable.TYPE_BASIC_NAKED.create(pos, state);
 		}
 	}
 
 	public class RedstoneCableContainerProvider implements MenuProvider {
 		public final Direction side;
 		public final Block owningBlock;
-		public final TileEntityRedstoneCable cable;
+		public final BlockEntityRedstoneCable cable;
 
-		public RedstoneCableContainerProvider(Block owningBlock, TileEntityRedstoneCable cable, Direction side) {
+		public RedstoneCableContainerProvider(Block owningBlock, BlockEntityRedstoneCable cable, Direction side) {
 			this.owningBlock = owningBlock;
 			this.side = side;
 			this.cable = cable;

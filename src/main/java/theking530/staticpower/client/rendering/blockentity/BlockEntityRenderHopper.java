@@ -3,6 +3,7 @@ package theking530.staticpower.client.rendering.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -18,15 +19,15 @@ import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderHopper extends StaticPowerBlockEntitySpecialRenderer<BlockEntityExperienceHopper> {
-	protected static final BlockModel CUBE_MODEL = new BlockModel();
 
 	public BlockEntityRenderHopper(BlockEntityRendererProvider.Context context) {
 		super(context);
 	}
 
 	@Override
-	protected void renderTileEntityBase(BlockEntityExperienceHopper tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
-			int combinedOverlay) {
+	protected void renderTileEntityBase(BlockEntityExperienceHopper tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer,
+			int combinedLight, int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Hopper");
 		// Render the contained fluid if it exists.
 		if (tileEntity.internalTank.getVisualFillLevel() > 0) {
 			// Get the fluid.
@@ -39,8 +40,9 @@ public class BlockEntityRenderHopper extends StaticPowerBlockEntitySpecialRender
 			// Calculate the hight and position, then render.
 			float height = tileEntity.internalTank.getVisualFillLevel();
 			float yPosition = TEXEL * 11f;
-			CUBE_MODEL.drawPreviewCube(new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, height * TEXEL * 4.8f, 11.95f * TEXEL), fluidColor, matrixStack,
-					sprite, new Vector3D(1.0f, height, 1.0f));
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(2.01f * TEXEL, yPosition, 2.01f * TEXEL), new Vector3f(11.95f * TEXEL, height * TEXEL * 4.8f, 11.95f * TEXEL),
+					fluidColor, sprite, new Vector3D(1.0f, height, 1.0f));
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

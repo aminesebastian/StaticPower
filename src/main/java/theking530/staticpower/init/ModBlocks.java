@@ -31,8 +31,8 @@ import theking530.staticpower.blockentities.machines.fermenter.BlockFermenter;
 import theking530.staticpower.blockentities.machines.fluidinfuser.BlockFluidInfuser;
 import theking530.staticpower.blockentities.machines.former.BlockFormer;
 import theking530.staticpower.blockentities.machines.fusionfurnace.BlockFusionFurnace;
-import theking530.staticpower.blockentities.machines.hydroponicfarmer.BlockHydroponicFarmer;
-import theking530.staticpower.blockentities.machines.hydroponicpod.BlockHydroponicPod;
+import theking530.staticpower.blockentities.machines.hydroponics.farmer.BlockHydroponicFarmer;
+import theking530.staticpower.blockentities.machines.hydroponics.pod.BlockHydroponicPod;
 import theking530.staticpower.blockentities.machines.laboratory.BlockLaboratory;
 import theking530.staticpower.blockentities.machines.lathe.BlockLathe;
 import theking530.staticpower.blockentities.machines.lumbermill.BlockLumberMill;
@@ -79,6 +79,7 @@ import theking530.staticpower.blockentities.power.electricminer.BlockElectricMin
 import theking530.staticpower.blockentities.power.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.blockentities.power.heatsink.BlockHeatSink;
 import theking530.staticpower.blockentities.power.inverter.BlockInverter;
+import theking530.staticpower.blockentities.power.lamp.BlockLightSocket;
 import theking530.staticpower.blockentities.power.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.blockentities.power.rectifier.BlockRectifier;
 import theking530.staticpower.blockentities.power.solarpanels.BlockSolarPanel;
@@ -539,6 +540,9 @@ public class ModBlocks {
 	public static final RegistryObject<BlockWireConnector> WireConnectorEV = registerBlock("wire_terminal_ev", () -> new BlockWireConnector(StaticPowerTiers.ENERGIZED));
 	public static final RegistryObject<BlockWireConnector> WireConnectorBV = registerBlock("wire_terminal_bv", () -> new BlockWireConnector(StaticPowerTiers.LUMUM));
 	public static final RegistryObject<BlockDigistoreWireConnector> WireConnectorDigistore = registerBlock("wire_terminal_digistore", () -> new BlockDigistoreWireConnector());
+
+	// Lights
+	public static final RegistryObject<BlockLightSocket> LightSocket = registerBlock("light_socket", () -> new BlockLightSocket());
 
 	// Monitors
 	public static final RegistryObject<BlockPowerMonitor> PowerMonitor = registerBlock("power_monitor", () -> new BlockPowerMonitor());

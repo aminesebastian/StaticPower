@@ -85,17 +85,17 @@ public class BlockIndustrialPowerCable extends AbstractCableBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.BASIC) {
-			return TileEntityPowerCable.TYPE_INDUSTRIAL_BASIC.create(pos, state);
+			return BlockEntityPowerCable.TYPE_INDUSTRIAL_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return TileEntityPowerCable.TYPE_INDUSTRIAL_ADVANCED.create(pos, state);
+			return BlockEntityPowerCable.TYPE_INDUSTRIAL_ADVANCED.create(pos, state);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return TileEntityPowerCable.TYPE_INDUSTRIAL_STATIC.create(pos, state);
+			return BlockEntityPowerCable.TYPE_INDUSTRIAL_STATIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return TileEntityPowerCable.TYPE_INDUSTRIAL_ENERGIZED.create(pos, state);
+			return BlockEntityPowerCable.TYPE_INDUSTRIAL_ENERGIZED.create(pos, state);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return TileEntityPowerCable.TYPE_INDUSTRIAL_LUMUM.create(pos, state);
+			return BlockEntityPowerCable.TYPE_INDUSTRIAL_LUMUM.create(pos, state);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return TileEntityPowerCable.TYPE_INDUSTRIAL_CREATIVE.create(pos, state);
+			return BlockEntityPowerCable.TYPE_INDUSTRIAL_CREATIVE.create(pos, state);
 		}
 		return null;
 	}

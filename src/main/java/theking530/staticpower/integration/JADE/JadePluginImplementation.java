@@ -59,8 +59,7 @@ public class JadePluginImplementation implements IWailaPlugin {
 		registrar.registerComponentProvider(new StaticVoltDecorator(), TooltipPosition.BODY, Block.class);
 		registrar.registerComponentProvider(new HeatDecorator(), TooltipPosition.BODY, Block.class);
 		registrar.registerComponentProvider(new ProcessingTimeDecorator(), TooltipPosition.BODY, Block.class);
-		// registrar.registerComponentProvider(new FluidDecorator(),
-		// TooltipPosition.BODY, Block.class);
+		registrar.registerComponentProvider(new FluidDecorator(), TooltipPosition.BODY, Block.class);
 	}
 
 	public static class StaticVoltDecorator implements IComponentProvider {
@@ -202,7 +201,12 @@ public class JadePluginImplementation implements IWailaPlugin {
 	public static class FluidDecorator implements IComponentProvider {
 		@Override
 		public void appendTooltip(ITooltip tooltip, BlockAccessor accessor, IPluginConfig config) {
+			if (accessor.getServerData().contains("pressure")) {
+				float pressure = accessor.getServerData().getFloat("pressure");
 
+				JadePluginImplementation.drawBar(tooltip, pressure, 32.0f, MAIN_FLUID_COLOR, ALT_FLUID_COLOR,
+						GuiTextUtilities.formatNumberAsString(pressure).withStyle(ChatFormatting.WHITE), FLUID_BAR_RENDERER);
+			}
 		}
 	}
 

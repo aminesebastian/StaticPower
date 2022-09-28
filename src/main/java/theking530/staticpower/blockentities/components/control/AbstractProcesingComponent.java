@@ -11,7 +11,6 @@ import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
-import theking530.staticpower.blockentities.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
@@ -21,6 +20,7 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractProcesingComponent extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
+	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
 
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
@@ -76,6 +76,8 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 	private boolean performedWorkLastTick;
 	@SaveSerialize
 	private int blockStateOffTimer;
+
+	private int lastSyncProcessingTime;
 
 	public AbstractProcesingComponent(String name, int processingTime, boolean serverOnly) {
 		super(name);
@@ -573,9 +575,16 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			return;
 		}
 
-		// Send the packet to all clients within the requested radius.
-		ProcesingComponentSyncPacket msg = new ProcesingComponentSyncPacket(getPos(), this);
-		StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
+		boolean shouldSync = Math.abs(lastSyncProcessingTime - this.currentProcessingTime) >= SYNC_UPDATE_DELTA_THRESHOLD;
+		shouldSync |= lastSyncProcessingTime == 0 && currentProcessingTime != 0;
+		shouldSync |= currentProcessingTime == 0 && lastSyncProcessingTime != 0;
+
+		if (shouldSync) {
+			lastSyncProcessingTime = currentProcessingTime;
+			// Send the packet to all clients within the requested radius.
+			ProcesingComponentSyncPacket msg = new ProcesingComponentSyncPacket(getPos(), this);
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), SYNC_PACKET_UPDATE_RADIUS, msg);
+		}
 	}
 
 	public CompoundTag serializeClientSynchronizeData(CompoundTag nbt, boolean fromUpdate) {

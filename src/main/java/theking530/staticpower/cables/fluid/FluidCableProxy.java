@@ -11,16 +11,35 @@ import theking530.staticcore.utilities.SDMath;
 
 public class FluidCableProxy {
 	public static final String FLUID_CAPACITY_DATA_TAG_KEY = "c";
+	public static final String FLUID_PRESSURE_DATA_TAG_KEY = "p";
 	public static final String FLUID_STORED_DATA_TAG_KEY = "s";
 	public static final String FLUID_TRANSFER_RATE_DATA_TAG_KEY = "r";
 	public static final String FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY = "i";
 
 	private final ServerCable cable;
 	private final Set<Direction> suppliedFromDirections;
+	private int adjacentDestinationCount;
 
 	public FluidCableProxy(ServerCable cable) {
 		this.cable = cable;
 		this.suppliedFromDirections = new HashSet<>();
+		adjacentDestinationCount = 0;
+
+		if (!cable.getDataTag().contains(FLUID_PRESSURE_DATA_TAG_KEY)) {
+			cable.getDataTag().putFloat(FLUID_PRESSURE_DATA_TAG_KEY, 0);
+		}
+	}
+
+	public int getAdjacentDestinationCount() {
+		return adjacentDestinationCount;
+	}
+
+	public void setAdjacentDestinationCount(int count) {
+		adjacentDestinationCount = count;
+	}
+
+	public int getSplitFactor() {
+		return Math.max(adjacentDestinationCount - suppliedFromDirections.size(), 1);
 	}
 
 	public void clearSuppliedFromDirections() {
@@ -52,6 +71,14 @@ public class FluidCableProxy {
 		cable.getDataTag().putInt(FLUID_STORED_DATA_TAG_KEY, SDMath.clamp(stored, 0, getCapacity()));
 	}
 
+	public float getPressure() {
+		return cable.getDataTag().getFloat(FLUID_PRESSURE_DATA_TAG_KEY);
+	}
+
+	public void setPressure(float pressure) {
+		cable.getDataTag().putFloat(FLUID_PRESSURE_DATA_TAG_KEY, pressure);
+	}
+
 	public BlockPos getPos() {
 		return cable.getPos();
 	}
@@ -64,10 +91,11 @@ public class FluidCableProxy {
 		return cable.getDataTag().getBoolean(FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY);
 	}
 
-	public int fill(int amount, FluidAction action) {
+	public int fill(int amount, float pressure, FluidAction action) {
 		int toFill = Math.min(getCapacity() - getStored(), amount);
 		if (action == FluidAction.EXECUTE) {
 			setStored(getStored() + toFill);
+			setPressure(Math.max(getPressure(), pressure));
 		}
 		return toFill;
 	}

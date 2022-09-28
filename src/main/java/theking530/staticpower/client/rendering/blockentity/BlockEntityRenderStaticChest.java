@@ -3,6 +3,7 @@ package theking530.staticpower.client.rendering.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelLayers;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -37,6 +38,7 @@ public class BlockEntityRenderStaticChest extends StaticPowerBlockEntitySpecialR
 	@Override
 	protected void renderTileEntityBase(BlockEntityStaticChest te, BlockPos position, float partialTicks, PoseStack pos, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Chest");
 		float interpretedOpenAlpha = 0.0f;
 
 		if (te.isOpen()) {
@@ -61,6 +63,7 @@ public class BlockEntityRenderStaticChest extends StaticPowerBlockEntitySpecialR
 
 		VertexConsumer vertexconsumer = material.buffer(buffer, RenderType::entityCutout);
 		render(pos, vertexconsumer, this.lid, this.lock, this.bottom, interpretedOpenAlpha, combinedLight, combinedOverlay);
+		Minecraft.getInstance().getProfiler().pop();
 	}
 
 	private void render(PoseStack stack, VertexConsumer consumer, ModelPart lid, ModelPart lock, ModelPart bottom, float lidRotation, int light, int overlay) {

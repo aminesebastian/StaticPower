@@ -26,7 +26,6 @@ import theking530.staticpower.client.rendering.BlockModel;
 
 @OnlyIn(Dist.CLIENT)
 public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase> extends StaticPowerBlockEntitySpecialRenderer<T> {
-	protected static final BlockModel CUBE_MODEL = new BlockModel();
 	protected static final Vector3D BLOCK_RENDER_SCALE = new Vector3D(0.3f, 0.3f, 0.3f);
 	protected static final Vector3D ITEM_RENDER_SCALE = new Vector3D(0.25f, 0.25f, 0.25f);
 
@@ -102,7 +101,7 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		float minWidth = 0.22f * filledAmount;
 		float minWidthOffset = (-0.1f * filledAmount) + 0.5f;
 		float floorOffset = 0.06f - (filledAmount * 0.06f);
-		CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, minWidthOffset - floorOffset, 0.5f - radius), new Vector3f(diameter, minWidth, diameter), fluidColor, matrixStack,
+		BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius, minWidthOffset - floorOffset, 0.5f - radius), new Vector3f(diameter, minWidth, diameter), fluidColor,
 				sprite);
 	}
 
@@ -112,19 +111,19 @@ public abstract class AbstractCableTileEntityRenderer<T extends BlockEntityBase>
 		float yAxisOffset = radius * (1.0f - filledAmount);
 
 		if (side == Direction.SOUTH) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, 0.5f - radius, 0.5f), new Vector3f(diameter, diameter * filledAmount, 0.5f), fluidColor, matrixStack, sprite);
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius, 0.5f - radius, 0.5f), new Vector3f(diameter, diameter * filledAmount, 0.5f), fluidColor, sprite);
 		} else if (side == Direction.NORTH) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius, 0.5f - radius, 0.0f), new Vector3f(diameter, diameter * filledAmount, 0.5f), fluidColor, matrixStack, sprite);
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius, 0.5f - radius, 0.0f), new Vector3f(diameter, diameter * filledAmount, 0.5f), fluidColor, sprite);
 		} else if (side == Direction.DOWN) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset),
-					new Vector3f(diameter * filledAmount, 0.5f, diameter * filledAmount), fluidColor, matrixStack, sprite);
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius + yAxisOffset, 0.0f, 0.5f - radius + yAxisOffset),
+					new Vector3f(diameter * filledAmount, 0.5f, diameter * filledAmount), fluidColor, sprite);
 		} else if (side == Direction.UP) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f - radius + yAxisOffset, 0.5f, 0.5f - radius + yAxisOffset),
-					new Vector3f(diameter * filledAmount, 0.5f, diameter * filledAmount), fluidColor, matrixStack, sprite);
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f - radius + yAxisOffset, 0.5f, 0.5f - radius + yAxisOffset),
+					new Vector3f(diameter * filledAmount, 0.5f, diameter * filledAmount), fluidColor, sprite);
 		} else if (side == Direction.WEST) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.0f, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f, diameter * filledAmount, diameter), fluidColor, matrixStack, sprite);
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.0f, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f, diameter * filledAmount, diameter), fluidColor, sprite);
 		} else if (side == Direction.EAST) {
-			CUBE_MODEL.drawPreviewCube(new Vector3f(0.5f, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f, diameter * filledAmount, diameter), fluidColor, matrixStack, sprite);
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(0.5f, 0.5f - radius, 0.5f - radius), new Vector3f(0.5f, diameter * filledAmount, diameter), fluidColor, sprite);
 		}
 	}
 }

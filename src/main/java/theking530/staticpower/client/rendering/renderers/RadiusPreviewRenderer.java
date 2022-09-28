@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.mojang.math.Vector3f;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -17,13 +18,13 @@ import theking530.staticpower.client.rendering.DrawCubeRequest;
 
 public class RadiusPreviewRenderer implements ICustomRenderer {
 	private static final HashMap<BlockEntity, HashMap<String, DrawCubeRequest>> CUBE_RENDER_REQUESTS = new HashMap<BlockEntity, HashMap<String, DrawCubeRequest>>();
-	private static final BlockModel BLOCK_MODEL = new BlockModel();
 
 	public void render(Level level, RenderLevelStageEvent event) {
 		if (event.getStage() != Stage.AFTER_TRANSLUCENT_BLOCKS) {
 			return;
 		}
 
+		Minecraft.getInstance().getProfiler().push("StaticPower.RadiusPreviewRenderer");
 		// Prepare a list of entries to remove if the te has been removed from the
 		// world.
 		List<BlockEntity> teEntriesToRemove = new LinkedList<BlockEntity>();
@@ -38,7 +39,7 @@ public class RadiusPreviewRenderer implements ICustomRenderer {
 
 			// Draw the request.
 			for (DrawCubeRequest request : CUBE_RENDER_REQUESTS.get(te).values()) {
-				BLOCK_MODEL.drawPreviewCube(request.Position, request.Scale, request.Color, event.getPoseStack());
+				BlockModel.drawCubeInWorld(event.getPoseStack(), request.Position, request.Scale, request.Color);
 			}
 		}
 
@@ -46,6 +47,7 @@ public class RadiusPreviewRenderer implements ICustomRenderer {
 		for (BlockEntity te : teEntriesToRemove) {
 			CUBE_RENDER_REQUESTS.remove(te);
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 
 	public static void addRadiusRenderRequest(BlockEntity tileEntity, String key, Vector3f position, Vector3f scale, SDColor color) {

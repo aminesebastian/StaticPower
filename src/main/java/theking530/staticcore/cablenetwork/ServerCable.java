@@ -352,6 +352,10 @@ public class ServerCable {
 		}
 	}
 
+	public CableConnectionType getConnectionType(Direction side) {
+		return this.sidedData[side.ordinal()].getConnectionType();
+	}
+
 	public void synchronizeServerState() {
 		ICableStateSyncTarget target = (ICableStateSyncTarget) getWorld().getExistingBlockEntity(getPos());
 		if (target != null) {

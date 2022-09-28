@@ -37,8 +37,8 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiSideConfigTab extends BaseGuiTab {
-	private static final BlockModel HIGHLIGHT_RENDERER = new BlockModel();
 	private static final AABB BOUNDS = new AABB(new Vec3(-0.05, -0.05, -0.05), new Vec3(1.05, 1.05, 1.05));
+	private static final float MOUSE_SENSETIVITY = 2.5f;
 
 	public BlockEntityBase tileEntity;
 	private Vector2D rotation;
@@ -120,7 +120,7 @@ public class GuiSideConfigTab extends BaseGuiTab {
 					matrix.mulPose(Quaternion.fromXYZDegrees(new Vector3f(rotation.getY(), rotation.getX(), 180)));
 					matrix.mulPose(result.getDirection().getRotation());
 					matrix.translate(-0.5f, -0.5f, -0.5f);
-					HIGHLIGHT_RENDERER.drawPreviewCubeGui(new Vector3f(0.3f, 1.01f, 0.3f), new Vector3f(0.4f, 0.05f, 0.4f), color, matrix);
+					BlockModel.drawCubeInGui(new Vector3f(0.3f, 1.01f, 0.3f), new Vector3f(0.4f, 0.05f, 0.4f), color, matrix);
 					matrix.popPose();
 				} else {
 					highlightedSide = null; // Clear out the highlighted side if its a disabled side.
@@ -155,8 +155,8 @@ public class GuiSideConfigTab extends BaseGuiTab {
 	@Override
 	public EInputResult mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
 		if (mouseDownInside) {
-			rotationVelocity.setX((float) deltaX * -3f);
-			rotationVelocity.setY((float) deltaY * -3f);
+			rotationVelocity.setX((float) deltaX * -MOUSE_SENSETIVITY);
+			rotationVelocity.setY((float) deltaY * -MOUSE_SENSETIVITY);
 			return EInputResult.HANDLED;
 		}
 		return EInputResult.UNHANDLED;

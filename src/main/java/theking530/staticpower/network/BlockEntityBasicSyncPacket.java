@@ -24,16 +24,16 @@ import theking530.staticpower.blockentities.BlockEntityBase;
  * @author Amine Sebastian
  *
  */
-public class TileEntityBasicSyncPacket extends NetworkMessage {
+public class BlockEntityBasicSyncPacket extends NetworkMessage {
 	protected CompoundTag machineUpdateTag;
 	protected BlockPos tileEntityPosition;
 	protected boolean shouldReRender;
 
-	public TileEntityBasicSyncPacket() {
+	public BlockEntityBasicSyncPacket() {
 
 	}
 
-	public TileEntityBasicSyncPacket(BlockEntityBase tileEntity, boolean shouldReRender) {
+	public BlockEntityBasicSyncPacket(BlockEntityBase tileEntity, boolean shouldReRender) {
 		tileEntityPosition = tileEntity.getBlockPos();
 		this.shouldReRender = shouldReRender;
 		machineUpdateTag = new CompoundTag();

@@ -287,7 +287,7 @@ public class CableBoundsCache {
 	protected VoxelShape addAttachmentOutline(BlockPos pos, Player entity, CollisionContext context, VoxelShape shape, boolean forCollision) {
 		// Gets the hovered result.
 		CableBoundsHoverResult hoverResult = getHoveredAttachmentOrCover(pos, entity);
-
+		
 		// Get some attributes to use in the check.
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getCommandSenderWorld(), pos);
 

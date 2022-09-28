@@ -11,7 +11,7 @@ import theking530.staticcore.initialization.container.ContainerTypeAllocator;
 import theking530.staticcore.initialization.container.ContainerTypePopulator;
 import theking530.staticpower.container.StaticPowerTileEntityContainer;
 
-public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEntityPowerCable> implements IPowerMetricsSyncConsumer {
+public class ContainerPowerCable extends StaticPowerTileEntityContainer<BlockEntityPowerCable> implements IPowerMetricsSyncConsumer {
 	@ContainerTypePopulator
 	public static final ContainerTypeAllocator<ContainerPowerCable, GuiPowerCable> TYPE = new ContainerTypeAllocator<>("power_cable", ContainerPowerCable::new);
 	static {
@@ -30,10 +30,10 @@ public class ContainerPowerCable extends StaticPowerTileEntityContainer<TileEnti
 	private long nextUpdateTime;
 
 	public ContainerPowerCable(int windowId, Inventory inv, FriendlyByteBuf data) {
-		this(windowId, inv, (TileEntityPowerCable) resolveTileEntityFromDataPacket(inv, data));
+		this(windowId, inv, (BlockEntityPowerCable) resolveTileEntityFromDataPacket(inv, data));
 	}
 
-	public ContainerPowerCable(int windowId, Inventory playerInventory, TileEntityPowerCable owner) {
+	public ContainerPowerCable(int windowId, Inventory playerInventory, BlockEntityPowerCable owner) {
 		super(TYPE, windowId, playerInventory, owner);
 	}
 

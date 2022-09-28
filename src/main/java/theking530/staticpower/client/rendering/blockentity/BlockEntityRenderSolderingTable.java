@@ -27,6 +27,7 @@ public class BlockEntityRenderSolderingTable extends StaticPowerBlockEntitySpeci
 	@Override
 	public void renderTileEntityBase(BlockEntitySolderingTable tileEntity, BlockPos pos, float partialTicks,
 			PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.SolderingTable");
 		matrixStack.pushPose();
 		matrixStack.mulPose(new Quaternion(new Vector3f(1.0f, 0.0f, 0.0f), -90, true));
 
@@ -62,5 +63,6 @@ public class BlockEntityRenderSolderingTable extends StaticPowerBlockEntitySpeci
 					new Vector3D(0.2f, 1.07f, 0.185f), new Vector3D(0.3f, 0.3f, 0.3f), new Vector3D(0, 0, 30), partialTicks, matrixStack,
 					buffer, combinedLight, combinedOverlay);
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

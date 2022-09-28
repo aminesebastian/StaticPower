@@ -12,10 +12,10 @@ import theking530.staticcore.gui.widgets.button.StandardButton;
 import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.tabs.GuiInfoTab;
 import theking530.staticpower.cables.redstone.RedstoneCableSideConfiguration;
-import theking530.staticpower.cables.redstone.basic.TileEntityRedstoneCable;
+import theking530.staticpower.cables.redstone.basic.BlockEntityRedstoneCable;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
-public class GuiBasicRedstoneIO extends StaticPowerTileEntityGui<ContainerBasicRedstoneIO, TileEntityRedstoneCable> {
+public class GuiBasicRedstoneIO extends StaticPowerTileEntityGui<ContainerBasicRedstoneIO, BlockEntityRedstoneCable> {
 
 	private ItemButton inputSignalButton;
 

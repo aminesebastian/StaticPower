@@ -27,6 +27,7 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 	@Override
 	public void renderTileEntityBase(BlockEntityFluidInfuser tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.FluidInfuser");
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
 			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
 
@@ -64,5 +65,6 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 				}
 			}
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

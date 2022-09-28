@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.hydroponicpod;
+package theking530.staticpower.blockentities.machines.hydroponics.pod;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;

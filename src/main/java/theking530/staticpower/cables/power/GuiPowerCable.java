@@ -20,7 +20,7 @@ import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 
-public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable, TileEntityPowerCable> {
+public class GuiPowerCable extends StaticPowerTileEntityGui<ContainerPowerCable, BlockEntityPowerCable> {
 
 	private DataGraphWidget graphWidget;
 	private MetricsTimeUnit displayType;

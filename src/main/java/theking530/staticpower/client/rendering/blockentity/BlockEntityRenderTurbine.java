@@ -29,11 +29,6 @@ import theking530.staticpower.client.rendering.BlockModel;
 @OnlyIn(Dist.CLIENT)
 public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRenderer<BlockEntityTurbine> {
 	/**
-	 * Fluid rendering model.
-	 */
-	protected static final BlockModel CUBE_MODEL = new BlockModel();
-
-	/**
 	 * Block renderer to render the blades model.
 	 */
 	protected static BlockRenderDispatcher blockRenderer;
@@ -46,6 +41,7 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 	public void renderTileEntityBase(BlockEntityTurbine tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
 
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Turbine");
 		// Set the block renderer if we haven't already.
 		if (blockRenderer == null) {
 			blockRenderer = Minecraft.getInstance().getBlockRenderer();
@@ -121,8 +117,9 @@ public class BlockEntityRenderTurbine extends StaticPowerBlockEntitySpecialRende
 			float yPosition = 16.0f * TEXEL - (16f * TEXEL * height);
 
 			// Render the fluid.
-			CUBE_MODEL.drawPreviewCube(new Vector3f(1 * TEXEL, yPosition - (TEXEL * 1), 1 * TEXEL), new Vector3f(14f * TEXEL, 16f * TEXEL * height, 14f * TEXEL), fluidColor,
-					matrixStack, sprite, new Vector3D(1.0f, height, 1.0f));
+			BlockModel.drawCubeInWorld(matrixStack, new Vector3f(1 * TEXEL, yPosition - (TEXEL * 1), 1 * TEXEL), new Vector3f(14f * TEXEL, 16f * TEXEL * height, 14f * TEXEL),
+					fluidColor, sprite, new Vector3D(1.0f, height, 1.0f));
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

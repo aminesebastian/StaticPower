@@ -2,6 +2,7 @@ package theking530.staticpower.client.rendering.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -27,15 +28,17 @@ public class BlockEntityRenderDigistore extends StaticPowerBlockEntitySpecialRen
 	@Override
 	public void renderTileEntityBase(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Digistore");
 		if (tileEntity.inventory.getUniqueItemCapacity() > 0) {
 			WorldRenderingUtilities.drawFlatItemInWorld(tileEntity, tileEntity.inventory.getDigistoreStack(0).getStoredItem(), new Vector3D(0.5f, 0.57f, 1.01f), new Vector2D(0.4f, 0.4f),
 					partialTicks, matrixStack, buffer, 15728880, combinedOverlay);
 			drawFillBar(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 			MetricConverter metric = new MetricConverter(tileEntity.inventory.getTotalContainedCount());
-			WorldRenderingUtilities.drawTextInWorld(this.renderer, metric.getValueAsString(true), tileEntity, new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
+			WorldRenderingUtilities.drawTextInWorld(this.blockRenderer, metric.getValueAsString(true), tileEntity, new SDColor(255.0f, 255.0f, 255.0f, 255.0f),
 					new Vector3D(0.5f, 0.323f, 1.0001f), 0.007f, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
 		}
 		drawIndicators(tileEntity, pos, partialTicks, matrixStack, buffer, combinedLight, combinedOverlay);
+		Minecraft.getInstance().getProfiler().pop();
 	}
 
 	public void drawIndicators(TileEntityDigistore tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {

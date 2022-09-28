@@ -32,8 +32,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.progressbars.ArrowProgressBar;
-import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.RectangleBounds;
+import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticcore.utilities.Vector3D;
@@ -152,8 +152,8 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			blockStack.translate(location.getX() + 43, location.getY() + 17.8f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
-			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL),
-					fluidColor, blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
+			BlockModel.drawCubeInWorld(blockStack, new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL),
+					fluidColor, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
 			blockStack.popPose();
 		}
 
@@ -171,8 +171,8 @@ public class CauldronRecipeCategory extends BaseJEIRecipeCategory<CauldronRecipe
 			blockStack.translate(location.getX() + 43, location.getY() + 17.7f, 265);
 			blockStack.scale(scale * 16, scale * 16, scale);
 			blockStack.mulPose(new Quaternion(32, 45, 0, true));
-			new BlockModel().drawPreviewCube(new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL),
-					fluidColor, blockStack, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
+			BlockModel.drawCubeInWorld(blockStack, new Vector3f(2 * TEXEL, 12 * TEXEL - (9 * TEXEL * height), 2 * TEXEL), new Vector3f(12 * TEXEL, TEXEL * height, 12 * TEXEL),
+					fluidColor, sprite, new Vector3D(1.0f, 1.0f, 1.0f));
 			blockStack.popPose();
 		}
 	}

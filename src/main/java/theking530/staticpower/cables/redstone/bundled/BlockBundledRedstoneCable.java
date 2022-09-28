@@ -54,6 +54,6 @@ public class BlockBundledRedstoneCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityBundledRedstoneCable.TYPE.create(pos, state);
+		return BlockEntityBundledRedstoneCable.TYPE.create(pos, state);
 	}
 }

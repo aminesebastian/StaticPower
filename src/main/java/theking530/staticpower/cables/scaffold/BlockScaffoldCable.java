@@ -32,6 +32,6 @@ public class BlockScaffoldCable extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityScaffoldCable.TYPE.create(pos, state);
+		return BlockEntityScaffoldCable.TYPE.create(pos, state);
 	}
 }

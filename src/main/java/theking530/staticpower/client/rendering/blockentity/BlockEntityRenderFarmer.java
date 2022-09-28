@@ -2,6 +2,7 @@ package theking530.staticpower.client.rendering.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -22,6 +23,7 @@ public class BlockEntityRenderFarmer extends StaticPowerBlockEntitySpecialRender
 
 	@Override
 	public void renderTileEntityBase(BlockEntityBasicFarmer tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.Farmer");
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
 			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
 			float firstSectionFilledPercent = Math.min(filledPercentage * 2.0f, 1.0f);
@@ -39,5 +41,6 @@ public class BlockEntityRenderFarmer extends StaticPowerBlockEntitySpecialRender
 						new Vector4D(1.0f, 1.0f - secondSectionFilledPercentage, 0.6f, 1.0f), WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 			}
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }

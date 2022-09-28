@@ -44,7 +44,7 @@ public class BlockDigistoreNetworkWire extends AbstractCableBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-		return TileEntityDigistoreWire.TYPE.create(pos, state);
+		return BlockEntityDigistoreWire.TYPE.create(pos, state);
 	}
 
 	@Override

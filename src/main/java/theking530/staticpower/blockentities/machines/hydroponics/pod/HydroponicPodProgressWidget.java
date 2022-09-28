@@ -1,4 +1,4 @@
-package theking530.staticpower.blockentities.machines.hydroponicpod;
+package theking530.staticpower.blockentities.machines.hydroponics.pod;
 
 import java.util.List;
 import java.util.Optional;

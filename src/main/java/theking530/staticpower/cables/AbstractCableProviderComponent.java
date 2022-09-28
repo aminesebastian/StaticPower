@@ -347,7 +347,12 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	}
 
 	public CableConnectionType getConnectionTypeOnSide(Direction side) {
-		return this.clientConnectionStates[side.ordinal()].getConnectionType();
+		if (!isClientSide()) {
+			if (this.getCable().isPresent()) {
+				return getCable().get().getConnectionType(side);
+			}
+		}
+		return clientConnectionStates[side.ordinal()].getConnectionType();
 	}
 
 	/**

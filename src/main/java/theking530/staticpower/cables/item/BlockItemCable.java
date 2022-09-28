@@ -37,17 +37,17 @@ public class BlockItemCable extends AbstractCableBlock {
 	@Override
 	public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
 		if (tier == StaticPowerTiers.BASIC) {
-			return TileEntityItemCable.TYPE_BASIC.create(pos, state);
+			return BlockEntityItemCable.TYPE_BASIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ADVANCED) {
-			return TileEntityItemCable.TYPE_ADVANCED.create(pos, state);
+			return BlockEntityItemCable.TYPE_ADVANCED.create(pos, state);
 		} else if (tier == StaticPowerTiers.STATIC) {
-			return TileEntityItemCable.TYPE_STATIC.create(pos, state);
+			return BlockEntityItemCable.TYPE_STATIC.create(pos, state);
 		} else if (tier == StaticPowerTiers.ENERGIZED) {
-			return TileEntityItemCable.TYPE_ENERGIZED.create(pos, state);
+			return BlockEntityItemCable.TYPE_ENERGIZED.create(pos, state);
 		} else if (tier == StaticPowerTiers.LUMUM) {
-			return TileEntityItemCable.TYPE_LUMUM.create(pos, state);
+			return BlockEntityItemCable.TYPE_LUMUM.create(pos, state);
 		} else if (tier == StaticPowerTiers.CREATIVE) {
-			return TileEntityItemCable.TYPE_CREATIVE.create(pos, state);
+			return BlockEntityItemCable.TYPE_CREATIVE.create(pos, state);
 		}
 		return null;
 	}

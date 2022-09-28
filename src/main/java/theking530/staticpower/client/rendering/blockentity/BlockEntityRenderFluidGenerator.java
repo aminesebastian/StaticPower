@@ -2,6 +2,7 @@ package theking530.staticpower.client.rendering.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.BlockPos;
@@ -26,6 +27,7 @@ public class BlockEntityRenderFluidGenerator extends StaticPowerBlockEntitySpeci
 	@Override
 	public void renderTileEntityBase(BlockEntityFluidGenerator tileEntity, BlockPos pos, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight,
 			int combinedOverlay) {
+		Minecraft.getInstance().getProfiler().push("StaticPowerBlockEntityRenderer.FluidGenerator");
 		// Draw the fluid bar.
 		if (!tileEntity.fluidTankComponent.isEmpty()) {
 			float filledPercentage = tileEntity.fluidTankComponent.getVisualFillLevel();
@@ -57,5 +59,6 @@ public class BlockEntityRenderFluidGenerator extends StaticPowerBlockEntitySpeci
 			WorldRenderingUtilities.drawTexturedQuadUnlit(StaticPowerSprites.GUI_POWER_BAR_FG, matrixStack, buffer, new Vector3D(0.657f, 0.18f, 0.0005f),
 					new Vector3D(0.125f, height * 0.635f, 1.0f), uv, SDColor.WHITE);
 		}
+		Minecraft.getInstance().getProfiler().pop();
 	}
 }
