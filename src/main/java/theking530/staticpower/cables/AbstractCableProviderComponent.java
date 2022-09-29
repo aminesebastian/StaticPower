@@ -367,7 +367,9 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 		if (!isClientSide()) {
 			ServerCable cable = this.getCable().orElse(null);
 			if (cable != null) {
-				return cable.addCoverToSide(side, cover);
+				ItemStack singleCover = cover.copy();
+				singleCover.setCount(1);
+				return cable.addCoverToSide(side, singleCover);
 			} else {
 				StaticPower.LOGGER.error(String.format("Encountered null cable when attempting to place a cover at: %1$s.", getPos()));
 			}
@@ -544,12 +546,13 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			ServerCable cable = this.getCable().orElse(null);
 			if (cable != null) {
 				// Use a copy of the attachment to be safe.
-				attachment = attachment.copy();
+				ItemStack attachmentCopy = attachment.copy();
+				attachmentCopy.setCount(1);
 
-				if (cable.addAttachmentToSide(side, attachment)) {
+				if (cable.addAttachmentToSide(side, attachmentCopy)) {
 					// Raise the on added method on the attachment.
-					AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachment.getItem();
-					attachmentItem.onAddedToCable(attachment, side, this);
+					AbstractCableAttachment attachmentItem = (AbstractCableAttachment) attachmentCopy.getItem();
+					attachmentItem.onAddedToCable(attachmentCopy, side, this);
 					cable.synchronizeServerState();
 					return true;
 				}

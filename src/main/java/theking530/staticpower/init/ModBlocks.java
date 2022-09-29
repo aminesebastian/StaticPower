@@ -79,7 +79,7 @@ import theking530.staticpower.blockentities.power.electricminer.BlockElectricMin
 import theking530.staticpower.blockentities.power.fluidgenerator.BlockFluidGenerator;
 import theking530.staticpower.blockentities.power.heatsink.BlockHeatSink;
 import theking530.staticpower.blockentities.power.inverter.BlockInverter;
-import theking530.staticpower.blockentities.power.lamp.BlockLightSocket;
+import theking530.staticpower.blockentities.power.lightsocket.BlockLightSocket;
 import theking530.staticpower.blockentities.power.powermonitor.BlockPowerMonitor;
 import theking530.staticpower.blockentities.power.rectifier.BlockRectifier;
 import theking530.staticpower.blockentities.power.solarpanels.BlockSolarPanel;

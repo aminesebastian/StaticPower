@@ -133,6 +133,23 @@
 	
 	"item.staticpower.card_basic": "Basic Card",
 	
+	"item.staticpower.light_bulb_white": "White Light Bulb",
+	"item.staticpower.light_bulb_light_gray": "Light Gray Light Bulb",
+	"item.staticpower.light_bulb_gray": "Gray Light Bulb",
+	"item.staticpower.light_bulb_black": "Black Light Bulb",
+	"item.staticpower.light_bulb_brown": "Brown Light Bulb",
+	"item.staticpower.light_bulb_red": "Red Light Bulb",
+	"item.staticpower.light_bulb_orange": "Orange Light Bulb",
+	"item.staticpower.light_bulb_yellow": "Yellow Light Bulb",
+	"item.staticpower.light_bulb_lime": "Lime Light Bulb",
+	"item.staticpower.light_bulb_green": "Green Light Bulb",
+	"item.staticpower.light_bulb_cyan": "Cyan Light Bulb",
+	"item.staticpower.light_bulb_light_blue": "Light Blue Light Bulb",
+	"item.staticpower.light_bulb_blue": "Blue Light Bulb",
+	"item.staticpower.light_bulb_purple": "Purple Light Bulb",
+	"item.staticpower.light_bulb_magenta": "Magenta Light Bulb",
+	"item.staticpower.light_bulb_pink": "Pink Light Bulb",
+	
 	"item.staticpower.turbine_blades_wood": "Wooden Turbine Blades",
 	"item.staticpower.turbine_blades_basic": "Basic Turbine Blades",
 	"item.staticpower.turbine_blades_advanced": "Advanced Turbine Blades",
@@ -636,6 +653,8 @@
 	"item.staticpower.research_tier_5": "Research Vol. 5",
 	"item.staticpower.research_tier_6": "Research Vol. 6",
 	"item.staticpower.research_tier_7": "Research Vol. 7",
+	
+	"block.staticpower.light_socket": "Light Socket",
 	
 	"block.staticpower.plant_static": "Static Seed",
 	"block.staticpower.plant_energized": "Energized Seed",

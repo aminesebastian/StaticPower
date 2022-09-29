@@ -63,6 +63,7 @@
 		"staticpower:digistore_server_rack",
 		"staticpower:digistore_pattern_storage",
 		"staticpower:pump_tube",
+		"staticpower:light_socket",
 		"#staticpower:machines",
 		"#staticpower:machine_blocks",
 		"#staticpower:solar_panels",

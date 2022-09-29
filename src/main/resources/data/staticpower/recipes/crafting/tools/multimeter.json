@@ -1,0 +1,31 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern": [
+		"ttt",
+		"tgt",
+		"rdb"
+	],
+	"key": {
+		"i": {
+			"tag": "forge:ingots/iron"
+		},
+		"d": {
+			"tag": "forge:dusts/redstone"
+		},
+		"g": {
+			"tag": "forge:glass"
+		},
+		"r": {
+			"tag": "forge:dyes/red"
+		},
+		"b": {
+			"tag": "forge:dyes/black"
+		},
+		"p": {
+			"item": "staticpower:processor_basic"
+		}
+	},
+	"result": {
+		"item": "staticpower:multimeter"
+	}
+}

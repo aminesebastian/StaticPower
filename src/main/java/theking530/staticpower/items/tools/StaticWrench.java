@@ -69,15 +69,17 @@ public class StaticWrench extends StaticPowerItem implements IWrenchTool {
 					InteractionResult result = wrenchable.wrenchBlock(player, getWrenchMode(item), item, world, wrenchablePos, wrenchableFace, true);
 					if (result == InteractionResult.SUCCESS) {
 						playWrenchSound(world, wrenchablePos);
-						return result;
 					}
+					return result;
 				} else {
+					// Make sure its only the block we're actually hitting that is wrenchable. Up
+					// top we also check for the relative face.
 					if (world.getBlockState(pos).getBlock() instanceof IWrenchable) {
 						InteractionResult result = wrenchable.sneakWrenchBlock(player, getSneakWrenchMode(item), item, world, wrenchablePos, wrenchableFace, true);
 						if (result == InteractionResult.SUCCESS) {
 							playWrenchSound(world, wrenchablePos);
-							return result;
 						}
+						return result;
 					}
 				}
 			} else if (world.getBlockState(pos).getProperties().contains(BlockStateProperties.AXIS) && getWrenchMode(item) == RegularWrenchMode.ROTATE) {

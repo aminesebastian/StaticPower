@@ -15,6 +15,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.fluids.FluidStack;
 
@@ -133,6 +134,11 @@ public class SerializationUtilities {
 					CompoundTag tag = new CompoundTag();
 					fluid.writeToNBT(tag);
 					nbt.put(field.getName(), tag);
+				} else if (t == ItemStack.class) {
+					ItemStack item = (ItemStack) field.get(object);
+					CompoundTag tag = new CompoundTag();
+					item.save(tag);
+					nbt.put(field.getName(), tag);
 				} else if (INBTSerializable.class.isAssignableFrom(t)) {
 					@SuppressWarnings("unchecked")
 					INBTSerializable<CompoundTag> serializeable = (INBTSerializable<CompoundTag>) field.get(object);
@@ -202,6 +208,9 @@ public class SerializationUtilities {
 					field.set(object, loc);
 				} else if (t == FluidStack.class) {
 					FluidStack stack = FluidStack.loadFluidStackFromNBT(nbt.getCompound(field.getName()));
+					field.set(object, stack);
+				} else if (t == ItemStack.class) {
+					ItemStack stack = ItemStack.of(nbt.getCompound(field.getName()));
 					field.set(object, stack);
 				} else if (MutableComponent.class.isInstance(field.get(object))) {
 					MutableComponent component = Component.Serializer.fromJson(nbt.getString(field.getName()));

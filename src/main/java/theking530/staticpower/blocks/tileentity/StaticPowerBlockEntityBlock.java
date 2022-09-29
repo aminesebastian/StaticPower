@@ -219,14 +219,16 @@ public abstract class StaticPowerBlockEntityBlock extends StaticPowerBlock imple
 		// If we're on the server and this machine has a tile entity of type
 		// IBreakSerializeable.
 		if (!world.isClientSide && world.getBlockEntity(pos) instanceof IBreakSerializeable) {
-			ItemStack machineStack = IBreakSerializeable.createItemDrop(this, player, world, pos);
-			// Drop the item.
-			WorldUtilities.dropItem(world, pos, machineStack);
+			if (((IBreakSerializeable) world.getBlockEntity(pos)).shouldSerializeWhenBroken()) {
+				ItemStack machineStack = IBreakSerializeable.createItemDrop(this, player, world, pos);
+				// Drop the item.
+				WorldUtilities.dropItem(world, pos, machineStack);
 
-			// Swap this block to air (break it).
-			world.removeBlockEntity(pos);
-			world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-			return InteractionResult.SUCCESS;
+				// Swap this block to air (break it).
+				world.removeBlockEntity(pos);
+				world.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+				return InteractionResult.SUCCESS;
+			}
 		}
 		return super.sneakWrenchBlock(player, mode, wrench, world, pos, facing, returnDrops);
 	}

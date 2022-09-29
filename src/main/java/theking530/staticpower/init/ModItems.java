@@ -353,6 +353,23 @@ public class ModItems {
 	public static final RegistryObject<StaticPowerItem> StaticCard = ITEMS.register("card_static", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> EnergizedCard = ITEMS.register("card_energized", () -> new StaticPowerItem());
 	public static final RegistryObject<StaticPowerItem> LumumCard = ITEMS.register("card_lumum", () -> new StaticPowerItem());
+	
+	public static final RegistryObject<StaticPowerItem> LightBulbWhite = ITEMS.register("light_bulb_white", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbLightGray = ITEMS.register("light_bulb_light_gray", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbGray = ITEMS.register("light_bulb_gray", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbBlack = ITEMS.register("light_bulb_black", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbBrown = ITEMS.register("light_bulb_brown", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbRed = ITEMS.register("light_bulb_red", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbOrange = ITEMS.register("light_bulb_orange", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbYellow = ITEMS.register("light_bulb_yellow", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbLime = ITEMS.register("light_bulb_lime", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbGreem = ITEMS.register("light_bulb_green", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbCyan = ITEMS.register("light_bulb_cyan", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbLightBlue = ITEMS.register("light_bulb_light_blue", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbBlue = ITEMS.register("light_bulb_blue", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbPurple = ITEMS.register("light_bulb_purple", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbMagenta = ITEMS.register("light_bulb_magenta", () -> new StaticPowerItem());
+	public static final RegistryObject<StaticPowerItem> LightBulbPink = ITEMS.register("light_bulb_pink", () -> new StaticPowerItem());
 
 	public static final RegistryObject<TurbineBlades> WoodTurbineBlades = ITEMS.register("turbine_blades_wood",
 			() -> new TurbineBlades(StaticPowerTiers.WOOD, StaticPowerAdditionalModels.TURBINE_BLADES_WOOD));

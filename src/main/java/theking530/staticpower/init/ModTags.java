@@ -25,6 +25,8 @@ public class ModTags {
 	public static final TagKey<Item> RESEARCH = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "research"));
 	public static final TagKey<Item> FARMING_SEEDS = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "farming_seeds"));
 
+	public static final TagKey<Item> LIGHTBULB = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "lightbulbs"));
+
 	public static final TagKey<Item> DIGGER_BACKPACK = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "backpacks/digger"));
 	public static final TagKey<Item> LUMBERJACK_BACKPACK = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "backpacks/lumberjack"));
 	public static final TagKey<Item> HUNTER_BACKPACK = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "backpacks/hunter"));
