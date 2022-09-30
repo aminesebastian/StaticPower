@@ -6,6 +6,7 @@ import java.util.Collections;
 import org.apache.commons.lang3.tuple.Pair;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -68,7 +69,7 @@ public class RaytracingUtilities {
 
 	public static AdvancedRayTraceResult<BlockHitResult> collisionRayTrace(BlockPos pos, Vec3 start, Vec3 end, Collection<AABB> boxes) {
 		double minDistance = Double.POSITIVE_INFINITY;
-		AdvancedRayTraceResult<BlockHitResult> hit = null;
+		AdvancedRayTraceResult<BlockHitResult> hit = AdvancedRayTraceResult.MISS;
 		int i = -1;
 
 		for (AABB aabb : boxes) {
@@ -95,9 +96,10 @@ public class RaytracingUtilities {
 		return new AdvancedRayTraceResult<>(result, bounds);
 	}
 
-	public static class AdvancedRayTraceResult<T extends HitResult> {
+	public static class AdvancedRayTraceResult<T extends BlockHitResult> {
+		public static final AdvancedRayTraceResult<BlockHitResult> MISS = new AdvancedRayTraceResult<BlockHitResult>(null, null);
 		public final AABB bounds;
-		public final T hit;
+		private final T hit;
 
 		public AdvancedRayTraceResult(T mop, AABB aabb) {
 			hit = mop;
@@ -106,6 +108,20 @@ public class RaytracingUtilities {
 
 		public boolean valid() {
 			return hit != null && bounds != null;
+		}
+
+		public Direction getDirection() {
+			if (hit != null) {
+				return hit.getDirection();
+			}
+			return null;
+		}
+
+		public HitResult.Type getType() {
+			if (hit != null) {
+				return hit.getType();
+			}
+			return HitResult.Type.MISS;
 		}
 
 		public double squareDistanceTo(Vec3 vec) {

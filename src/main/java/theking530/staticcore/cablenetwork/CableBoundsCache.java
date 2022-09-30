@@ -198,8 +198,8 @@ public class CableBoundsCache {
 		AdvancedRayTraceResult<BlockHitResult> result = RaytracingUtilities.collisionRayTrace(pos, vec.getLeft(), vec.getRight(), rawBounds);
 
 		// Check to see which direction's bounds we hit and return it.
-		if (result != null) {
-			if (result.hit.getDirection().getAxis() == Axis.Z) {
+		if (result != null && result.valid()) {
+			if (result.getDirection().getAxis() == Axis.Z) {
 				bounds.sort(new Comparator<CableHoverCheckRequest>() {
 					@Override
 					public int compare(CableHoverCheckRequest o1, CableHoverCheckRequest o2) {
@@ -209,7 +209,7 @@ public class CableBoundsCache {
 			}
 			for (CableHoverCheckRequest requests : bounds) {
 				if (requests.bounds.bounds().equals(result.bounds)) {
-					return new CableBoundsHoverResult(requests.type, result.hit.getDirection(), requests.direction);
+					return new CableBoundsHoverResult(requests.type, result.getDirection(), requests.direction);
 				}
 			}
 		}
@@ -287,7 +287,7 @@ public class CableBoundsCache {
 	protected VoxelShape addAttachmentOutline(BlockPos pos, Player entity, CollisionContext context, VoxelShape shape, boolean forCollision) {
 		// Gets the hovered result.
 		CableBoundsHoverResult hoverResult = getHoveredAttachmentOrCover(pos, entity);
-		
+
 		// Get some attributes to use in the check.
 		AbstractCableProviderComponent cable = CableUtilities.getCableWrapperComponent(entity.getCommandSenderWorld(), pos);
 

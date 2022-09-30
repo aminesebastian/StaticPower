@@ -6,8 +6,8 @@
 		"rdb"
 	],
 	"key": {
-		"i": {
-			"tag": "forge:ingots/iron"
+		"t": {
+			"tag": "forge:ingots/tin"
 		},
 		"d": {
 			"tag": "forge:dusts/redstone"

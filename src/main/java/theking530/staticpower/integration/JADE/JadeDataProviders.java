@@ -16,7 +16,6 @@ import theking530.staticpower.blockentities.components.ComponentUtilities;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.fluid.BlockEntityFluidCable;
-import theking530.staticpower.cables.fluid.FluidCableProxy;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 
 public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
@@ -53,7 +52,7 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 
 		if (te instanceof BlockEntityFluidCable) {
 			BlockEntityFluidCable fluidCable = (BlockEntityFluidCable) te;
-			float pressure = fluidCable.fluidCableComponent.getCable().get().getDataTag().getFloat(FluidCableProxy.FLUID_PRESSURE_DATA_TAG_KEY);
+			float pressure = fluidCable.fluidCableComponent.getFluidModule().get().getFluidProxyAtLocation(te.getBlockPos()).getPressure();
 			data.putFloat("pressure", pressure);
 		}
 

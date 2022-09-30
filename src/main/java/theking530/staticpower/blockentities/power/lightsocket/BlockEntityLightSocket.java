@@ -129,5 +129,4 @@ public class BlockEntityLightSocket extends BlockEntityMachine {
 		ModelDataMap.Builder builder = new ModelDataMap.Builder();
 		return builder.withInitial(LIGHT_SOCKET_RENDERING_STATE, new LightSocketRenderingState(lightbulb)).build();
 	}
-
 }

@@ -6,6 +6,8 @@ import java.util.Map;
 
 import javax.annotation.Nullable;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
@@ -28,7 +30,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.material.PushReaction;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -37,10 +42,13 @@ import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.client.rendering.blocks.LightSocketModel;
 import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModTags;
+import theking530.staticpower.utilities.RaytracingUtilities;
+import theking530.staticpower.utilities.RaytracingUtilities.AdvancedRayTraceResult;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class BlockLightSocket extends StaticPowerBlockEntityBlock implements ICustomModelSupplier {
@@ -86,7 +94,8 @@ public class BlockLightSocket extends StaticPowerBlockEntityBlock implements ICu
 	@Override
 	public InteractionResult onStaticPowerBlockActivated(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
 		BlockEntityLightSocket socket = (BlockEntityLightSocket) world.getBlockEntity(pos);
-
+		Direction facingDirection = state.getValue(FACING);
+		System.out.println(SideConfigurationUtilities.getBlockSide(hit.getDirection(), facingDirection));
 		if (socket.hasLightBulb()) {
 			ItemStack removed = socket.removeLightbulb();
 			if (!world.isClientSide() && !player.isCreative()) {
@@ -155,6 +164,22 @@ public class BlockLightSocket extends StaticPowerBlockEntityBlock implements ICu
 	@Override
 	public DirectionProperty getFacingType() {
 		return FACING;
+	}
+
+	@Override
+	public ItemStack getCloneItemStack(BlockState state, HitResult target, BlockGetter world, BlockPos pos, Player player) {
+		BlockEntityLightSocket socketBe = (BlockEntityLightSocket) world.getBlockEntity(pos);
+		if (socketBe != null && socketBe.hasLightBulb()) {
+			Direction facingDirection = state.getValue(FACING);
+			AABB bulbShape = BULB_SHAPES.get(facingDirection).bounds();
+			AABB socketShape = SHAPES.get(facingDirection).bounds();
+			Pair<Vec3, Vec3> vec = RaytracingUtilities.getVectors(player);
+			AdvancedRayTraceResult<BlockHitResult> result = RaytracingUtilities.collisionRayTrace(pos, vec.getLeft(), vec.getRight(), List.of(bulbShape, socketShape));
+			if (result.getType() == HitResult.Type.BLOCK && result.bounds == bulbShape) {
+				return socketBe.getLightbulb().copy();
+			}
+		}
+		return super.getCloneItemStack(state, target, world, pos, player);
 	}
 
 	@Override

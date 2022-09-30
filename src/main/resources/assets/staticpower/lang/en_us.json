@@ -1101,6 +1101,8 @@
 	"gui.staticpower.voltage.short_name.extreme_voltage": "EV",
 	"gui.staticpower.voltage.short_name.bonkers_voltage": "BV",
 	
+	"gui.staticpower.pressure": "Pressure",
+	
 	"gui.staticpower.length": "Length",
 	"gui.staticpower.heat_transfer": "Heat Transfer",
 	"gui.staticpower.heat": "Heat",

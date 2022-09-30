@@ -33,8 +33,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
 	// This is intentionally high, we only want to force update if the difference is
 	// VAST, otherwise, let the MAX_TICKS driven update do the work.
-	public static final float FLUID_UPDATE_THRESHOLD = 500;
-	public static final float MAX_TICKS_BEFORE_UPDATE = 5;
+	public static final float FLUID_UPDATE_THRESHOLD = 100;
+	public static final float MAX_TICKS_BEFORE_UPDATE = 10;
 
 	private final int capacity;
 	private final int transferRate;
@@ -66,7 +66,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		super.preProcessUpdate();
 		if (!isClientSide()) {
 			this.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
-				boolean shouldUpdate = !network.getStoredFluid().isFluidEqual(lastUpdateFluidStack);
+				boolean shouldUpdate = !network.getStoredFluid(getPos()).isFluidEqual(lastUpdateFluidStack);
 				int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
 				if (delta > FLUID_UPDATE_THRESHOLD) {
 					shouldUpdate = true;
@@ -120,12 +120,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		} else {
 			FluidNetworkModule module = getFluidModule().orElse(null);
 			if (module != null) {
-				if (module.getStoredFluid().isEmpty()) {
-					return 0;
-				}
-
 				FluidCableProxy proxy = module.getFluidProxyAtLocation(getPos());
-				return (float) proxy.getStored() / proxy.getCapacity();
+				return (float) proxy.getStored().getAmount() / proxy.getCapacity();
 			}
 			return 0;
 		}
@@ -179,7 +175,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (!getTileEntity().getLevel().isClientSide) {
 			FluidNetworkModule module = getFluidModule().orElse(null);
 			if (module != null) {
-				return module.isFluidValid(stack);
+				return module.isFluidValid(stack, getPos());
 			}
 			return false;
 		} else {
@@ -241,9 +237,8 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
-		cable.getDataTag().putInt(FluidCableProxy.FLUID_CAPACITY_DATA_TAG_KEY, capacity);
+		cable.getDataTag().putInt(FluidCableProxy.FLUID_DEFAULT_CAPACITY_DATA_TAG_KEY, capacity);
 		cable.getDataTag().putInt(FluidCableProxy.FLUID_TRANSFER_RATE_DATA_TAG_KEY, transferRate);
-		cable.getDataTag().putInt(FluidCableProxy.FLUID_STORED_DATA_TAG_KEY, 0);
 		cable.getDataTag().putBoolean(FluidCableProxy.FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
 
 		List<Direction> sidesToDisable = new ArrayList<>();

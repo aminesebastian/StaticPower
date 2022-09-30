@@ -1,20 +1,20 @@
 package theking530.staticpower.cables.fluid;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.annotation.Nullable;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
@@ -25,132 +25,129 @@ import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticcore.cablenetwork.pathfinding.Path;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
+import theking530.staticpower.client.utilities.GuiTextUtilities;
 import theking530.staticpower.init.ModCableDestinations;
 import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.utilities.MetricConverter;
+import theking530.staticpower.utilities.NBTUtilities;
 
 public class FluidNetworkModule extends CableNetworkModule {
 	protected record CachedFluidDestination(IFluidHandler handler, ServerCable cable, BlockPos desintationPos) {
 	}
 
-	private FluidStack networkFluid;
 	private int totalCapacity;
 	private final Map<BlockPos, List<CachedFluidDestination>> destinations;
 	private final Map<BlockPos, FluidCableProxy> cableProxies;
 
 	public FluidNetworkModule() {
 		super(ModCableModules.Fluid.get());
-		networkFluid = FluidStack.EMPTY;
 		destinations = new HashMap<>();
 		cableProxies = new HashMap<>();
 	}
 
 	@Override
 	public void preWorldTick(Level world) {
-		supplyFluid();
-	}
-
-	@Override
-	public void tick(Level world) {
 		// Balance the fluid amounts in the cables.
 		for (FluidCableProxy firstProxy : cableProxies.values()) {
 			firstProxy.clearSuppliedFromDirections();
-			if (firstProxy.getStored() == 0) {
-				firstProxy.setPressure(0);
-			}
+			firstProxy.fluidStorage.captureFluidMetrics();
 		}
 		balanceCables();
 	}
 
+	@Override
+	public void tick(Level world) {
+
+	}
+
 	protected void balanceCables() {
 		// Sort so we flow from high to low pressure.
-		List<FluidCableProxy> storedCables = cableProxies.values().stream().sorted((first, second) -> first.getStored() - second.getStored()).toList();
+		List<FluidCableProxy> storedCables = cableProxies.values().stream().sorted((first, second) -> first.getStored().getAmount() - second.getStored().getAmount()).toList();
 		for (FluidCableProxy firstProxy : storedCables) {
-			if (networkFluid.isEmpty()) {
-				break;
-			}
-
 			// Skip empty cables.
-			if (firstProxy.getStored() <= 0 || firstProxy.getPressure() == 0) {
+			if (firstProxy.getStored().isEmpty() || firstProxy.getPressure() == 0) {
 				continue;
 			}
-
-			// Create an order of directions such that we first move towards cables that
-			// lead to a destination.
-			List<Direction> outputDirections = new ArrayList<Direction>();
-			Set<Direction> remainingDirections = new HashSet<Direction>();
-			remainingDirections.addAll(Arrays.asList(Direction.values()));
-			for (CachedFluidDestination dest : destinations.values().stream().flatMap(x -> x.stream()).toList()) {
-				List<Path> paths = Network.getPathCache().getPaths(firstProxy.getPos(), dest.desintationPos(), getType());
-				if (paths.isEmpty()) {
-					continue;
-				}
-
-				int fillTest = dest.handler().fill(networkFluid.copy(), FluidAction.SIMULATE);
-				if (fillTest <= 0) {
-					continue;
-				}
-
-				Path path = paths.get(0);
-				if (path.getEntries().length > 1) {
-					Direction nextDir = path.getEntries()[1].getDirectionOfEntry();
-					outputDirections.add(nextDir);
-					remainingDirections.remove(nextDir);
-				}
-			}
-			outputDirections.addAll(remainingDirections);
-
-			// Then iterate through the prioritized directions and supply fluid.
-			// If the direction leads to another pipe, balance the amount of fluids.
-			// If the direction leads to a destination, supply the fluid.
-			for (Direction dir : outputDirections) {
-				// Don't supply to a direction you just recieved fluid from.
-				if (firstProxy.wasSuppliedFromDirection(dir.getOpposite())) {
-					continue;
-				}
-
-				BlockPos toBalancePos = firstProxy.getPos().relative(dir);
-				FluidCableProxy secondProxy = cableProxies.get(toBalancePos);
-				if (secondProxy == null) {
-					continue;
-				}
-				if (secondProxy.getPressure() > firstProxy.getPressure()) {
-					continue;
-				}
-
-				int deltaFirstToSecond = firstProxy.getStored() - secondProxy.getStored();
-				int sign = (int) Math.signum(deltaFirstToSecond);
-				int absoluteDelta = Math.abs(deltaFirstToSecond);
-				int amountToBalance = Math.max(absoluteDelta - 1, 1);
-				amountToBalance *= sign;
-
-				if (amountToBalance > 0) {
-					int drained = firstProxy.drain(amountToBalance, FluidAction.EXECUTE);
-					secondProxy.fill(drained, secondProxy.getPressure(), FluidAction.EXECUTE);
-					secondProxy.addSuppliedFromDirection(dir);
-				}
-				secondProxy.setPressure(Math.max(0, firstProxy.getPressure() - 1f));
-
-				if (firstProxy.getStored() <= 0 || networkFluid.isEmpty()) {
-					break;
-				}
-			}
+			tickCable(firstProxy);
 		}
 	}
 
-	public void supplyFluid() {
-		for (CachedFluidDestination dest : destinations.values().stream().flatMap(x -> x.stream()).toList()) {
-			FluidCableProxy proxy = this.getFluidProxyAtLocation(dest.cable().getPos());
-			if (proxy == null) {
+	protected List<Tuple<Direction, Boolean>> getCableSidesToDistributeTo(FluidCableProxy cableProxy) {
+		List<Tuple<Direction, Boolean>> sidesToDistributeTo = new ArrayList<>();
+		for (Direction dir : Direction.values()) {
+			// Don't supply to a direction you just recieved fluid from.
+			if (cableProxy.wasSuppliedFromDirection(dir.getOpposite())) {
 				continue;
 			}
 
-			FluidStack simulatedDrained = supply(proxy.getPos(), proxy.getTransferRate(), FluidAction.SIMULATE);
-			if (simulatedDrained.getAmount() > 0) {
-				int drained = dest.handler().fill(simulatedDrained, FluidAction.EXECUTE);
-				supply(proxy.getPos(), drained, FluidAction.EXECUTE);
+			BlockPos testPos = cableProxy.getPos().relative(dir);
+			if (getFluidProxyAtLocation(testPos) != null) {
+				// Skip disabled sides.
+				if (Network.getGraph().getCables().get(testPos).isDisabledOnSide(dir)) {
+					continue;
+				}
+
+				FluidCableProxy adjacentCable = getFluidProxyAtLocation(testPos);
+				if (adjacentCable.getPressure() >= cableProxy.getPressure()) {
+					continue;
+				}
+
+				if (!adjacentCable.fluidStorage.isFluidValid(cableProxy.getStored())) {
+					continue;
+				}
+				sidesToDistributeTo.add(new Tuple<Direction, Boolean>(dir, false));
+			} else if (destinations.containsKey(testPos)) {
+				List<CachedFluidDestination> adjacentDestinations = destinations.get(testPos);
+				if (adjacentDestinations.size() > 0) {
+					sidesToDistributeTo.add(new Tuple<Direction, Boolean>(dir, true));
+				}
+			}
+		}
+		return sidesToDistributeTo;
+	}
+
+	protected void tickCable(FluidCableProxy cableProxy) {
+		List<Tuple<Direction, Boolean>> sidesToDistributeTo = getCableSidesToDistributeTo(cableProxy);
+		int sumOfCables = (int) sidesToDistributeTo.stream().filter(x -> !x.getB()).count();
+		for (Tuple<Direction, Boolean> dir : sidesToDistributeTo) {
+			BlockPos testPos = cableProxy.getPos().relative(dir.getA());
+
+			// If the side contains a cable, balance to it.
+			// If the side is a destination, supply to it.
+			if (getFluidProxyAtLocation(testPos) != null) {
+				FluidCableProxy adjacentCable = getFluidProxyAtLocation(testPos);
+				int deltaFirstToSecond = cableProxy.getStored().getAmount() - adjacentCable.getStored().getAmount();
+				int sign = (int) Math.signum(deltaFirstToSecond);
+				int absoluteDelta = Math.abs(deltaFirstToSecond);
+				int amountToBalance = (absoluteDelta / sumOfCables);
+				amountToBalance = Math.min(absoluteDelta, amountToBalance);
+				amountToBalance *= sign;
+
+				if (amountToBalance > 0) {
+					FluidStack drained = cableProxy.drain(amountToBalance, FluidAction.EXECUTE);
+					adjacentCable.fill(drained, adjacentCable.getPressure(), FluidAction.EXECUTE);
+				}
+				adjacentCable.setPressure(cableProxy.getPressure() - 1);
+
+				// Leave early if we run out.
+				if (cableProxy.getStored().isEmpty()) {
+					break;
+				}
+			} else if (destinations.containsKey(testPos)) {
+				List<CachedFluidDestination> adjacentDestinations = destinations.get(testPos);
+				for (CachedFluidDestination dest : adjacentDestinations) {
+					FluidCableProxy proxy = this.getFluidProxyAtLocation(dest.cable().getPos());
+					if (proxy == null || proxy.getStored().isEmpty()) {
+						continue;
+					}
+
+					FluidStack simulatedSupplied = supply(proxy.getPos(), proxy.getTransferRate(), FluidAction.SIMULATE);
+					if (!simulatedSupplied.isEmpty()) {
+						int supplied = dest.handler().fill(simulatedSupplied, FluidAction.EXECUTE);
+						supply(proxy.getPos(), supplied, FluidAction.EXECUTE);
+					}
+				}
 			}
 		}
 	}
@@ -166,23 +163,27 @@ public class FluidNetworkModule extends CableNetworkModule {
 	public void onAddedToNetwork(CableNetwork other) {
 		super.onAddedToNetwork(other);
 		FluidNetworkModule otherModule = other.getModule(ModCableModules.Fluid.get());
-		networkFluid = otherModule.networkFluid;
+		for (FluidCableProxy otherProxy : otherModule.cableProxies.values()) {
+			cableProxies.put(otherProxy.getPos(), otherProxy);
+		}
 	}
 
 	@Override
 	public void onNetworksSplitOff(List<CableNetwork> newNetworks) {
-		for (CableNetwork otherNetwork : newNetworks) {
-			FluidNetworkModule otherModule = otherNetwork.getModule(ModCableModules.Fluid.get());
-			otherModule.networkFluid = networkFluid;
-		}
+
 	}
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
 		totalCapacity = 0;
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
-			cableProxies.put(cable.getPos(), new FluidCableProxy(cable));
-			totalCapacity += cableProxies.get(cable.getPos()).getCapacity();
+			if (!cableProxies.containsKey(cable.getPos())) {
+				cableProxies.put(cable.getPos(),
+						new FluidCableProxy(cable.getPos(), cable.getDataTag().getInt(FluidCableProxy.FLUID_DEFAULT_CAPACITY_DATA_TAG_KEY),
+								cable.getDataTag().getInt(FluidCableProxy.FLUID_TRANSFER_RATE_DATA_TAG_KEY),
+								cable.getDataTag().getBoolean(FluidCableProxy.FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY)));
+				totalCapacity += cableProxies.get(cable.getPos()).getCapacity();
+			}
 		}
 
 		for (ServerCable removed : mapper.getRemovedCables()) {
@@ -208,59 +209,53 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void getReaderOutput(List<Component> output, BlockPos pos) {
-		String storedFluid = new MetricConverter(getStoredFluid().getAmount()).getValueAsString(true);
-		String maximumFluid = new MetricConverter(totalCapacity).getValueAsString(true);
-
-		String storedFluidAtPos = new MetricConverter(cableProxies.get(pos).getStored()).getValueAsString(true);
+		String storedFluidAtPos = new MetricConverter(cableProxies.get(pos).getStored().getAmount()).getValueAsString(true);
 		String capacityAtPos = new MetricConverter(cableProxies.get(pos).getCapacity()).getValueAsString(true);
+		String gainedPerTick = GuiTextUtilities.formatFluidRateToString(cableProxies.get(pos).fluidStorage.getFilledPerTick()).getString();
+		String drainedPerTick = GuiTextUtilities.formatFluidRateToString(cableProxies.get(pos).fluidStorage.getDrainedPerTick()).getString();
 
-		output.add(new TextComponent(
-				String.format("Network Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluid, networkFluid.getDisplayName().getString(), maximumFluid)));
-		output.add(new TextComponent(
-				String.format("Pipe Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluidAtPos, networkFluid.getDisplayName().getString(), capacityAtPos)));
+		output.add(new TextComponent(String.format("Pipe Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluidAtPos,
+				cableProxies.get(pos).getStored().getDisplayName().getString(), capacityAtPos)));
+		output.add(new TextComponent(String.format("Gained: %1$smB Drained: %2$s", drainedPerTick, gainedPerTick)));
+
 	}
 
 	@Override
 	public void readFromNbt(CompoundTag tag) {
-		networkFluid = FluidStack.loadFluidStackFromNBT(tag.getCompound("fluid"));
+		List<FluidCableProxy> newProxies = NBTUtilities.deserialize(tag.getList("proxies", Tag.TAG_COMPOUND), (proxyTag) -> {
+			return FluidCableProxy.deserialize((CompoundTag) proxyTag);
+		});
+
+		cableProxies.clear();
+		for (FluidCableProxy proxy : newProxies) {
+			cableProxies.put(proxy.getPos(), proxy);
+		}
 	}
 
 	@Override
 	public CompoundTag writeToNbt(CompoundTag tag) {
-		CompoundTag fluidTag = new CompoundTag();
-		networkFluid.writeToNBT(fluidTag);
-		tag.put("fluid", fluidTag);
+		ListTag serializedProxies = NBTUtilities.serialize(cableProxies.values(), (proxy) -> {
+			return proxy.serialize();
+		});
+		tag.put("proxies", serializedProxies);
 		return tag;
 	}
 
-	public FluidStack getStoredFluid() {
-		if (networkFluid.isEmpty()) {
-			return FluidStack.EMPTY;
-		}
-
+	public int getStoredFluid() {
 		int stored = 0;
 		for (FluidCableProxy proxy : this.cableProxies.values()) {
-			stored += proxy.getStored();
+			stored += proxy.getStored().getAmount();
 		}
-
-		FluidStack output = networkFluid.copy();
-		output.setAmount(stored);
-		return output;
+		return stored;
 	}
 
 	public FluidStack getStoredFluid(BlockPos pos) {
-		if (networkFluid.isEmpty()) {
-			return FluidStack.EMPTY;
-		}
-
 		FluidCableProxy proxy = getFluidProxyAtLocation(pos);
 		if (proxy == null) {
 			return FluidStack.EMPTY;
 		}
 
-		FluidStack fluid = networkFluid.copy();
-		fluid.setAmount(proxy.getStored());
-		return fluid;
+		return proxy.getStored();
 	}
 
 	public int getCapacity(BlockPos pos) {
@@ -298,8 +293,12 @@ public class FluidNetworkModule extends CableNetworkModule {
 		return output;
 	}
 
-	public boolean isFluidValid(FluidStack stack) {
-		return networkFluid.isEmpty() || networkFluid.getAmount() == 0 || networkFluid.isFluidEqual(stack);
+	public boolean isFluidValid(FluidStack stack, BlockPos pos) {
+		FluidCableProxy proxyAtPos = this.getFluidProxyAtLocation(pos);
+		if (proxyAtPos == null) {
+			return false;
+		}
+		return proxyAtPos.fluidStorage.isFluidValid(stack);
 	}
 
 	public int fill(BlockPos fromPos, FluidStack resource, FluidAction action) {
@@ -308,13 +307,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return 0;
 		}
 
-		if (isFluidValid(resource)) {
-			int filled = proxyAtPos.fill(resource.getAmount(), 32.0f, action);
-			if (filled > 0 && action == FluidAction.EXECUTE) {
-				if (networkFluid.isEmpty()) {
-					networkFluid = resource.copy();
-				}
-			}
+		if (isFluidValid(resource, fromPos)) {
+			int filled = proxyAtPos.fill(resource, 32.0f, action);
 			return filled;
 		}
 
@@ -322,7 +316,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	public FluidStack supply(BlockPos fromPos, int amount, FluidAction action) {
-		if (networkFluid.isEmpty()) {
+		if (amount == 0) {
 			return FluidStack.EMPTY;
 		}
 
@@ -331,23 +325,18 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return FluidStack.EMPTY;
 		}
 
-		int drained = proxyAtPos.drain(amount, action);
-		FluidStack output = networkFluid.copy();
-		output.setAmount(drained);
+		FluidStack drained = proxyAtPos.drain(amount, action);
+		FluidStack output = drained.copy();
 
 		if (action == FluidAction.EXECUTE) {
 			// Drop the pressure by the percent of fluid provided.
 			// If the cable goes empty, pressure goes to 0.
-			if (proxyAtPos.getStored() <= 0) {
+			if (proxyAtPos.getStored().getAmount() <= 0) {
 				proxyAtPos.setPressure(0);
 			} else {
-				float providedPercentage = (float) drained / amount;
+				float providedPercentage = (float) drained.getAmount() / proxyAtPos.getCapacity();
 				float pressure = (1 - providedPercentage) * proxyAtPos.getPressure();
 				proxyAtPos.setPressure(pressure);
-			}
-
-			if (getStoredFluid().getAmount() < 0) {
-				networkFluid.setAmount(0);
 			}
 		}
 
