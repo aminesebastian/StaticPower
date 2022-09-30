@@ -1,6 +1,7 @@
 package theking530.staticpower.cables.fluid;
 
 import java.util.HashSet;
+import java.util.Queue;
 import java.util.Set;
 
 import net.minecraft.core.BlockPos;
@@ -23,6 +24,8 @@ public class FluidCableProxy {
 	protected int transferRate;
 	protected boolean isIndustrial;
 
+	protected Queue<FluidStack> queuedTransfers;
+	
 	public FluidCableProxy(BlockPos pos, int capacity, int transferRate, boolean isIndustrial) {
 		this.pos = pos;
 		this.transferRate = transferRate;
@@ -32,6 +35,10 @@ public class FluidCableProxy {
 		adjacentDestinationCount = 0;
 		pressure = 0;
 		fluidStorage = new StaticPowerFluidTank(capacity);
+	}
+
+	public void tick() {
+
 	}
 
 	public int getAdjacentDestinationCount() {

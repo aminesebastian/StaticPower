@@ -2,8 +2,11 @@ package theking530.staticpower.cables.fluid;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Nullable;
 
@@ -14,8 +17,8 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.util.Tuple;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
@@ -33,10 +36,11 @@ import theking530.staticpower.utilities.MetricConverter;
 import theking530.staticpower.utilities.NBTUtilities;
 
 public class FluidNetworkModule extends CableNetworkModule {
-	protected record CachedFluidDestination(IFluidHandler handler, ServerCable cable, BlockPos desintationPos) {
+	protected record CachedFluidDestination(Direction connectedSide, ServerCable cable, BlockPos desintationPos) {
 	}
 
-	private int totalCapacity;
+	private static float PRESSURE_BALANCING_RATE = 1f;
+
 	private final Map<BlockPos, List<CachedFluidDestination>> destinations;
 	private final Map<BlockPos, FluidCableProxy> cableProxies;
 
@@ -48,108 +52,173 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void preWorldTick(Level world) {
-		// Balance the fluid amounts in the cables.
-		for (FluidCableProxy firstProxy : cableProxies.values()) {
-			firstProxy.clearSuppliedFromDirections();
-			firstProxy.fluidStorage.captureFluidMetrics();
-		}
+		balancePressures();
 		balanceCables();
 	}
 
 	@Override
 	public void tick(Level world) {
+		supplyFluid();
+		for (FluidCableProxy cableProxy : cableProxies.values()) {
+			cableProxy.fluidStorage.captureFluidMetrics();
+		}
+	}
 
+	protected void balancePressures() {
+		// First, establish the low pressure cables.
+		for (CachedFluidDestination cableDestination : destinations.values().stream().flatMap(x -> x.stream()).toList()) {
+			FluidCableProxy proxy = this.getFluidProxyAtLocation(cableDestination.cable().getPos());
+			if (proxy == null) {
+				continue;
+			}
+
+			IFluidHandler handler = Network.getWorld().getBlockEntity(cableDestination.desintationPos())
+					.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, cableDestination.connectedSide()).orElse(null);
+			if (handler == null) {
+				continue;
+			}
+
+			if (handler.fill(new FluidStack(Fluids.WATER, 100), FluidAction.SIMULATE) > 0) {
+				proxy.setPressure(proxy.getPressure() + calculateDeltaPressure(proxy.getPressure(), 0));
+			}
+		}
+
+		// Then average out the rest.
+		for (FluidCableProxy cableProxy : cableProxies.values()) {
+			float totalPressure = cableProxy.getPressure();
+			int count = 1;
+			for (FluidCableProxy adjacent : this.getAdjacentCableProxies(cableProxy.getPos())) {
+				totalPressure += adjacent.getPressure();
+				count++;
+			}
+			cableProxy.setPressure(cableProxy.getPressure() + calculateDeltaPressure(cableProxy.getPressure(), totalPressure / count));
+
+		}
+	}
+
+	protected List<FluidCableProxy> getAdjacentCableProxies(BlockPos pos) {
+		List<FluidCableProxy> output = new LinkedList<FluidCableProxy>();
+		for (Direction dir : Direction.values()) {
+			BlockPos testPos = pos.relative(dir);
+			FluidCableProxy adjacentCable = getFluidProxyAtLocation(testPos);
+			if (adjacentCable == null) {
+				continue;
+			}
+
+			if (Network.getGraph().getCables().get(testPos).isDisabledOnSide(dir.getOpposite())) {
+				continue;
+			}
+
+			output.add(adjacentCable);
+		}
+		return output;
 	}
 
 	protected void balanceCables() {
 		// Sort so we flow from high to low pressure.
-		List<FluidCableProxy> storedCables = cableProxies.values().stream().sorted((first, second) -> first.getStored().getAmount() - second.getStored().getAmount()).toList();
-		for (FluidCableProxy firstProxy : storedCables) {
-			// Skip empty cables.
-			if (firstProxy.getStored().isEmpty() || firstProxy.getPressure() == 0) {
-				continue;
-			}
-			tickCable(firstProxy);
-		}
-	}
+		List<FluidCableProxy> storedCables = cableProxies.values().stream().sorted((first, second) -> (int) (second.getPressure() - first.getPressure())).toList();
 
-	protected List<Tuple<Direction, Boolean>> getCableSidesToDistributeTo(FluidCableProxy cableProxy) {
-		List<Tuple<Direction, Boolean>> sidesToDistributeTo = new ArrayList<>();
-		for (Direction dir : Direction.values()) {
-			// Don't supply to a direction you just recieved fluid from.
-			if (cableProxy.wasSuppliedFromDirection(dir.getOpposite())) {
+		for (FluidCableProxy cableProxy : storedCables) {
+			if (cableProxy.getStored().isEmpty()) {
 				continue;
 			}
 
-			BlockPos testPos = cableProxy.getPos().relative(dir);
-			if (getFluidProxyAtLocation(testPos) != null) {
-				// Skip disabled sides.
-				if (Network.getGraph().getCables().get(testPos).isDisabledOnSide(dir)) {
+			// Capture the sides with cables.
+			List<FluidCableProxy> adjacentCables = getAdjacentCableProxies(cableProxy.getPos());
+
+			for (int i = 0; i < adjacentCables.size(); i++) {
+				FluidCableProxy adjacentCable = adjacentCables.get(i);
+
+				// Leave early if we've run out of fluid.
+				if (cableProxy.getStored().isEmpty()) {
+					break;
+				}
+
+				if (adjacentCable.getPressure() > cableProxy.getPressure()) {
 					continue;
 				}
 
-				FluidCableProxy adjacentCable = getFluidProxyAtLocation(testPos);
-				if (adjacentCable.getPressure() >= cableProxy.getPressure()) {
-					continue;
-				}
-
-				if (!adjacentCable.fluidStorage.isFluidValid(cableProxy.getStored())) {
-					continue;
-				}
-				sidesToDistributeTo.add(new Tuple<Direction, Boolean>(dir, false));
-			} else if (destinations.containsKey(testPos)) {
-				List<CachedFluidDestination> adjacentDestinations = destinations.get(testPos);
-				if (adjacentDestinations.size() > 0) {
-					sidesToDistributeTo.add(new Tuple<Direction, Boolean>(dir, true));
-				}
-			}
-		}
-		return sidesToDistributeTo;
-	}
-
-	protected void tickCable(FluidCableProxy cableProxy) {
-		List<Tuple<Direction, Boolean>> sidesToDistributeTo = getCableSidesToDistributeTo(cableProxy);
-		int sumOfCables = (int) sidesToDistributeTo.stream().filter(x -> !x.getB()).count();
-		for (Tuple<Direction, Boolean> dir : sidesToDistributeTo) {
-			BlockPos testPos = cableProxy.getPos().relative(dir.getA());
-
-			// If the side contains a cable, balance to it.
-			// If the side is a destination, supply to it.
-			if (getFluidProxyAtLocation(testPos) != null) {
-				FluidCableProxy adjacentCable = getFluidProxyAtLocation(testPos);
 				int deltaFirstToSecond = cableProxy.getStored().getAmount() - adjacentCable.getStored().getAmount();
+				if (deltaFirstToSecond <= 0) {
+					continue;
+				}
+
 				int sign = (int) Math.signum(deltaFirstToSecond);
 				int absoluteDelta = Math.abs(deltaFirstToSecond);
-				int amountToBalance = (absoluteDelta / sumOfCables);
-				amountToBalance = Math.min(absoluteDelta, amountToBalance);
+				int amountToBalance = i == adjacentCables.size() - 1 ? absoluteDelta : absoluteDelta / adjacentCables.size(); // TODO: Fix the balancing around multiple branches so
+																																// as to not waste any
+				// thoroughput.
 				amountToBalance *= sign;
 
 				if (amountToBalance > 0) {
 					FluidStack drained = cableProxy.drain(amountToBalance, FluidAction.EXECUTE);
 					adjacentCable.fill(drained, adjacentCable.getPressure(), FluidAction.EXECUTE);
 				}
-				adjacentCable.setPressure(cableProxy.getPressure() - 1);
-
-				// Leave early if we run out.
-				if (cableProxy.getStored().isEmpty()) {
-					break;
-				}
-			} else if (destinations.containsKey(testPos)) {
-				List<CachedFluidDestination> adjacentDestinations = destinations.get(testPos);
-				for (CachedFluidDestination dest : adjacentDestinations) {
-					FluidCableProxy proxy = this.getFluidProxyAtLocation(dest.cable().getPos());
-					if (proxy == null || proxy.getStored().isEmpty()) {
-						continue;
-					}
-
-					FluidStack simulatedSupplied = supply(proxy.getPos(), proxy.getTransferRate(), FluidAction.SIMULATE);
-					if (!simulatedSupplied.isEmpty()) {
-						int supplied = dest.handler().fill(simulatedSupplied, FluidAction.EXECUTE);
-						supply(proxy.getPos(), supplied, FluidAction.EXECUTE);
-					}
-				}
 			}
 		}
+	}
+
+	protected void supplyFluid() {
+		for (FluidCableProxy cableProxy : cableProxies.values()) {
+			if (cableProxy.getStored().isEmpty()) {
+				continue;
+			}
+
+			// Capture all the sides on this cable that have a destination.
+			List<Direction> sidesWithDest = new LinkedList<>();
+			for (Direction dir : Direction.values()) {
+				BlockPos destPos = cableProxy.getPos().relative(dir);
+				if (Network.getWorld().getBlockEntity(destPos) == null) {
+					continue;
+				}
+				if (destinations.containsKey(destPos) && !Network.getGraph().getCables().get(cableProxy.getPos()).isDisabledOnSide(dir)) {
+					sidesWithDest.add(dir);
+				}
+			}
+
+			// Supply to the all the sides with a destination.
+			supplyFluidToSides(cableProxy, sidesWithDest);
+		}
+	}
+
+	protected void supplyFluidToSides(FluidCableProxy cableProxy, List<Direction> sidesWithDest) {
+		if (sidesWithDest.isEmpty() || cableProxy.getStored().isEmpty()) {
+			return;
+		}
+
+		// Determine the max amount of fluid we can supply.
+		// Allocate a tracker to see how much is left to supply to account for non
+		// integer division.
+		FluidStack maxSupply = cableProxy.drain(cableProxy.getTransferRate(), FluidAction.SIMULATE);
+		int maxPerDest = maxSupply.getAmount();
+		if (maxPerDest >= sidesWithDest.size()) {
+			// maxPerDest /= sidesWithDest.size();
+		}
+
+		// For each of those destinations, try to supply fluid.
+		for (Direction sideWithDest : sidesWithDest) {
+			if (cableProxy.getStored().isEmpty()) {
+				break;
+			}
+
+			BlockPos destPos = cableProxy.getPos().relative(sideWithDest);
+			List<CachedFluidDestination> blockDestinations = destinations.get(destPos);
+
+			for (CachedFluidDestination dest : blockDestinations) {
+				FluidStack toSupply = cableProxy.drain(maxPerDest, FluidAction.SIMULATE);
+				supplyFluidToDestination(cableProxy, dest, toSupply);
+			}
+		}
+	}
+
+	protected FluidStack supplyFluidToDestination(FluidCableProxy cableProxy, CachedFluidDestination destination, FluidStack toSupply) {
+		IFluidHandler handler = Network.getWorld().getBlockEntity(destination.desintationPos())
+				.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, destination.connectedSide()).orElse(null);
+		if (handler != null) {
+			int filled = handler.fill(toSupply, FluidAction.EXECUTE);
+			return cableProxy.drain(filled, FluidAction.EXECUTE);
+		}
+		return FluidStack.EMPTY;
 	}
 
 	public FluidCableProxy getFluidProxyAtLocation(BlockPos pos) {
@@ -175,14 +244,12 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	@Override
 	public void onNetworkGraphUpdated(NetworkMapper mapper, BlockPos startingPosition) {
-		totalCapacity = 0;
 		for (ServerCable cable : mapper.getDiscoveredCables()) {
 			if (!cableProxies.containsKey(cable.getPos())) {
 				cableProxies.put(cable.getPos(),
 						new FluidCableProxy(cable.getPos(), cable.getDataTag().getInt(FluidCableProxy.FLUID_DEFAULT_CAPACITY_DATA_TAG_KEY),
 								cable.getDataTag().getInt(FluidCableProxy.FLUID_TRANSFER_RATE_DATA_TAG_KEY),
 								cable.getDataTag().getBoolean(FluidCableProxy.FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY)));
-				totalCapacity += cableProxies.get(cable.getPos()).getCapacity();
 			}
 		}
 
@@ -198,7 +265,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 					return;
 				}
 
-				// Add all the power interfaces.
 				List<CachedFluidDestination> fluidDest = getInterfaceForDesination(wrapper);
 				if (fluidDest.size() > 0) {
 					destinations.put(pos, fluidDest);
@@ -285,7 +351,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 			if (wrapper.supportsType(ModCableDestinations.Fluid.get())) {
 				IFluidHandler handler = wrapper.getTileEntity().getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, connectedSide).orElse(null);
 				if (handler != null) {
-					output.add(new CachedFluidDestination(handler, Network.getGraph().getCables().get(cablePos), wrapper.getPos()));
+					output.add(new CachedFluidDestination(connectedSide, Network.getGraph().getCables().get(cablePos), wrapper.getPos()));
 				}
 			}
 		}
@@ -308,11 +374,38 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		if (isFluidValid(resource, fromPos)) {
-			int filled = proxyAtPos.fill(resource, 32.0f, action);
+			int filled = proxyAtPos.fill(resource, 0, action);
+			propagatePressure(fromPos, 32, new HashSet<BlockPos>());
 			return filled;
 		}
 
 		return 0;
+	}
+
+	protected void propagatePressure(BlockPos pos, float pressure, Set<BlockPos> visited) {
+		if (pressure <= 0 || visited.contains(pos)) {
+			return;
+		}
+
+		FluidCableProxy proxy = getFluidProxyAtLocation(pos);
+		proxy.setPressure(proxy.getPressure() + calculateDeltaPressure(proxy.getPressure(), pressure));
+		visited.add(pos);
+
+		for (FluidCableProxy adjacent : getAdjacentCableProxies(pos)) {
+			propagatePressure(adjacent.getPos(), pressure - 1, visited);
+		}
+	}
+
+	protected float calculateDeltaPressure(float currentPressure, float targetPressure) {
+		float deltaPressure = targetPressure - currentPressure;
+		if (deltaPressure == 0) {
+			return 0;
+		}
+
+		int sign = (int) Math.signum(deltaPressure);
+		float absoluteDeltaPressure = Math.abs(deltaPressure);
+		float deltaToApply = Math.min(absoluteDeltaPressure, 1f);
+		return deltaToApply * sign;
 	}
 
 	public FluidStack supply(BlockPos fromPos, int amount, FluidAction action) {
@@ -325,21 +418,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 			return FluidStack.EMPTY;
 		}
 
-		FluidStack drained = proxyAtPos.drain(amount, action);
-		FluidStack output = drained.copy();
-
-		if (action == FluidAction.EXECUTE) {
-			// Drop the pressure by the percent of fluid provided.
-			// If the cable goes empty, pressure goes to 0.
-			if (proxyAtPos.getStored().getAmount() <= 0) {
-				proxyAtPos.setPressure(0);
-			} else {
-				float providedPercentage = (float) drained.getAmount() / proxyAtPos.getCapacity();
-				float pressure = (1 - providedPercentage) * proxyAtPos.getPressure();
-				proxyAtPos.setPressure(pressure);
-			}
-		}
-
-		return output;
+		return proxyAtPos.drain(amount, action);
 	}
 }

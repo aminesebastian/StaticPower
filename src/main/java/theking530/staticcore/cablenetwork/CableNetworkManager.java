@@ -64,8 +64,6 @@ public class CableNetworkManager extends SavedData {
 		for (CableNetwork network : Networks.values()) {
 			network.preWorldTick();
 		}
-//		WorldCables.clear();
-//		Networks.clear();
 	}
 
 	public void tick() {
@@ -324,7 +322,7 @@ public class CableNetworkManager extends SavedData {
 			network.setWorld(world);
 			output.Networks.put(network.getId(), network);
 		}
-		
+
 		ListTag cables = tag.getList("cables", Tag.TAG_COMPOUND);
 		for (Tag cableTag : cables) {
 			CompoundTag cableTagCompound = (CompoundTag) cableTag;
