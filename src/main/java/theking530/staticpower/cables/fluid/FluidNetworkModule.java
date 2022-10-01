@@ -11,7 +11,6 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -38,7 +37,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 	protected record CachedFluidDestination(Direction connectedSide, ServerCable cable, BlockPos desintationPos) {
 	}
 
-	private static float PRESSURE_BALANCING_RATE = 1f;
+	// 0.1 seems to be a good number. That's a maximum of 2 pressure a second.
+	private static float PRESSURE_BALANCING_RATE = 0.1f;
 
 	private final Map<BlockPos, List<CachedFluidDestination>> destinations;
 	private final List<FluidCableCapability> fluidCapabilities;
@@ -99,18 +99,19 @@ public class FluidNetworkModule extends CableNetworkModule {
 		for (FluidCableCapability capability : fluidCapabilities) {
 			float totalPressure = capability.getPressure();
 			int count = 1;
-			for (FluidCableCapability adjacent : this.getAdjacentCableProxies(capability.getPos())) {
+			for (FluidCableCapability adjacent : getAdjacentCableProxies(capability.getPos())) {
 				totalPressure += adjacent.getPressure();
 				count++;
 			}
-			capability.setPressure(capability.getPressure() + calculateDeltaPressure(capability.getPressure(), totalPressure / count));
+			float targetPressure = Math.max(totalPressure / count, 0);
+			capability.setPressure(capability.getPressure() + calculateDeltaPressure(capability.getPressure(), targetPressure));
 
 		}
 	}
 
 	protected void balanceCables() {
 		// Sort so we flow from high to low pressure.
-		List<FluidCableCapability> storedCables = fluidCapabilities.stream().sorted((first, second) -> (int) (second.getPressure() - first.getPressure())).toList();
+		List<FluidCableCapability> storedCables = fluidCapabilities.stream().sorted((first, second) -> (int) Math.signum(second.getPressure() - first.getPressure())).toList();
 
 		for (FluidCableCapability capability : storedCables) {
 			if (capability.getFluidStorage().isEmpty()) {
@@ -157,10 +158,6 @@ public class FluidNetworkModule extends CableNetworkModule {
 
 	protected void supplyFluid() {
 		for (FluidCableCapability capability : fluidCapabilities) {
-			if (capability.getFluidStorage().isEmpty()) {
-				continue;
-			}
-
 			// Capture all the sides on this cable that have a destination.
 			List<Direction> sidesWithDest = new LinkedList<>();
 			for (Direction dir : Direction.values()) {
@@ -168,13 +165,16 @@ public class FluidNetworkModule extends CableNetworkModule {
 				if (Network.getWorld().getBlockEntity(destPos) == null) {
 					continue;
 				}
-				if (destinations.containsKey(destPos) && !Network.getGraph().getCables().get(capability.getPos()).isDisabledOnSide(dir)) {
+
+				if (destinations.containsKey(destPos) && !capability.getOwningCable().isDisabledOnSide(dir)) {
 					sidesWithDest.add(dir);
 				}
 			}
 
 			// Supply to the all the sides with a destination.
-			supplyFluidToSides(capability, sidesWithDest);
+			if (!sidesWithDest.isEmpty()) {
+				supplyFluidToSides(capability, sidesWithDest);
+			}
 		}
 	}
 
@@ -184,6 +184,8 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		// Determine how much fluid we could AT MAXIMUM supply.
+		// Ignore how much fluid we actually have so we can get a list of *potential*
+		// outputs.
 		FluidStack maxSupply = capability.drain(capability.getTransferRate(), FluidAction.SIMULATE);
 
 		// For each of those destinations, see how much fluid they actually need (if
@@ -311,10 +313,12 @@ public class FluidNetworkModule extends CableNetworkModule {
 		String capacityAtPos = new MetricConverter(capability.get().getFluidStorage().getCapacity()).getValueAsString(true);
 		String gainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getFilledPerTick()).getString();
 		String drainedPerTick = GuiTextUtilities.formatFluidRateToString(capability.get().getFluidStorage().getDrainedPerTick()).getString();
+		String pressure = GuiTextUtilities.formatNumberAsStringOneDecimal(capability.get().getPressure()).getString();
 
 		output.add(new TextComponent(String.format("Pipe Contains: %1$smB of %2$s out of a maximum of %3$smB.", storedFluidAtPos,
 				capability.get().getFluidStorage().getFluid().getDisplayName().getString(), capacityAtPos)));
 		output.add(new TextComponent(String.format("Gained: %1$smB Drained: %2$s", drainedPerTick, gainedPerTick)));
+		output.add(new TextComponent(String.format("Pressure: %1$s", pressure)));
 	}
 
 	@Nullable
@@ -344,7 +348,7 @@ public class FluidNetworkModule extends CableNetworkModule {
 	}
 
 	protected void propagatePressure(BlockPos pos, float pressure, Set<BlockPos> visited) {
-		if (pressure <= 0 || visited.contains(pos)) {
+		if (visited.contains(pos)) {
 			return;
 		}
 
@@ -356,8 +360,10 @@ public class FluidNetworkModule extends CableNetworkModule {
 		capability.get().setPressure(capability.get().getPressure() + calculateDeltaPressure(capability.get().getPressure(), pressure));
 		visited.add(pos);
 
-		for (FluidCableCapability adjacent : getAdjacentCableProxies(pos)) {
-			propagatePressure(adjacent.getPos(), pressure - 1, visited);
+		if (pressure >= 1) {
+			for (FluidCableCapability adjacent : getAdjacentCableProxies(pos)) {
+				propagatePressure(adjacent.getPos(), pressure - 1, visited);
+			}
 		}
 	}
 
@@ -380,7 +386,11 @@ public class FluidNetworkModule extends CableNetworkModule {
 		}
 
 		int filled = capability.get().fill(resource, 0, action);
-		propagatePressure(fromPos, 32, new HashSet<BlockPos>());
+		// We have to actively propagate the pressure out to ensure this takes
+		// precedence over passive pressure equalization. However, IMMEDIETLY set the
+		// initial pressure to the maximum.
+		capability.get().setPressure(32);
+		propagatePressure(fromPos, capability.get().getPressure(), new HashSet<BlockPos>());
 		return filled;
 	}
 

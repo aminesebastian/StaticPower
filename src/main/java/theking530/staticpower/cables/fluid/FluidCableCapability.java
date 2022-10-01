@@ -50,9 +50,7 @@ public class FluidCableCapability extends ServerCableCapability {
 			return 0;
 		}
 
-		FluidStack limitedStack = fluid.copy();
-		limitedStack.setAmount(Math.min(getTransferRate(), fluid.getAmount()));
-		int filled = fluidStorage.fill(limitedStack, action);
+		int filled = fluidStorage.fill(fluid, action);
 		if (action == FluidAction.EXECUTE) {
 			setPressure(Math.max(getPressure(), pressure));
 		}
