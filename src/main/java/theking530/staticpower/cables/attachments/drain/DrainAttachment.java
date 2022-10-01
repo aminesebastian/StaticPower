@@ -25,7 +25,7 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public class DrainAttachment extends AbstractCableAttachment {

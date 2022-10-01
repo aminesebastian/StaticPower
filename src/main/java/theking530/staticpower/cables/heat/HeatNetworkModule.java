@@ -21,8 +21,8 @@ import theking530.staticcore.cablenetwork.data.DestinationWrapper;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class HeatNetworkModule extends CableNetworkModule {
 	private HeatStorage heatStorage;

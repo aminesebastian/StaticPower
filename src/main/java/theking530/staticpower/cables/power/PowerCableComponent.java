@@ -22,8 +22,8 @@ import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class PowerCableComponent extends AbstractCableProviderComponent implements ISidedStaticPowerStorage {
 	public static final String VOLTAGE_ORDINAL = "power_voltage_ordinal";

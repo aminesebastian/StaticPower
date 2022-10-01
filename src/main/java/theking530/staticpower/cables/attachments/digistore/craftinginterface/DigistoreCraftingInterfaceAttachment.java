@@ -31,7 +31,7 @@ import theking530.staticpower.cables.attachments.digistore.AbstractDigistoreCabl
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
 import theking530.staticpower.cables.digistore.crafting.EncodedDigistorePattern;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 

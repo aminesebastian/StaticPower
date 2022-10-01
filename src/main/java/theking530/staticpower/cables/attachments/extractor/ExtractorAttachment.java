@@ -42,7 +42,7 @@ import theking530.staticpower.cables.fluid.FluidCableComponent;
 import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ExtractorAttachment extends AbstractCableAttachment {

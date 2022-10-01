@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import net.minecraft.core.BlockPos;
+import javax.annotation.Nullable;
+
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,8 +25,9 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.drain.DrainAttachment;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableCapabilities;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
@@ -65,21 +66,23 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void preProcessUpdate() {
 		super.preProcessUpdate();
 		if (!isClientSide()) {
-			this.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
-				boolean shouldUpdate = !network.getStoredFluid(getPos()).isFluidEqual(lastUpdateFluidStack);
-				int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
-				if (delta > FLUID_UPDATE_THRESHOLD) {
-					shouldUpdate = true;
-				} else if (!network.getStoredFluid(getPos()).isEmpty()) {
-					subThresholdUpdateTime++;
-				}
+			Optional<FluidCableCapability> capability = getFluidCapability();
+			if (capability.isEmpty()) {
+				return;
+			}
+			boolean shouldUpdate = !capability.get().getFluidStorage().getFluid().isFluidEqual(lastUpdateFluidStack);
+			int delta = Math.abs(lastUpdateFluidStack.getAmount() - getFluidInTank(0).getAmount());
+			if (delta > FLUID_UPDATE_THRESHOLD) {
+				shouldUpdate = true;
+			} else if (!capability.get().getFluidStorage().getFluid().isEmpty()) {
+				subThresholdUpdateTime++;
+			}
 
-				shouldUpdate |= subThresholdUpdateTime >= MAX_TICKS_BEFORE_UPDATE;
-				if (shouldUpdate) {
-					synchronizeServerToClient();
-					subThresholdUpdateTime = 0;
-				}
-			});
+			shouldUpdate |= subThresholdUpdateTime >= MAX_TICKS_BEFORE_UPDATE;
+			if (shouldUpdate) {
+				synchronizeServerToClient();
+				subThresholdUpdateTime = 0;
+			}
 		}
 	}
 
@@ -88,21 +91,20 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		if (visualFilledPercentage != lastUpdateFilledPercentage) {
 			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
 			visualFilledPercentage -= difference * (partialTicks / 20.0f);
-
 		}
 	}
 
 	protected void synchronizeServerToClient() {
 		if (!isClientSide()) {
-			this.<FluidNetworkModule>getNetworkModule(ModCableModules.Fluid.get()).ifPresent(network -> {
-				lastUpdateFluidStack = network.getStoredFluid(getPos());
-				lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
+			Optional<FluidCableCapability> capability = getFluidCapability();
+			if (capability.isEmpty()) {
+				return;
+			}
 
-				// Only send the packet to nearby players since these packets get sent
-				// frequently.
-				FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
-				StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 64, packet);
-			});
+			lastUpdateFluidStack = capability.get().getFluidStorage().getFluid().copy();
+			lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
+			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
+			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
 		}
 	}
 
@@ -120,8 +122,11 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		} else {
 			FluidNetworkModule module = getFluidModule().orElse(null);
 			if (module != null) {
-				FluidCableProxy proxy = module.getFluidProxyAtLocation(getPos());
-				return (float) proxy.getStored().getAmount() / proxy.getCapacity();
+				Optional<FluidCableCapability> capability = getFluidCapability();
+				if (capability.isPresent()) {
+					return (float) capability.get().getFluidStorage().getFluidAmount() / capability.get().getFluidStorage().getCapacity();
+				}
+				return 0;
 			}
 			return 0;
 		}
@@ -131,8 +136,74 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		return visualFilledPercentage;
 	}
 
-	public int getCapacity() {
-		return transferRate;
+	public Optional<FluidNetworkModule> getFluidModule() {
+		return getNetworkModule(ModCableModules.Fluid.get());
+	}
+
+	public Optional<FluidCableCapability> getFluidCapability() {
+		FluidNetworkModule module = getFluidModule().orElse(null);
+		if (module == null) {
+			return Optional.empty();
+		}
+
+		return module.getFluidCableCapability(getPos());
+	}
+
+	@Override
+	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
+		FluidCableCapability fluidCapability = ModCableCapabilities.Fluid.get().create(cable);
+		fluidCapability.initialize(capacity, transferRate, isIndustrial);
+		cable.registerCapability(fluidCapability);
+	}
+
+	@Override
+	protected void onCableFirstAddedToNetwork(ServerCable cable, BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+		super.onCableFirstAddedToNetwork(cable, context, state, placer, stack);
+		List<Direction> sidesToDisable = new ArrayList<>();
+
+		FluidStack existingStack = FluidStack.EMPTY;
+		boolean multipleFluids = false;
+		for (Direction dir : Direction.values()) {
+			BlockEntity te = getLevel().getBlockEntity(getPos().relative(dir));
+			if (te == null) {
+				continue;
+			}
+
+			IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()).orElse(null);
+			if (handler == null || handler.getTanks() <= 0) {
+				continue;
+
+			}
+
+			for (int i = 0; i < handler.getTanks(); i++) {
+				if (handler.getFluidInTank(i).isEmpty()) {
+					continue;
+				}
+
+				if (existingStack.isEmpty()) {
+					existingStack = handler.getFluidInTank(0);
+				} else if (!existingStack.isFluidEqual(handler.getFluidInTank(i))) {
+					multipleFluids = true;
+				}
+
+				// We'll allow the pipe to connect to another fluid source if the player
+				// indicated that's what they want.
+				if (dir.getOpposite() != context.getClickedFace()) {
+					sidesToDisable.add(dir);
+				}
+			}
+		}
+
+		if (multipleFluids) {
+			for (Direction dir : sidesToDisable) {
+				cable.setDisabledStateOnSide(dir, true);
+			}
+		}
+	}
+
+	@Override
+	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
+		types.add(ModCableDestinations.Fluid.get());
 	}
 
 	@Override
@@ -143,9 +214,9 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public FluidStack getFluidInTank(int tank) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			FluidNetworkModule module = getFluidModule().orElse(null);
-			if (module != null) {
-				return module.getStoredFluid(getPos());
+			Optional<FluidCableCapability> capability = getFluidCapability();
+			if (capability.isPresent()) {
+				return capability.get().getFluidStorage().getFluid();
 			}
 			return FluidStack.EMPTY;
 		} else {
@@ -153,16 +224,12 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		}
 	}
 
-	public Optional<FluidNetworkModule> getFluidModule() {
-		return getNetworkModule(ModCableModules.Fluid.get());
-	}
-
 	@Override
 	public int getTankCapacity(int tank) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			FluidNetworkModule module = getFluidModule().orElse(null);
-			if (module != null) {
-				return module.getCapacity(getPos());
+			Optional<FluidCableCapability> capability = getFluidCapability();
+			if (capability.isPresent()) {
+				return capability.get().getFluidStorage().getCapacity();
 			}
 			return 0;
 		} else {
@@ -173,9 +240,9 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public boolean isFluidValid(int tank, FluidStack stack) {
 		if (!getTileEntity().getLevel().isClientSide) {
-			FluidNetworkModule module = getFluidModule().orElse(null);
-			if (module != null) {
-				return module.isFluidValid(stack, getPos());
+			Optional<FluidCableCapability> capability = getFluidCapability();
+			if (capability.isPresent()) {
+				return capability.get().getFluidStorage().isFluidValid(stack);
 			}
 			return false;
 		} else {
@@ -228,64 +295,6 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 		}
 		return LazyOptional.empty();
 
-	}
-
-	@Override
-	public void onOwningBlockEntityLoaded(Level level, BlockPos pos, BlockState state) {
-		super.onOwningBlockEntityLoaded(level, pos, state);
-	}
-
-	@Override
-	protected void initializeCableProperties(ServerCable cable, BlockPlaceContext context, BlockState state, LivingEntity placer, ItemStack stack) {
-		cable.getDataTag().putInt(FluidCableProxy.FLUID_DEFAULT_CAPACITY_DATA_TAG_KEY, capacity);
-		cable.getDataTag().putInt(FluidCableProxy.FLUID_TRANSFER_RATE_DATA_TAG_KEY, transferRate);
-		cable.getDataTag().putBoolean(FluidCableProxy.FLUID_CABLE_INDUSTRIAL_DATA_TAG_KEY, isIndustrial);
-
-		List<Direction> sidesToDisable = new ArrayList<>();
-
-		FluidStack existingStack = FluidStack.EMPTY;
-		boolean multipleFluids = false;
-		for (Direction dir : Direction.values()) {
-			BlockEntity te = getLevel().getBlockEntity(getPos().relative(dir));
-			if (te == null) {
-				continue;
-			}
-
-			IFluidHandler handler = te.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, dir.getOpposite()).orElse(null);
-			if (handler == null || handler.getTanks() <= 0) {
-				continue;
-
-			}
-
-			for (int i = 0; i < handler.getTanks(); i++) {
-				if (handler.getFluidInTank(i).isEmpty()) {
-					continue;
-				}
-
-				if (existingStack.isEmpty()) {
-					existingStack = handler.getFluidInTank(0);
-				} else if (!existingStack.isFluidEqual(handler.getFluidInTank(i))) {
-					multipleFluids = true;
-				}
-
-				// We'll allow the pipe to connect to another fluid source if the player
-				// indicated that's what they want.
-				if (dir.getOpposite() != context.getClickedFace()) {
-					sidesToDisable.add(dir);
-				}
-			}
-		}
-
-		if (multipleFluids) {
-			for (Direction dir : sidesToDisable) {
-				cable.setDisabledStateOnSide(dir, true);
-			}
-		}
-	}
-
-	@Override
-	protected void getSupportedDestinationTypes(Set<CableDestination> types) {
-		types.add(ModCableDestinations.Fluid.get());
 	}
 
 	public CompoundTag serializeSaveNbt(CompoundTag nbt) {

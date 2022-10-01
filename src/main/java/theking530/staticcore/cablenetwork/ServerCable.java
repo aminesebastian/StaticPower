@@ -7,6 +7,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 
 import net.minecraft.core.BlockPos;
@@ -21,6 +22,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import theking530.staticcore.cablenetwork.SparseCableLink.SparseCableConnectionType;
+import theking530.staticcore.cablenetwork.capabilities.ServerCableCapability;
+import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
@@ -44,6 +47,7 @@ public class ServerCable {
 	private final boolean isSparse;
 	private final Map<BlockPos, SparseCableLink> sparseLinks;
 	private final Set<CableDestination> supportedDestinationTypes;
+	private final Map<ServerCableCapabilityType, ServerCableCapability> capabilities;
 
 	public ServerCable(Level level, BlockPos position, boolean sparse, Set<CableNetworkModuleType> supportedNetworkModules, Set<CableDestination> supportedDestinationTypes) {
 		this.position = position;
@@ -52,7 +56,8 @@ public class ServerCable {
 		this.supportedNetworkModules = supportedNetworkModules;
 		this.supportedDestinationTypes = supportedDestinationTypes;
 		dataTag = new CompoundTag();
-		sparseLinks = new HashMap<BlockPos, SparseCableLink>();
+		sparseLinks = new HashMap<>();
+		capabilities = new HashMap<>();
 
 		sidedData = new CableSideConnectionState[6];
 		for (Direction dir : Direction.values()) {
@@ -412,14 +417,23 @@ public class ServerCable {
 
 		// Deserialize the destination types.
 		supportedDestinationTypes = new HashSet<CableDestination>();
-		List<CableDestination> destinations = NBTUtilities.deserialize(tag.getList("destination_types", Tag.TAG_STRING), (destTag) -> {
+		NBTUtilities.deserialize(tag.getList("destination_types", Tag.TAG_STRING), (destTag) -> {
 			ResourceLocation key = new ResourceLocation(destTag.getAsString());
-			return StaticPowerRegistries.CableDestinationRegistry().getValue(key);
+			CableDestination dest = StaticPowerRegistries.CableDestinationRegistry().getValue(key);
+			supportedDestinationTypes.add(dest);
+			return dest;
 		});
-		for (CableDestination destination : destinations) {
-			supportedDestinationTypes.add(destination);
-		}
 
+		// Deserialize the capabilities.
+		capabilities = new HashMap<>();
+		NBTUtilities.deserialize(tag.getList("capability_types", Tag.TAG_COMPOUND), (rawTag) -> {
+			CompoundTag capabilityTag = (CompoundTag) rawTag;
+			ResourceLocation key = new ResourceLocation(capabilityTag.getString("type"));
+			ServerCableCapabilityType type = StaticPowerRegistries.CableCapabilityRegistry().getValue(key);
+			ServerCableCapability cap = type.create(this, capabilityTag);
+			capabilities.put(cap.getType(), cap);
+			return cap;
+		});
 		dataTag = tag.getCompound("data");
 	}
 
@@ -456,6 +470,15 @@ public class ServerCable {
 		});
 		tag.put("destination_types", destinationList);
 
+		// Serialize the capabilities.
+		ListTag capabilityList = NBTUtilities.serialize(capabilities.keySet(), (capType) -> {
+			CompoundTag capTag = new CompoundTag();
+			capTag.putString("type", capType.getRegistryName().toString());
+			capabilities.get(capType).save(capTag);
+			return capTag;
+		});
+		tag.put("capability_types", capabilityList);
+
 		// Serialize the data.
 		tag.put("data", dataTag);
 
@@ -476,6 +499,22 @@ public class ServerCable {
 			throw new RuntimeException(String.format("A cable wrapper exists without a cooresponding AbstractCableProviderComponent at BlockPos: %1$s.", position));
 		}
 		return baseTe.getComponents(AbstractCableProviderComponent.class);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T extends ServerCableCapability> Optional<T> getCapability(ServerCableCapabilityType capabilityType) {
+		if (capabilities.containsKey(capabilityType)) {
+			return (Optional<T>) Optional.of(capabilities.get(capabilityType));
+		} else {
+			return Optional.empty();
+		}
+	}
+
+	public void registerCapability(ServerCableCapability capability) {
+		if (capabilities.containsKey(capability.getType())) {
+			throw new RuntimeException("Attempting to register a capability type that is already registered!");
+		}
+		capabilities.put(capability.getType(), capability);
 	}
 
 	@Override

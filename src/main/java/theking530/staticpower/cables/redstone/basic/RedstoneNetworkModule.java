@@ -14,7 +14,7 @@ import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.bundled.BundledRedstoneNetworkModule;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class RedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 

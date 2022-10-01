@@ -32,8 +32,8 @@ import theking530.staticcore.cablenetwork.pathfinding.Path;
 import theking530.staticcore.cablenetwork.pathfinding.Path.PathEntry;
 import theking530.staticcore.cablenetwork.scanning.NetworkMapper;
 import theking530.staticcore.gui.text.PowerTextFormatting;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class PowerNetworkModule extends CableNetworkModule implements IStaticPowerStorage {
 	protected record CachedPowerDestination(IStaticPowerStorage power, BlockPos cable, BlockPos desintationPos) {

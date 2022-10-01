@@ -12,7 +12,7 @@ import theking530.staticcore.cablenetwork.CableUtilities;
 import theking530.staticcore.cablenetwork.data.CableSideConnectionState.CableConnectionType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class ScaffoldCableComponent extends AbstractCableProviderComponent {
 	public ScaffoldCableComponent(String name) {

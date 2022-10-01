@@ -32,13 +32,14 @@ import theking530.staticpower.data.tiers.tungsten.StaticPowerTierTungsten;
 import theking530.staticpower.data.tiers.wood.StaticPowerTierWood;
 import theking530.staticpower.data.tiers.zinc.StaticPowerTierZinc;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModNetworkMessages;
 import theking530.staticpower.init.ModRecipeSerializers;
+import theking530.staticpower.init.cables.ModCableCapabilities;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.world.trees.ModTrees;
 
 @Mod(StaticPower.MOD_ID)
@@ -48,9 +49,7 @@ public class StaticPower {
 	public static final String MOD_ID = "staticpower";
 	public static final CreativeModeTab CREATIVE_TAB = new StaticPowerItemGroup();
 
-
-	public StaticPower()
-	{
+	public StaticPower() {
 		try {
 			IEventBus eventBus = FMLJavaModLoadingContext.get().getModEventBus();
 
@@ -93,6 +92,7 @@ public class StaticPower {
 
 			ModCableDestinations.init(eventBus);
 			ModCableModules.init(eventBus);
+			ModCableCapabilities.init(eventBus);
 
 			StaticCoreRegistry.postInitialize();
 		} catch (Exception e) {

@@ -29,6 +29,7 @@ import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
 import theking530.staticpower.cables.attachments.sprinkler.SprinklerAttachment;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
 import theking530.staticpower.data.StaticPowerTiers;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.BatteryPack;
 import theking530.staticpower.items.DigistoreCard;
 import theking530.staticpower.items.DigistoreMonoCard;

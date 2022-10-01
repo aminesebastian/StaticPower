@@ -34,8 +34,8 @@ import theking530.staticpower.cables.fluid.FluidNetworkModule;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.fertilization.FertalizerRecipe;
-import theking530.staticpower.init.ModCableModules;
 import theking530.staticpower.init.ModFluids;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class SprinklerAttachment extends AbstractCableAttachment {
 	private static final Vector3D SPRINKLER_BOUNDS = new Vector3D(2.5f, 2.5f, 2.5f);

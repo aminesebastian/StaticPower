@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.Level;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModule;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class ScaffoldNetworkModule extends CableNetworkModule {
 

@@ -32,8 +32,8 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.network.PacketUpdateRedstoneCableConfiguration;
 import theking530.staticpower.client.StaticPowerAdditionalModels;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class RedstoneCableComponent extends AbstractCableProviderComponent {

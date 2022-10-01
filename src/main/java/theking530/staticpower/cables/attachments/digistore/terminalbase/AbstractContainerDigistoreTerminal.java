@@ -38,7 +38,7 @@ import theking530.staticpower.cables.digistore.crafting.network.PacketCancelDigi
 import theking530.staticpower.cables.digistore.crafting.recipes.CraftingStepsBundle.CraftingStepsBundleContainer;
 import theking530.staticpower.container.StaticPowerContainer;
 import theking530.staticpower.container.slots.PlayerArmorItemSlot;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.tools.DigistoreWirelessTerminal;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.InventoryUtilities;

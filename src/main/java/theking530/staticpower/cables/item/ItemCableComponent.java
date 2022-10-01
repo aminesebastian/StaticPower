@@ -29,8 +29,8 @@ import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
 import theking530.staticpower.cables.attachments.filter.FilterAttachment;
 import theking530.staticpower.cables.attachments.retirever.RetrieverAttachment;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class ItemCableComponent extends AbstractCableProviderComponent {

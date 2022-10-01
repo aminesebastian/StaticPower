@@ -184,7 +184,9 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 
 				// Raise an event on this component for any additional work that needs to be
 				// done.
-				onCableFirstAddedToNetwork(wrapper);
+				onCableFirstAddedToNetwork(wrapper, context, state, placer, stack);
+			} else {
+				initializeCableProperties(manager.getCable(getPos()), context, state, placer, stack);
 			}
 		}
 	}
@@ -459,7 +461,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 			Optional<ServerCable> cable = getCable();
 			if (cable.isPresent()) {
 				if (cable.get().getNetwork().hasModule(moduleType)) {
-					return Optional.of(cable.get().getNetwork().getModule(moduleType));
+					return Optional.ofNullable(cable.get().getNetwork().getModule(moduleType));
 				}
 			}
 		}
@@ -503,7 +505,7 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 
 	}
 
-	protected void onCableFirstAddedToNetwork(ServerCable cable) {
+	protected void onCableFirstAddedToNetwork(ServerCable cable, BlockPlaceContext context, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
 
 	}
 

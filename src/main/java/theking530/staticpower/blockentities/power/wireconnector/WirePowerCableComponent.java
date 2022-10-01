@@ -25,8 +25,8 @@ import theking530.staticpower.blocks.StaticPowerBlock;
 import theking530.staticpower.cables.power.PowerCableComponent;
 import theking530.staticpower.client.rendering.WireRenderCache;
 import theking530.staticpower.client.rendering.renderers.WireRenderer;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.WireCoil;
 import theking530.staticpower.utilities.WorldUtilities;
 

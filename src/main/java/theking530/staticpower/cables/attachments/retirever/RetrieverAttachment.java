@@ -32,7 +32,7 @@ import theking530.staticpower.cables.attachments.AbstractCableAttachment;
 import theking530.staticpower.cables.attachments.AttachmentTooltipUtilities;
 import theking530.staticpower.cables.item.ItemNetworkModule;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class RetrieverAttachment extends AbstractCableAttachment {

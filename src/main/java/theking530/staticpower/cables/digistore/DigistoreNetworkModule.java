@@ -25,7 +25,7 @@ import theking530.staticpower.cables.attachments.digistore.craftinginterface.Dig
 import theking530.staticpower.cables.attachments.digistore.terminalbase.DigistoreInventorySortType;
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends CableNetworkModule {

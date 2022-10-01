@@ -1,4 +1,4 @@
-package theking530.staticpower.init;
+package theking530.staticpower.init.cables;
 
 import java.util.HashMap;
 import java.util.Map;

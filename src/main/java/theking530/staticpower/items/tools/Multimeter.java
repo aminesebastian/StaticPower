@@ -21,7 +21,7 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticpower.cables.power.PowerNetworkModule;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.items.StaticPowerItem;
 
 public class Multimeter extends StaticPowerItem {

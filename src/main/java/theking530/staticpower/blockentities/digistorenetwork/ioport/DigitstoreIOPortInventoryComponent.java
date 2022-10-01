@@ -14,7 +14,7 @@ import theking530.staticcore.cablenetwork.CableNetworkManager;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.cables.digistore.DigistoreNetworkModule;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class DigitstoreIOPortInventoryComponent extends AbstractBlockEntityComponent implements IItemHandler {
 

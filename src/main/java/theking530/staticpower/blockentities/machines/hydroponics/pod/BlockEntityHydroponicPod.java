@@ -15,7 +15,9 @@ import net.minecraft.world.level.block.CropBlock;
 import net.minecraft.world.level.block.StemBlock;
 import net.minecraft.world.level.block.StemGrownBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
@@ -100,7 +102,7 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 			if (hasFarmer()) {
 				// Use fluid if we're growing.
 				if (isGrowing()) {
-					owningFarmer.fluidTankComponent.drain(1, FluidAction.EXECUTE);
+					owningFarmer.fluidTankComponent.drain(2, FluidAction.EXECUTE);
 				}
 			}
 		}
@@ -191,7 +193,12 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 	}
 
 	public boolean hasWater() {
-		return hasFarmer() && owningFarmer.fluidTankComponent.getStorage().getFluidAmount() > 0;
+		if (!hasFarmer()) {
+			return false;
+		}
+
+		FluidStack simulated = owningFarmer.fluidTankComponent.getStorage().drain(2, FluidAction.SIMULATE);
+		return simulated.getAmount() == 2 && simulated.getFluid() == Fluids.WATER;
 	}
 
 	protected HarvestResult getDrops() {

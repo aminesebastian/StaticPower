@@ -35,6 +35,7 @@ import theking530.api.attributes.capability.CapabilityAttributable;
 import theking530.api.digistore.CapabilityDigistoreInventory;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
+import theking530.staticcore.cablenetwork.capabilities.ServerCableCapabilityType;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.data.StaticPowerGameDataManager;
@@ -92,6 +93,8 @@ public class StaticPowerModEventsCommon {
 				Integer.MAX_VALUE - 1));
 		event.create(new RegistryBuilder<CableNetworkModuleType>().setName(StaticPowerRegistries.CABLE_MODULE_REGISTRY).setType(CableNetworkModuleType.class).setIDRange(0,
 				Integer.MAX_VALUE - 1));
+		event.create(new RegistryBuilder<ServerCableCapabilityType>().setName(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY).setType(ServerCableCapabilityType.class)
+				.setIDRange(0, Integer.MAX_VALUE - 1));
 	}
 
 	@SubscribeEvent

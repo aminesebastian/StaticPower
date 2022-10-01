@@ -20,7 +20,7 @@ import theking530.staticpower.cables.redstone.AbstractRedstoneNetworkModule;
 import theking530.staticpower.cables.redstone.RedstoneCableConfiguration;
 import theking530.staticpower.cables.redstone.basic.RedstoneCableComponent;
 import theking530.staticpower.cables.redstone.basic.RedstoneNetworkModule;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class BundledRedstoneNetworkModule extends AbstractRedstoneNetworkModule {
 	@SuppressWarnings("unused")

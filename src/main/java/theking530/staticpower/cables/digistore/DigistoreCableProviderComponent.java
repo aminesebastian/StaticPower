@@ -26,8 +26,8 @@ import theking530.staticpower.cables.attachments.digistore.iobus.DigistoreIOBusA
 import theking530.staticpower.cables.attachments.digistore.patternencoder.DigistorePatternEncoder;
 import theking530.staticpower.cables.attachments.digistore.regulator.DigistoreRegulatorAttachment;
 import theking530.staticpower.cables.attachments.digistore.terminal.DigistoreTerminal;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class DigistoreCableProviderComponent extends AbstractCableProviderComponent {
 	public static final String POWER_USAGE_TAG = "power_usage";

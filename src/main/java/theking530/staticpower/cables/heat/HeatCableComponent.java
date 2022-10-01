@@ -18,8 +18,8 @@ import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticpower.blockentities.components.heat.HeatStorageComponent;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public class HeatCableComponent extends AbstractCableProviderComponent implements IHeatStorage {

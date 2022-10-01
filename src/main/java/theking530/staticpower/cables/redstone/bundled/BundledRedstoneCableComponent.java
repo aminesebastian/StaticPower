@@ -16,8 +16,8 @@ import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.utilities.MinecraftColor;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
-import theking530.staticpower.init.ModCableDestinations;
-import theking530.staticpower.init.ModCableModules;
+import theking530.staticpower.init.cables.ModCableDestinations;
+import theking530.staticpower.init.cables.ModCableModules;
 
 public class BundledRedstoneCableComponent extends AbstractCableProviderComponent {
 	public BundledRedstoneCableComponent(String name) {

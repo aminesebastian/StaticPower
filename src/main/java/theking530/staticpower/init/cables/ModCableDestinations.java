@@ -1,4 +1,4 @@
-package theking530.staticpower.init;
+package theking530.staticpower.init.cables;
 
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
