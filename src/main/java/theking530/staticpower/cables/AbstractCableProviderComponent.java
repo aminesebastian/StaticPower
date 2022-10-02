@@ -201,7 +201,12 @@ public abstract class AbstractCableProviderComponent extends AbstractBlockEntity
 	 */
 	public boolean isSideDisabled(Direction side) {
 		if (!isClientSide()) {
-			return CableNetworkManager.get(getLevel()).getCable(getPos()).isDisabledOnSide(side);
+			// Make sure the cable is still tracked by the server. Sometimes when a cable is
+			// removed, we trigger the scan before the block entity is also removed.
+			if (getCable().isPresent()) {
+				return getCable().get().isDisabledOnSide(side);
+			}
+			return true;
 		} else {
 			return clientConnectionStates[side.ordinal()].isDisabled();
 		}

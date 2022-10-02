@@ -96,10 +96,15 @@ public class StaticPowerFluidTank extends FluidTank implements INBTSerializable<
 	@Nonnull
 	@Override
 	public FluidStack drain(int maxDrain, FluidAction action) {
+		if (maxDrain <= 0) {
+			return FluidStack.EMPTY;
+		}
+
 		int drained = maxDrain;
-		if (fluid.getAmount() < drained) {
+		if (drained > fluid.getAmount()) {
 			drained = fluid.getAmount();
 		}
+		
 		FluidStack stack = new FluidStack(fluid, drained);
 		if (action.execute() && drained > 0) {
 			fluid.shrink(drained);

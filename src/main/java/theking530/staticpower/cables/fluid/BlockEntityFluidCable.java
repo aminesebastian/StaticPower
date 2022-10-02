@@ -77,7 +77,7 @@ public class BlockEntityFluidCable extends BlockEntityBase {
 		TierFluidCableConfiguration config = getTierObject().cableFluidConfiguration;
 		int transferRate = isIndustrial ? config.cableIndustrialFluidTransferRate.get() : config.cableFluidTransferRate.get();
 
-		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial, transferRate * 2, transferRate));
+		registerComponent(fluidCableComponent = new FluidCableComponent("FluidCableComponent", isIndustrial, transferRate * 4, transferRate));
 		fluidRenderRadius = radius;
 	}
 }

@@ -2,6 +2,7 @@ package theking530.staticcore.data;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
@@ -18,7 +19,7 @@ public abstract class StaticPowerGameData {
 
 	public abstract CompoundTag serialize(CompoundTag tag);
 
-	public void tick() {
+	public void tick(Level level) {
 	}
 
 	public ResourceLocation getId() {

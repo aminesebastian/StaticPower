@@ -33,7 +33,7 @@ public class CableNetworkAnalyzer extends StaticPowerItem {
 					player.sendMessage(text, player.getUUID());
 				}
 
-				player.sendMessage(new TextComponent("Cable Location: ").append(pos.toString()), player.getUUID());
+				player.sendMessage(new TextComponent("Cable Location: ").append(pos.toShortString()), player.getUUID());
 				player.sendMessage(new TextComponent("Cable Sparse Links: ").append("" + cable.getSparseLinks().size()), player.getUUID());
 
 				return InteractionResult.SUCCESS;

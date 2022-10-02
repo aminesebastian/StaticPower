@@ -552,6 +552,11 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		// Don't return anything if this entity was removed.
+		if (isRemoved()) {
+			return LazyOptional.empty();
+		}
+
 		for (AbstractBlockEntityComponent comp : components.values()) {
 			LazyOptional<T> capability = comp.provideCapability(cap, side);
 			if (capability.isPresent()) {

@@ -13,10 +13,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.teams.production.ProductionManager;
 import theking530.staticpower.teams.research.ResearchManager;
 import theking530.staticpower.utilities.NBTUtilities;
 
@@ -24,14 +26,20 @@ public class Team {
 	private String id;
 	private String name;
 	private final HashSet<String> players;
-	private final ResearchManager researchContainer;
+	private final ResearchManager researchManager;
+	private final ProductionManager productionManager;
 	private boolean dirty;
 
 	public Team(String name) {
 		players = new LinkedHashSet<String>();
-		researchContainer = new ResearchManager(this);
+		researchManager = new ResearchManager(this);
+		productionManager = new ProductionManager(this);
 		this.name = name;
 		this.id = UUID.randomUUID().toString();
+	}
+
+	public void tick(Level level) {
+		productionManager.tick(level.getGameTime());
 	}
 
 	public String getName() {
@@ -59,7 +67,11 @@ public class Team {
 	}
 
 	public ResearchManager getResearchManager() {
-		return researchContainer;
+		return researchManager;
+	}
+
+	public ProductionManager getProductionManager() {
+		return productionManager;
 	}
 
 	/**
@@ -145,14 +157,20 @@ public class Team {
 			return ((CompoundTag) playerTag).getString("id");
 		}));
 
-		researchContainer.deserialize(tag.getCompound("research"), this);
+		researchManager.deserialize(tag.getCompound("research"), this);
+
+		// TODO: We can remove this later.
+		if (tag.contains("production")) {
+			productionManager.deserialize(tag.getCompound("production"));
+		}
 	}
 
 	public CompoundTag serialize() {
 		CompoundTag output = new CompoundTag();
 		output.putString("name", name);
 		output.putString("id", id.toString());
-		output.put("research", researchContainer.serialize());
+		output.put("research", researchManager.serialize());
+		output.put("production", productionManager.serialize());
 		output.put("players", NBTUtilities.serialize(players, (player, tag) -> {
 			tag.putString("id", player);
 		}));
@@ -162,6 +180,6 @@ public class Team {
 
 	@Override
 	public String toString() {
-		return "Team [name=" + name + ", id=" + id + ", players=" + players + ", researchContainer=" + researchContainer + ", dirty=" + dirty + "]";
+		return "Team [id=" + id + ", name=" + name + ", players=" + players + ", researchManager=" + researchManager + ", productionManager=" + productionManager + "]";
 	}
 }

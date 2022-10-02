@@ -12,6 +12,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.data.StaticPowerGameData;
@@ -29,9 +30,10 @@ public class TeamManager extends StaticPowerGameData {
 	}
 
 	@Override
-	public void tick() {
+	public void tick(Level level) {
 		boolean isDirty = false;
 		for (Team team : teams.values()) {
+			team.tick(level);
 			if (team.isDirty()) {
 				isDirty = true;
 				team.markDirty(false);

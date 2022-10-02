@@ -60,8 +60,6 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		te.getCapability(CapabilityStaticPower.STATIC_VOLT_CAPABILITY).ifPresent(powerStorage -> {
 			CompoundTag powerData = new CompoundTag();
 			powerData.putDouble("output_voltage", powerStorage.getOutputVoltage());
-			// powerData.putByte("output_current_type", (byte)
-			// powerStorage.getOutputCurrentType().ordinal());
 
 			powerData.put("voltage_range", powerStorage.getInputVoltageRange().serializeNBT());
 			powerData.putDouble("stored_power", powerStorage.getStoredPower());

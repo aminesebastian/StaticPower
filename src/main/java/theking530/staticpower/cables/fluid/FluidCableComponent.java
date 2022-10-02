@@ -1,7 +1,9 @@
 package theking530.staticpower.cables.fluid;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,6 +23,8 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import theking530.staticcore.cablenetwork.ServerCable;
 import theking530.staticcore.cablenetwork.destinations.CableDestination;
+import theking530.staticcore.fluid.ISidedFluidHandler;
+import theking530.staticcore.fluid.SidedFluidHandlerCapabilityWrapper;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.cables.attachments.drain.DrainAttachment;
 import theking530.staticpower.cables.attachments.extractor.ExtractorAttachment;
@@ -30,25 +34,34 @@ import theking530.staticpower.init.cables.ModCableDestinations;
 import theking530.staticpower.init.cables.ModCableModules;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public class FluidCableComponent extends AbstractCableProviderComponent implements IFluidHandler {
+public class FluidCableComponent extends AbstractCableProviderComponent implements ISidedFluidHandler {
 	public static final String FLUID_INDUSTRIAL_DATA_TAG_KEY = "fluid_cable_industrial";
 	// This is intentionally high, we only want to force update if the difference is
 	// VAST, otherwise, let the MAX_TICKS driven update do the work.
 	public static final float FLUID_UPDATE_THRESHOLD = 100;
 	public static final float MAX_TICKS_BEFORE_UPDATE = 10;
 
+	private final SidedFluidHandlerCapabilityWrapper capabilityWrapper;
 	private final int capacity;
 	private final int transferRate;
 	private final boolean isIndustrial;
 	private FluidStack lastUpdateFluidStack;
 	private float lastUpdateFilledPercentage;
 	private float visualFilledPercentage;
+	private float clientPressure;
 	private int subThresholdUpdateTime;
+	public Map<Direction, Float> flowMap;
 
 	public FluidCableComponent(String name, boolean isIndustrial, int capacity, int transferRate) {
 		super(name, ModCableModules.Fluid.get());
 		this.capacity = capacity;
 		this.transferRate = transferRate;
+		this.flowMap = new HashMap<>();
+		for (Direction dir : Direction.values()) {
+			flowMap.put(dir, 0.0f);
+		}
+
+		capabilityWrapper = new SidedFluidHandlerCapabilityWrapper(this);
 		lastUpdateFluidStack = FluidStack.EMPTY;
 		lastUpdateFilledPercentage = 0.0f;
 		visualFilledPercentage = 0.0f;
@@ -90,7 +103,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	public void updateBeforeRendering(float partialTicks) {
 		if (visualFilledPercentage != lastUpdateFilledPercentage) {
 			float difference = visualFilledPercentage - lastUpdateFilledPercentage;
-			visualFilledPercentage -= difference * (partialTicks / 20.0f);
+			visualFilledPercentage -= difference * (partialTicks / 100.0f);
 		}
 	}
 
@@ -103,15 +116,23 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 			lastUpdateFluidStack = capability.get().getFluidStorage().getFluid().copy();
 			lastUpdateFilledPercentage = Math.min(1.0f, getFilledPercentage());
-			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), lastUpdateFluidStack, lastUpdateFilledPercentage);
+
+			CompoundTag data = new CompoundTag();
+			CompoundTag fluid = new CompoundTag();
+			lastUpdateFluidStack.writeToNBT(fluid);
+			data.put("f", fluid);
+			data.putFloat("%", lastUpdateFilledPercentage);
+			data.putInt("p", capability.get().getPressure());
+			FluidCableUpdatePacket packet = new FluidCableUpdatePacket(getPos(), data);
 			StaticPowerMessageHandler.sendMessageToPlayerInArea(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, getLevel(), getPos(), 32, packet);
 		}
 	}
 
-	public void recieveUpdateRenderValues(FluidStack stack, float fluidAmount) {
+	public void recieveUpdateRenderValues(CompoundTag data) {
 		if (isClientSide()) {
-			lastUpdateFluidStack = stack;
-			lastUpdateFilledPercentage = Math.min(1.0f, fluidAmount);
+			lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT(data.getCompound("f"));
+			lastUpdateFilledPercentage = Math.min(1.0f, data.getFloat("%"));
+			clientPressure = data.getFloat("p");
 			getTileEntity().requestModelDataUpdate();
 		}
 	}
@@ -207,6 +228,57 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	}
 
 	@Override
+	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
+		// Only provide the fluid capability if we are not disabled on that side.
+		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
+			if (side == null) {
+				return LazyOptional.of(() -> this).cast();
+			}
+
+			boolean disabled = isSideDisabled(side);
+			if (!disabled) {
+				return LazyOptional.of(() -> capabilityWrapper.get(side)).cast();
+			}
+		}
+		return LazyOptional.empty();
+
+	}
+
+	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
+		super.serializeSaveNbt(nbt);
+		// Save the filled percent.
+		nbt.putFloat("filled_percentage", lastUpdateFilledPercentage);
+
+		// Put the fluid stack.
+		CompoundTag fluidNbt = new CompoundTag();
+		lastUpdateFluidStack.writeToNBT(fluidNbt);
+		nbt.put("fluid", fluidNbt);
+		return nbt;
+	}
+
+	public void deserializeSaveNbt(CompoundTag nbt) {
+		super.deserializeSaveNbt(nbt);
+		// Load the filled percent.
+		lastUpdateFilledPercentage = nbt.getFloat("filled_percentage");
+
+		// Load the last update fluidstack.
+		lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) nbt.get("fluid"));
+	}
+
+	@Override
+	public int fill(Direction direction, FluidStack resource, FluidAction action) {
+		if (!getTileEntity().getLevel().isClientSide) {
+			FluidNetworkModule module = getFluidModule().orElse(null);
+			if (module != null) {
+				return module.fill(getPos(), direction.getOpposite(), resource, action);
+			}
+			return 0;
+		} else {
+			return 0;
+		}
+	}
+
+	@Override
 	public int getTanks() {
 		return 1;
 	}
@@ -252,15 +324,7 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 
 	@Override
 	public int fill(FluidStack resource, FluidAction action) {
-		if (!getTileEntity().getLevel().isClientSide) {
-			FluidNetworkModule module = getFluidModule().orElse(null);
-			if (module != null) {
-				return module.fill(getPos(), resource, action);
-			}
-			return 0;
-		} else {
-			return 0;
-		}
+		return 0;
 	}
 
 	@Override
@@ -271,50 +335,5 @@ public class FluidCableComponent extends AbstractCableProviderComponent implemen
 	@Override
 	public FluidStack drain(int maxDrain, FluidAction action) {
 		return FluidStack.EMPTY;
-	}
-
-	@Override
-	public <T> LazyOptional<T> provideCapability(Capability<T> cap, Direction side) {
-		// Only provide the fluid capability if we are not disabled on that side.
-		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
-			boolean disabled = false;
-			if (side != null) {
-				if (isClientSide()) {
-					disabled = isSideDisabled(side);
-				} else {
-					// If the cable is not valid, just assume disabled. Could be that the cable is
-					// not yet initialized server side.
-					Optional<ServerCable> cable = getCable();
-					disabled = cable.isPresent() ? cable.get().isDisabledOnSide(side) : true;
-				}
-			}
-
-			if (!disabled) {
-				return LazyOptional.of(() -> this).cast();
-			}
-		}
-		return LazyOptional.empty();
-
-	}
-
-	public CompoundTag serializeSaveNbt(CompoundTag nbt) {
-		super.serializeSaveNbt(nbt);
-		// Save the filled percent.
-		nbt.putFloat("filled_percentage", lastUpdateFilledPercentage);
-
-		// Put the fluid stack.
-		CompoundTag fluidNbt = new CompoundTag();
-		lastUpdateFluidStack.writeToNBT(fluidNbt);
-		nbt.put("fluid", fluidNbt);
-		return nbt;
-	}
-
-	public void deserializeSaveNbt(CompoundTag nbt) {
-		super.deserializeSaveNbt(nbt);
-		// Load the filled percent.
-		lastUpdateFilledPercentage = nbt.getFloat("filled_percentage");
-
-		// Load the last update fluidstack.
-		lastUpdateFluidStack = FluidStack.loadFluidStackFromNBT((CompoundTag) nbt.get("fluid"));
 	}
 }

@@ -14,6 +14,7 @@ import java.util.function.Supplier;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.TagParser;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
@@ -161,9 +162,9 @@ public class StaticPowerGameDataManager {
 		}
 	}
 
-	public static void tickGameData() {
+	public static void tickGameData(Level level) {
 		for (StaticPowerGameData data : DATA.values()) {
-			data.tick();
+			data.tick(level);
 		}
 	}
 

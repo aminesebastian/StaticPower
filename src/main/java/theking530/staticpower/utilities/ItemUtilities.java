@@ -2,6 +2,7 @@ package theking530.staticpower.utilities;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
@@ -166,5 +167,7 @@ public class ItemUtilities {
 		}
 	}
 
-
+	public static int getItemStackHash(ItemStack stack) {
+		return Objects.hash(stack.getItem(), stack.getTag());
+	}
 }

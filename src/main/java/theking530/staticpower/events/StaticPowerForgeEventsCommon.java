@@ -86,7 +86,7 @@ public class StaticPowerForgeEventsCommon {
 				CableNetworkManager.get(event.world).preWorldTick();
 			} else if (event.phase == TickEvent.Phase.END) {
 				CableNetworkManager.get(event.world).tick();
-				StaticPowerGameDataManager.tickGameData();
+				StaticPowerGameDataManager.tickGameData(event.world);
 			}
 		}
 	}
