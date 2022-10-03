@@ -6,28 +6,19 @@ import theking530.staticpower.utilities.ItemUtilities;
 
 public class ItemProductionEntry extends ProductionEntry<ItemStack> {
 
-	public ItemProductionEntry() {
-		super();
-	}
-
 	public ItemProductionEntry(ItemStack product) {
 		super(product);
 	}
 
 	@Override
-	public int hashCode() {
-		return ItemUtilities.getItemStackHash(getProduct());
+	public int getProductHashCode() {
+		return ItemUtilities.getItemStackHash(product);
 	}
 
 	@Override
-	public CompoundTag serialize() {
-		CompoundTag output = new CompoundTag();
-		getProduct().save(output);
-		return output;
-	}
-
-	@Override
-	public void deserialize(CompoundTag tag) {
-		product = ItemStack.of(tag);
+	public String getSerializedProduct() {
+		CompoundTag serialized = product.serializeNBT();
+		serialized.remove("Count");
+		return serialized.getAsString();
 	}
 }

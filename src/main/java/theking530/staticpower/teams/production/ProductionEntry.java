@@ -1,68 +1,69 @@
 package theking530.staticpower.teams.production;
 
-import java.util.LinkedList;
-import java.util.List;
-
-import net.minecraft.nbt.CompoundTag;
-
 public abstract class ProductionEntry<T> {
-	private final List<Integer> insertedPerSecond;
-	private final List<Integer> extractedPerSecond;
+	public record Metric(float input, float output, int period) {
+	}
+
+	public enum MetricPeriod {
+		SECOND("second"), MINUTE("minute"), HOUR("hour"), DAY("day");
+
+		private final String tableKey;
+
+		MetricPeriod(String tableKey) {
+			this.tableKey = tableKey;
+		}
+
+		public String getTableKey() {
+			return tableKey;
+		}
+
+	}
+
 	protected T product;
-	protected int currentSecondInserted;
-	protected int currentSecondExtracted;
+	protected int currentSecondInput;
+	protected int currentSecondOutput;
 
 	public ProductionEntry(T product) {
 		this();
 		this.product = product;
 	}
 
-	public ProductionEntry(CompoundTag tag) {
-		this();
-		deserialize(tag);
-	}
-
 	protected ProductionEntry() {
-		this.currentSecondInserted = 0;
-		this.currentSecondExtracted = 0;
-		this.insertedPerSecond = new LinkedList<>();
-		this.extractedPerSecond = new LinkedList<>();
+		this.currentSecondInput = 0;
+		this.currentSecondOutput = 0;
 	}
 
-	public void tick(long gameTime) {
-		if (gameTime % 20 == 0) {
-			capture(gameTime);
-		}
-	}
-
-	private void capture(long gameTime) {
-		insertedPerSecond.add(currentSecondInserted);
-		extractedPerSecond.add(currentSecondExtracted);
-		currentSecondInserted = 0;
-		currentSecondExtracted = 0;
+	public void reset() {
+		currentSecondInput = 0;
+		currentSecondOutput = 0;
 	}
 
 	public T getProduct() {
 		return product;
 	}
 
+	public int getCurrentSecondInput() {
+		return currentSecondInput;
+	}
+
+	public int getCurrentSecondOutput() {
+		return currentSecondOutput;
+	}
+
 	public void inserted(int amount) {
-		currentSecondInserted += Math.max(0, amount);
+		currentSecondInput += Math.max(0, amount);
 	}
 
 	public void extracted(int amount) {
-		currentSecondExtracted += Math.max(0, amount);
+		currentSecondOutput += Math.max(0, amount);
 	}
 
-	@Override
-	public abstract int hashCode();
+	public abstract int getProductHashCode();
+
+	public abstract String getSerializedProduct();
 
 	@Override
 	public String toString() {
-		return "ProductionEntry [product=" + product + ", inserted=" + currentSecondInserted + ", extracted=" + currentSecondExtracted + "]";
+		return "ProductionEntry [product=" + product + ", inserted=" + currentSecondInput + ", extracted=" + currentSecondOutput + "]";
 	}
-
-	public abstract CompoundTag serialize();
-
-	public abstract void deserialize(CompoundTag tag);
 }

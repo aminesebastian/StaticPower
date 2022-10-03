@@ -31,6 +31,7 @@ import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
 import theking530.staticpower.client.rendering.renderers.WireRenderer;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModKeyBindings;
+import theking530.staticpower.teams.production.GuiProductionMenu;
 import theking530.staticpower.teams.research.ActiveResearchHUD;
 import theking530.staticpower.teams.research.GuiResearchMenu;
 
@@ -92,6 +93,17 @@ public class StaticPowerForgeEventsProxy {
 				}
 			}
 		});
+		ModKeyBindings.addCallback(ModKeyBindings.OPEN_PRODUCTION, (binding) -> {
+			if (binding.wasJustPressed()) {
+				if (Minecraft.getInstance().screen == null) {
+					Minecraft.getInstance().setScreen(new GuiProductionMenu());
+				} else if (Minecraft.getInstance().screen instanceof GuiProductionMenu) {
+					Minecraft.getInstance().screen.onClose();
+				}
+			}
+		});
+		
+		
 		StaticPowerForgeBusClient.addHUDElement(new ActiveResearchHUD());
 		
 		// Register the custom renderers.

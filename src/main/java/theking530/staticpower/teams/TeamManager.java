@@ -3,6 +3,7 @@ package theking530.staticpower.teams;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.spongepowered.asm.mixin.Overwrite;
 
@@ -85,7 +86,7 @@ public class TeamManager extends StaticPowerGameData {
 
 		// Name the team after the first player in the list and create it.
 		String name = String.format("%1$s's Team", players[0].getDisplayName().getString());
-		Team newTeam = new Team(name);
+		Team newTeam = new Team(name, UUID.randomUUID().toString().replace("-", ""));
 
 		// For all the players, if they're also on another team, remove them from that
 		// team.
@@ -131,9 +132,9 @@ public class TeamManager extends StaticPowerGameData {
 		for (Tag teamTag : teamsTag) {
 			CompoundTag teamTagCompound = (CompoundTag) teamTag;
 			String teamId = teamTagCompound.getString("id");
-			if(teams.containsKey(teamId)) {
+			if (teams.containsKey(teamId)) {
 				teams.get(teamId).deserialize(teamTagCompound);
-			}else {
+			} else {
 				teams.put(teamId, Team.fromTag(teamTagCompound));
 			}
 		}

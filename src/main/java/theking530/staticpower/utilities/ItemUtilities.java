@@ -168,6 +168,6 @@ public class ItemUtilities {
 	}
 
 	public static int getItemStackHash(ItemStack stack) {
-		return Objects.hash(stack.getItem(), stack.getTag());
+		return Objects.hash(stack.getItem().getRegistryName(), stack.getTag());
 	}
 }

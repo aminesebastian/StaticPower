@@ -3,6 +3,7 @@ package theking530.staticcore.gui.widgets.tabs;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import theking530.staticcore.gui.drawables.ItemDrawable;
@@ -11,7 +12,6 @@ import theking530.staticcore.gui.widgets.button.StandardButton.MouseButton;
 import theking530.staticcore.gui.widgets.button.TextButton;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticpower.blockentities.components.team.TeamComponent;
-import theking530.staticpower.init.ModItems;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
 
@@ -21,9 +21,9 @@ public class GuiResearchTab extends AbstractInfoTab {
 	public TextButton setTeamButton;
 
 	public GuiResearchTab(TeamComponent teamComponent) {
-		super("gui.staticpower.tab_title.research", new SDColor(255, 255, 255), 100, new SDColor(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(ModItems.ResearchTier1.get()));
+		super("gui.staticpower.tab_title.team", new SDColor(255, 255, 255), 100, new SDColor(0.0f, 0.85f, 0.6f, 1.0f), new ItemDrawable(Blocks.LECTERN.asItem()));
 		this.teamComponent = teamComponent;
-		registerWidget(setTeamButton = new TextButton(12, 25, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
+		registerWidget(setTeamButton = new TextButton(14, 18, 16, new TranslatableComponent("gui.staticpower.set_team").getString(), this::setTeamClicked));
 		setTeamButton.setTooltip(new TranslatableComponent("gui.staticpower.machine_set_team"));
 	}
 
@@ -42,8 +42,8 @@ public class GuiResearchTab extends AbstractInfoTab {
 		} else {
 			addLine("team_name", ChatFormatting.RED, new TextComponent("Missing Team!"));
 		}
-		
-		setTeamButton.setPosition(setTeamButton.getPosition().getX(), getHeight() - 26);
-		this.setExpandedHeight(getExpandedSize().getY() + 16);
+
+		setTeamButton.setPosition(setTeamButton.getPosition().getX(), getHeight() - 28);
+		this.setExpandedHeight(getExpandedSize().getY() + 20);
 	}
 }

@@ -38,6 +38,10 @@ public class ModKeyBindings {
 	 */
 	public static final KeyBinding OPEN_RESEARCH = create("open_research", GLFW.GLFW_KEY_R);
 	/**
+	 * Opens the production window.
+	 */
+	public static final KeyBinding OPEN_PRODUCTION = create("open_production", GLFW.GLFW_KEY_P);
+	/**
 	 * If held while clicking inside the side config tab, reset the config to
 	 * default.
 	 */

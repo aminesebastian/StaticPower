@@ -20,9 +20,6 @@
 		},
 		"b": {
 			"tag": "forge:dyes/black"
-		},
-		"p": {
-			"item": "staticpower:processor_basic"
 		}
 	},
 	"result": {

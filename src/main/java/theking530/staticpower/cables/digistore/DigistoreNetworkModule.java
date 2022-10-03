@@ -2,6 +2,7 @@ package theking530.staticpower.cables.digistore;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,6 +27,7 @@ import theking530.staticpower.cables.attachments.digistore.terminalbase.Digistor
 import theking530.staticpower.cables.digistore.crafting.CraftingInterfaceWrapper;
 import theking530.staticpower.cables.digistore.crafting.DigistoreNetworkCraftingManager;
 import theking530.staticpower.init.cables.ModCableModules;
+import theking530.staticpower.teams.Team;
 import theking530.staticpower.utilities.MetricConverter;
 
 public class DigistoreNetworkModule extends CableNetworkModule {
@@ -180,14 +182,26 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
 		if (isManagerPresent()) {
-			return transactionManager.insertItem(stack, simulate);
+			ItemStack remaining = transactionManager.insertItem(stack, simulate);
+			if (remaining.getCount() != stack.getCount()) {
+				if (getOwningTeam().isPresent()) {
+					getOwningTeam().get().getProductionManager().itemInserted(stack, stack.getCount() - remaining.getCount());
+				}
+			}
+			return remaining;
 		}
 		throw new RuntimeException("Attempted to insert an item into a network with no present manager.");
 	}
 
 	public ItemStack extractItem(ItemStack stack, int count, boolean simulate) {
 		if (isManagerPresent()) {
-			return transactionManager.extractItem(stack, count, simulate);
+			ItemStack extracted = transactionManager.extractItem(stack, count, simulate);
+			if (!extracted.isEmpty()) {
+				if (getOwningTeam().isPresent()) {
+					getOwningTeam().get().getProductionManager().itemExtracted(extracted.copy(), extracted.getCount());
+				}
+			}
+			return extracted;
 		}
 		throw new RuntimeException("Attempted to extract an item from a network with no present manager.");
 	}
@@ -226,6 +240,15 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	public void readFromNbt(CompoundTag tag) {
 		craftingManager.readFromNbt(tag);
 		craftingTimer = tag.getInt("crafting_timer");
+	}
+
+	protected Optional<Team> getOwningTeam() {
+		if (!isManagerPresent()) {
+			return Optional.empty();
+		}
+
+		Team team = manager.getTeamComponent().getOwningTeam();
+		return Optional.ofNullable(team);
 	}
 
 	@Override

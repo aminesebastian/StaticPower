@@ -1,5 +1,6 @@
 package theking530.staticpower.teams;
 
+import java.sql.Connection;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.UUID;
@@ -9,12 +10,14 @@ import java.util.function.Function;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.server.ServerLifecycleHooks;
+import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.StaticPowerMessageHandler;
@@ -23,6 +26,7 @@ import theking530.staticpower.teams.research.ResearchManager;
 import theking530.staticpower.utilities.NBTUtilities;
 
 public class Team {
+	private final Connection db;
 	private String id;
 	private String name;
 	private final HashSet<String> players;
@@ -30,12 +34,13 @@ public class Team {
 	private final ProductionManager productionManager;
 	private boolean dirty;
 
-	public Team(String name) {
+	public Team(String name, String id) {
+		this.id = id.replace("-", "");
+		this.db = StaticPowerGameDataManager.getDatabaseConnection(new ResourceLocation(StaticPower.MOD_ID, id));
 		players = new LinkedHashSet<String>();
 		researchManager = new ResearchManager(this);
 		productionManager = new ProductionManager(this);
 		this.name = name;
-		this.id = UUID.randomUUID().toString();
 	}
 
 	public void tick(Level level) {
@@ -72,6 +77,10 @@ public class Team {
 
 	public ProductionManager getProductionManager() {
 		return productionManager;
+	}
+
+	public Connection getDatabaseConnection() {
+		return db;
 	}
 
 	/**
@@ -143,7 +152,7 @@ public class Team {
 	}
 
 	public static Team fromTag(CompoundTag tag) {
-		Team output = new Team(tag.getString("name"));
+		Team output = new Team(tag.getString("name"), tag.getString("id"));
 		output.deserialize(tag);
 		return output;
 	}
@@ -158,11 +167,6 @@ public class Team {
 		}));
 
 		researchManager.deserialize(tag.getCompound("research"), this);
-
-		// TODO: We can remove this later.
-		if (tag.contains("production")) {
-			productionManager.deserialize(tag.getCompound("production"));
-		}
 	}
 
 	public CompoundTag serialize() {
@@ -170,7 +174,6 @@ public class Team {
 		output.putString("name", name);
 		output.putString("id", id.toString());
 		output.put("research", researchManager.serialize());
-		output.put("production", productionManager.serialize());
 		output.put("players", NBTUtilities.serialize(players, (player, tag) -> {
 			tag.putString("id", player);
 		}));
