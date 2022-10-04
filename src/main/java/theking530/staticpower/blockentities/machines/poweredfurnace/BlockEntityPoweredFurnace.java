@@ -40,7 +40,7 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 	 * Indicates how many times faster this block will perform compared to the
 	 * vanila furnace.
 	 */
-	public static final float DEFAULT_PROCESSING_TIME_MULT = 1.3f;
+	public static final float DEFAULT_PROCESSING_TIME_MULT = 1.25f;
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;

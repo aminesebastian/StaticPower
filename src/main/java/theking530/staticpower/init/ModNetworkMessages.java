@@ -46,8 +46,10 @@ import theking530.staticpower.container.PacketRevertToParentContainer;
 import theking530.staticpower.entities.player.datacapability.PacketSyncStaticPowerPlayerDataCapability;
 import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
-import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.BlockEntityBasicSyncPacket;
+import theking530.staticpower.network.StaticPowerMessageHandler;
+import theking530.staticpower.teams.production.metrics.PacketGetProductionMetrics;
+import theking530.staticpower.teams.production.metrics.PacketRecieveProductionMetrics;
 import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
 
 public class ModNetworkMessages {
@@ -80,9 +82,11 @@ public class ModNetworkMessages {
 		StaticPowerMessageHandler.registerMessage(PacketMakeDigistoreCraftingRequest.class);
 		StaticPowerMessageHandler.registerMessage(PacketCloseCurrentContainer.class);
 		StaticPowerMessageHandler.registerMessage(PacketRevertToParentContainer.class);
+
 		StaticPowerMessageHandler.registerMessage(PacketGetCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketReturnCurrentCraftingQueue.class);
 		StaticPowerMessageHandler.registerMessage(PacketCancelDigistoreCraftingRequest.class);
+
 		StaticPowerMessageHandler.registerMessage(PacketRestorePreviousCraftingRecipe.class);
 		StaticPowerMessageHandler.registerMessage(PacketPackagerSizeChange.class);
 		StaticPowerMessageHandler.registerMessage(PacketSyncStaticPowerPlayerDataCapability.class);
@@ -104,5 +108,8 @@ public class ModNetworkMessages {
 
 		StaticPowerMessageHandler.registerMessage(CableStateSyncPacket.class);
 		StaticPowerMessageHandler.registerMessage(CableStateSyncRequestPacket.class);
+
+		StaticPowerMessageHandler.registerMessage(PacketGetProductionMetrics.class);
+		StaticPowerMessageHandler.registerMessage(PacketRecieveProductionMetrics.class);
 	}
 }

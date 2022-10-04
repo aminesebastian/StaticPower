@@ -171,54 +171,53 @@ public class ExtractorAttachment extends AbstractCableAttachment {
 	protected boolean performDigistoreExtract(ItemStack attachment, Direction side, AbstractCableProviderComponent cable, BlockEntity targetTe) {
 		if (targetTe instanceof TileEntityDigistoreIOPort) {
 			AtomicBoolean output = new AtomicBoolean(false);
-			((TileEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get())
-					.ifPresent(module -> {
-						cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
-							// Return early if there is no manager.
-							if (!module.isManagerPresent()) {
-								return;
+			((TileEntityDigistoreIOPort) targetTe).digistoreCableProvider.<DigistoreNetworkModule>getNetworkModule(ModCableModules.Digistore.get()).ifPresent(module -> {
+				cable.<ItemNetworkModule>getNetworkModule(ModCableModules.Item.get()).ifPresent(network -> {
+					// Return early if there is no manager.
+					if (!module.isManagerPresent()) {
+						return;
+					}
+
+					// Get the filter inventory (if there is a null value, do not handle it, throw
+					// an exception).
+					IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
+							.orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
+
+					// We do this to ensure we randomly extract.
+					int startingSlot = SDMath.getRandomIntInRange(0, filterItems.getSlots() - 1);
+					int currentSlot = startingSlot;
+
+					// Get the list of filter items.
+					for (int i = 0; i < filterItems.getSlots(); i++) {
+						if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
+							// Simulate an extract.
+							ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot),
+									StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionStackSize.get(), true);
+
+							// Increment the current slot and make sure we wrap around.
+							currentSlot++;
+							if (currentSlot > filterItems.getSlots() - 1) {
+								currentSlot = 0;
 							}
 
-							// Get the filter inventory (if there is a null value, do not handle it, throw
-							// an exception).
-							IItemHandler filterItems = attachment.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY)
-									.orElseThrow(() -> new RuntimeException("Encounetered an extractor attachment without a valid filter inventory."));
-
-							// We do this to ensure we randomly extract.
-							int startingSlot = SDMath.getRandomIntInRange(0, filterItems.getSlots() - 1);
-							int currentSlot = startingSlot;
-
-							// Get the list of filter items.
-							for (int i = 0; i < filterItems.getSlots(); i++) {
-								if (!filterItems.getStackInSlot(currentSlot).isEmpty()) {
-									// Simulate an extract.
-									ItemStack extractedItem = module.extractItem(filterItems.getStackInSlot(currentSlot),
-											StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractionStackSize.get(), true);
-
-									// Increment the current slot and make sure we wrap around.
-									currentSlot++;
-									if (currentSlot > filterItems.getSlots() - 1) {
-										currentSlot = 0;
-									}
-
-									// If the extracted item is empty, continue.
-									if (extractedItem.isEmpty()) {
-										continue;
-									}
-
-									// Attempt to transfer the itemstack through the cable network.
-									ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side.getOpposite(), false,
-											StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
-									if (remainingAmount.getCount() < extractedItem.getCount()) {
-										module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
-										cable.getTileEntity().setChanged();
-										output.set(true);
-										break;
-									}
-								}
+							// If the extracted item is empty, continue.
+							if (extractedItem.isEmpty()) {
+								continue;
 							}
-						});
-					});
+
+							// Attempt to transfer the itemstack through the cable network.
+							ItemStack remainingAmount = network.transferItemStack(extractedItem, cable.getPos(), side.getOpposite(), false,
+									StaticPowerConfig.getTier(tierType).cableAttachmentConfiguration.cableExtractedItemInitialSpeed.get());
+							if (remainingAmount.getCount() < extractedItem.getCount()) {
+								module.extractItem(extractedItem, extractedItem.getCount() - remainingAmount.getCount(), false);
+								cable.getTileEntity().setChanged();
+								output.set(true);
+								break;
+							}
+						}
+					}
+				});
+			});
 			return output.get();
 		}
 		return false;

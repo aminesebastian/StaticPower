@@ -183,7 +183,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
 		if (isManagerPresent()) {
 			ItemStack remaining = transactionManager.insertItem(stack, simulate);
-			if (remaining.getCount() != stack.getCount()) {
+			if (!simulate && remaining.getCount() != stack.getCount()) {
 				if (getOwningTeam().isPresent()) {
 					getOwningTeam().get().getProductionManager().itemInserted(stack, stack.getCount() - remaining.getCount());
 				}
@@ -196,7 +196,7 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 	public ItemStack extractItem(ItemStack stack, int count, boolean simulate) {
 		if (isManagerPresent()) {
 			ItemStack extracted = transactionManager.extractItem(stack, count, simulate);
-			if (!extracted.isEmpty()) {
+			if (!simulate && !extracted.isEmpty()) {
 				if (getOwningTeam().isPresent()) {
 					getOwningTeam().get().getProductionManager().itemExtracted(extracted.copy(), extracted.getCount());
 				}

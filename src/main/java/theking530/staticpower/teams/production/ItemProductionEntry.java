@@ -4,7 +4,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class ItemProductionEntry extends ProductionEntry<ItemStack> {
+public class ItemProductionEntry extends AbstractProductionEntry<ItemStack> {
 
 	public ItemProductionEntry(ItemStack product) {
 		super(product);

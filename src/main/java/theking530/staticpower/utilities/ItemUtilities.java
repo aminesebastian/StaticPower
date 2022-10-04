@@ -168,6 +168,9 @@ public class ItemUtilities {
 	}
 
 	public static int getItemStackHash(ItemStack stack) {
-		return Objects.hash(stack.getItem().getRegistryName(), stack.getTag());
+		// TODO: Profile the performance here.
+		CompoundTag tag = stack.serializeNBT();
+		tag.remove("Count");
+		return Objects.hash(tag);
 	}
 }
