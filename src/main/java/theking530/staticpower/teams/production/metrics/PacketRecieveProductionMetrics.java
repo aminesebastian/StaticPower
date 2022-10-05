@@ -1,7 +1,5 @@
 package theking530.staticpower.teams.production.metrics;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -10,31 +8,24 @@ import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.teams.TeamManager;
 
 public class PacketRecieveProductionMetrics extends NetworkMessage {
-	private List<SerializedMetricPeriod> metrics;
+	private SertializedBiDirectionalMetrics metrics;
 
 	public PacketRecieveProductionMetrics() {
 
 	}
 
-	public PacketRecieveProductionMetrics(List<SerializedMetricPeriod> metrics) {
+	public PacketRecieveProductionMetrics(SertializedBiDirectionalMetrics metrics) {
 		this.metrics = metrics;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
-		buffer.writeInt(metrics.size());
-		for (SerializedMetricPeriod metric : metrics) {
-			buffer.writeNbt(metric.serialize());
-		}
+		metrics.encode(buffer);
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
-		metrics = new LinkedList<>();
-		int count = buffer.readInt();
-		for (int i = 0; i < count; i++) {
-			metrics.add(SerializedMetricPeriod.deserialize(buffer.readNbt()));
-		}
+		metrics = SertializedBiDirectionalMetrics.decode(buffer);
 	}
 
 	@Override

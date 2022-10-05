@@ -182,26 +182,14 @@ public class DigistoreNetworkModule extends CableNetworkModule {
 
 	public ItemStack insertItem(ItemStack stack, boolean simulate) {
 		if (isManagerPresent()) {
-			ItemStack remaining = transactionManager.insertItem(stack, simulate);
-			if (!simulate && remaining.getCount() != stack.getCount()) {
-				if (getOwningTeam().isPresent()) {
-					getOwningTeam().get().getProductionManager().itemInserted(stack, stack.getCount() - remaining.getCount());
-				}
-			}
-			return remaining;
+			return transactionManager.insertItem(stack, simulate);
 		}
 		throw new RuntimeException("Attempted to insert an item into a network with no present manager.");
 	}
 
 	public ItemStack extractItem(ItemStack stack, int count, boolean simulate) {
 		if (isManagerPresent()) {
-			ItemStack extracted = transactionManager.extractItem(stack, count, simulate);
-			if (!simulate && !extracted.isEmpty()) {
-				if (getOwningTeam().isPresent()) {
-					getOwningTeam().get().getProductionManager().itemExtracted(extracted.copy(), extracted.getCount());
-				}
-			}
-			return extracted;
+			return transactionManager.extractItem(stack, count, simulate);
 		}
 		throw new RuntimeException("Attempted to extract an item from a network with no present manager.");
 	}

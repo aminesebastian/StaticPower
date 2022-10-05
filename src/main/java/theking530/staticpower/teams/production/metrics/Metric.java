@@ -3,22 +3,26 @@ package theking530.staticpower.teams.production.metrics;
 import net.minecraft.nbt.CompoundTag;
 
 public class Metric {
-	private final float input;
-	private final float output;
+	private final double consumption;
+	private final double production;
 	private final MetricPeriod period;
 
-	public Metric(float input, float output, MetricPeriod period) {
-		this.input = input;
-		this.output = output;
+	public Metric(double consumption, double production, MetricPeriod period) {
+		this.consumption = consumption;
+		this.production = production;
 		this.period = period;
 	}
 
-	public float getInput() {
-		return input;
+	public double getMetric(MetricType type) {
+		return type == MetricType.CONSUMPTION ? consumption : production;
 	}
 
-	public float getOutput() {
-		return output;
+	public double getConsumption() {
+		return consumption;
+	}
+
+	public double getProduction() {
+		return production;
 	}
 
 	public MetricPeriod getPeriod() {
@@ -26,14 +30,19 @@ public class Metric {
 	}
 
 	public static Metric deserialize(CompoundTag tag) {
-		return new Metric(tag.getFloat("i"), tag.getFloat("o"), MetricPeriod.values()[tag.getByte("p")]);
+		return new Metric(tag.getFloat("c"), tag.getFloat("p"), MetricPeriod.values()[tag.getByte("t")]);
 	}
 
 	public CompoundTag serialize() {
 		CompoundTag tag = new CompoundTag();
-		tag.putFloat("i", input);
-		tag.putFloat("o", output);
-		tag.putByte("p", (byte) period.ordinal());
+		tag.putDouble("c", consumption);
+		tag.putDouble("p", production);
+		tag.putByte("t", (byte) period.ordinal());
 		return tag;
+	}
+
+	@Override
+	public String toString() {
+		return "Metric [consumption=" + consumption + ", production=" + production + ", period=" + period + "]";
 	}
 }

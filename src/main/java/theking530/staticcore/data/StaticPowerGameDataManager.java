@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -142,6 +143,17 @@ public class StaticPowerGameDataManager {
 
 	public static void clearAllGameData() {
 		DATA.clear();
+
+		for (Connection conn : DATABASE_CONNECTIONS.values()) {
+			try {
+				if (conn != null && !conn.isClosed()) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				StaticPower.LOGGER.error("An error occured when attempting to close the sql connection on server stop.");
+			}
+		}
+		DATABASE_CONNECTIONS.clear();
 	}
 
 	/**

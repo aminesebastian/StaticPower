@@ -3,26 +3,30 @@ package theking530.staticpower.teams.production;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
-import net.minecraft.world.item.ItemStack;
 import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.production.metrics.MetricPeriod;
-import theking530.staticpower.teams.production.metrics.SerializedMetricPeriod;
-import theking530.staticpower.utilities.ItemUtilities;
+import theking530.staticpower.teams.production.metrics.SertializedBiDirectionalMetrics;
+import theking530.staticpower.teams.production.product.ProductType;
 
 public class ProductionManager {
 	private final Team team;
 	public final ItemProductivityCache itemProductvitiyCache;
-	public List<SerializedMetricPeriod> tempClientMetrics;
+	public SertializedBiDirectionalMetrics tempClientMetrics = SertializedBiDirectionalMetrics.EMPTY;
+
+	public Map<ProductType<?, ?>, ProductionCache<?>> cache;
 
 	public ProductionManager(Team team) {
 		this.team = team;
 		this.itemProductvitiyCache = new ItemProductivityCache(team.getDatabaseConnection());
-		this.tempClientMetrics = new LinkedList<>();
+		cache = new HashMap<>();
+		cache.put(ModProducts.ITEM, itemProductvitiyCache);
+
 		initializeDatabase();
 	}
 
@@ -50,16 +54,12 @@ public class ProductionManager {
 		}
 	}
 
-	public void itemInserted(ItemStack stack, int count) {
-		if (!stack.isEmpty()) {
-			itemProductvitiyCache.increment(stack, ItemUtilities.getItemStackHash(stack), count, 0);
+	@SuppressWarnings("unchecked")
+	public <T, K extends ProductionEntry<T>> ProductionCache<T> getCache(ProductType<T, K> productType) {
+		if (cache.containsKey(productType)) {
+			return (ProductionCache<T>) cache.get(productType);
 		}
-	}
-
-	public void itemExtracted(ItemStack stack, int count) {
-		if (!stack.isEmpty() && count > 0) {
-			itemProductvitiyCache.increment(stack, ItemUtilities.getItemStackHash(stack), 0, count);
-		}
+		return null;
 	}
 
 	protected void initializeDatabase() {
@@ -83,8 +83,10 @@ public class ProductionManager {
 		//@formatter:off
 		return String.format("CREATE TABLE IF NOT EXISTS %1$s_productivity_%2$s (\n" 
 				+ "	product_hash int NOT NULL,\n" 
-				+ "	input integer NOT NULL,\n"
-				+ "	output integer NOT NULL,\n" 
+				+ "	consumed integer NOT NULL,\n"
+				+ "	produced integer NOT NULL,\n" 
+				+ "	consumption_rate real NOT NULL,\n"
+				+ "	production_rate real NOT NULL,\n" 
 				+ "	game_tick bigint NOT NULL\n"
 				+ ");", productType, period.getTableKey());
 		//@formatter:on

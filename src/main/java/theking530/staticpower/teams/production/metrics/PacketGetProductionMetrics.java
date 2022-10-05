@@ -41,7 +41,7 @@ public class PacketGetProductionMetrics extends NetworkMessage {
 			}
 
 			PacketRecieveProductionMetrics response = new PacketRecieveProductionMetrics(
-					team.getProductionManager().itemProductvitiyCache.getAverageProductionRate(MetricPeriod.MINUTE));
+					team.getProductionManager().itemProductvitiyCache.getSerializedProductionMetrics(serverPlayer.level.getGameTime(), 20, MetricPeriod.MINUTE));
 			StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) ctx.get().getSender(), response);
 		});
 	}

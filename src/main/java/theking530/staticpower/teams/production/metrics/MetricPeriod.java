@@ -4,9 +4,9 @@ import theking530.staticcore.utilities.SDTime;
 
 public enum MetricPeriod {
 	//@formatter:off
-		SECOND("second", SDTime.TICKS_PER_SECOND * 240,  1), 
-		MINUTE("minute", SDTime.TICKS_PER_MINUTE * 240, 60),
-		HOUR("hour", SDTime.TICKS_PER_HOUR * 48,  3600), 
+		SECOND("second", SDTime.TICKS_PER_SECOND * 60,  1), 
+		MINUTE("minute", SDTime.TICKS_PER_MINUTE * 60, 60),
+		HOUR("hour", SDTime.TICKS_PER_HOUR * 24,  3600), 
 		DAY("day", -1, 86400);
 		//@formatter:on
 

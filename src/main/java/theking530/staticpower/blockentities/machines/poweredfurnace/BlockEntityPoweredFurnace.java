@@ -12,8 +12,8 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -24,6 +24,8 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModProducts;
+import theking530.staticpower.teams.production.ProductionTrackingToken;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 /**
@@ -34,7 +36,8 @@ import theking530.staticpower.utilities.InventoryUtilities;
  */
 public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityPoweredFurnace(pos, state), ModBlocks.PoweredFurnace);
+	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityPoweredFurnace(pos, state),
+			ModBlocks.PoweredFurnace);
 
 	/**
 	 * Indicates how many times faster this block will perform compared to the
@@ -48,6 +51,8 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final RecipeProcessingComponent<SmeltingRecipe> processingComponent;
+
+	private ProductionTrackingToken<ItemStack> test;
 
 	public BlockEntityPoweredFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
@@ -66,8 +71,8 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, RecipeType.SMELTING, this::getMatchParameters,
-				this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, RecipeType.SMELTING,
+				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -83,6 +88,7 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
+		test = ModProducts.ITEM.getProductivityToken();
 	}
 
 	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
@@ -97,6 +103,9 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
+
+		test.consumed(getTeamComponent().getOwningTeam(), inputInventory.getStackInSlot(0), 1);
+
 		transferItemInternally(inputInventory, 0, internalInventory, 0);
 		processingComponent.setMaxProcessingTime(BlockEntityPoweredFurnace.getCookTime(recipe));
 		return ProcessingCheckState.ok();
@@ -106,12 +115,21 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
+		test.setProductionPerSecond(getTeamComponent().getOwningTeam(), recipe.getResultItem(), 1.0 / (processingComponent.getMaxProcessingTime() / 20.0));
+		if (location == RecipeProcessingPhase.PRE_PROCESSING) {
+			test.setConsumptionPerSection(getTeamComponent().getOwningTeam(), inputInventory.getStackInSlot(0), 1.0 / (processingComponent.getMaxProcessingTime() / 20.0));
+		} else if (location == RecipeProcessingPhase.PROCESSING) {
+			test.setConsumptionPerSection(getTeamComponent().getOwningTeam(), internalInventory.getStackInSlot(0), 1.0 / (processingComponent.getMaxProcessingTime() / 20.0));
+		}
+
 		return ProcessingCheckState.ok();
 	}
 
 	protected ProcessingCheckState processingCompleted(SmeltingRecipe recipe) {
 		outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
 		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
+		test.produced(this.getTeamComponent().getOwningTeam(), recipe.getResultItem(), 1);
+		test.invalidate();
 		return ProcessingCheckState.ok();
 	}
 

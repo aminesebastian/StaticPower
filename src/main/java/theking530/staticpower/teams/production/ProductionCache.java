@@ -11,56 +11,80 @@ import java.util.List;
 import java.util.Map;
 
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.teams.production.metrics.Metric;
+import theking530.staticpower.teams.production.ProductionEntry.ProductionEntryState;
 import theking530.staticpower.teams.production.metrics.MetricPeriod;
+import theking530.staticpower.teams.production.metrics.MetricType;
 import theking530.staticpower.teams.production.metrics.SerializedMetricPeriod;
+import theking530.staticpower.teams.production.metrics.SertializedBiDirectionalMetrics;
 
-public abstract class AbstractProductivityCache<T> {
-	private final List<Map<Integer, AbstractProductionEntry<T>>> productivityBuckets;
+public abstract class ProductionCache<T> {
+	private final List<Map<Integer, ProductionEntry<T>>> productivityBuckets;
 	private final Map<Integer, Integer> productivityBucketMap;
 	private final Connection database;
 	private int bucketRoundRobinIndex;
 
-	public AbstractProductivityCache(Connection database) {
+	public ProductionCache(Connection database) {
 		this.database = database;
 
 		bucketRoundRobinIndex = 0;
 		productivityBucketMap = new HashMap<>();
-		productivityBuckets = new LinkedList<Map<Integer, AbstractProductionEntry<T>>>();
+		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();
 		for (int i = 0; i < 20; i++) {
-			productivityBuckets.add(new HashMap<Integer, AbstractProductionEntry<T>>());
+			productivityBuckets.add(new HashMap<Integer, ProductionEntry<T>>());
 		}
+	}
+
+	public ProductionEntry<T> addOrUpdateProductionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
+		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
+		entry.updateProductionRate(token, rate);
+		return entry;
+	}
+
+	public ProductionEntry<T> addOrUpdateConsumptionRate(ProductionTrackingToken<T> token, T product, int productHash, double rate) {
+		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
+		entry.updateConsumptionRate(token, rate);
+		return entry;
+	}
+
+	public ProductionEntry<T> addProduced(T product, int productHash, double amount) {
+		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
+		entry.produced(amount);
+		return entry;
+	}
+
+	public ProductionEntry<T> addConsumed(T product, int productHash, double amount) {
+		ProductionEntry<T> entry = getOrCreateProductionEntry(product, productHash);
+		entry.consumed(amount);
+		return entry;
 	}
 
 	public void initializeDatabase() {
 		createProductLookupTable();
 	}
 
-	public void capturePerSecondMetrics() {
-		for (Map<Integer, AbstractProductionEntry<T>> bucket : productivityBuckets) {
-			for (AbstractProductionEntry<T> entry : bucket.values()) {
-				entry.captureCurrentSecondMetric();
-			}
-		}
-	}
-
 	public void insertProductivityPerSecond(Connection database, int bucketIndex, long gameTime) {
-		List<AbstractProductionEntry<T>> toBeInserted = new LinkedList<>();
+		List<ProductionEntry<T>> toBeInserted = new LinkedList<>();
 
 		try {
-			Collection<AbstractProductionEntry<T>> bucket = productivityBuckets.get(bucketIndex).values();
+			Collection<ProductionEntry<T>> bucket = productivityBuckets.get(bucketIndex).values();
 			Statement stmt = database.createStatement();
 
-			for (AbstractProductionEntry<T> entry : bucket) {
-				Metric metric = entry.captureCurrentSecondMetric();
-				if (metric.getInput() == 0 && metric.getOutput() == 0) {
+			for (ProductionEntry<T> entry : bucket) {
+				ProductionEntryState metric = entry.getValuesForDatabaseInsert();
+				if (metric.isEmpty()) {
 					continue;
 				}
 
 				//@formatter:off
-				String upsert = String.format("REPLACE INTO %1$s_productivity_%2$s(product_hash, input, output, game_tick) \n"
-						+ "  VALUES('%3$d', '%4$d', '%5$d', '%6$d');",
-						getProductType(), MetricPeriod.SECOND.getTableKey(), entry.getProductHashCode(), (int)metric.getInput(), (int)metric.getOutput(), gameTime);
+				String upsert = String.format("REPLACE INTO %1$s_productivity_%2$s(product_hash, consumed, produced, consumption_rate, production_rate, game_tick) \n"
+						+ "  VALUES('%3$d', '%4$f', '%5$f', '%6$f', '%7$f', '%8$d');",
+						getProductType(), MetricPeriod.SECOND.getTableKey(), 
+						entry.getProductHashCode(), 
+						metric.consumed(),
+						metric.produced(),
+						metric.consumptionRate(),
+						metric.productionRate(),
+						gameTime);
 				//@formatter:on
 				stmt.addBatch(upsert);
 				toBeInserted.add(entry);
@@ -71,7 +95,7 @@ public abstract class AbstractProductivityCache<T> {
 				stmt.executeBatch();
 
 				// Only if we made it this far should we clear the entires.
-				for (AbstractProductionEntry<T> entry : toBeInserted) {
+				for (ProductionEntry<T> entry : toBeInserted) {
 					entry.clearCurrentSecondMetrics();
 				}
 			}
@@ -87,7 +111,12 @@ public abstract class AbstractProductivityCache<T> {
 		try {
 			//@formatter:off
 			String upsert = String.format("REPLACE INTO %1$s_productivity_%3$s \n"
-					+ " SELECT product_hash, SUM(input) as input, SUM(output) as output, %4$d \n"
+					+ " SELECT product_hash, "
+					+ " 	SUM(consumed) as consumed, "
+					+ " 	SUM(produced) as produced, "
+					+ " 	AVG(consumption_rate) as consumption_rate, "
+					+ " 	AVG(production_rate) as production_rate, "
+					+ "		%4$d \n"
 					+ " FROM item_productivity_%2$s \n"
 					+ " WHERE game_tick > %5$d \n"
 					+ " GROUP BY product_hash;",
@@ -102,39 +131,49 @@ public abstract class AbstractProductivityCache<T> {
 		}
 	}
 
-	public List<SerializedMetricPeriod> getAverageProductionRate(MetricPeriod period) {
+	public SertializedBiDirectionalMetrics getSerializedProductionMetrics(long gameTime, int limit, MetricPeriod period) {
+		List<SerializedMetricPeriod> inputs = getAverageProductionRate(gameTime, limit, period, MetricType.CONSUMPTION);
+		List<SerializedMetricPeriod> outputs = getAverageProductionRate(gameTime, limit, period, MetricType.PRODUCTION);
+		return new SertializedBiDirectionalMetrics(inputs, outputs);
+	}
+
+	private List<SerializedMetricPeriod> getAverageProductionRate(long gameTime, int limit, MetricPeriod period, MetricType direction) {
 		List<SerializedMetricPeriod> metrics = new LinkedList<SerializedMetricPeriod>();
 
 		try {
 		//@formatter:off
-		String query = "SELECT \r\n"
-				+ "	product.serialized_product, \r\n"
-				+ "	SUM(input) as input_sum,\r\n"
-				+ "	SUM(output) as output_sum,\r\n"
-				+ "	(MAX(game_tick) - MIN(game_tick)) as ticks\r\n"
-				+ "FROM \r\n"
-				+ "	item_product as product\r\n"
-				+ "		LEFT JOIN\r\n"
-				+ "	item_productivity_second as metric\r\n"
-				+ "		ON\r\n"
-				+ "	product.product_hash = metric.product_hash\r\n"
-				+ " GROUP BY\r\n"
-				+ "	product.product_hash"
-				+ " ORDER BY\r\n"
-				+ " CASE WHEN output > input THEN output ELSE input END DESC";
+		String query = String.format("SELECT   \r\n"
+				+ "	 product.serialized_product,   \r\n"
+				+ "	 AVG(consumption_rate) as consumption_rate,  \r\n"
+				+ "	 AVG(production_rate) as production_rate  \r\n"
+				+ "FROM   \r\n"
+				+ "	 item_product as product  \r\n"
+				+ "		LEFT JOIN  \r\n"
+				+ "	 item_productivity_second as metric  \r\n"
+				+ "		ON  \r\n"
+				+ "	 product.product_hash = metric.product_hash \r\n"
+				+ "WHERE	\r\n"
+				+ "	metric.game_tick >= %1$d OR metric.game_tick IS NULL\r\n"
+				+ "GROUP BY  \r\n"
+				+ "	product.product_hash \r\n"
+				+ "ORDER BY %2$s_rate DESC \r\n"
+				+ "LIMIT %3$d;", gameTime - period.getMetricPeriodInTicks(), direction.getQueryField(), limit);
 		//@formatter:on
 			Statement stmt = database.createStatement();
 			ResultSet result = stmt.executeQuery(query);
 			while (result.next()) {
-				float actualRatio = (float) MetricPeriod.SECOND.getMaxRecordsAgeTicks() / result.getInt("ticks");
-				if (Float.isInfinite(actualRatio)) {
-					actualRatio = 1;
-				}
 				String product = result.getString("serialized_product");
-				float seconds = Math.max(period.getPeriodLengthInSeconds(), (result.getInt("ticks") * actualRatio) / 20);
-				float input = (result.getInt("input_sum") / seconds) * period.getPeriodLengthInSeconds();
-				float output = (result.getInt("output_sum") / seconds) * period.getPeriodLengthInSeconds();
-				metrics.add(new SerializedMetricPeriod(product, input, output, period));
+				double consumption = result.getDouble("consumption_rate") * period.getPeriodLengthInSeconds();
+				double production = result.getDouble("production_rate") * period.getPeriodLengthInSeconds();
+				if (direction == MetricType.CONSUMPTION) {
+					if (consumption > 0) {
+						metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
+					}
+				} else {
+					if (production > 0) {
+						metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
+					}
+				}
 			}
 		} catch (SQLException e) {
 			StaticPower.LOGGER.error(String.format("An error occured when pulling the average production rage for product type: %1$s.", getProductType()), e);
@@ -164,33 +203,28 @@ public abstract class AbstractProductivityCache<T> {
 		}
 	}
 
-	public Map<Integer, AbstractProductionEntry<T>> getBucket(int bucketIndex) {
-		return productivityBuckets.get(bucketIndex);
-	}
-
-	public boolean containsProduct(int productHash) {
+	protected boolean containsProduct(int productHash) {
 		return productivityBucketMap.containsKey(productHash);
 	}
 
-	public void increment(T product, int productHash, int input, int output) {
+	protected ProductionEntry<T> getOrCreateProductionEntry(T product, int productHash) {
+		ProductionEntry<T> entry;
 		if (containsProduct(productHash)) {
-			Map<Integer, AbstractProductionEntry<T>> bucket = productivityBuckets.get(productivityBucketMap.get(productHash));
-			bucket.get(productHash).inserted(input);
-			bucket.get(productHash).extracted(output);
+			Map<Integer, ProductionEntry<T>> bucket = productivityBuckets.get(productivityBucketMap.get(productHash));
+			entry = bucket.get(productHash);
 		} else {
-			AbstractProductionEntry<T> entry = createNewEntry(product);
-			entry.inserted(input);
-			entry.extracted(output);
+			entry = createNewEntry(product);
 			insertNew(entry);
 		}
+		return entry;
 	}
 
-	public void insertNew(AbstractProductionEntry<T> entry) {
+	protected void insertNew(ProductionEntry<T> entry) {
 		if (containsProduct(entry.getProductHashCode())) {
 			throw new RuntimeException("Attempted to insert a product entry for a product we're already tracking!");
 		}
 		productivityBucketMap.put(entry.getProductHashCode(), bucketRoundRobinIndex);
-		Map<Integer, AbstractProductionEntry<T>> bucket = productivityBuckets.get(bucketRoundRobinIndex);
+		Map<Integer, ProductionEntry<T>> bucket = productivityBuckets.get(bucketRoundRobinIndex);
 		bucket.put(entry.getProductHashCode(), entry);
 		bucketRoundRobinIndex = (bucketRoundRobinIndex + 1) % productivityBuckets.size();
 		insertNewProduct(entry);
@@ -213,7 +247,7 @@ public abstract class AbstractProductivityCache<T> {
 		}
 	}
 
-	protected void insertNewProduct(AbstractProductionEntry<T> entry) {
+	protected void insertNewProduct(ProductionEntry<T> entry) {
 		//@formatter:off
 			String insert = String.format("REPLACE INTO %1$s_product(product_hash, serialized_product) \n"
 					+ "  VALUES('%2$d', '%3$s');",
@@ -227,7 +261,7 @@ public abstract class AbstractProductivityCache<T> {
 		}
 	}
 
-	protected abstract AbstractProductionEntry<T> createNewEntry(T product);
+	protected abstract ProductionEntry<T> createNewEntry(T product);
 
 	protected abstract String getProductType();
 

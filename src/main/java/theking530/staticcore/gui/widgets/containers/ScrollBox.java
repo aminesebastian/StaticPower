@@ -24,8 +24,8 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 	}
 
 	@Override
-	public void transformPoseBeforeRender(PoseStack matrix) {
-		super.transformPoseBeforeRender(matrix);
+	protected void transformPoseBeforeChildRender(PoseStack matrix, AbstractGuiWidget<?> child, int index) {
+		super.transformPoseBeforeChildRender(matrix, child, index);
 		matrix.translate(0, -interpolatedScroll, 0);
 
 	}
@@ -101,7 +101,9 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 	public void tick() {
 		float requiredHeight = 0;
 		for (AbstractGuiWidget<?> child : getChildren()) {
-			requiredHeight += child.getHeight();
+			if(child.isVisible()) {
+				requiredHeight += child.getHeight();
+			}
 		}
 
 		float maxScroll = Math.max(0, requiredHeight - getSize().getY());
@@ -129,10 +131,10 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 		if (drawScrollBar) {
 			int topPosition = 5;
 			int bottomPosition = (int) (getSize().getY() - 5);
-			float handlePosition = SDMath.lerp(topPosition, bottomPosition, (float) targetScroll / maxScroll) - 6;
+			float handlePosition = SDMath.lerp(topPosition, bottomPosition, (float) interpolatedScroll / maxScroll) - 6;
 
 			if (drawScrollBarBackground) {
-				GuiDrawUtilities.drawSlot(pose, 10, getSize().getY() - 2, getSize().getX() - 10, 0, 0);
+				GuiDrawUtilities.drawSlot(pose, 10, getSize().getY(), getSize().getX() - 10, 0, 0);
 			}
 
 			GuiDrawUtilities.drawTexture(pose, GuiTextures.SCROLL_HANDLE, 10, 15, getSize().getX() - 10, handlePosition, 0, 0, 0, 1, 1, SDColor.WHITE);

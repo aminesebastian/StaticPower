@@ -5,8 +5,8 @@ import net.minecraft.nbt.CompoundTag;
 public class SerializedMetricPeriod extends Metric {
 	private final String serializedProduct;
 
-	public SerializedMetricPeriod(String serializedProduct, float input, float output, MetricPeriod period) {
-		super(input, output, period);
+	public SerializedMetricPeriod(String serializedProduct, double consumption, double production, MetricPeriod period) {
+		super(consumption, production, period);
 		this.serializedProduct = serializedProduct;
 	}
 
@@ -15,7 +15,7 @@ public class SerializedMetricPeriod extends Metric {
 	}
 
 	public static SerializedMetricPeriod deserialize(CompoundTag tag) {
-		return new SerializedMetricPeriod(tag.getString("s"), tag.getFloat("i"), tag.getFloat("o"), MetricPeriod.values()[tag.getByte("p")]);
+		return new SerializedMetricPeriod(tag.getString("s"), tag.getDouble("c"), tag.getDouble("p"), MetricPeriod.values()[tag.getByte("t")]);
 	}
 
 	@Override
@@ -27,6 +27,7 @@ public class SerializedMetricPeriod extends Metric {
 
 	@Override
 	public String toString() {
-		return "SerializedMetricPeriod [serializedProduct=" + serializedProduct + ", input=" + getInput() + ", output=" + getOutput() + ", period=" + getPeriod() + "]";
+		return "SerializedMetricPeriod [serializedProduct=" + serializedProduct + ", consumption()=" + getConsumption() + ", production()=" + getProduction() + ", period()="
+				+ getPeriod() + "]";
 	}
 }

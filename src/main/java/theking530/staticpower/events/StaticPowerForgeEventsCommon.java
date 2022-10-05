@@ -33,6 +33,7 @@ import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.ItemCraftedEvent;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock;
 import net.minecraftforge.event.server.ServerAboutToStartEvent;
+import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
 import net.minecraftforge.event.world.WorldEvent.Save;
@@ -103,6 +104,11 @@ public class StaticPowerForgeEventsCommon {
 	@SubscribeEvent
 	public static void onServerAboutToStart(ServerAboutToStartEvent serverStarted) {
 		DATA_PATH = serverStarted.getServer().getWorldPath(new LevelResource("data"));
+		StaticPowerGameDataManager.clearAllGameData();
+	}
+
+	@SubscribeEvent
+	public static void onServerStopped(ServerStoppedEvent serverStopped) {
 		StaticPowerGameDataManager.clearAllGameData();
 	}
 
