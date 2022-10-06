@@ -1,4 +1,4 @@
-package theking530.staticpower.teams.production.metrics;
+package theking530.staticcore.productivity.metrics;
 
 public enum MetricType {
 	CONSUMPTION("consumption"), PRODUCTION("production");

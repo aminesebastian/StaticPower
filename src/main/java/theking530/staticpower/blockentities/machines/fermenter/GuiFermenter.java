@@ -15,7 +15,6 @@ import theking530.staticcore.gui.widgets.tabs.slottabs.GuiFluidContainerTab;
 import theking530.staticcore.gui.widgets.tabs.slottabs.GuiUpgradeTab;
 import theking530.staticcore.gui.widgets.valuebars.GuiFluidBarFromTank;
 import theking530.staticcore.gui.widgets.valuebars.GuiPowerBarFromStorage;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.client.gui.StaticPowerTileEntityGui;
 import theking530.staticpower.init.ModFluids;
@@ -41,7 +40,8 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, B
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+		getTabManager()
+				.registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiUpgradeTab(this.menu, getTileEntity().upgradesInventory).setTabSide(TabSide.LEFT));
 
 		this.setOutputSlotSize(20);
@@ -51,7 +51,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, B
 	public void updateData() {
 		// If the recipe is non-null, render the fluid progress bar.
 		if (getTileEntity().processingComponent.isProcessing()) {
-			FluidStack fluid = getTileEntity().processingComponent.getRecipeMatchingParameters(getTileEntity().getMatchParameters(RecipeProcessingPhase.PROCESSING)).get().getOutputFluidStack();
+			FluidStack fluid = getTileEntity().processingComponent.getCurrentlyProcessingRecipe().get().getOutputFluidStack();
 			progressBar.setFluidStack(fluid);
 		} else {
 			progressBar.setFluidStack(FluidStack.EMPTY);

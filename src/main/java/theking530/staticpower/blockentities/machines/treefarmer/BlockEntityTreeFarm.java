@@ -40,8 +40,9 @@ import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -84,7 +85,6 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
-	public final InventoryComponent internalInventory;
 	public final MachineProcessingComponent processingComponent;
 	public final FluidTankComponent fluidTankComponent;
 
@@ -112,7 +112,6 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = (UpgradeInventoryComponent) new UpgradeInventoryComponent("UpgradeInventory", 3)
 				.setModifiedCallback(this::onUpgradesInventoryModifiedCallback));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 64));
 
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.treeFarmerProcessingTime.get(), this::canProcess,
 				this::canProcess, this::processingCompleted, true));
@@ -206,8 +205,9 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			refreshBlocksInRange(range);
 		}
 
+		ProcessingOutputContainer outputContainer = processingComponent.getOutputContainer();
 		// Only perform a harvest if the internal inventory is TOTALLY empty.
-		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
+		if (outputContainer.getOutputItems().isEmpty()) {
 			processBlock(getCurrentPosition());
 			((ServerLevel) getLevel()).sendParticles(ParticleTypes.FALLING_WATER, getCurrentPosition().getX() + 0.5D, getCurrentPosition().getY() + 1.0D,
 					getCurrentPosition().getZ() + 0.5D, 1, 0.0D, 0.0D, 0.0D, 0.0D);
@@ -217,8 +217,8 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		// For each of the farmed stacks, place the harvested stacks into the output
 		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
 		// Otherwise, update the farmed stack.
-		for (int i = 0; i < internalInventory.getSlots(); i++) {
-			ItemStack extractedStack = internalInventory.extractItem(i, Integer.MAX_VALUE, false);
+		for (int i = 0; i < outputContainer.getOutputItems().size(); i++) {
+			ItemStack extractedStack = outputContainer.getOutputItems().get(i);
 			InventoryComponent targetInventory = outputInventory;
 			if (saplingIngredient.test(extractedStack)) {
 				if (InventoryUtilities.canPartiallyInsertItemIntoInventory(inputInventory, extractedStack)) {
@@ -227,15 +227,16 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			}
 			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack, false);
 			if (!insertedStack.isEmpty()) {
-				internalInventory.setStackInSlot(i, insertedStack);
+				outputContainer.getOutputItems().set(i, insertedStack);
 			}
 		}
 
 		// Return true if we finished clearing the internal inventory.
-		if (InventoryUtilities.isInventoryEmpty(internalInventory)) {
+		if (outputContainer.getOutputItems().isEmpty()) {
+			outputContainer.clear();
 			return ProcessingCheckState.ok();
 		} else {
-			return ProcessingCheckState.internalInventoryNotEmpty();
+			return ProcessingCheckState.internalBufferNotEmpty();
 		}
 	}
 
@@ -301,9 +302,12 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			harvestBlock(pos, harvestResults, visited);
 
 			// Insert all the harvested results into the internal inventory.
-			for (ItemStack drop : harvestResults) {
-				InventoryUtilities.insertItemIntoInventory(internalInventory, drop, false);
+			ProcessingOutputContainer outputContainer = processingComponent.getOutputContainer();
+			outputContainer.open(null);
+			for (int i = 0; i < harvestResults.size(); i++) {
+				outputContainer.addOutputItem(harvestResults.get(i));
 			}
+			outputContainer.close();
 		}
 
 		// Plant a sapling in this place if possible and apply the bonemeal.

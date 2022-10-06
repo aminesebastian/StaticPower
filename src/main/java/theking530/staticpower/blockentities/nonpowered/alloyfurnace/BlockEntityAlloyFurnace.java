@@ -17,9 +17,10 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -32,7 +33,7 @@ import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRe
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
+public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements IRecipeProcessor<AlloyFurnaceRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityAlloyFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityAlloyFurnace(pos, state),
 			ModBlocks.AlloyFurnace);
@@ -50,7 +51,6 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent fuelInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;
 	public final RecipeProcessingComponent<AlloyFurnaceRecipe> processingComponent;
 	public final LoopingSoundComponent furnaceSoundComponent;
 
@@ -64,7 +64,6 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 		disableFaceInteraction();
 
 		registerComponent(furnaceSoundComponent = new LoopingSoundComponent("FurnaceSoundComponent", 20));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 2));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 2, MachineSideMode.Input2).setShiftClickEnabled(true));
 		registerComponent(fuelInventory = new InventoryComponent("FuelInventory", 1, MachineSideMode.Input3).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -74,7 +73,8 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 		}));
 
 		registerComponent(processingComponent = new RecipeProcessingComponent<AlloyFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.alloyFurnaceProcessingTime.get(),
-				RecipeProcessingComponent.MOVE_TIME, AlloyFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true));
+				AlloyFurnaceRecipe.RECIPE_TYPE, this));
+		processingComponent.setShouldControlBlockState(true);
 	}
 
 	public void process() {
@@ -89,7 +89,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 			// If we have a recipe that we can place in the output, if we don't have any
 			// remaining
 			// fuel, use some.
-			Optional<AlloyFurnaceRecipe> recipe = processingComponent.getPendingProcessingRecipe();
+			Optional<AlloyFurnaceRecipe> recipe = processingComponent.getPendingRecipe();
 			if (recipe.isPresent() && InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.get().getOutput().getItem())) {
 				int burnTime = ForgeHooks.getBurnTime(fuelInventory.getStackInSlot(0), null);
 				if (burnTimeRemaining <= 0 && burnTime > 0) {
@@ -110,6 +110,45 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 		}
 	}
 
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<AlloyFurnaceRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1));
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0))) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+		if (burnTimeRemaining <= 0) {
+			return ProcessingCheckState.error("gui.staticpower.alert.out_of_fuel");
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+		ItemStack input1 = inputInventory.getStackInSlot(0).copy();
+		input1.setCount(recipe.getInput1().getCount());
+		outputContainer.addInputItem(input1);
+		inputInventory.extractItem(0, recipe.getInput2().getCount(), false);
+
+		ItemStack input2 = inputInventory.getStackInSlot(1).copy();
+		input2.setCount(recipe.getInput2().getCount());
+		outputContainer.addInputItem(input2);
+		inputInventory.extractItem(1, recipe.getInput2().getCount(), false);
+
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+
+		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0), false);
+	}
+
 	public int getLastFuelBurnTime() {
 		return lastFuelBurnTime;
 	}
@@ -120,39 +159,6 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 
 	public float getBurnTimeRemainingRatio() {
 		return (float) burnTimeRemaining / lastFuelBurnTime;
-	}
-
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1));
-		}
-	}
-
-	protected void moveInputs(AlloyFurnaceRecipe recipe) {
-		transferItemInternally(recipe.getInput1().getCount(), inputInventory, 0, internalInventory, 0);
-		transferItemInternally(recipe.getInput2().getCount(), inputInventory, 1, internalInventory, 1);
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-	}
-
-	protected ProcessingCheckState canProcessRecipe(AlloyFurnaceRecipe recipe, RecipeProcessingPhase location) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getOutput().getItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		if (burnTimeRemaining <= 0) {
-			return ProcessingCheckState.error("gui.staticpower.alert.out_of_fuel");
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected void processingCompleted(AlloyFurnaceRecipe recipe) {
-		// Insert the output into the output inventory.
-		ItemStack output = recipe.getOutput().calculateOutput();
-		InventoryUtilities.insertItemIntoInventory(outputInventory, output, false);
-
-		// Clear the internal inventory.
-		InventoryUtilities.clearInventory(internalInventory);
 	}
 
 	@Override
@@ -168,4 +174,5 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable {
 		// Stick with the default setup ONLy.
 		return mode == SIDE_CONFIGURATION.getSideDefaultMode(side);
 	}
+
 }

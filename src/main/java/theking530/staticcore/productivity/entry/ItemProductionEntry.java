@@ -1,4 +1,4 @@
-package theking530.staticpower.teams.production;
+package theking530.staticcore.productivity.entry;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;

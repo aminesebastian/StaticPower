@@ -10,6 +10,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
 import theking530.staticpower.blockentities.BlockEntityBase;
+import theking530.staticpower.blockentities.components.control.processing.AbstractProcesingComponent;
 
 public class ProcesingComponentSyncPacket extends NetworkMessage {
 	private BlockPos pos;

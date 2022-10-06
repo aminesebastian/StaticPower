@@ -15,8 +15,8 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
@@ -28,7 +28,6 @@ import theking530.staticpower.blockentities.components.items.ItemStackHandlerFil
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.bottler.BottleRecipe;
@@ -78,8 +77,12 @@ public class BlockEntityBottler extends BlockEntityMachine {
 				.createMovingProcessingComponent("MoveComponent", this::canMoveFromInputToProcessing, () -> ProcessingCheckState.ok(), this::movingCompleted, true)
 				.setRedstoneControlComponent(redstoneControlComponent));
 		registerComponent(processingComponent = new MachineProcessingComponent("ProcessingComponent", StaticPowerConfig.SERVER.bottlerProcessingTime.get(), this::canProcess,
-				this::canProcess, this::processingCompleted, true).setShouldControlBlockState(true).setUpgradeInventory(upgradesInventory)
-				.setRedstoneControlComponent(redstoneControlComponent).setPowerComponent(powerStorage).setProcessingPowerUsage(StaticPowerConfig.SERVER.bottlerPowerUsage.get()));
+				this::canProcess, this::processingCompleted, true));
+		processingComponent.setShouldControlBlockState(true);
+		processingComponent.setUpgradeInventory(upgradesInventory);
+		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setPowerComponent(powerStorage);
+		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.bottlerPowerUsage.get());
 
 		// Setup the I/O servos.
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));

@@ -1,15 +1,16 @@
-package theking530.staticpower.blockentities.components.control;
+package theking530.staticpower.blockentities.components.control.processing;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.PowerStack;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.gui.text.PowerTextFormatting;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
+import theking530.staticpower.blockentities.components.control.ProcesingComponentSyncPacket;
+import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
@@ -18,7 +19,7 @@ import theking530.staticpower.blockentities.components.serialization.UpdateSeria
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
-public abstract class AbstractProcesingComponent extends AbstractBlockEntityComponent {
+public abstract class AbstractProcesingComponent<T extends AbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
 
@@ -37,9 +38,9 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 	@UpdateSerialize
 	private int currentProcessingTime;
 	@SaveSerialize
-	private int tickDownRate;
-	@SaveSerialize
 	private int defaultProcessingTime;
+	@SaveSerialize
+	private int tickDownRate;
 
 	@UpdateSerialize
 	private boolean processing;
@@ -55,8 +56,6 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 	protected double powerUsage;
 	@SaveSerialize
 	protected double defaultPowerUsage;
-	@SaveSerialize
-	protected boolean hasProcessingPowerCost;
 
 	/**
 	 * The power multiplier as calculated from the speed upgrade.
@@ -90,7 +89,6 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		this.tickDownRate = 1;
 		this.performedWorkLastTick = false;
 		this.processingSpeedUpgradeMultiplier = 1.0f;
-		this.hasProcessingPowerCost = false;
 		this.powerUsageIncreaseMultiplier = 1.0f;
 		this.processingErrorMessage = new TextComponent("");
 		this.processingStoppedDueToError = false;
@@ -144,12 +142,13 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		// Check if we have not started.
 		if (!hasStarted) {
 			// If we have not, check the starting state.
-			ProcessingCheckState startProcessingState = canStartProcessing();
+			ProcessingCheckState startProcessingState = internalCanStartProcessing();
 			// If it is an error, set the error info, otherwise, determine if it was okay
 			// and we can start.
 			if (startProcessingState.isError()) {
 				processingStoppedDueToError = true;
 				processingErrorMessage = startProcessingState.getErrorMessage();
+				onProcessingPausedDueToError();
 				return false;
 			} else {
 				// Set the error state to false.
@@ -168,10 +167,11 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			processing = false;
 
 			// Check to see if we can continue processing.
-			ProcessingCheckState canContinueProcessing = canContinueProcessing();
+			ProcessingCheckState canContinueProcessing = internalCanContinueProcessing();
 			if (canContinueProcessing.isError()) {
 				processingStoppedDueToError = true;
 				processingErrorMessage = canContinueProcessing.getErrorMessage();
+				onProcessingPausedDueToError();
 				return false;
 			} else {
 				// Get out of the error state.
@@ -195,7 +195,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			}
 
 			// Use power if requested to.
-			if (hasProcessingPowerCost && powerComponent != null && currentProcessingTime < processingTime) {
+			if (powerUsage > 0 && powerComponent != null && currentProcessingTime < processingTime) {
 				powerComponent.drainPower(getPowerUsage(), false);
 			}
 
@@ -209,6 +209,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 				if (completedState.isError()) {
 					processingStoppedDueToError = true;
 					processingErrorMessage = completedState.getErrorMessage();
+					onProcessingPausedDueToError();
 					return false;
 				} else {
 					// If it is cancel or an ok, finish processing. If it is skip, do nothing.
@@ -219,6 +220,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 						processing = false;
 						hasStarted = false;
 						processingStoppedDueToError = false;
+						onProcessingCompleted();
 					}
 				}
 			} else {
@@ -233,7 +235,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 	 * Starts processing if this component was not already processing. If we were
 	 * already processing, checks to see if we are paused, and unpauses.
 	 */
-	public void startProcessing() {
+	private void startProcessing() {
 		// If we should only run on the server, do nothing.
 		if (serverOnly && getLevel().isClientSide) {
 			return;
@@ -249,7 +251,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			onProcessingStarted();
 
 		} else if (processingPaused) {
-			continueProcessing();
+			resumeProcessing();
 		}
 	}
 
@@ -262,7 +264,7 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		processingPaused = true;
 	}
 
-	public void continueProcessing() {
+	public void resumeProcessing() {
 		// If we should only run on the server, do nothing.
 		if (serverOnly && getLevel().isClientSide) {
 			return;
@@ -280,9 +282,10 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		processing = false;
 		hasStarted = false;
 		processingStoppedDueToError = false;
+		onProcessingCanceled();
 	}
 
-	protected ProcessingCheckState canStartProcessing() {
+	private ProcessingCheckState internalCanStartProcessing() {
 		// Check the redstone state.
 		ProcessingCheckState redstoneState;
 		if (!(redstoneState = checkRedstoneState()).isOk()) {
@@ -295,11 +298,11 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 			return powerState;
 		}
 
-		// If the above are met, return ok.
-		return ProcessingCheckState.ok();
+		// If the above are met, check the non-internal call.
+		return canStartProcessing();
 	}
 
-	protected ProcessingCheckState canContinueProcessing() {
+	private ProcessingCheckState internalCanContinueProcessing() {
 		// Check the redstone state.
 		ProcessingCheckState redstoneState;
 		if (!(redstoneState = checkRedstoneState()).isOk()) {
@@ -307,27 +310,37 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		}
 
 		// Check the power state.
+		// Only do this if there is still processing to be done.
 		ProcessingCheckState powerState;
-		if (this.currentProcessingTime != this.processingTime && !(powerState = checkPowerRequirements()).isOk()) {
+		if (currentProcessingTime < processingTime && !(powerState = checkPowerRequirements()).isOk()) {
 			return powerState;
 		}
 
-		// If the above are met, return ok.
-		return ProcessingCheckState.ok();
+		// If the above are met, check the non-internal call.
+		return canContinueProcessing();
 	}
 
-	protected ProcessingCheckState canCompleteProcessing() {
-		// Check the redstone state.
-		ProcessingCheckState redstoneState;
-		if (!(redstoneState = checkRedstoneState()).isOk()) {
-			return redstoneState;
-		}
+	protected abstract ProcessingCheckState canStartProcessing();
 
-		// If the above are met, return ok.
+	protected abstract ProcessingCheckState canContinueProcessing();
+
+	protected ProcessingCheckState canCompleteProcessing() {
 		return ProcessingCheckState.ok();
 	}
 
 	protected void onProcessingStarted() {
+
+	}
+
+	protected void onProcessingCanceled() {
+
+	}
+
+	protected void onProcessingPausedDueToError() {
+
+	}
+
+	protected void onProcessingCompleted() {
 
 	}
 
@@ -375,8 +388,12 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		return processingTime;
 	}
 
-	public int getReminingTicks() {
-		return processingTime - currentProcessingTime;
+	public void setMaxProcessingTime(int newTime) {
+		defaultProcessingTime = newTime;
+		processingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);
+		if (processingTime == 0) {
+			processingTime = 1;
+		}
 	}
 
 	public float getCalculatedPowerUsageMultipler() {
@@ -387,48 +404,33 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		return powerUsageIncreaseMultiplier;
 	}
 
-	public void setMaxProcessingTime(int newTime) {
-		defaultProcessingTime = newTime;
-		processingTime = (int) (defaultProcessingTime * processingSpeedUpgradeMultiplier);
-		if (processingTime == 0) {
-			processingTime = 1;
-		}
-	}
-
-	public AbstractProcesingComponent setUpgradeInventory(UpgradeInventoryComponent inventory) {
+	@SuppressWarnings("unchecked")
+	public T setUpgradeInventory(UpgradeInventoryComponent inventory) {
 		upgradeInventory = inventory;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProcesingComponent setPowerComponent(PowerStorageComponent energyComponent) {
+	@SuppressWarnings("unchecked")
+	public T setPowerComponent(PowerStorageComponent energyComponent) {
 		this.powerComponent = energyComponent;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProcesingComponent setProcessingPowerUsage(double power) {
+	@SuppressWarnings("unchecked")
+	public T setProcessingPowerUsage(double power) {
 		if (power <= 0) {
-			return this;
+			return (T) this;
 		}
 
-		hasProcessingPowerCost = true;
 		defaultPowerUsage = power;
 		powerUsage = defaultPowerUsage * powerUsageIncreaseMultiplier;
-		return this;
+		return (T) this;
 	}
 
-	public AbstractProcesingComponent setPowerUsageMuiltiplier(float multiplier) {
-		powerMultiplier = multiplier;
-		return this;
-	}
-
-	public AbstractProcesingComponent disableProcessingPowerUsage() {
-		hasProcessingPowerCost = false;
-		return this;
-	}
-
-	public AbstractProcesingComponent setRedstoneControlComponent(RedstoneControlComponent redstoneControlComponent) {
+	@SuppressWarnings("unchecked")
+	public T setRedstoneControlComponent(RedstoneControlComponent redstoneControlComponent) {
 		this.redstoneControlComponent = redstoneControlComponent;
-		return this;
+		return (T) this;
 	}
 
 	/**
@@ -438,9 +440,16 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 	 * @param shouldControl
 	 * @return
 	 */
-	public AbstractProcesingComponent setShouldControlBlockState(boolean shouldControl) {
+	@SuppressWarnings("unchecked")
+	public T setShouldControlBlockState(boolean shouldControl) {
 		this.shouldControlOnBlockState = shouldControl;
-		return this;
+		return (T) this;
+	}
+
+	@SuppressWarnings("unchecked")
+	public T setPowerUsageMuiltiplier(float multiplier) {
+		powerMultiplier = multiplier;
+		return (T) this;
 	}
 
 	public float getPowerUsageMultiplier() {
@@ -521,15 +530,18 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 		}
 
 		// Check the processing power cost.
-		if (hasProcessingPowerCost) {
-			if (powerComponent != null && powerComponent.getStoredPower() < getPowerUsage()) {
-				return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
-			}
-			// Check the processing power rate.
-			PowerStack drainedPower = powerComponent.drainPower(getPowerUsage(), true);
-			if (hasProcessingPowerCost && powerComponent != null && drainedPower.getPower() < getPowerUsage()) {
-				return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (").append(PowerTextFormatting.formatPowerRateToString(getPowerUsage()))
-						.append(") is larger than the amount this machine can handle!").getString());
+		if (powerUsage > 0) {
+			if (powerComponent != null) {
+				if (powerComponent.getStoredPower() < getPowerUsage()) {
+					return ProcessingCheckState.error(new TextComponent("Not Enough Power!").getString());
+				}
+
+				// Check the processing power rate.
+				PowerStack drainedPower = powerComponent.drainPower(getPowerUsage(), true);
+				if (drainedPower.getPower() < getPowerUsage()) {
+					return ProcessingCheckState.error(new TextComponent("Recipe's power per tick requirement (")
+							.append(PowerTextFormatting.formatPowerRateToString(getPowerUsage())).append(") is larger than the amount this machine can handle!").getString());
+				}
 			}
 		}
 
@@ -598,97 +610,4 @@ public abstract class AbstractProcesingComponent extends AbstractBlockEntityComp
 
 	}
 
-	public static class ProcessingCheckState {
-		public enum ProcessingState {
-			SKIP, ERROR, OK, CANCEL
-		}
-
-		private final ProcessingState state;
-		private final MutableComponent errorMessage;
-
-		private ProcessingCheckState(ProcessingState state, String errorMessage) {
-			this(state, new TranslatableComponent(errorMessage));
-		}
-
-		private ProcessingCheckState(ProcessingState state, MutableComponent errorMessage) {
-			this.state = state;
-			this.errorMessage = errorMessage;
-		}
-
-		public ProcessingState getState() {
-			return state;
-		}
-
-		public MutableComponent getErrorMessage() {
-			return errorMessage;
-		}
-
-		public boolean isOk() {
-			return state == ProcessingState.OK;
-		}
-
-		public boolean isError() {
-			return state == ProcessingState.ERROR;
-		}
-
-		public boolean isSkip() {
-			return state == ProcessingState.SKIP;
-		}
-
-		public boolean isCancel() {
-			return state == ProcessingState.CANCEL;
-		}
-
-		public static ProcessingCheckState skip() {
-			return new ProcessingCheckState(ProcessingState.SKIP, "");
-		}
-
-		public static ProcessingCheckState ok() {
-			return new ProcessingCheckState(ProcessingState.OK, "");
-		}
-
-		public static ProcessingCheckState cancel() {
-			return new ProcessingCheckState(ProcessingState.CANCEL, "");
-		}
-
-		public static ProcessingCheckState error(String errorMessage) {
-			return new ProcessingCheckState(ProcessingState.ERROR, errorMessage);
-		}
-
-		public static ProcessingCheckState error(MutableComponent errorMessage) {
-			return new ProcessingCheckState(ProcessingState.ERROR, errorMessage);
-		}
-
-		public static ProcessingCheckState notCorrectFluid() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.requires_different_input_fluid");
-		}
-
-		public static ProcessingCheckState notEnoughFluid() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.not_enough_fluid");
-		}
-
-		public static ProcessingCheckState notEnoughPower(double requiredPower) {
-			return new ProcessingCheckState(ProcessingState.ERROR, new TranslatableComponent("gui.staticpower.alert.not_enough_power", requiredPower));
-		}
-
-		public static ProcessingCheckState powerOutputFull() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.power_output_full");
-		}
-
-		public static ProcessingCheckState fluidOutputFull() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.fluid_output_full");
-		}
-
-		public static ProcessingCheckState outputFluidDoesNotMatch() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.fluid_output_mismatch");
-		}
-
-		public static ProcessingCheckState internalInventoryNotEmpty() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.internal_buffer_not_empty");
-		}
-
-		public static ProcessingCheckState outputsCannotTakeRecipe() {
-			return new ProcessingCheckState(ProcessingState.ERROR, "gui.staticpower.alert.machine_ouput_cannot_fit_recipe");
-		}
-	}
 }

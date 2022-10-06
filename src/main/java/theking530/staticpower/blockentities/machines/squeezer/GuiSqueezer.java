@@ -40,13 +40,14 @@ public class GuiSqueezer extends StaticPowerTileEntityGui<ContainerSqueezer, Blo
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+		getTabManager()
+				.registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 	}
 
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<SqueezerRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentProcessingRecipe();
+		Optional<SqueezerRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent() && currentRecipe.get().hasOutputFluid()) {

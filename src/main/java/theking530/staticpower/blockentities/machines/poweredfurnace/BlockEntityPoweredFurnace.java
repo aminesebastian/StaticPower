@@ -12,9 +12,10 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
@@ -24,8 +25,6 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModBlocks;
-import theking530.staticpower.init.ModProducts;
-import theking530.staticpower.teams.production.ProductionTrackingToken;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 /**
@@ -34,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  * @author Amine Sebastian
  *
  */
-public class BlockEntityPoweredFurnace extends BlockEntityMachine {
+public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRecipeProcessor<SmeltingRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPoweredFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityPoweredFurnace(pos, state),
 			ModBlocks.PoweredFurnace);
@@ -47,12 +46,9 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final RecipeProcessingComponent<SmeltingRecipe> processingComponent;
-
-	private ProductionTrackingToken<ItemStack> test;
 
 	public BlockEntityPoweredFurnace(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
@@ -66,16 +62,11 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, RecipeType.SMELTING,
-				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
-
-		// Initialize the processing component to work with the redstone control
-		// component, upgrade component and energy component.
+		registerComponent(processingComponent = new RecipeProcessingComponent<SmeltingRecipe>("ProcessingComponent", RecipeType.SMELTING, this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -83,54 +74,36 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine {
 		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.poweredFurnacePowerUsage.get());
 
 		// Setup the I/O servos.
-		registerComponent(new InputServoComponent("InputServo", 4, inputInventory, 0));
-		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory, 0));
+		registerComponent(new InputServoComponent("InputServo", inputInventory));
+		registerComponent(new OutputServoComponent("OutputServo", outputInventory));
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
-		test = ModProducts.ITEM.getProductivityToken();
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
-		}
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SmeltingRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
 	}
 
-	protected ProcessingCheckState moveInputs(SmeltingRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItems().get(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
-
-		test.consumed(getTeamComponent().getOwningTeam(), inputInventory.getStackInSlot(0), 1);
-
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-		processingComponent.setMaxProcessingTime(BlockEntityPoweredFurnace.getCookTime(recipe));
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(SmeltingRecipe recipe, RecipeProcessingPhase location) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		test.setProductionPerSecond(getTeamComponent().getOwningTeam(), recipe.getResultItem(), 1.0 / (processingComponent.getMaxProcessingTime() / 20.0));
-		if (location == RecipeProcessingPhase.PRE_PROCESSING) {
-			test.setConsumptionPerSection(getTeamComponent().getOwningTeam(), inputInventory.getStackInSlot(0), 1.0 / (processingComponent.getMaxProcessingTime() / 20.0));
-		} else if (location == RecipeProcessingPhase.PROCESSING) {
-			test.setConsumptionPerSection(getTeamComponent().getOwningTeam(), internalInventory.getStackInSlot(0), 1.0 / (processingComponent.getMaxProcessingTime() / 20.0));
-		}
-
-		return ProcessingCheckState.ok();
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, 1, false));
+		outputContainer.addOutputItem(recipe.getResultItem().copy());
+		component.setMaxProcessingTime(getCookTime(recipe));
 	}
 
-	protected ProcessingCheckState processingCompleted(SmeltingRecipe recipe) {
-		outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		test.produced(this.getTeamComponent().getOwningTeam(), recipe.getResultItem(), 1);
-		test.invalidate();
-		return ProcessingCheckState.ok();
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
 	}
 
 	public static int getCookTime(SmeltingRecipe recipe) {

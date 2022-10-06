@@ -22,9 +22,10 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector4D;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -50,16 +51,14 @@ import theking530.staticpower.data.crafting.wrappers.refinery.RefineryRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModTags;
-import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityRefineryController extends BlockEntityMachine {
+public class BlockEntityRefineryController extends BlockEntityMachine implements IRecipeProcessor<RefineryRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityRefineryController> TYPE = new BlockEntityTypeAllocator<BlockEntityRefineryController>(
 			(type, pos, state) -> new BlockEntityRefineryController(pos, state), ModBlocks.RefineryController);
 	public static final int MAX_EFFICIENCY_TOWER_HEIGHT = 4;
 
 	public final InventoryComponent catalystInventory;
-	public final InventoryComponent internalInventory;
 	public final LoopingSoundComponent generatingSoundComponent;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final RecipeProcessingComponent<RefineryRecipe> processingComponent;
@@ -80,7 +79,6 @@ public class BlockEntityRefineryController extends BlockEntityMachine {
 
 		// Setup the inventories.
 		registerComponent(catalystInventory = new InventoryComponent("CatalystInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setExposedAsCapability(false));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Create the energy storage and and set the energy storage upgrade inventory.
@@ -88,8 +86,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, RefineryRecipe.RECIPE_TYPE,
-				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<RefineryRecipe>("ProcessingComponent", 1, RefineryRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -296,55 +293,6 @@ public class BlockEntityRefineryController extends BlockEntityMachine {
 		return total;
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters().setItems(internalInventory.getStackInSlot(0)).setFluids(getInputTank(0).getFluid(), getInputTank(1).getFluid());
-		} else {
-			return new RecipeMatchParameters().setItems(catalystInventory.getStackInSlot(0)).setFluids(getInputTank(0).getFluid(), getInputTank(1).getFluid());
-		}
-	}
-
-	protected void moveInputs(RefineryRecipe recipe) {
-		transferItemInternally(recipe.getCatalyst().getCount(), catalystInventory, 0, internalInventory, 0);
-		currentProcessingProductivity = getProductivity();
-	}
-
-	protected ProcessingCheckState canProcessRecipe(RefineryRecipe recipe, RecipeProcessingPhase location) {
-		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
-		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
-		if (!multiBlockCheck.isOk()) {
-			return multiBlockCheck;
-		}
-
-		ProcessingCheckState tankCheck = fillOutputTanksWithOutput(recipe, FluidAction.SIMULATE);
-		if (!tankCheck.isOk()) {
-			return tankCheck;
-		}
-
-		ProcessingCheckState heatCheck = checkHeatStorageReady();
-		if (!heatCheck.isOk()) {
-			return heatCheck;
-		}
-
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState processingCompleted(RefineryRecipe recipe) {
-		// Output the refined fluids.
-		fillOutputTanksWithOutput(recipe, FluidAction.EXECUTE);
-
-		// Drain the fluid.
-		getInputTank(0).drain((int) (recipe.getPrimaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
-		getInputTank(1).drain((int) (recipe.getSecondaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
-
-		// Clear the internal inventory.
-		InventoryUtilities.clearInventory(internalInventory);
-		heatStorage.cool(getHeatUsage(), HeatTransferAction.EXECUTE);
-		return ProcessingCheckState.ok();
-	}
-
 	protected ProcessingCheckState checkMultiBlockReady() {
 		if (getBoilers().size() == 0) {
 			return ProcessingCheckState.error("Missing Boilers!");
@@ -419,5 +367,54 @@ public class BlockEntityRefineryController extends BlockEntityMachine {
 	public void setRemoved() {
 		updateMultiblockBlockStates(false);
 		super.setRemoved();
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<RefineryRecipe> component) {
+		return new RecipeMatchParameters().setItems(catalystInventory.getStackInSlot(0)).setFluids(getInputTank(0).getFluid(), getInputTank(1).getFluid());
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (recipe.hasCatalyst()) {
+			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), false));
+		}
+
+		component.setMaxProcessingTime(recipe.getProcessingTime());
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
+		currentProcessingProductivity = getProductivity();
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+		ProcessingCheckState multiBlockCheck = checkMultiBlockReady();
+		if (!multiBlockCheck.isOk()) {
+			return multiBlockCheck;
+		}
+
+		ProcessingCheckState tankCheck = fillOutputTanksWithOutput(recipe, FluidAction.SIMULATE);
+		if (!tankCheck.isOk()) {
+			return tankCheck;
+		}
+
+		ProcessingCheckState heatCheck = checkHeatStorageReady();
+		if (!heatCheck.isOk()) {
+			return heatCheck;
+		}
+
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// Output the refined fluids.
+		fillOutputTanksWithOutput(recipe, FluidAction.EXECUTE);
+
+		// Drain the fluid.
+		getInputTank(0).drain((int) (recipe.getPrimaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
+		getInputTank(1).drain((int) (recipe.getSecondaryFluidInput().getAmount() * currentProcessingProductivity), FluidAction.EXECUTE);
+
+		heatStorage.cool(getHeatUsage(), HeatTransferAction.EXECUTE);
 	}
 }

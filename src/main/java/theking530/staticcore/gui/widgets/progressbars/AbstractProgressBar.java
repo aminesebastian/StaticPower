@@ -18,8 +18,8 @@ import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent;
-import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.AbstractProcesingComponent;
+import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
 

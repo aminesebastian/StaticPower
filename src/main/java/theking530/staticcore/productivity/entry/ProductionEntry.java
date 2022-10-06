@@ -1,7 +1,9 @@
-package theking530.staticpower.teams.production;
+package theking530.staticcore.productivity.entry;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import theking530.staticcore.productivity.ProductionTrackingToken;
 
 public abstract class ProductionEntry<T> {
 	public record ProductionEntryState(double consumed, double produced, double consumptionRate, double productionRate) {

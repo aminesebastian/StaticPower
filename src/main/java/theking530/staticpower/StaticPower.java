@@ -36,6 +36,7 @@ import theking530.staticpower.init.ModEntities;
 import theking530.staticpower.init.ModFluids;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModNetworkMessages;
+import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.init.ModRecipeSerializers;
 import theking530.staticpower.init.cables.ModCableCapabilities;
 import theking530.staticpower.init.cables.ModCableDestinations;
@@ -93,6 +94,8 @@ public class StaticPower {
 			ModCableDestinations.init(eventBus);
 			ModCableModules.init(eventBus);
 			ModCableCapabilities.init(eventBus);
+
+			ModProducts.init(eventBus);
 
 			StaticCoreRegistry.postInitialize();
 		} catch (Exception e) {

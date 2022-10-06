@@ -11,9 +11,10 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -21,19 +22,19 @@ import theking530.staticpower.blockentities.components.fluids.FluidOutputServoCo
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
+import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.lumbermill.LumberMillRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityLumberMill extends BlockEntityMachine {
+public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipeProcessor<LumberMillRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityLumberMill> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityLumberMill(pos, state),
 			ModBlocks.LumberMill);
@@ -42,7 +43,6 @@ public class BlockEntityLumberMill extends BlockEntityMachine {
 	public final InventoryComponent mainOutputInventory;
 	public final InventoryComponent secondaryOutputInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
-	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
@@ -63,7 +63,6 @@ public class BlockEntityLumberMill extends BlockEntityMachine {
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(mainOutputInventory = new InventoryComponent("MainOutputInventory", 1, MachineSideMode.Output2));
 		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
@@ -71,11 +70,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<LumberMillRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, LumberMillRecipe.RECIPE_TYPE,
-				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
-
-		// Initialize the processing component to work with the redstone control
-		// component, upgrade component and energy component.
+		registerComponent(processingComponent = new RecipeProcessingComponent<LumberMillRecipe>("ProcessingComponent", LumberMillRecipe.RECIPE_TYPE, this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -99,69 +94,31 @@ public class BlockEntityLumberMill extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
-		}
-	}
-
-	protected ProcessingCheckState moveInputs(LumberMillRecipe recipe) {
-		// If the recipe cannot be insert into the output, return false.
-		if (!canOutputsTakeRecipeResult(recipe)) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		// Move the item.
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-
-		// Set the power usage.
-		this.processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState canProcessRecipe(LumberMillRecipe recipe, RecipeProcessingPhase location) {
-		// If the recipe cannot be insert into the output, return false.
-		if (!canOutputsTakeRecipeResult(recipe)) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return ProcessingCheckState.fluidOutputFull();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState processingCompleted(LumberMillRecipe recipe) {
-		ItemStack primaryOutput = recipe.getPrimaryOutput().calculateOutput();
-		ItemStack secondaryOutput = recipe.getSecondaryOutput().calculateOutput();
-
-		mainOutputInventory.insertItem(0, primaryOutput, false);
-		secondaryOutputInventory.insertItem(0, secondaryOutput, false);
-
-		fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
-
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		return ProcessingCheckState.ok();
-	}
-
 	/**
 	 * Ensure the output slots can take the results of the crafting.
 	 * 
 	 * @param recipe
 	 * @return
 	 */
-	protected boolean canOutputsTakeRecipeResult(LumberMillRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, recipe.getPrimaryOutput().getItem())) {
-			return false;
-		} else if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, recipe.getSecondaryOutput().getItem())) {
-			return false;
-		} else if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return false;
+	protected boolean canOutputsTakeRecipeResult(ProcessingOutputContainer outputContainer) {
+		if (outputContainer.getOutputItems().size() > 0) {
+			if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0))) {
+				return false;
+			}
+
+			if (outputContainer.getOutputItems().size() > 1) {
+				if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, outputContainer.getOutputItem(1))) {
+					return false;
+				}
+			}
 		}
+
+		if (outputContainer.hasOutputFluids()) {
+			if (fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).getAmount()) {
+				return false;
+			}
+		}
+
 		return true;
 	}
 
@@ -179,5 +136,50 @@ public class BlockEntityLumberMill extends BlockEntityMachine {
 	@Override
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
 		return DEFAULT_NO_FACE_SIDE_CONFIGURATION.copy().setSide(BlockSide.BACK, true, MachineSideMode.Output2).setSide(BlockSide.RIGHT, true, MachineSideMode.Output3);
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<LumberMillRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// Move the item.
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput());
+		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput());
+		outputContainer.addOutputFluid(recipe.getOutputFluid().copy());
+
+		// Set the power usage.
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// If the recipe cannot be insert into the output, return false.
+		if (!canOutputsTakeRecipeResult(outputContainer)) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+			return ProcessingCheckState.fluidOutputFull();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (outputContainer.getOutputItems().size() > 0) {
+			mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+			if (outputContainer.getOutputItems().size() > 1) {
+				secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1), false);
+			}
+		}
+
+		if (outputContainer.getOutputFluids().size() > 0) {
+			fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+		}
 	}
 }

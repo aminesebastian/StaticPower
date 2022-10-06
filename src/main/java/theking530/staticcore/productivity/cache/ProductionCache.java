@@ -1,4 +1,4 @@
-package theking530.staticpower.teams.production;
+package theking530.staticcore.productivity.cache;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -10,22 +10,22 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import theking530.staticcore.productivity.ProductionTrackingToken;
+import theking530.staticcore.productivity.entry.ProductionEntry;
+import theking530.staticcore.productivity.entry.ProductionEntry.ProductionEntryState;
+import theking530.staticcore.productivity.metrics.MetricPeriod;
+import theking530.staticcore.productivity.metrics.MetricType;
+import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
+import theking530.staticcore.productivity.metrics.SertializedBiDirectionalMetrics;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.teams.production.ProductionEntry.ProductionEntryState;
-import theking530.staticpower.teams.production.metrics.MetricPeriod;
-import theking530.staticpower.teams.production.metrics.MetricType;
-import theking530.staticpower.teams.production.metrics.SerializedMetricPeriod;
-import theking530.staticpower.teams.production.metrics.SertializedBiDirectionalMetrics;
 
 public abstract class ProductionCache<T> {
 	private final List<Map<Integer, ProductionEntry<T>>> productivityBuckets;
 	private final Map<Integer, Integer> productivityBucketMap;
-	private final Connection database;
+	private Connection database;
 	private int bucketRoundRobinIndex;
 
-	public ProductionCache(Connection database) {
-		this.database = database;
-
+	public ProductionCache() {
 		bucketRoundRobinIndex = 0;
 		productivityBucketMap = new HashMap<>();
 		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();
@@ -58,7 +58,8 @@ public abstract class ProductionCache<T> {
 		return entry;
 	}
 
-	public void initializeDatabase() {
+	public void initializeDatabase(Connection database) {
+		this.database = database;
 		createProductLookupTable();
 	}
 
@@ -166,13 +167,9 @@ public abstract class ProductionCache<T> {
 				double consumption = result.getDouble("consumption_rate") * period.getPeriodLengthInSeconds();
 				double production = result.getDouble("production_rate") * period.getPeriodLengthInSeconds();
 				if (direction == MetricType.CONSUMPTION) {
-					if (consumption > 0) {
-						metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
-					}
+					metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
 				} else {
-					if (production > 0) {
-						metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
-					}
+					metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
 				}
 			}
 		} catch (SQLException e) {

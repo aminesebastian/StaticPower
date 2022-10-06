@@ -48,7 +48,7 @@ public class GuiMixer extends StaticPowerTileEntityGui<ContainerMixer, BlockEnti
 	@Override
 	public void updateData() {
 		// If the recipe is non-null, render the fluid progress bar.
-		Optional<MixerRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentProcessingRecipe();
+		Optional<MixerRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
 		if (currentRecipe.isPresent()) {
 			progressBar.setFluidStack(currentRecipe.get().getOutput());
 		} else {

@@ -1,4 +1,4 @@
-package theking530.staticpower.teams.production.metrics;
+package theking530.staticcore.productivity.metrics;
 
 public class ProductMetric<T> extends Metric {
 	private final T product;

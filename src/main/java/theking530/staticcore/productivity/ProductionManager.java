@@ -1,56 +1,63 @@
-package theking530.staticpower.teams.production;
+package theking530.staticcore.productivity;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import theking530.staticcore.productivity.cache.ProductionCache;
+import theking530.staticcore.productivity.entry.ProductionEntry;
+import theking530.staticcore.productivity.metrics.MetricPeriod;
+import theking530.staticcore.productivity.metrics.SertializedBiDirectionalMetrics;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticcore.utilities.SDTime;
 import theking530.staticpower.StaticPower;
-import theking530.staticpower.init.ModProducts;
+import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.teams.Team;
-import theking530.staticpower.teams.production.metrics.MetricPeriod;
-import theking530.staticpower.teams.production.metrics.SertializedBiDirectionalMetrics;
-import theking530.staticpower.teams.production.product.ProductType;
 
 public class ProductionManager {
 	private final Team team;
-	public final ItemProductivityCache itemProductvitiyCache;
 	public SertializedBiDirectionalMetrics tempClientMetrics = SertializedBiDirectionalMetrics.EMPTY;
 
 	public Map<ProductType<?, ?>, ProductionCache<?>> cache;
 
 	public ProductionManager(Team team) {
 		this.team = team;
-		this.itemProductvitiyCache = new ItemProductivityCache(team.getDatabaseConnection());
 		cache = new HashMap<>();
-		cache.put(ModProducts.ITEM, itemProductvitiyCache);
+
+		Collection<ProductType<?, ?>> registeredProducts = StaticPowerRegistries.ProductRegistry().getValues();
+		for (ProductType<?, ?> registration : registeredProducts) {
+			cache.put(registration, registration.createNewCacheInstance());
+		}
 
 		initializeDatabase();
 	}
 
 	public void tick(long gameTime) {
 		int currentTickIndex = (int) (gameTime % 20);
-		itemProductvitiyCache.insertProductivityPerSecond(team.getDatabaseConnection(), currentTickIndex, gameTime);
+		for (ProductionCache<?> prodCache : cache.values()) {
+			prodCache.insertProductivityPerSecond(team.getDatabaseConnection(), currentTickIndex, gameTime);
 
-		if (gameTime % SDTime.TICKS_PER_SECOND == 0) {
-			itemProductvitiyCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.SECOND, gameTime);
-		}
+			if (gameTime % SDTime.TICKS_PER_SECOND == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.SECOND, gameTime);
+			}
 
-		if (gameTime % SDTime.TICKS_PER_MINUTE == 0) {
-			itemProductvitiyCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.MINUTE, gameTime);
-			itemProductvitiyCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.SECOND, MetricPeriod.MINUTE, gameTime);
-		}
+			if (gameTime % SDTime.TICKS_PER_MINUTE == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.MINUTE, gameTime);
+				prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.SECOND, MetricPeriod.MINUTE, gameTime);
+			}
 
-		if (gameTime % SDTime.TICKS_PER_HOUR == 0) {
-			itemProductvitiyCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.HOUR, gameTime);
-			itemProductvitiyCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.MINUTE, MetricPeriod.HOUR, gameTime);
-		}
+			if (gameTime % SDTime.TICKS_PER_HOUR == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.HOUR, gameTime);
+				prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.MINUTE, MetricPeriod.HOUR, gameTime);
+			}
 
-		if (gameTime % SDTime.TICKS_PER_DAY == 0) {
-			itemProductvitiyCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.DAY, gameTime);
-			itemProductvitiyCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.HOUR, MetricPeriod.DAY, gameTime);
+			if (gameTime % SDTime.TICKS_PER_DAY == 0) {
+				prodCache.clearOldEntries(team.getDatabaseConnection(), MetricPeriod.DAY, gameTime);
+				prodCache.updateAggregateData(team.getDatabaseConnection(), MetricPeriod.HOUR, MetricPeriod.DAY, gameTime);
+			}
 		}
 	}
 
@@ -76,7 +83,9 @@ public class ProductionManager {
 			StaticPower.LOGGER.error(String.format("An error occured when creating the productivity tracking tables!"), e);
 		}
 
-		itemProductvitiyCache.initializeDatabase();
+		for (ProductionCache<?> prodCache : cache.values()) {
+			prodCache.initializeDatabase(team.getDatabaseConnection());
+		}
 	}
 
 	private String createProductivityTable(String productType, MetricPeriod period) {

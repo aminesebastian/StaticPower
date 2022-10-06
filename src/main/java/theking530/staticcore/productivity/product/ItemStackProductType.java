@@ -1,14 +1,15 @@
-package theking530.staticpower.teams.production.product;
+package theking530.staticcore.productivity.product;
 
 import net.minecraft.world.item.ItemStack;
-import theking530.staticpower.teams.production.ItemProductionEntry;
-import theking530.staticpower.teams.production.ProductionTrackingToken;
+import theking530.staticcore.productivity.ProductionTrackingToken;
+import theking530.staticcore.productivity.cache.ItemProductionCache;
+import theking530.staticcore.productivity.entry.ItemProductionEntry;
 import theking530.staticpower.utilities.ItemUtilities;
 
 public class ItemStackProductType extends ProductType<ItemStack, ItemProductionEntry> {
 
 	public ItemStackProductType() {
-		super(ItemStack.class);
+		super(ItemStack.class, () -> new ItemProductionCache());
 	}
 
 	@Override

@@ -13,20 +13,21 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent;
+import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.ItemStackHandlerFilter;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
-import theking530.staticpower.blockentities.components.items.FluidContainerInventoryComponent.FluidContainerInteractionMode;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderSqueezer;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
@@ -34,9 +35,10 @@ import theking530.staticpower.data.crafting.wrappers.squeezer.SqueezerRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntitySqueezer extends BlockEntityMachine {
+public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipeProcessor<SqueezerRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntitySqueezer> TYPE = new BlockEntityTypeAllocator<BlockEntitySqueezer>((type, pos, state) -> new BlockEntitySqueezer(pos, state), ModBlocks.Squeezer);
+	public static final BlockEntityTypeAllocator<BlockEntitySqueezer> TYPE = new BlockEntityTypeAllocator<BlockEntitySqueezer>(
+			(type, pos, state) -> new BlockEntitySqueezer(pos, state), ModBlocks.Squeezer);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -76,10 +78,7 @@ public class BlockEntitySqueezer extends BlockEntityMachine {
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<SqueezerRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.squeezerProcessingTime.get(),
-				RecipeProcessingComponent.MOVE_TIME, SqueezerRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
-
-		// Initialize the processing component to work with the redstone control
-		// component, upgrade component and energy component.
+				SqueezerRecipe.RECIPE_TYPE, this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -99,14 +98,6 @@ public class BlockEntitySqueezer extends BlockEntityMachine {
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
-	}
-
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
-		}
 	}
 
 	protected ProcessingCheckState moveInputs(SqueezerRecipe recipe) {
@@ -131,42 +122,47 @@ public class BlockEntitySqueezer extends BlockEntityMachine {
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canProcessRecipe(SqueezerRecipe recipe, RecipeProcessingPhase location) {
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SqueezerRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.addOutputFluid(fluidTankComponent.getFluid(), recipe.getOutputFluid().getAmount());
+
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+		component.setMaxProcessingTime(recipe.getProcessingTime());
+
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
-		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
+		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
-		if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			if (!fluidTankComponent.getFluid().isEmpty() && fluidTankComponent.getFluid().getFluid() != recipe.getOutputFluid().getFluid()) {
-				return ProcessingCheckState.outputFluidDoesNotMatch();
-			} else {
-				return ProcessingCheckState.fluidOutputFull();
-			}
+		if (recipe.hasOutputFluid() && fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+			return ProcessingCheckState.fluidOutputFull();
 		}
+
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState processingCompleted(SqueezerRecipe recipe) {
-
-		// Insert the outputs
-		// Check the dice roll for the output.
-		if (recipe.hasItemOutput()) {
-			ItemStack outputItem = recipe.getOutput().calculateOutput();
-			outputInventory.insertItem(0, outputItem, false);
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!outputContainer.getOutputItems().isEmpty()) {
+			outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
 		}
-
-		// Fill the output tank.
-		if (recipe.hasOutputFluid()) {
-			fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
+		if (!outputContainer.getOutputFluids().isEmpty()) {
+			fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
 		}
-
-		// Clear the internal inventory.
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		return ProcessingCheckState.ok();
 	}
 
 	@Override

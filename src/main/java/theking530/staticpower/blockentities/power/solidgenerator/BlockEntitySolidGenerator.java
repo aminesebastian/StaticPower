@@ -18,9 +18,10 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
@@ -32,13 +33,12 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
 
-public class BlockEntitySolidGenerator extends BlockEntityMachine {
+public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRecipeProcessor<SolidFuelRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntitySolidGenerator> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntitySolidGenerator(pos, state),
 			ModBlocks.SolidGenerator);
 
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent internalInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final LoopingSoundComponent generatingSoundComponent;
 
@@ -59,14 +59,12 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine {
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1).setShouldDropContentsOnBreak(false));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<SolidFuelRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, SolidFuelRecipe.RECIPE_TYPE,
-				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<SolidFuelRecipe>("ProcessingComponent", SolidFuelRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -85,31 +83,6 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine {
 		powerGenerationPerTick = StaticPowerConfig.SERVER.solidFuelGenerationPerTick.get();
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
-		}
-	}
-
-	protected void moveInputs(SolidFuelRecipe recipe) {
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-		processingComponent.setMaxProcessingTime(recipe.getFuelAmount());
-	}
-
-	protected ProcessingCheckState canProcessRecipe(SolidFuelRecipe recipe, RecipeProcessingPhase location) {
-		if (!powerStorage.canFullyAcceptPower(powerGenerationPerTick)) {
-			return ProcessingCheckState.powerOutputFull();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState processingCompleted(SolidFuelRecipe recipe) {
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		return ProcessingCheckState.ok();
-	}
-
 	@Override
 	public void process() {
 		if (!level.isClientSide) {
@@ -123,7 +96,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine {
 		// Randomly generate smoke and flame particles.
 		if (processingComponent.getIsOnBlockState()) {
 			if (SDMath.diceRoll(0.25f)) {
-				float randomOffset = ((2 * getLevel().random.nextFloat()) - 1.0f) / 3.5f;
+				float randomOffset = ((2 * getLevel().getRandom().nextFloat()) - 1.0f) / 3.5f;
 				Vector3f forwardVector = SDMath.translateRelativeOffset(getFacingDirection(), new Vector3f(1.0f, 0.32f, -0.5f + randomOffset));
 				getLevel().addParticle(ParticleTypes.SMOKE, getBlockPos().getX() + forwardVector.x(), getBlockPos().getY() + forwardVector.y(),
 						getBlockPos().getZ() + forwardVector.z(), 0.0f, 0.01f, 0.0f);
@@ -133,7 +106,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine {
 		}
 
 		// If we're processing, generate power. Otherwise, pause.
-		if (!getLevel().isClientSide && processingComponent.isPerformingWork()) {
+		if (!getLevel().isClientSide() && processingComponent.isPerformingWork()) {
 			powerStorage.addPower(new PowerStack(powerGenerationPerTick, powerStorage.getOutputVoltage()), false);
 		}
 	}
@@ -141,5 +114,32 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine {
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerSolidGenerator(windowId, inventory, this);
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<SolidFuelRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!powerStorage.canFullyAcceptPower(powerGenerationPerTick)) {
+			return ProcessingCheckState.powerOutputFull();
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.getStackInSlot(0), recipe.getInput().getCount());
+		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
+
+		outputContainer.setOutputPower(powerGenerationPerTick);
+		component.setMaxProcessingTime(recipe.getFuelAmount());
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
+
 	}
 }

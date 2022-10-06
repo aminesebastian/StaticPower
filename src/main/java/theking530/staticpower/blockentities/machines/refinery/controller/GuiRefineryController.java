@@ -62,7 +62,7 @@ public class GuiRefineryController extends StaticPowerTileEntityGui<ContainerRef
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<RefineryRecipe> recipe = getTileEntity().processingComponent.getCurrentProcessingRecipe();
+		Optional<RefineryRecipe> recipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
 
 		// Update the progress bar.
 		if (recipe.isPresent()) {

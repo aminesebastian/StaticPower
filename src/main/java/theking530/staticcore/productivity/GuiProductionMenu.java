@@ -1,4 +1,4 @@
-package theking530.staticpower.teams.production;
+package theking530.staticcore.productivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -8,15 +8,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.containers.ScrollBox;
+import theking530.staticcore.productivity.metrics.MetricEntryWidget;
+import theking530.staticcore.productivity.metrics.MetricType;
+import theking530.staticcore.productivity.metrics.PacketGetProductionMetrics;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.gui.StaticPowerDetatchedGui;
+import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
-import theking530.staticpower.teams.production.metrics.MetricEntryWidget;
-import theking530.staticpower.teams.production.metrics.MetricType;
-import theking530.staticpower.teams.production.metrics.PacketGetProductionMetrics;
 
 public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	private ScrollBox inputScrollBox;
@@ -34,7 +35,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 		inputMetricWidgets = new LinkedList<MetricEntryWidget>();
 		outputMetricWidgets = new LinkedList<MetricEntryWidget>();
 
-		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketGetProductionMetrics());
+		StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketGetProductionMetrics(ModProducts.Item.get()));
 
 		this.registerWidget(inputScrollBox = new ScrollBox(10, 10, 200, 200));
 		inputScrollBox.setDrawScrollBar(true);
@@ -56,7 +57,7 @@ public class GuiProductionMenu extends StaticPowerDetatchedGui {
 	public void tick() {
 		super.tick();
 		if (Minecraft.getInstance().level.getGameTime() % 20 == 0) {
-			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketGetProductionMetrics());
+			StaticPowerMessageHandler.sendToServer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, new PacketGetProductionMetrics(ModProducts.Item.get()));
 		}
 
 		// Updated the metric widgets.

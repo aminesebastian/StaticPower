@@ -10,7 +10,7 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
 import theking530.staticcore.gui.drawables.SpriteDrawable;
 import theking530.staticcore.utilities.Vector2D;
-import theking530.staticpower.blockentities.components.control.MachineProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.client.StaticPowerSprites;
 
 public class ProcessingComponentStateWidget extends AbstractGuiWidget<ProcessingComponentStateWidget> {

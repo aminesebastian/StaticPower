@@ -58,6 +58,8 @@ import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.SerializationUtilities;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
@@ -67,8 +69,8 @@ import theking530.staticpower.blocks.tileentity.StaticPowerBlockEntityBlock;
 import theking530.staticpower.cables.AbstractCableProviderComponent;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.StaticPowerTiers;
-import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.network.BlockEntityBasicSyncPacket;
+import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.utilities.WorldUtilities;
 
 public abstract class BlockEntityBase extends BlockEntity implements MenuProvider, IBreakSerializeable, ICableStateSyncTarget {
@@ -285,26 +287,28 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		}
 		isValid = false;
 
-		// Add all the items that are currently in an inventory.
-		if (worldPosition != null) {
-			BlockEntityBase baseTe = level.getBlockEntity(worldPosition) instanceof BlockEntityBase ? (BlockEntityBase) level.getBlockEntity(worldPosition) : null;
-			if (baseTe != null) {
-				for (InventoryComponent comp : baseTe.getComponents(InventoryComponent.class)) {
-					// Skip components that should not drop their contents.
-					if (!comp.shouldDropContentsOnBreak()) {
-						continue;
-					}
-					// Capture all the items in the component.
-					for (int i = 0; i < comp.getSlots(); i++) {
-						ItemStack extracted = comp.extractItem(i, Integer.MAX_VALUE, false);
-						if (!extracted.isEmpty()) {
-							WorldUtilities.dropItem(level, worldPosition, extracted);
-						}
-					}
+		// Drop all the items currently in an inventory.
+		for (InventoryComponent comp : getComponents(InventoryComponent.class)) {
+			// Skip components that should not drop their contents.
+			if (!comp.shouldDropContentsOnBreak()) {
+				continue;
+			}
+			for (int i = 0; i < comp.getSlots(); i++) {
+				ItemStack extracted = comp.extractItem(i, Integer.MAX_VALUE, false);
+				if (!extracted.isEmpty()) {
+					WorldUtilities.dropItem(level, worldPosition, extracted);
 				}
 			}
 		}
 
+		// Drop all the INPUTS from any recipe processing components.
+		for (RecipeProcessingComponent<?> comp : getComponents(RecipeProcessingComponent.class)) {
+			ProcessingOutputContainer outputContainer = comp.getCurrentProcessingContainer();
+			for (ItemStack input : outputContainer.getInputItems()) {
+				WorldUtilities.dropItem(level, worldPosition, input);
+			}
+			outputContainer.clear();
+		}
 	}
 
 	public void onBlockReplaced(BlockState state, BlockState newState, boolean isMoving) {

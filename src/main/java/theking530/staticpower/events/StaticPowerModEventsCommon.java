@@ -40,6 +40,7 @@ import theking530.staticcore.cablenetwork.destinations.CableDestination;
 import theking530.staticcore.cablenetwork.modules.CableNetworkModuleType;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.initialization.StaticCoreRegistry;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.blockentities.machines.cropfarmer.BlockEntityBasicFarmer;
@@ -95,6 +96,13 @@ public class StaticPowerModEventsCommon {
 				Integer.MAX_VALUE - 1));
 		event.create(new RegistryBuilder<ServerCableCapabilityType>().setName(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY).setType(ServerCableCapabilityType.class)
 				.setIDRange(0, Integer.MAX_VALUE - 1));
+		event.create(new RegistryBuilder<ProductType<?, ?>>().setName(StaticPowerRegistries.PRODUCT_REGISTRY).setType(castClass(ProductType.class)).setIDRange(0,
+				Integer.MAX_VALUE - 1));
+	}
+
+	@SuppressWarnings("unchecked") // Need this wrapper, because generics
+	private static <G> Class<G> castClass(Class<?> cls) {
+		return (Class<G>) cls;
 	}
 
 	@SubscribeEvent

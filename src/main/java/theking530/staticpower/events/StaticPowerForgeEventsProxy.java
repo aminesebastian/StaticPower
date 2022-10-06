@@ -24,6 +24,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.initialization.StaticCoreRegistry;
 import theking530.staticcore.item.ICustomModelSupplier;
+import theking530.staticcore.productivity.GuiProductionMenu;
 import theking530.staticpower.blocks.interfaces.IRenderLayerProvider;
 import theking530.staticpower.client.StaticPowerSprites;
 import theking530.staticpower.client.rendering.items.FluidCapsuleItemModel.CapsuleColorProvider;
@@ -31,7 +32,6 @@ import theking530.staticpower.client.rendering.renderers.RadiusPreviewRenderer;
 import theking530.staticpower.client.rendering.renderers.WireRenderer;
 import theking530.staticpower.init.ModItems;
 import theking530.staticpower.init.ModKeyBindings;
-import theking530.staticpower.teams.production.GuiProductionMenu;
 import theking530.staticpower.teams.research.ActiveResearchHUD;
 import theking530.staticpower.teams.research.GuiResearchMenu;
 

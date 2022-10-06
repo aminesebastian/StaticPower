@@ -1,10 +1,12 @@
-package theking530.staticpower.teams.production;
+package theking530.staticcore.productivity;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import theking530.staticcore.productivity.cache.ProductionCache;
+import theking530.staticcore.productivity.entry.ProductionEntry;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.teams.Team;
-import theking530.staticpower.teams.production.product.ProductType;
 
 public class ProductionTrackingToken<T> {
 	private static long NEXT_ID = 0;

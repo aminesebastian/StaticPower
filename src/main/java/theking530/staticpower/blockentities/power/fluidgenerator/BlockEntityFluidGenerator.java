@@ -14,9 +14,10 @@ import theking530.api.energy.PowerStack;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.energy.PowerDistributionComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
@@ -30,7 +31,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.fluidgenerator.FluidGeneratorRecipe;
 import theking530.staticpower.init.ModBlocks;
 
-public class BlockEntityFluidGenerator extends BlockEntityMachine {
+public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRecipeProcessor<FluidGeneratorRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityFluidGenerator> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidGenerator>(
 			(type, pos, state) -> new BlockEntityFluidGenerator(pos, state), ModBlocks.FluidGenerator);
@@ -51,9 +52,10 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 		super(TYPE, pos, state);
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", 0, 0, FluidGeneratorRecipe.RECIPE_TYPE,
-				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FluidGeneratorRecipe>("ProcessingComponent", FluidGeneratorRecipe.RECIPE_TYPE, this));
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
+		processingComponent.setMaxProcessingTime(0);
+		processingComponent.setMoveTime(0);
 
 		registerComponent(generatingSoundComponent = new LoopingSoundComponent("GeneratingSoundComponent", 20));
 
@@ -78,16 +80,25 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 		}
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
+	protected ProcessingCheckState processingCompleted(FluidGeneratorRecipe recipe) {
+		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage().getVoltage()), false);
+		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
+		return new ContainerFluidGenerator(windowId, inventory, this);
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FluidGeneratorRecipe> component) {
 		return new RecipeMatchParameters(fluidTankComponent.getFluid());
 	}
 
-	protected void moveInputs(FluidGeneratorRecipe recipe) {
-		powerStorage.setMaximumOutputPower(recipe.getPowerGeneration());
-		powerStorage.setMaximumInputPower(recipe.getPowerGeneration());
-	}
-
-	protected ProcessingCheckState canProcessRecipe(FluidGeneratorRecipe recipe, RecipeProcessingPhase location) {
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
 		// Do nothing if the input tank is empty.
 		if (fluidTankComponent.getFluidAmount() == 0) {
 			return ProcessingCheckState.skip();
@@ -102,14 +113,17 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine {
 		}
 	}
 
-	protected ProcessingCheckState processingCompleted(FluidGeneratorRecipe recipe) {
-		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage().getVoltage()), false);
-		fluidTankComponent.drain(recipe.getFluid().getAmount(), FluidAction.EXECUTE);
-		return ProcessingCheckState.ok();
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer) {
+		powerStorage.setMaximumOutputPower(recipe.getPowerGeneration());
+		powerStorage.setMaximumInputPower(recipe.getPowerGeneration());
+		outputContainer.setOutputPower(recipe.getPowerGeneration());
+		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getFluid().getAmount());
 	}
 
 	@Override
-	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
-		return new ContainerFluidGenerator(windowId, inventory, this);
+	public void processingCompleted(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer) {
+		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage().getVoltage()), false);
+		fluidTankComponent.drain(outputContainer.getInputFluid(0), FluidAction.EXECUTE);
 	}
 }

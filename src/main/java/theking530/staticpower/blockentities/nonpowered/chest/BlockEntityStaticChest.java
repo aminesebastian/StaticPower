@@ -1,7 +1,6 @@
 package theking530.staticpower.blockentities.nonpowered.chest;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,7 +16,6 @@ import theking530.staticpower.blockentities.BlockEntityBase;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.client.rendering.blockentity.BlockEntityRenderStaticChest;
-import theking530.staticpower.data.StaticPowerTiers;
 import theking530.staticpower.init.ModBlocks;
 
 public class BlockEntityStaticChest extends BlockEntityBase {

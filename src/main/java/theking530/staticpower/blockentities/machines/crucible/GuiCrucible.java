@@ -42,14 +42,15 @@ public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, Blo
 
 		getTabManager().registerTab(new GuiMachinePowerInfoTab(getTileEntity().powerStorage).setTabSide(TabSide.LEFT), true);
 		getTabManager().registerTab(new GuiMachineFluidTab(getTileEntity().fluidTankComponent).setTabSide(TabSide.LEFT));
-		getTabManager().registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
+		getTabManager()
+				.registerTab(new GuiFluidContainerTab(this.menu, getTileEntity().fluidContainerComponent, Items.BUCKET, ModFluids.Mash.getBucket()).setTabSide(TabSide.LEFT));
 		getTabManager().registerTab(new GuiMachineHeatTab(getTileEntity().heatStorage).setTabSide(TabSide.LEFT));
 	}
 
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<CrucibleRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentProcessingRecipe();
+		Optional<CrucibleRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent()) {

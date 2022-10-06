@@ -19,9 +19,9 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.server.ServerLifecycleHooks;
 import theking530.staticcore.data.StaticPowerGameDataManager;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.productivity.ProductionManager;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.teams.production.ProductionManager;
 import theking530.staticpower.teams.research.ResearchManager;
 import theking530.staticpower.utilities.NBTUtilities;
 

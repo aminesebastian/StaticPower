@@ -1,32 +1,38 @@
-package theking530.staticpower.teams.production.metrics;
+package theking530.staticcore.productivity.metrics;
 
-import java.util.List;
 import java.util.function.Supplier;
 
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent.Context;
 import theking530.staticcore.network.NetworkMessage;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.StaticPower;
+import theking530.staticpower.StaticPowerRegistries;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
 
 public class PacketGetProductionMetrics extends NetworkMessage {
+	private ProductType<?, ?> productType;
 
 	public PacketGetProductionMetrics() {
 
 	}
 
-	public PacketGetProductionMetrics(List<SerializedMetricPeriod> metrics) {
+	public PacketGetProductionMetrics(ProductType<?, ?> productType) {
+		this.productType = productType;
 	}
 
 	@Override
 	public void encode(FriendlyByteBuf buffer) {
+		buffer.writeUtf(productType.getRegistryName().toString());
 	}
 
 	@Override
 	public void decode(FriendlyByteBuf buffer) {
+		productType = StaticPowerRegistries.ProductRegistry().getValue(new ResourceLocation(buffer.readUtf()));
 	}
 
 	@Override
@@ -41,7 +47,7 @@ public class PacketGetProductionMetrics extends NetworkMessage {
 			}
 
 			PacketRecieveProductionMetrics response = new PacketRecieveProductionMetrics(
-					team.getProductionManager().itemProductvitiyCache.getSerializedProductionMetrics(serverPlayer.level.getGameTime(), 20, MetricPeriod.MINUTE));
+					team.getProductionManager().getCache(productType).getSerializedProductionMetrics(serverPlayer.level.getGameTime(), 20, MetricPeriod.MINUTE));
 			StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) ctx.get().getSender(), response);
 		});
 	}

@@ -10,9 +10,10 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent.ProcessingCheckState;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
@@ -32,7 +33,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
  * @author Amine Sebastian
  *
  */
-public class BlockEntityPackager extends BlockEntityMachine {
+public class BlockEntityPackager extends BlockEntityMachine implements IRecipeProcessor<PackagerRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityPackager> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityPackager(pos, state),
 			ModBlocks.Packager);
@@ -41,8 +42,6 @@ public class BlockEntityPackager extends BlockEntityMachine {
 	public final InventoryComponent inputInventory;
 	/** The output inventory where packaged items will be placed. */
 	public final InventoryComponent outputInventory;
-	/** The internal inventory where items that are being process are placed. */
-	public final InventoryComponent internalInventory;
 	/** The battery inventory that automatically charges the storage. */
 	public final BatteryInventoryComponent batteryInventory;
 	/** The upgrades inventory handles power and processing speed upgrades. */
@@ -53,17 +52,13 @@ public class BlockEntityPackager extends BlockEntityMachine {
 	public final RecipeProcessingComponent<PackagerRecipe> processingComponent;
 	/** The crafting grid size to use (2x2 vs 3x3). */
 	@UpdateSerialize
-	protected int gridSize;;
-	/** This value keeps track of the last grid size used when processing. */
-	@UpdateSerialize
-	protected int currentProcessingGridSize;
+	protected int gridSize;
 
 	public BlockEntityPackager(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 
 		// Default to a 2x2.
 		gridSize = 2;
-		currentProcessingGridSize = gridSize;
 
 		// Setup the input inventory to only accept items that have a valid recipe.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true).setFilter(new ItemStackHandlerFilter() {
@@ -74,13 +69,11 @@ public class BlockEntityPackager extends BlockEntityMachine {
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<PackagerRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, PackagerRecipe.RECIPE_TYPE,
-				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<PackagerRecipe>("ProcessingComponent", PackagerRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -98,46 +91,34 @@ public class BlockEntityPackager extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0)).setIntParameter("size", currentProcessingGridSize);
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setIntParameter("size", gridSize);
-		}
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<PackagerRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setIntParameter("size", gridSize);
 	}
 
-	protected ProcessingCheckState moveInputs(PackagerRecipe recipe) {
-		// Make sure we can insert the output into the output slot.
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the input to the internal inventory.
-		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, 0, internalInventory, 0);
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false));
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.getCustomParameterContainer().putInt("size", gridSize);
 
 		// Update the processing/power.
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-
-		// Update the internal grid size.
-		currentProcessingGridSize = gridSize;
-
-		// Sync
-		return ProcessingCheckState.ok();
+		component.setMaxProcessingTime(recipe.getProcessingTime());
+		component.setProcessingPowerUsage(recipe.getPowerCost());
 	}
 
-	protected ProcessingCheckState canProcessRecipe(PackagerRecipe recipe, RecipeProcessingPhase location) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState processingCompleted(PackagerRecipe recipe) {
-		ItemStack output = recipe.getOutput().calculateOutput();
-		outputInventory.insertItem(0, output, false);
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		return ProcessingCheckState.ok();
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
 	}
 
 	public void setRecipeSize(int size) {
@@ -152,4 +133,5 @@ public class BlockEntityPackager extends BlockEntityMachine {
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerPackager(windowId, inventory, this);
 	}
+
 }

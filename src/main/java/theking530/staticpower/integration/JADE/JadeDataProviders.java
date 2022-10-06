@@ -13,7 +13,7 @@ import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import theking530.api.energy.CapabilityStaticPower;
 import theking530.api.heat.CapabilityHeatable;
 import theking530.staticpower.blockentities.components.ComponentUtilities;
-import theking530.staticpower.blockentities.components.control.AbstractProcesingComponent;
+import theking530.staticpower.blockentities.components.control.processing.AbstractProcesingComponent;
 import theking530.staticpower.cables.digistore.DigistoreCableProviderComponent;
 import theking530.staticpower.cables.fluid.BlockEntityFluidCable;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -79,10 +79,11 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		if (processing.isPresent()) {
 			CompoundTag processingData = new CompoundTag();
 			if (processing.get().isProcessing()) {
-				processingData.putInt("remaining", processing.get().getReminingTicks());
+				int remaining = processing.get().getMaxProcessingTime() - processing.get().getCurrentProcessingTime();
+				processingData.putInt("remaining", remaining);
 				processingData.putInt("max", processing.get().getMaxProcessingTime());
-				processingData.putString("description", GuiTextUtilities.formatNumberAsString(processing.get().getReminingTicks()).append(" ")
-						.append(new TranslatableComponent("gui.staticpower.ticks_remaining")).getString());
+				processingData.putString("description",
+						GuiTextUtilities.formatNumberAsString(remaining).append(" ").append(new TranslatableComponent("gui.staticpower.ticks_remaining")).getString());
 			} else {
 				processingData.putInt("remaining", 0);
 				processingData.putInt("max", 0);

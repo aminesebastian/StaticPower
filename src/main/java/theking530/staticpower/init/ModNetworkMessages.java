@@ -8,6 +8,8 @@ import theking530.staticcore.gui.widgets.tabs.PacketSideConfigTab;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketCableAttachmentRedstoneSync;
 import theking530.staticcore.gui.widgets.tabs.redstonecontrol.PacketRedstoneComponentSync;
 import theking530.staticcore.gui.widgets.tabs.slottabs.PacketGuiTabAddSlots;
+import theking530.staticcore.productivity.metrics.PacketGetProductionMetrics;
+import theking530.staticcore.productivity.metrics.PacketRecieveProductionMetrics;
 import theking530.staticpower.blockentities.components.control.ProcesingComponentSyncPacket;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponentSyncPacket;
 import theking530.staticpower.blockentities.components.fluids.PacketFluidContainerComponent;
@@ -48,8 +50,6 @@ import theking530.staticpower.integration.JEI.JEIRecipeTransferPacket;
 import theking530.staticpower.items.itemfilter.PacketItemFilter;
 import theking530.staticpower.network.BlockEntityBasicSyncPacket;
 import theking530.staticpower.network.StaticPowerMessageHandler;
-import theking530.staticpower.teams.production.metrics.PacketGetProductionMetrics;
-import theking530.staticpower.teams.production.metrics.PacketRecieveProductionMetrics;
 import theking530.staticpower.teams.research.network.PacketSetSelectedResearch;
 
 public class ModNetworkMessages {
