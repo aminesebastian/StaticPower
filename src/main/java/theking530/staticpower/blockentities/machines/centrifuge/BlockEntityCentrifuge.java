@@ -1,5 +1,8 @@
 package theking530.staticpower.blockentities.machines.centrifuge;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -13,8 +16,9 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -26,23 +30,19 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent.UpgradeItemWrapper;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
+import theking530.staticpower.data.crafting.ProbabilityItemStackOutput;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.centrifuge.CentrifugeRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityCentrifuge extends BlockEntityMachine {
+public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipeProcessor<CentrifugeRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityCentrifuge> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityCentrifuge(pos, state),
 			ModBlocks.Centrifuge);
 
 	public final InventoryComponent inputInventory;
-
-	public final InventoryComponent firstOutputInventory;
-	public final InventoryComponent secondOutputInventory;
-	public final InventoryComponent thirdOutputInventory;
-
-	public final InventoryComponent internalInventory;
+	public final List<InventoryComponent> outputInventories;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final RecipeProcessingComponent<CentrifugeRecipe> processingComponent;
@@ -56,6 +56,7 @@ public class BlockEntityCentrifuge extends BlockEntityMachine {
 
 	public BlockEntityCentrifuge(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
+		outputInventories = new LinkedList<>();
 		// Initialize the current speed.
 		currentSpeed = 0;
 
@@ -67,17 +68,21 @@ public class BlockEntityCentrifuge extends BlockEntityMachine {
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(firstOutputInventory = new InventoryComponent("FirstOutputInventory", 1, MachineSideMode.Output2));
-		registerComponent(secondOutputInventory = new InventoryComponent("SecondOutputInventory", 1, MachineSideMode.Output3));
-		registerComponent(thirdOutputInventory = new InventoryComponent("ThirdOutputInventory", 1, MachineSideMode.Output4));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
+		InventoryComponent firstOutputInventory = new InventoryComponent("FirstOutputInventory", 1, MachineSideMode.Output2);
+		outputInventories.add(firstOutputInventory);
+		InventoryComponent secondOutputInventory = new InventoryComponent("SecondOutputInventory", 1, MachineSideMode.Output3);
+		outputInventories.add(secondOutputInventory);
+		InventoryComponent thirdOutputInventory = new InventoryComponent("ThirdOutputInventory", 1, MachineSideMode.Output4);
+		outputInventories.add(thirdOutputInventory);
+		for (InventoryComponent inv : outputInventories) {
+			registerComponent(inv);
+		}
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 		upgradesInventory.setModifiedCallback(this::onUpgradesInventoryModifiedCallback);
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.centrifugeProcessingTime.get(),
-				RecipeProcessingComponent.MOVE_TIME, CentrifugeRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<CentrifugeRecipe>("ProcessingComponent", CentrifugeRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -100,76 +105,10 @@ public class BlockEntityCentrifuge extends BlockEntityMachine {
 		centrifugeMotorPowerCost = StaticPowerConfig.SERVER.centrifugeMotorPowerUsage.get();
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
-		}
-	}
-
-	protected ProcessingCheckState moveInputs(CentrifugeRecipe recipe) {
-		// Check the required speed.
-		if (currentSpeed < recipe.getMinimumSpeed()) {
-			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed() + "RPM");
-		}
-
-		// If we don't have enough inputs, return false.
-		if (inputInventory.getStackInSlot(0).getCount() < recipe.getInput().getCount()) {
-			return ProcessingCheckState.skip();
-		}
-
-		// If the items can be insert into the output, transfer the items and return
-		// true.
-		if (internalInventory.getStackInSlot(0).isEmpty() && canInsertRecipeIntoOutputs(recipe)) {
-			transferItemInternally(recipe.getInput().getCount(), inputInventory, 0, internalInventory, 0);
-
-			// Set the power usage.
-			processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-			processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-
-			return ProcessingCheckState.ok();
-		} else {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-	}
-
-	protected ProcessingCheckState canProcessRecipe(CentrifugeRecipe recipe, RecipeProcessingPhase location) {
-		if (!canInsertRecipeIntoOutputs(recipe)) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		if (currentSpeed < recipe.getMinimumSpeed()) {
-			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed() + "RPM");
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState processingCompleted(CentrifugeRecipe recipe) {
-		// Ensure the output slots can take the recipe.
-		if (canInsertRecipeIntoOutputs(recipe)) {
-			// For each output, insert the contents into the output based on the percentage
-			// chance. The clear the internal inventory, mark for synchronization, and
-			// return true.
-			// Insert the output.
-			ItemStack output1 = recipe.getOutput1().calculateOutput();
-			ItemStack output2 = recipe.getOutput2().calculateOutput();
-			ItemStack output3 = recipe.getOutput3().calculateOutput();
-
-			InventoryUtilities.insertItemIntoInventory(firstOutputInventory, output1, false);
-			InventoryUtilities.insertItemIntoInventory(secondOutputInventory, output2, false);
-			InventoryUtilities.insertItemIntoInventory(thirdOutputInventory, output3, false);
-
-			InventoryUtilities.clearInventory(internalInventory);
-			return ProcessingCheckState.ok();
-		}
-		return ProcessingCheckState.outputsCannotTakeRecipe();
-	}
-
 	@Override
 	public void process() {
 		// Maintain the spin.
-		if (!getLevel().isClientSide && redstoneControlComponent.passesRedstoneCheck()) {
+		if (!getLevel().isClientSide() && redstoneControlComponent.passesRedstoneCheck()) {
 			// If we're spinning faster than the current max, start slowing down. Otherwise,
 			// either spin up or maintain speed.
 			if (currentSpeed > maxSpeed) {
@@ -209,16 +148,13 @@ public class BlockEntityCentrifuge extends BlockEntityMachine {
 		}
 	}
 
-	protected boolean canInsertRecipeIntoOutputs(CentrifugeRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(firstOutputInventory, recipe.getOutput1().getItem())) {
-			return false;
+	protected boolean canInsertRecipeIntoOutputs(ProcessingOutputContainer container) {
+		for (int i = 0; i < container.getOutputItems().size(); i++) {
+			if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventories.get(i), container.getOutputItem(i))) {
+				return false;
+			}
 		}
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(secondOutputInventory, recipe.getOutput2().getItem())) {
-			return false;
-		}
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(thirdOutputInventory, recipe.getOutput3().getItem())) {
-			return false;
-		}
+
 		return true;
 	}
 
@@ -226,6 +162,40 @@ public class BlockEntityCentrifuge extends BlockEntityMachine {
 	protected boolean isValidSideConfiguration(BlockSide side, MachineSideMode mode) {
 		return mode == MachineSideMode.Disabled || mode == MachineSideMode.Output || mode == MachineSideMode.Input || mode == MachineSideMode.Output2
 				|| mode == MachineSideMode.Output3 || mode == MachineSideMode.Output4;
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CentrifugeRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		for (ProbabilityItemStackOutput output : recipe.getOutputs()) {
+			outputContainer.addOutputItem(output.calculateOutput());
+		}
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!canInsertRecipeIntoOutputs(outputContainer)) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		if (currentSpeed < recipe.getMinimumSpeed()) {
+			return ProcessingCheckState.error("Centrifuge not up to required speed of: " + recipe.getMinimumSpeed() + "RPM");
+		}
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+		for (int i = 0; i < outputContainer.getOutputItems().size(); i++) {
+			outputInventories.get(i).insertItem(0, outputContainer.getOutputItem(i), false);
+		}
 	}
 
 	@Override

@@ -1,5 +1,7 @@
 package theking530.staticpower.blockentities.machines.autocrafter;
 
+import java.util.List;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -18,8 +20,9 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
@@ -31,7 +34,7 @@ import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityAutoCraftingTable extends BlockEntityMachine {
+public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements IRecipeProcessor<CraftingRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityAutoCraftingTable> TYPE = new BlockEntityTypeAllocator<BlockEntityAutoCraftingTable>(
 			(type, pos, state) -> new BlockEntityAutoCraftingTable(pos, state), ModBlocks.AutoCraftingTable);
@@ -43,7 +46,6 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine {
 	}
 
 	public final RecipeProcessingComponent<CraftingRecipe> processingComponent;
-	public final InventoryComponent internalInventory;
 	public final InventoryComponent patternInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
@@ -54,7 +56,6 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine {
 	public BlockEntityAutoCraftingTable(BlockPos pos, BlockState state) {
 		super(TYPE, pos, state);
 		registerComponent(patternInventory = new InventoryComponent("PatternInventory", 9, MachineSideMode.Never));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9, MachineSideMode.Never));
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setSlotsLockable(true).setShiftClickEnabled(true));
 
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
@@ -63,13 +64,11 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine {
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<CraftingRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.autoCrafterProcessingTime.get(),
-				RecipeProcessingComponent.MOVE_TIME, RecipeType.CRAFTING, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true)
-				.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get()));
-
+				RecipeType.CRAFTING, this));
+		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setRedstoneControlComponent(redstoneControlComponent);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
-		processingComponent.setProcessingPowerUsage(StaticPowerConfig.SERVER.autoCrafterPowerUsage.get());
 
 		registerComponent(new OutputServoComponent("OutputServo", 2, outputInventory));
 		registerComponent(new InputServoComponent("InputServo", 2, inputInventory));
@@ -80,97 +79,13 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine {
 		patternInventory.setShouldDropContentsOnBreak(false);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		ItemStack[] pattern = new ItemStack[patternInventory.getSlots()];
-
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			for (int i = 0; i < internalInventory.getSlots(); i++) {
-				pattern[i] = internalInventory.getStackInSlot(i);
-			}
-		} else {
-			for (int i = 0; i < patternInventory.getSlots(); i++) {
-				pattern[i] = patternInventory.getStackInSlot(i);
-			}
-		}
-
-		return new RecipeMatchParameters(pattern);
-	}
-
-	public void moveInputs(CraftingRecipe recipe) {
-		// If this recipe is shaped, make sure we place the same shaped recipe's items
-		// into the internal inventory. If shapeless, just put the items into the
-		// internal inv.
-		if (recipe instanceof ShapedRecipe) {
-			ShapedRecipe sRecipe = (ShapedRecipe) recipe;
-			for (int x = 0; x < 3; ++x) {
-				for (int y = 0; y < 3; ++y) {
-					// Get the recipe index.
-					Ingredient ingredient = Ingredient.EMPTY;
-					if (x >= 0 && y >= 0 && x < sRecipe.getRecipeWidth() && y < sRecipe.getRecipeHeight()) {
-						ingredient = sRecipe.getIngredients().get(sRecipe.getRecipeWidth() - x - 1 + y * sRecipe.getRecipeWidth());
-					}
-
-					// Skip empty ingredients.
-					if (ingredient.equals(Ingredient.EMPTY)) {
-						continue;
-					}
-
-					// Capture the item.
-					for (int j = 0; j < inputInventory.getSlots(); j++) {
-						if (ingredient.test(inputInventory.getStackInSlot(j))) {
-							ItemStack extracted = inputInventory.extractItem(j, 1, false);
-							internalInventory.setStackInSlot(x + (y * 3), extracted.copy());
-							break;
-						}
-					}
-				}
-			}
-		} else {
-			// Transfer the materials into the internal inventory.
-			for (int i = 0; i < recipe.getIngredients().size(); i++) {
-				// Get the used ingredient.
-				Ingredient ing = recipe.getIngredients().get(i);
-
-				// Skip holes in the recipe.
-				if (ing.equals(Ingredient.EMPTY)) {
-					continue;
-				}
-
-				// Remove the item.
-				for (int j = 0; j < inputInventory.getSlots(); j++) {
-					if (ing.test(inputInventory.getStackInSlot(j))) {
-						ItemStack extracted = inputInventory.extractItem(j, 1, false);
-						internalInventory.setStackInSlot(i, extracted.copy());
-						break;
-					}
-				}
-			}
-		}
-	}
-
-	public ProcessingCheckState canProcessRecipe(CraftingRecipe recipe, RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PRE_PROCESSING) {
-			if (!hasRequiredItems(recipe)) {
-				return ProcessingCheckState.error("Missing items in input inventory!");
-			}
-		}
-
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
-			ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		return ProcessingCheckState.ok();
-	}
-
-	public void processingCompleted(CraftingRecipe recipe) {
-		outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
-		InventoryUtilities.clearInventory(internalInventory);
-	}
-
-	public boolean hasRequiredItems(CraftingRecipe recipe) {
+	public boolean hasRequiredItems(CraftingRecipe recipe, List<ItemStack> items) {
 
 		// Create a duplicate inventory.
-		ItemStackHandler duplicateInventory = InventoryUtilities.duplicateItemStackHandler(inputInventory);
+		ItemStackHandler duplicateInventory = new ItemStackHandler(items.size());
+		for (int i = 0; i < items.size(); i++) {
+			duplicateInventory.setStackInSlot(i, items.get(i).copy());
+		}
 
 		// Allocate a flag to indicate if we found an ingredient match.
 		boolean flag = false;
@@ -211,5 +126,86 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine {
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerAutoCraftingTable(windowId, inventory, this);
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<CraftingRecipe> component) {
+		ItemStack[] pattern = new ItemStack[patternInventory.getSlots()];
+		for (int i = 0; i < patternInventory.getSlots(); i++) {
+			pattern[i] = patternInventory.getStackInSlot(i);
+		}
+		return new RecipeMatchParameters(pattern);
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// If this recipe is shaped, make sure we place the same shaped recipe's items
+		// into the internal inventory. If shapeless, just put the items into the
+		// internal inv.
+		if (recipe instanceof ShapedRecipe) {
+			ShapedRecipe sRecipe = (ShapedRecipe) recipe;
+			for (int x = 0; x < 3; ++x) {
+				for (int y = 0; y < 3; ++y) {
+					// Get the recipe index.
+					Ingredient ingredient = Ingredient.EMPTY;
+					if (x >= 0 && y >= 0 && x < sRecipe.getRecipeWidth() && y < sRecipe.getRecipeHeight()) {
+						ingredient = sRecipe.getIngredients().get(sRecipe.getRecipeWidth() - x - 1 + y * sRecipe.getRecipeWidth());
+					}
+
+					// Skip empty ingredients.
+					if (ingredient.equals(Ingredient.EMPTY)) {
+						continue;
+					}
+
+					// Capture the item.
+					for (int j = 0; j < inputInventory.getSlots(); j++) {
+						if (ingredient.test(inputInventory.getStackInSlot(j))) {
+							ItemStack extracted = inputInventory.extractItem(j, 1, false);
+							outputContainer.addInputItem(extracted);
+							break;
+						}
+					}
+				}
+			}
+		} else {
+			// Transfer the materials into the internal inventory.
+			for (int i = 0; i < recipe.getIngredients().size(); i++) {
+				// Get the used ingredient.
+				Ingredient ing = recipe.getIngredients().get(i);
+
+				// Skip holes in the recipe.
+				if (ing.equals(Ingredient.EMPTY)) {
+					continue;
+				}
+
+				// Remove the item.
+				for (int j = 0; j < inputInventory.getSlots(); j++) {
+					if (ing.test(inputInventory.getStackInSlot(j))) {
+						ItemStack extracted = inputInventory.extractItem(j, 1, false);
+						outputContainer.addInputItem(extracted);
+						break;
+					}
+				}
+			}
+		}
+		outputContainer.addOutputItem(recipe.getResultItem());
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!hasRequiredItems(recipe, outputContainer.getInputItems())) {
+			return ProcessingCheckState.error("Missing items in input inventory!");
+		}
+
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getResultItem())) {
+			ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputInventory.insertItem(0, recipe.getResultItem().copy(), false);
 	}
 }

@@ -4,7 +4,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
@@ -12,8 +11,9 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
@@ -31,7 +31,7 @@ import theking530.staticpower.data.crafting.wrappers.lathe.LatheRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityLathe extends BlockEntityMachine {
+public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProcessor<LatheRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityLathe> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityLathe(pos, state), ModBlocks.Lathe);
 
@@ -39,7 +39,6 @@ public class BlockEntityLathe extends BlockEntityMachine {
 	public final InventoryComponent mainOutputInventory;
 	public final InventoryComponent secondaryOutputInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
-	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
@@ -55,7 +54,6 @@ public class BlockEntityLathe extends BlockEntityMachine {
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 9, MachineSideMode.Input).setShiftClickEnabled(true).setSlotsLockable(true));
 
 		// Setup all the other inventories.
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9));
 		registerComponent(mainOutputInventory = new InventoryComponent("MainOutputInventory", 1, MachineSideMode.Output2));
 		registerComponent(secondaryOutputInventory = new InventoryComponent("SecondaryOutputInventory", 1, MachineSideMode.Output3));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
@@ -63,8 +61,7 @@ public class BlockEntityLathe extends BlockEntityMachine {
 
 		// Setup the processing component to work with the redstone control component,
 		// upgrade component and energy component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<LatheRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, LatheRecipe.RECIPE_TYPE,
-				this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<LatheRecipe>("ProcessingComponent", LatheRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -92,76 +89,55 @@ public class BlockEntityLathe extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
-					internalInventory.getStackInSlot(3), internalInventory.getStackInSlot(4), internalInventory.getStackInSlot(5), internalInventory.getStackInSlot(6),
-					internalInventory.getStackInSlot(7), internalInventory.getStackInSlot(8));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
-					inputInventory.getStackInSlot(4), inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7),
-					inputInventory.getStackInSlot(8));
-		}
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<LatheRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
+				inputInventory.getStackInSlot(4), inputInventory.getStackInSlot(5), inputInventory.getStackInSlot(6), inputInventory.getStackInSlot(7),
+				inputInventory.getStackInSlot(8));
 	}
 
-	protected ProcessingCheckState moveInputs(LatheRecipe recipe) {
-		// If the recipe cannot be insert into the output, return false.
-		if (!canOutputsTakeRecipeResult(recipe)) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the items.
 		for (int i = 0; i < 9; i++) {
-			transferItemInternally(recipe.getInputs().get(i).getCount(), inputInventory, i, internalInventory, i);
+			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), false));
 		}
+
+		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput());
+		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput());
+		outputContainer.addOutputFluid(recipe.getOutputFluid());
 
 		// Set the power usage.
-		this.processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		this.processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-
-		return ProcessingCheckState.ok();
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+		component.setMaxProcessingTime(recipe.getProcessingTime());
 	}
 
-	protected ProcessingCheckState canProcessRecipe(LatheRecipe recipe, RecipeProcessingPhase location) {
-		// If the recipe cannot be insert into the output, return false.
-		if (!canOutputsTakeRecipeResult(recipe)) {
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
+		if (outputContainer.getOutputItems().size() > 1) {
+			if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, outputContainer.getOutputItem(1))) {
+				return ProcessingCheckState.outputsCannotTakeRecipe();
+			}
+		}
 
-		if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return ProcessingCheckState.fluidOutputFull();
+		if (outputContainer.hasOutputFluids()) {
+			if (fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).getAmount()) {
+				return ProcessingCheckState.fluidOutputFull();
+			}
 		}
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState processingCompleted(LatheRecipe recipe) {
-		ItemStack primaryOutput = recipe.getPrimaryOutput().calculateOutput();
-		ItemStack secondaryOutput = recipe.getSecondaryOutput().calculateOutput();
-
-		mainOutputInventory.insertItem(0, primaryOutput, false);
-		secondaryOutputInventory.insertItem(0, secondaryOutput, false);
-
-		fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.EXECUTE);
-
-		InventoryUtilities.clearInventory(internalInventory);
-		return ProcessingCheckState.ok();
-	}
-
-	/**
-	 * Ensure the output slots can take the results of the crafting.
-	 * 
-	 * @param recipe
-	 * @return
-	 */
-	protected boolean canOutputsTakeRecipeResult(LatheRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, recipe.getPrimaryOutput().getItem())) {
-			return false;
-		} else if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, recipe.getSecondaryOutput().getItem())) {
-			return false;
-		} else if (fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return false;
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
+		mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+		if (outputContainer.getOutputItems().size() > 1) {
+			secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1), false);
 		}
-		return true;
+		fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
 	}
 
 	@Override

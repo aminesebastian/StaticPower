@@ -45,11 +45,11 @@ public class GuiAutoSolderingTable extends AbstractGuiSolderingTable<BlockEntity
 	protected void drawBehindItems(PoseStack stack, float partialTicks, int mouseX, int mouseY) {
 		super.drawBehindItems(stack, partialTicks, mouseX, mouseY);
 		// Check if we have a recipe currently processing.
-		SolderingRecipe recipe = getTileEntity().processingComponent.getCurrentProcessingRecipe().orElse(null);
+		SolderingRecipe recipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe().orElse(null);
 
 		// If we do not, check to see if we have a potential recipe.
 		if (recipe == null) {
-			recipe = getTileEntity().processingComponent.getPendingProcessingRecipe().orElse(null);
+			recipe = getTileEntity().processingComponent.getPendingRecipe().orElse(null);
 		}
 
 		// If there is a recipe, draw a phantom output.

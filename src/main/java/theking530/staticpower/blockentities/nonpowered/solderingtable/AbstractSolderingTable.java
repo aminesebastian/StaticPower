@@ -1,5 +1,7 @@
 package theking530.staticpower.blockentities.nonpowered.solderingtable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import net.minecraft.core.BlockPos;
@@ -38,7 +40,15 @@ public abstract class AbstractSolderingTable extends BlockEntityConfigurable imp
 		patternInventory.setShouldDropContentsOnBreak(false);
 	}
 
-	public boolean hasRequiredItems(SolderingRecipe recipe) {
+	public boolean hasRequiredItemsInInventory(SolderingRecipe recipe) {
+		List<ItemStack> inputs = new ArrayList<ItemStack>();
+		for (ItemStack input : inventory) {
+			inputs.add(input.copy());
+		}
+		return hasRequiredItems(recipe, inputs);
+	}
+
+	public boolean hasRequiredItems(SolderingRecipe recipe, List<ItemStack> items) {
 		// If there is no soldering iron, return false. If there is, but it cannot be
 		// used to solder, return false.
 		if (requiresSolderingIron()) {
@@ -53,9 +63,9 @@ public abstract class AbstractSolderingTable extends BlockEntityConfigurable imp
 		}
 
 		// Create a duplicate inventory.
-		ItemStackHandler duplicateInventory = new ItemStackHandler(inventory.getSlots());
-		for (int i = 0; i < inventory.getSlots(); i++) {
-			duplicateInventory.setStackInSlot(i, inventory.getStackInSlot(i).copy());
+		ItemStackHandler duplicateInventory = new ItemStackHandler(items.size());
+		for (int i = 0; i < items.size(); i++) {
+			duplicateInventory.setStackInSlot(i, items.get(i).copy());
 		}
 
 		// Allocate a flag to indicate if we found an ingredient match.
@@ -112,7 +122,11 @@ public abstract class AbstractSolderingTable extends BlockEntityConfigurable imp
 			}
 
 			// Break out of the loop if we're out of items.
-			if (!hasRequiredItems(recipe)) {
+			List<ItemStack> items = new ArrayList<ItemStack>();
+			for (ItemStack stack : inventory) {
+				items.add(stack);
+			}
+			if (!hasRequiredItems(recipe, items)) {
 				break;
 			}
 

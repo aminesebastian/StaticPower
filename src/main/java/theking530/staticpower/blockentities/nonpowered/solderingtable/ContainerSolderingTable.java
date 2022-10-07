@@ -74,7 +74,7 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Blo
 			// Get the recipe. If we dont currently have a valid recipe, just return an
 			// empty itemstack.
 			SolderingRecipe recipe = getTileEntity().getCurrentRecipe().orElse(null);
-			if (recipe == null || !getTileEntity().hasRequiredItems(recipe)) {
+			if (recipe == null || !getTileEntity().hasRequiredItemsInInventory(recipe)) {
 				return;
 			}
 
@@ -103,7 +103,7 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Blo
 				}
 
 				// If on the server, update the held item.
-				if (!getTileEntity().getLevel().isClientSide) {
+				if (!getTileEntity().getLevel().isClientSide()) {
 					broadcastChanges();
 				}
 
@@ -115,21 +115,18 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Blo
 				updateOutputSlot();
 			} else if (clickTypeIn == ClickType.QUICK_MOVE) {
 				// Craft the output.
-				if (!getTileEntity().getLevel().isClientSide) {
-					int amount = 0;
+				if (!getTileEntity().getLevel().isClientSide()) {
 					while (InventoryUtilities.canFullyInsertItemIntoPlayerInventory(recipe.getResultItem().copy(), player.getInventory())) {
 						ItemStack craftedResult = getTileEntity().craftItem(1);
 						player.addItem(craftedResult);
 						// Tell the slot we crafted.
 						outputSlot.onCrafted(player, craftedResult);
-						amount++;
 						// Break when we run out of items.
-						if (!getTileEntity().hasRequiredItems(recipe)) {
+						if (!getTileEntity().hasRequiredItemsInInventory(recipe)) {
 							break;
 						}
 					}
 					broadcastFullState();
-					// Old Way ((ServerPlayer) player).refreshContainer(this, this.getItems());
 				}
 			}
 		} else {
@@ -153,7 +150,7 @@ public class ContainerSolderingTable extends AbstractContainerSolderingTable<Blo
 
 			// Set the slot contents on the server.
 			if (getTileEntity().getCurrentRecipe().isPresent()) {
-				if (getTileEntity().hasRequiredItems(getTileEntity().getCurrentRecipe().get())) {
+				if (getTileEntity().hasRequiredItemsInInventory(getTileEntity().getCurrentRecipe().get())) {
 					output = getTileEntity().getCurrentRecipe().get().getResultItem().copy();
 				}
 			}

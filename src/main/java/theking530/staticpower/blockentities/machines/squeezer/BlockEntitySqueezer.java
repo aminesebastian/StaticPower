@@ -47,7 +47,6 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 	}
 
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -71,7 +70,6 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 		}));
 
 		// Setup all the other inventories.
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
@@ -98,28 +96,6 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 
 		// Set the energy storage upgrade inventory.
 		powerStorage.setUpgradeInventory(upgradesInventory);
-	}
-
-	protected ProcessingCheckState moveInputs(SqueezerRecipe recipe) {
-		// If this recipe has an item output that we cannot put into the output slot,
-		// continue waiting.
-		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getOutput().getItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		// If this recipe has a fluid output that we cannot put into the output tank,
-		// continue waiting.
-		if (recipe.hasOutputFluid() && fluidTankComponent.fill(recipe.getOutputFluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			return ProcessingCheckState.fluidOutputFull();
-		}
-
-		// Transfer the items to the internal inventory.
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-
-		// Set the power usage.
-		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-		return ProcessingCheckState.ok();
 	}
 
 	@Override

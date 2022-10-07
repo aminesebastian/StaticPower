@@ -4,18 +4,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
@@ -33,10 +32,10 @@ import theking530.staticpower.data.crafting.wrappers.fluidinfusion.FluidInfusion
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityFluidInfuser extends BlockEntityMachine {
+public class BlockEntityFluidInfuser extends BlockEntityMachine implements IRecipeProcessor<FluidInfusionRecipe> {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidInfuser>((type, pos, state) -> new BlockEntityFluidInfuser(pos, state),
-			ModBlocks.FluidInfuser);
+	public static final BlockEntityTypeAllocator<BlockEntityFluidInfuser> TYPE = new BlockEntityTypeAllocator<BlockEntityFluidInfuser>(
+			(type, pos, state) -> new BlockEntityFluidInfuser(pos, state), ModBlocks.FluidInfuser);
 
 	static {
 		if (FMLEnvironment.dist == Dist.CLIENT) {
@@ -45,7 +44,6 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine {
 	}
 
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
 	public final InventoryComponent batteryInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
@@ -61,14 +59,12 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine {
 
 		// Setup the inventories.
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 1, MachineSideMode.Input).setShiftClickEnabled(true));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fluidInfuserProcessingTime.get(),
-				RecipeProcessingComponent.MOVE_TIME, FluidInfusionRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FluidInfusionRecipe>("ProcessingComponent", FluidInfusionRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -96,52 +92,41 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
-		}
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FluidInfusionRecipe> component) {
+
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
 	}
 
-	protected ProcessingCheckState moveInputs(FluidInfusionRecipe recipe) {
-		// If the items can be insert into the output, transfer the items and return
-		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getOutput().getItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		transferItemInternally(recipe.getInput().getCount(), inputInventory, 0, internalInventory, 0);
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getRequiredFluid().getAmount());
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 
 		// Set the power usage.
-		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-
-		return ProcessingCheckState.ok();
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+		component.setMaxProcessingTime(recipe.getProcessingTime());
 	}
 
-	protected ProcessingCheckState canProcessRecipe(FluidInfusionRecipe recipe, RecipeProcessingPhase location) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getOutput().getItem())) {
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState processingCompleted(FluidInfusionRecipe recipe) {
-		// Output the item if the dice roll passes.
-		ItemStack output = recipe.getOutput().calculateOutput();
-		outputInventory.insertItem(0, output, false);
-
-		// Drain the fluid.
-		fluidTankComponent.drain(recipe.getRequiredFluid().getAmount(), FluidAction.EXECUTE);
-
-		// Clear the internal inventory.
-		InventoryUtilities.clearInventory(internalInventory);
-		return ProcessingCheckState.ok();
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+		fluidTankComponent.drain(outputContainer.getInputFluid(0), FluidAction.EXECUTE);
 	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFluidInfuser(windowId, inventory, this);
 	}
+
 }

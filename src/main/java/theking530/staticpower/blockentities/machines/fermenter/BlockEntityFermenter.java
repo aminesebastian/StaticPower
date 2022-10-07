@@ -13,8 +13,9 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
 import theking530.staticpower.blockentities.components.fluids.FluidTankComponent;
@@ -32,14 +33,13 @@ import theking530.staticpower.data.crafting.wrappers.fermenter.FermenterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityFermenter extends BlockEntityMachine {
+public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeProcessor<FermenterRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityFermenter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityFermenter(pos, state),
 			ModBlocks.Fermenter);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
@@ -59,16 +59,12 @@ public class BlockEntityFermenter extends BlockEntityMachine {
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 9));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<FermenterRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fermenterProcessingTime.get(),
-				RecipeProcessingComponent.MOVE_TIME, FermenterRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
-
-		// Initialize the processing component to work with the redstone control
-		// component, upgrade component and energy component.
+				FermenterRecipe.RECIPE_TYPE, this));
 		processingComponent.setShouldControlBlockState(true);
 		processingComponent.setUpgradeInventory(upgradesInventory);
 		processingComponent.setPowerComponent(powerStorage);
@@ -88,67 +84,6 @@ public class BlockEntityFermenter extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
-		} else {
-			int slot = getSlotToProccess();
-			if (slot >= 0) {
-				return new RecipeMatchParameters(inputInventory.getStackInSlot(slot));
-			}
-			return new RecipeMatchParameters();
-		}
-	}
-
-	protected ProcessingCheckState moveInputs(FermenterRecipe recipe) {
-		// Make sure we have a slot to process.
-		if (getSlotToProccess() == -1) {
-			return ProcessingCheckState.skip();
-		}
-
-		// If the items can be insert into the output, transfer the items and return
-		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResultItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
-			return ProcessingCheckState.outputFluidDoesNotMatch();
-		}
-		if (fluidTankComponent.getFluid().getAmount() + recipe.getOutputFluidStack().getAmount() > fluidTankComponent.getCapacity()) {
-			return ProcessingCheckState.fluidOutputFull();
-		}
-
-		int slot = getSlotToProccess();
-		transferItemInternally(recipe.getInputIngredient().getCount(), inputInventory, slot, internalInventory, 0);
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState canProcessRecipe(FermenterRecipe recipe, RecipeProcessingPhase location) {
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getResidualOutput().getItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		if (!fluidTankComponent.getFluid().isEmpty() && !recipe.getOutputFluidStack().isFluidEqual(fluidTankComponent.getFluid())) {
-			return ProcessingCheckState.outputFluidDoesNotMatch();
-		}
-		if (fluidTankComponent.getFluid().getAmount() + recipe.getOutputFluidStack().getAmount() > fluidTankComponent.getCapacity()) {
-			return ProcessingCheckState.fluidOutputFull();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState processingCompleted(FermenterRecipe recipe) {
-		// Add the residual.
-		if (!recipe.getResidualOutput().isEmpty()) {
-			outputInventory.insertItem(0, recipe.getResidualOutput().calculateOutput(), false);
-		}
-		fluidTankComponent.fill(recipe.getOutputFluidStack(), FluidAction.EXECUTE);
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		return ProcessingCheckState.ok();
-	}
-
 	protected int getSlotToProccess() {
 		for (int i = 0; i < 9; i++) {
 			FermenterRecipe recipe = StaticPowerRecipeRegistry.getRecipe(FermenterRecipe.RECIPE_TYPE, new RecipeMatchParameters(inputInventory.getStackInSlot(i))).orElse(null);
@@ -165,7 +100,53 @@ public class BlockEntityFermenter extends BlockEntityMachine {
 	}
 
 	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FermenterRecipe> component) {
+		int slot = getSlotToProccess();
+		if (slot >= 0) {
+			return new RecipeMatchParameters(inputInventory.getStackInSlot(slot));
+		}
+		return new RecipeMatchParameters();
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		int slot = getSlotToProccess();
+		outputContainer.addInputItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), false));
+		outputContainer.addOutputItem(recipe.getResidualOutput().calculateOutput());
+		outputContainer.addOutputFluid(recipe.getOutputFluidStack());
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (outputContainer.hasOutputItems()) {
+			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
+				return ProcessingCheckState.outputsCannotTakeRecipe();
+			}
+		}
+
+		if (!fluidTankComponent.getFluid().isEmpty() && !outputContainer.getOutputFluid(0).isFluidEqual(fluidTankComponent.getFluid())) {
+			return ProcessingCheckState.outputFluidDoesNotMatch();
+		}
+
+		if (fluidTankComponent.getFluid().getAmount() + outputContainer.getOutputFluid(0).getAmount() > fluidTankComponent.getCapacity()) {
+			return ProcessingCheckState.fluidOutputFull();
+		}
+
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (outputContainer.hasOutputItems()) {
+			outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+		}
+
+		fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+	}
+
+	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFermenter(windowId, inventory, this);
 	}
+
 }

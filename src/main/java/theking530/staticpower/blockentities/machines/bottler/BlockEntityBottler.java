@@ -40,8 +40,8 @@ public class BlockEntityBottler extends BlockEntityMachine {
 			ModBlocks.Bottler);
 
 	public final InventoryComponent inputInventory;
-	public final InventoryComponent internalInventory;
 	public final InventoryComponent outputInventory;
+	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
@@ -66,8 +66,8 @@ public class BlockEntityBottler extends BlockEntityMachine {
 		}));
 
 		// Setup all the other inventories.;
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
+		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 

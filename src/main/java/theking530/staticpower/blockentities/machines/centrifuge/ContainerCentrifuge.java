@@ -44,9 +44,9 @@ public class ContainerCentrifuge extends StaticPowerTileEntityContainer<BlockEnt
 		this.addSlot(new BatteryItemSlot(getTileEntity().batteryInventory, 0, 8, 64));
 
 		// Output
-		this.addSlot(new OutputSlot(getTileEntity().firstOutputInventory, 0, 81, 60));
-		this.addSlot(new OutputSlot(getTileEntity().secondOutputInventory, 0, 107, 60));
-		this.addSlot(new OutputSlot(getTileEntity().thirdOutputInventory, 0, 55, 60));
+		this.addSlot(new OutputSlot(getTileEntity().outputInventories.get(0), 0, 81, 60));
+		this.addSlot(new OutputSlot(getTileEntity().outputInventories.get(1), 0, 107, 60));
+		this.addSlot(new OutputSlot(getTileEntity().outputInventories.get(2), 0, 55, 60));
 
 		// Upgrades
 		this.addSlot(new UpgradeItemSlot(getTileEntity().upgradesInventory, 0, 152, 12));

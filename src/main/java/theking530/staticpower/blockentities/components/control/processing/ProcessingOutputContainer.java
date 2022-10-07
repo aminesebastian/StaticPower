@@ -67,10 +67,9 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 		if (isClosed()) {
 			throw new RuntimeException(String.format("Attempted to add an input item to a clowed process output container."));
 		}
-
-		if (!item.isEmpty()) {
-			inputItems.add(item.copy());
-		}
+		// Don't check for empty items here because some recipes depend on empty items
+		// to match shapes (eg: crafting).
+		inputItems.add(item.copy());
 		return this;
 	}
 

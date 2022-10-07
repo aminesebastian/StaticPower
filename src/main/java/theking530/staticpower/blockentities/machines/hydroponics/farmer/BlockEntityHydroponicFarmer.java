@@ -34,7 +34,6 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 	public static final int MAX_PODS = 4;
 
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 
@@ -51,7 +50,6 @@ public class BlockEntityHydroponicFarmer extends BlockEntityMachine {
 
 		// Setup the inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 9, MachineSideMode.Output));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 1));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 

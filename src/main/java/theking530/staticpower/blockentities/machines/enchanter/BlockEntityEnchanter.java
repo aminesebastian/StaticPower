@@ -11,8 +11,9 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -28,11 +29,12 @@ import theking530.staticpower.blockentities.components.items.OutputServoComponen
 import theking530.staticpower.blockentities.components.items.UpgradeInventoryComponent;
 import theking530.staticpower.data.StaticPowerTier;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
+import theking530.staticpower.data.crafting.StaticPowerIngredient;
 import theking530.staticpower.data.crafting.wrappers.enchanter.EnchanterRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityEnchanter extends BlockEntityMachine {
+public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeProcessor<EnchanterRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityEnchanter> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityEnchanter(pos, state),
 			ModBlocks.Enchanter);
@@ -40,7 +42,6 @@ public class BlockEntityEnchanter extends BlockEntityMachine {
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent enchantableInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;
 	public final FluidTankComponent fluidTankComponent;
 	public final FluidContainerInventoryComponent fluidContainerComponent;
 
@@ -65,13 +66,11 @@ public class BlockEntityEnchanter extends BlockEntityMachine {
 
 		// Setup all the other inventories.
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 1, MachineSideMode.Output));
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 4));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(processingComponent = new RecipeProcessingComponent<EnchanterRecipe>("ProcessingComponent", 1, RecipeProcessingComponent.MOVE_TIME, EnchanterRecipe.RECIPE_TYPE,
-				this::getMatchParameters, this::canStartProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<EnchanterRecipe>("ProcessingComponent", EnchanterRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -101,44 +100,42 @@ public class BlockEntityEnchanter extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
-					internalInventory.getStackInSlot(3)).setFluids(fluidTankComponent.getFluid());
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2),
-					enchantableInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
-		}
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<EnchanterRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2),
+				enchantableInventory.getStackInSlot(0)).setFluids(fluidTankComponent.getFluid());
 	}
 
-	protected ProcessingCheckState moveInputs(EnchanterRecipe recipe) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, recipe.getEnchantedVersion(enchantableInventory.getStackInSlot(0)))) {
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		ItemStack itemToEnchant = enchantableInventory.extractItem(0, 0, false);
+		outputContainer.addInputItem(itemToEnchant);
+
+		int slot = 0;
+		for (StaticPowerIngredient ing : recipe.getInputIngredients()) {
+			outputContainer.addInputItem(inputInventory.extractItem(slot, ing.getCount(), false));
+			slot++;
+		}
+
+		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getInputFluidStack().getAmount());
+		outputContainer.addOutputItem(recipe.getEnchantedVersion(itemToEnchant.copy()));
+
+		component.setMaxProcessingTime(recipe.getProcessingTime());
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
-
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-		transferItemInternally(inputInventory, 1, internalInventory, 1);
-		transferItemInternally(inputInventory, 2, internalInventory, 2);
-		transferItemInternally(enchantableInventory, 0, internalInventory, 3);
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState canStartProcessRecipe(EnchanterRecipe recipe, RecipeProcessingPhase location) {
-		ItemStack input = location == RecipeProcessingPhase.PRE_PROCESSING ? enchantableInventory.getStackInSlot(0) : internalInventory.getStackInSlot(3);
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, input)) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-		return ProcessingCheckState.ok();
-	}
-
-	protected ProcessingCheckState processingCompleted(EnchanterRecipe recipe) {
-		outputInventory.insertItem(0, recipe.getEnchantedVersion(internalInventory.getStackInSlot(3)), false);
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(2, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(3, ItemStack.EMPTY);
-		return ProcessingCheckState.ok();
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0).copy(), false);
 	}
 
 	@Override

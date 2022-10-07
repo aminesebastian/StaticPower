@@ -26,8 +26,9 @@ import theking530.staticcore.utilities.SDMath;
 import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationComponent;
@@ -46,7 +47,7 @@ import theking530.staticpower.utilities.InventoryUtilities;
 import theking530.staticpower.utilities.ItemUtilities;
 import theking530.staticpower.utilities.WorldUtilities;
 
-public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
+public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements IRecipeProcessor<HydroponicFarmingRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityHydroponicPod> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityHydroponicPod(pos, state),
 			ModBlocks.HydroponicPod);
@@ -77,11 +78,9 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 10, MachineSideMode.Output));
 		registerComponent(new OutputServoComponent("OutputServo", 4, outputInventory));
 
-		// Setup the processing component to work with the redstone control component,
-		// upgrade component and energy component.
 		registerComponent(processingComponent = new RecipeProcessingComponent<HydroponicFarmingRecipe>("ProcessingComponent",
-				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), RecipeProcessingComponent.MOVE_TIME, HydroponicFarmingRecipe.RECIPE_TYPE, this::getMatchParameters,
-				this::canProcessRecipe, this::moveInputs, this::processingCompleted).setShouldControlBlockState(true));
+				StaticPowerConfig.SERVER.poweredGrinderProcessingTime.get(), HydroponicFarmingRecipe.RECIPE_TYPE, this));
+		processingComponent.setShouldControlBlockState(true);
 
 		owningFarmer = null;
 	}
@@ -106,59 +105,6 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 				}
 			}
 		}
-	}
-
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
-		}
-	}
-
-	protected ProcessingCheckState canProcessRecipe(HydroponicFarmingRecipe recipe, RecipeProcessingPhase location) {
-		if (!hasFarmer()) {
-			return ProcessingCheckState.error("Missing farmer!");
-		}
-
-		if (!hasWater()) {
-			return ProcessingCheckState.notEnoughFluid();
-		}
-
-		if (!InventoryUtilities.isInventoryEmpty(outputInventory)) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
-		return ProcessingCheckState.ok();
-	}
-
-	protected void moveInputs(HydroponicFarmingRecipe recipe) {
-		transferItemInternally(inputInventory, 0, internalInventory, 0);
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		processingComponent.setMaxProcessingTime(100);
-	}
-
-	protected void processingCompleted(HydroponicFarmingRecipe recipe) {
-		// Iterate through all the drops. If the input is empty, check if any of the
-		// drops can be put back into the seed slot.
-		// If so, transfer. Then, whatever is left goes into the buffer.
-		HarvestResult results = getDrops();
-		for (ItemStack stack : results.getResults()) {
-			if (StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent()) {
-				if (inputInventory.getStackInSlot(0).isEmpty() || ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
-					ItemStack remaining = inputInventory.insertItem(0, stack.copy(), false);
-					stack.setCount(remaining.getCount());
-				}
-			}
-
-			if (!stack.isEmpty()) {
-				InventoryUtilities.insertItemIntoInventory(outputInventory, stack, false);
-			}
-		}
-
-		// Clear the internal inventory.
-		InventoryUtilities.clearInventory(internalInventory);
 	}
 
 	public boolean isGrowing() {
@@ -271,5 +217,60 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable {
 	@Override
 	protected DefaultSideConfiguration getDefaultSideConfiguration() {
 		return SideConfigurationComponent.BACK_OUTPUT_ONLY;
+	}
+
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<HydroponicFarmingRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0));
+	}
+
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+
+		HarvestResult results = getDrops();
+		for (ItemStack stack : results.getResults()) {
+			outputContainer.addOutputItem(stack);
+		}
+
+		component.setMaxProcessingTime(recipe.getProcessingTime());
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+	}
+
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
+		if (!hasFarmer()) {
+			return ProcessingCheckState.error("Missing farmer!");
+		}
+
+		if (!hasWater()) {
+			return ProcessingCheckState.notEnoughFluid();
+		}
+
+		if (!InventoryUtilities.isInventoryEmpty(outputInventory)) {
+			return ProcessingCheckState.outputsCannotTakeRecipe();
+		}
+
+		return ProcessingCheckState.ok();
+	}
+
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// Iterate through all the drops. If the input is empty, check if any of the
+		// drops can be put back into the seed slot.
+		// If so, transfer. Then, whatever is left goes into the buffer.
+		for (ItemStack stack : outputContainer.getOutputItems()) {
+			if (StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent()) {
+				if (inputInventory.getStackInSlot(0).isEmpty() || ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
+					ItemStack remaining = inputInventory.insertItem(0, stack.copy(), false);
+					stack.setCount(remaining.getCount());
+				}
+			}
+
+			if (!stack.isEmpty()) {
+				InventoryUtilities.insertItemIntoInventory(outputInventory, stack, false);
+			}
+		}
 	}
 }

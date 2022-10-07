@@ -4,15 +4,14 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
-import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
-import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent.RecipeProcessingPhase;
+import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
 import theking530.staticpower.blockentities.components.items.InputServoComponent;
@@ -24,14 +23,13 @@ import theking530.staticpower.data.crafting.wrappers.fusionfurnace.FusionFurnace
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
-public class BlockEntityFusionFurnace extends BlockEntityMachine {
+public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRecipeProcessor<FusionFurnaceRecipe> {
 	@BlockEntityTypePopulator()
 	public static final BlockEntityTypeAllocator<BlockEntityFusionFurnace> TYPE = new BlockEntityTypeAllocator<>((type, pos, state) -> new BlockEntityFusionFurnace(pos, state),
 			ModBlocks.FusionFurnace);
 
 	public final InventoryComponent inputInventory;
 	public final InventoryComponent outputInventory;
-	public final InventoryComponent internalInventory;
 	public final BatteryInventoryComponent batteryInventory;
 	public final UpgradeInventoryComponent upgradesInventory;
 	public final RecipeProcessingComponent<FusionFurnaceRecipe> processingComponent;
@@ -45,15 +43,12 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine {
 		registerComponent(inputInventory = new InventoryComponent("InputInventory", 5, MachineSideMode.Input).setShiftClickEnabled(true));
 
 		// Setup all the other inventories.
-		registerComponent(internalInventory = new InventoryComponent("InternalInventory", 5));
 		registerComponent(outputInventory = new InventoryComponent("OutputInventory", 3, MachineSideMode.Output));
 		registerComponent(batteryInventory = new BatteryInventoryComponent("BatteryComponent", powerStorage));
 		registerComponent(upgradesInventory = new UpgradeInventoryComponent("UpgradeInventory", 3));
 
 		// Setup the processing component.
-		registerComponent(
-				processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", StaticPowerConfig.SERVER.fusionFurnaceProcessingTime.get(),
-						RecipeProcessingComponent.MOVE_TIME, FusionFurnaceRecipe.RECIPE_TYPE, this::getMatchParameters, this::canProcessRecipe, this::moveInputs, this::processingCompleted));
+		registerComponent(processingComponent = new RecipeProcessingComponent<FusionFurnaceRecipe>("ProcessingComponent", FusionFurnaceRecipe.RECIPE_TYPE, this));
 
 		// Initialize the processing component to work with the redstone control
 		// component, upgrade component and energy component.
@@ -70,61 +65,46 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine {
 		powerStorage.setUpgradeInventory(upgradesInventory);
 	}
 
-	protected RecipeMatchParameters getMatchParameters(RecipeProcessingPhase location) {
-		if (location == RecipeProcessingPhase.PROCESSING) {
-			return new RecipeMatchParameters(internalInventory.getStackInSlot(0), internalInventory.getStackInSlot(1), internalInventory.getStackInSlot(2),
-					internalInventory.getStackInSlot(3), internalInventory.getStackInSlot(4));
-		} else {
-			return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
-					inputInventory.getStackInSlot(4));
-		}
+	@Override
+	public RecipeMatchParameters getRecipeMatchParameters(RecipeProcessingComponent<FusionFurnaceRecipe> component) {
+		return new RecipeMatchParameters(inputInventory.getStackInSlot(0), inputInventory.getStackInSlot(1), inputInventory.getStackInSlot(2), inputInventory.getStackInSlot(3),
+				inputInventory.getStackInSlot(4));
 	}
 
-	protected ProcessingCheckState moveInputs(FusionFurnaceRecipe recipe) {
-		// If the items can be insert into the output, transfer the items and return
-		// true.
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, recipe.getOutput().getItem())) {
-			return ProcessingCheckState.outputsCannotTakeRecipe();
-		}
-
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<FusionFurnaceRecipe> component, FusionFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Transfer the items.
 		for (int i = 0; i < 5; i++) {
 			int count = recipe.getRequiredCountOfItem(inputInventory.getStackInSlot(i));
 			if (count > 0) {
-				transferItemInternally(count, inputInventory, i, internalInventory, i);
+				outputContainer.addInputItem(inputInventory.extractItem(i, count, false));
 			}
 		}
 
-		// Set the power usage.
-		processingComponent.setProcessingPowerUsage(recipe.getPowerCost());
-		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 
-		return ProcessingCheckState.ok();
+		// Set the power usage.
+		component.setProcessingPowerUsage(recipe.getPowerCost());
+		component.setMaxProcessingTime(recipe.getProcessingTime());
 	}
 
-	protected ProcessingCheckState canProcessRecipe(FusionFurnaceRecipe recipe, RecipeProcessingPhase location) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, recipe.getOutput().getItem())) {
+	@Override
+	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FusionFurnaceRecipe> component, FusionFurnaceRecipe recipe,
+			ProcessingOutputContainer outputContainer) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
 	}
 
-	protected ProcessingCheckState processingCompleted(FusionFurnaceRecipe recipe) {
-		// Insert the output into the output inventory.
-		ItemStack output = recipe.getOutput().calculateOutput();
-		InventoryUtilities.insertItemIntoInventory(outputInventory, output, false);
-
-		// Clear the internal inventory.
-		internalInventory.setStackInSlot(0, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(1, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(2, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(3, ItemStack.EMPTY);
-		internalInventory.setStackInSlot(4, ItemStack.EMPTY);
-		return ProcessingCheckState.ok();
+	@Override
+	public void processingCompleted(RecipeProcessingComponent<FusionFurnaceRecipe> component, FusionFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
 	}
 
 	@Override
 	public AbstractContainerMenu createMenu(int windowId, Inventory inventory, Player player) {
 		return new ContainerFusionFurnace(windowId, inventory, this);
 	}
+
 }

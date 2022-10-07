@@ -74,6 +74,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 			}
 		}
 		updateProductionStatistics();
+		return super.process();
 	}
 
 	private void updateProductionStatistics() {
