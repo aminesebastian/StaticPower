@@ -104,8 +104,13 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 	}
 
 	@Override
+	public void processingStarted(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
+	}
+
+	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 		outputContainer.addOutputFluid(fluidTankComponent.getFluid(), recipe.getOutputFluid().getAmount());
 

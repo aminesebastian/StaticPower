@@ -100,7 +100,7 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 	public void captureInputsAndProducts(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the items.
 		for (int i = 0; i < 9; i++) {
-			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), false));
+			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), true));
 		}
 
 		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput());
@@ -110,6 +110,14 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// Move the items.
+		for (int i = 0; i < 9; i++) {
+			inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), false);
+		}
 	}
 
 	@Override

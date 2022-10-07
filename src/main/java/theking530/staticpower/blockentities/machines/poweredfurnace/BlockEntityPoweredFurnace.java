@@ -96,9 +96,14 @@ public class BlockEntityPoweredFurnace extends BlockEntityMachine implements IRe
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, 1, false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, 1, true));
 		outputContainer.addOutputItem(recipe.getResultItem().copy());
 		component.setMaxProcessingTime(getCookTime(recipe));
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<SmeltingRecipe> component, SmeltingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, 1, false);
 	}
 
 	@Override

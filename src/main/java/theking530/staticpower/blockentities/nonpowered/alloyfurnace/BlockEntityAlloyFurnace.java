@@ -30,6 +30,7 @@ import theking530.staticpower.blockentities.components.loopingsound.LoopingSound
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
+import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -127,21 +128,18 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
-		ItemStack input1 = inputInventory.getStackInSlot(0).copy();
-		input1.setCount(recipe.getInput1().getCount());
-		outputContainer.addInputItem(input1);
-		inputInventory.extractItem(0, recipe.getInput2().getCount(), false);
-
-		ItemStack input2 = inputInventory.getStackInSlot(1).copy();
-		input2.setCount(recipe.getInput2().getCount());
-		outputContainer.addInputItem(input2);
+	public void processingStarted(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInput1().getCount(), false);
 		inputInventory.extractItem(1, recipe.getInput2().getCount(), false);
+	}
 
+	@Override
+	public void captureInputsAndProducts(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput1().getCount(), true));
+		outputContainer.addInputItem(inputInventory.extractItem(1, recipe.getInput2().getCount(), true));
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
-
 	}
 
 	@Override

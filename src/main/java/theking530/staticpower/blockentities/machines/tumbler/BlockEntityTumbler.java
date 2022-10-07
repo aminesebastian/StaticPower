@@ -130,8 +130,13 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IRecipePro
 	}
 
 	@Override
+	public void processingStarted(RecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
+	}
+
+	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true));
 
 		ItemStack outputItem = recipe.getOutput().calculateOutput(bonusOutputChance - 1.0f);
 		outputContainer.addOutputItem(outputItem);

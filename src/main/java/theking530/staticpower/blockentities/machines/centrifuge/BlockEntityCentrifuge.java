@@ -171,12 +171,17 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
 		for (ProbabilityItemStackOutput output : recipe.getOutputs()) {
 			outputContainer.addOutputItem(output.calculateOutput());
 		}
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override

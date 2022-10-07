@@ -98,10 +98,10 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (recipe.hasPrimaryItemInput()) {
-			outputContainer.addInputItem(input1Inventory.extractItem(0, recipe.getPrimaryItemInput().getCount(), false));
+			outputContainer.addInputItem(input1Inventory.extractItem(0, recipe.getPrimaryItemInput().getCount(), true));
 		}
 		if (recipe.hasSecondaryItemInput()) {
-			outputContainer.addInputItem(input2Inventory.extractItem(0, recipe.getSecondaryItemInput().getCount(), false));
+			outputContainer.addInputItem(input2Inventory.extractItem(0, recipe.getSecondaryItemInput().getCount(), true));
 		}
 
 		if (recipe.hasPrimaryFluidInput()) {
@@ -116,6 +116,16 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (recipe.hasPrimaryItemInput()) {
+			input1Inventory.extractItem(0, recipe.getPrimaryItemInput().getCount(), false);
+		}
+		if (recipe.hasSecondaryItemInput()) {
+			input2Inventory.extractItem(0, recipe.getSecondaryItemInput().getCount(), false);
+		}
 	}
 
 	@Override

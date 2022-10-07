@@ -88,13 +88,18 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true));
 
 		for (ProbabilityItemStackOutput outputItem : recipe.getOutputItems()) {
 			outputContainer.addOutputItem(outputItem.calculateOutput(bonusOutputChance - 1.0f));
 		}
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override

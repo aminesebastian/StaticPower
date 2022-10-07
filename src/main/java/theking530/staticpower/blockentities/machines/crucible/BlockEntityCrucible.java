@@ -118,13 +118,18 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
 		outputContainer.addOutputFluid(recipe.getOutputFluid());
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override

@@ -89,13 +89,18 @@ public class BlockEntityFormer extends BlockEntityMachine implements IRecipeProc
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true));
 		outputContainer.addInputItem(moldInventory.getStackInSlot(0));
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 
 		// Set the power usage and processing time.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<FormerRecipe> component, FormerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override

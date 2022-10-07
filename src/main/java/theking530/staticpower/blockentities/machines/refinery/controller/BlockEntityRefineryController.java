@@ -377,13 +377,20 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (recipe.hasCatalyst()) {
-			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), false));
+			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), true));
 		}
 
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		heatStorage.setMinimumHeatThreshold(recipe.getProcessingSection().getMinimumHeat());
 		currentProcessingProductivity = getProductivity();
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
+		if (recipe.hasCatalyst()) {
+			catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), false);
+		}
 	}
 
 	@Override

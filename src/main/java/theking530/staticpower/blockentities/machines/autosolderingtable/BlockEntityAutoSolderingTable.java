@@ -102,7 +102,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 			// Remove the item.
 			for (int j = 0; j < inventory.getSlots(); j++) {
 				if (ing.test(inventory.getStackInSlot(j))) {
-					ItemStack extracted = inventory.extractItem(j, 1, false);
+					ItemStack extracted = inventory.extractItem(j, 1, true);
 					outputContainer.addInputItem(extracted);
 					break;
 				}
@@ -110,6 +110,30 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 		}
 
 		outputContainer.addOutputItem(recipe.getResultItem());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// If we still have the recipe, and the required items, move the input items
+		// into the internal inventory.
+		// Transfer the materials into the internal inventory.
+		for (int i = 0; i < patternInventory.getSlots(); i++) {
+			// Get the used ingredient.
+			Ingredient ing = recipe.getIngredients().get(i);
+
+			// Skip holes in the recipe.
+			if (ing.equals(Ingredient.EMPTY)) {
+				continue;
+			}
+
+			// Remove the item.
+			for (int j = 0; j < inventory.getSlots(); j++) {
+				if (ing.test(inventory.getStackInSlot(j))) {
+					inventory.extractItem(j, 1, false);
+					break;
+				}
+			}
+		}
 	}
 
 	@Override

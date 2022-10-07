@@ -99,13 +99,18 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the input to the internal inventory.
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true));
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 		outputContainer.getCustomParameterContainer().putInt("size", gridSize);
 
 		// Update the processing/power.
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override

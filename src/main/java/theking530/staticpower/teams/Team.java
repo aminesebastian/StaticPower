@@ -44,7 +44,9 @@ public class Team {
 	}
 
 	public void tick(Level level) {
+		level.getProfiler().push("ProductionManager.Tick");
 		productionManager.tick(level.getGameTime());
+		level.getProfiler().pop();
 	}
 
 	public String getName() {

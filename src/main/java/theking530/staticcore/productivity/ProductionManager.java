@@ -38,6 +38,7 @@ public class ProductionManager {
 	public void tick(long gameTime) {
 		int currentTickIndex = (int) (gameTime % 20);
 		for (ProductionCache<?> prodCache : cache.values()) {
+			prodCache.tick(gameTime);
 			prodCache.insertProductivityPerSecond(team.getDatabaseConnection(), currentTickIndex, gameTime);
 
 			if (gameTime % SDTime.TICKS_PER_SECOND == 0) {
@@ -94,8 +95,6 @@ public class ProductionManager {
 				+ "	product_hash int NOT NULL,\n" 
 				+ "	consumed integer NOT NULL,\n"
 				+ "	produced integer NOT NULL,\n" 
-				+ "	consumption_rate real NOT NULL,\n"
-				+ "	production_rate real NOT NULL,\n" 
 				+ "	game_tick bigint NOT NULL\n"
 				+ ");", productType, period.getTableKey());
 		//@formatter:on

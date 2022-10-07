@@ -1,7 +1,6 @@
 package theking530.staticcore.productivity.cache;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
@@ -31,6 +30,14 @@ public abstract class ProductionCache<T> {
 		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();
 		for (int i = 0; i < 20; i++) {
 			productivityBuckets.add(new HashMap<Integer, ProductionEntry<T>>());
+		}
+	}
+
+	public void tick(long gameTime) {
+		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
+			for (ProductionEntry<T> entry : bucket.values()) {
+				entry.tick(gameTime);
+			}
 		}
 	}
 
@@ -77,14 +84,13 @@ public abstract class ProductionCache<T> {
 				}
 
 				//@formatter:off
-				String upsert = String.format("REPLACE INTO %1$s_productivity_%2$s(product_hash, consumed, produced, consumption_rate, production_rate, game_tick) \n"
-						+ "  VALUES('%3$d', '%4$f', '%5$f', '%6$f', '%7$f', '%8$d');",
-						getProductType(), MetricPeriod.SECOND.getTableKey(), 
+				String upsert = String.format("REPLACE INTO %1$s_productivity_%2$s(product_hash, consumed, produced, game_tick) \n"
+						+ "  VALUES('%3$d', '%4$f', '%5$f',  '%6$d');",
+						getProductType(), 
+						MetricPeriod.SECOND.getTableKey(), 
 						entry.getProductHashCode(), 
 						metric.consumed(),
 						metric.produced(),
-						metric.consumptionRate(),
-						metric.productionRate(),
 						gameTime);
 				//@formatter:on
 				stmt.addBatch(upsert);
@@ -115,8 +121,6 @@ public abstract class ProductionCache<T> {
 					+ " SELECT product_hash, "
 					+ " 	SUM(consumed) as consumed, "
 					+ " 	SUM(produced) as produced, "
-					+ " 	AVG(consumption_rate) as consumption_rate, "
-					+ " 	AVG(production_rate) as production_rate, "
 					+ "		%4$d \n"
 					+ " FROM item_productivity_%2$s \n"
 					+ " WHERE game_tick > %5$d \n"
@@ -141,39 +145,20 @@ public abstract class ProductionCache<T> {
 	private List<SerializedMetricPeriod> getAverageProductionRate(long gameTime, int limit, MetricPeriod period, MetricType direction) {
 		List<SerializedMetricPeriod> metrics = new LinkedList<SerializedMetricPeriod>();
 
-		try {
-		//@formatter:off
-		String query = String.format("SELECT   \r\n"
-				+ "	 product.serialized_product,   \r\n"
-				+ "	 AVG(consumption_rate) as consumption_rate,  \r\n"
-				+ "	 AVG(production_rate) as production_rate  \r\n"
-				+ "FROM   \r\n"
-				+ "	 item_product as product  \r\n"
-				+ "		LEFT JOIN  \r\n"
-				+ "	 item_productivity_second as metric  \r\n"
-				+ "		ON  \r\n"
-				+ "	 product.product_hash = metric.product_hash \r\n"
-				+ "WHERE	\r\n"
-				+ "	metric.game_tick >= %1$d OR metric.game_tick IS NULL\r\n"
-				+ "GROUP BY  \r\n"
-				+ "	product.product_hash \r\n"
-				+ "ORDER BY %2$s_rate DESC \r\n"
-				+ "LIMIT %3$d;", gameTime - period.getMetricPeriodInTicks(), direction.getQueryField(), limit);
-		//@formatter:on
-			Statement stmt = database.createStatement();
-			ResultSet result = stmt.executeQuery(query);
-			while (result.next()) {
-				String product = result.getString("serialized_product");
-				double consumption = result.getDouble("consumption_rate") * period.getPeriodLengthInSeconds();
-				double production = result.getDouble("production_rate") * period.getPeriodLengthInSeconds();
-				if (direction == MetricType.CONSUMPTION) {
-					metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
-				} else {
-					metrics.add(new SerializedMetricPeriod(product, consumption, production, period));
-				}
+		// Pull the production rates from memory into the metrics result.
+		for (Map<Integer, ProductionEntry<T>> bucket : productivityBuckets) {
+			for (ProductionEntry<T> entry : bucket.values()) {
+				double consumption = entry.getConsumptionRate() * period.getPeriodLengthInSeconds();
+				double production = entry.getProductionRate() * period.getPeriodLengthInSeconds();
+				metrics.add(new SerializedMetricPeriod(entry.getSerializedProduct(), consumption, production, period));
 			}
-		} catch (SQLException e) {
-			StaticPower.LOGGER.error(String.format("An error occured when pulling the average production rage for product type: %1$s.", getProductType()), e);
+		}
+
+		// Sort such that the highest rates go to the top.
+		if (direction == MetricType.PRODUCTION) {
+			metrics.sort((m1, m2) -> Double.compare(m2.getProduction(), m1.getProduction()));
+		} else {
+			metrics.sort((m1, m2) -> Double.compare(m2.getConsumption(), m1.getConsumption()));
 		}
 
 		return metrics;

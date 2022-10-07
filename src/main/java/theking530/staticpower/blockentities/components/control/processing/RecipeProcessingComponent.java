@@ -83,10 +83,10 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 				TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
 				if (teamComp != null) {
 					for (ItemStack output : outputContainer.getOutputItems()) {
-						productionToken.setProductionPerSecond(teamComp.getOwningTeam(), output, 1.0 / (this.getMaxProcessingTime() / 20));
+						productionToken.setProductionPerSecond(teamComp.getOwningTeam(), output, 1.0 / (getMaxProcessingTime() / 20.0));
 					}
 					for (ItemStack input : outputContainer.getInputItems()) {
-						productionToken.setConsumptionPerSection(teamComp.getOwningTeam(), input, 1.0 / (this.getMaxProcessingTime() / 20));
+						productionToken.setConsumptionPerSection(teamComp.getOwningTeam(), input, 1.0 / (getMaxProcessingTime() / 20.0));
 					}
 				}
 			} else {
@@ -147,7 +147,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	@Override
 	protected ProcessingCheckState canContinueProcessing() {
 		// Get the recipe. Skip if it does not exist.
-		Optional<T> recipe = getCurrentlyProcessingRecipe();
+		Optional<T> recipe = getCurrentRecipe();
 		if (!recipe.isPresent()) {
 			return ProcessingCheckState.ok();
 		}
@@ -159,7 +159,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	@Override
 	protected void onProcessingCompleted() {
 		// If we can immediately start processing again, do so without a move delay.
-		processor.processingCompleted(this, getCurrentlyProcessingRecipe().get(), outputContainer);
+		processor.processingCompleted(this, getCurrentRecipe().get(), outputContainer);
 
 		TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
 		if (teamComp != null) {
@@ -181,7 +181,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		return getRecipeMatchingParameters(processor.getRecipeMatchParameters(this));
 	}
 
-	public Optional<T> getCurrentlyProcessingRecipe() {
+	public Optional<T> getCurrentRecipe() {
 		ResourceLocation recipeId = this.outputContainer.getRecipe();
 		if (recipeId == null) {
 			return Optional.empty();
@@ -222,7 +222,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	 * @return
 	 */
 	public Optional<T> getCurrentOrPendingRecipe() {
-		Optional<T> recipe = this.getCurrentlyProcessingRecipe();
+		Optional<T> recipe = this.getCurrentRecipe();
 		if (!recipe.isPresent()) {
 			recipe = this.getPendingRecipe();
 		}
@@ -231,7 +231,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 	@Override
 	protected void onProcessingStarted() {
-
+		processor.processingStarted(this, getCurrentRecipe().get(), outputContainer);
 	}
 
 	@Override

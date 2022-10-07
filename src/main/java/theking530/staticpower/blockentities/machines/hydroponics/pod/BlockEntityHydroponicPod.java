@@ -226,7 +226,7 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
 
 		HarvestResult results = getDrops();
 		for (ItemStack stack : results.getResults()) {
@@ -235,6 +235,11 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override

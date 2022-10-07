@@ -77,7 +77,7 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 		for (int i = 0; i < 5; i++) {
 			int count = recipe.getRequiredCountOfItem(inputInventory.getStackInSlot(i));
 			if (count > 0) {
-				outputContainer.addInputItem(inputInventory.extractItem(i, count, false));
+				outputContainer.addInputItem(inputInventory.extractItem(i, count, true));
 			}
 		}
 
@@ -86,6 +86,17 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<FusionFurnaceRecipe> component, FusionFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// Transfer the items.
+		for (int i = 0; i < 5; i++) {
+			int count = recipe.getRequiredCountOfItem(inputInventory.getStackInSlot(i));
+			if (count > 0) {
+				inputInventory.extractItem(i, count, false);
+			}
+		}
 	}
 
 	@Override

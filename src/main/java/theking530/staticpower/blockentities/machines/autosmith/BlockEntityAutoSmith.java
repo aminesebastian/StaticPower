@@ -148,7 +148,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 		int transferCount = recipe.isWildcardRecipe() ? 1 : recipe.getSmithTarget().getCount();
 		ItemStack toModifyItem = inputInventory.extractItem(0, transferCount, false);
 		outputContainer.addInputItem(toModifyItem);
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getModifierMaterial().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getModifierMaterial().getCount(), true));
 		outputContainer.addInputFluid(recipe.getModifierFluid());
 
 		recipe.applyToItemStack(toModifyItem);
@@ -157,6 +157,11 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 		// Set the power usage and processing time.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<AutoSmithRecipe> component, AutoSmithRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getModifierMaterial().getCount(), false);
 	}
 
 	@Override

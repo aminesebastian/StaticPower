@@ -130,16 +130,14 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 	}
 
 	@Override
-	public void captureInputsAndProducts(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.getStackInSlot(0), recipe.getInput().getCount());
+	public void processingStarted(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
 		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
-
-		outputContainer.setOutputPower(powerGenerationPerTick);
-		component.setMaxProcessingTime(recipe.getFuelAmount());
 	}
 
 	@Override
-	public void processingCompleted(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
-
+	public void captureInputsAndProducts(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
+		outputContainer.setOutputPower(powerGenerationPerTick);
+		component.setMaxProcessingTime(recipe.getFuelAmount());
 	}
 }

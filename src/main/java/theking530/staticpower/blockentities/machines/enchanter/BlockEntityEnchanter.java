@@ -108,12 +108,12 @@ public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
-		ItemStack itemToEnchant = enchantableInventory.extractItem(0, 0, false);
+		ItemStack itemToEnchant = enchantableInventory.extractItem(0, 0, true);
 		outputContainer.addInputItem(itemToEnchant);
 
 		int slot = 0;
 		for (StaticPowerIngredient ing : recipe.getInputIngredients()) {
-			outputContainer.addInputItem(inputInventory.extractItem(slot, ing.getCount(), false));
+			outputContainer.addInputItem(inputInventory.extractItem(slot, ing.getCount(), true));
 			slot++;
 		}
 
@@ -123,6 +123,17 @@ public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeP
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		enchantableInventory.extractItem(0, 0, false);
+
+		int slot = 0;
+		for (StaticPowerIngredient ing : recipe.getInputIngredients()) {
+			inputInventory.extractItem(slot, ing.getCount(), false);
+			slot++;
+		}
 	}
 
 	@Override

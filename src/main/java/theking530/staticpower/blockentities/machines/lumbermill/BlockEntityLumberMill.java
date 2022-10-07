@@ -146,7 +146,7 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the item.
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
 		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput());
 		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput());
 		outputContainer.addOutputFluid(recipe.getOutputFluid().copy());
@@ -154,6 +154,11 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override

@@ -46,7 +46,7 @@ public class GuiFluidInfuser extends StaticPowerTileEntityGui<ContainerFluidInfu
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<FluidInfusionRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
+		Optional<FluidInfusionRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent()) {

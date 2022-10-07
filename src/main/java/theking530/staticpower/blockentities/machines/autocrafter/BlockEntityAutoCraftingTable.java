@@ -160,7 +160,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 					// Capture the item.
 					for (int j = 0; j < inputInventory.getSlots(); j++) {
 						if (ingredient.test(inputInventory.getStackInSlot(j))) {
-							ItemStack extracted = inputInventory.extractItem(j, 1, false);
+							ItemStack extracted = inputInventory.extractItem(j, 1, true);
 							outputContainer.addInputItem(extracted);
 							break;
 						}
@@ -181,7 +181,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 				// Remove the item.
 				for (int j = 0; j < inputInventory.getSlots(); j++) {
 					if (ing.test(inputInventory.getStackInSlot(j))) {
-						ItemStack extracted = inputInventory.extractItem(j, 1, false);
+						ItemStack extracted = inputInventory.extractItem(j, 1, true);
 						outputContainer.addInputItem(extracted);
 						break;
 					}
@@ -189,6 +189,57 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 			}
 		}
 		outputContainer.addOutputItem(recipe.getResultItem());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
+		// If this recipe is shaped, make sure we place the same shaped recipe's items
+		// into the internal inventory. If shapeless, just put the items into the
+		// internal inv.
+		if (recipe instanceof ShapedRecipe) {
+			ShapedRecipe sRecipe = (ShapedRecipe) recipe;
+			for (int x = 0; x < 3; ++x) {
+				for (int y = 0; y < 3; ++y) {
+					// Get the recipe index.
+					Ingredient ingredient = Ingredient.EMPTY;
+					if (x >= 0 && y >= 0 && x < sRecipe.getRecipeWidth() && y < sRecipe.getRecipeHeight()) {
+						ingredient = sRecipe.getIngredients().get(sRecipe.getRecipeWidth() - x - 1 + y * sRecipe.getRecipeWidth());
+					}
+
+					// Skip empty ingredients.
+					if (ingredient.equals(Ingredient.EMPTY)) {
+						continue;
+					}
+
+					// Capture the item.
+					for (int j = 0; j < inputInventory.getSlots(); j++) {
+						if (ingredient.test(inputInventory.getStackInSlot(j))) {
+							inputInventory.extractItem(j, 1, false);
+							break;
+						}
+					}
+				}
+			}
+		} else {
+			// Transfer the materials into the internal inventory.
+			for (int i = 0; i < recipe.getIngredients().size(); i++) {
+				// Get the used ingredient.
+				Ingredient ing = recipe.getIngredients().get(i);
+
+				// Skip holes in the recipe.
+				if (ing.equals(Ingredient.EMPTY)) {
+					continue;
+				}
+
+				// Remove the item.
+				for (int j = 0; j < inputInventory.getSlots(); j++) {
+					if (ing.test(inputInventory.getStackInSlot(j))) {
+						inputInventory.extractItem(j, 1, false);
+						break;
+					}
+				}
+			}
+		}
 	}
 
 	@Override

@@ -100,13 +100,18 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
 		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getRequiredFluid().getAmount());
 		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
+		inputInventory.extractItem(0, recipe.getInput().getCount(), false);
 	}
 
 	@Override

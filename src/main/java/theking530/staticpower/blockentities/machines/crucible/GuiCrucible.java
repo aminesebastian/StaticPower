@@ -50,7 +50,7 @@ public class GuiCrucible extends StaticPowerTileEntityGui<ContainerCrucible, Blo
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<CrucibleRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
+		Optional<CrucibleRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent()) {

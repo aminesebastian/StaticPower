@@ -47,7 +47,7 @@ public class GuiSqueezer extends StaticPowerTileEntityGui<ContainerSqueezer, Blo
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<SqueezerRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
+		Optional<SqueezerRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent() && currentRecipe.get().hasOutputFluid()) {

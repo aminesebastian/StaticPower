@@ -49,7 +49,7 @@ public class GuiCaster extends StaticPowerTileEntityGui<ContainerCaster, BlockEn
 	@Override
 	public void updateData() {
 		// Get the recipe.
-		Optional<CastingRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentlyProcessingRecipe();
+		Optional<CastingRecipe> currentRecipe = getTileEntity().processingComponent.getCurrentRecipe();
 
 		// Update the progress bar.
 		if (currentRecipe.isPresent()) {

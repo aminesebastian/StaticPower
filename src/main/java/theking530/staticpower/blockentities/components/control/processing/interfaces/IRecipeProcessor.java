@@ -13,9 +13,14 @@ public interface IRecipeProcessor<T extends Recipe<?>> {
 
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<T> component, T recipe, ProcessingOutputContainer outputContainer);
 
-	public void processingCompleted(RecipeProcessingComponent<T> component, T recipe, ProcessingOutputContainer outputContainer);
-
 	public default ProcessingCheckState canContinueProcessing(RecipeProcessingComponent<T> component, T recipe, ProcessingOutputContainer outputContainer) {
 		return canStartProcessing(component, recipe, outputContainer);
+	}
+
+	public default void processingStarted(RecipeProcessingComponent<T> component, T recipe, ProcessingOutputContainer outputContainer) {
+
+	}
+
+	public default void processingCompleted(RecipeProcessingComponent<T> component, T recipe, ProcessingOutputContainer outputContainer) {
 	}
 }

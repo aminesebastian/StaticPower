@@ -51,7 +51,7 @@ public class GuiFermenter extends StaticPowerTileEntityGui<ContainerFermenter, B
 	public void updateData() {
 		// If the recipe is non-null, render the fluid progress bar.
 		if (getTileEntity().processingComponent.isProcessing()) {
-			FluidStack fluid = getTileEntity().processingComponent.getCurrentlyProcessingRecipe().get().getOutputFluidStack();
+			FluidStack fluid = getTileEntity().processingComponent.getCurrentRecipe().get().getOutputFluidStack();
 			progressBar.setFluidStack(fluid);
 		} else {
 			progressBar.setFluidStack(FluidStack.EMPTY);

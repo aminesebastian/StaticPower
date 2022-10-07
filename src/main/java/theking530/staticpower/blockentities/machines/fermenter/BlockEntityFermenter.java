@@ -111,9 +111,15 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		int slot = getSlotToProccess();
-		outputContainer.addInputItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), false));
+		outputContainer.addInputItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), true));
 		outputContainer.addOutputItem(recipe.getResidualOutput().calculateOutput());
 		outputContainer.addOutputFluid(recipe.getOutputFluidStack());
+	}
+
+	@Override
+	public void processingStarted(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
+		int slot = getSlotToProccess();
+		inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), false);
 	}
 
 	@Override
