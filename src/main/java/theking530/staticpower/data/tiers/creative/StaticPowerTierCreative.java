@@ -5,7 +5,6 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.Builder;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.data.StaticPowerTier;
-import theking530.staticpower.data.tiers.advanced.AdvancedPowerConfiguration;
 import theking530.staticpower.data.tiers.categories.TierPowerConfiguration;
 import theking530.staticpower.data.tiers.categories.TierToolConfiguration;
 import theking530.staticpower.data.tiers.categories.TierUpgradeConfiguration;
@@ -61,7 +60,7 @@ public class StaticPowerTierCreative extends StaticPowerTier {
 
 	@Override
 	protected TierPowerConfiguration createPowerConfiguration(Builder builder) {
-		return new AdvancedPowerConfiguration(builder);
+		return new CreativePowerConfiguration(builder);
 	}
 
 	@Override

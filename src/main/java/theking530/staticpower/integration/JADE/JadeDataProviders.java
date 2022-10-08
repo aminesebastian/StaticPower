@@ -78,7 +78,7 @@ public class JadeDataProviders implements IServerDataProvider<BlockEntity> {
 		Optional<AbstractProcesingComponent> processing = ComponentUtilities.getComponent(AbstractProcesingComponent.class, te);
 		if (processing.isPresent()) {
 			CompoundTag processingData = new CompoundTag();
-			if (processing.get().isProcessing()) {
+			if (processing.get().hasProcessingStarted()) {
 				int remaining = processing.get().getMaxProcessingTime() - processing.get().getCurrentProcessingTime();
 				processingData.putInt("remaining", remaining);
 				processingData.putInt("max", processing.get().getMaxProcessingTime());

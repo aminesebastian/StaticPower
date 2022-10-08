@@ -52,11 +52,11 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		}
 		GuiDrawUtilities.drawRectangle(pose, getWidth(), getHeight() - 2, 0, 1, 1, bgColor);
 		GuiDrawUtilities.drawRectangle(pose, getWidth(), 1, 0, getHeight() - 1, 1, new SDColor(0.0f, 0.0f, 0.0f, 0.5f));
+
 	}
 
 	@Override
 	public void renderWidgetBehindItems(PoseStack pose, int mouseX, int mouseY, float partialTicks) {
-
 	}
 
 	@Override
@@ -64,7 +64,6 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		if (metric == null) {
 			return;
 		}
-
 		try {
 			CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
 			tag.putByte("Count", (byte) 1);
@@ -80,11 +79,10 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 		float growthPercentage = 0.5f;
 		pose.pushPose();
 		pose.scale(1, 0.85f, 1);
-		float barXPos = 48;
+		float barXPos = 45;
 		float barYPos = (getHeight() - 12);
-		float width = getWidth() / 5;
+		float width = (getWidth() - barXPos - 5);
 		GuiDrawUtilities.drawGenericBackground(pose, width, 7, barXPos, barYPos, 1, new SDColor(0.4f, 0.4f, 0.4f, 1.0f));
-
 		GuiDrawUtilities.drawGenericBackground(pose, Math.max(7, width * growthPercentage), 7, barXPos, barYPos, 1, new SDColor(0.2f, 0.5f, 1.4f, 1.0f));
 		pose.popPose();
 	}
@@ -92,10 +90,12 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 		try {
-			CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
-			tag.putByte("Count", (byte) 1);
-			ItemStack product = ItemStack.of(tag);
-			tooltips.addAll(product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
+			if (metric != null) {
+				CompoundTag tag = TagParser.parseTag(metric.getSerializedProduct());
+				tag.putByte("Count", (byte) 1);
+				ItemStack product = ItemStack.of(tag);
+				tooltips.addAll(product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
+			}
 		} catch (CommandSyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

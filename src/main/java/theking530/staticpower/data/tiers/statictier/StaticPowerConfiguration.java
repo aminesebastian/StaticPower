@@ -17,7 +17,7 @@ public class StaticPowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected StaticPowerVoltage getDefaultOutputVoltage() {
-		return StaticPowerVoltage.MEDIUM;
+		return StaticPowerVoltage.LOW;
 	}
 
 	@Override

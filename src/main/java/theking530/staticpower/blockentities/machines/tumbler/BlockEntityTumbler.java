@@ -15,6 +15,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -136,10 +137,10 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IRecipePro
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 
 		ItemStack outputItem = recipe.getOutput().calculateOutput(bonusOutputChance - 1.0f);
-		outputContainer.addOutputItem(outputItem);
+		outputContainer.addOutputItem(outputItem, CaptureType.BOTH);
 
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
@@ -149,7 +150,7 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IRecipePro
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// If the items can be insert into the output, transfer the items and return
 		// true.
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
@@ -162,7 +163,7 @@ public class BlockEntityTumbler extends BlockEntityMachine implements IRecipePro
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<TumblerRecipe> component, TumblerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0), false);
+		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 
 	public int getCurrentSpeed() {

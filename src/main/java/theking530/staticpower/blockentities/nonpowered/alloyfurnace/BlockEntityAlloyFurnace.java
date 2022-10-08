@@ -19,6 +19,7 @@ import theking530.staticpower.blockentities.BlockEntityConfigurable;
 import theking530.staticpower.blockentities.BlockEntityUpdateRequest;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
@@ -30,7 +31,6 @@ import theking530.staticpower.blockentities.components.loopingsound.LoopingSound
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.wrappers.alloyfurnace.AlloyFurnaceRecipe;
-import theking530.staticpower.data.crafting.wrappers.solidfuel.SolidFuelRecipe;
 import theking530.staticpower.init.ModBlocks;
 import theking530.staticpower.utilities.InventoryUtilities;
 
@@ -118,7 +118,7 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0))) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (burnTimeRemaining <= 0) {
@@ -135,16 +135,16 @@ public class BlockEntityAlloyFurnace extends BlockEntityConfigurable implements 
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput1().getCount(), true));
-		outputContainer.addInputItem(inputInventory.extractItem(1, recipe.getInput2().getCount(), true));
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput1().getCount(), true), CaptureType.BOTH);
+		outputContainer.addInputItem(inputInventory.extractItem(1, recipe.getInput2().getCount(), true), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 
 		processingComponent.setMaxProcessingTime(recipe.getProcessingTime());
 	}
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<AlloyFurnaceRecipe> component, AlloyFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
-		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0), false);
+		InventoryUtilities.insertItemIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item().copy(), false);
 	}
 
 	public int getLastFuelBurnTime() {

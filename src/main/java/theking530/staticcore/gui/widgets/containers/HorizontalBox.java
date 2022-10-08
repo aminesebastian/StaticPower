@@ -15,8 +15,11 @@ public class HorizontalBox extends AbstractGuiWidget<HorizontalBox> {
 	}
 
 	protected void transformPoseBeforeChildRender(PoseStack pose, AbstractGuiWidget<?> child, int index) {
-		float distanceBetween = getSize().getX() / (getChildren().size() + 1);
-		pose.translate(((index + 1) * distanceBetween), 0, 0);
+		int offset = 0;
+		for (int i = 0; i < index; i++) {
+			offset += this.getChildren().get(i).getSize().getXi();
+		}
+		pose.translate(offset, 0, 0);
 	}
 
 	public HorizontalBox setBackgroundColor(SDColor color) {

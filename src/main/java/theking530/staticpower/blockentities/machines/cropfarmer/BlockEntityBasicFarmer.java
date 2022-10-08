@@ -183,7 +183,7 @@ public class BlockEntityBasicFarmer extends BlockEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isPerformingWork()) {
+		if (processingComponent.isCurrentlyProcessing()) {
 			if (!getLevel().isClientSide()) {
 				// If we're processing but somehow the watering ticket is not valid, create one.
 				if (wateringTicket == null || !wateringTicket.isValid()) {

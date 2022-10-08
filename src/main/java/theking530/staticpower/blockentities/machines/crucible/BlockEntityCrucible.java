@@ -16,6 +16,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
@@ -118,9 +119,9 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
-		outputContainer.addOutputFluid(recipe.getOutputFluid());
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
+		outputContainer.addOutputFluid(recipe.getOutputFluid(), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -136,7 +137,7 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
-		if (outputContainer.hasOutputItems() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
+		if (outputContainer.hasOutputItems() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
@@ -148,8 +149,8 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
-		if (fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
-			if (!fluidTankComponent.getFluid().isEmpty() && fluidTankComponent.getFluid().isFluidEqual(outputContainer.getOutputFluid(0))) {
+		if (fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).fluid().getAmount()) {
+			if (!fluidTankComponent.getFluid().isEmpty() && fluidTankComponent.getFluid().isFluidEqual(outputContainer.getOutputFluid(0).fluid())) {
 				return ProcessingCheckState.outputFluidDoesNotMatch();
 			} else {
 				return ProcessingCheckState.fluidOutputFull();
@@ -161,10 +162,10 @@ public class BlockEntityCrucible extends BlockEntityMachine implements IRecipePr
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<CrucibleRecipe> component, CrucibleRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (outputContainer.hasOutputItems()) {
-			outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+			outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		}
 
-		fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+		fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 
 	@Override

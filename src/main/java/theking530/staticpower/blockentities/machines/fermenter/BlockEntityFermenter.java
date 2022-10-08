@@ -15,6 +15,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
@@ -111,9 +112,9 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		int slot = getSlotToProccess();
-		outputContainer.addInputItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), true));
-		outputContainer.addOutputItem(recipe.getResidualOutput().calculateOutput());
-		outputContainer.addOutputFluid(recipe.getOutputFluidStack());
+		outputContainer.addInputItem(inputInventory.extractItem(slot, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getResidualOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addOutputFluid(recipe.getOutputFluidStack(), CaptureType.BOTH);
 	}
 
 	@Override
@@ -125,16 +126,16 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (outputContainer.hasOutputItems()) {
-			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
+			if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 				return ProcessingCheckState.outputsCannotTakeRecipe();
 			}
 		}
 
-		if (!fluidTankComponent.getFluid().isEmpty() && !outputContainer.getOutputFluid(0).isFluidEqual(fluidTankComponent.getFluid())) {
+		if (!fluidTankComponent.getFluid().isEmpty() && !outputContainer.getOutputFluid(0).fluid().isFluidEqual(fluidTankComponent.getFluid())) {
 			return ProcessingCheckState.outputFluidDoesNotMatch();
 		}
 
-		if (fluidTankComponent.getFluid().getAmount() + outputContainer.getOutputFluid(0).getAmount() > fluidTankComponent.getCapacity()) {
+		if (fluidTankComponent.getFluid().getAmount() + outputContainer.getOutputFluid(0).fluid().getAmount() > fluidTankComponent.getCapacity()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 
@@ -144,10 +145,10 @@ public class BlockEntityFermenter extends BlockEntityMachine implements IRecipeP
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<FermenterRecipe> component, FermenterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (outputContainer.hasOutputItems()) {
-			outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+			outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		}
 
-		fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+		fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 
 	@Override

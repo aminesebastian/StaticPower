@@ -53,8 +53,8 @@ public class BlockEntityRenderFluidInfuser extends StaticPowerBlockEntitySpecial
 					WorldRenderingUtilities.getForwardFacingLightLevel(tileEntity));
 
 			// Render the item inside the infuser.
-			if (!tileEntity.processingComponent.getCurrentProcessingContainer().getInputItem(0).isEmpty()) {
-				ItemStack inputItem = tileEntity.processingComponent.getCurrentProcessingContainer().getInputItem(0);
+			if (!tileEntity.processingComponent.getCurrentProcessingContainer().getInputItem(0).item().isEmpty()) {
+				ItemStack inputItem = tileEntity.processingComponent.getCurrentProcessingContainer().getInputItem(0).item();
 				// Get the baked model and check if it wants to render the item in 3d or 2d.
 				BakedModel itemModel = Minecraft.getInstance().getItemRenderer().getModel(inputItem, null, null, combinedOverlay);
 				boolean render3D = itemModel.isGui3d();

@@ -27,6 +27,8 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityConfigurable;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
@@ -226,11 +228,11 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<HydroponicFarmingRecipe> component, HydroponicFarmingRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 
 		HarvestResult results = getDrops();
 		for (ItemStack stack : results.getResults()) {
-			outputContainer.addOutputItem(stack);
+			outputContainer.addOutputItem(stack, CaptureType.BOTH);
 		}
 
 		component.setMaxProcessingTime(recipe.getProcessingTime());
@@ -265,7 +267,8 @@ public class BlockEntityHydroponicPod extends BlockEntityConfigurable implements
 		// Iterate through all the drops. If the input is empty, check if any of the
 		// drops can be put back into the seed slot.
 		// If so, transfer. Then, whatever is left goes into the buffer.
-		for (ItemStack stack : outputContainer.getOutputItems()) {
+		for (ProcessingItemWrapper wrapper : outputContainer.getOutputItems()) {
+			ItemStack stack = wrapper.item().copy();
 			if (StaticPowerRecipeRegistry.getRecipe(HydroponicFarmingRecipe.RECIPE_TYPE, new RecipeMatchParameters(stack)).isPresent()) {
 				if (inputInventory.getStackInSlot(0).isEmpty() || ItemUtilities.areItemStacksStackable(inputInventory.getStackInSlot(0), stack)) {
 					ItemStack remaining = inputInventory.insertItem(0, stack.copy(), false);

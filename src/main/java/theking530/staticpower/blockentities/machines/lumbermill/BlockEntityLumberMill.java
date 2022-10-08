@@ -14,6 +14,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -102,19 +103,19 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	 */
 	protected boolean canOutputsTakeRecipeResult(ProcessingOutputContainer outputContainer) {
 		if (outputContainer.getOutputItems().size() > 0) {
-			if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0))) {
+			if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0).item())) {
 				return false;
 			}
 
 			if (outputContainer.getOutputItems().size() > 1) {
-				if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, outputContainer.getOutputItem(1))) {
+				if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, outputContainer.getOutputItem(1).item())) {
 					return false;
 				}
 			}
 		}
 
 		if (outputContainer.hasOutputFluids()) {
-			if (fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).getAmount()) {
+			if (fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).fluid().getAmount()) {
 				return false;
 			}
 		}
@@ -146,10 +147,10 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the item.
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
-		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput());
-		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput());
-		outputContainer.addOutputFluid(recipe.getOutputFluid().copy());
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addOutputFluid(recipe.getOutputFluid().copy(), CaptureType.BOTH);
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -177,14 +178,14 @@ public class BlockEntityLumberMill extends BlockEntityMachine implements IRecipe
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<LumberMillRecipe> component, LumberMillRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (outputContainer.getOutputItems().size() > 0) {
-			mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+			mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 			if (outputContainer.getOutputItems().size() > 1) {
-				secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1), false);
+				secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1).item().copy(), false);
 			}
 		}
 
 		if (outputContainer.getOutputFluids().size() > 0) {
-			fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+			fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid().copy(), FluidAction.EXECUTE);
 		}
 	}
 }

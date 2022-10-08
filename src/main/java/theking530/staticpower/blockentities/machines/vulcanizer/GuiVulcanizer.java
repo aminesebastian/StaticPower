@@ -42,7 +42,7 @@ public class GuiVulcanizer extends StaticPowerTileEntityGui<ContainerVulcanizer,
 	public void updateData() {
 		super.updateData();
 		// If the recipe is non-null, render the fluid progress bar.
-		if (getTileEntity().processingComponent.isProcessing()) {
+		if (getTileEntity().processingComponent.hasProcessingStarted()) {
 			FluidStack fluid = getTileEntity().fluidTankComponent.getFluid();
 			progressBar.setFluidStack(fluid);
 		} else {

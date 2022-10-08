@@ -198,25 +198,25 @@ public class ModBlocks {
 	// Storage Blocks
 	public static final RegistryObject<StaticPowerBlock> BlockTin = registerBlock("block_tin", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockCutTin = registerBlock("block_cut_tin", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	
+
 	public static final RegistryObject<StaticPowerBlock> BlockZinc = registerBlock("block_zinc", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockCutZinc = registerBlock("block_cut_zinc", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-	
+
 	public static final RegistryObject<StaticPowerBlock> BlockAluminum = registerBlock("block_aluminum", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockCutAluminum = registerBlock("block_cut_aluminum", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	
+
 	public static final RegistryObject<StaticPowerBlock> BlockMagnesium = registerBlock("block_magnesium", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockCutMagnesium = registerBlock("block_cut_magnesium", () -> new StaticPowerBlock(Properties.copy(Blocks.IRON_BLOCK)));
-	
+
 	public static final RegistryObject<StaticPowerBlock> BlockSilver = registerBlock("block_silver", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockCutSilver = registerBlock("block_cut_silver", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
-	
+
 	public static final RegistryObject<StaticPowerBlock> BlockBrass = registerBlock("block_brass", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockCutBrass = registerBlock("block_cut_brass", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	
+
 	public static final RegistryObject<StaticPowerBlock> BlockBronze = registerBlock("block_bronze", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockCutBronze = registerBlock("block_cut_bronze", () -> new StaticPowerBlock(Properties.copy(Blocks.COPPER_BLOCK)));
-	
+
 	public static final RegistryObject<StaticPowerBlock> BlockLead = registerBlock("block_lead", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockPlatinum = registerBlock("block_platinum", () -> new StaticPowerBlock(Properties.copy(Blocks.GOLD_BLOCK)));
 	public static final RegistryObject<StaticPowerBlock> BlockRuby = registerBlock("block_ruby", () -> new StaticPowerBlock(Properties.copy(Blocks.DIAMOND_BLOCK)));
@@ -328,12 +328,14 @@ public class ModBlocks {
 	public static final RegistryObject<BlockCauldron> CleanCauldron = registerBlock("clean_cauldron", () -> new BlockCauldron(true));
 	public static final RegistryObject<BlockDirectDropper> DirectDropper = registerBlock("direct_dropper", () -> new BlockDirectDropper());
 	public static final RegistryObject<BlockAutomaticPlacer> AutomaticPlacer = registerBlock("automatic_placer", () -> new BlockAutomaticPlacer());
-	public static final RegistryObject<BlockRandomItemGenerator> RandomItemGenerator = registerBlock("random_item_generator", () -> new BlockRandomItemGenerator());
 	public static final RegistryObject<BlockEnchanter> Enchanter = registerBlock("machine_enchanter", () -> new BlockEnchanter());
-	
+
+	public static final RegistryObject<BlockRandomItemGenerator> RandomItemGenerator = registerBlock("random_item_generator", () -> new BlockRandomItemGenerator(null));
+	public static final RegistryObject<BlockRandomItemGenerator> RandomOreGenerator = registerBlock("random_ore_generator", () -> new BlockRandomItemGenerator("ore"));
+
 	public static final RegistryObject<BlockHydroponicFarmer> HydroponicFarmer = registerBlock("machine_hydroponic_farmer", () -> new BlockHydroponicFarmer());
 	public static final RegistryObject<BlockHydroponicPod> HydroponicPod = registerBlock("machine_hydroponic_pod", () -> new BlockHydroponicPod());
-	
+
 	public static final RegistryObject<BlockAlloyFurnace> AlloyFurnace = registerBlock("alloy_furnace", () -> new BlockAlloyFurnace());
 
 	public static final RegistryObject<BlockRefineryController> RefineryController = registerBlock("machine_refinery_controller", () -> new BlockRefineryController());

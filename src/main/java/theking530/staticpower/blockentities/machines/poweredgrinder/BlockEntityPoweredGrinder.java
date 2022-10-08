@@ -14,6 +14,8 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -88,10 +90,10 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
 
 		for (ProbabilityItemStackOutput outputItem : recipe.getOutputItems()) {
-			outputContainer.addOutputItem(outputItem.calculateOutput(bonusOutputChance - 1.0f));
+			outputContainer.addOutputItem(outputItem.calculateOutput(bonusOutputChance - 1.0f), CaptureType.BOTH);
 		}
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
@@ -104,7 +106,7 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItems())) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItems().stream().map(x -> x.item()).toList())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -112,8 +114,8 @@ public class BlockEntityPoweredGrinder extends BlockEntityMachine implements IRe
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<GrinderRecipe> component, GrinderRecipe recipe, ProcessingOutputContainer outputContainer) {
-		for (ItemStack output : outputContainer.getOutputItems()) {
-			InventoryUtilities.insertItemIntoInventory(outputInventory, output, false);
+		for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
+			InventoryUtilities.insertItemIntoInventory(outputInventory, output.item().copy(), false);
 		}
 	}
 

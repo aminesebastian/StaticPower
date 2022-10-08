@@ -232,6 +232,7 @@ public class GuiDrawUtilities {
 		bufferbuilder.vertex(pose.last().pose(), x + width, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
 		bufferbuilder.vertex(pose.last().pose(), x, y, z).color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()).endVertex();
 		tessellator.end();
+		RenderSystem.disableBlend();
 	}
 
 	public static void drawTexture(PoseStack pose, ResourceLocation texture, float width, float height, float x, float y) {

@@ -14,6 +14,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
@@ -96,7 +97,7 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItems().get(0))) {
+		if (!InventoryUtilities.canFullyInsertAllItemsIntoInventory(outputInventory, outputContainer.getOutputItems().get(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -106,14 +107,14 @@ public class BlockEntityVulcanizer extends BlockEntityMachine implements IRecipe
 	public void captureInputsAndProducts(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
-		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getInputFluid().getAmount());
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getInputFluid().getAmount(), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 	}
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<VulcanizerRecipe> component, VulcanizerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		fluidTankComponent.drain(outputContainer.getInputFluids().get(0).getAmount(), FluidAction.EXECUTE);
-		outputInventory.insertItem(0, outputContainer.getOutputItems().get(0).copy(), false);
+		fluidTankComponent.drain(outputContainer.getInputFluids().get(0).fluid(), FluidAction.EXECUTE);
+		outputInventory.insertItem(0, outputContainer.getOutputItems().get(0).item().copy(), false);
 	}
 
 	@Override

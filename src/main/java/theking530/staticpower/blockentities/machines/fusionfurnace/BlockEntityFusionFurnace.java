@@ -11,6 +11,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -77,11 +78,11 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 		for (int i = 0; i < 5; i++) {
 			int count = recipe.getRequiredCountOfItem(inputInventory.getStackInSlot(i));
 			if (count > 0) {
-				outputContainer.addInputItem(inputInventory.extractItem(i, count, true));
+				outputContainer.addInputItem(inputInventory.extractItem(i, count, true), CaptureType.BOTH);
 			}
 		}
 
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -102,7 +103,7 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FusionFurnaceRecipe> component, FusionFurnaceRecipe recipe,
 			ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -110,7 +111,7 @@ public class BlockEntityFusionFurnace extends BlockEntityMachine implements IRec
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<FusionFurnaceRecipe> component, FusionFurnaceRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 
 	@Override

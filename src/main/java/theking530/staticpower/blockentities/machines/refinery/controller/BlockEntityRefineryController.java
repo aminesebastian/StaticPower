@@ -25,6 +25,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -149,7 +150,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 		if (!getLevel().isClientSide()) {
 			if (redstoneControlComponent.passesRedstoneCheck() && getProductivity() > 0 && processingComponent.getCurrentOrPendingRecipe().isPresent()) {
 				double powerCost = StaticPowerConfig.SERVER.refineryPowerUsage.get();
-				boolean shouldHeat = processingComponent.isPerformingWork() || !heatStorage.isRecoveringFromMeltdown();
+				boolean shouldHeat = processingComponent.isCurrentlyProcessing() || !heatStorage.isRecoveringFromMeltdown();
 				if (powerStorage.canSupplyPower(powerCost) && shouldHeat) {
 					powerStorage.drainPower(powerCost, false);
 					heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
@@ -377,7 +378,7 @@ public class BlockEntityRefineryController extends BlockEntityMachine implements
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<RefineryRecipe> component, RefineryRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (recipe.hasCatalyst()) {
-			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), true));
+			outputContainer.addInputItem(catalystInventory.extractItem(0, recipe.getCatalyst().getCount(), true), CaptureType.BOTH);
 		}
 
 		component.setMaxProcessingTime(recipe.getProcessingTime());

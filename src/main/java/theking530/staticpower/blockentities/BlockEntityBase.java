@@ -59,6 +59,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.RedstoneControlComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.serialization.SerializationUtilities;
@@ -304,8 +305,10 @@ public abstract class BlockEntityBase extends BlockEntity implements MenuProvide
 		// Drop all the INPUTS from any recipe processing components.
 		for (RecipeProcessingComponent<?> comp : getComponents(RecipeProcessingComponent.class)) {
 			ProcessingOutputContainer outputContainer = comp.getCurrentProcessingContainer();
-			for (ItemStack input : outputContainer.getInputItems()) {
-				WorldUtilities.dropItem(level, worldPosition, input);
+			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
+				if (!input.isTemplateItem()) {
+					WorldUtilities.dropItem(level, worldPosition, input.item());
+				}
 			}
 			outputContainer.clear();
 		}

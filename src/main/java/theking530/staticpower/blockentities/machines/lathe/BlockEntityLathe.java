@@ -13,6 +13,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -100,12 +101,12 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 	public void captureInputsAndProducts(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the items.
 		for (int i = 0; i < 9; i++) {
-			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), true));
+			outputContainer.addInputItem(inputInventory.extractItem(i, recipe.getInputs().get(i).getCount(), true), CaptureType.BOTH);
 		}
 
-		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput());
-		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput());
-		outputContainer.addOutputFluid(recipe.getOutputFluid());
+		outputContainer.addOutputItem(recipe.getPrimaryOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getSecondaryOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addOutputFluid(recipe.getOutputFluid(), CaptureType.BOTH);
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -122,17 +123,17 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(mainOutputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		if (outputContainer.getOutputItems().size() > 1) {
-			if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, outputContainer.getOutputItem(1))) {
+			if (!InventoryUtilities.canFullyInsertStackIntoSlot(secondaryOutputInventory, 0, outputContainer.getOutputItem(1).item())) {
 				return ProcessingCheckState.outputsCannotTakeRecipe();
 			}
 		}
 
 		if (outputContainer.hasOutputFluids()) {
-			if (fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).getAmount()) {
+			if (fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).fluid().getAmount()) {
 				return ProcessingCheckState.fluidOutputFull();
 			}
 		}
@@ -141,11 +142,11 @@ public class BlockEntityLathe extends BlockEntityMachine implements IRecipeProce
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<LatheRecipe> component, LatheRecipe recipe, ProcessingOutputContainer outputContainer) {
-		mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+		mainOutputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		if (outputContainer.getOutputItems().size() > 1) {
-			secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1), false);
+			secondaryOutputInventory.insertItem(0, outputContainer.getOutputItem(1).item().copy(), false);
 		}
-		fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+		fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 
 	@Override

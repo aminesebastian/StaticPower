@@ -41,7 +41,7 @@ public class GuiEvaporator extends StaticPowerTileEntityGui<ContainerEvaporator,
 	@Override
 	public void updateData() {
 		// If the recipe is non-null, render the fluid progress bar.
-		if (getTileEntity().processingComponent.isProcessing()) {
+		if (getTileEntity().processingComponent.hasProcessingStarted()) {
 			FluidStack fluid = getTileEntity().inputTankComponent.getFluid();
 			progressBar.setFluidStack(fluid);
 		} else {

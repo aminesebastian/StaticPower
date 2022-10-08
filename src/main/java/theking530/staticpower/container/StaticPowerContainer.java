@@ -327,18 +327,20 @@ public abstract class StaticPowerContainer extends AbstractContainerMenu {
 					InventoryComponent invComponent = ((InventoryComponent) ((StaticPowerContainerSlot) slot).getItemHandler());
 
 					// If they held control, toggle the locked state of the slot.
-					if (ModKeyBindings.SLOT_LOCK.isDown()) {
-						if (invComponent.isSlotLocked(slot.getSlotIndex())) {
-							invComponent.unlockSlot(slot.getSlotIndex());
-						} else {
-							invComponent.lockSlot(slot.getSlotIndex(), invComponent.getStackInSlot(slot.getSlotIndex()));
+					if (invComponent.areSlotsLockable()) {
+						if (ModKeyBindings.SLOT_LOCK.isDown()) {
+							if (invComponent.isSlotLocked(slot.getSlotIndex())) {
+								invComponent.unlockSlot(slot.getSlotIndex());
+							} else {
+								invComponent.lockSlot(slot.getSlotIndex(), invComponent.getStackInSlot(slot.getSlotIndex()));
+							}
+
+							// Send a packet to the server with the updated values.
+							NetworkMessage msg = new PacketLockInventorySlot(invComponent, slot.getSlotIndex(), invComponent.isSlotLocked(slot.getSlotIndex()),
+									invComponent.getStackInSlot(slot.getSlotIndex()));
+							StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
+
 						}
-
-						// Send a packet to the server with the updated values.
-						NetworkMessage msg = new PacketLockInventorySlot(invComponent, slot.getSlotIndex(), invComponent.isSlotLocked(slot.getSlotIndex()),
-								invComponent.getStackInSlot(slot.getSlotIndex()));
-						StaticPowerMessageHandler.MAIN_PACKET_CHANNEL.sendToServer(msg);
-
 					}
 				}
 			}

@@ -14,6 +14,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidInputServoComponent;
@@ -100,9 +101,9 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
-		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getRequiredFluid().getAmount());
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
+		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getRequiredFluid().getAmount(), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -117,7 +118,7 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe,
 			ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -125,8 +126,8 @@ public class BlockEntityFluidInfuser extends BlockEntityMachine implements IReci
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<FluidInfusionRecipe> component, FluidInfusionRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
-		fluidTankComponent.drain(outputContainer.getInputFluid(0), FluidAction.EXECUTE);
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
+		fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 
 	@Override

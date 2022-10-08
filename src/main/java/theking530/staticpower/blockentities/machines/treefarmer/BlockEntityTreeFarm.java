@@ -43,6 +43,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.MachineProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -182,7 +183,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 
 	@Override
 	public void process() {
-		if (processingComponent.isPerformingWork()) {
+		if (processingComponent.isCurrentlyProcessing()) {
 			if (!getLevel().isClientSide()) {
 				fluidTankComponent.drain(StaticPowerConfig.SERVER.treeFarmerFluidUsage.get(), FluidAction.EXECUTE);
 			}
@@ -218,7 +219,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 		// inventory. Remove the entry from the farmed stacks if it was fully inserted.
 		// Otherwise, update the farmed stack.
 		for (int i = 0; i < outputContainer.getOutputItems().size(); i++) {
-			ItemStack extractedStack = outputContainer.getOutputItems().get(i);
+			ItemStack extractedStack = outputContainer.getOutputItems().get(i).item().copy();
 			InventoryComponent targetInventory = outputInventory;
 			if (saplingIngredient.test(extractedStack)) {
 				if (InventoryUtilities.canPartiallyInsertItemIntoInventory(inputInventory, extractedStack)) {
@@ -227,7 +228,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			}
 			ItemStack insertedStack = InventoryUtilities.insertItemIntoInventory(targetInventory, extractedStack, false);
 			if (!insertedStack.isEmpty()) {
-				outputContainer.getOutputItems().set(i, insertedStack);
+				outputContainer.getOutputItems().get(i).item().setCount(insertedStack.getCount());
 			}
 		}
 
@@ -305,7 +306,7 @@ public class BlockEntityTreeFarm extends BlockEntityMachine {
 			ProcessingOutputContainer outputContainer = processingComponent.getOutputContainer();
 			outputContainer.open(null);
 			for (int i = 0; i < harvestResults.size(); i++) {
-				outputContainer.addOutputItem(harvestResults.get(i));
+				outputContainer.addOutputItem(harvestResults.get(i), CaptureType.COUNT_ONLY);
 			}
 			outputContainer.close();
 		}

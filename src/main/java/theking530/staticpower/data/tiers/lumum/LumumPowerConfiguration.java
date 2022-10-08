@@ -17,7 +17,7 @@ public class LumumPowerConfiguration extends TierPowerConfiguration {
 
 	@Override
 	protected StaticPowerVoltage getDefaultOutputVoltage() {
-		return StaticPowerVoltage.HIGH;
+		return StaticPowerVoltage.LOW;
 	}
 
 	@Override

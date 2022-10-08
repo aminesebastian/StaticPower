@@ -20,6 +20,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -106,7 +107,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 		}
 
 		// If we're processing, generate power. Otherwise, pause.
-		if (!getLevel().isClientSide() && processingComponent.isPerformingWork()) {
+		if (!getLevel().isClientSide() && processingComponent.isCurrentlyProcessing()) {
 			powerStorage.addPower(new PowerStack(powerGenerationPerTick, powerStorage.getOutputVoltage()), false);
 		}
 	}
@@ -136,7 +137,7 @@ public class BlockEntitySolidGenerator extends BlockEntityMachine implements IRe
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<SolidFuelRecipe> component, SolidFuelRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		outputContainer.setOutputPower(powerGenerationPerTick);
 		component.setMaxProcessingTime(recipe.getFuelAmount());
 	}

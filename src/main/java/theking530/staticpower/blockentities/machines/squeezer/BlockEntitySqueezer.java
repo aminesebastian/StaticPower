@@ -16,6 +16,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.fluids.FluidOutputServoComponent;
@@ -110,9 +111,9 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
-		outputContainer.addOutputFluid(fluidTankComponent.getFluid(), recipe.getOutputFluid().getAmount());
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
+		outputContainer.addOutputFluid(fluidTankComponent.getFluid(), recipe.getOutputFluid().getAmount(), CaptureType.BOTH);
 
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
@@ -123,13 +124,13 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// If this recipe has an item output that we cannot put into the output slot,
 		// continue waiting.
-		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
+		if (recipe.hasItemOutput() && !InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
 		// If this recipe has a fluid output that we cannot put into the output tank,
 		// continue waiting.
-		if (recipe.hasOutputFluid() && fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
+		if (recipe.hasOutputFluid() && fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != recipe.getOutputFluid().getAmount()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 
@@ -139,10 +140,10 @@ public class BlockEntitySqueezer extends BlockEntityMachine implements IRecipePr
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<SqueezerRecipe> component, SqueezerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (!outputContainer.getOutputItems().isEmpty()) {
-			outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+			outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 		}
 		if (!outputContainer.getOutputFluids().isEmpty()) {
-			fluidTankComponent.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+			fluidTankComponent.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.EXECUTE);
 		}
 	}
 

@@ -22,6 +22,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -161,7 +162,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 					for (int j = 0; j < inputInventory.getSlots(); j++) {
 						if (ingredient.test(inputInventory.getStackInSlot(j))) {
 							ItemStack extracted = inputInventory.extractItem(j, 1, true);
-							outputContainer.addInputItem(extracted);
+							outputContainer.addInputItem(extracted, CaptureType.BOTH);
 							break;
 						}
 					}
@@ -182,13 +183,13 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 				for (int j = 0; j < inputInventory.getSlots(); j++) {
 					if (ing.test(inputInventory.getStackInSlot(j))) {
 						ItemStack extracted = inputInventory.extractItem(j, 1, true);
-						outputContainer.addInputItem(extracted);
+						outputContainer.addInputItem(extracted, CaptureType.BOTH);
 						break;
 					}
 				}
 			}
 		}
-		outputContainer.addOutputItem(recipe.getResultItem());
+		outputContainer.addOutputItem(recipe.getResultItem(), CaptureType.BOTH);
 	}
 
 	@Override
@@ -244,7 +245,7 @@ public class BlockEntityAutoCraftingTable extends BlockEntityMachine implements 
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<CraftingRecipe> component, CraftingRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!hasRequiredItems(recipe, outputContainer.getInputItems())) {
+		if (!hasRequiredItems(recipe, outputContainer.getInputItems().stream().map(x -> x.item()).toList())) {
 			return ProcessingCheckState.error("Missing items in input inventory!");
 		}
 

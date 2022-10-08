@@ -20,6 +20,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -147,12 +148,12 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 		// Transfer the inputs to internal buffers.
 		int transferCount = recipe.isWildcardRecipe() ? 1 : recipe.getSmithTarget().getCount();
 		ItemStack toModifyItem = inputInventory.extractItem(0, transferCount, false);
-		outputContainer.addInputItem(toModifyItem);
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getModifierMaterial().getCount(), true));
-		outputContainer.addInputFluid(recipe.getModifierFluid());
+		outputContainer.addInputItem(toModifyItem, CaptureType.NONE, true);
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getModifierMaterial().getCount(), true), CaptureType.BOTH);
+		outputContainer.addInputFluid(recipe.getModifierFluid(), CaptureType.BOTH);
 
 		recipe.applyToItemStack(toModifyItem);
-		outputContainer.addOutputItem(toModifyItem);
+		outputContainer.addOutputItem(toModifyItem, CaptureType.BOTH);
 
 		// Set the power usage and processing time.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -166,7 +167,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<AutoSmithRecipe> component, AutoSmithRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventory, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -174,7 +175,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<AutoSmithRecipe> component, AutoSmithRecipe recipe, ProcessingOutputContainer outputContainer) {
-		ItemStack output = outputContainer.getOutputItem(0).copy();
+		ItemStack output = outputContainer.getOutputItem(0).item().copy();
 
 		// Make a hybrid of recipe parameters with the output as the smithing target,
 		// but the inputs as the rest.
@@ -192,7 +193,7 @@ public class BlockEntityAutoSmith extends BlockEntityMachine implements IRecipeP
 
 		// Drain the fluid.
 		if (outputContainer.hasInputFluids()) {
-			fluidTankComponent.drain(outputContainer.getInputFluid(0).getAmount(), FluidAction.EXECUTE);
+			fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 		}
 
 		// Play the crafting sound.

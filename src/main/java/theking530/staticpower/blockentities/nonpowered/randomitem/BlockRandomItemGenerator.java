@@ -11,9 +11,11 @@ import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
 import theking530.staticpower.data.StaticPowerTiers;
 
 public class BlockRandomItemGenerator extends StaticPowerMachineBlock {
+	private final String type;
 
-	public BlockRandomItemGenerator() {
+	public BlockRandomItemGenerator(String type) {
 		super(StaticPowerTiers.BASIC);
+		this.type = type;
 	}
 
 	@Override
@@ -23,6 +25,9 @@ public class BlockRandomItemGenerator extends StaticPowerMachineBlock {
 
 	@Override
 	public BlockEntity newBlockEntity(final BlockPos pos, final BlockState state) {
-		return BlockEntityRandomItemGenerator.TYPE.create(pos, state);
+		if (type == "ore") {
+			return BlockEntityRandomItemGenerator.ORE.create(pos, state);
+		}
+		return BlockEntityRandomItemGenerator.ANY_ITEM.create(pos, state);
 	}
 }

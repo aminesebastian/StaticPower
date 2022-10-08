@@ -13,6 +13,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -109,16 +110,16 @@ public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeP
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
 		ItemStack itemToEnchant = enchantableInventory.extractItem(0, 0, true);
-		outputContainer.addInputItem(itemToEnchant);
+		outputContainer.addInputItem(itemToEnchant, CaptureType.NONE, true);
 
 		int slot = 0;
 		for (StaticPowerIngredient ing : recipe.getInputIngredients()) {
-			outputContainer.addInputItem(inputInventory.extractItem(slot, ing.getCount(), true));
+			outputContainer.addInputItem(inputInventory.extractItem(slot, ing.getCount(), true), CaptureType.BOTH);
 			slot++;
 		}
 
-		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getInputFluidStack().getAmount());
-		outputContainer.addOutputItem(recipe.getEnchantedVersion(itemToEnchant.copy()));
+		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getInputFluidStack().getAmount(), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getEnchantedVersion(itemToEnchant.copy()), CaptureType.BOTH);
 
 		component.setMaxProcessingTime(recipe.getProcessingTime());
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -138,7 +139,7 @@ public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -146,7 +147,7 @@ public class BlockEntityEnchanter extends BlockEntityMachine implements IRecipeP
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<EnchanterRecipe> component, EnchanterRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0).copy(), false);
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 
 	@Override

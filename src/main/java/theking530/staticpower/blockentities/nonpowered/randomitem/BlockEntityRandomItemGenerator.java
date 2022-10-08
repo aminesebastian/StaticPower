@@ -1,17 +1,16 @@
 package theking530.staticpower.blockentities.nonpowered.randomitem;
 
-import java.util.stream.Collectors;
-
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegistryManager;
+import net.minecraftforge.registries.ForgeRegistries;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypeAllocator;
 import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator;
 import theking530.staticcore.utilities.SDMath;
@@ -20,18 +19,25 @@ import theking530.staticpower.blockentities.components.control.sideconfiguration
 import theking530.staticpower.blockentities.components.items.InventoryComponent;
 import theking530.staticpower.blockentities.components.items.OutputServoComponent;
 import theking530.staticpower.init.ModBlocks;
+import theking530.staticpower.init.ModTags;
 import theking530.staticpower.utilities.InventoryUtilities;
 
 public class BlockEntityRandomItemGenerator extends BlockEntityConfigurable implements MenuProvider {
 	@BlockEntityTypePopulator()
-	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> TYPE = new BlockEntityTypeAllocator<>(
-			(type, pos, state) -> new BlockEntityRandomItemGenerator(pos, state), ModBlocks.RandomItemGenerator);
-	private static final float GENERATION_RATE = 1;
+	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ANY_ITEM = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, null), ModBlocks.RandomItemGenerator);
+	@BlockEntityTypePopulator()
+	public static final BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> ORE = new BlockEntityTypeAllocator<>(
+			(type, pos, state) -> new BlockEntityRandomItemGenerator(type, pos, state, ModTags.ORE), ModBlocks.RandomOreGenerator);
+
+	private static final float GENERATION_RATE = 4;
 	public final InventoryComponent inventory;
+	private final TagKey<Item> itemTag;
 	private float timer;
 
-	public BlockEntityRandomItemGenerator(BlockPos pos, BlockState state) {
-		super(TYPE, pos, state);
+	public BlockEntityRandomItemGenerator(BlockEntityTypeAllocator<BlockEntityRandomItemGenerator> type, BlockPos pos, BlockState state, TagKey<Item> itemTag) {
+		super(type, pos, state);
+		this.itemTag = itemTag;
 		registerComponent(inventory = new InventoryComponent("Inventory", 30, MachineSideMode.Output).setShiftClickEnabled(true));
 		registerComponent(new OutputServoComponent("OutputServo", 2, inventory));
 	}
@@ -50,17 +56,19 @@ public class BlockEntityRandomItemGenerator extends BlockEntityConfigurable impl
 
 	private void generateItem() {
 		try {
-			// Pick a random item.
-			IForgeRegistry<Item> items = RegistryManager.ACTIVE.getRegistry(Item.class);
-			int randomIndex = SDMath.getRandomIntInRange(0, items.getValues().size() - 1);
-			Item item = items.getValues().stream().collect(Collectors.toList()).get(randomIndex);
-
-			// Make the stack and set its stack size to the max.
-			ItemStack stack = new ItemStack(item);
-			stack.setCount(stack.getMaxStackSize());
-
-			// Insert it into the inventory.
-			InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
+			if (itemTag != null) {
+				ItemStack[] items = Ingredient.of(itemTag).getItems();
+				int randomIndex = SDMath.getRandomIntInRange(0, items.length - 1);
+				ItemStack stack = items[randomIndex].copy();
+				stack.setCount(stack.getMaxStackSize());
+				InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
+			} else {
+				int randomIndex = SDMath.getRandomIntInRange(0, ForgeRegistries.ITEMS.getValues().size() - 1);
+				Item item = ForgeRegistries.ITEMS.getValues().stream().toList().get(randomIndex);
+				ItemStack stack = new ItemStack(item);
+				stack.setCount(stack.getMaxStackSize());
+				InventoryUtilities.insertItemIntoInventory(inventory, stack, false);
+			}
 		} catch (Exception e) {
 		}
 	}

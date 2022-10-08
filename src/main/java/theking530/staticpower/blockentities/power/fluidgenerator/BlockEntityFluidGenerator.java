@@ -16,6 +16,7 @@ import theking530.staticcore.initialization.blockentity.BlockEntityTypePopulator
 import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -72,7 +73,7 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 	@Override
 	public void process() {
 		if (!getLevel().isClientSide()) {
-			if (processingComponent.isPerformingWork()) {
+			if (processingComponent.isCurrentlyProcessing()) {
 				generatingSoundComponent.startPlayingSound(SoundEvents.MINECART_RIDING.getRegistryName(), SoundSource.BLOCKS, 0.1f, 0.75f, getBlockPos(), 64);
 			} else {
 				generatingSoundComponent.stopPlayingSound();
@@ -118,12 +119,12 @@ public class BlockEntityFluidGenerator extends BlockEntityMachine implements IRe
 		powerStorage.setMaximumOutputPower(recipe.getPowerGeneration());
 		powerStorage.setMaximumInputPower(recipe.getPowerGeneration());
 		outputContainer.setOutputPower(recipe.getPowerGeneration());
-		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getFluid().getAmount());
+		outputContainer.addInputFluid(fluidTankComponent.getFluid(), recipe.getFluid().getAmount(), CaptureType.BOTH);
 	}
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<FluidGeneratorRecipe> component, FluidGeneratorRecipe recipe, ProcessingOutputContainer outputContainer) {
 		powerStorage.addPower(new PowerStack(recipe.getPowerGeneration(), powerStorage.getInputVoltageRange().maximumVoltage().getVoltage()), false);
-		fluidTankComponent.drain(outputContainer.getInputFluid(0), FluidAction.EXECUTE);
+		fluidTankComponent.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 	}
 }

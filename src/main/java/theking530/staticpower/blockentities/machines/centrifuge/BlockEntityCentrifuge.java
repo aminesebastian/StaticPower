@@ -18,6 +18,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.SideConfigurationUtilities.BlockSide;
@@ -150,7 +151,7 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 
 	protected boolean canInsertRecipeIntoOutputs(ProcessingOutputContainer container) {
 		for (int i = 0; i < container.getOutputItems().size(); i++) {
-			if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventories.get(i), container.getOutputItem(i))) {
+			if (!InventoryUtilities.canFullyInsertItemIntoInventory(outputInventories.get(i), container.getOutputItem(i).item())) {
 				return false;
 			}
 		}
@@ -171,9 +172,9 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true));
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInput().getCount(), true), CaptureType.BOTH);
 		for (ProbabilityItemStackOutput output : recipe.getOutputs()) {
-			outputContainer.addOutputItem(output.calculateOutput());
+			outputContainer.addOutputItem(output.calculateOutput(), CaptureType.BOTH);
 		}
 		component.setProcessingPowerUsage(recipe.getPowerCost());
 		component.setMaxProcessingTime(recipe.getProcessingTime());
@@ -199,7 +200,7 @@ public class BlockEntityCentrifuge extends BlockEntityMachine implements IRecipe
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<CentrifugeRecipe> component, CentrifugeRecipe recipe, ProcessingOutputContainer outputContainer) {
 		for (int i = 0; i < outputContainer.getOutputItems().size(); i++) {
-			outputInventories.get(i).insertItem(0, outputContainer.getOutputItem(i), false);
+			outputInventories.get(i).insertItem(0, outputContainer.getOutputItem(i).item().copy(), false);
 		}
 	}
 

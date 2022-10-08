@@ -36,6 +36,11 @@ public class StaticPowerTierLumum extends StaticPowerTier {
 	}
 
 	@Override
+	protected int getDigistoreCardCapacity() {
+		return 262144;
+	}
+
+	@Override
 	protected int getItemFilterSlots() {
 		return 18;
 	}

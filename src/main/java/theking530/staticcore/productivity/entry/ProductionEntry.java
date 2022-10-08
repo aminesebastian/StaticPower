@@ -1,9 +1,7 @@
 package theking530.staticcore.productivity.entry;
 
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
-import java.util.Queue;
 
 import theking530.staticcore.productivity.ProductionTrackingToken;
 
@@ -14,7 +12,7 @@ public abstract class ProductionEntry<T> {
 		}
 	}
 
-	private static final int MAX_STOERED_RATES = 40;
+	private static final int SMOOTHING_FACTOR = 20;
 
 	protected T product;
 	protected double currentSecondConsumed;
@@ -22,8 +20,8 @@ public abstract class ProductionEntry<T> {
 	protected Map<ProductionTrackingToken<T>, Double> productionRates;
 	protected Map<ProductionTrackingToken<T>, Double> comsumptionRates;
 
-	protected Queue<Double> historicalProductionRates;
-	protected Queue<Double> historicalConsumptionRate;
+	protected double smoothedProducedPerSecond;
+	protected double smoothedConsumedPerSecond;
 
 	public ProductionEntry(T product) {
 		this();
@@ -35,8 +33,8 @@ public abstract class ProductionEntry<T> {
 		currentSecondProduced = 0;
 		productionRates = new HashMap<>();
 		comsumptionRates = new HashMap<>();
-		historicalProductionRates = new LinkedList<>();
-		historicalConsumptionRate = new LinkedList<>();
+		smoothedProducedPerSecond = 0;
+		smoothedConsumedPerSecond = 0;
 	}
 
 	public ProductionEntryState getValuesForDatabaseInsert() {
@@ -44,24 +42,31 @@ public abstract class ProductionEntry<T> {
 	}
 
 	public void tick(long gameTime) {
-		if (historicalProductionRates.size() >= 60) {
-			historicalProductionRates.poll();
-		}
-		if (historicalConsumptionRate.size() >= 60) {
-			historicalConsumptionRate.poll();
-		}
-
 		double production = 0;
 		for (double val : productionRates.values()) {
 			production += val;
 		}
-		historicalProductionRates.add(production);
-
+		smoothedProducedPerSecond = (production + (smoothedProducedPerSecond * SMOOTHING_FACTOR)) / (SMOOTHING_FACTOR + 1);
+		if(smoothedProducedPerSecond < 0.001) {
+			if(production > 0) {
+				smoothedProducedPerSecond = production;
+			}else {
+				smoothedProducedPerSecond = 0;
+			}
+		}
+		
 		double consumption = 0;
 		for (double val : comsumptionRates.values()) {
 			consumption += val;
 		}
-		historicalConsumptionRate.add(consumption);
+		smoothedConsumedPerSecond = (consumption + (smoothedConsumedPerSecond * SMOOTHING_FACTOR)) / (SMOOTHING_FACTOR + 1);
+		if(smoothedConsumedPerSecond < 0.001) {
+			if(consumption > 0) {
+				smoothedConsumedPerSecond = consumption;
+			}else {
+				smoothedConsumedPerSecond = 0;
+			}
+		}
 	}
 
 	public void clearCurrentSecondMetrics() {
@@ -103,19 +108,11 @@ public abstract class ProductionEntry<T> {
 	}
 
 	public double getProductionRate() {
-		double production = 0;
-		for (double val : historicalProductionRates) {
-			production += val;
-		}
-		return production / Math.max(historicalProductionRates.size(), 1);
+		return smoothedProducedPerSecond;
 	}
 
 	public double getConsumptionRate() {
-		double consumption = 0;
-		for (double val : historicalConsumptionRate) {
-			consumption += val;
-		}
-		return consumption / Math.max(historicalConsumptionRate.size(), 1);
+		return smoothedConsumedPerSecond;
 	}
 
 	public void produced(double amount) {

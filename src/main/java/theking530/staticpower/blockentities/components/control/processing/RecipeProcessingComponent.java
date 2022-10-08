@@ -8,6 +8,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import theking530.staticcore.productivity.ProductionTrackingToken;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
@@ -50,15 +52,34 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 	@Override
 	public boolean process() {
-		if (!isProcessing()) {
-			// Try to update the power cost and processing times if we have a valid recipe.
-			Optional<T> recipe = getPendingRecipe();
-			if (recipe.isPresent()) {
-				if (recipe.get() instanceof AbstractMachineRecipe) {
-					AbstractMachineRecipe machineRecipe = (AbstractMachineRecipe) recipe.get();
-					setMaxProcessingTime(machineRecipe.getProcessingTime());
-					setProcessingPowerUsage(machineRecipe.getPowerCost());
-				}
+		if (!hasProcessingStarted()) {
+			productionToken.invalidate();
+			if (!attemptMove()) {
+				return false;
+			}
+		}
+
+		boolean result = super.process();
+		if (isCurrentlyProcessing()) {
+			updateProductionStatistics();
+		} else {
+			productionToken.invalidate();
+		}
+		return result;
+	}
+
+	protected boolean attemptMove() {
+		// Try to update the power cost and processing times if we have a valid recipe.
+		Optional<T> recipe = getPendingRecipe();
+		if (recipe.isPresent()) {
+			if (recipe.get() instanceof AbstractMachineRecipe) {
+				AbstractMachineRecipe machineRecipe = (AbstractMachineRecipe) recipe.get();
+				setMaxProcessingTime(machineRecipe.getProcessingTime());
+				setProcessingPowerUsage(machineRecipe.getPowerCost());
+			}
+
+			if (this.isCurrentlyProcessing()) {
+				moveTimer = moveTime;
 			}
 
 			ProcessingCheckState moveState = performMove();
@@ -72,25 +93,25 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 			if (!moveState.isOk()) {
 				return false;
 			}
+			return true;
+		} else {
+			this.processingStoppedDueToError = false;
+			return false;
 		}
-		updateProductionStatistics();
-		return super.process();
 	}
 
 	private void updateProductionStatistics() {
-		if (!isClientSide()) {
-			if (isProcessing()) {
-				TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
-				if (teamComp != null) {
-					for (ItemStack output : outputContainer.getOutputItems()) {
-						productionToken.setProductionPerSecond(teamComp.getOwningTeam(), output, 1.0 / (getMaxProcessingTime() / 20.0));
-					}
-					for (ItemStack input : outputContainer.getInputItems()) {
-						productionToken.setConsumptionPerSection(teamComp.getOwningTeam(), input, 1.0 / (getMaxProcessingTime() / 20.0));
-					}
+		TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
+		if (teamComp != null && teamComp.getOwningTeam() != null) {
+			for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
+				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
+					productionToken.setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 				}
-			} else {
-				productionToken.invalidate();
+			}
+			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
+				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
+					productionToken.setConsumptionPerSection(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+				}
 			}
 		}
 	}
@@ -163,18 +184,18 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 		TeamComponent teamComp = getTileEntity().getComponent(TeamComponent.class);
 		if (teamComp != null) {
-			for (ItemStack output : outputContainer.getOutputItems()) {
-				productionToken.produced(teamComp.getOwningTeam(), output, output.getCount());
+			for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
+				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.COUNT_ONLY) {
+					productionToken.produced(teamComp.getOwningTeam(), output.item(), output.item().getCount());
+				}
 			}
-			for (ItemStack input : outputContainer.getInputItems()) {
-				productionToken.produced(teamComp.getOwningTeam(), input, input.getCount());
+			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
+				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.COUNT_ONLY) {
+					productionToken.consumed(teamComp.getOwningTeam(), input.item(), input.item().getCount());
+				}
 			}
 		}
 		outputContainer.clear();
-		productionToken.invalidate();
-		if (canStartProcessing().isOk()) {
-			moveTimer = moveTime;
-		}
 	}
 
 	public Optional<T> getPendingRecipe() {
@@ -252,5 +273,10 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 	public void setMoveTime(int moveTime) {
 		this.moveTime = moveTime;
+	}
+
+	public void onOwningBlockEntityUnloaded() {
+		super.onOwningBlockEntityUnloaded();
+		productionToken.invalidate();
 	}
 }

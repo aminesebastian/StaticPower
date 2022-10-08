@@ -15,6 +15,7 @@ import theking530.staticpower.StaticPowerConfig;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.energy.PowerStorageComponent;
@@ -103,13 +104,13 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 			for (int j = 0; j < inventory.getSlots(); j++) {
 				if (ing.test(inventory.getStackInSlot(j))) {
 					ItemStack extracted = inventory.extractItem(j, 1, true);
-					outputContainer.addInputItem(extracted);
+					outputContainer.addInputItem(extracted, CaptureType.BOTH);
 					break;
 				}
 			}
 		}
 
-		outputContainer.addOutputItem(recipe.getResultItem());
+		outputContainer.addOutputItem(recipe.getResultItem(), CaptureType.BOTH);
 	}
 
 	@Override
@@ -138,11 +139,11 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!hasRequiredItems(recipe, outputContainer.getInputItems())) {
+		if (!hasRequiredItems(recipe, outputContainer.getInputItems().stream().map(x -> x.item()).toList())) {
 			return ProcessingCheckState.error("Missing items in input inventory!");
 		}
 
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 
@@ -151,7 +152,7 @@ public class BlockEntityAutoSolderingTable extends AbstractSolderingTable implem
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<SolderingRecipe> component, SolderingRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 
 	@Override

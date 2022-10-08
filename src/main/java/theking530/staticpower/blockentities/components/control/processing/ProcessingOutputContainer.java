@@ -14,10 +14,22 @@ import net.minecraftforge.fluids.FluidStack;
 import theking530.staticpower.utilities.NBTUtilities;
 
 public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> {
-	private final List<ItemStack> inputItems;
-	private final List<ItemStack> outputItems;
-	private final List<FluidStack> inputFluids;
-	private final List<FluidStack> outputFluids;
+	public enum CaptureType {
+		NONE, RATE_ONLY, COUNT_ONLY, BOTH
+	}
+
+	public record ProcessingItemWrapper(ItemStack item, CaptureType captureType, boolean isTemplateItem) {
+		public static final ProcessingItemWrapper EMPTY = new ProcessingItemWrapper(ItemStack.EMPTY, CaptureType.NONE, true);
+	}
+
+	public record ProcessingFluidWrapper(FluidStack fluid, CaptureType captureType, boolean isTemplateItem) {
+		public static final ProcessingFluidWrapper EMPTY = new ProcessingFluidWrapper(FluidStack.EMPTY, CaptureType.NONE, true);
+	}
+
+	private final List<ProcessingItemWrapper> inputItems;
+	private final List<ProcessingItemWrapper> outputItems;
+	private final List<ProcessingFluidWrapper> inputFluids;
+	private final List<ProcessingFluidWrapper> outputFluids;
 	@Nullable
 	private ResourceLocation recipeId;
 	private double inputPower;
@@ -63,26 +75,37 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 		this.outputPower = outputPower;
 	}
 
-	public ProcessingOutputContainer addInputItem(ItemStack item) {
+	public ProcessingOutputContainer addInputItem(ItemStack item, CaptureType captureType) {
+		return addInputItem(item, captureType, false);
+	}
+
+	public ProcessingOutputContainer addInputItem(ItemStack item, CaptureType captureType, boolean isTemplateItem) {
 		if (isClosed()) {
 			throw new RuntimeException(String.format("Attempted to add an input item to a clowed process output container."));
 		}
 		// Don't check for empty items here because some recipes depend on empty items
 		// to match shapes (eg: crafting).
-		inputItems.add(item.copy());
+		inputItems.add(new ProcessingItemWrapper(item.copy(), captureType, isTemplateItem));
 		return this;
 	}
 
-	public ProcessingOutputContainer addInputItem(ItemStack item, int amount) {
-		item.setCount(amount);
-		return addInputItem(item);
+	public ProcessingOutputContainer addInputItem(ItemStack item, int amount, CaptureType captureType) {
+		return addInputItem(item, amount, captureType);
 	}
 
-	public List<ItemStack> getInputItems() {
+	public ProcessingOutputContainer addInputItem(ItemStack item, int amount, CaptureType captureType, boolean isTemplateItem) {
+		item.setCount(amount);
+		return addInputItem(item, captureType, isTemplateItem);
+	}
+
+	public List<ProcessingItemWrapper> getInputItems() {
 		return inputItems;
 	}
 
-	public ItemStack getInputItem(int index) {
+	public ProcessingItemWrapper getInputItem(int index) {
+		if (index >= inputItems.size()) {
+			return ProcessingItemWrapper.EMPTY;
+		}
 		return inputItems.get(index);
 	}
 
@@ -90,26 +113,37 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 		return inputItems.size() > 0;
 	}
 
-	public ProcessingOutputContainer addOutputItem(ItemStack item) {
+	public ProcessingOutputContainer addOutputItem(ItemStack item, CaptureType captureType) {
+		return addOutputItem(item, captureType, false);
+	}
+
+	public ProcessingOutputContainer addOutputItem(ItemStack item, CaptureType captureType, boolean isTemplateItem) {
 		if (isClosed()) {
 			throw new RuntimeException(String.format("Attempted to add an output item to a clowed process output container."));
 		}
 		if (!item.isEmpty()) {
-			outputItems.add(item.copy());
+			outputItems.add(new ProcessingItemWrapper(item.copy(), captureType, isTemplateItem));
 		}
 		return this;
 	}
 
-	public ProcessingOutputContainer addOutputItem(ItemStack item, int amount) {
-		item.setCount(amount);
-		return addOutputItem(item);
+	public ProcessingOutputContainer addOutputItem(ItemStack item, int amount, CaptureType captureType) {
+		return addOutputItem(item, amount, captureType, false);
 	}
 
-	public List<ItemStack> getOutputItems() {
+	public ProcessingOutputContainer addOutputItem(ItemStack item, int amount, CaptureType captureType, boolean isTemplateItem) {
+		item.setCount(amount);
+		return addOutputItem(item, captureType, isTemplateItem);
+	}
+
+	public List<ProcessingItemWrapper> getOutputItems() {
 		return outputItems;
 	}
 
-	public ItemStack getOutputItem(int index) {
+	public ProcessingItemWrapper getOutputItem(int index) {
+		if (index >= inputItems.size()) {
+			return ProcessingItemWrapper.EMPTY;
+		}
 		return outputItems.get(index);
 	}
 
@@ -117,26 +151,37 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 		return outputItems.size() > 0;
 	}
 
-	public ProcessingOutputContainer addInputFluid(FluidStack fluid) {
+	public ProcessingOutputContainer addInputFluid(FluidStack fluid, CaptureType captureType) {
+		return addInputFluid(fluid, captureType, false);
+	}
+
+	public ProcessingOutputContainer addInputFluid(FluidStack fluid, CaptureType captureType, boolean isTemplateItem) {
 		if (isClosed()) {
 			throw new RuntimeException(String.format("Attempted to add an input fluid to a clowed process output container."));
 		}
 		if (!fluid.isEmpty()) {
-			inputFluids.add(fluid.copy());
+			inputFluids.add(new ProcessingFluidWrapper(fluid.copy(), captureType, isTemplateItem));
 		}
 		return this;
 	}
 
-	public ProcessingOutputContainer addInputFluid(FluidStack fluid, int amount) {
-		fluid.setAmount(amount);
-		return addInputFluid(fluid);
+	public ProcessingOutputContainer addInputFluid(FluidStack fluid, int amount, CaptureType captureType) {
+		return addInputFluid(fluid, amount, captureType, false);
 	}
 
-	public List<FluidStack> getInputFluids() {
+	public ProcessingOutputContainer addInputFluid(FluidStack fluid, int amount, CaptureType captureType, boolean isTemplateItem) {
+		fluid.setAmount(amount);
+		return addInputFluid(fluid, captureType, isTemplateItem);
+	}
+
+	public List<ProcessingFluidWrapper> getInputFluids() {
 		return inputFluids;
 	}
 
-	public FluidStack getInputFluid(int index) {
+	public ProcessingFluidWrapper getInputFluid(int index) {
+		if (index >= inputItems.size()) {
+			return ProcessingFluidWrapper.EMPTY;
+		}
 		return inputFluids.get(index);
 	}
 
@@ -144,26 +189,37 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 		return inputFluids.size() > 0;
 	}
 
-	public ProcessingOutputContainer addOutputFluid(FluidStack fluid) {
+	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, CaptureType captureType) {
+		return addOutputFluid(fluid, captureType, false);
+	}
+
+	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, CaptureType captureType, boolean isTemplateItem) {
 		if (isClosed()) {
 			throw new RuntimeException(String.format("Attempted to add an output fluid to a clowed process output container."));
 		}
 		if (!fluid.isEmpty()) {
-			outputFluids.add(fluid.copy());
+			outputFluids.add(new ProcessingFluidWrapper(fluid.copy(), captureType, isTemplateItem));
 		}
 		return this;
 	}
 
-	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, int amount) {
-		fluid.setAmount(amount);
-		return addOutputFluid(fluid);
+	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, int amount, CaptureType captureType) {
+		return addOutputFluid(fluid, amount, captureType, false);
 	}
 
-	public List<FluidStack> getOutputFluids() {
+	public ProcessingOutputContainer addOutputFluid(FluidStack fluid, int amount, CaptureType captureType, boolean isTemplateItem) {
+		fluid.setAmount(amount);
+		return addOutputFluid(fluid, captureType, isTemplateItem);
+	}
+
+	public List<ProcessingFluidWrapper> getOutputFluids() {
 		return outputFluids;
 	}
 
-	public FluidStack getOutputFluid(int index) {
+	public ProcessingFluidWrapper getOutputFluid(int index) {
+		if (index >= inputItems.size()) {
+			return ProcessingFluidWrapper.EMPTY;
+		}
 		return outputFluids.get(index);
 	}
 
@@ -212,23 +268,31 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 		output.putDouble("output_power", outputPower);
 		output.put("custom_data", customParameters);
 
-		ListTag serializedInputItems = NBTUtilities.serialize(inputItems, (item) -> {
-			return item.serializeNBT();
+		ListTag serializedInputItems = NBTUtilities.serialize(inputItems, (item, tag) -> {
+			item.item.save(tag);
+			tag.putBoolean("t", item.isTemplateItem());
+			tag.putByte("m", (byte) item.captureType.ordinal());
 		});
 		output.put("input_items", serializedInputItems);
 
-		ListTag serializedOutputItems = NBTUtilities.serialize(outputItems, (item) -> {
-			return item.serializeNBT();
+		ListTag serializedOutputItems = NBTUtilities.serialize(outputItems, (item, tag) -> {
+			item.item.save(tag);
+			tag.putBoolean("t", item.isTemplateItem());
+			tag.putByte("m", (byte) item.captureType.ordinal());
 		});
 		output.put("output_items", serializedOutputItems);
 
 		ListTag serializedInputFluids = NBTUtilities.serialize(inputFluids, (fluid, tag) -> {
-			fluid.writeToNBT(tag);
+			fluid.fluid.writeToNBT(tag);
+			tag.putBoolean("t", fluid.isTemplateItem());
+			tag.putByte("m", (byte) fluid.captureType.ordinal());
 		});
 		output.put("input_fluids", serializedInputFluids);
 
 		ListTag serializedOutputFluids = NBTUtilities.serialize(outputFluids, (fluid, tag) -> {
-			fluid.writeToNBT(tag);
+			fluid.fluid.writeToNBT(tag);
+			tag.putBoolean("t", fluid.isTemplateItem());
+			tag.putByte("m", (byte) fluid.captureType.ordinal());
 		});
 		output.put("output_fluids", serializedOutputFluids);
 
@@ -247,16 +311,20 @@ public class ProcessingOutputContainer implements INBTSerializable<CompoundTag> 
 		customParameters = nbt.getCompound("custom_data");
 
 		inputItems.addAll(NBTUtilities.deserialize(nbt.getList("input_items", ListTag.TAG_COMPOUND), (tag) -> {
-			return ItemStack.of((CompoundTag) tag);
+			CompoundTag cTag = (CompoundTag) tag;
+			return new ProcessingItemWrapper(ItemStack.of(cTag), CaptureType.values()[cTag.getByte("m")], cTag.getBoolean("t"));
 		}));
 		outputItems.addAll(NBTUtilities.deserialize(nbt.getList("output_items", ListTag.TAG_COMPOUND), (tag) -> {
-			return ItemStack.of((CompoundTag) tag);
+			CompoundTag cTag = (CompoundTag) tag;
+			return new ProcessingItemWrapper(ItemStack.of(cTag), CaptureType.values()[cTag.getByte("m")], cTag.getBoolean("t"));
 		}));
 		inputFluids.addAll(NBTUtilities.deserialize(nbt.getList("input_fluids", ListTag.TAG_COMPOUND), (tag) -> {
-			return FluidStack.loadFluidStackFromNBT((CompoundTag) tag);
+			CompoundTag cTag = (CompoundTag) tag;
+			return new ProcessingFluidWrapper(FluidStack.loadFluidStackFromNBT(cTag), CaptureType.values()[cTag.getByte("m")], cTag.getBoolean("t"));
 		}));
 		outputFluids.addAll(NBTUtilities.deserialize(nbt.getList("output_fluids", ListTag.TAG_COMPOUND), (tag) -> {
-			return FluidStack.loadFluidStackFromNBT((CompoundTag) tag);
+			CompoundTag cTag = (CompoundTag) tag;
+			return new ProcessingFluidWrapper(FluidStack.loadFluidStackFromNBT(cTag), CaptureType.values()[cTag.getByte("m")], cTag.getBoolean("t"));
 		}));
 	}
 }

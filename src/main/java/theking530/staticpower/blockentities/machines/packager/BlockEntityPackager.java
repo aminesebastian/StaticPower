@@ -13,6 +13,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
 import theking530.staticpower.blockentities.components.items.BatteryInventoryComponent;
@@ -99,8 +100,8 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		// Move the input to the internal inventory.
-		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true));
-		outputContainer.addOutputItem(recipe.getOutput().calculateOutput());
+		outputContainer.addInputItem(inputInventory.extractItem(0, recipe.getInputIngredient().getCount(), true), CaptureType.BOTH);
+		outputContainer.addOutputItem(recipe.getOutput().calculateOutput(), CaptureType.BOTH);
 		outputContainer.getCustomParameterContainer().putInt("size", gridSize);
 
 		// Update the processing/power.
@@ -115,7 +116,7 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0))) {
+		if (!InventoryUtilities.canFullyInsertStackIntoSlot(outputInventory, 0, outputContainer.getOutputItem(0).item())) {
 			return ProcessingCheckState.outputsCannotTakeRecipe();
 		}
 		return ProcessingCheckState.ok();
@@ -123,7 +124,7 @@ public class BlockEntityPackager extends BlockEntityMachine implements IRecipePr
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<PackagerRecipe> component, PackagerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		outputInventory.insertItem(0, outputContainer.getOutputItem(0), false);
+		outputInventory.insertItem(0, outputContainer.getOutputItem(0).item().copy(), false);
 	}
 
 	public void setRecipeSize(int size) {

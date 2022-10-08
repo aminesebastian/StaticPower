@@ -12,6 +12,7 @@ import theking530.staticpower.blockentities.BlockEntityMachine;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingCheckState;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer;
 import theking530.staticpower.blockentities.components.control.processing.RecipeProcessingComponent;
+import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.DefaultSideConfiguration;
 import theking530.staticpower.blockentities.components.control.sideconfiguration.MachineSideMode;
@@ -98,20 +99,20 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 	@Override
 	public void captureInputsAndProducts(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
 		if (recipe.hasPrimaryItemInput()) {
-			outputContainer.addInputItem(input1Inventory.extractItem(0, recipe.getPrimaryItemInput().getCount(), true));
+			outputContainer.addInputItem(input1Inventory.extractItem(0, recipe.getPrimaryItemInput().getCount(), true), CaptureType.BOTH);
 		}
 		if (recipe.hasSecondaryItemInput()) {
-			outputContainer.addInputItem(input2Inventory.extractItem(0, recipe.getSecondaryItemInput().getCount(), true));
+			outputContainer.addInputItem(input2Inventory.extractItem(0, recipe.getSecondaryItemInput().getCount(), true), CaptureType.BOTH);
 		}
 
 		if (recipe.hasPrimaryFluidInput()) {
-			outputContainer.addInputFluid(fluidInput1.getFluid(), recipe.getPrimaryFluidInput().getAmount());
+			outputContainer.addInputFluid(fluidInput1.getFluid(), recipe.getPrimaryFluidInput().getAmount(), CaptureType.BOTH);
 		}
 		if (recipe.hasSecondaryFluidInput()) {
-			outputContainer.addInputFluid(fluidInput2.getFluid(), recipe.getSecondaryFluidInput().getAmount());
+			outputContainer.addInputFluid(fluidInput2.getFluid(), recipe.getSecondaryFluidInput().getAmount(), CaptureType.BOTH);
 		}
 
-		outputContainer.addOutputFluid(recipe.getOutput().copy());
+		outputContainer.addOutputFluid(recipe.getOutput().copy(), CaptureType.BOTH);
 
 		// Set the power usage.
 		component.setProcessingPowerUsage(recipe.getPowerCost());
@@ -130,7 +131,7 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 
 	@Override
 	public ProcessingCheckState canStartProcessing(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		if (fluidOutput.fill(outputContainer.getOutputFluid(0), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).getAmount()) {
+		if (fluidOutput.fill(outputContainer.getOutputFluid(0).fluid(), FluidAction.SIMULATE) != outputContainer.getOutputFluid(0).fluid().getAmount()) {
 			return ProcessingCheckState.fluidOutputFull();
 		}
 		return ProcessingCheckState.ok();
@@ -138,13 +139,13 @@ public class BlockEntityMixer extends BlockEntityMachine implements IRecipeProce
 
 	@Override
 	public void processingCompleted(RecipeProcessingComponent<MixerRecipe> component, MixerRecipe recipe, ProcessingOutputContainer outputContainer) {
-		fluidOutput.fill(outputContainer.getOutputFluid(0), FluidAction.EXECUTE);
+		fluidOutput.fill(outputContainer.getOutputFluid(0).fluid().copy(), FluidAction.EXECUTE);
 
 		// Drain the fluid.
 		if (outputContainer.getInputFluids().size() > 0) {
-			fluidInput1.drain(outputContainer.getInputFluid(0).getAmount(), FluidAction.EXECUTE);
+			fluidInput1.drain(outputContainer.getInputFluid(0).fluid(), FluidAction.EXECUTE);
 			if (outputContainer.getInputFluids().size() > 1) {
-				fluidInput2.drain(outputContainer.getInputFluid(1).getAmount(), FluidAction.EXECUTE);
+				fluidInput2.drain(outputContainer.getInputFluid(1).fluid(), FluidAction.EXECUTE);
 			}
 		}
 	}

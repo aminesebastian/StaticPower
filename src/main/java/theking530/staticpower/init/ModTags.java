@@ -16,6 +16,7 @@ import theking530.staticpower.StaticPower;
 
 public class ModTags {
 	public static final TagKey<Item> INGOT = createItemWrapper(new ResourceLocation("forge", "ingots"));
+	public static final TagKey<Item> ORE = createItemWrapper(new ResourceLocation("forge", "ores"));
 	public static final TagKey<Item> SAPLING = createItemWrapper(new ResourceLocation("minecraft", "saplings"));
 
 	public static final TagKey<Item> COVER_SAW = createItemWrapper(new ResourceLocation(StaticPower.MOD_ID, "saw"));

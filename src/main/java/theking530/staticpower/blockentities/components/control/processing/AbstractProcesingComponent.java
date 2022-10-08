@@ -108,7 +108,6 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		}
 
 		// Process.
-		performedWorkLastTick = false;
 		boolean performedWork = process();
 
 		// Check for changing to the off state.
@@ -129,9 +128,9 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			blockStateOffTimer = 0;
 			// Update the block's on state.
 			setIsOnBlockState(true);
-			// Set that we performed work on the last tick.
-			performedWorkLastTick = performedWork;
 		}
+		// Set that we performed work on the last tick.
+		performedWorkLastTick = performedWork;
 	}
 
 	public boolean process() {
@@ -347,9 +346,9 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	/**
 	 * Returns true if the current processing time is equal to the maximum
 	 * processing time for this component. This is useful to check in combination
-	 * with {@link #isProcessing()} to consider whether or not to consumer power.
-	 * For example, {@link #isProcessing()} may return true even when
-	 * {@link #isDone()} is true because {@link #isProcessing()} waits until
+	 * with {@link #hasProcessingStarted()} to consider whether or not to consumer power.
+	 * For example, {@link #hasProcessingStarted()} may return true even when
+	 * {@link #isDone()} is true because {@link #hasProcessingStarted()} waits until
 	 * {@link #processingEndedCallback} returns true. So if a user has a process
 	 * that only completes when it is able to put an item into an inventory and that
 	 * inventory is full, it will continually be processing. But it will have
@@ -368,11 +367,11 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	 * 
 	 * @return
 	 */
-	public boolean isPerformingWork() {
+	public boolean isCurrentlyProcessing() {
 		return performedWorkLastTick;
 	}
 
-	public boolean isProcessing() {
+	public boolean hasProcessingStarted() {
 		return hasStarted;
 	}
 
