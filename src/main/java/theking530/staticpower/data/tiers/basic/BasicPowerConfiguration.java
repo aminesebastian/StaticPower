@@ -26,6 +26,11 @@ public class BasicPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected double getDefaultMaximumPowerOutput() {
+		return 5;
+	}
+
+	@Override
 	protected double getBatteryMaximumPowerOutput() {
 		return 25;
 	}

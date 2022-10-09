@@ -4,10 +4,8 @@ import java.util.Optional;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.CaptureType;
 import theking530.staticpower.blockentities.components.control.processing.ProcessingOutputContainer.ProcessingItemWrapper;
 import theking530.staticpower.blockentities.components.control.processing.interfaces.IRecipeProcessor;
@@ -20,13 +18,11 @@ import theking530.staticpower.data.crafting.AbstractStaticPowerRecipe;
 import theking530.staticpower.data.crafting.RecipeMatchParameters;
 import theking530.staticpower.data.crafting.StaticPowerRecipeRegistry;
 import theking530.staticpower.data.crafting.wrappers.packager.PackagerRecipe;
-import theking530.staticpower.init.ModProducts;
 
 public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProcesingComponent<RecipeProcessingComponent<T>> {
 	public static final int MOVE_TIME = 8;
 
 	private final RecipeType<T> recipeType;
-	private final ProductionTrackingToken<ItemStack> productionToken;
 	private final IRecipeProcessor<T> processor;
 
 	@SaveSerialize
@@ -46,14 +42,13 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		this.processor = processor;
 		this.moveTime = MOVE_TIME;
 		moveTimer = 0;
-		productionToken = ModProducts.Item.get().getProductivityToken();
 		outputContainer = new ProcessingOutputContainer();
 	}
 
 	@Override
 	public boolean process() {
 		if (!hasProcessingStarted()) {
-			productionToken.invalidate();
+			getItemProductionToken().invalidate();
 			if (!attemptMove()) {
 				return false;
 			}
@@ -63,7 +58,7 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		if (isCurrentlyProcessing()) {
 			updateProductionStatistics();
 		} else {
-			productionToken.invalidate();
+			getItemProductionToken().invalidate();
 		}
 		return result;
 	}
@@ -105,12 +100,12 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		if (teamComp != null && teamComp.getOwningTeam() != null) {
 			for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.RATE_ONLY) {
-					productionToken.setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+					getItemProductionToken().setProductionPerSecond(teamComp.getOwningTeam(), output.item(), output.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 				}
 			}
 			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.RATE_ONLY) {
-					productionToken.setConsumptionPerSection(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
+					getItemProductionToken().setConsumptionPerSection(teamComp.getOwningTeam(), input.item(), input.item().getCount() * (1.0 / (getMaxProcessingTime() / 20.0)));
 				}
 			}
 		}
@@ -186,12 +181,12 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 		if (teamComp != null) {
 			for (ProcessingItemWrapper output : outputContainer.getOutputItems()) {
 				if (output.captureType() == CaptureType.BOTH || output.captureType() == CaptureType.COUNT_ONLY) {
-					productionToken.produced(teamComp.getOwningTeam(), output.item(), output.item().getCount());
+					getItemProductionToken().produced(teamComp.getOwningTeam(), output.item(), output.item().getCount());
 				}
 			}
 			for (ProcessingItemWrapper input : outputContainer.getInputItems()) {
 				if (input.captureType() == CaptureType.BOTH || input.captureType() == CaptureType.COUNT_ONLY) {
-					productionToken.consumed(teamComp.getOwningTeam(), input.item(), input.item().getCount());
+					getItemProductionToken().consumed(teamComp.getOwningTeam(), input.item(), input.item().getCount());
 				}
 			}
 		}
@@ -258,12 +253,12 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 	@Override
 	protected void onProcessingCanceled() {
 		outputContainer.clear();
-		productionToken.invalidate();
+		getItemProductionToken().invalidate();
 	}
 
 	@Override
 	protected void onProcessingPausedDueToError() {
-		productionToken.invalidate();
+		getItemProductionToken().invalidate();
 
 	}
 
@@ -277,6 +272,6 @@ public class RecipeProcessingComponent<T extends Recipe<?>> extends AbstractProc
 
 	public void onOwningBlockEntityUnloaded() {
 		super.onOwningBlockEntityUnloaded();
-		productionToken.invalidate();
+		getItemProductionToken().invalidate();
 	}
 }

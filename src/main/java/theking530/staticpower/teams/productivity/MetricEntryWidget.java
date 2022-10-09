@@ -1,4 +1,4 @@
-package theking530.staticcore.productivity.metrics;
+package theking530.staticpower.teams.productivity;
 
 import java.util.List;
 
@@ -16,6 +16,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import theking530.staticcore.gui.GuiDrawUtilities;
 import theking530.staticcore.gui.widgets.AbstractGuiWidget;
+import theking530.staticcore.productivity.metrics.MetricType;
+import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
 import theking530.staticcore.utilities.SDColor;
 import theking530.staticcore.utilities.Vector2D;
 import theking530.staticpower.client.utilities.GuiTextUtilities;
@@ -76,17 +78,26 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 			e.printStackTrace();
 		}
 
+		SDColor testColor = new SDColor(1, 1, 1, 1);
+		int serializedHash = metric.getSerializedProduct().hashCode();
+		testColor.setRed(Math.abs(serializedHash) % 100 / 100.0f);
+		testColor.setGreen(Math.abs(serializedHash) % 200 / 200.0f);
+		testColor.setBlue(Math.abs(serializedHash) % 300 / 300.0f);
+		testColor.desaturate(-1);
+		testColor.lighten(0.5f, 0.5f, 0.5f, 0.0f);
+
 		float growthPercentage = 0.5f;
 		pose.pushPose();
 		pose.scale(1, 0.85f, 1);
-		float barXPos = 45;
+		float barXPos = 50;
 		float barYPos = (getHeight() - 12);
 		float width = (getWidth() - barXPos - 5);
 		GuiDrawUtilities.drawGenericBackground(pose, width, 7, barXPos, barYPos, 1, new SDColor(0.4f, 0.4f, 0.4f, 1.0f));
-		GuiDrawUtilities.drawGenericBackground(pose, Math.max(7, width * growthPercentage), 7, barXPos, barYPos, 1, new SDColor(0.2f, 0.5f, 1.4f, 1.0f));
+		GuiDrawUtilities.drawGenericBackground(pose, Math.max(7, width * growthPercentage), 7, barXPos, barYPos, 1, testColor);
 		pose.popPose();
 	}
 
+	@SuppressWarnings("resource")
 	public void getWidgetTooltips(Vector2D mousePosition, List<Component> tooltips, boolean showAdvanced) {
 		super.getWidgetTooltips(mousePosition, tooltips, showAdvanced);
 		try {
@@ -97,7 +108,6 @@ public class MetricEntryWidget extends AbstractGuiWidget<MetricEntryWidget> {
 				tooltips.addAll(product.getTooltipLines(Minecraft.getInstance().player, TooltipFlag.Default.NORMAL));
 			}
 		} catch (CommandSyntaxException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 

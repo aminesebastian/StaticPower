@@ -27,7 +27,7 @@ public class StaticPowerRegistries {
 		return RegistryManager.ACTIVE.getRegistry(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY);
 	}
 
-	public static final ForgeRegistry<ProductType<?, ?>> ProductRegistry() {
+	public static final ForgeRegistry<ProductType<?>> ProductRegistry() {
 		return RegistryManager.ACTIVE.getRegistry(StaticPowerRegistries.PRODUCT_REGISTRY);
 	}
 }

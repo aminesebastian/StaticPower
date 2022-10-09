@@ -117,6 +117,8 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 				heatStorage.setCanHeat(true);
 				heatStorage.heat(getHeatGeneration(), HeatTransferAction.EXECUTE);
 				heatStorage.setCanHeat(false);
+			}else {
+				processingComponent.getItemProductionToken().invalidate();
 			}
 
 			if (processingComponent.getIsOnBlockState()) {
@@ -254,6 +256,9 @@ public abstract class AbstractTileEntityMiner extends BlockEntityConfigurable {
 			List<ItemStack> minedItems = attemptMineBlock(minedPos);
 			for (int i = 0; i < minedItems.size(); i++) {
 				InventoryUtilities.insertItemIntoInventory(internalInventory, minedItems.get(i), false);
+				processingComponent.getItemProductionToken().produced(getTeamComponent().getOwningTeam(), minedItems.get(i), minedItems.get(i).getCount());
+				processingComponent.getItemProductionToken().setProductionPerSecond(getTeamComponent().getOwningTeam(), minedItems.get(i),
+						minedItems.get(i).getCount() * (1 / ((Math.max(processingComponent.getMaxProcessingTime(), 1) / 20.0))));
 			}
 
 			// Set the mined block to cobblestone.

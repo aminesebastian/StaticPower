@@ -26,6 +26,11 @@ public class LumumPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected double getDefaultMaximumPowerOutput() {
+		return 50;
+	}
+
+	@Override
 	protected double getBatteryMaximumPowerOutput() {
 		return 500;
 	}

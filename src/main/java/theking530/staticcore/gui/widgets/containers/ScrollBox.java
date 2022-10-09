@@ -31,14 +31,14 @@ public class ScrollBox extends AbstractGuiWidget<ScrollBox> {
 	}
 
 	protected void onWidgetAdded(AbstractGuiWidget<?> widget) {
-		repositionElements();
+		recreateWidgets();
 	}
 
 	protected void onWidgetRemoved(AbstractGuiWidget<?> widget) {
-		repositionElements();
+		recreateWidgets();
 	}
 
-	protected void repositionElements() {
+	protected void recreateWidgets() {
 		for (int i = 0; i < getChildren().size(); i++) {
 			AbstractGuiWidget<?> widget = getChildren().get(i);
 			if (i == 0) {

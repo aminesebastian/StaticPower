@@ -14,14 +14,14 @@ import theking530.staticpower.network.StaticPowerMessageHandler;
 import theking530.staticpower.teams.Team;
 import theking530.staticpower.teams.TeamManager;
 
-public class PacketGetProductionMetrics extends NetworkMessage {
-	private ProductType<?, ?> productType;
+public class PacketRequestProductionMetrics extends NetworkMessage {
+	private ProductType<?> productType;
 
-	public PacketGetProductionMetrics() {
+	public PacketRequestProductionMetrics() {
 
 	}
 
-	public PacketGetProductionMetrics(ProductType<?, ?> productType) {
+	public PacketRequestProductionMetrics(ProductType<?> productType) {
 		this.productType = productType;
 	}
 
@@ -46,7 +46,7 @@ public class PacketGetProductionMetrics extends NetworkMessage {
 				return;
 			}
 
-			PacketRecieveProductionMetrics response = new PacketRecieveProductionMetrics(
+			PacketRecieveProductionMetrics response = new PacketRecieveProductionMetrics(productType,
 					team.getProductionManager().getCache(productType).getSerializedProductionMetrics(serverPlayer.level.getGameTime(), 20, MetricPeriod.MINUTE));
 			StaticPowerMessageHandler.sendMessageToPlayer(StaticPowerMessageHandler.MAIN_PACKET_CHANNEL, (ServerPlayer) ctx.get().getSender(), response);
 		});

@@ -4,11 +4,11 @@ import java.util.function.Supplier;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.registries.IForgeRegistryEntry;
+import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
-import theking530.staticcore.productivity.cache.ProductionCache;
 import theking530.staticcore.productivity.entry.ProductionEntry;
 
-public abstract class ProductType<T, K extends ProductionEntry<T>> implements IForgeRegistryEntry<ProductType<T, K>> {
+public abstract class ProductType<T> implements IForgeRegistryEntry<ProductType<T>> {
 	private ResourceLocation registryName;
 	private final Class<T> productClass;
 	private Supplier<ProductionCache<T>> cacheType;
@@ -33,14 +33,14 @@ public abstract class ProductType<T, K extends ProductionEntry<T>> implements IF
 
 	public abstract int getProductHashCode(T product);
 
-	public abstract K createProductionEntry(T product);
+	public abstract ProductionEntry<T> createProductionEntry(T product);
 
 	public Class<T> getProductClass() {
 		return productClass;
 	}
 
 	@Override
-	public ProductType<T, K> setRegistryName(ResourceLocation name) {
+	public ProductType<T> setRegistryName(ResourceLocation name) {
 		registryName = name;
 		return this;
 	}
@@ -51,7 +51,7 @@ public abstract class ProductType<T, K extends ProductionEntry<T>> implements IF
 	}
 
 	@Override
-	public Class<ProductType<T, K>> getRegistryType() {
+	public Class<ProductType<T>> getRegistryType() {
 		return castClass(this.getClass());
 	}
 

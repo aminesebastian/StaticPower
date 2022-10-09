@@ -1,4 +1,4 @@
-package theking530.staticcore.productivity.cache;
+package theking530.staticcore.productivity;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -9,22 +9,27 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticcore.productivity.entry.ProductionEntry;
 import theking530.staticcore.productivity.entry.ProductionEntry.ProductionEntryState;
 import theking530.staticcore.productivity.metrics.MetricPeriod;
 import theking530.staticcore.productivity.metrics.MetricType;
 import theking530.staticcore.productivity.metrics.SerializedMetricPeriod;
 import theking530.staticcore.productivity.metrics.SertializedBiDirectionalMetrics;
+import theking530.staticcore.productivity.product.ProductType;
 import theking530.staticpower.StaticPower;
 
-public abstract class ProductionCache<T> {
+public class ProductionCache<T> {
 	private final List<Map<Integer, ProductionEntry<T>>> productivityBuckets;
 	private final Map<Integer, Integer> productivityBucketMap;
+	private final ProductType<T> productType;
+	private final String productTablePrefix;
+
 	private Connection database;
 	private int bucketRoundRobinIndex;
 
-	public ProductionCache() {
+	public ProductionCache(ProductType<T> productType) {
+		this.productType = productType;
+		this.productTablePrefix = productType.getRegistryName().toString().replace(":", "_");
 		bucketRoundRobinIndex = 0;
 		productivityBucketMap = new HashMap<>();
 		productivityBuckets = new LinkedList<Map<Integer, ProductionEntry<T>>>();
@@ -67,7 +72,21 @@ public abstract class ProductionCache<T> {
 
 	public void initializeDatabase(Connection database) {
 		this.database = database;
+		try {
+			Statement stmt = database.createStatement();
+			stmt.addBatch(createProductivityTable(MetricPeriod.SECOND));
+			stmt.addBatch(createProductivityTable(MetricPeriod.MINUTE));
+			stmt.addBatch(createProductivityTable(MetricPeriod.HOUR));
+			stmt.addBatch(createProductivityTable(MetricPeriod.DAY));
+			stmt.executeBatch();
+		} catch (SQLException e) {
+			StaticPower.LOGGER.error(String.format("An error occured when creating the productivity tracking tables!"), e);
+		}
 		createProductLookupTable();
+	}
+
+	public ProductType<T> getProductType() {
+		return productType;
 	}
 
 	public void insertProductivityPerSecond(Connection database, int bucketIndex, long gameTime) {
@@ -86,7 +105,7 @@ public abstract class ProductionCache<T> {
 				//@formatter:off
 				String upsert = String.format("REPLACE INTO %1$s_productivity_%2$s(product_hash, consumed, produced, game_tick) \n"
 						+ "  VALUES('%3$d', '%4$f', '%5$f',  '%6$d');",
-						getProductType(), 
+						productTablePrefix, 
 						MetricPeriod.SECOND.getTableKey(), 
 						entry.getProductHashCode(), 
 						metric.consumed(),
@@ -98,7 +117,7 @@ public abstract class ProductionCache<T> {
 			}
 
 			if (!toBeInserted.isEmpty()) {
-				StaticPower.LOGGER.trace(String.format("Inserting %1$d entries for bucket: %2$d for product: %3$s.", toBeInserted.size(), bucketIndex, getProductType()));
+				StaticPower.LOGGER.trace(String.format("Inserting %1$d entries for bucket: %2$d for product: %3$s.", toBeInserted.size(), bucketIndex, productTablePrefix));
 				stmt.executeBatch();
 
 				// Only if we made it this far should we clear the entires.
@@ -108,12 +127,12 @@ public abstract class ProductionCache<T> {
 			}
 
 		} catch (SQLException e) {
-			StaticPower.LOGGER.error(String.format("An error occured when inserting the per second productivity for product: %1$s.", getProductType()), e);
+			StaticPower.LOGGER.error(String.format("An error occured when inserting the per second productivity for product: %1$s.", productTablePrefix), e);
 		}
 	}
 
 	public void updateAggregateData(Connection database, MetricPeriod fromPeriod, MetricPeriod toPeriod, long gameTime) {
-		StaticPower.LOGGER.trace(String.format("Updating aggregate data for product type: %1$s from period: %2$s to period: %3$s.", getProductType(), fromPeriod.getTableKey(),
+		StaticPower.LOGGER.trace(String.format("Updating aggregate data for product type: %1$s from period: %2$s to period: %3$s.", productTablePrefix, fromPeriod.getTableKey(),
 				toPeriod.getTableKey()));
 		try {
 			//@formatter:off
@@ -122,16 +141,16 @@ public abstract class ProductionCache<T> {
 					+ " 	SUM(consumed) as consumed, "
 					+ " 	SUM(produced) as produced, "
 					+ "		%4$d \n"
-					+ " FROM item_productivity_%2$s \n"
+					+ " FROM %1$s_productivity_%2$s \n"
 					+ " WHERE game_tick > %5$d \n"
 					+ " GROUP BY product_hash;",
-					getProductType(), fromPeriod.getTableKey(), toPeriod.getTableKey(), gameTime, gameTime - toPeriod.getMetricPeriodInTicks());
+					productTablePrefix, fromPeriod.getTableKey(), toPeriod.getTableKey(), gameTime, gameTime - toPeriod.getMetricPeriodInTicks());
 			//@formatter:on
 
 			Statement stmt = database.createStatement();
 			stmt.execute(upsert);
 		} catch (SQLException e) {
-			StaticPower.LOGGER.error(String.format("An error occured when aggregating the productivity for product: %1$s from period: %2$s to period: %3$s.", getProductType(),
+			StaticPower.LOGGER.error(String.format("An error occured when aggregating the productivity for product: %1$s from period: %2$s to period: %3$s.", productTablePrefix,
 					fromPeriod.getTableKey(), toPeriod.getTableKey()), e);
 		}
 	}
@@ -169,19 +188,19 @@ public abstract class ProductionCache<T> {
 			return;
 		}
 
-		StaticPower.LOGGER.trace(String.format("Deleting old data for product: %1$s over period: %2$s.", getProductType(), period.getTableKey()));
+		StaticPower.LOGGER.trace(String.format("Deleting old data for product: %1$s over period: %2$s.", productTablePrefix, period.getTableKey()));
 		try {
 			//@formatter:off
 			String upsert = String.format("DELETE FROM %1$s_productivity_%2$s \n"
 					+ " WHERE game_tick < %3$d;",
-					getProductType(), period.getTableKey(),  gameTime - period.getMaxRecordsAgeTicks());
+					productTablePrefix, period.getTableKey(),  gameTime - period.getMaxRecordsAgeTicks());
 			//@formatter:on
 
 			Statement stmt = database.createStatement();
 			stmt.execute(upsert);
 		} catch (SQLException e) {
 			StaticPower.LOGGER
-					.error(String.format("An error occured when clearing old data for product: %1$s over period: %2$s.", getProductType(), period.getMaxRecordsAgeTicks()), e);
+					.error(String.format("An error occured when clearing old data for product: %1$s over period: %2$s.", productTablePrefix, period.getMaxRecordsAgeTicks()), e);
 		}
 	}
 
@@ -195,7 +214,7 @@ public abstract class ProductionCache<T> {
 			Map<Integer, ProductionEntry<T>> bucket = productivityBuckets.get(productivityBucketMap.get(productHash));
 			entry = bucket.get(productHash);
 		} else {
-			entry = createNewEntry(product);
+			entry = productType.createProductionEntry(product);
 			insertNew(entry);
 		}
 		return entry;
@@ -218,14 +237,14 @@ public abstract class ProductionCache<T> {
 				+ "	product_hash int NOT NULL,\n" 
 				+ "	serialized_product text NOT NULL,\n"
 				+ " UNIQUE(product_hash,serialized_product)\n"
-				+ ")", getProductType());
+				+ ")", productTablePrefix);
 		//@formatter:on
 
 		try {
 			Statement stmt = getDatabase().createStatement();
 			stmt.execute(tableQuery);
 		} catch (SQLException e) {
-			StaticPower.LOGGER.error(String.format("An error occured when creating the lookup table for product type: $1$s!", getProductType()), e);
+			StaticPower.LOGGER.error(String.format("An error occured when creating the lookup table for product type: $1$s!", productTablePrefix), e);
 		}
 	}
 
@@ -233,7 +252,7 @@ public abstract class ProductionCache<T> {
 		//@formatter:off
 			String insert = String.format("REPLACE INTO %1$s_product(product_hash, serialized_product) \n"
 					+ "  VALUES('%2$d', '%3$s');",
-					getProductType(), entry.getProductHashCode(), entry.getSerializedProduct());
+					productTablePrefix, entry.getProductHashCode(), entry.getSerializedProduct());
 			//@formatter:on
 		try {
 			Statement stmt = getDatabase().createStatement();
@@ -243,11 +262,18 @@ public abstract class ProductionCache<T> {
 		}
 	}
 
-	protected abstract ProductionEntry<T> createNewEntry(T product);
-
-	protected abstract String getProductType();
-
 	protected Connection getDatabase() {
 		return database;
+	}
+
+	private String createProductivityTable(MetricPeriod period) {
+		//@formatter:off
+		return String.format("CREATE TABLE IF NOT EXISTS %1$s_productivity_%2$s (\n" 
+				+ "	product_hash int NOT NULL,\n" 
+				+ "	consumed integer NOT NULL,\n"
+				+ "	produced integer NOT NULL,\n" 
+				+ "	game_tick bigint NOT NULL\n"
+				+ ");", productTablePrefix, period.getTableKey());
+		//@formatter:on
 	}
 }

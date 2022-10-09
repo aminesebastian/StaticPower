@@ -478,7 +478,7 @@ public class StaticPowerConfig {
 					electricMinerRadius = builder.comment("Defines the base radius of the electric miner.").translation(StaticPower.MOD_ID + ".config." + "electricMinerRadius")
 							.define("ElectricMinerRadius", 3);
 					electricMinerPowerUsage = builder.comment("Controls how much power is used per tick in this machine (in SW).")
-							.translation(StaticPower.MOD_ID + ".config." + "electricMinerPowerUsage").define("ElectricMinerPowerUsage", 50.0);
+							.translation(StaticPower.MOD_ID + ".config." + "electricMinerPowerUsage").define("ElectricMinerPowerUsage", 20.0);
 					electricMinerProcessingTime = builder.comment("Defines the amount of ticks an electric miner takes to break a block [1 Second = 20 Ticks].")
 							.translation(StaticPower.MOD_ID + ".config." + "electricMinerProcessingTime").define("ElectricMinerProcessingTime", 40);
 					builder.pop();

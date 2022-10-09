@@ -3,10 +3,12 @@ package theking530.staticpower.blockentities.components.control.processing;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import theking530.api.energy.PowerStack;
 import theking530.api.upgrades.UpgradeTypes;
 import theking530.staticcore.gui.text.PowerTextFormatting;
+import theking530.staticcore.productivity.ProductionTrackingToken;
 import theking530.staticpower.StaticPower;
 import theking530.staticpower.blockentities.components.AbstractBlockEntityComponent;
 import theking530.staticpower.blockentities.components.control.ProcesingComponentSyncPacket;
@@ -17,11 +19,14 @@ import theking530.staticpower.blockentities.components.items.UpgradeInventoryCom
 import theking530.staticpower.blockentities.components.serialization.SaveSerialize;
 import theking530.staticpower.blockentities.components.serialization.UpdateSerialize;
 import theking530.staticpower.blocks.tileentity.StaticPowerMachineBlock;
+import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.network.StaticPowerMessageHandler;
 
 public abstract class AbstractProcesingComponent<T extends AbstractProcesingComponent<?>> extends AbstractBlockEntityComponent {
 	private static final int SYNC_PACKET_UPDATE_RADIUS = 32;
 	private static final int SYNC_UPDATE_DELTA_THRESHOLD = 20;
+
+	private final ProductionTrackingToken<ItemStack> productionToken;
 
 	private boolean shouldControlOnBlockState;
 	protected UpgradeInventoryComponent upgradeInventory;
@@ -93,6 +98,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 		this.processingErrorMessage = new TextComponent("");
 		this.processingStoppedDueToError = false;
 		this.powerMultiplier = 1.0f;
+		
+		productionToken = ModProducts.Item.get().getProductivityToken();
 	}
 
 	@SuppressWarnings("resource")
@@ -346,8 +353,8 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 	/**
 	 * Returns true if the current processing time is equal to the maximum
 	 * processing time for this component. This is useful to check in combination
-	 * with {@link #hasProcessingStarted()} to consider whether or not to consumer power.
-	 * For example, {@link #hasProcessingStarted()} may return true even when
+	 * with {@link #hasProcessingStarted()} to consider whether or not to consumer
+	 * power. For example, {@link #hasProcessingStarted()} may return true even when
 	 * {@link #isDone()} is true because {@link #hasProcessingStarted()} waits until
 	 * {@link #processingEndedCallback} returns true. So if a user has a process
 	 * that only completes when it is able to put an item into an inventory and that
@@ -578,6 +585,10 @@ public abstract class AbstractProcesingComponent<T extends AbstractProcesingComp
 			return currentState.getValue(StaticPowerMachineBlock.IS_ON);
 		}
 		return false;
+	}
+
+	public ProductionTrackingToken<ItemStack> getItemProductionToken() {
+		return this.productionToken;
 	}
 
 	protected void sendSynchronizationPacket() {

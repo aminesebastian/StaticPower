@@ -26,6 +26,11 @@ public class AdvancedPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected double getDefaultMaximumPowerOutput() {
+		return 10;
+	}
+
+	@Override
 	protected double getBatteryMaximumPowerOutput() {
 		return 50;
 	}

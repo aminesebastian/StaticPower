@@ -1,15 +1,16 @@
 package theking530.staticcore.productivity.product;
 
 import net.minecraft.world.item.ItemStack;
+import theking530.staticcore.productivity.ProductionCache;
 import theking530.staticcore.productivity.ProductionTrackingToken;
-import theking530.staticcore.productivity.cache.ItemProductionCache;
 import theking530.staticcore.productivity.entry.ItemProductionEntry;
+import theking530.staticpower.init.ModProducts;
 import theking530.staticpower.utilities.ItemUtilities;
 
-public class ItemStackProductType extends ProductType<ItemStack, ItemProductionEntry> {
+public class ItemStackProductType extends ProductType<ItemStack> {
 
 	public ItemStackProductType() {
-		super(ItemStack.class, () -> new ItemProductionCache());
+		super(ItemStack.class, () -> new ProductionCache<ItemStack>(ModProducts.Item.get()));
 	}
 
 	@Override

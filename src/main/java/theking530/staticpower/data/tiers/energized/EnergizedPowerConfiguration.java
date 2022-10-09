@@ -26,6 +26,11 @@ public class EnergizedPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected double getDefaultMaximumPowerOutput() {
+		return 35;
+	}
+
+	@Override
 	protected double getBatteryMaximumPowerOutput() {
 		return 250;
 	}

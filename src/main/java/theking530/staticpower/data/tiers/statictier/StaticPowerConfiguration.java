@@ -26,6 +26,11 @@ public class StaticPowerConfiguration extends TierPowerConfiguration {
 	}
 
 	@Override
+	protected double getDefaultMaximumPowerOutput() {
+		return 20;
+	}
+
+	@Override
 	protected double getBatteryMaximumPowerOutput() {
 		return 100;
 	}

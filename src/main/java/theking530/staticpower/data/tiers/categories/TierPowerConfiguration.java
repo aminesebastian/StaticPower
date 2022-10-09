@@ -118,9 +118,7 @@ public abstract class TierPowerConfiguration {
 
 	protected abstract StaticPowerVoltage getDefaultOutputVoltage();
 
-	protected double getDefaultMaximumPowerOutput() {
-		return getDefaultOutputVoltage().getVoltage();
-	}
+	protected abstract double getDefaultMaximumPowerOutput();
 
 	protected double getBatteryCapacity() {
 		return getDefaultPowerCapacity() * 100;

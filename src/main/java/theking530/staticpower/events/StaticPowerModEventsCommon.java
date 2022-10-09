@@ -96,8 +96,8 @@ public class StaticPowerModEventsCommon {
 				Integer.MAX_VALUE - 1));
 		event.create(new RegistryBuilder<ServerCableCapabilityType>().setName(StaticPowerRegistries.CABLE_CAPABILITY_REGISTRY).setType(ServerCableCapabilityType.class)
 				.setIDRange(0, Integer.MAX_VALUE - 1));
-		event.create(new RegistryBuilder<ProductType<?, ?>>().setName(StaticPowerRegistries.PRODUCT_REGISTRY).setType(castClass(ProductType.class)).setIDRange(0,
-				Integer.MAX_VALUE - 1));
+		event.create(
+				new RegistryBuilder<ProductType<?>>().setName(StaticPowerRegistries.PRODUCT_REGISTRY).setType(castClass(ProductType.class)).setIDRange(0, Integer.MAX_VALUE - 1));
 	}
 
 	@SuppressWarnings("unchecked") // Need this wrapper, because generics
